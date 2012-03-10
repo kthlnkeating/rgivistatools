@@ -1,24 +1,16 @@
 package com.raygroupintl.vista.mtoken;
 
 import com.raygroupintl.vista.fnds.IToken;
-import com.raygroupintl.vista.struct.MNameWithMnemonic;
 
-public class Command extends Keyword {
-	private MNameWithMnemonic command;
+public abstract class Command extends Keyword {
 	private IToken postConditional;
 	private IToken argument;
 	private int traliningSpace;
 
-	public Command(String identifier, MNameWithMnemonic command) {
+	public Command(String identifier) {
 		super(identifier);
-		this.command = command;
 	}
 	
-	@Override
-	protected MNameWithMnemonic getNameWithMnemonic() {
-		return this.command;
-	}
-
 	public String getCommandString() {
 		return super.getStringValue();
 	}

@@ -9,6 +9,10 @@ public abstract class Keyword extends Base {
 		this.identifier = new Basic(identifier);
 	}
 
+	public String getIdentier() {
+		return this.identifier.getStringValue();
+	}
+	
 	@Override
 	public String getStringValue() {
 		return this.identifier.getStringValue();
