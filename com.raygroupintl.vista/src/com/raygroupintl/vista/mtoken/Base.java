@@ -38,8 +38,4 @@ public abstract class Base implements IToken {
 		}
 		return false;
 	}
-
-	//@Override
-	//public void beautify() {
-	//}
 }

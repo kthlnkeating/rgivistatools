@@ -638,6 +638,7 @@ public class Line extends Multi {
 					index += tag.getStringSize();
 				}
 			}
+			
 			if (index < length) {
 				ch = line.charAt(index);
 				if (ch == ';') {
@@ -662,22 +663,16 @@ public class Line extends Multi {
 					Comment cmt = new Comment(line.substring(index+1));
 					index = length;
 					result.add(cmt);				
+				} else if (! Character.isLetter(ch)) {
+					SyntaxError err = new SyntaxError(line, index);
+					index = length;
+					result.add(err);
 				} else {
-					int commandIndex = index;
-					if (Character.isLetter(ch)) {
-						int toIndex = Algorithm.findOther(line, index, Algorithm.CharType.LETTER_DIGIT);
-						String identifier = line.substring(index, toIndex);
-						Command newToken = Line.getCommand(identifier);
-						index = newToken.extractDetails(line, toIndex);
-						if (index >= 0) {
-							result.add(newToken);
-							continue;
-						}
-					} 
-					
-					IToken newToken = new FatalError(MError.ERR_GENERAL_SYNTAX, line, commandIndex);
+					int toIndex = Algorithm.findOther(line, index, Algorithm.CharType.LETTER_DIGIT);
+					String identifier = line.substring(index, toIndex);
+					Command newToken = Line.getCommand(identifier);
+					index = newToken.extractDetails(line, toIndex);
 					result.add(newToken);
-					index = length;						
 				}			
 			}
 		}

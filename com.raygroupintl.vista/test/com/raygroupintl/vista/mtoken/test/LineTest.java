@@ -31,6 +31,8 @@ public class LineTest {
 	@Test
 	public void testBasic() {
 		lineTest(" S A=A+1  F  S B=$O(^F(B)) Q:B=\"\"   S ^F(B,A)=5");
+		lineTest(" S $E(A)=J+1 Q:B=\"\"\"YYY\"\"\"  Q:B=\"\"\"XXX\"\"\"");
+		lineTest(" I '$D(USERPRT),(STATUS'=\"c\") Q ;not individual & not complete");
 		lineTest("PRCA219P ;ALB/RRG - REPORT LIKELY BILLS TO PRINT;;");
 		lineTest(" I $$DEVICE() D ENTER");
 		lineTest("DEVICE() ;");

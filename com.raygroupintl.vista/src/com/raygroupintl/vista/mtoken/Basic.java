@@ -13,6 +13,11 @@ public class Basic extends Base {
 		return this.value;
 	}
 	
+	@Override
+	public int getStringSize() {
+		return this.value.length();
+	}
+	
 	public void setValue(String value) {
 		this.value = value;
 	}

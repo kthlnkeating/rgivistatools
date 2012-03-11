@@ -3,6 +3,22 @@ package com.raygroupintl.vista.mtoken;
 import com.raygroupintl.vista.fnds.IToken;
 
 public abstract class Command extends Keyword {
+	private static class PostConditional extends Multi {
+		public PostConditional(Multi input) {
+			super(input);
+		}
+		
+		@Override
+		public String getStringValue() {
+			return ':' + super.getStringValue();
+		}
+		
+		@Override
+		public int getStringSize() {
+			return 1 + super.getStringSize();
+		}		
+	}
+	
 	private IToken postConditional;
 	private IToken argument;
 	private int traliningSpace;
@@ -22,18 +38,23 @@ public abstract class Command extends Keyword {
 			char ch = line.charAt(fromIndex);
 			if (ch == ':') {
 				Multi pc = Algorithm.tokenize(line, index+1, ' ');
-				this.postConditional = pc;
-				index += 1 + this.postConditional.getStringSize();
+				this.postConditional = new PostConditional(pc);
+				index += this.postConditional.getStringSize();
+			} else if (ch != ' ') {
+				this.postConditional = new SyntaxError(line, fromIndex);
+				return length;
 			}
 			if (index < length) {
-				ch = line.charAt(index);
-				if (ch != ' ') return -1;
 				++index;
 				if (index == length) {
 					this.traliningSpace = 1;
 					return length;
 				}
 				ch = line.charAt(index);
+				if (ch == ';') {
+					this.traliningSpace = 1;
+					return index;
+				}				
 				if (ch ==' ') {
 					int notSpaceIndex = Algorithm.findOther(line, index, ' ');
 					this.traliningSpace = notSpaceIndex - index + 1;
@@ -56,7 +77,7 @@ public abstract class Command extends Keyword {
 	public String getStringValue() {
 		String result = super.getStringValue();
 		if (this.postConditional != null) {
-			result += ':' + this.postConditional.getStringValue();
+			result += this.postConditional.getStringValue();
 		}
 		if (this.argument != null) {
 			result += " " + this.argument.getStringValue();
@@ -69,7 +90,7 @@ public abstract class Command extends Keyword {
 	public int getStringSize() {
 		int result = super.getStringSize();
 		if (this.postConditional != null) {
-			result += 1 + this.postConditional.getStringSize();
+			result += this.postConditional.getStringSize();
 		}
 		if (this.argument != null) {
 			result += 1 + this.argument.getStringSize();
