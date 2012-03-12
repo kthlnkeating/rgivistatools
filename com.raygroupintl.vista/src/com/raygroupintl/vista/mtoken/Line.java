@@ -42,6 +42,23 @@ public class Line extends Multi {
 		}
 
 		@Override
+		protected IToken getArgument(String line, int fromIndex) {
+			ArgumentList result = new ArgumentList();
+			int index = fromIndex;
+			int endIndex = line.length();
+			while (index < endIndex) {
+				Multi arg = Algorithm.tokenize(line, index, ' ', ',');
+				index += arg.getStringSize();
+				result.add(arg);
+				if ((index >= endIndex) || (line.charAt(index) == ' ')) {
+					return result;
+				}
+				++index;
+			}
+			return result;
+		}
+				
+		@Override
 		protected MNameWithMnemonic getNameWithMnemonic() {
 			return new MNameWithMnemonic("D", "DO");
 		}		

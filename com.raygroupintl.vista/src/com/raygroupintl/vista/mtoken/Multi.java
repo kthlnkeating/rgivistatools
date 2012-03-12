@@ -30,11 +30,21 @@ public class Multi implements IToken {
 		this.tokens.addAll(tokens.tokens);
 	}
 
+	protected String getDelimiter() {
+		return null;
+	}
+	
 	@Override
 	public String getStringValue() {
 		StringBuilder sb = new StringBuilder();
+		boolean first = true;
+		String delimiter = this.getDelimiter();
 		for (IToken token : this.tokens) {
+			if ((delimiter != null) && (! first)) {
+				sb.append(delimiter);
+			}			
 			sb.append(token.getStringValue());
+			first = false;
 		}
 		return sb.toString();
 	}
@@ -45,6 +55,10 @@ public class Multi implements IToken {
 		for (IToken token : this.tokens) {
 			result += token.getStringSize();
 		}
+		String delimiter = this.getDelimiter();
+		if (delimiter != null) {
+			result += this.tokens.size() - 1;
+		}		
 		return result;
 	}
 

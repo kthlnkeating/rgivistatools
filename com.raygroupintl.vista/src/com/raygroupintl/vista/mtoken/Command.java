@@ -56,9 +56,13 @@ public abstract class Command extends Keyword {
 		}
 	}
 	
-	protected int extractArgument(String line, int fromIndex) {
+	protected IToken getArgument(String line, int fromIndex) {
 		Multi arg = Algorithm.tokenize(line, fromIndex, ' ');
-		this.argument = arg;
+		return arg;
+	}
+	
+	protected int extractArgument(String line, int fromIndex) {
+		this.argument = this.getArgument(line, fromIndex);
 		int index = fromIndex + this.argument.getStringSize();
 		int endIndex = line.length();
 		if (index < endIndex) {
@@ -70,7 +74,7 @@ public abstract class Command extends Keyword {
 			return endIndex;
 		}		
 	}
-		
+	
 	public int extractDetails(String line, int fromIndex) {
 		this.traliningSpace = 0;
 		int endIndex = line.length();
