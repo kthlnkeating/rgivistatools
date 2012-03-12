@@ -47,13 +47,28 @@ public class Line extends Multi {
 			int index = fromIndex;
 			int endIndex = line.length();
 			while (index < endIndex) {
-				Multi arg = Algorithm.tokenize(line, index, ' ', ',');
+				IToken arg = Algorithm.tokenize(line, index, ' ', ',', ':');
 				index += arg.getStringSize();
-				result.add(arg);
-				if ((index >= endIndex) || (line.charAt(index) == ' ')) {
-					return result;
-				}
-				++index;
+				if (index < endIndex) {
+					char ch = line.charAt(index);
+					if (ch == ':') {
+						++index;
+						IToken condition = Algorithm.tokenize(line, index, ' ', ',');
+						index += condition.getStringSize();
+						arg = new ConditionalArgument(arg, condition);
+					}					
+					result.add(arg);
+					if (index < endIndex) {
+						ch = line.charAt(index);
+						if (ch == ' ') {
+							return result;
+						}
+						++index;
+						if (index == endIndex) {
+							
+						}
+					}
+				} else result.add(arg);
 			}
 			return result;
 		}

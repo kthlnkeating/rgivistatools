@@ -51,6 +51,15 @@ public class Algorithm {
 		};
 	}
 	
+	public void setStopChars(final char stopChar1, final char stopChar2, final char stopChar3) {
+		this.predicate = new StopOnCharPredicate() {			
+			@Override
+			public boolean evaluate(char ch) {
+				return (stopChar1 == ch) || (stopChar2 == ch) || (stopChar3 == ch) ;
+			}
+		};
+	}
+	
 	public void setContinueChar(final char continueChar) {
 		this.predicate = new StopOnCharPredicate() {			
 			@Override
@@ -157,6 +166,12 @@ public class Algorithm {
 	public static Multi tokenize(String line, int fromIndex, char stopChar1, char stopChar2) {
 		Algorithm ta = new Algorithm();
 		ta.setStopChars(stopChar1, stopChar2);
+		return ta.tokenize(line, fromIndex);
+	}
+
+	public static Multi tokenize(String line, int fromIndex, char stopChar1, char stopChar2, char stopChar3) {
+		Algorithm ta = new Algorithm();
+		ta.setStopChars(stopChar1, stopChar2, stopChar3);
 		return ta.tokenize(line, fromIndex);
 	}
 
