@@ -9,7 +9,6 @@ import com.raygroupintl.vista.struct.MError;
 
 
 public class FactorySupply {
-	/*
 	private static class IndirectionTokenFactory implements ITokenFactory {
 		private static class ITFTokenizeStopPredicate implements Algorithm.StopPredicate {
 			@Override
@@ -31,12 +30,10 @@ public class FactorySupply {
 		
 		@Override
 		public IToken tokenize(String line, int index) {
-			if (line.charAt(index) != '@') throw new IllegalArgumentException("Mismatched token factory");
-			
 			int endIndex = line.length();
 			int notSpaceIndex = Algorithm.findOther(line, index+1, ' ');
 			if (notSpaceIndex == endIndex) {
-				return new FatalError(MError.ERR_GENERAL_SYNTAX, line, index);
+				return new SyntaxError(line, index);
 			}
 			
 			ITFTokenizeStopPredicate predicate = new ITFTokenizeStopPredicate();
@@ -46,22 +43,22 @@ public class FactorySupply {
 			int toIndex = notSpaceIndex + stringSize;
 			if (toIndex >= endIndex) {
 				assert(toIndex == endIndex);
-				return new Indirection(notSpaceIndex-index, tokens);
+				return new Indirection(notSpaceIndex-index-1, tokens);
 			}
 			
 			char toChar = line.charAt(toIndex);
 			if (toChar == ' ') {
-				return new Indirection(notSpaceIndex-index, tokens);
+				return new Indirection(notSpaceIndex-index-1, tokens);
 			}
 			
 			assert(toChar == '@');
 			ITokenFactory lptf = FactorySupply.findFactory('(');
 			IToken subscriptTokens = lptf.tokenize(line, toIndex+1);
-			return new Indirection(notSpaceIndex-index, tokens, subscriptTokens); 
+			return new Indirection(notSpaceIndex-index-1, tokens, subscriptTokens); 
 		}
 
 	}
-	*/
+	
 	private static class ExtrinsicTF implements ITokenFactory {
 		@Override
 		public IToken tokenize(String line, int index) {
@@ -273,12 +270,6 @@ public class FactorySupply {
 		}
 	}
 	
-	private static class AtSign extends TCharacter {	
-		public AtSign() {
-			super('@');
-		}
-	}
-	
 	private static class Colon extends TCharacter {	
 		public Colon() {
 			super(':');
@@ -466,13 +457,6 @@ public class FactorySupply {
 		@Override
 		public Base getToken() {
 			return new MoreThanSign();
-		}		
-	}
-
-	private static class AtSignTokenFactory extends PunctuationTokenFactory {
-		@Override
-		public Base getToken() {
-			return new AtSign();
 		}		
 	}
 
@@ -706,7 +690,7 @@ public class FactorySupply {
 		TOKEN_FACTORIES.put('!', new ExclamationMarkTokenFactory());
 		TOKEN_FACTORIES.put('<', new LessThanSignTokenFactory());
 		TOKEN_FACTORIES.put('>', new MoreThanSignTokenFactory());
-		TOKEN_FACTORIES.put('@', new AtSignTokenFactory());
+		TOKEN_FACTORIES.put('@', new IndirectionTokenFactory());
 		TOKEN_FACTORIES.put(':', new ColonTokenFactory());
 		TOKEN_FACTORIES.put(',', new CommaTokenFactory());
 		
