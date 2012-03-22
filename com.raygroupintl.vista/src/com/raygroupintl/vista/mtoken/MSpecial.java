@@ -2,7 +2,7 @@ package com.raygroupintl.vista.mtoken;
 
 import com.raygroupintl.vista.fnds.IToken;
 
-public abstract class MSpecial extends Keyword {
+public abstract class MSpecial extends TKeyword {
 	private IToken arguments;
 	
 	public MSpecial(String identifier) {

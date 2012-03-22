@@ -12,5 +12,7 @@ public interface IToken {
 	boolean hasError();
 	boolean hasFatalError();
 	
+	boolean isError();
+	
 	void beautify();
 }

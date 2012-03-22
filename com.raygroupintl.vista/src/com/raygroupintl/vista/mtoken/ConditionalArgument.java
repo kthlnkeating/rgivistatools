@@ -2,7 +2,7 @@ package com.raygroupintl.vista.mtoken;
 
 import com.raygroupintl.vista.fnds.IToken;
 
-public class ConditionalArgument extends TwoTokens {
+public class ConditionalArgument extends DelimitedPair {
 	private IToken argument;
 	private IToken condition;
 	
@@ -26,4 +26,8 @@ public class ConditionalArgument extends TwoTokens {
 		return ":";
 	}
 
+	@Override
+	public boolean isError() {
+		return false;
+	}
 }

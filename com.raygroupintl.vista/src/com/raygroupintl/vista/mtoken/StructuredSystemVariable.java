@@ -1,5 +1,8 @@
 package com.raygroupintl.vista.mtoken;
 
+import java.util.List;
+
+import com.raygroupintl.vista.struct.MError;
 import com.raygroupintl.vista.struct.MNameWithMnemonic;
 
 public class StructuredSystemVariable extends MSpecial {
@@ -35,6 +38,11 @@ public class StructuredSystemVariable extends MSpecial {
 	@Override
 	public boolean hasArgument() {
 		return true;
+	}
+
+	@Override
+	public List<MError> getErrors() {
+		return null;
 	}
 
 	public static StructuredSystemVariable getInstance(String identifier) {

@@ -7,7 +7,6 @@ import com.raygroupintl.vista.struct.MError;
 
 
 public abstract class Base implements IToken {
-
 	public Base() {
 		super();
 	}
@@ -16,11 +15,6 @@ public abstract class Base implements IToken {
 	public int getStringSize() {
 		String v = this.getStringValue();
 		return v.length();
-	}
-
-	@Override
-	public List<MError> getErrors() {
-		return null;
 	}
 
 	@Override
@@ -36,6 +30,11 @@ public abstract class Base implements IToken {
 				if (e.isFatal()) return true;
 			}
 		}
+		return false;
+	}
+
+	@Override
+	public boolean isError() {
 		return false;
 	}
 }

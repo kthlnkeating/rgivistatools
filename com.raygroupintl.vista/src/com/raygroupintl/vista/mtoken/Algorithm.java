@@ -2,6 +2,7 @@ package com.raygroupintl.vista.mtoken;
 
 import com.raygroupintl.vista.fnds.IToken;
 import com.raygroupintl.vista.fnds.ITokenFactory;
+import com.raygroupintl.vista.token.TList;
 
 public class Algorithm {
 
@@ -140,8 +141,8 @@ public class Algorithm {
 		}
 	}
 	
-	public Multi tokenize(String line, int fromIndex) {
-		Multi tokens = new Multi();
+	public TList tokenize(String line, int fromIndex) {
+		TList tokens = new TList();
 		int length = line.length();
 		int index = fromIndex;
 		while (index < length) {
@@ -157,25 +158,25 @@ public class Algorithm {
 		return tokens;
 	}
 	
-	public static Multi tokenize(String line, int fromIndex, char stopChar) {
+	public static TList tokenize(String line, int fromIndex, char stopChar) {
 		Algorithm ta = new Algorithm();
 		ta.setStopChar(stopChar);
 		return ta.tokenize(line, fromIndex);
 	}
 
-	public static Multi tokenize(String line, int fromIndex, char stopChar1, char stopChar2) {
+	public static TList tokenize(String line, int fromIndex, char stopChar1, char stopChar2) {
 		Algorithm ta = new Algorithm();
 		ta.setStopChars(stopChar1, stopChar2);
 		return ta.tokenize(line, fromIndex);
 	}
 
-	public static Multi tokenize(String line, int fromIndex, char stopChar1, char stopChar2, char stopChar3) {
+	public static TList tokenize(String line, int fromIndex, char stopChar1, char stopChar2, char stopChar3) {
 		Algorithm ta = new Algorithm();
 		ta.setStopChars(stopChar1, stopChar2, stopChar3);
 		return ta.tokenize(line, fromIndex);
 	}
 
-	public static Multi tokenize(String line, int fromIndex, StopPredicate predicate) {
+	public static TList tokenize(String line, int fromIndex, StopPredicate predicate) {
 		Algorithm ta = new Algorithm(predicate);
 		return ta.tokenize(line, fromIndex);
 	}

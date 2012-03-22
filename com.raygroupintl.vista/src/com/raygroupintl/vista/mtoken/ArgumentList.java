@@ -1,6 +1,8 @@
 package com.raygroupintl.vista.mtoken;
 
-public class ArgumentList extends Multi {
+import com.raygroupintl.vista.token.TList;
+
+public class ArgumentList extends TList {
 	@Override
 	protected String getDelimiter() {
 		return ",";

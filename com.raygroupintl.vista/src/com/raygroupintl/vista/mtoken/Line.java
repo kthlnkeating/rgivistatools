@@ -8,13 +8,15 @@ import java.util.Map;
 import com.raygroupintl.vista.fnds.IToken;
 import com.raygroupintl.vista.struct.MError;
 import com.raygroupintl.vista.struct.MNameWithMnemonic;
+import com.raygroupintl.vista.token.TList;
+import com.raygroupintl.vista.token.TSyntaxError;
 
-public class Line extends Multi {
+public class Line extends TList {
 	private static abstract class CommandFactory {
-		public abstract Command getInstance(String identifier);
+		public abstract TCommand getInstance(String identifier);
 	}
 
-	private static class BreakCommand extends Command {
+	private static class BreakCommand extends TCommand {
 		public BreakCommand(String identifier) {
 			super(identifier);
 		}
@@ -25,7 +27,7 @@ public class Line extends Multi {
 		}		
 	}
 	
-	private static class CloseCommand extends Command {
+	private static class CloseCommand extends TCommand {
 		public CloseCommand(String identifier) {
 			super(identifier);
 		}
@@ -36,50 +38,7 @@ public class Line extends Multi {
 		}		
 	}
 
-	private static class DoCommand extends Command {
-		public DoCommand(String identifier) {
-			super(identifier);
-		}
-
-		@Override
-		protected IToken getArgument(String line, int fromIndex) {
-			ArgumentList result = new ArgumentList();
-			int index = fromIndex;
-			int endIndex = line.length();
-			while (index < endIndex) {
-				IToken arg = Algorithm.tokenize(line, index, ' ', ',', ':');
-				index += arg.getStringSize();
-				if (index < endIndex) {
-					char ch = line.charAt(index);
-					if (ch == ':') {
-						++index;
-						IToken condition = Algorithm.tokenize(line, index, ' ', ',');
-						index += condition.getStringSize();
-						arg = new ConditionalArgument(arg, condition);
-					}					
-					result.add(arg);
-					if (index < endIndex) {
-						ch = line.charAt(index);
-						if (ch == ' ') {
-							return result;
-						}
-						++index;
-						if (index == endIndex) {
-							
-						}
-					}
-				} else result.add(arg);
-			}
-			return result;
-		}
-				
-		@Override
-		protected MNameWithMnemonic getNameWithMnemonic() {
-			return new MNameWithMnemonic("D", "DO");
-		}		
-	}
-	
-	private static class ElseCommand extends Command {
+	private static class ElseCommand extends TCommand {
 		public ElseCommand(String identifier) {
 			super(identifier);
 		}
@@ -90,7 +49,7 @@ public class Line extends Multi {
 		}		
 	}
 
-	private static class ForCommand extends Command {
+	private static class ForCommand extends TCommand {
 		public ForCommand(String identifier) {
 			super(identifier);
 		}
@@ -101,7 +60,7 @@ public class Line extends Multi {
 		}		
 	}
 
-	private static class GotoCommand extends Command {
+	private static class GotoCommand extends TCommand {
 		public GotoCommand(String identifier) {
 			super(identifier);
 		}
@@ -112,7 +71,7 @@ public class Line extends Multi {
 		}		
 	}
 
-	private static class HaltCommand extends Command {
+	private static class HaltCommand extends TCommand {
 		public HaltCommand(String identifier) {
 			super(identifier);
 		}
@@ -123,7 +82,7 @@ public class Line extends Multi {
 		}		
 	}
 
-	private static class HangCommand extends Command {
+	private static class HangCommand extends TCommand {
 		public HangCommand(String identifier) {
 			super(identifier);
 		}
@@ -134,7 +93,7 @@ public class Line extends Multi {
 		}		
 	}
 
-	private static class IfCommand extends Command {
+	private static class IfCommand extends TCommand {
 		public IfCommand(String identifier) {
 			super(identifier);
 		}
@@ -145,7 +104,7 @@ public class Line extends Multi {
 		}		
 	}
 	
-	private static class JobCommand extends Command {
+	private static class JobCommand extends TCommand {
 		public JobCommand(String identifier) {
 			super(identifier);
 		}
@@ -156,7 +115,7 @@ public class Line extends Multi {
 		}		
 	}
 	
-	private static class KillCommand extends Command {
+	private static class KillCommand extends TCommand {
 		public KillCommand(String identifier) {
 			super(identifier);
 		}
@@ -167,7 +126,7 @@ public class Line extends Multi {
 		}		
 	}
 	
-	private static class LockCommand extends Command {
+	private static class LockCommand extends TCommand {
 		public LockCommand(String identifier) {
 			super(identifier);
 		}
@@ -178,7 +137,7 @@ public class Line extends Multi {
 		}		
 	}
 	
-	private static class MergeCommand extends Command {
+	private static class MergeCommand extends TCommand {
 		public MergeCommand(String identifier) {
 			super(identifier);
 		}
@@ -189,7 +148,7 @@ public class Line extends Multi {
 		}		
 	}
 	
-	private static class NewCommand extends Command {
+	private static class NewCommand extends TCommand {
 		public NewCommand(String identifier) {
 			super(identifier);
 		}
@@ -200,7 +159,7 @@ public class Line extends Multi {
 		}		
 	}
 	
-	private static class OpenCommand extends Command {
+	private static class OpenCommand extends TCommand {
 		public OpenCommand(String identifier) {
 			super(identifier);
 		}
@@ -211,7 +170,7 @@ public class Line extends Multi {
 		}		
 	}
 	
-	private static class QuitCommand extends Command {
+	private static class QuitCommand extends TCommand {
 		public QuitCommand(String identifier) {
 			super(identifier);
 		}
@@ -222,7 +181,7 @@ public class Line extends Multi {
 		}		
 	}
 	
-	private static class ReadCommand extends Command {
+	private static class ReadCommand extends TCommand {
 		public ReadCommand(String identifier) {
 			super(identifier);
 		}
@@ -233,7 +192,7 @@ public class Line extends Multi {
 		}		
 	}
 	
-	private static class SetCommand extends Command {
+	private static class SetCommand extends TCommand {
 		public SetCommand(String identifier) {
 			super(identifier);
 		}
@@ -244,7 +203,7 @@ public class Line extends Multi {
 		}		
 	}
 	
-	private static class TCommitCommand extends Command {
+	private static class TCommitCommand extends TCommand {
 		public TCommitCommand(String identifier) {
 			super(identifier);
 		}
@@ -255,7 +214,7 @@ public class Line extends Multi {
 		}		
 	}
 	
-	private static class TRestartCommand extends Command {
+	private static class TRestartCommand extends TCommand {
 		public TRestartCommand(String identifier) {
 			super(identifier);
 		}
@@ -266,7 +225,7 @@ public class Line extends Multi {
 		}		
 	}
 	
-	private static class TRollbackCommand extends Command {
+	private static class TRollbackCommand extends TCommand {
 		public TRollbackCommand(String identifier) {
 			super(identifier);
 		}
@@ -277,7 +236,7 @@ public class Line extends Multi {
 		}		
 	}
 	
-	private static class TStartCommand extends Command {
+	private static class TStartCommand extends TCommand {
 		public TStartCommand(String identifier) {
 			super(identifier);
 		}
@@ -288,7 +247,7 @@ public class Line extends Multi {
 		}		
 	}
 	
-	private static class UseCommand extends Command {
+	private static class UseCommand extends TCommand {
 		public UseCommand(String identifier) {
 			super(identifier);
 		}
@@ -300,7 +259,7 @@ public class Line extends Multi {
 	}
 	
 	
-	private static class ViewCommand extends Command {
+	private static class ViewCommand extends TCommand {
 		public ViewCommand(String identifier) {
 			super(identifier);
 		}
@@ -312,7 +271,7 @@ public class Line extends Multi {
 	}
 	
 	
-	private static class WriteCommand extends Command {
+	private static class WriteCommand extends TCommand {
 		public WriteCommand(String identifier) {
 			super(identifier);
 		}
@@ -324,7 +283,7 @@ public class Line extends Multi {
 	}
 	
 	
-	private static class XecuteCommand extends Command {
+	private static class XecuteCommand extends TCommand {
 		public XecuteCommand(String identifier) {
 			super(identifier);
 		}
@@ -335,7 +294,7 @@ public class Line extends Multi {
 		}		
 	}
 	
-	private static class GenericCommand extends Command {
+	private static class GenericCommand extends TCommand {
 		public GenericCommand(String identifier) {
 			super(identifier);
 		}
@@ -377,7 +336,7 @@ public class Line extends Multi {
 	static {
 		CommandFactory b = new CommandFactory() {			
 			@Override
-			public Command getInstance(String identifier) {
+			public TCommand getInstance(String identifier) {
 				return new BreakCommand(identifier);
 			}
 		};
@@ -385,7 +344,7 @@ public class Line extends Multi {
 		COMMANDS.put("BREAK", b);
 		CommandFactory c = new CommandFactory() {			
 			@Override
-			public Command getInstance(String identifier) {
+			public TCommand getInstance(String identifier) {
 				return new CloseCommand(identifier);
 			}
 		};		
@@ -393,15 +352,15 @@ public class Line extends Multi {
 		COMMANDS.put("CLOSE", c);
 		CommandFactory d = new CommandFactory() {			
 			@Override
-			public Command getInstance(String identifier) {
-				return new DoCommand(identifier);
+			public TCommand getInstance(String identifier) {
+				return new TCommandDo(identifier);
 			}
 		};				
 		COMMANDS.put("D", d);
 		COMMANDS.put("DO", d);
 		CommandFactory e = new CommandFactory() {			
 			@Override
-			public Command getInstance(String identifier) {
+			public TCommand getInstance(String identifier) {
 				return new ElseCommand(identifier);
 			}
 		};						
@@ -409,7 +368,7 @@ public class Line extends Multi {
 		COMMANDS.put("ELSE", e);
 		CommandFactory f = new CommandFactory() {			
 			@Override
-			public Command getInstance(String identifier) {
+			public TCommand getInstance(String identifier) {
 				return new ForCommand(identifier);
 			}
 		};						
@@ -417,7 +376,7 @@ public class Line extends Multi {
 		COMMANDS.put("FOR", f);
 		CommandFactory g = new CommandFactory() {			
 			@Override
-			public Command getInstance(String identifier) {
+			public TCommand getInstance(String identifier) {
 				return new GotoCommand(identifier);
 			}
 		};						
@@ -425,7 +384,7 @@ public class Line extends Multi {
 		COMMANDS.put("GOTO", g);
 		CommandFactory h = new CommandFactory() {			
 			@Override
-			public Command getInstance(String identifier) {
+			public TCommand getInstance(String identifier) {
 				return new HaltCommand(identifier);
 			}
 		};								
@@ -433,7 +392,7 @@ public class Line extends Multi {
 		COMMANDS.put("HALT", h);
 		CommandFactory hh = new CommandFactory() {			
 			@Override
-			public Command getInstance(String identifier) {
+			public TCommand getInstance(String identifier) {
 				return new HangCommand(identifier);
 			}
 		};										
@@ -441,7 +400,7 @@ public class Line extends Multi {
 		COMMANDS.put("HANG", hh);
 		CommandFactory i = new CommandFactory() {			
 			@Override
-			public Command getInstance(String identifier) {
+			public TCommand getInstance(String identifier) {
 				return new IfCommand(identifier);
 			}
 		};												
@@ -449,7 +408,7 @@ public class Line extends Multi {
 		COMMANDS.put("IF", i);
 		CommandFactory j = new CommandFactory() {			
 			@Override
-			public Command getInstance(String identifier) {
+			public TCommand getInstance(String identifier) {
 				return new JobCommand(identifier);
 			}
 		};												
@@ -457,7 +416,7 @@ public class Line extends Multi {
 		COMMANDS.put("JOB", j);
 		CommandFactory k = new CommandFactory() {			
 			@Override
-			public Command getInstance(String identifier) {
+			public TCommand getInstance(String identifier) {
 				return new KillCommand(identifier);
 			}
 		};												
@@ -465,7 +424,7 @@ public class Line extends Multi {
 		COMMANDS.put("KILL", k);
 		CommandFactory l = new CommandFactory() {			
 			@Override
-			public Command getInstance(String identifier) {
+			public TCommand getInstance(String identifier) {
 				return new LockCommand(identifier);
 			}
 		};												
@@ -473,7 +432,7 @@ public class Line extends Multi {
 		COMMANDS.put("LOCK", l);
 		CommandFactory m = new CommandFactory() {			
 			@Override
-			public Command getInstance(String identifier) {
+			public TCommand getInstance(String identifier) {
 				return new MergeCommand(identifier);
 			}
 		};												
@@ -481,7 +440,7 @@ public class Line extends Multi {
 		COMMANDS.put("MERGE", m);
 		CommandFactory n = new CommandFactory() {			
 			@Override
-			public Command getInstance(String identifier) {
+			public TCommand getInstance(String identifier) {
 				return new NewCommand(identifier);
 			}
 		};												
@@ -489,7 +448,7 @@ public class Line extends Multi {
 		COMMANDS.put("NEW", n);
 		CommandFactory o = new CommandFactory() {			
 			@Override
-			public Command getInstance(String identifier) {
+			public TCommand getInstance(String identifier) {
 				return new OpenCommand(identifier);
 			}
 		};												
@@ -497,7 +456,7 @@ public class Line extends Multi {
 		COMMANDS.put("OPEN", o);
 		CommandFactory q = new CommandFactory() {			
 			@Override
-			public Command getInstance(String identifier) {
+			public TCommand getInstance(String identifier) {
 				return new QuitCommand(identifier);
 			}
 		};												
@@ -505,7 +464,7 @@ public class Line extends Multi {
 		COMMANDS.put("QUIT", q);
 		CommandFactory r = new CommandFactory() {			
 			@Override
-			public Command getInstance(String identifier) {
+			public TCommand getInstance(String identifier) {
 				return new ReadCommand(identifier);
 			}
 		};												
@@ -513,7 +472,7 @@ public class Line extends Multi {
 		COMMANDS.put("READ", r);
 		CommandFactory s = new CommandFactory() {			
 			@Override
-			public Command getInstance(String identifier) {
+			public TCommand getInstance(String identifier) {
 				return new SetCommand(identifier);
 			}
 		};												
@@ -521,7 +480,7 @@ public class Line extends Multi {
 		COMMANDS.put("SET", s);
 		CommandFactory tc = new CommandFactory() {			
 			@Override
-			public Command getInstance(String identifier) {
+			public TCommand getInstance(String identifier) {
 				return new TCommitCommand(identifier);
 			}
 		};												
@@ -529,7 +488,7 @@ public class Line extends Multi {
 		COMMANDS.put("TCOMMIT", tc);
 		CommandFactory tr = new CommandFactory() {			
 			@Override
-			public Command getInstance(String identifier) {
+			public TCommand getInstance(String identifier) {
 				return new TRestartCommand(identifier);
 			}
 		};												
@@ -537,7 +496,7 @@ public class Line extends Multi {
 		COMMANDS.put("TRESTART", tr);
 		CommandFactory tro = new CommandFactory() {			
 			@Override
-			public Command getInstance(String identifier) {
+			public TCommand getInstance(String identifier) {
 				return new TRollbackCommand(identifier);
 			}
 		};												
@@ -545,7 +504,7 @@ public class Line extends Multi {
 		COMMANDS.put("TROLLBACK", tro);
 		CommandFactory ts = new CommandFactory() {			
 			@Override
-			public Command getInstance(String identifier) {
+			public TCommand getInstance(String identifier) {
 				return new TStartCommand(identifier);
 			}
 		};												
@@ -553,7 +512,7 @@ public class Line extends Multi {
 		COMMANDS.put("TSTART", ts);
 		CommandFactory u = new CommandFactory() {			
 			@Override
-			public Command getInstance(String identifier) {
+			public TCommand getInstance(String identifier) {
 				return new UseCommand(identifier);
 			}
 		};												
@@ -561,7 +520,7 @@ public class Line extends Multi {
 		COMMANDS.put("USE", u);
 		CommandFactory v = new CommandFactory() {			
 			@Override
-			public Command getInstance(String identifier) {
+			public TCommand getInstance(String identifier) {
 				return new ViewCommand(identifier);
 			}
 		};												
@@ -569,7 +528,7 @@ public class Line extends Multi {
 		COMMANDS.put("VIEW", v);
 		CommandFactory w = new CommandFactory() {			
 			@Override
-			public Command getInstance(String identifier) {
+			public TCommand getInstance(String identifier) {
 				return new WriteCommand(identifier);
 			}
 		};												
@@ -577,7 +536,7 @@ public class Line extends Multi {
 		COMMANDS.put("WRITE", w);
 		CommandFactory x = new CommandFactory() {			
 			@Override
-			public Command getInstance(String identifier) {
+			public TCommand getInstance(String identifier) {
 				return new XecuteCommand(identifier);
 			}
 		};												
@@ -644,13 +603,13 @@ public class Line extends Multi {
 		return sb.toString();
 	}
 
-	private static Command getCommand(String identifier) {
+	private static TCommand getCommand(String identifier) {
 		CommandFactory f = COMMANDS.get(identifier.toUpperCase());
 		if (f != null) {
-			Command command = f.getInstance(identifier);
+			TCommand command = f.getInstance(identifier);
 			return command;
 		} else {
-			Command command = new GenericCommand(identifier);
+			TCommand command = new GenericCommand(identifier);
 			return command;
 		}
 	}
@@ -696,13 +655,13 @@ public class Line extends Multi {
 					index = length;
 					result.add(cmt);				
 				} else if (! Character.isLetter(ch)) {
-					SyntaxError err = new SyntaxError(line, index);
+					TSyntaxError err = new TSyntaxError(line, index);
 					index = length;
 					result.add(err);
 				} else {
 					int toIndex = Algorithm.findOther(line, index, Algorithm.CharType.LETTER_DIGIT);
 					String identifier = line.substring(index, toIndex);
-					Command newToken = Line.getCommand(identifier);
+					TCommand newToken = Line.getCommand(identifier);
 					index = newToken.extractDetails(line, toIndex);
 					result.add(newToken);
 				}			

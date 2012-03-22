@@ -1,10 +1,15 @@
 package com.raygroupintl.vista.mtoken;
 
-import com.raygroupintl.vista.fnds.IToken;
+import java.util.List;
 
-public abstract class Command extends Keyword {
-	private static class PostConditional extends Multi {
-		public PostConditional(Multi input) {
+import com.raygroupintl.vista.fnds.IToken;
+import com.raygroupintl.vista.struct.MError;
+import com.raygroupintl.vista.token.TList;
+import com.raygroupintl.vista.token.TSyntaxError;
+
+public abstract class TCommand extends TKeyword {
+	private static class PostConditional extends TList {
+		public PostConditional(TList input) {
 			super(input);
 		}
 		
@@ -19,11 +24,11 @@ public abstract class Command extends Keyword {
 		}		
 	}
 	
-	private IToken postConditional;
-	private IToken argument;
+	protected IToken postConditional;
+	protected IToken argument;
 	private int traliningSpace;
 
-	public Command(String identifier) {
+	public TCommand(String identifier) {
 		super(identifier);
 	}
 	
@@ -31,12 +36,22 @@ public abstract class Command extends Keyword {
 		return super.getStringValue();
 	}
 	
+	@Override
+	public List<MError> getErrors() {
+		return null;
+	}
+
+	@Override
+	public boolean isError() {
+		return false;
+	}
+
 	protected int extractPostConditional(String line, int fromIndex) {
 		int endIndex = line.length();
 		if (fromIndex < endIndex) {
 			char ch = line.charAt(fromIndex);
 			if (ch == ':') {
-				Multi pc = Algorithm.tokenize(line, fromIndex+1, ' ');
+				TList pc = Algorithm.tokenize(line, fromIndex+1, ' ');
 				this.postConditional = new PostConditional(pc);
 				int index = fromIndex + this.postConditional.getStringSize();
 				if (index < endIndex) {
@@ -45,7 +60,7 @@ public abstract class Command extends Keyword {
 				}
 				return index;
 			} else if (ch != ' ') {
-				this.postConditional = new SyntaxError(line, fromIndex);
+				this.postConditional = new TSyntaxError(line, fromIndex);
 				return endIndex;				
 			} else {
 				this.traliningSpace = 1;
@@ -57,7 +72,7 @@ public abstract class Command extends Keyword {
 	}
 	
 	protected IToken getArgument(String line, int fromIndex) {
-		Multi arg = Algorithm.tokenize(line, fromIndex, ' ');
+		TList arg = Algorithm.tokenize(line, fromIndex, ' ');
 		return arg;
 	}
 	

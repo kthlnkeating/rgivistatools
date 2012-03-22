@@ -4,7 +4,7 @@ import java.util.List;
 
 import com.raygroupintl.vista.struct.MError;
 
-public class Expression extends Basic {
+public class Expression extends TBasic {
 	public Expression(String line, int index) {
 		super(line.substring(index));
 	}

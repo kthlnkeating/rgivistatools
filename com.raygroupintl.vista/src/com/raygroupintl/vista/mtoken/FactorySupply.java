@@ -1,15 +1,18 @@
 package com.raygroupintl.vista.mtoken;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import com.raygroupintl.vista.fnds.IToken;
 import com.raygroupintl.vista.fnds.ITokenFactory;
 import com.raygroupintl.vista.struct.MError;
+import com.raygroupintl.vista.token.TList;
+import com.raygroupintl.vista.token.TSyntaxError;
 
 
 public class FactorySupply {
-	private static class IndirectionTokenFactory implements ITokenFactory {
+	private static class IndirectionFactory implements ITokenFactory {
 		private static class ITFTokenizeStopPredicate implements Algorithm.StopPredicate {
 			@Override
 			public boolean evaluate(String line, int index) {
@@ -31,30 +34,34 @@ public class FactorySupply {
 		@Override
 		public IToken tokenize(String line, int index) {
 			int endIndex = line.length();
+			if ((index >= endIndex) || line.charAt(index) != '@') {
+				return null;
+			}
+						
 			int notSpaceIndex = Algorithm.findOther(line, index+1, ' ');
 			if (notSpaceIndex == endIndex) {
-				return new SyntaxError(line, index);
+				return new TSyntaxError(line, index);
 			}
 			
 			ITFTokenizeStopPredicate predicate = new ITFTokenizeStopPredicate();
-			Multi tokens = Algorithm.tokenize(line, notSpaceIndex, predicate);
+			TList tokens = Algorithm.tokenize(line, notSpaceIndex, predicate);
 			
 			int stringSize = tokens.getStringSize();
 			int toIndex = notSpaceIndex + stringSize;
 			if (toIndex >= endIndex) {
 				assert(toIndex == endIndex);
-				return new Indirection(notSpaceIndex-index-1, tokens);
+				return new TIndirection(notSpaceIndex-index-1, tokens);
 			}
 			
 			char toChar = line.charAt(toIndex);
 			if (toChar == ' ') {
-				return new Indirection(notSpaceIndex-index-1, tokens);
+				return new TIndirection(notSpaceIndex-index-1, tokens);
 			}
 			
 			assert(toChar == '@');
 			ITokenFactory lptf = FactorySupply.findFactory('(');
 			IToken subscriptTokens = lptf.tokenize(line, toIndex+1);
-			return new Indirection(notSpaceIndex-index-1, tokens, subscriptTokens); 
+			return new TIndirection(notSpaceIndex-index-1, tokens, subscriptTokens); 
 		}
 
 	}
@@ -63,7 +70,7 @@ public class FactorySupply {
 		@Override
 		public IToken tokenize(String line, int index) {
 			assert(line.substring(index, index+2).equals("$$"));
-			return new Basic("$$");
+			return new TBasic("$$");
 		}
 	}
 
@@ -71,7 +78,7 @@ public class FactorySupply {
 		@Override
 		public IToken tokenize(String line, int index) {
 			assert(line.substring(index, index+2).equals("$&"));
-			return new Basic("$&");
+			return new TBasic("$&");
 		}
 	}
 
@@ -176,8 +183,19 @@ public class FactorySupply {
 		}
 		
 		@Override
+		public List<MError> getErrors() {
+			return null;
+		}
+
+		@Override
 		public void beautify() {			
 		}
+		
+		@Override
+		public boolean isError() {
+			return false;
+		}
+
 	}
 	
 	private static class Plus extends TCharacter {	
@@ -312,31 +330,12 @@ public class FactorySupply {
 		}
 	}
 	
-	private static class NumericLiteral extends Basic {
+	private static class NumericLiteral extends TBasic {
 		public NumericLiteral(String value) {
 			super(value);
 		}
 	}
 	
-	private static class StringLiteral extends Basic {
-		public StringLiteral(String value) {
-			super(value);
-		}
-		
-		@Override
-		public String getStringValue() {
-			return '"' + super.getStringValue().replaceAll("\"", "\"\"") + '"';
-		}
-
-		@Override
-		public int getStringSize() {
-			String value = super.getStringValue();
-			int quoteCount = 0;
-			for (int i=0; i<value.length(); ++i) if (value.charAt(i) == '"') ++quoteCount;
-			return 2 + quoteCount + super.getStringSize();
-		}
-	}
-
 	private static abstract class PunctuationTokenFactory implements ITokenFactory {
 		public abstract Base getToken();
 		
@@ -564,28 +563,6 @@ public class FactorySupply {
 		}		
 	}
 	
-	private static class QuoteTokenFactory implements ITokenFactory {
-		@Override
-		public IToken tokenize(String line, int fromIndex) {
-			StringBuilder sb = new StringBuilder();
-			int length = line.length();
-			int index = fromIndex;
-			++index;
-			while (index < length) {
-				char ch = line.charAt(index);
-				++index;
-				if (ch == '"') {
-					if ((index == length) || (line.charAt(index) != '"')) {
-						return new StringLiteral(sb.toString());
-					}
-					++index;
-				}				
-				sb.append(ch);
-			}
-			return FatalError.getInstance(MError.ERR_UNMATCHED_QUOTATION, line, fromIndex);
-		}		
-	}
-	
 	private static class SemiColonTokenFactory implements ITokenFactory {
 		@Override
 		public IToken tokenize(String line, int index) {
@@ -608,22 +585,22 @@ public class FactorySupply {
 			++index;
 			Algorithm ta = new Algorithm();
 			ta.setStopChar(')');
-			Multi tokens = ta.tokenize(line, index);
+			TList tokens = ta.tokenize(line, index);
 			int length = line.length();
 			int resultSize = tokens.getStringSize(); 
 			index += resultSize; 
 			if (index == length) {
 				return FatalError.getInstance(MError.ERR_UNMATCHED_PARANTHESIS, line, fromIndex);
 			}
-			return new Group(tokens);
+			return new TInParantheses(tokens);
 		}
 	}
 
 	private static abstract class MSpecialTF implements ITokenFactory {
 		private IToken getErrorToken(String identifier, String line, int identifierToIndex) {
-			Basic it = new Basic(identifier);
+			TBasic it = new TBasic(identifier);
 			String rest = line.substring(identifierToIndex); 
-			Basic st = new Basic(rest);
+			TBasic st = new TBasic(rest);
 			FatalError et = new FatalError(MError.ERR_GENERAL_SYNTAX, it, st);
 			return et;		
 		}
@@ -690,7 +667,7 @@ public class FactorySupply {
 		TOKEN_FACTORIES.put('!', new ExclamationMarkTokenFactory());
 		TOKEN_FACTORIES.put('<', new LessThanSignTokenFactory());
 		TOKEN_FACTORIES.put('>', new MoreThanSignTokenFactory());
-		TOKEN_FACTORIES.put('@', new IndirectionTokenFactory());
+		TOKEN_FACTORIES.put('@', new IndirectionFactory());
 		TOKEN_FACTORIES.put(':', new ColonTokenFactory());
 		TOKEN_FACTORIES.put(',', new CommaTokenFactory());
 		
@@ -698,17 +675,183 @@ public class FactorySupply {
 		TOKEN_FACTORIES.put(' ', new SpaceTokenFactory());
 		
 		TOKEN_FACTORIES.put('.', new PeriodTokenFactory());
-		TOKEN_FACTORIES.put('"', new QuoteTokenFactory());
+		TOKEN_FACTORIES.put('"', new TFStringLiteral());
 		TOKEN_FACTORIES.put(';', new SemiColonTokenFactory());
 		TOKEN_FACTORIES.put('$', new DollarTF());
 		TOKEN_FACTORIES.put('^', new CaretTF());
 		TOKEN_FACTORIES.put('(', new LeftParanthesisTF());
 	}
 	
+	private static boolean isDigit(char ch) {
+		return (ch >= '0') && (ch <= '9');	
+	}
+	
+	private static boolean isIdent(char ch) {
+		return ((ch >= 'a') && (ch <='z')) || ((ch >= 'A') && (ch <='Z'));	
+	}
+	
+	private static class NameFactory implements ITokenFactory {
+		@Override
+		public IToken tokenize(String line, int fromIndex) {
+			int endIndex = line.length();
+			if (fromIndex < endIndex) {
+				char ch = line.charAt(fromIndex);
+				if ((ch == '%') || isIdent(ch)) {
+					int index = fromIndex + 1;
+					while (index < endIndex) {
+						if(! (isDigit(ch) || isIdent(ch))) {
+							break;
+						}
+					}
+					String value = line.substring(fromIndex, index);
+					return new TName(value);
+				}
+			}
+			return null;			
+		}
+	}
+	
+	private static class RoutineNameFactory extends NameFactory {}
+	
+	private static class IntlitFactory implements ITokenFactory {
+		@Override
+		public IToken tokenize(String line, int fromIndex) {
+			int endIndex = line.length();
+			int index = fromIndex;
+			while (index < endIndex) {
+				char ch = line.charAt(index);
+				if(! isDigit(ch)) {
+					break;
+				}
+			}
+			if (fromIndex < index) {
+				String value = line.substring(fromIndex, index);
+				return new Identifier(value);				
+			} else {			
+				return null;
+			}
+		}
+	}
+	
+	private static class FactoryOrFactory implements ITokenFactory {
+		private ITokenFactory factory1;
+		private ITokenFactory factory2;
+		
+		public FactoryOrFactory(ITokenFactory factory1, ITokenFactory factory2) {
+			this.factory1 = factory1;
+			this.factory2 = factory2;
+		}
+		
+		@Override
+		public IToken tokenize(String line, int fromIndex) {
+			IToken result = this.factory1.tokenize(line, fromIndex);
+			if (result == null) {
+				return this.factory2.tokenize(line, fromIndex);				
+			} else {
+				return result;
+			}
+		}
+	}
+	
+	private static class EnvironmentFactory implements ITokenFactory {
+		@Override
+		public IToken tokenize(String line, int fromIndex) {
+			int endIndex = line.length();
+			if (fromIndex < endIndex) {
+				char ch = line.charAt(fromIndex);
+				if (ch == '|') {
+					int index = fromIndex + 1;
+					if (index < endIndex) {
+						TList environment = Algorithm.tokenize(line, index, '|');
+						index += environment.getStringSize();
+						if ((index < endIndex)) {
+							return new TEnvironment(environment);
+						} else {
+							return new TSyntaxError(line, fromIndex);
+						}
+					}
+				}
+			}
+			return null;			
+		}
+	}
+		
+	private static class OptionalFirstTwoFactories implements ITokenFactory {
+		private ITokenFactory mainFactory;
+		private ITokenFactory optionalFactory;
+		
+		public OptionalFirstTwoFactories(ITokenFactory mainFactory, ITokenFactory optionalFactory) {
+			this.mainFactory = mainFactory;
+			this.optionalFactory = optionalFactory;
+		}
+				
+		@Override
+		public IToken tokenize(String line, int fromIndex) {
+			int endIndex = line.length();
+			int index = fromIndex;
+
+			IToken optionalToken = this.optionalFactory.tokenize(line, fromIndex);
+			if (optionalToken != null) {
+				if (optionalToken instanceof TSyntaxError) {
+					return optionalToken;
+				}
+				index += optionalToken.getStringSize();
+				if (index >= endIndex) {
+					return new TSyntaxError(line, fromIndex);
+				}
+			}
+			
+			IToken mainToken = this.mainFactory.tokenize(line, index);
+			if (mainToken == null) {
+				return null;
+			}
+			if (mainToken instanceof TSyntaxError) {
+				return new TSyntaxError(line, fromIndex);
+			}
+			
+			if (optionalToken == null) {
+				return mainToken;
+			} else {
+				return new TList(optionalToken, mainToken);				
+			}
+		}		
+	}
+
+	private static ITokenFactory Or(String key1, String key2) {
+		ITokenFactory factory1 = FactorySupply.findFactory(key1);
+		ITokenFactory factory2 = FactorySupply.findFactory(key2);
+		return new FactoryOrFactory(factory1, factory2);
+	}
+	
+	private static ITokenFactory Or(ITokenFactory factory1, String key2) {
+		ITokenFactory factory2 = FactorySupply.findFactory(key2);
+		return new FactoryOrFactory(factory1, factory2);
+	}
+
+	public static ITokenFactory OptionalMain(String mainKey, String optionalKey) {
+		ITokenFactory mainFactory = FactorySupply.findFactory(mainKey);
+		ITokenFactory optionalFactory = FactorySupply.findFactory(optionalKey);
+		return new OptionalFirstTwoFactories(mainFactory, optionalFactory);
+	}
+	
+	private static final Map<String, ITokenFactory> FACTORIES;
+	static {
+		FACTORIES = new HashMap<String, ITokenFactory>();
+		FACTORIES.put("name", new NameFactory());
+		FACTORIES.put("routinename", new RoutineNameFactory());
+		FACTORIES.put("intlit", new IntlitFactory());
+		FACTORIES.put("label", Or("name", "intlit"));
+		FACTORIES.put("@", new IndirectionFactory());
+		FACTORIES.put("dlabel", Or("label", "@"));
+		FACTORIES.put("environment", new EnvironmentFactory());
+		FACTORIES.put("routineref", Or(OptionalMain("environment", "routinename"), "@"));
+	}
+		
 	public static ITokenFactory findFactory(char ch) {
 		if (Character.isLetter(ch)) {
 			return new LetterTokenFactory();
 		}
+		
 		if (Character.isDigit(ch)) {
 			return new DigitTokenFactory();
 		}
@@ -717,5 +860,14 @@ public class FactorySupply {
 			return tokenFactory;
 		}
 		return new UnknownTokenFactory();
+	}
+	
+	public static ITokenFactory findFactory(String name) {
+		ITokenFactory tokenFactory = FACTORIES.get(name);
+		if (tokenFactory != null) {
+			return tokenFactory;
+		}
+		char ch = name.charAt(0);
+		return FactorySupply.findFactory(ch);
 	}
 }

@@ -6,15 +6,15 @@ import java.util.List;
 
 import com.raygroupintl.vista.fnds.IToken;
 import com.raygroupintl.vista.struct.MError;
+import com.raygroupintl.vista.token.TList;
 
-
-public class FatalError extends Multi {
+public class FatalError extends TList {
 	private MError error;
 	private IToken errorToken;
 	public int fromIndex;
 	public int endIndex;
 	
-	public FatalError(int code, Multi tokens) {
+	public FatalError(int code, TList tokens) {
 		super(tokens);
 		this.error = new MError(code);
 	}
@@ -26,15 +26,15 @@ public class FatalError extends Multi {
 	}
 
 	public FatalError(int code, String line, int index) {
-		super(new Basic(line.substring(index)));
-		this.errorToken = new Basic(line);
+		super(new TBasic(line.substring(index)));
+		this.errorToken = new TBasic(line);
 		this.error = new MError(code);
 	}
 
 	public static FatalError getInstance(int code, String line, int index) {
 		String subLine = line.substring(index);
-		Basic token = new Basic(subLine);
-		Multi tokens = new Multi(token);
+		TBasic token = new TBasic(subLine);
+		TList tokens = new TList(token);
 		return new FatalError(code, tokens);
 	}
 

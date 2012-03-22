@@ -1,7 +1,7 @@
 package com.raygroupintl.vista.mtoken;
 
 
-public class Level extends Basic {
+public class Level extends TBasic {
 	public Level(String value) {
 		super(value);
 	}

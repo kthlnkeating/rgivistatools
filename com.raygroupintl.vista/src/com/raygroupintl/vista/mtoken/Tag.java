@@ -1,7 +1,10 @@
 package com.raygroupintl.vista.mtoken;
 
+import java.util.List;
+
 import com.raygroupintl.vista.fnds.IToken;
 import com.raygroupintl.vista.fnds.ITokenFactory;
+import com.raygroupintl.vista.struct.MError;
 
 public class Tag extends Base {
 	private IToken identifier;
@@ -51,6 +54,11 @@ public class Tag extends Base {
 		return result;
 	}
 	
+	@Override
+	public List<MError> getErrors() {
+		return null;
+	}
+
 	public static Tag getInstance(String line, int fromIndex) {
 		Tag result = new Tag();
 		int length = line.length();

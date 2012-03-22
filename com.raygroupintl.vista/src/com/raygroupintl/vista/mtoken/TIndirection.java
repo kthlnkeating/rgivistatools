@@ -1,22 +1,30 @@
 package com.raygroupintl.vista.mtoken;
 
-import com.raygroupintl.vista.fnds.IToken;
+import java.util.List;
 
-public class Indirection extends Base {
+import com.raygroupintl.vista.fnds.IToken;
+import com.raygroupintl.vista.struct.MError;
+
+public class TIndirection extends Base {
 	private int precedingSpaces = 0;
 	private IToken argument;
 	private IToken subcripts;
 	
-	public Indirection(IToken argument) {
+	public TIndirection(IToken argument) {
 		this.argument = argument;
 	}
 	
-	public Indirection(int precedingSpaces, IToken argument) {
+	public TIndirection(IToken argument, IToken subsripts) {
+		this.argument = argument;
+		this.subcripts = subsripts;
+	}
+	
+	public TIndirection(int precedingSpaces, IToken argument) {
 		this.precedingSpaces = precedingSpaces;
 		this.argument = argument;
 	}
 	
-	public Indirection(int precedingSpaces, IToken argument, IToken subscripts) {
+	public TIndirection(int precedingSpaces, IToken argument, IToken subscripts) {
 		this.precedingSpaces = precedingSpaces;
 		this.argument = argument;
 		this.subcripts = subscripts;
@@ -51,5 +59,14 @@ public class Indirection extends Base {
 		if (this.subcripts != null) this.subcripts.beautify();
 	}
 	
+	@Override
+	public List<MError> getErrors() {
+		return null;
+	}
+
+	@Override
+	public boolean isError() {
+		return false;
+	}
 }
 

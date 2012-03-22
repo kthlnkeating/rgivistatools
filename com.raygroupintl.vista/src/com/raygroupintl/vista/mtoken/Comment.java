@@ -1,7 +1,7 @@
 package com.raygroupintl.vista.mtoken;
 
 
-public class Comment extends Basic {
+public class Comment extends TBasic {
 	public Comment(String value) {
 		super(value);
 	}

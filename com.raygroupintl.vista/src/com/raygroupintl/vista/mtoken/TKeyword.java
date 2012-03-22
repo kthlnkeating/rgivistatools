@@ -2,11 +2,11 @@ package com.raygroupintl.vista.mtoken;
 
 import com.raygroupintl.vista.struct.MNameWithMnemonic;
 
-public abstract class Keyword extends Base {
-	private Basic identifier;
+public abstract class TKeyword extends Base {
+	private TBasic identifier;
 
-	public Keyword(String identifier) {
-		this.identifier = new Basic(identifier);
+	public TKeyword(String identifier) {
+		this.identifier = new TBasic(identifier);
 	}
 
 	public String getIdentier() {

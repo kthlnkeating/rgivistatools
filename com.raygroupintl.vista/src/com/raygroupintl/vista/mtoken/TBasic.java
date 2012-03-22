@@ -1,10 +1,13 @@
 package com.raygroupintl.vista.mtoken;
 
+import java.util.List;
 
-public class Basic extends Base {
+import com.raygroupintl.vista.struct.MError;
+
+public class TBasic extends Base {
 	private String value;
 		
-	public Basic(String value) {
+	public TBasic(String value) {
 		this.value = value;
 	}
 		
@@ -20,6 +23,16 @@ public class Basic extends Base {
 	
 	public void setValue(String value) {
 		this.value = value;
+	}
+
+	@Override
+	public List<MError> getErrors() {
+		return null;
+	}
+	
+	@Override
+	public boolean isError() {
+		return false;
 	}
 
 	@Override

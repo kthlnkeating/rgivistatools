@@ -1,32 +1,32 @@
-package com.raygroupintl.vista.mtoken;
+package com.raygroupintl.vista.token;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import com.raygroupintl.vista.fnds.IToken;
+import com.raygroupintl.vista.mtoken.TCommand;
 import com.raygroupintl.vista.struct.MError;
 
-
-public class Multi implements IToken {
+public class TList implements IToken {
 	private ArrayList<IToken> tokens = new ArrayList<IToken>();
 		
-	public Multi() {
+	public TList() {
 	}
 	
-	public Multi(IToken token) {
+	public TList(IToken token) {
 		this.tokens.add(token);
 	}
 
-	public Multi(IToken token0, IToken token1) {
+	public TList(IToken token0, IToken token1) {
 		this.tokens.add(token0);
 		this.tokens.add(token1);
 	}
 
-	public Multi(List<IToken> tokens) {
+	public TList(List<IToken> tokens) {
 		this.tokens.addAll(tokens);
 	}
 
-	public Multi(Multi tokens) {
+	public TList(TList tokens) {
 		this.tokens.addAll(tokens.tokens);
 	}
 
@@ -109,6 +109,10 @@ public class Multi implements IToken {
 		this.tokens.addAll(tokens);
 	}
 	
+	public void addAll(TList tokens) {
+		this.tokens.addAll(tokens.tokens);
+	}
+	
 	public IToken get(int index) {
 		return this.tokens.get(index);
 	}
@@ -120,8 +124,8 @@ public class Multi implements IToken {
 	public String getCommandView() {
 		StringBuilder sb = new StringBuilder();
 		for (IToken token : this.tokens) {
-			if (token instanceof Command) {
-				Command commandToken = (Command) token;
+			if (token instanceof TCommand) {
+				TCommand commandToken = (TCommand) token;
 				String commandString = commandToken.getCommandString();
 				sb.append(commandString);
 				sb.append("  ");
@@ -132,6 +136,11 @@ public class Multi implements IToken {
 
 	public void add(int index, IToken token) {
 		this.tokens.add(index, token);
+	}
+
+	@Override
+	public boolean isError() {
+		return false;
 	}
 
 }
