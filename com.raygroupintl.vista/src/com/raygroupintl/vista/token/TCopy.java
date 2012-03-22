@@ -1,4 +1,4 @@
-package com.raygroupintl.vista.mtoken;
+package com.raygroupintl.vista.token;
 
 import java.util.List;
 

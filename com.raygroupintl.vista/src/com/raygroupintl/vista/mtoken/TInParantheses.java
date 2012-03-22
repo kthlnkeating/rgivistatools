@@ -1,6 +1,7 @@
 package com.raygroupintl.vista.mtoken;
 
 import com.raygroupintl.vista.fnds.IToken;
+import com.raygroupintl.vista.token.TCopy;
 
 public class TInParantheses extends TCopy {
 	public TInParantheses(IToken source) {

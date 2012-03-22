@@ -2,6 +2,7 @@ package com.raygroupintl.vista.mtoken;
 
 import com.raygroupintl.vista.fnds.IToken;
 import com.raygroupintl.vista.fnds.ITokenFactory;
+import com.raygroupintl.vista.token.TEmpty;
 
 public abstract class TFEmptyAllowed implements ITokenFactory {
 	protected abstract ITokenFactory getFactory();
