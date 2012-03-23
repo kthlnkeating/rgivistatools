@@ -9,7 +9,7 @@ public class TFOperator implements ITokenFactory {
 		if (possible.indexOf(ch, 0) >= 0) {
 			if (ch == extra) {
 				int index = fromIndex + 1;
-				if ((index < line.length()) && (line.charAt(index) == '*')) {
+				if ((index < line.length()) && (line.charAt(index) == extra)) {
 					return 2;
 				}
 			}			
@@ -32,7 +32,7 @@ public class TFOperator implements ITokenFactory {
 						return null;
 					}
 				}
-				opLength = this.getOperatorLength(line, fromIndex, "&!=<>][?", ']');
+				opLength = this.getOperatorLength(line, index, "&!=<>][?", ']');
 				if (opLength > 0) {
 					if (ch == '\'') {
 						++opLength;

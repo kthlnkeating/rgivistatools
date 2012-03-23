@@ -35,10 +35,13 @@ public class Routine extends Base {
 	
 	@Override
 	public List<MError> getErrors() {
-		List<MError> result = new ArrayList<MError>();
+		List<MError> result = null;
 		for (Line line : this.lines) {
 			List<MError> lerr = line.getErrors();
 			if (lerr != null) {
+				if (result == null) {
+					result = new ArrayList<MError>();	
+				}				
 				result.addAll(lerr);
 			}
 		}

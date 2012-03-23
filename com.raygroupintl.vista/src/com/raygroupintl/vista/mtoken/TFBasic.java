@@ -23,6 +23,7 @@ public abstract class TFBasic extends TFCharAccumulating {
 	protected boolean isRightStop(char ch) {
 		return true;
 	}
+	
 	protected IToken getToken(String value) {
 		return new TBasic(value);		
 	}

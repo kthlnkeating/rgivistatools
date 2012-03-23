@@ -16,7 +16,7 @@ import com.raygroupintl.vista.tools.MRoutineAnalyzer;
 import junit.framework.Assert;
 
 public class LineTest1 {
-	//private final static Logger LOGGER = Logger.getLogger(MRoutineAnalyzer.class.getName());
+	private final static Logger LOGGER = Logger.getLogger(MRoutineAnalyzer.class.getName());
 
 	@Test
 	public void testAll() {
@@ -27,7 +27,7 @@ public class LineTest1 {
 					Scanner scanner = new Scanner(path);
 					int index = 0;
 					//if (! path.getFileName().toString().equals("PSSFDBRT.m")) return;
-					//LOGGER.info(path.getFileName().toString());
+					LOGGER.info(path.getFileName().toString());
 					while (scanner.hasNextLine()) {
 						String line = scanner.nextLine();
 						//LOGGER.info(">>> " + line);

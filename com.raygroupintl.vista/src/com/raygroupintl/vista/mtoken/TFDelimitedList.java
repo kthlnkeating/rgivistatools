@@ -1,10 +1,9 @@
 package com.raygroupintl.vista.mtoken;
 
-import java.util.Arrays;
-
 import com.raygroupintl.vista.fnds.IToken;
 import com.raygroupintl.vista.fnds.ITokenFactory;
 import com.raygroupintl.vista.token.TFAllRequired;
+import com.raygroupintl.vista.token.TFConstChar;
 import com.raygroupintl.vista.token.TFSerialRO;
 import com.raygroupintl.vista.token.TList;
 
@@ -20,19 +19,8 @@ public abstract class TFDelimitedList extends TFSerialRO {
 
 	@Override
 	protected ITokenFactory getOptional() {
-		return new TFAllRequired() {			
-			@Override
-			protected IToken getToken(IToken[] foundTokens) {
-				return new TList(Arrays.asList(foundTokens));
-			}
-			
-			@Override
-			protected ITokenFactory[] getFactories() {
-				ITokenFactory d = TFDelimitedList.this.getDelimitedFactory();
-				ITokenFactory e = TFDelimitedList.this.getElementFactory();
-				return new ITokenFactory[]{d, e};
-			}
-		};
+		TFAllRequired r = TFAllRequired.getInstance(this.getDelimitedFactory(), this.getElementFactory());
+		return TFList.getInstance(r);
 	}
 
 	protected IToken getToken(TList listToken) {
@@ -50,4 +38,19 @@ public abstract class TFDelimitedList extends TFSerialRO {
 		result.add(0, requiredToken);
 		return  this.getToken(result);
 	}
+	
+	public static TFDelimitedList getInstance(final ITokenFactory tfElement, final char ch) {
+		return new TFDelimitedList() {			
+			@Override
+			protected ITokenFactory getElementFactory() {
+				return tfElement;
+			}
+			
+			@Override
+			protected ITokenFactory getDelimitedFactory() {
+				return TFConstChar.getInstance(ch);
+			}
+		};
+	}
+	
 }

@@ -38,7 +38,6 @@ public abstract class TFSerialBase implements ITokenFactory {
 		}
 	}
 	
-	
 	@Override
 	public IToken tokenize(String line, int fromIndex) {
 		int endIndex = line.length();

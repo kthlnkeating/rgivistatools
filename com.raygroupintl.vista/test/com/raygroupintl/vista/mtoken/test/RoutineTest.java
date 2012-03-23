@@ -1,5 +1,7 @@
 package com.raygroupintl.vista.mtoken.test;
 
+import java.io.InputStream;
+
 import junit.framework.Assert;
 
 import org.junit.Test;
@@ -56,4 +58,12 @@ public class RoutineTest {
 			++index;
 		}		
 	}
+	
+	@Test
+	public void testNonErrorFiles() {
+		String fileName = "resource/XRGITST0.m";
+		InputStream is = this.getClass().getResourceAsStream(fileName);
+		Routine r = Routine.getInstance(is);
+		Assert.assertFalse("Unexpected error: " + fileName, r.hasError() || r.hasFatalError());	
+	}	
 }

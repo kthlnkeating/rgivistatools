@@ -5,6 +5,7 @@ import java.util.List;
 import com.raygroupintl.vista.fnds.IToken;
 import com.raygroupintl.vista.struct.MError;
 import com.raygroupintl.vista.token.TList;
+import com.raygroupintl.vista.token.TPair;
 import com.raygroupintl.vista.token.TSyntaxError;
 
 public abstract class TCommand extends TKeyword {
@@ -38,7 +39,17 @@ public abstract class TCommand extends TKeyword {
 	
 	@Override
 	public List<MError> getErrors() {
-		return null;
+		if ((this.argument == null) && (this.postConditional == null)) {
+			return null;
+		}
+		if (this.argument == null) {
+			return this.postConditional.getErrors();
+		}
+		if (this.postConditional == null) {
+			return this.argument.getErrors();
+		}
+		TPair p = new TPair(this.argument, this.postConditional);
+		return p.getErrors();
 	}
 
 	@Override

@@ -24,4 +24,8 @@ public class TFActual extends TFParallel {
 	protected ITokenFactory[] getFactories() {
 		return new ITokenFactory[]{new TFByReference(), new TFExpr()};
 	}
+	
+	public static TFActual getInstance() {
+		return new TFActual();
+	}
 }

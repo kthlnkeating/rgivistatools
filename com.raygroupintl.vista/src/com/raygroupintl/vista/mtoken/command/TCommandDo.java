@@ -1,8 +1,17 @@
-package com.raygroupintl.vista.mtoken;
+package com.raygroupintl.vista.mtoken.command;
 
 import com.raygroupintl.vista.fnds.IToken;
 import com.raygroupintl.vista.fnds.ITokenFactory;
 import com.raygroupintl.vista.fnds.ITokenFactorySupply;
+import com.raygroupintl.vista.mtoken.TCommand;
+import com.raygroupintl.vista.mtoken.TFActualList;
+import com.raygroupintl.vista.mtoken.TFCommaDelimitedList;
+import com.raygroupintl.vista.mtoken.TFEnvironment;
+import com.raygroupintl.vista.mtoken.TFExpr;
+import com.raygroupintl.vista.mtoken.TFIndirection;
+import com.raygroupintl.vista.mtoken.TFLabel;
+import com.raygroupintl.vista.mtoken.TFName;
+import com.raygroupintl.vista.mtoken.TIndirection;
 import com.raygroupintl.vista.struct.MError;
 import com.raygroupintl.vista.struct.MNameWithMnemonic;
 import com.raygroupintl.vista.token.TFAllRequired;
@@ -42,11 +51,15 @@ public class TCommandDo extends TCommand {
 		}
 
 		private static ITokenFactory getFactory3(IToken[] previousTokens) {
-			ITokenFactory tfEnv = TFEnvironment.getInstance();
-			ITokenFactory tfName = TFName.getInstance();
-			ITokenFactory tfEnvName = TFSerialOR.getInstance(tfEnv, tfName);
-			ITokenFactory tfInd = TFIndirection.getInstance();
-			return TFParallel.getInstance(tfEnvName, tfInd);
+			if (previousTokens[2] == null) {
+				return new TFNull();
+			} else {
+				ITokenFactory tfEnv = TFEnvironment.getInstance();
+				ITokenFactory tfName = TFName.getInstance();
+				ITokenFactory tfEnvName = TFSerialOR.getInstance(tfEnv, tfName);
+				ITokenFactory tfInd = TFIndirection.getInstance();
+				return TFParallel.getInstance(tfEnvName, tfInd);
+			}
 		}
 
 		private static ITokenFactory getFactory4(IToken[] previousTokens) {
@@ -93,12 +106,12 @@ public class TCommandDo extends TCommand {
 			if (n == 2) {
 				if (foundTokens[0] == null) {
 					return RETURN_NULL;
-				} else {
-					return RETURN_TOKEN;
-				}
+				} 
 			}
-			if (n ==3) {
-				return this.getErrorCode();
+			if (n == 3) {
+				if (foundTokens[2] != null) {
+					return this.getErrorCode();
+				}
 			}
 			return CONTINUE;
 		}
@@ -117,9 +130,9 @@ public class TCommandDo extends TCommand {
 	
 	@Override
 	protected IToken getArgument(String line, int fromIndex) {
-		ITokenFactory f = new TFList() {			
+		ITokenFactory f = new TFCommaDelimitedList() {			
 			@Override
-			protected ITokenFactory getFactory() {
+			protected ITokenFactory getElementFactory() {
 				return new TFArgument();
 			}
 		};

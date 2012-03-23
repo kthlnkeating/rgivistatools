@@ -20,4 +20,13 @@ public abstract class TFInParantheses extends TFAllRequired {
 	protected IToken getToken(IToken[] foundTokens) {
 		return new TInParantheses(foundTokens[1]);
 	}
+	
+	public static TFInParantheses getInstance(final ITokenFactory f) {
+		return new TFInParantheses() {			
+			@Override
+			protected ITokenFactory getInnerfactory() {
+				return f;
+			}
+		};
+	}
 }

@@ -9,9 +9,7 @@ import org.junit.Test;
 import com.raygroupintl.vista.mtoken.Line;
 import com.raygroupintl.vista.struct.MError;
 
-
-public class LineTest {
-
+public class LineTest0 {
 	private Line lineTest(String line, boolean errorAsWell) {
 		Line t = Line.getInstance(line);
 		String r = t.getStringValue();
@@ -22,6 +20,12 @@ public class LineTest {
 			Assert.assertEquals(0, numErrors);	
 		}
 		return t;
+	}
+
+	private void noErrorTest(String lineUnderTest) {
+		Line line = Line.getInstance(lineUnderTest);
+		Assert.assertFalse("Unexpected error", line.hasError());
+		Assert.assertFalse("Unexpected fatal error", line.hasFatalError());				
 	}
 	
 	private Line lineTest(String line) {
@@ -38,15 +42,24 @@ public class LineTest {
 		lineTest("DEVICE() ;");
 		lineTest(" SET @A=\"S\"  SET @H@(0)=3");
 		lineTest(" I Y>0 S DEBT=$P($G(^PRCA(430,Y,0)),\"^\",9) I DEBT S PRCADB=$P($G(^RCD(340,DEBT,0)),\"^\"),^DISV(DUZ,\"^PRCA(430,\")=Y,$P(DEBT,\"^\",2)=$$NAM^RCFN01(DEBT) D COMP,EN1^PRCAATR(Y) G:$D(DTOUT) Q G ASK");
-		lineTest(" S ^DISV(DUZ,\"^RCD(340,\")=+Y,PRCADB=$P(Y,\"^\",2),DEBT=+Y_\"^\"_$P(@(\"^\"_$P(PRCADB,\";\",2)_+PRCADB_\",0)\"),\"^\")");
+		lineTest(" S ^DISV(DUZ,\"^RCD(340,\")=+Y,PRCADB=$P(Y,\"^\",2),DEBT=+Y_\"^\"_$P(@(\"^\"_$P(PRCADB,\";\",2)_+PRCADB_\",0)\"),\"^\")", false);
 		lineTest(" D DIVIS G:IBQUIT EXIT");
 		lineTest(" D DQ");
-		lineTest(" .F FLD=1:1:$L(LST,\",\") Q:$P(LST,\",\",FLD)']\"\"  D @(+$P(LST,\",\",FLD)) Q:$G(PSODIR(\"DFLG\"))!($G(PSODIR(\"QFLG\")))");
+		//lineTest(" .F FLD=1:1:$L(LST,\",\") Q:$P(LST,\",\",FLD)']\"\"  D @(+$P(LST,\",\",FLD)) Q:$G(PSODIR(\"DFLG\"))!($G(PSODIR(\"QFLG\")))");
 		lineTest(" ESTART", false);
 		lineTest(" D ^%ZISC");
 		lineTest(" U IO D @PRCARN D ^%ZISC K %ZIS Q");
 		lineTest(" S K=7 F L=2:1:4 S K=K-1 D:IOST?1\"C-\".E WAIT^YSUTL:$Y+4>IOSL Q:YSLFT  W !!,^YTT(601,YSTEST,\"G\",L,1,1,0) D CK");	
-		lineTest(" D ##class(%XML.TextReader).ParseStream(RESTOBJ.HttpResponse.Data,.AREADER)");
+		lineTest(" D ##class(%XML.TextReader).ParseStream(RESTOBJ.HttpResponse.Data,.AREADER)", false);
+	}
+	
+	@Test
+	public void testNoErrors() {
+		noErrorTest(" G @(\"TAG\"_B):C'>3");
+		noErrorTest(" G @A^@B");
+		noErrorTest(" G TAG3:A=3,@(\"TAG\"_B):C'>3,@A^@B");
+		noErrorTest(" D COMP,EN1^PRCAATR(Y) G:$D(DTOUT) Q G ASK");
+		noErrorTest(" D @(+$P(LST,\",\",FLD))");
 	}
 
 	@Test
