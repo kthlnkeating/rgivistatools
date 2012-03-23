@@ -8,4 +8,13 @@ public abstract class TFCommaDelimitedList extends TFDelimitedList {
 	protected ITokenFactory getDelimitedFactory() {
 		return new TFConstChar(',');
 	}
+	
+	public static TFCommaDelimitedList getInstance(final ITokenFactory tfElement) {
+		return new TFCommaDelimitedList() {			
+			@Override
+			protected ITokenFactory getElementFactory() {
+				return tfElement;
+			}
+		};
+	}		
 }

@@ -10,7 +10,6 @@ import com.raygroupintl.vista.mtoken.TFExpr;
 import com.raygroupintl.vista.mtoken.TFIndirection;
 import com.raygroupintl.vista.mtoken.TFLabel;
 import com.raygroupintl.vista.mtoken.TFName;
-import com.raygroupintl.vista.struct.MError;
 import com.raygroupintl.vista.struct.MNameWithMnemonic;
 import com.raygroupintl.vista.token.TFAllRequired;
 import com.raygroupintl.vista.token.TFConstChar;
@@ -18,7 +17,6 @@ import com.raygroupintl.vista.token.TFNull;
 import com.raygroupintl.vista.token.TFParallel;
 import com.raygroupintl.vista.token.TFSerialBase;
 import com.raygroupintl.vista.token.TFSerialOR;
-import com.raygroupintl.vista.token.TSyntaxError;
 
 public class TCommandGoto extends TCommand {	
 	private static class TFArgument extends TFSerialBase {
@@ -60,12 +58,6 @@ public class TCommandGoto extends TCommand {
 			}
 		}
 
-		private static ITokenFactory getFactory4(IToken[] previousTokens) {
-			ITokenFactory tfColon = TFConstChar.getInstance(':');
-			ITokenFactory tfExpr = TFExpr.getInstance();
-			return TFAllRequired.getInstance(tfColon, tfExpr);
-		}
-
 		protected ITokenFactorySupply getFactorySupply() {
 			return new ITokenFactorySupply() {				
 				@Override
@@ -81,7 +73,7 @@ public class TCommandGoto extends TCommand {
 						case 1: return TFArgument.getFactory1(previousTokens); 
 						case 2: return TFArgument.getFactory2(previousTokens); 
 						case 3: return TFArgument.getFactory3(previousTokens); 
-						case 4: return TFArgument.getFactory4(previousTokens); 
+						case 4: return TCommand.getTFPostCondition(previousTokens);
 						default:
 							assert(false);
 							return null;
@@ -119,31 +111,18 @@ public class TCommandGoto extends TCommand {
 		super(identifier);
 	}
 
-
-	@Override
-	protected IToken getArgument(String line, int fromIndex) {
-		ITokenFactory f = new TFCommaDelimitedList() {			
-			@Override
-			protected ITokenFactory getElementFactory() {
-				return new TFArgument();
-			}
-		};
-		IToken result = f.tokenize(line, fromIndex);
-		if (result == null) {
-			return TSyntaxError.getInstance(MError.ERR_GENERAL_SYNTAX, line, fromIndex, fromIndex);			
-		}
-		int index = fromIndex + result.getStringSize();
-		if (index < line.length()) {
-			char ch = line.charAt(index);
-			if (ch != ' ') {
-				return TSyntaxError.getInstance(MError.ERR_GENERAL_SYNTAX, line, index, fromIndex);
-			}
-		}
-		return result;
-	}
-
 	@Override
 	protected MNameWithMnemonic getNameWithMnemonic() {
 		return new MNameWithMnemonic("G", "GOTO");
 	}		
+	
+	@Override
+	protected ITokenFactory getArgumentFactory() {
+		return TFCommaDelimitedList.getInstance(new TFArgument());
+	}
+ 	
+	@Override
+	protected IToken getArgument(String line, int fromIndex) {
+		return this.getNewArgument(line, fromIndex);
+	}
 }

@@ -3,7 +3,10 @@ package com.raygroupintl.vista.mtoken;
 import java.util.List;
 
 import com.raygroupintl.vista.fnds.IToken;
+import com.raygroupintl.vista.fnds.ITokenFactory;
 import com.raygroupintl.vista.struct.MError;
+import com.raygroupintl.vista.token.TFAllRequired;
+import com.raygroupintl.vista.token.TFConstChar;
 import com.raygroupintl.vista.token.TList;
 import com.raygroupintl.vista.token.TPair;
 import com.raygroupintl.vista.token.TSyntaxError;
@@ -144,6 +147,31 @@ public abstract class TCommand extends TKeyword {
 		result += this.traliningSpace;
 		return result;
 	}
-
+	
+	protected static ITokenFactory getTFPostCondition(IToken[] previousTokens) {
+		ITokenFactory tfColon = TFConstChar.getInstance(':');
+		ITokenFactory tfExpr = TFExpr.getInstance();
+		return TFAllRequired.getInstance(tfColon, tfExpr);
+	}
+	
+	protected ITokenFactory getArgumentFactory() {
+		return null;
+	}
+		
+	protected IToken getNewArgument(String line, int fromIndex) {
+		ITokenFactory f = this.getArgumentFactory();
+		IToken result = f.tokenize(line, fromIndex);
+		if (result == null) {
+			return TSyntaxError.getInstance(MError.ERR_GENERAL_SYNTAX, line, fromIndex, fromIndex);			
+		}
+		int index = fromIndex + result.getStringSize();
+		if (index < line.length()) {
+			char ch = line.charAt(index);
+			if (ch != ' ') {
+				return TSyntaxError.getInstance(MError.ERR_GENERAL_SYNTAX, line, index, fromIndex);
+			}
+		}
+		return result;
+	}
 }
 

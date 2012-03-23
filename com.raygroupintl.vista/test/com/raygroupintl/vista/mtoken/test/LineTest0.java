@@ -45,7 +45,7 @@ public class LineTest0 {
 		lineTest(" S ^DISV(DUZ,\"^RCD(340,\")=+Y,PRCADB=$P(Y,\"^\",2),DEBT=+Y_\"^\"_$P(@(\"^\"_$P(PRCADB,\";\",2)_+PRCADB_\",0)\"),\"^\")", false);
 		lineTest(" D DIVIS G:IBQUIT EXIT");
 		lineTest(" D DQ");
-		//lineTest(" .F FLD=1:1:$L(LST,\",\") Q:$P(LST,\",\",FLD)']\"\"  D @(+$P(LST,\",\",FLD)) Q:$G(PSODIR(\"DFLG\"))!($G(PSODIR(\"QFLG\")))");
+		lineTest(" .F FLD=1:1:$L(LST,\",\") Q:$P(LST,\",\",FLD)']\"\"  D @(+$P(LST,\",\",FLD)) Q:$G(PSODIR(\"DFLG\"))!($G(PSODIR(\"QFLG\")))");
 		lineTest(" ESTART", false);
 		lineTest(" D ^%ZISC");
 		lineTest(" U IO D @PRCARN D ^%ZISC K %ZIS Q");

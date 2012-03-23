@@ -12,7 +12,6 @@ import com.raygroupintl.vista.mtoken.TFIndirection;
 import com.raygroupintl.vista.mtoken.TFLabel;
 import com.raygroupintl.vista.mtoken.TFName;
 import com.raygroupintl.vista.mtoken.TIndirection;
-import com.raygroupintl.vista.struct.MError;
 import com.raygroupintl.vista.struct.MNameWithMnemonic;
 import com.raygroupintl.vista.token.TFAllRequired;
 import com.raygroupintl.vista.token.TFConstChar;
@@ -20,7 +19,6 @@ import com.raygroupintl.vista.token.TFNull;
 import com.raygroupintl.vista.token.TFParallel;
 import com.raygroupintl.vista.token.TFSerialBase;
 import com.raygroupintl.vista.token.TFSerialOR;
-import com.raygroupintl.vista.token.TSyntaxError;
 
 public class TCommandDo extends TCommand {	
 	private static class TFArgument extends TFSerialBase {
@@ -70,12 +68,6 @@ public class TCommandDo extends TCommand {
 			}
 		}
 
-		private static ITokenFactory getFactory5(IToken[] previousTokens) {
-			ITokenFactory tfColon = TFConstChar.getInstance(':');
-			ITokenFactory tfExpr = TFExpr.getInstance();
-			return TFAllRequired.getInstance(tfColon, tfExpr);
-		}
-
 		protected ITokenFactorySupply getFactorySupply() {
 			return new ITokenFactorySupply() {				
 				@Override
@@ -92,7 +84,7 @@ public class TCommandDo extends TCommand {
 						case 2: return TFArgument.getFactory2(previousTokens); 
 						case 3: return TFArgument.getFactory3(previousTokens); 
 						case 4: return TFArgument.getFactory4(previousTokens); 
-						case 5: return TFArgument.getFactory5(previousTokens);
+						case 5: return TCommand.getTFPostCondition(previousTokens);
 						default:
 							assert(false);
 							return null;
@@ -129,25 +121,13 @@ public class TCommandDo extends TCommand {
 	}
 	
 	@Override
+	protected ITokenFactory getArgumentFactory() {
+		return TFCommaDelimitedList.getInstance(new TFArgument());
+	}
+ 	
+	@Override
 	protected IToken getArgument(String line, int fromIndex) {
-		ITokenFactory f = new TFCommaDelimitedList() {			
-			@Override
-			protected ITokenFactory getElementFactory() {
-				return new TFArgument();
-			}
-		};
-		IToken result = f.tokenize(line, fromIndex);
-		if (result == null) {
-			return TSyntaxError.getInstance(MError.ERR_GENERAL_SYNTAX, line, fromIndex, fromIndex);			
-		}
-		int index = fromIndex + result.getStringSize();
-		if (index < line.length()) {
-			char ch = line.charAt(index);
-			if (ch != ' ') {
-				return TSyntaxError.getInstance(MError.ERR_GENERAL_SYNTAX, line, index, fromIndex);
-			}
-		}
-		return result;
+		return this.getNewArgument(line, fromIndex);
 	}
 
 	@Override
