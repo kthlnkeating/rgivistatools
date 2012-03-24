@@ -122,7 +122,7 @@ public class TCommandGoto extends TCommand {
 	}
  	
 	@Override
-	protected IToken getArgument(String line, int fromIndex) {
+	public IToken getArgument(String line, int fromIndex) {
 		return this.getNewArgument(line, fromIndex);
 	}
 }

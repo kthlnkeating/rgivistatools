@@ -16,4 +16,8 @@ public class TFGlvn extends TFParallelCharBased {
 			return null;
 		}		
 	}
+	
+	public static TFGlvn getInstance() {
+		return new TFGlvn();
+	}
 }

@@ -38,7 +38,7 @@ public class TIndirection extends Base {
 		}
 		result += this.argument.getStringValue();
 		if (this.subcripts != null) {
-			result += "@" + this.subcripts.getStringValue();
+			result += "@(" + this.subcripts.getStringValue() + ")";
 		}
 		return result;
 	}
@@ -47,7 +47,7 @@ public class TIndirection extends Base {
 	public int getStringSize() {
 		int result = 1 + this.precedingSpaces + this.argument.getStringSize();
 		if (this.subcripts != null) {
-			result += 1 + this.subcripts.getStringSize();
+			result += 3 + this.subcripts.getStringSize();
 		}
 		return result;
 	}

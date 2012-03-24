@@ -33,9 +33,10 @@ public class TFIndirection extends TFSerialRO {
 	
 	@Override
 	protected IToken getTokenBoth(IToken requiredToken, IToken optionalToken) {
-		ITokenArray tokenArray = (ITokenArray) optionalToken;
-		IToken subscripts = tokenArray.get(1);
-		return new TIndirection(requiredToken, subscripts);
+		TArray tReqArray = (TArray) requiredToken;
+		ITokenArray tOptArray = (ITokenArray) optionalToken;
+		IToken subscripts = tOptArray.get(1);
+		return new TIndirection(tReqArray.get(1), subscripts);
 	}
 
 	public static TFIndirection getInstance() {

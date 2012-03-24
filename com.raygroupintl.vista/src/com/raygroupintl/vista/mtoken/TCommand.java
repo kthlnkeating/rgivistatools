@@ -85,7 +85,7 @@ public abstract class TCommand extends TKeyword {
 		}
 	}
 	
-	protected IToken getArgument(String line, int fromIndex) {
+	public IToken getArgument(String line, int fromIndex) {
 		TList arg = Algorithm.tokenize(line, fromIndex, ' ');
 		return arg;
 	}

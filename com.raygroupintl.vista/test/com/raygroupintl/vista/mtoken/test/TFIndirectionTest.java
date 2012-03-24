@@ -9,5 +9,7 @@ public class TFIndirectionTest {
 	public void test() {
 		TFIndirection f = TFIndirection.getInstance();		
 		TFCommonTest.validCheck(f, "@(+$P(LST,\",\",FLD))");
+		TFCommonTest.validCheck(f, "@H@(0)");
+		TFCommonTest.validCheck(f, "@XARRAY@(FROMX1,TO1)");
 	}
 }
