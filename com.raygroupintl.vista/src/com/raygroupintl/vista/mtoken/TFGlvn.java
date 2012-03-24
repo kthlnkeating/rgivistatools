@@ -6,7 +6,7 @@ import com.raygroupintl.vista.token.TFParallelCharBased;
 public class TFGlvn extends TFParallelCharBased {
 	@Override
 	protected ITokenFactory getFactory(char ch) {
-		if (Library.isIdent(ch)) {
+		if ((ch == '%') || Library.isIdent(ch)) {
 			return new TFLvn();
 		} else if (ch == '^') {
 			return new TFGvn();

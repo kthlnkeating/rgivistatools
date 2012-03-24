@@ -8,6 +8,7 @@ import java.util.Map;
 import com.raygroupintl.vista.fnds.IToken;
 import com.raygroupintl.vista.mtoken.command.TCommandDo;
 import com.raygroupintl.vista.mtoken.command.TCommandGoto;
+import com.raygroupintl.vista.mtoken.command.TCommandKill;
 import com.raygroupintl.vista.mtoken.command.TCommandSet;
 import com.raygroupintl.vista.struct.MError;
 import com.raygroupintl.vista.struct.MNameWithMnemonic;
@@ -104,17 +105,6 @@ public class Line extends TList {
 		@Override
 		protected MNameWithMnemonic getNameWithMnemonic() {
 			return new MNameWithMnemonic("J", "JOB");
-		}		
-	}
-	
-	private static class KillCommand extends TCommand {
-		public KillCommand(String identifier) {
-			super(identifier);
-		}
-
-		@Override
-		protected MNameWithMnemonic getNameWithMnemonic() {
-			return new MNameWithMnemonic("K", "KILL");
 		}		
 	}
 	
@@ -398,7 +388,7 @@ public class Line extends TList {
 		CommandFactory k = new CommandFactory() {			
 			@Override
 			public TCommand getInstance(String identifier) {
-				return new KillCommand(identifier);
+				return new TCommandKill(identifier);
 			}
 		};												
 		COMMANDS.put("K", k);
