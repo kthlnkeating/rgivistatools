@@ -11,7 +11,7 @@ public abstract class TFAllOptional extends TFSerial {
 	
 	@Override
 	protected final int getCodeStringEnds(IToken[] foundTokens) {
-		return this.getErrorCode();
+		return 0;
 	}
 	
 	@Override

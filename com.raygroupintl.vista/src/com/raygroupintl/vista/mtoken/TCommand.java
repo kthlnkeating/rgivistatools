@@ -5,6 +5,7 @@ import java.util.List;
 import com.raygroupintl.vista.fnds.IToken;
 import com.raygroupintl.vista.fnds.ITokenFactory;
 import com.raygroupintl.vista.struct.MError;
+import com.raygroupintl.vista.token.TCopy;
 import com.raygroupintl.vista.token.TFAllRequired;
 import com.raygroupintl.vista.token.TFConstChar;
 import com.raygroupintl.vista.token.TList;
@@ -12,8 +13,8 @@ import com.raygroupintl.vista.token.TPair;
 import com.raygroupintl.vista.token.TSyntaxError;
 
 public abstract class TCommand extends TKeyword {
-	private static class PostConditional extends TList {
-		public PostConditional(TList input) {
+	private static class PostConditional extends TCopy {
+		public PostConditional(IToken input) {
 			super(input);
 		}
 		
@@ -65,10 +66,16 @@ public abstract class TCommand extends TKeyword {
 		if (fromIndex < endIndex) {
 			char ch = line.charAt(fromIndex);
 			if (ch == ':') {
-				TList pc = Algorithm.tokenize(line, fromIndex+1, ' ');
+				ITokenFactory f = TFExpr.getInstance();
+				IToken pc = f.tokenize(line, fromIndex+1);
+				//IToken pc = Algorithm.tokenize(line, fromIndex+1, ' ');
 				this.postConditional = new PostConditional(pc);
 				int index = fromIndex + this.postConditional.getStringSize();
 				if (index < endIndex) {
+					if (line.charAt(index) != ' ') {
+						this.postConditional = new TSyntaxError(line, index, fromIndex);
+						return endIndex;
+					}					
 					++index;
 					this.traliningSpace = 1;
 				}

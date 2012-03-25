@@ -2,13 +2,13 @@ package com.raygroupintl.vista.mtoken;
 
 import com.raygroupintl.vista.fnds.IToken;
 import com.raygroupintl.vista.fnds.ITokenFactory;
+import com.raygroupintl.vista.token.TFAllOptional;
 import com.raygroupintl.vista.token.TFCharAccumulating;
 import com.raygroupintl.vista.token.TFConstChar;
 import com.raygroupintl.vista.token.TFParallelCharBased;
 import com.raygroupintl.vista.token.TFSerialOR;
 import com.raygroupintl.vista.token.TSyntaxError;
 import com.raygroupintl.vista.token.TFAllRequired;
-import com.raygroupintl.vista.token.TFAllOptional;
 	
 public class TFPattern extends TFParallelCharBased {
 	static abstract class TFPatOnSomething extends TFCharAccumulating {
@@ -50,15 +50,23 @@ public class TFPattern extends TFParallelCharBased {
 			return new TBasic(value);			
 		}
 
+		protected boolean checkFirst() {
+			return true;
+		}
+		
 		@Override
 		protected boolean stopOn(char ch) {
-			return ! ((ch >= 'a') && (ch < 'y')) || ((ch >= 'A') && (ch <'Y'));
+			return ! (((ch >= 'a') && (ch < 'y')) || ((ch >= 'A') && (ch <'Y')));
 		}
 				
 		@Override
 		protected IToken getToken(String line, int fromIndex, int endIndex) {
-			String value = line.substring(fromIndex, endIndex);
-			return new TBasic(value);
+			if (fromIndex == endIndex) {
+				return null;
+			} else {
+				String value = line.substring(fromIndex, endIndex);
+				return new TBasic(value);
+			}
 		}
 		
 		@Override
@@ -113,7 +121,7 @@ public class TFPattern extends TFParallelCharBased {
 				protected ITokenFactory getFactory(char ch) {
 					if (ch == '(') return new TFAlternation();
 					if (Library.isIdent(ch)) return new TFPatCode();
-					if (Library.isDigit(ch)) return new TIntLit.Factory();
+					if (ch == '"') return TFStringLiteral.getInstance();
 					return null;
 				}
 			};
@@ -143,7 +151,7 @@ public class TFPattern extends TFParallelCharBased {
 		if (ch == '@') {
 			return new TFIndirection();
 		} else {
-			return new TFPatAtom();
+			return TFList.getInstance(new TFPatAtom());
 		}
 	}
 	

@@ -13,4 +13,8 @@ public class TFConstChars extends TFChar {
 	protected boolean isValid(char ch) {
 		return this.chars.indexOf(ch, 0) >= 0;
 	}
+
+	public static TFConstChars getInstance(String chars) {
+		return new TFConstChars(chars);
+	}
 }

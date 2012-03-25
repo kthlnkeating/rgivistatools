@@ -32,4 +32,9 @@ public class TFLvn extends TFSerialRO {
 	protected IToken getToken(IToken requiredToken, IToken optionalToken) {
 		return new TLocal(requiredToken, optionalToken);
 	}				
+
+	public static TFLvn getInstance() {
+		return new TFLvn();
+	}
 }
+

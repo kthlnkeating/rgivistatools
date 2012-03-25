@@ -54,6 +54,10 @@ public class LineTest0 {
 		lineTest(" S CT=CT+1,^TMP(\"RCXM_344.5\",$J,CT)=\"This message is sent to alert you to conditions regarding this \"_RCTYP_\".\",CT=CT+1,^TMP(\"RCXM_344.5\",$J,CT)=\" \"");
 		lineTest(" S CT=CT+1,^TMP(\"RCXM_344.5\",$J,CT)=\"The following electronic \"_RCTYP_\" was received at your site.\",CT=CT+1,^TMP(\"RCXM_344.5\",$J,CT)=\"It was received on: \"_$$FMTE^XLFDT($$NOW^XLFDT(),2)_\" in mail msg # \"_RCXMG_\".\"");
 		lineTest(" S Z=0 F  S Z=$O(@RCVAR@(Z)) Q:'Z  I $D(@RCVAR@(Z,\"*\")) S CT=CT+1,^TMP(\"RCXM_344.5\",$J,CT)=@RCVAR@(Z,\"\")");
+		lineTest(" L -@TASKNODE@(\"T\",0)");
+		lineTest(" . X \"S RC=\"_@RULENODE@(1)");
+		lineTest(" Q $D(@HANDLE@(\"Pr\",\"Handle\",CHILD))");
+		lineTest(" .S BREAK=0 F  Q:BREAK||READER.EOF||'READER.Read()  D", false);
 	}
 	
 	@Test

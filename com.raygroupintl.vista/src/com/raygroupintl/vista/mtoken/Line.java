@@ -7,9 +7,16 @@ import java.util.Map;
 
 import com.raygroupintl.vista.fnds.IToken;
 import com.raygroupintl.vista.mtoken.command.TCommandDo;
+import com.raygroupintl.vista.mtoken.command.TCommandExecute;
+import com.raygroupintl.vista.mtoken.command.TCommandFor;
 import com.raygroupintl.vista.mtoken.command.TCommandGoto;
+import com.raygroupintl.vista.mtoken.command.TCommandIf;
 import com.raygroupintl.vista.mtoken.command.TCommandKill;
+import com.raygroupintl.vista.mtoken.command.TCommandLock;
+import com.raygroupintl.vista.mtoken.command.TCommandMerge;
+import com.raygroupintl.vista.mtoken.command.TCommandQuit;
 import com.raygroupintl.vista.mtoken.command.TCommandSet;
+import com.raygroupintl.vista.mtoken.command.TCommandWrite;
 import com.raygroupintl.vista.struct.MError;
 import com.raygroupintl.vista.struct.MNameWithMnemonic;
 import com.raygroupintl.vista.token.TList;
@@ -53,17 +60,6 @@ public class Line extends TList {
 		}		
 	}
 
-	private static class ForCommand extends TCommand {
-		public ForCommand(String identifier) {
-			super(identifier);
-		}
-
-		@Override
-		protected MNameWithMnemonic getNameWithMnemonic() {
-			return new MNameWithMnemonic("F", "FOR");
-		}		
-	}
-
 	private static class HaltCommand extends TCommand {
 		public HaltCommand(String identifier) {
 			super(identifier);
@@ -86,17 +82,6 @@ public class Line extends TList {
 		}		
 	}
 
-	private static class IfCommand extends TCommand {
-		public IfCommand(String identifier) {
-			super(identifier);
-		}
-
-		@Override
-		protected MNameWithMnemonic getNameWithMnemonic() {
-			return new MNameWithMnemonic("I", "IF");
-		}		
-	}
-	
 	private static class JobCommand extends TCommand {
 		public JobCommand(String identifier) {
 			super(identifier);
@@ -105,28 +90,6 @@ public class Line extends TList {
 		@Override
 		protected MNameWithMnemonic getNameWithMnemonic() {
 			return new MNameWithMnemonic("J", "JOB");
-		}		
-	}
-	
-	private static class LockCommand extends TCommand {
-		public LockCommand(String identifier) {
-			super(identifier);
-		}
-
-		@Override
-		protected MNameWithMnemonic getNameWithMnemonic() {
-			return new MNameWithMnemonic("L", "LOCK");
-		}		
-	}
-	
-	private static class MergeCommand extends TCommand {
-		public MergeCommand(String identifier) {
-			super(identifier);
-		}
-
-		@Override
-		protected MNameWithMnemonic getNameWithMnemonic() {
-			return new MNameWithMnemonic("M", "MERGE");
 		}		
 	}
 	
@@ -149,17 +112,6 @@ public class Line extends TList {
 		@Override
 		protected MNameWithMnemonic getNameWithMnemonic() {
 			return new MNameWithMnemonic("O", "OPEN");
-		}		
-	}
-	
-	private static class QuitCommand extends TCommand {
-		public QuitCommand(String identifier) {
-			super(identifier);
-		}
-
-		@Override
-		protected MNameWithMnemonic getNameWithMnemonic() {
-			return new MNameWithMnemonic("Q", "QUIT");
 		}		
 	}
 	
@@ -241,30 +193,6 @@ public class Line extends TList {
 		}		
 	}
 	
-	
-	private static class WriteCommand extends TCommand {
-		public WriteCommand(String identifier) {
-			super(identifier);
-		}
-
-		@Override
-		protected MNameWithMnemonic getNameWithMnemonic() {
-			return new MNameWithMnemonic("W", "WRITE");
-		}		
-	}
-	
-	
-	private static class XecuteCommand extends TCommand {
-		public XecuteCommand(String identifier) {
-			super(identifier);
-		}
-
-		@Override
-		protected MNameWithMnemonic getNameWithMnemonic() {
-			return new MNameWithMnemonic("X", "XECUTE");
-		}		
-	}
-	
 	private static class GenericCommand extends TCommand {
 		public GenericCommand(String identifier) {
 			super(identifier);
@@ -340,7 +268,7 @@ public class Line extends TList {
 		CommandFactory f = new CommandFactory() {			
 			@Override
 			public TCommand getInstance(String identifier) {
-				return new ForCommand(identifier);
+				return new TCommandFor(identifier);
 			}
 		};						
 		COMMANDS.put("F", f);
@@ -372,7 +300,7 @@ public class Line extends TList {
 		CommandFactory i = new CommandFactory() {			
 			@Override
 			public TCommand getInstance(String identifier) {
-				return new IfCommand(identifier);
+				return new TCommandIf(identifier);
 			}
 		};												
 		COMMANDS.put("I", i);
@@ -396,7 +324,7 @@ public class Line extends TList {
 		CommandFactory l = new CommandFactory() {			
 			@Override
 			public TCommand getInstance(String identifier) {
-				return new LockCommand(identifier);
+				return new TCommandLock(identifier);
 			}
 		};												
 		COMMANDS.put("L", l);
@@ -404,7 +332,7 @@ public class Line extends TList {
 		CommandFactory m = new CommandFactory() {			
 			@Override
 			public TCommand getInstance(String identifier) {
-				return new MergeCommand(identifier);
+				return new TCommandMerge(identifier);
 			}
 		};												
 		COMMANDS.put("M", m);
@@ -428,7 +356,7 @@ public class Line extends TList {
 		CommandFactory q = new CommandFactory() {			
 			@Override
 			public TCommand getInstance(String identifier) {
-				return new QuitCommand(identifier);
+				return new TCommandQuit(identifier);
 			}
 		};												
 		COMMANDS.put("Q", q);
@@ -500,7 +428,7 @@ public class Line extends TList {
 		CommandFactory w = new CommandFactory() {			
 			@Override
 			public TCommand getInstance(String identifier) {
-				return new WriteCommand(identifier);
+				return new TCommandWrite(identifier);
 			}
 		};												
 		COMMANDS.put("W", w);
@@ -508,7 +436,7 @@ public class Line extends TList {
 		CommandFactory x = new CommandFactory() {			
 			@Override
 			public TCommand getInstance(String identifier) {
-				return new XecuteCommand(identifier);
+				return new TCommandExecute(identifier);
 			}
 		};												
 		COMMANDS.put("X", x);

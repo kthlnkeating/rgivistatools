@@ -15,6 +15,20 @@ public class TIntLit extends TBasic {
 		}
 		
 		@Override
+		protected boolean checkFirst() {
+			return true;
+		}
+				
+		@Override
+		protected IToken getToken(String line, int fromIndex, int endIndex) {
+			if (fromIndex == endIndex) {
+				return null;
+			} else {
+				return super.getToken(line, fromIndex, endIndex);
+			}
+		}
+		
+		@Override
 		protected IToken getToken(String value) {
 			return new TIntLit(value);
 		}

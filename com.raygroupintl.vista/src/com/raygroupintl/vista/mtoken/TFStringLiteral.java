@@ -31,4 +31,8 @@ public class TFStringLiteral implements ITokenFactory {
 		}
 		return null;
 	}
+	
+	public static TFStringLiteral getInstance() {
+		return new TFStringLiteral();
+	}
 }

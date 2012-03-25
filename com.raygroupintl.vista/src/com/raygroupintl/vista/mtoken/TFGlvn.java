@@ -9,7 +9,7 @@ public class TFGlvn extends TFParallelCharBased {
 		if ((ch == '%') || Library.isIdent(ch)) {
 			return new TFLvn();
 		} else if (ch == '^') {
-			return new TFGvn();
+			return new TFGvnAll();
 		} else if (ch == '@') {
 			return new TFIndirection();
 		} else {

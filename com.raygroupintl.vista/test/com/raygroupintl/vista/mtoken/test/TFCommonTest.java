@@ -16,4 +16,9 @@ public class TFCommonTest {
 		IToken t = f.tokenize(v, 0);
 		validCheck(t, v);
 	}
+
+	static void validCheck(ITokenFactory f, String v, String compare) {
+		IToken t = f.tokenize(v, 0);
+		validCheck(t, compare);
+	}
 }

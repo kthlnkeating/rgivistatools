@@ -1,6 +1,7 @@
 package com.raygroupintl.vista.token;
 
 import com.raygroupintl.vista.fnds.IToken;
+import com.raygroupintl.vista.fnds.ITokenFactory;
 
 public abstract class TFSerialORO extends TFSerial {
 	@Override
@@ -25,5 +26,14 @@ public abstract class TFSerialORO extends TFSerial {
 		} else {
 			return 0;
 		}
+	}
+	
+	public static TFSerialORO getInstance(final ITokenFactory f0, final ITokenFactory f1, final ITokenFactory f2) {
+		return new TFSerialORO() {			
+			@Override
+			protected ITokenFactory[] getFactories() {
+				return new ITokenFactory[]{f0, f1, f2};
+			}
+		};
 	}
 }

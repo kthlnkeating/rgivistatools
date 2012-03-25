@@ -2,6 +2,7 @@ package com.raygroupintl.vista.token;
 
 import com.raygroupintl.vista.fnds.IToken;
 import com.raygroupintl.vista.fnds.ITokenFactory;
+import com.raygroupintl.vista.mtoken.TBasic;
 
 public abstract class TFCharAccumulating implements ITokenFactory {
 	protected abstract boolean stopOn(char ch);
@@ -39,5 +40,29 @@ public abstract class TFCharAccumulating implements ITokenFactory {
 			return this.getToken(line, fromIndex);
 		}
 		return null;
+	}
+	
+	public static TFCharAccumulating getInstance(final char ch0, final char ch1) {
+		return new TFCharAccumulating() {			
+			@Override
+			protected boolean stopOn(char ch) {
+				return (ch != ch0) && (ch != ch1);
+			}
+			
+			@Override
+			protected boolean isRightStop(char ch) {
+				return true;
+			}
+			
+			@Override
+			protected IToken getToken(String line, int fromIndex, int endIndex) {
+				return new TBasic(line.substring(fromIndex, endIndex));
+			}
+			
+			@Override
+			protected IToken getToken(String line, int fromIndex) {
+				return new TBasic(line.substring(fromIndex));
+			}
+		};
 	}
 }
