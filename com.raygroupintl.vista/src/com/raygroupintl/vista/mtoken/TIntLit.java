@@ -2,8 +2,8 @@ package com.raygroupintl.vista.mtoken;
 
 import com.raygroupintl.vista.fnds.IToken;
 import com.raygroupintl.vista.fnds.ITokenFactory;
-import com.raygroupintl.vista.token.TFBasic;
 import com.raygroupintl.vista.token.TBasic;
+import com.raygroupintl.vista.token.TFBasic;
 
 public class TIntLit extends TBasic {
 	private TIntLit(String value) {
@@ -14,20 +14,6 @@ public class TIntLit extends TBasic {
 		@Override
 		protected boolean stopOn(char ch) {
 			return (ch < '0') || (ch > '9');
-		}
-		
-		@Override
-		protected boolean checkFirst() {
-			return true;
-		}
-				
-		@Override
-		protected IToken getToken(String line, int fromIndex, int endIndex) {
-			if (fromIndex == endIndex) {
-				return null;
-			} else {
-				return super.getToken(line, fromIndex, endIndex);
-			}
 		}
 		
 		@Override

@@ -9,10 +9,6 @@ public class TFIdent extends TFBasic {
 		return ! Library.isIdent(ch);	
 	}
 	
-	protected boolean checkFirst() {
-		return true;
-	}
-	
 	@Override
 	protected IToken getToken(String value) {
 		return new TIdent(value);

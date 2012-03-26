@@ -29,7 +29,7 @@ import com.raygroupintl.vista.struct.MError;
 import com.raygroupintl.vista.struct.MNameWithMnemonic;
 import com.raygroupintl.vista.token.TFAllRequired;
 import com.raygroupintl.vista.token.TFAnyBut;
-import com.raygroupintl.vista.token.TFCharAccumulating;
+import com.raygroupintl.vista.token.TFBasic;
 import com.raygroupintl.vista.token.TFConstChar;
 import com.raygroupintl.vista.token.TFEmpty;
 import com.raygroupintl.vista.token.TFSerialBase;
@@ -447,7 +447,7 @@ public class TFCommand extends TFSerialBase {
 					return cmd.getArgumentFactory();
 				}					
 				case 4:
-					return TFCharAccumulating.getInstance(' ');
+					return TFBasic.getInstance(' ');
 				default:
 					assert(n == 5);
 					return null;

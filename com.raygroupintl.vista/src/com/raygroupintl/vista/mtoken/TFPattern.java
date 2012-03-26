@@ -3,76 +3,46 @@ package com.raygroupintl.vista.mtoken;
 import com.raygroupintl.vista.fnds.IToken;
 import com.raygroupintl.vista.fnds.ITokenFactory;
 import com.raygroupintl.vista.token.TFAllOptional;
-import com.raygroupintl.vista.token.TFCharAccumulating;
+import com.raygroupintl.vista.token.TFBasic;
 import com.raygroupintl.vista.token.TFConstChar;
+import com.raygroupintl.vista.token.TFConstChars;
 import com.raygroupintl.vista.token.TFParallelCharBased;
 import com.raygroupintl.vista.token.TFSerialOR;
-import com.raygroupintl.vista.token.TSyntaxError;
 import com.raygroupintl.vista.token.TFAllRequired;
-import com.raygroupintl.vista.token.TBasic;
 	
 public class TFPattern extends TFParallelCharBased {
-	static abstract class TFPatOnSomething extends TFCharAccumulating {
+	static class TFPatOnYy extends  TFAllRequired {
 		@Override
-		protected IToken getToken(String line, int fromIndex) {
-			return new TSyntaxError(line, line.length(), fromIndex);			
-		}
-
-		@Override
-		protected boolean stopOn(char ch) {
-			return this.isRightStop(ch) || ! Library.isIdent(ch);
-		}
-				
-		@Override
-		protected IToken getToken(String line, int fromIndex, int endIndex) {
-			String value = line.substring(fromIndex, endIndex+1);
-			return new TBasic(value);
-		}
-	}
-		
-	static class TFPatOnYy extends TFPatOnSomething {
-		@Override
-		protected boolean isRightStop(char ch) {
-			return (ch == 'y') || (ch == 'Y');
+		protected ITokenFactory[] getFactories() {
+			ITokenFactory y = TFConstChars.getInstance("Zz");
+			ITokenFactory m = new TFBasic() {				
+				@Override
+				protected boolean stopOn(char ch) {
+					return (ch == 'Y') || (ch == 'y') || ! Library.isIdent(ch);
+				}
+			};
+			return new ITokenFactory[]{y, m, y};
 		}
 	}
 	
-	static class TFPatOnZz extends TFPatOnSomething {
+	static class TFPatOnZz extends TFAllRequired {
 		@Override
-		protected boolean isRightStop(char ch) {
-			return (ch == 'z') || (ch == 'Z');
+		protected ITokenFactory[] getFactories() {
+			ITokenFactory z = TFConstChars.getInstance("Zz");
+			ITokenFactory m = new TFBasic() {				
+				@Override
+				protected boolean stopOn(char ch) {
+					return (ch == 'Z') || (ch == 'z') || ! Library.isIdent(ch);
+				}
+			};
+			return new ITokenFactory[]{z, m, z};
 		}
 	}
 	
-	static class TFPatOn extends TFCharAccumulating {
-		@Override
-		protected IToken getToken(String line, int fromIndex) {
-			String value = line.substring(fromIndex);
-			return new TBasic(value);			
-		}
-
-		protected boolean checkFirst() {
-			return true;
-		}
-		
+	static class TFPatOn extends TFBasic {
 		@Override
 		protected boolean stopOn(char ch) {
 			return ! (((ch >= 'a') && (ch < 'y')) || ((ch >= 'A') && (ch <'Y')));
-		}
-				
-		@Override
-		protected IToken getToken(String line, int fromIndex, int endIndex) {
-			if (fromIndex == endIndex) {
-				return null;
-			} else {
-				String value = line.substring(fromIndex, endIndex);
-				return new TBasic(value);
-			}
-		}
-		
-		@Override
-		protected boolean isRightStop(char ch) {
-			return true;
 		}
 	}
 	
