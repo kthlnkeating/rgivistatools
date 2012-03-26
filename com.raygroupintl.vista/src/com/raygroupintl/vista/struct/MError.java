@@ -27,6 +27,9 @@ public class MError {
 	public static final int ERR_GENERAL_SYNTAX = 6;
 	public static final int ERR_NULL_LINE = 42;
 	
+	public static final int ERR_UNKNOWN_INTRINSIC_VARIABLE = 1000;
+	public static final int ERR_UNKNOWN_INTRINSIC_FUNCTION = 1001;
+	
 	private static class CodeDetail {
 		public Severity severity;
 		public String text;
@@ -111,6 +114,10 @@ public class MError {
 		CODES.put(61, new CodeDetail(Severity.STANDARD, "Non-Incremental Lock."));
 		CODES.put(62, new CodeDetail(Severity.STANDARD, "First line of routine violates the SAC."));
 		CODES.put(63, new CodeDetail(Severity.FATAL, "GO or DO mismatch from block structure (M45).	}"));
+
+		CODES.put(ERR_UNKNOWN_INTRINSIC_VARIABLE, new CodeDetail(Severity.FATAL, "Unknown intrinsic variable."));
+		CODES.put(ERR_UNKNOWN_INTRINSIC_FUNCTION, new CodeDetail(Severity.FATAL, "Unknown intrinsic function."));
+
 	}
 	
 	private int code;

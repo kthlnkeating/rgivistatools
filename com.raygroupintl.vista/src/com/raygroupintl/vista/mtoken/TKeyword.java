@@ -2,27 +2,26 @@ package com.raygroupintl.vista.mtoken;
 
 import com.raygroupintl.vista.struct.MNameWithMnemonic;
 import com.raygroupintl.vista.token.TBase;
-import com.raygroupintl.vista.token.TBasic;
 
 public abstract class TKeyword extends TBase {
-	private TBasic identifier;
+	private String value;
 
-	public TKeyword(String identifier) {
-		this.identifier = new TBasic(identifier);
+	public TKeyword(String value) {
+		this.value = value;
 	}
 
 	public String getIdentier() {
-		return this.identifier.getStringValue();
+		return this.value;
 	}
 	
 	@Override
 	public String getStringValue() {
-		return this.identifier.getStringValue();
+		return this.value;
 	}
 	
 	@Override
 	public int getStringSize() {
-		return this.identifier.getStringSize();
+		return this.value.length();
 	}
 		
 	protected abstract MNameWithMnemonic getNameWithMnemonic();
@@ -30,8 +29,8 @@ public abstract class TKeyword extends TBase {
 	@Override
 	public void beautify() {
 		MNameWithMnemonic name = this.getNameWithMnemonic();
-		String fullName = name.getName();
-		this.identifier.setValue(fullName);
-	}
-	
+		if (name != null) {
+			this.value = name.getName();
+		}
+	}	
 }

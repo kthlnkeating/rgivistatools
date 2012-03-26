@@ -1,7 +1,7 @@
 package com.raygroupintl.vista.mtoken.command;
 
 import com.raygroupintl.vista.fnds.ITokenFactory;
-import com.raygroupintl.vista.mtoken.TCommand;
+import com.raygroupintl.vista.mtoken.TCommandName;
 import com.raygroupintl.vista.mtoken.TFCommaDelimitedList;
 import com.raygroupintl.vista.mtoken.TFExpr;
 import com.raygroupintl.vista.mtoken.TFGvn;
@@ -12,7 +12,7 @@ import com.raygroupintl.vista.token.TFConstChars;
 import com.raygroupintl.vista.token.TFParallelCharBased;
 import com.raygroupintl.vista.token.TFSerialORO;
 
-public class TCommandLock extends TCommand {
+public class TCommandLock extends TCommandName {
 	public TCommandLock(String identifier) {
 		super(identifier);
 	}

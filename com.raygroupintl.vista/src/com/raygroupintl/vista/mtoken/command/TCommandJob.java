@@ -3,7 +3,7 @@ package com.raygroupintl.vista.mtoken.command;
 import com.raygroupintl.vista.fnds.IToken;
 import com.raygroupintl.vista.fnds.ITokenFactory;
 import com.raygroupintl.vista.fnds.ITokenFactorySupply;
-import com.raygroupintl.vista.mtoken.TCommand;
+import com.raygroupintl.vista.mtoken.TCommandName;
 import com.raygroupintl.vista.mtoken.TFActualList;
 import com.raygroupintl.vista.mtoken.TFCommaDelimitedList;
 import com.raygroupintl.vista.mtoken.TFDelimitedList;
@@ -25,7 +25,7 @@ import com.raygroupintl.vista.token.TFSerialBase;
 import com.raygroupintl.vista.token.TFSerialOR;
 import com.raygroupintl.vista.token.TFSerialRO;
 
-public class TCommandJob extends TCommand {	
+public class TCommandJob extends TCommandName {	
 	private static class TFArgument extends TFSerialBase {
 		private static ITokenFactory getFactory0(IToken[] previousTokens) {
 			TFLabel tfl = TFLabel.getInstance();

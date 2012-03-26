@@ -6,7 +6,6 @@ import com.raygroupintl.vista.token.TArray;
 import com.raygroupintl.vista.token.TFAllRequired;
 import com.raygroupintl.vista.token.TFConstChar;
 import com.raygroupintl.vista.token.TFSerialRO;
-import com.raygroupintl.vista.token.TBasic;
 
 public class TFIntrinsic extends TFSerialRO {
 	private static class TFIntrinsicHead extends TFAllRequired {
@@ -26,16 +25,16 @@ public class TFIntrinsic extends TFSerialRO {
 		return new TFActualList();
 	}
 
-	private TBasic toTBasic(IToken token) {
-		return (TBasic) ((TArray) token).get(1);	
+	private TIdent toTIdent(IToken token) {
+		return (TIdent) ((TArray) token).get(1);	
 	}
 	
 	protected IToken getTokenRequired(IToken requiredToken) {
-		return new TIntrinsicVar(this.toTBasic(requiredToken)) ;
+		return TIntrinsicVar.getInstance(this.toTIdent(requiredToken)) ;
 	}
 	
 	protected IToken getTokenBoth(IToken requiredToken, IToken optionalToken) {
-		return new TIntrinsicFunc(this.toTBasic(requiredToken), (TActualList) optionalToken);
+		return TIntrinsicFunc.getInstance(this.toTIdent(requiredToken), (TActualList) optionalToken);
 	}
 	
 	public static TFIntrinsic getInstance() {

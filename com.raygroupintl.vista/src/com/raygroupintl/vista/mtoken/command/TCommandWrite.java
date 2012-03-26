@@ -1,7 +1,7 @@
 package com.raygroupintl.vista.mtoken.command;
 
 import com.raygroupintl.vista.fnds.ITokenFactory;
-import com.raygroupintl.vista.mtoken.TCommand;
+import com.raygroupintl.vista.mtoken.TCommandName;
 import com.raygroupintl.vista.mtoken.TFCommaDelimitedList;
 import com.raygroupintl.vista.mtoken.TFExpr;
 import com.raygroupintl.vista.mtoken.TFFormat;
@@ -11,7 +11,7 @@ import com.raygroupintl.vista.token.TFAllRequired;
 import com.raygroupintl.vista.token.TFConstChar;
 import com.raygroupintl.vista.token.TFParallelCharBased;
 
-public class TCommandWrite extends TCommand {	
+public class TCommandWrite extends TCommandName {	
 	public static class TFArgument extends TFParallelCharBased {
 		@Override
 		protected ITokenFactory getFactory(char ch) {

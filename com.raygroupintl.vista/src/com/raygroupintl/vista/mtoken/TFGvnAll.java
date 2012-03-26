@@ -30,7 +30,7 @@ public class TFGvnAll extends TFAllRequired {
 		
 		@Override
 		protected IToken getToken(IToken[] foundTokens) {			
-			return new TSsvn(foundTokens[1], foundTokens[2]);
+			return TSsvn.getInstance((TIdent) foundTokens[1], foundTokens[2]);
 		}		
 	}
 	

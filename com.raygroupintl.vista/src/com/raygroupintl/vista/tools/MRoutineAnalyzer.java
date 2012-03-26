@@ -8,7 +8,7 @@ import java.util.List;
 import java.util.logging.Logger;
 
 import com.raygroupintl.vista.fnds.IFileAction;
-import com.raygroupintl.vista.mtoken.Routine;
+import com.raygroupintl.vista.mtoken.TRoutine;
 import com.raygroupintl.vista.repository.MFileVisitor;
 import com.raygroupintl.vista.struct.MError;
 
@@ -22,7 +22,7 @@ public class MRoutineAnalyzer {
 			@Override
 			public void handle(Path path) {
 				try {
-					Routine r = Routine.getInstance(path);
+					TRoutine r = TRoutine.getInstance(path);
 					List<MError> errors = r.getErrors();
 					if (errors != null) for (MError error : errors){
 						w.write(path.getFileName().toString());

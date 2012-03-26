@@ -36,10 +36,10 @@ import com.raygroupintl.vista.token.TFSerialBase;
 
 public class TFCommand extends TFSerialBase {
 	private static abstract class CommandFactory {
-		public abstract TCommand getInstance(String identifier);
+		public abstract TCommandName getInstance(String identifier);
 	}
 
-	protected static abstract class TCommandAnyArgument extends TCommand {
+	protected static abstract class TCommandAnyArgument extends TCommandName {
 		public TCommandAnyArgument(String identifier) {
 			super(identifier);
 		}
@@ -132,7 +132,7 @@ public class TFCommand extends TFSerialBase {
 		}		
 	}
 
-	protected static abstract class TCommandNoArgument extends TCommand {
+	protected static abstract class TCommandNoArgument extends TCommandName {
 		public TCommandNoArgument(String identifier) {
 			super(identifier);
 		}
@@ -202,7 +202,7 @@ public class TFCommand extends TFSerialBase {
 	static {
 		CommandFactory b = new CommandFactory() {			
 			@Override
-			public TCommand getInstance(String identifier) {
+			public TCommandName getInstance(String identifier) {
 				return new TCommandBreak(identifier);
 			}
 		};
@@ -210,7 +210,7 @@ public class TFCommand extends TFSerialBase {
 		COMMANDS.put("BREAK", b);
 		CommandFactory c = new CommandFactory() {			
 			@Override
-			public TCommand getInstance(String identifier) {
+			public TCommandName getInstance(String identifier) {
 				return new TCommandClose(identifier);
 			}
 		};		
@@ -218,7 +218,7 @@ public class TFCommand extends TFSerialBase {
 		COMMANDS.put("CLOSE", c);
 		CommandFactory d = new CommandFactory() {			
 			@Override
-			public TCommand getInstance(String identifier) {
+			public TCommandName getInstance(String identifier) {
 				return new TCommandDo(identifier);
 			}
 		};				
@@ -226,7 +226,7 @@ public class TFCommand extends TFSerialBase {
 		COMMANDS.put("DO", d);
 		CommandFactory e = new CommandFactory() {			
 			@Override
-			public TCommand getInstance(String identifier) {
+			public TCommandName getInstance(String identifier) {
 				return new TCommandElse(identifier);
 			}
 		};						
@@ -234,7 +234,7 @@ public class TFCommand extends TFSerialBase {
 		COMMANDS.put("ELSE", e);
 		CommandFactory f = new CommandFactory() {			
 			@Override
-			public TCommand getInstance(String identifier) {
+			public TCommandName getInstance(String identifier) {
 				return new TCommandFor(identifier);
 			}
 		};						
@@ -242,7 +242,7 @@ public class TFCommand extends TFSerialBase {
 		COMMANDS.put("FOR", f);
 		CommandFactory g = new CommandFactory() {			
 			@Override
-			public TCommand getInstance(String identifier) {
+			public TCommandName getInstance(String identifier) {
 				return new TCommandGoto(identifier);
 			}
 		};						
@@ -250,7 +250,7 @@ public class TFCommand extends TFSerialBase {
 		COMMANDS.put("GOTO", g);
 		CommandFactory h = new CommandFactory() {			
 			@Override
-			public TCommand getInstance(String identifier) {
+			public TCommandName getInstance(String identifier) {
 				return new TCommandHalt(identifier);
 			}
 		};								
@@ -258,7 +258,7 @@ public class TFCommand extends TFSerialBase {
 		COMMANDS.put("HALT", h);
 		CommandFactory hh = new CommandFactory() {			
 			@Override
-			public TCommand getInstance(String identifier) {
+			public TCommandName getInstance(String identifier) {
 				return new TCommandHang(identifier);
 			}
 		};										
@@ -266,7 +266,7 @@ public class TFCommand extends TFSerialBase {
 		COMMANDS.put("HANG", hh);
 		CommandFactory i = new CommandFactory() {			
 			@Override
-			public TCommand getInstance(String identifier) {
+			public TCommandName getInstance(String identifier) {
 				return new TCommandIf(identifier);
 			}
 		};												
@@ -274,7 +274,7 @@ public class TFCommand extends TFSerialBase {
 		COMMANDS.put("IF", i);
 		CommandFactory j = new CommandFactory() {			
 			@Override
-			public TCommand getInstance(String identifier) {
+			public TCommandName getInstance(String identifier) {
 				return new TCommandJob(identifier);
 			}
 		};												
@@ -282,7 +282,7 @@ public class TFCommand extends TFSerialBase {
 		COMMANDS.put("JOB", j);
 		CommandFactory k = new CommandFactory() {			
 			@Override
-			public TCommand getInstance(String identifier) {
+			public TCommandName getInstance(String identifier) {
 				return new TCommandKill(identifier);
 			}
 		};												
@@ -290,7 +290,7 @@ public class TFCommand extends TFSerialBase {
 		COMMANDS.put("KILL", k);
 		CommandFactory l = new CommandFactory() {			
 			@Override
-			public TCommand getInstance(String identifier) {
+			public TCommandName getInstance(String identifier) {
 				return new TCommandLock(identifier);
 			}
 		};												
@@ -298,7 +298,7 @@ public class TFCommand extends TFSerialBase {
 		COMMANDS.put("LOCK", l);
 		CommandFactory m = new CommandFactory() {			
 			@Override
-			public TCommand getInstance(String identifier) {
+			public TCommandName getInstance(String identifier) {
 				return new TCommandMerge(identifier);
 			}
 		};												
@@ -306,7 +306,7 @@ public class TFCommand extends TFSerialBase {
 		COMMANDS.put("MERGE", m);
 		CommandFactory n = new CommandFactory() {			
 			@Override
-			public TCommand getInstance(String identifier) {
+			public TCommandName getInstance(String identifier) {
 				return new TCommandNew(identifier);
 			}
 		};												
@@ -314,7 +314,7 @@ public class TFCommand extends TFSerialBase {
 		COMMANDS.put("NEW", n);
 		CommandFactory o = new CommandFactory() {			
 			@Override
-			public TCommand getInstance(String identifier) {
+			public TCommandName getInstance(String identifier) {
 				return new TCommandOpen(identifier);
 			}
 		};												
@@ -322,7 +322,7 @@ public class TFCommand extends TFSerialBase {
 		COMMANDS.put("OPEN", o);
 		CommandFactory q = new CommandFactory() {			
 			@Override
-			public TCommand getInstance(String identifier) {
+			public TCommandName getInstance(String identifier) {
 				return new TCommandQuit(identifier);
 			}
 		};												
@@ -330,7 +330,7 @@ public class TFCommand extends TFSerialBase {
 		COMMANDS.put("QUIT", q);
 		CommandFactory r = new CommandFactory() {			
 			@Override
-			public TCommand getInstance(String identifier) {
+			public TCommandName getInstance(String identifier) {
 				return new TCommandRead(identifier);
 			}
 		};												
@@ -338,7 +338,7 @@ public class TFCommand extends TFSerialBase {
 		COMMANDS.put("READ", r);
 		CommandFactory s = new CommandFactory() {			
 			@Override
-			public TCommand getInstance(String identifier) {
+			public TCommandName getInstance(String identifier) {
 				return new TCommandSet(identifier);
 			}
 		};												
@@ -346,7 +346,7 @@ public class TFCommand extends TFSerialBase {
 		COMMANDS.put("SET", s);
 		CommandFactory tc = new CommandFactory() {			
 			@Override
-			public TCommand getInstance(String identifier) {
+			public TCommandName getInstance(String identifier) {
 				return new TCommandTCommit(identifier);
 			}
 		};												
@@ -354,7 +354,7 @@ public class TFCommand extends TFSerialBase {
 		COMMANDS.put("TCOMMIT", tc);
 		CommandFactory tr = new CommandFactory() {			
 			@Override
-			public TCommand getInstance(String identifier) {
+			public TCommandName getInstance(String identifier) {
 				return new TCommandTRestart(identifier);
 			}
 		};												
@@ -362,7 +362,7 @@ public class TFCommand extends TFSerialBase {
 		COMMANDS.put("TRESTART", tr);
 		CommandFactory tro = new CommandFactory() {			
 			@Override
-			public TCommand getInstance(String identifier) {
+			public TCommandName getInstance(String identifier) {
 				return new TCommandTRollback(identifier);
 			}
 		};												
@@ -370,7 +370,7 @@ public class TFCommand extends TFSerialBase {
 		COMMANDS.put("TROLLBACK", tro);
 		CommandFactory ts = new CommandFactory() {			
 			@Override
-			public TCommand getInstance(String identifier) {
+			public TCommandName getInstance(String identifier) {
 				return new TCommandTStart(identifier);
 			}
 		};												
@@ -378,7 +378,7 @@ public class TFCommand extends TFSerialBase {
 		COMMANDS.put("TSTART", ts);
 		CommandFactory u = new CommandFactory() {			
 			@Override
-			public TCommand getInstance(String identifier) {
+			public TCommandName getInstance(String identifier) {
 				return new TCommandUse(identifier);
 			}
 		};												
@@ -386,7 +386,7 @@ public class TFCommand extends TFSerialBase {
 		COMMANDS.put("USE", u);
 		CommandFactory v = new CommandFactory() {			
 			@Override
-			public TCommand getInstance(String identifier) {
+			public TCommandName getInstance(String identifier) {
 				return new TCommandView(identifier);
 			}
 		};												
@@ -394,7 +394,7 @@ public class TFCommand extends TFSerialBase {
 		COMMANDS.put("VIEW", v);
 		CommandFactory w = new CommandFactory() {			
 			@Override
-			public TCommand getInstance(String identifier) {
+			public TCommandName getInstance(String identifier) {
 				return new TCommandWrite(identifier);
 			}
 		};												
@@ -402,7 +402,7 @@ public class TFCommand extends TFSerialBase {
 		COMMANDS.put("WRITE", w);
 		CommandFactory x = new CommandFactory() {			
 			@Override
-			public TCommand getInstance(String identifier) {
+			public TCommandName getInstance(String identifier) {
 				return new TCommandExecute(identifier);
 			}
 		};												
@@ -410,20 +410,20 @@ public class TFCommand extends TFSerialBase {
 		COMMANDS.put("XECUTE", x);
 	}
 	
-	private static TCommand getCommand(String identifier) {
+	private static TCommandName getCommand(String identifier) {
 		CommandFactory f = COMMANDS.get(identifier.toUpperCase());
 		if (f != null) {
-			TCommand command = f.getInstance(identifier);
+			TCommandName command = f.getInstance(identifier);
 			return command;
 		} else {
-			TCommand command = new TCommandGeneric(identifier);
+			TCommandName command = new TCommandGeneric(identifier);
 			return command;
 		}
 	}
 	
 	private static class TFIdentCommand extends TFIdent {
 		@Override
-		protected TCommand getToken(String value) {
+		protected TCommandName getToken(String value) {
 			return getCommand(value);
 		}				
 		
@@ -443,7 +443,7 @@ public class TFCommand extends TFSerialBase {
 				case 2:
 					return TFConstChar.getInstance(' ');
 				case 3: {
-					TCommand cmd = (TCommand) previousTokens[0];
+					TCommandName cmd = (TCommandName) previousTokens[0];
 					return cmd.getArgumentFactory();
 				}					
 				case 4:

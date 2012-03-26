@@ -2,7 +2,7 @@ package com.raygroupintl.vista.mtoken.command;
 
 import com.raygroupintl.vista.fnds.IToken;
 import com.raygroupintl.vista.fnds.ITokenFactory;
-import com.raygroupintl.vista.mtoken.TCommand;
+import com.raygroupintl.vista.mtoken.TCommandName;
 import com.raygroupintl.vista.mtoken.TFCommaDelimitedList;
 import com.raygroupintl.vista.mtoken.TFDelimitedList;
 import com.raygroupintl.vista.mtoken.TFExpr;
@@ -16,7 +16,7 @@ import com.raygroupintl.vista.token.TFConstChar;
 import com.raygroupintl.vista.token.TFParallelCharBased;
 import com.raygroupintl.vista.token.TFSerial;
 
-public class TCommandSet extends TCommand {	
+public class TCommandSet extends TCommandName {	
 	private static class TFSetLeft extends TFParallelCharBased {
 		@Override
 		protected ITokenFactory getFactory(char ch) {

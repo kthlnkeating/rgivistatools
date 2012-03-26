@@ -1,14 +1,14 @@
 package com.raygroupintl.vista.mtoken.command;
 
 import com.raygroupintl.vista.fnds.ITokenFactory;
-import com.raygroupintl.vista.mtoken.TCommand;
+import com.raygroupintl.vista.mtoken.TCommandName;
 import com.raygroupintl.vista.mtoken.TFExpr;
 import com.raygroupintl.vista.mtoken.TFIndirection;
 import com.raygroupintl.vista.struct.MNameWithMnemonic;
 import com.raygroupintl.vista.token.TFParallelCharBased;
 import com.raygroupintl.vista.token.TFSerialRO;
 
-public class TCommandExecute extends TCommand {
+public class TCommandExecute extends TCommandName {
 	public TCommandExecute(String identifier) {
 		super(identifier);
 	}

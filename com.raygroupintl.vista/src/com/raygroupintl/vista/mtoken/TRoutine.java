@@ -14,7 +14,7 @@ import com.raygroupintl.vista.fnds.IToken;
 import com.raygroupintl.vista.struct.MError;
 import com.raygroupintl.vista.token.TBase;
 
-public class Routine extends TBase {
+public class TRoutine extends TBase {
 	private List<IToken> lines = new ArrayList<IToken>();
 	
 	public void add(IToken line) {
@@ -83,8 +83,8 @@ public class Routine extends TBase {
 	}
 	
 	
-	private static Routine getInstance(Scanner scanner) {
-		Routine result = new Routine();
+	private static TRoutine getInstance(Scanner scanner) {
+		TRoutine result = new TRoutine();
 		TFLine f = TFLine.getInstance();
 		while (scanner.hasNextLine()) {
 			String line = scanner.nextLine();
@@ -94,16 +94,16 @@ public class Routine extends TBase {
 		return result;				
 	}
 	
-	public static Routine getInstance(InputStream is) {
+	public static TRoutine getInstance(InputStream is) {
 		Scanner scanner = new Scanner(is);
-		Routine result = getInstance(scanner);
+		TRoutine result = getInstance(scanner);
 		scanner.close();
 		return result;				
 	}
 	
-	public static Routine getInstance(Path file) throws IOException {
+	public static TRoutine getInstance(Path file) throws IOException {
 		Scanner scanner = new Scanner(file);
-		Routine result = getInstance(scanner);
+		TRoutine result = getInstance(scanner);
 		scanner.close();
 		return result;		
 	}

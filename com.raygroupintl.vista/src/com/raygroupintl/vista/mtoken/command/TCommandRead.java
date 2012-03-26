@@ -1,7 +1,7 @@
 package com.raygroupintl.vista.mtoken.command;
 
 import com.raygroupintl.vista.fnds.ITokenFactory;
-import com.raygroupintl.vista.mtoken.TCommand;
+import com.raygroupintl.vista.mtoken.TCommandName;
 import com.raygroupintl.vista.mtoken.TFCommaDelimitedList;
 import com.raygroupintl.vista.mtoken.TFExpr;
 import com.raygroupintl.vista.mtoken.TFFormat;
@@ -15,7 +15,7 @@ import com.raygroupintl.vista.token.TFParallelCharBased;
 import com.raygroupintl.vista.token.TFSerialROO;
 import com.raygroupintl.vista.token.TFSerialRRO;
 
-public class TCommandRead extends TCommand {	
+public class TCommandRead extends TCommandName {	
 	private static ITokenFactory getTFReadcountInstance() {
 		return TFAllRequired.getInstance(TFConstChar.getInstance('#'), TFExpr.getInstance());
 	}

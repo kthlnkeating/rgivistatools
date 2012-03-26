@@ -8,8 +8,8 @@ import com.raygroupintl.vista.struct.MError;
 import com.raygroupintl.vista.token.TFAllRequired;
 import com.raygroupintl.vista.token.TFConstChar;
 
-public abstract class TCommand extends TKeyword {
-	public TCommand(String identifier) {
+public abstract class TCommandName extends TKeyword {
+	public TCommandName(String identifier) {
 		super(identifier);
 	}
 	

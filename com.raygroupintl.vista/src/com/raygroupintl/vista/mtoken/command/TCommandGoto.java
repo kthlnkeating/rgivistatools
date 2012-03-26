@@ -3,7 +3,7 @@ package com.raygroupintl.vista.mtoken.command;
 import com.raygroupintl.vista.fnds.IToken;
 import com.raygroupintl.vista.fnds.ITokenFactory;
 import com.raygroupintl.vista.fnds.ITokenFactorySupply;
-import com.raygroupintl.vista.mtoken.TCommand;
+import com.raygroupintl.vista.mtoken.TCommandName;
 import com.raygroupintl.vista.mtoken.TFCommaDelimitedList;
 import com.raygroupintl.vista.mtoken.TFEnvironment;
 import com.raygroupintl.vista.mtoken.TFExpr;
@@ -18,7 +18,7 @@ import com.raygroupintl.vista.token.TFParallel;
 import com.raygroupintl.vista.token.TFSerialBase;
 import com.raygroupintl.vista.token.TFSerialOR;
 
-public class TCommandGoto extends TCommand {	
+public class TCommandGoto extends TCommandName {	
 	private static class TFArgument extends TFSerialBase {
 		private static ITokenFactory getFactory0(IToken[] previousTokens) {
 			TFLabel tfl = TFLabel.getInstance();
@@ -73,7 +73,7 @@ public class TCommandGoto extends TCommand {
 						case 1: return TFArgument.getFactory1(previousTokens); 
 						case 2: return TFArgument.getFactory2(previousTokens); 
 						case 3: return TFArgument.getFactory3(previousTokens); 
-						case 4: return TCommand.getTFPostCondition(previousTokens);
+						case 4: return TCommandName.getTFPostCondition(previousTokens);
 						default:
 							assert(false);
 							return null;
