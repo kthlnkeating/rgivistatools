@@ -15,7 +15,7 @@ public class TCommandExecute extends TCommand {
 	}
 	
 	@Override
-	protected ITokenFactory getArgumentFactory() {
+	public ITokenFactory getArgumentFactory() {
 		ITokenFactory tf = TFParallelCharBased.getInstance(TFExpr.getInstance(), '@', TFIndirection.getInstance());
 		ITokenFactory pc = getTFPostCondition(null);
 		return TFSerialRO.getInstance(tf, pc);

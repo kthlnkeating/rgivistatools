@@ -161,7 +161,7 @@ public abstract class TCommand extends TKeyword {
 		return TFAllRequired.getInstance(tfColon, tfExpr);
 	}
 	
-	protected ITokenFactory getArgumentFactory() {
+	public ITokenFactory getArgumentFactory() {
 		return null;
 	}
 		

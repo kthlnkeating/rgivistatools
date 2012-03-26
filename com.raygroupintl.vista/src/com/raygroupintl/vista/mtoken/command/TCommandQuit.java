@@ -14,7 +14,7 @@ public class TCommandQuit extends TCommand {
 	}
 	
 	@Override
-	protected ITokenFactory getArgumentFactory() {
+	public ITokenFactory getArgumentFactory() {
 		return TFParallelCharBased.getInstance(TFExpr.getInstance(), '@', TFIndirection.getInstance());		
 	}
  	

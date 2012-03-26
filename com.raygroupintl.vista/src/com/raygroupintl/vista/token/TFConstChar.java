@@ -1,6 +1,5 @@
 package com.raygroupintl.vista.token;
 
-import com.raygroupintl.vista.mtoken.TFChar;
 
 public class TFConstChar extends TFChar {
 	private char constChar;

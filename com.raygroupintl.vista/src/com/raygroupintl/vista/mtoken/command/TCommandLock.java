@@ -19,7 +19,7 @@ public class TCommandLock extends TCommand {
 	}
 	
 	@Override
-	protected ITokenFactory getArgumentFactory() {
+	public ITokenFactory getArgumentFactory() {
 		ITokenFactory tfNRef = TFParallelCharBased.getInstance(TFName.getInstance(), '^', TFGvn.getInstance(), '@', TFIndirection.getInstance());		
 		ITokenFactory tfNRefOrList = TFParallelCharBased.getInstance(tfNRef, '(', TFCommaDelimitedList.getInstance(tfNRef));
 		return TFSerialORO.getInstance(TFConstChars.getInstance("+-"), tfNRefOrList, TFExpr.getInstance());

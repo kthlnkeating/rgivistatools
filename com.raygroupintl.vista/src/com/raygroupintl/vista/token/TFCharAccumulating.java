@@ -28,7 +28,11 @@ public abstract class TFCharAccumulating implements ITokenFactory {
 				if ((! first) || this.checkFirst()) {				
 					if (this.stopOn(ch)) {
 						if (this.isRightStop(ch)) {
-							return this.getToken(line, fromIndex, index);
+							if (fromIndex == index) {
+								return null;
+							} else {
+								return this.getToken(line, fromIndex, index);
+							}
 						} else {
 							return new TSyntaxError(line, index, fromIndex);
 						}
@@ -51,6 +55,35 @@ public abstract class TFCharAccumulating implements ITokenFactory {
 			
 			@Override
 			protected boolean isRightStop(char ch) {
+				return true;
+			}
+			
+			@Override
+			protected IToken getToken(String line, int fromIndex, int endIndex) {
+				return new TBasic(line.substring(fromIndex, endIndex));
+			}
+			
+			@Override
+			protected IToken getToken(String line, int fromIndex) {
+				return new TBasic(line.substring(fromIndex));
+			}
+		};
+	}
+	
+	public static TFCharAccumulating getInstance(final char chIn) {
+		return new TFCharAccumulating() {			
+			@Override
+			protected boolean stopOn(char ch) {
+				return ch != chIn;
+			}
+			
+			@Override
+			protected boolean isRightStop(char ch) {
+				return true;
+			}
+			
+			@Override
+			protected boolean checkFirst() {
 				return true;
 			}
 			

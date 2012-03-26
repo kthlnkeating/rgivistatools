@@ -6,21 +6,26 @@ import com.raygroupintl.vista.fnds.ITokenFactorySupply;
 import com.raygroupintl.vista.mtoken.TCommand;
 import com.raygroupintl.vista.mtoken.TFActualList;
 import com.raygroupintl.vista.mtoken.TFCommaDelimitedList;
+import com.raygroupintl.vista.mtoken.TFDelimitedList;
 import com.raygroupintl.vista.mtoken.TFEnvironment;
 import com.raygroupintl.vista.mtoken.TFExpr;
+import com.raygroupintl.vista.mtoken.TFInParantheses;
 import com.raygroupintl.vista.mtoken.TFIndirection;
 import com.raygroupintl.vista.mtoken.TFLabel;
 import com.raygroupintl.vista.mtoken.TFName;
+import com.raygroupintl.vista.mtoken.TFTimeout;
 import com.raygroupintl.vista.mtoken.TIndirection;
 import com.raygroupintl.vista.struct.MNameWithMnemonic;
 import com.raygroupintl.vista.token.TFAllRequired;
 import com.raygroupintl.vista.token.TFConstChar;
 import com.raygroupintl.vista.token.TFNull;
 import com.raygroupintl.vista.token.TFParallel;
+import com.raygroupintl.vista.token.TFParallelCharBased;
 import com.raygroupintl.vista.token.TFSerialBase;
 import com.raygroupintl.vista.token.TFSerialOR;
+import com.raygroupintl.vista.token.TFSerialRO;
 
-public class TCommandDo extends TCommand {	
+public class TCommandJob extends TCommand {	
 	private static class TFArgument extends TFSerialBase {
 		private static ITokenFactory getFactory0(IToken[] previousTokens) {
 			TFLabel tfl = TFLabel.getInstance();
@@ -68,6 +73,14 @@ public class TCommandDo extends TCommand {
 			}
 		}
 
+		private static ITokenFactory getFactory5(IToken[] previousTokens) {
+			TFExpr e = TFExpr.getInstance();
+			TFDelimitedList re = TFDelimitedList.getInstance(e, ':');
+			ITokenFactory processParams = TFParallelCharBased.getInstance(e, '(', TFInParantheses.getInstance(re));
+			ITokenFactory jobParams = TFAllRequired.getInstance(TFConstChar.getInstance(':'), processParams); 
+			return TFSerialRO.getInstance(jobParams, TFTimeout.getInstance());
+		}
+
 		protected ITokenFactorySupply getFactorySupply() {
 			return new ITokenFactorySupply() {				
 				@Override
@@ -84,7 +97,7 @@ public class TCommandDo extends TCommand {
 						case 2: return TFArgument.getFactory2(previousTokens); 
 						case 3: return TFArgument.getFactory3(previousTokens); 
 						case 4: return TFArgument.getFactory4(previousTokens); 
-						case 5: return TCommand.getTFPostCondition(previousTokens);
+						case 5: return TFArgument.getFactory5(previousTokens);
 						default:
 							assert(false);
 							return null;
@@ -116,9 +129,14 @@ public class TCommandDo extends TCommand {
 		}
 	}	
 	
-	public TCommandDo(String identifier) {
+	public TCommandJob(String identifier) {
 		super(identifier);
 	}
+
+	@Override
+	protected MNameWithMnemonic getNameWithMnemonic() {
+		return new MNameWithMnemonic("J", "JOB");
+	}		
 	
 	@Override
 	public ITokenFactory getArgumentFactory() {
@@ -129,10 +147,4 @@ public class TCommandDo extends TCommand {
 	public IToken getArgument(String line, int fromIndex) {
 		return this.getNewArgument(line, fromIndex);
 	}
-
-	@Override
-	protected MNameWithMnemonic getNameWithMnemonic() {
-		return new MNameWithMnemonic("D", "DO");
-	}		
 }
-

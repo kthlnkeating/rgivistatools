@@ -31,7 +31,7 @@ public class TCommandIf extends TCommand {
 	}		
 	
 	@Override
-	protected ITokenFactory getArgumentFactory() {
+	public ITokenFactory getArgumentFactory() {
 		return TFCommaDelimitedList.getInstance(new TFArgument());
 	}
  	

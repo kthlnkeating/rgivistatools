@@ -51,7 +51,7 @@ public class TCommandKill extends TCommand {
 	}		
 	
 	@Override
-	protected ITokenFactory getArgumentFactory() {
+	public ITokenFactory getArgumentFactory() {
 		return TFCommaDelimitedList.getInstance(new TFArgument());
 	}
  	
