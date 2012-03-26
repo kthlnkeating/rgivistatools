@@ -2,10 +2,11 @@ package com.raygroupintl.vista.mtoken;
 
 import com.raygroupintl.vista.fnds.IToken;
 import com.raygroupintl.vista.fnds.ITokenFactory;
-import com.raygroupintl.vista.token.TFAllRequired;
+import com.raygroupintl.vista.token.TEmpty;
 import com.raygroupintl.vista.token.TFConstChar;
+import com.raygroupintl.vista.token.TFSerial;
 
-public abstract class TFInParantheses extends TFAllRequired {
+public abstract class TFInParantheses extends TFSerial {
 	protected abstract ITokenFactory getInnerfactory();
 	
 	@Override
@@ -17,8 +18,48 @@ public abstract class TFInParantheses extends TFAllRequired {
 	}
 
 	@Override
+	protected final int getCodeStringEnds(IToken[] foundTokens) {
+		return this.getErrorCode();
+	}		
+	
+	@Override
 	protected IToken getToken(IToken[] foundTokens) {
-		return new TInParantheses(foundTokens[1]);
+		if (foundTokens[1] == null) {
+			return new TInParantheses(new TEmpty());
+		} else {
+			return new TInParantheses(foundTokens[1]);
+		}
+	}		
+	
+	@Override
+	protected int getCodeNextIsNull(IToken[] foundTokens) {
+		if (foundTokens.length == 0) {
+			return RETURN_NULL;
+		} else {
+			return this.getErrorCode();
+		}
+	}	
+
+	private static abstract class TFInParanthesesOptional extends TFInParantheses {
+		@Override
+		protected final int getCodeNextIsNull(IToken[] foundTokens) {
+			if (foundTokens.length == 0) {
+				return RETURN_NULL;
+			} else if (foundTokens.length == 1) {
+				return CONTINUE;
+			} else {
+				return this.getErrorCode();
+			}
+		}
+		
+		public static TFInParanthesesOptional getInstance(final ITokenFactory f) {
+			return new TFInParanthesesOptional() {			
+				@Override
+				protected ITokenFactory getInnerfactory() {
+					return f;
+				}
+			};			
+		}
 	}
 	
 	public static TFInParantheses getInstance(final ITokenFactory f) {
@@ -28,5 +69,13 @@ public abstract class TFInParantheses extends TFAllRequired {
 				return f;
 			}
 		};
+	}
+
+	public static TFInParantheses getInstance(final ITokenFactory f, boolean innerRequired) {
+		if (innerRequired) {
+			return TFInParantheses.getInstance(f);
+		} else {
+			return TFInParanthesesOptional.getInstance(f);			
+		}
 	}
 }

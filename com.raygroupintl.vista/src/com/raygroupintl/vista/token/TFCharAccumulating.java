@@ -59,6 +59,11 @@ public abstract class TFCharAccumulating implements ITokenFactory {
 			}
 			
 			@Override
+			protected boolean checkFirst() {
+				return true;
+			}
+			
+			@Override
 			protected IToken getToken(String line, int fromIndex, int endIndex) {
 				return new TBasic(line.substring(fromIndex, endIndex));
 			}

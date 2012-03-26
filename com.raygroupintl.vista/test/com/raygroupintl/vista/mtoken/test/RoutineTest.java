@@ -6,7 +6,8 @@ import junit.framework.Assert;
 
 import org.junit.Test;
 
-import com.raygroupintl.vista.mtoken.Line;
+import com.raygroupintl.vista.fnds.IToken;
+import com.raygroupintl.vista.mtoken.TFLine;
 import com.raygroupintl.vista.mtoken.Routine;
 
 public class RoutineTest {
@@ -31,7 +32,8 @@ public class RoutineTest {
 		Routine r = new Routine();
 		for (int i=0; i<lines.length; ++i) {
 			String line = lines[i];
-			Line l = Line.getInstance(line);
+			TFLine f = TFLine.getInstance();
+			IToken l = f.tokenize(line, 0);
 			r.add(l);
 		}
 		r.beautify();		
@@ -51,7 +53,7 @@ public class RoutineTest {
 				" QUIT",
 				" ;"};
 		int index = 0;
-		for (Line line : r.asList()) {
+		for (IToken line : r.asList()) {
 			String expected = result[index];
 			String actual = line.getStringValue();
 			Assert.assertEquals(expected, actual);

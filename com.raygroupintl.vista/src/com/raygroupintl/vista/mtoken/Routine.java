@@ -10,23 +10,24 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
 
+import com.raygroupintl.vista.fnds.IToken;
 import com.raygroupintl.vista.struct.MError;
 
 public class Routine extends Base {
-	private List<Line> lines = new ArrayList<Line>();
+	private List<IToken> lines = new ArrayList<IToken>();
 	
-	public void add(Line line) {
+	public void add(IToken line) {
 		this.lines.add(line);
 	}
 	
-	public List<Line> asList() {
+	public List<IToken> asList() {
 		return this.lines;
 	}
 	
 	@Override
 	public String getStringValue() {
 		StringBuilder sb = new StringBuilder();
-		for (Line line : this.lines) {
+		for (IToken line : this.lines) {
 			sb.append(line.getStringValue());
 			sb.append('\n');
 		}
@@ -36,7 +37,7 @@ public class Routine extends Base {
 	@Override
 	public List<MError> getErrors() {
 		List<MError> result = null;
-		for (Line line : this.lines) {
+		for (IToken line : this.lines) {
 			List<MError> lerr = line.getErrors();
 			if (lerr != null) {
 				if (result == null) {
@@ -50,7 +51,7 @@ public class Routine extends Base {
 
 	@Override
 	public void beautify() {		
-		for (Line line : this.lines) {
+		for (IToken line : this.lines) {
 			line.beautify();
 		}	
 	}
@@ -60,7 +61,7 @@ public class Routine extends Base {
 		if (seperator == null) {
 			seperator = "\n";
 		}
-		for (Line line : this.lines) {
+		for (IToken line : this.lines) {
 			String lineAsString = line.getStringValue(); 
 			os.write(lineAsString.getBytes());
 			os.write(seperator.getBytes());
@@ -69,7 +70,7 @@ public class Routine extends Base {
 		
 	public void write(Path path) throws IOException {
 		List<String> fileLines = new ArrayList<String>();
-		for (Line line : this.lines) {
+		for (IToken line : this.lines) {
 			if (line == null) {
 				fileLines.add("");
 			} else {
@@ -83,9 +84,10 @@ public class Routine extends Base {
 	
 	private static Routine getInstance(Scanner scanner) {
 		Routine result = new Routine();
+		TFLine f = TFLine.getInstance();
 		while (scanner.hasNextLine()) {
 			String line = scanner.nextLine();
-			Line tokens = Line.getInstance(line);
+			IToken tokens = f.tokenize(line, 0);
 			result.lines.add(tokens);
 		}
 		return result;				

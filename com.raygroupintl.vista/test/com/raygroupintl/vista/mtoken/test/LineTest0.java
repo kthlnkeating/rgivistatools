@@ -6,12 +6,14 @@ import junit.framework.Assert;
 
 import org.junit.Test;
 
-import com.raygroupintl.vista.mtoken.Line;
+import com.raygroupintl.vista.fnds.IToken;
+import com.raygroupintl.vista.mtoken.TFLine;
 import com.raygroupintl.vista.struct.MError;
 
 public class LineTest0 {
-	private Line lineTest(String line, boolean errorAsWell) {
-		Line t = Line.getInstance(line);
+	private IToken lineTest(String line, boolean errorAsWell) {
+		TFLine f = TFLine.getInstance();
+		IToken t = f.tokenize(line, 0);
 		String r = t.getStringValue();
 		Assert.assertEquals(line, r);	
 		if (errorAsWell) {
@@ -23,12 +25,13 @@ public class LineTest0 {
 	}
 
 	private void noErrorTest(String lineUnderTest) {
-		Line line = Line.getInstance(lineUnderTest);
+		TFLine f = TFLine.getInstance();
+		IToken line = f.tokenize(lineUnderTest, 0);
 		Assert.assertFalse("Unexpected error", line.hasError());
 		Assert.assertFalse("Unexpected fatal error", line.hasFatalError());				
 	}
 	
-	private Line lineTest(String line) {
+	private IToken lineTest(String line) {
 		return lineTest(line, true);
 	}
 	
@@ -71,7 +74,7 @@ public class LineTest0 {
 
 	@Test
 	public void testBeautify() {
-		Line l = lineTest(" S @A=\"S\"  S @H@(0)=3");
+		IToken l = lineTest(" S @A=\"S\"  S @H@(0)=3");
 		l.beautify();
 		String expected = " SET @A=\"S\"  SET @H@(0)=3";
 		String actual = l.getStringValue();

@@ -574,7 +574,7 @@ public class FactorySupply {
 				++index;
 				sb.append(ch);
 			}
-			return new Comment(sb.toString());
+			return new TComment(sb.toString());
 		}		
 	}
 

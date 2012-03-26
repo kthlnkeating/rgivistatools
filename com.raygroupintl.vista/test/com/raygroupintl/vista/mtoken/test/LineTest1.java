@@ -9,7 +9,8 @@ import java.util.logging.Logger;
 import org.junit.Test;
 
 import com.raygroupintl.vista.fnds.IFileAction;
-import com.raygroupintl.vista.mtoken.Line;
+import com.raygroupintl.vista.fnds.IToken;
+import com.raygroupintl.vista.mtoken.TFLine;
 import com.raygroupintl.vista.repository.MFileVisitor;
 import com.raygroupintl.vista.tools.MRoutineAnalyzer;
 
@@ -31,7 +32,8 @@ public class LineTest1 {
 					while (scanner.hasNextLine()) {
 						String line = scanner.nextLine();
 						//LOGGER.info(">>> " + line);
-						Line tokens = Line.getInstance(line);
+						TFLine f = TFLine.getInstance();
+						IToken tokens = f.tokenize(line, 0);
 						String readLine = tokens.getStringValue();
 						String msg = path.getFileName().toString() + " Line " +  String.valueOf(index);
 						Assert.assertEquals("Different: " + msg, line, readLine);
