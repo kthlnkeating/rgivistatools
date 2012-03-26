@@ -126,7 +126,7 @@ public class TList implements IToken {
 		for (IToken token : this.tokens) {
 			if (token instanceof TCommand) {
 				TCommand commandToken = (TCommand) token;
-				String commandString = commandToken.getCommandString();
+				String commandString = commandToken.getStringValue();
 				sb.append(commandString);
 				sb.append("  ");
 			}
