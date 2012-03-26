@@ -32,11 +32,6 @@ public class TEmpty implements IToken {
 	}
 
 	@Override
-	public boolean isError() {
-		return false;
-	}
-
-	@Override
 	public void beautify() {
 	}
 }

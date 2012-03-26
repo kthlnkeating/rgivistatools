@@ -32,9 +32,4 @@ public abstract class TBase implements IToken {
 		}
 		return false;
 	}
-
-	@Override
-	public boolean isError() {
-		return false;
-	}
 }

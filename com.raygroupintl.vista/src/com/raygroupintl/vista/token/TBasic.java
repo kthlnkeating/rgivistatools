@@ -31,11 +31,6 @@ public class TBasic extends TBase {
 	}
 	
 	@Override
-	public boolean isError() {
-		return false;
-	}
-
-	@Override
 	public void beautify() {		
 	}
 }

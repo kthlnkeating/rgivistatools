@@ -54,11 +54,6 @@ public class TSyntaxError implements IToken {
 	}
 
 	@Override
-	public boolean isError() {
-		return true;
-	}
-
-	@Override
 	public boolean hasError() {
 		return true;
 	}

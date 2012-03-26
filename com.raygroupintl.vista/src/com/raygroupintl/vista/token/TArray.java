@@ -76,11 +76,6 @@ public class TArray implements IToken, ITokenArray {
 	}
 	
 	@Override
-	public boolean isError() {
-		return false;
-	}
-	
-	@Override
 	public int getCount() {
 		return this.tokens.length;
 	}

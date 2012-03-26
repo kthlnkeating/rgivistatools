@@ -29,9 +29,4 @@ public class TChar extends TBase {
 	@Override
 	public void beautify() {			
 	}
-	
-	@Override
-	public boolean isError() {
-		return false;
-	}
 }

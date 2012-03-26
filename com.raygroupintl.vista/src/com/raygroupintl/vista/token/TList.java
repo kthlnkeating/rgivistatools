@@ -137,10 +137,4 @@ public class TList implements IToken {
 	public void add(int index, IToken token) {
 		this.tokens.add(index, token);
 	}
-
-	@Override
-	public boolean isError() {
-		return false;
-	}
-
 }

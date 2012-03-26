@@ -38,11 +38,6 @@ public abstract class TCopy implements IToken {
 	}
 
 	@Override
-	public boolean isError() {
-		return this.source.isError();
-	}
-
-	@Override
 	public void beautify() {
 		this.source.beautify();
 	}

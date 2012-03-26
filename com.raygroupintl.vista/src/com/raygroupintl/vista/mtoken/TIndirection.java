@@ -64,10 +64,5 @@ public class TIndirection extends TBase {
 	public List<MError> getErrors() {
 		return null;
 	}
-
-	@Override
-	public boolean isError() {
-		return false;
-	}
 }
 
