@@ -4,8 +4,9 @@ import java.util.List;
 
 import com.raygroupintl.vista.fnds.IToken;
 import com.raygroupintl.vista.struct.MError;
+import com.raygroupintl.vista.token.TBase;
 
-public class TIndirection extends Base {
+public class TIndirection extends TBase {
 	private int precedingSpaces = 0;
 	private IToken argument;
 	private IToken subcripts;

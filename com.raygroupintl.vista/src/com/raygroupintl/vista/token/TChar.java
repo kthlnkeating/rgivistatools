@@ -2,10 +2,9 @@ package com.raygroupintl.vista.token;
 
 import java.util.List;
 
-import com.raygroupintl.vista.mtoken.Base;
 import com.raygroupintl.vista.struct.MError;
 
-public class TChar extends Base {
+public class TChar extends TBase {
 	private char value;
 	
 	public TChar(char value) {

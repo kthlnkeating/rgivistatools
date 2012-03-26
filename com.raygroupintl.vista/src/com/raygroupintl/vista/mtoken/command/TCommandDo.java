@@ -126,11 +126,6 @@ public class TCommandDo extends TCommand {
 	}
  	
 	@Override
-	public IToken getArgument(String line, int fromIndex) {
-		return this.getNewArgument(line, fromIndex);
-	}
-
-	@Override
 	protected MNameWithMnemonic getNameWithMnemonic() {
 		return new MNameWithMnemonic("D", "DO");
 	}		

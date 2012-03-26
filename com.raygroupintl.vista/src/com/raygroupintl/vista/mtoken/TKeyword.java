@@ -1,8 +1,10 @@
 package com.raygroupintl.vista.mtoken;
 
 import com.raygroupintl.vista.struct.MNameWithMnemonic;
+import com.raygroupintl.vista.token.TBase;
+import com.raygroupintl.vista.token.TBasic;
 
-public abstract class TKeyword extends Base {
+public abstract class TKeyword extends TBase {
 	private TBasic identifier;
 
 	public TKeyword(String identifier) {

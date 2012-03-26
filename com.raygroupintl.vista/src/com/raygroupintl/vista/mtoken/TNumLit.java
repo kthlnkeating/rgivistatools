@@ -8,6 +8,7 @@ import com.raygroupintl.vista.token.TFConstChars;
 import com.raygroupintl.vista.token.TFSerialRO;
 import com.raygroupintl.vista.token.TFSerial;
 import com.raygroupintl.vista.token.TFAllRequired;
+import com.raygroupintl.vista.token.TBasic;
 
 public class TNumLit extends TBasic {
 	private TNumLit(String value) {

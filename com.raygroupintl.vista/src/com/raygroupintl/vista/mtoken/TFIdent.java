@@ -1,6 +1,7 @@
 package com.raygroupintl.vista.mtoken;
 
 import com.raygroupintl.vista.fnds.IToken;
+import com.raygroupintl.vista.token.TFBasic;
 
 public class TFIdent extends TFBasic {
 	@Override

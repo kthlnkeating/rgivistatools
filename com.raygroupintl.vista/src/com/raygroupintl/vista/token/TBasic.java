@@ -1,10 +1,10 @@
-package com.raygroupintl.vista.mtoken;
+package com.raygroupintl.vista.token;
 
 import java.util.List;
 
 import com.raygroupintl.vista.struct.MError;
 
-public class TBasic extends Base {
+public class TBasic extends TBase {
 	private String value;
 		
 	public TBasic(String value) {

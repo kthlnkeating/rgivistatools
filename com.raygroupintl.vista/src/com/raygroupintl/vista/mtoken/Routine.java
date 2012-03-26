@@ -12,8 +12,9 @@ import java.util.Scanner;
 
 import com.raygroupintl.vista.fnds.IToken;
 import com.raygroupintl.vista.struct.MError;
+import com.raygroupintl.vista.token.TBase;
 
-public class Routine extends Base {
+public class Routine extends TBase {
 	private List<IToken> lines = new ArrayList<IToken>();
 	
 	public void add(IToken line) {

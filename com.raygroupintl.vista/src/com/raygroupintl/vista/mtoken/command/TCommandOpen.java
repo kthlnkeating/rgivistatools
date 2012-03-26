@@ -1,6 +1,5 @@
 package com.raygroupintl.vista.mtoken.command;
 
-import com.raygroupintl.vista.fnds.IToken;
 import com.raygroupintl.vista.fnds.ITokenFactory;
 import com.raygroupintl.vista.mtoken.TCommand;
 import com.raygroupintl.vista.mtoken.TFCommaDelimitedList;
@@ -49,10 +48,5 @@ public class TCommandOpen extends TCommand {
 	@Override
 	public ITokenFactory getArgumentFactory() {
 		return TFCommaDelimitedList.getInstance(new TFArgument());
-	}
- 	
-	@Override
-	public IToken getArgument(String line, int fromIndex) {
-		return this.getNewArgument(line, fromIndex);
 	}
 }

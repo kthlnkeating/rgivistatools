@@ -2,25 +2,20 @@ package com.raygroupintl.vista.mtoken.test;
 
 import org.junit.Test;
 
-import com.raygroupintl.vista.fnds.IToken;
-import com.raygroupintl.vista.mtoken.command.TCommandSet;
+import com.raygroupintl.vista.fnds.ITokenFactory;
+import com.raygroupintl.vista.mtoken.TFCommand;
 
 public class TCommandSetTest {
-	private void testCommon(String v) {
-		TCommandSet o = new TCommandSet("S");
-		IToken t = o.getArgument(v, 0);
-		TFCommonTest.validCheck(t, v);		
-	}
-	
 	@Test
 	public void test() {
-		this.testCommon("A=B");
-		this.testCommon("A=B,@C=D");
-		this.testCommon("@A,$E(V,\",\",2)=\"DE\"");
-		this.testCommon("@A=@C");
-		this.testCommon("$X=5,$Y=3,(B,C,D)=(A=B)");
-		this.testCommon("A=B,C=F,D=YSH");
-		this.testCommon("@A=\"S\"");
-		this.testCommon("@H@(0)=3");
+		ITokenFactory f = new TFCommand();
+		TFCommonTest.validCheck(f, "S A=B");
+		TFCommonTest.validCheck(f, "S A=B,@C=D");
+		TFCommonTest.validCheck(f, "S @A,$E(V,\",\",2)=\"DE\"");
+		TFCommonTest.validCheck(f, "S @A=@C");
+		TFCommonTest.validCheck(f, "S $X=5,$Y=3,(B,C,D)=(A=B)");
+		TFCommonTest.validCheck(f, "S A=B,C=F,D=YSH");
+		TFCommonTest.validCheck(f, "S @A=\"S\"");
+		TFCommonTest.validCheck(f, "S @H@(0)=3");
 	}
 }

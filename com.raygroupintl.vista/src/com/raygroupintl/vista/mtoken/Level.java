@@ -1,5 +1,7 @@
 package com.raygroupintl.vista.mtoken;
 
+import com.raygroupintl.vista.token.TBasic;
+
 
 public class Level extends TBasic {
 	public Level(String value) {

@@ -11,9 +11,10 @@ import com.raygroupintl.vista.token.TFConstChar;
 import com.raygroupintl.vista.token.TFSerialROO;
 import com.raygroupintl.vista.token.TFSerialRRO;
 import com.raygroupintl.vista.token.TPair;
+import com.raygroupintl.vista.token.TBase;
 
 public class External {
-	public static class TReference extends Base {
+	public static class TReference extends TBase {
 		private String routineName;
 		private String packageName;
 		private String label;

@@ -7,6 +7,7 @@ import java.util.List;
 import com.raygroupintl.vista.fnds.IToken;
 import com.raygroupintl.vista.struct.MError;
 import com.raygroupintl.vista.token.TList;
+import com.raygroupintl.vista.token.TBasic;
 
 public class FatalError extends TList {
 	private MError error;

@@ -29,9 +29,9 @@ public abstract class TCommand extends TKeyword {
 		}		
 	}
 	
-	protected IToken postConditional;
-	protected IToken argument;
-	private int traliningSpace;
+	//protected IToken postConditional;
+	//protected IToken argument;
+	//private int traliningSpace;
 
 	public TCommand(String identifier) {
 		super(identifier);
@@ -41,6 +41,11 @@ public abstract class TCommand extends TKeyword {
 		return super.getStringValue();
 	}
 	
+	@Override
+	public List<MError> getErrors() {
+		return null;
+	}
+	/*
 	@Override
 	public List<MError> getErrors() {
 		if ((this.argument == null) && (this.postConditional == null)) {
@@ -110,7 +115,8 @@ public abstract class TCommand extends TKeyword {
 			return endIndex;
 		}		
 	}
-	
+	*/
+	/*
 	public int extractDetails(String line, int fromIndex) {
 		this.traliningSpace = 0;
 		int endIndex = line.length();
@@ -128,7 +134,8 @@ public abstract class TCommand extends TKeyword {
 			return endIndex;
 		}
 	}
-	
+	*/
+	/*
 	@Override
 	public String getStringValue() {
 		String result = super.getStringValue();
@@ -141,7 +148,7 @@ public abstract class TCommand extends TKeyword {
 		for (int i=0; i<this.traliningSpace; ++i) result += ' ';
 		return result;
 	}
-
+   
 	@Override
 	public int getStringSize() {
 		int result = super.getStringSize();
@@ -154,7 +161,7 @@ public abstract class TCommand extends TKeyword {
 		result += this.traliningSpace;
 		return result;
 	}
-	
+	*/
 	protected static ITokenFactory getTFPostCondition(IToken[] previousTokens) {
 		ITokenFactory tfColon = TFConstChar.getInstance(':');
 		ITokenFactory tfExpr = TFExpr.getInstance();

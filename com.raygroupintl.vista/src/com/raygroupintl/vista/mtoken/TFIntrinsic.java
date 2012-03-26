@@ -6,6 +6,7 @@ import com.raygroupintl.vista.token.TArray;
 import com.raygroupintl.vista.token.TFAllRequired;
 import com.raygroupintl.vista.token.TFConstChar;
 import com.raygroupintl.vista.token.TFSerialRO;
+import com.raygroupintl.vista.token.TBasic;
 
 public class TFIntrinsic extends TFSerialRO {
 	private static class TFIntrinsicHead extends TFAllRequired {

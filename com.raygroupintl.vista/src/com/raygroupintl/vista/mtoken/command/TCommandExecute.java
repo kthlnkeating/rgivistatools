@@ -1,6 +1,5 @@
 package com.raygroupintl.vista.mtoken.command;
 
-import com.raygroupintl.vista.fnds.IToken;
 import com.raygroupintl.vista.fnds.ITokenFactory;
 import com.raygroupintl.vista.mtoken.TCommand;
 import com.raygroupintl.vista.mtoken.TFExpr;
@@ -21,11 +20,6 @@ public class TCommandExecute extends TCommand {
 		return TFSerialRO.getInstance(tf, pc);
 	}
  	
-	@Override
-	public IToken getArgument(String line, int fromIndex) {
-		return this.getNewArgument(line, fromIndex);
-	}
-
 	@Override
 	protected MNameWithMnemonic getNameWithMnemonic() {
 		return new MNameWithMnemonic("X", "EXECUTE");

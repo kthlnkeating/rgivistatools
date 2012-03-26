@@ -38,6 +38,11 @@ public abstract class TFSerialBase implements ITokenFactory {
 		}
 	}
 	
+	protected IToken getTokenWhenSyntaxError(IToken[] found, TSyntaxError error, int fromIndex) {
+		error.setFromIndex(fromIndex);
+		return error;
+	}
+	
 	@Override
 	public IToken tokenize(String line, int fromIndex) {
 		int endIndex = line.length();
@@ -50,8 +55,7 @@ public abstract class TFSerialBase implements ITokenFactory {
 				IToken token = factory.tokenize(line, index);				
 				
 				if ((token != null) && (token instanceof TSyntaxError)) {
-					((TSyntaxError) token).setFromIndex(fromIndex);
-					return token;
+					return this.getTokenWhenSyntaxError(foundTokens, (TSyntaxError) token, fromIndex);
 				}
 
 				int code = this.validate(foundTokens, token);

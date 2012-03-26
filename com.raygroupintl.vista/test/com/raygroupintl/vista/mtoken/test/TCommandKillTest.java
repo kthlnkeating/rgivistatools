@@ -2,25 +2,20 @@ package com.raygroupintl.vista.mtoken.test;
 
 import org.junit.Test;
 
-import com.raygroupintl.vista.fnds.IToken;
-import com.raygroupintl.vista.mtoken.command.TCommandKill;
+import com.raygroupintl.vista.fnds.ITokenFactory;
+import com.raygroupintl.vista.mtoken.TFCommand;
 
 public class TCommandKillTest {
-	private void testCommon(String v) {
-		TCommandKill o = new TCommandKill("K");
-		IToken t = o.getArgument(v, 0);
-		TFCommonTest.validCheck(t, v);		
-	}
-	
 	@Test
 	public void test() {
-		this.testCommon("A");
-		this.testCommon("A,B,@C,D");
-		this.testCommon("@A");
-		this.testCommon("@A,@C");
-		this.testCommon("(A,B),D,(R,E)");
-		this.testCommon("A,B");
-		this.testCommon("CC,DD,EE");
-		this.testCommon("%ZIS");
+		ITokenFactory f = new TFCommand();
+		TFCommonTest.validCheck(f, "K A");
+		TFCommonTest.validCheck(f, "K A,B,@C,D");
+		TFCommonTest.validCheck(f, "K @A");
+		TFCommonTest.validCheck(f, "K @A,@C");
+		TFCommonTest.validCheck(f, "K (A,B),D,(R,E)");
+		TFCommonTest.validCheck(f, "K A,B");
+		TFCommonTest.validCheck(f, "K CC,DD,EE");
+		TFCommonTest.validCheck(f, "K %ZIS");
 	}
 }

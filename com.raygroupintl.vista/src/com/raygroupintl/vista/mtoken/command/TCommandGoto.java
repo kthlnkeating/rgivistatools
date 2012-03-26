@@ -120,9 +120,4 @@ public class TCommandGoto extends TCommand {
 	public ITokenFactory getArgumentFactory() {
 		return TFCommaDelimitedList.getInstance(new TFArgument());
 	}
- 	
-	@Override
-	public IToken getArgument(String line, int fromIndex) {
-		return this.getNewArgument(line, fromIndex);
-	}
 }

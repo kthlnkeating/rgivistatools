@@ -1,4 +1,4 @@
-package com.raygroupintl.vista.mtoken;
+package com.raygroupintl.vista.token;
 
 import java.util.List;
 
@@ -6,8 +6,8 @@ import com.raygroupintl.vista.fnds.IToken;
 import com.raygroupintl.vista.struct.MError;
 
 
-public abstract class Base implements IToken {
-	public Base() {
+public abstract class TBase implements IToken {
+	public TBase() {
 		super();
 	}
 

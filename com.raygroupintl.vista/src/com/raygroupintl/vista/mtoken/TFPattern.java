@@ -9,6 +9,7 @@ import com.raygroupintl.vista.token.TFParallelCharBased;
 import com.raygroupintl.vista.token.TFSerialOR;
 import com.raygroupintl.vista.token.TSyntaxError;
 import com.raygroupintl.vista.token.TFAllRequired;
+import com.raygroupintl.vista.token.TBasic;
 	
 public class TFPattern extends TFParallelCharBased {
 	static abstract class TFPatOnSomething extends TFCharAccumulating {

@@ -1,6 +1,7 @@
 package com.raygroupintl.vista.mtoken;
 
 import com.raygroupintl.vista.token.TCopy;
+import com.raygroupintl.vista.token.TBasic;
 
 public class TIntrinsicVar extends TCopy {
 	public TIntrinsicVar(TBasic source) {

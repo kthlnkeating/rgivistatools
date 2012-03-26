@@ -1,6 +1,5 @@
 package com.raygroupintl.vista.mtoken.command;
 
-import com.raygroupintl.vista.fnds.IToken;
 import com.raygroupintl.vista.fnds.ITokenFactory;
 import com.raygroupintl.vista.mtoken.TCommand;
 import com.raygroupintl.vista.mtoken.TFCommaDelimitedList;
@@ -25,11 +24,6 @@ public class TCommandLock extends TCommand {
 		return TFSerialORO.getInstance(TFConstChars.getInstance("+-"), tfNRefOrList, TFExpr.getInstance());
 	}
  	
-	@Override
-	public IToken getArgument(String line, int fromIndex) {
-		return this.getNewArgument(line, fromIndex);
-	}
-
 	@Override
 	protected MNameWithMnemonic getNameWithMnemonic() {
 		return new MNameWithMnemonic("L", "LOCK");

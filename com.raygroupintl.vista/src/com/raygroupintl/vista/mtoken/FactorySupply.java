@@ -9,6 +9,8 @@ import com.raygroupintl.vista.fnds.ITokenFactory;
 import com.raygroupintl.vista.struct.MError;
 import com.raygroupintl.vista.token.TList;
 import com.raygroupintl.vista.token.TSyntaxError;
+import com.raygroupintl.vista.token.TBase;
+import com.raygroupintl.vista.token.TBasic;
 
 
 public class FactorySupply {
@@ -165,7 +167,7 @@ public class FactorySupply {
 		}		
 	}
 
-	private static class TCharacter extends Base {
+	private static class TCharacter extends TBase {
 		private char value;
 		
 		public TCharacter(char value) {
@@ -337,11 +339,11 @@ public class FactorySupply {
 	}
 	
 	private static abstract class PunctuationTokenFactory implements ITokenFactory {
-		public abstract Base getToken();
+		public abstract TBase getToken();
 		
 		@Override
 		public IToken tokenize(String line, int index) {
-			Base token = this.getToken();
+			TBase token = this.getToken();
 			return token;
 		}
 	}
@@ -355,63 +357,63 @@ public class FactorySupply {
 
 	private static class PlusTokenFactory extends PunctuationTokenFactory {
 		@Override
-		public Base getToken() {
+		public TBase getToken() {
 			return new Plus();
 		}		
 	}
 	
 	private static class MinusTokenFactory extends PunctuationTokenFactory {
 		@Override
-		public Base getToken() {
+		public TBase getToken() {
 			return new Minus();
 		}		
 	}
 	
 	private static class LeftBracketsTokenFactory extends PunctuationTokenFactory {
 		@Override
-		public Base getToken() {
+		public TBase getToken() {
 			return new LeftSquareBracket();
 		}		
 	}
 	
 	private static class RightBracketsTokenFactory extends PunctuationTokenFactory {
 		@Override
-		public Base getToken() {
+		public TBase getToken() {
 			return new RightSquareBracket();
 		}		
 	}
 
 	private static class SingleQuoteTokenFactory extends PunctuationTokenFactory {
 		@Override
-		public Base getToken() {
+		public TBase getToken() {
 			return new SingleQuote();
 		}		
 	}
 	
 	private static class NumberSignTokenFactory extends PunctuationTokenFactory {
 		@Override
-		public Base getToken() {
+		public TBase getToken() {
 			return new NumberSign();
 		}		
 	}
 	
 	private static class EqualSignTokenFactory extends PunctuationTokenFactory {
 		@Override
-		public Base getToken() {
+		public TBase getToken() {
 			return new EqualSign();
 		}		
 	}
 	
 	private static class ForwardSlashTokenFactory extends PunctuationTokenFactory {
 		@Override
-		public Base getToken() {
+		public TBase getToken() {
 			return new Slash();
 		}		
 	}
 	
 	private static class StarTokenFactory extends PunctuationTokenFactory {
 		@Override
-		public Base getToken() {
+		public TBase getToken() {
 			return new Asterisk();
 		}		
 	}
@@ -419,70 +421,70 @@ public class FactorySupply {
 	
 	private static class UnderscoreTokenFactory extends PunctuationTokenFactory {
 		@Override
-		public Base getToken() {
+		public TBase getToken() {
 			return new Underscore();
 		}		
 	}
 	
 	private static class AmpersandTokenFactory extends PunctuationTokenFactory {
 		@Override
-		public Base getToken() {
+		public TBase getToken() {
 			return new Ampersand();
 		}		
 	}
 	
 	private static class ExclamationMarkTokenFactory extends PunctuationTokenFactory {
 		@Override
-		public Base getToken() {
+		public TBase getToken() {
 			return new ExclamationMark();
 		}		
 	}
 
 	private static class QuestionMarkTokenFactory extends PunctuationTokenFactory {
 		@Override
-		public Base getToken() {
+		public TBase getToken() {
 			return new QuestionMark();
 		}		
 	}
 	
 	private static class LessThanSignTokenFactory extends PunctuationTokenFactory {
 		@Override
-		public Base getToken() {
+		public TBase getToken() {
 			return new LessThanSign();
 		}		
 	}
 	
 	private static class MoreThanSignTokenFactory extends PunctuationTokenFactory {
 		@Override
-		public Base getToken() {
+		public TBase getToken() {
 			return new MoreThanSign();
 		}		
 	}
 
 	private static class CommaTokenFactory extends PunctuationTokenFactory {
 		@Override
-		public Base getToken() {
+		public TBase getToken() {
 			return new Comma();
 		}		
 	}
 
 	private static class ColonTokenFactory extends PunctuationTokenFactory {
 		@Override
-		public Base getToken() {
+		public TBase getToken() {
 			return new Colon();
 		}		
 	}
 
 	private static class PercentTokenFactory extends PunctuationTokenFactory {
 		@Override
-		public Base getToken() {
+		public TBase getToken() {
 			return new Percent();
 		}		
 	}
 
 	private static class SpaceTokenFactory extends PunctuationTokenFactory {
 		@Override
-		public Base getToken() {
+		public TBase getToken() {
 			return new Space();
 		}		
 	}

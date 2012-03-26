@@ -1,5 +1,7 @@
 package com.raygroupintl.vista.mtoken;
 
+import com.raygroupintl.vista.token.TBasic;
+
 public class TStringLiteral extends TBasic {
 	public TStringLiteral(String value) {
 		super(value);

@@ -2,6 +2,8 @@ package com.raygroupintl.vista.mtoken;
 
 import com.raygroupintl.vista.fnds.IToken;
 import com.raygroupintl.vista.fnds.ITokenFactory;
+import com.raygroupintl.vista.token.TFBasic;
+import com.raygroupintl.vista.token.TBasic;
 
 public class TIntLit extends TBasic {
 	private TIntLit(String value) {

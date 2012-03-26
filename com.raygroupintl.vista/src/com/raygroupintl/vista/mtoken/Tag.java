@@ -5,8 +5,9 @@ import java.util.List;
 import com.raygroupintl.vista.fnds.IToken;
 import com.raygroupintl.vista.fnds.ITokenFactory;
 import com.raygroupintl.vista.struct.MError;
+import com.raygroupintl.vista.token.TBase;
 
-public class Tag extends Base {
+public class Tag extends TBase {
 	private IToken identifier;
 	private IToken arguments;
 	

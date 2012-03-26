@@ -2,7 +2,6 @@ package com.raygroupintl.vista.token;
 
 import com.raygroupintl.vista.fnds.IToken;
 import com.raygroupintl.vista.fnds.ITokenFactory;
-import com.raygroupintl.vista.mtoken.TBasic;
 
 public abstract class TFCharAccumulating implements ITokenFactory {
 	protected abstract boolean stopOn(char ch);
