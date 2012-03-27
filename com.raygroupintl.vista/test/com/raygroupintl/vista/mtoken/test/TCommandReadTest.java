@@ -5,11 +5,10 @@ import org.junit.Test;
 import com.raygroupintl.vista.fnds.ITokenFactory;
 import com.raygroupintl.vista.mtoken.TFCommand;
 
-public class TCommandWriteTest {
+public class TCommandReadTest {
 	@Test
 	public void test() {
 		ITokenFactory f = new TFCommand();
-		TFCommonTest.validCheck(f, "W !!,^YTT(601,YSTEST,\"G\",L,1,1,0)");
-		TFCommonTest.validCheck(f, "W !,$S($D(ZTSK):\"REQUEST QUEUED TASK=\"_ZTSK,1:\"REQUEST CANCELLED\")");
+		TFCommonTest.validCheck(f, "R !,\"Select DEBTOR NAME or BILL NUMBER: \",X:DTIME");
 	}
 }

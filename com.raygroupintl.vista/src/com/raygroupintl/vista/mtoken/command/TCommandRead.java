@@ -7,6 +7,7 @@ import com.raygroupintl.vista.mtoken.TFExpr;
 import com.raygroupintl.vista.mtoken.TFFormat;
 import com.raygroupintl.vista.mtoken.TFGlvn;
 import com.raygroupintl.vista.mtoken.TFIndirection;
+import com.raygroupintl.vista.mtoken.TFStringLiteral;
 import com.raygroupintl.vista.mtoken.TFTimeout;
 import com.raygroupintl.vista.struct.MNameWithMnemonic;
 import com.raygroupintl.vista.token.TFAllRequired;
@@ -29,6 +30,8 @@ public class TCommandRead extends TCommandName {
 				case '?':
 				case '/':
 					return TFFormat.getInstance();
+				case '"':
+					return TFStringLiteral.getInstance();
 				case '*':
 					return TFSerialRRO.getInstance(TFConstChar.getInstance('*'), TFGlvn.getInstance(), TFTimeout.getInstance());
 				case '@':

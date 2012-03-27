@@ -11,16 +11,6 @@ import com.raygroupintl.vista.token.TFConstChar;
 import com.raygroupintl.vista.token.TFSerialROO;
 
 public class TCommandFor extends TCommandName {	
-	private static class TFArgument extends TFAllRequired {
-		@Override
-		protected ITokenFactory[] getFactories() {
-			TFExpr tfExpr = TFExpr.getInstance();
-			TFAllRequired tfFromTo = TFAllRequired.getInstance(TFConstChar.getInstance(':'), tfExpr);
-			ITokenFactory RHS = TFSerialROO.getInstance(tfExpr, tfFromTo, tfFromTo);
-			return new ITokenFactory[]{TFLvn.getInstance(), TFConstChar.getInstance('='), RHS}; 
-		}
-	}	
-	
 	public TCommandFor(String identifier) {
 		super(identifier);
 	}
@@ -32,6 +22,10 @@ public class TCommandFor extends TCommandName {
 	
 	@Override
 	public ITokenFactory getArgumentFactory() {
-		return TFCommaDelimitedList.getInstance(new TFArgument());
+		TFExpr tfExpr = TFExpr.getInstance();
+		TFAllRequired tfFromTo = TFAllRequired.getInstance(TFConstChar.getInstance(':'), tfExpr);
+		ITokenFactory RHS = TFSerialROO.getInstance(tfExpr, tfFromTo, tfFromTo);
+		ITokenFactory RHSs = TFCommaDelimitedList.getInstance(RHS);
+		return TFAllRequired.getInstance(TFLvn.getInstance(), TFConstChar.getInstance('='), RHSs); 
 	}
 }

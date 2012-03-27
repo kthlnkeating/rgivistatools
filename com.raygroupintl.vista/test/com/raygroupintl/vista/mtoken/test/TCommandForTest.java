@@ -10,5 +10,6 @@ public class TCommandForTest {
 	public void test() {
 		ITokenFactory f = new TFCommand();
 		TFCommonTest.validCheck(f, "F FLD=1:1:$L(LST,\",\")");
+		TFCommonTest.validCheck(f, "F STAT=42,16");
 	}
 }

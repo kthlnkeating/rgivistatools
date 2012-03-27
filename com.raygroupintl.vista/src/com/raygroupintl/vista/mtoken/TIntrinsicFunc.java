@@ -6,14 +6,32 @@ import java.util.List;
 
 import com.raygroupintl.vista.struct.MError;
 import com.raygroupintl.vista.struct.MNameWithMnemonic;
-import com.raygroupintl.vista.struct.MSpecialFunction;
 import com.raygroupintl.vista.token.TPair;
 
 public class TIntrinsicFunc extends TPair {
+	private static class IntrinsicFunction extends MNameWithMnemonic {
+		private int minNumArguments;
+		private int maxNumArguments;
+		
+		public IntrinsicFunction(String mnemonic, String name, int minNumArguments, int maxNumArguments) {
+			super(mnemonic, name);
+			this.minNumArguments = minNumArguments;
+			this.maxNumArguments = maxNumArguments;
+		}		
+
+		public int getMinNumArguments() {
+			return this.minNumArguments;
+		}
+		
+		public int getMaxNumArguments() {
+			return this.maxNumArguments;
+		}
+	}
+
 	@SuppressWarnings("serial")
-	private static class IntrinsicFunctions extends HashMap<String, MSpecialFunction> {
+	private static class IntrinsicFunctions extends HashMap<String, IntrinsicFunction> {
 		public void update(String mnemonic, String name, int minNumArguments, int maxNumArguments) {
-			MSpecialFunction ifunc = new MSpecialFunction(mnemonic, name, minNumArguments, maxNumArguments);
+			IntrinsicFunction ifunc = new IntrinsicFunction(mnemonic, name, minNumArguments, maxNumArguments);
 			this.put(mnemonic, ifunc);
 			if (! mnemonic.equals(name)) {
 				this.put(name, ifunc);			

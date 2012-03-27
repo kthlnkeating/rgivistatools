@@ -1,8 +1,9 @@
 package com.raygroupintl.vista.mtoken;
 
 import com.raygroupintl.vista.fnds.IToken;
+import com.raygroupintl.vista.token.TCopy;
 
-public class TGlobalNaked extends TInParantheses {
+public class TGlobalNaked extends TCopy {
 	public TGlobalNaked(IToken source) {
 		super(source);
 	}

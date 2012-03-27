@@ -24,7 +24,7 @@ public class MError {
 	public static final int ERR_UNDEFINED_COMMAND = 1;
 	public static final int ERR_UNMATCHED_PARANTHESIS = 5;
 	public static final int ERR_UNMATCHED_QUOTATION = 6;
-	public static final int ERR_GENERAL_SYNTAX = 6;
+	public static final int ERR_GENERAL_SYNTAX = 21;
 	public static final int ERR_NULL_LINE = 42;
 	
 	public static final int ERR_UNKNOWN_INTRINSIC_VARIABLE = 1000;
@@ -71,7 +71,7 @@ public class MError {
 		CODES.put(18, new CodeDetail(Severity.WARNING, "Line contains a CONTROL (non-graphic) character."));
 		CODES.put(19, new CodeDetail(Severity.STANDARD, "Line is longer than 245 bytes."));
 		CODES.put(20, new CodeDetail(Severity.STANDARD, "View command used."));
-		CODES.put(21, new CodeDetail(Severity.FATAL, "General Syntax Error."));
+		CODES.put(ERR_GENERAL_SYNTAX, new CodeDetail(Severity.FATAL, "General Syntax Error."));
 		CODES.put(22, new CodeDetail(Severity.STANDARD, "Exclusive Kill."));
 		CODES.put(23, new CodeDetail(Severity.STANDARD, "Unargumented Kill."));
 		CODES.put(24, new CodeDetail(Severity.STANDARD, "Kill of an unsubscripted global."));

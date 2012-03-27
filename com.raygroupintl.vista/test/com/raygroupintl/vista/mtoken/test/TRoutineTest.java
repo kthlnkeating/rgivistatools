@@ -8,9 +8,10 @@ import org.junit.Test;
 
 import com.raygroupintl.vista.fnds.IToken;
 import com.raygroupintl.vista.mtoken.TFLine;
+import com.raygroupintl.vista.mtoken.TLine;
 import com.raygroupintl.vista.mtoken.TRoutine;
 
-public class RoutineTest {
+public class TRoutineTest {
 
 	@Test
 	public void testBeautify() {
@@ -29,11 +30,11 @@ public class RoutineTest {
 				" G EXIT",
 				" Q",
 				" ;"};
-		TRoutine r = new TRoutine();
+		TRoutine r = new TRoutine("XRGITST0.m");
 		for (int i=0; i<lines.length; ++i) {
 			String line = lines[i];
 			TFLine f = TFLine.getInstance();
-			IToken l = f.tokenize(line, 0);
+			TLine l = (TLine) f.tokenize(line, 0);
 			r.add(l);
 		}
 		r.beautify();		
@@ -65,7 +66,7 @@ public class RoutineTest {
 	public void testNonErrorFiles() {
 		String fileName = "resource/XRGITST0.m";
 		InputStream is = this.getClass().getResourceAsStream(fileName);
-		TRoutine r = TRoutine.getInstance(is);
+		TRoutine r = TRoutine.getInstance("XRGITST0.m", is);
 		Assert.assertFalse("Unexpected error: " + fileName, r.hasError() || r.hasFatalError());	
 	}	
 }

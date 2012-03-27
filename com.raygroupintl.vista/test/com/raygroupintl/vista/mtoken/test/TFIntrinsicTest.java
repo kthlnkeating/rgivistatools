@@ -9,5 +9,6 @@ public class TFIntrinsicTest {
 	public void test() {
 		TFIntrinsic f = TFIntrinsic.getInstance();
 		TFCommonTest.validCheck(f, "$P(LST,\",\",FLD)");		
+		TFCommonTest.validCheck(f, "$S(LST=\"A\":0,1:1)");		
 	}
 }

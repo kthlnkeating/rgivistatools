@@ -7,4 +7,8 @@ public class TFExprListInParantheses extends TFInParantheses {
 	protected ITokenFactory getInnerfactory() {
 		return TFExprList.getInstance();
 	}
+	
+	public static TFExprListInParantheses getInstance() {
+		return new TFExprListInParantheses();
+	}
 }

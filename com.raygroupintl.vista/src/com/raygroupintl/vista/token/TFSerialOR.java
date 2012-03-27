@@ -20,7 +20,7 @@ public abstract class TFSerialOR extends TFSerial {
 	}
 	
 	protected IToken getTokenBoth(IToken optionalToken, IToken requiredToken) {
-		return new TPair(requiredToken, optionalToken);
+		return new TPair(optionalToken, requiredToken);
 	}
 	
 	@Override
@@ -54,8 +54,8 @@ public abstract class TFSerialOR extends TFSerial {
 		}
 	}
 	
-	public static TFSerialRO getInstance(final ITokenFactory optional, final ITokenFactory required) {
-		return new TFSerialRO() {			
+	public static TFSerialOR getInstance(final ITokenFactory optional, final ITokenFactory required) {
+		return new TFSerialOR() {			
 			@Override
 			protected ITokenFactory getRequired() {
 				return required;

@@ -1,12 +1,11 @@
 package com.raygroupintl.vista.mtoken;
 
-import com.raygroupintl.vista.fnds.IToken;
 import com.raygroupintl.vista.token.TArray;
 
 public class TGlobalNamed extends TArray {
-	public TGlobalNamed(IToken[] spec) {
+	public TGlobalNamed(TArray spec) {
 		super(spec);
-		assert(spec.length == 3);
+		assert(spec.getCount() == 3);
 	}
 	
 	@Override

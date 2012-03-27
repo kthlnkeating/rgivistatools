@@ -4,10 +4,19 @@ import com.raygroupintl.vista.fnds.IToken;
 import com.raygroupintl.vista.fnds.ITokenFactory;
 import com.raygroupintl.vista.token.TFAllRequired;
 import com.raygroupintl.vista.token.TFConstChar;
+import com.raygroupintl.vista.token.TFConstChars;
 import com.raygroupintl.vista.token.TFParallelCharBased;
+import com.raygroupintl.vista.token.TFSyntaxError;
 
-public class TFGvnAll extends TFAllRequired {	
+public class TFGvnAll extends TFParallelCharBased {	
 	static class TFGvnNaked extends TFExprListInParantheses {
+		@Override
+		protected ITokenFactory[] getFactories() {
+			TFConstChar c = TFConstChar.getInstance('^');
+			TFExprListInParantheses r = TFExprListInParantheses.getInstance();
+			return new ITokenFactory[]{c, r};
+		}
+		
 		@Override
 		protected IToken getToken(IToken[] foundTokens) {
 			return new TGlobalNaked(foundTokens[1]);
@@ -17,7 +26,7 @@ public class TFGvnAll extends TFAllRequired {
 	static class TFGvnSsvn extends TFAllRequired {
 		@Override
 		protected ITokenFactory[] getFactories() {
-			ITokenFactory c = new TFConstChar('$');
+			ITokenFactory c = new TFConstChars("^$");
 			ITokenFactory i = new TFIdent();
 			ITokenFactory p = new TFInParantheses() {				
 				@Override
@@ -35,23 +44,34 @@ public class TFGvnAll extends TFAllRequired {
 	}
 	
 	@Override
-	protected ITokenFactory[] getFactories() {
-		ITokenFactory c = new TFConstChar('^');
-		ITokenFactory r = new TFParallelCharBased() {			
-			@Override
-			protected ITokenFactory getFactory(char ch) {
-				switch (ch) {
-					case '$': return new TFGvnSsvn();  
-					case '(': return new TFGvnNaked();
-					default: return new TFGvn();
-				}
-			}
-		};
-		return new ITokenFactory[]{c, r};
+	protected ITokenFactory getFactory(char ch) {				
+		return null;
 	}
-
+			
 	@Override
-	protected IToken getToken(IToken[] foundTokens) {
-		return foundTokens[1];
+	protected ITokenFactory getFactory(char ch, char ch2) {
+		if (ch == '^') {
+			switch (ch2) {
+				case '$': 
+					return new TFGvnSsvn();  
+				case '(': 
+					return new TFGvnNaked();
+				case '%':
+				case '|':
+					return new TFGvn();							
+				default: 
+					if (Library.isIdent(ch2)) {
+						return new TFGvn();
+					} else {
+						return new TFSyntaxError();
+					}
+			}
+		} else {
+			return null;
+		}
+	}
+	
+	public static TFGvnAll getInstance() {
+		return new TFGvnAll();
 	}
 }

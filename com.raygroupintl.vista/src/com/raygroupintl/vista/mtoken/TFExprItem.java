@@ -60,12 +60,12 @@ public class TFExprItem extends TFParallelCharBased {
 		case '-':
 			return new TFUnaryOnExprAtom();
 		case '.':
-			return TNumLit.getFactory();
+			return TFNumLit.getInstance();
 		case '(':
 			return TFInParantheses.getInstance(TFExpr.getInstance());
 		default:
 			if (Library.isDigit(ch)) {
-				return TNumLit.getFactory();
+				return TFNumLit.getInstance();
 			} else {
 				return null;
 			}				

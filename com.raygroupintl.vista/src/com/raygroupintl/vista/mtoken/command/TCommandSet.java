@@ -77,7 +77,7 @@ public class TCommandSet extends TCommandName {
 		@Override		
 		protected int getCodeStringEnds(IToken[] foundTokens) {
 			int n = foundTokens.length;
-			if ((n == 0) && (foundTokens[0] instanceof TIndirection)) {
+			if ((n == 1) && (foundTokens[0] instanceof TIndirection)) {
 				return 0;
 			} else {
 				return this.getErrorCode();

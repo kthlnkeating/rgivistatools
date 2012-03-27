@@ -16,7 +16,7 @@ import com.raygroupintl.vista.tools.MRoutineAnalyzer;
 
 import junit.framework.Assert;
 
-public class LineTest1 {
+public class TLineTest1 {
 	private final static Logger LOGGER = Logger.getLogger(MRoutineAnalyzer.class.getName());
 
 	@Test

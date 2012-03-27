@@ -10,7 +10,7 @@ import com.raygroupintl.vista.fnds.IToken;
 import com.raygroupintl.vista.mtoken.TFLine;
 import com.raygroupintl.vista.struct.MError;
 
-public class LineTest0 {
+public class TLineTest0 {
 	private IToken lineTest(String line, boolean errorAsWell) {
 		TFLine f = TFLine.getInstance();
 		IToken t = f.tokenize(line, 0);
@@ -61,6 +61,9 @@ public class LineTest0 {
 		lineTest(" . X \"S RC=\"_@RULENODE@(1)");
 		lineTest(" Q $D(@HANDLE@(\"Pr\",\"Handle\",CHILD))");
 		lineTest(" .S BREAK=0 F  Q:BREAK||READER.EOF||'READER.Read()  D", false);
+		lineTest(" F STAT=42,16 F  S BILLN=$O(^PRCA(430,\"AC\",STAT,BILLN)) Q:'BILLN  I $$ACCK(BILLN) D");
+		lineTest(" S PRCANODE=.11 S:$P(Y,\";\",2)=\"DIC(4,\" PRCANODE=1 S PRCANODE=\"^\"_$P(Y,\";\",2)_+$P(Y,\"^\",2)_\",\"_PRCANODE_\")\",PRCANODE=$G(@PRCANODE)");
+
 	}
 	
 	@Test
