@@ -6,23 +6,17 @@ import com.raygroupintl.vista.token.TFAllRequired;
 import com.raygroupintl.vista.token.TFConstChars;
 import com.raygroupintl.vista.token.TFConstString;
 import com.raygroupintl.vista.token.TFParallelCharBased;
-import com.raygroupintl.vista.token.TFSerialRRO;
 
 public class TFExprItem extends TFParallelCharBased {
-	private static final class TFExtrinsic extends TFSerialRRO {
+	private static final class TFExtrinsic extends TFAllRequired {
 		@Override
 		protected final ITokenFactory[] getFactories() {
-			return new ITokenFactory[]{new TFConstString("$$"), new TFLabelRef(), new TFActualList()};
+			return new ITokenFactory[]{new TFConstString("$$"), TFDoArgument.getInstance()};
 		}
 
 		@Override
-		protected final IToken getTokenWhenNoOptional(IToken[] foundTokens) {
-			return new TExtrinsicVar((TLabelRef) foundTokens[1]);
-		}
-		
-		@Override
-		protected final IToken getTokenWhenAll(IToken[] foundTokens) {
-			return new TExtrinsicFunc((TLabelRef) foundTokens[1], (TActualList) foundTokens[2]);			
+		protected final IToken getToken(IToken[] foundTokens) {
+			return new TExtrinsic(foundTokens[1]);
 		}
 	}
 	

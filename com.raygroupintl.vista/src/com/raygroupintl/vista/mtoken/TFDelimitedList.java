@@ -52,5 +52,13 @@ public abstract class TFDelimitedList extends TFSerialRO {
 			}
 		};
 	}
-	
+
+	public static ITokenFactory getInstance(final ITokenFactory f, final char ch, final boolean inParan) {
+		final TFDelimitedList fList = getInstance(f, ch);
+		if (inParan) {
+			return TFInParantheses.getInstance(fList);
+		} else {
+			return fList;
+		}
+	}
 }

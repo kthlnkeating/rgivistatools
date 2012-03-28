@@ -1,46 +1,52 @@
 package com.raygroupintl.vista.mtoken;
 
+import java.util.Arrays;
+import java.util.HashSet;
+import java.util.Set;
+
 import com.raygroupintl.vista.fnds.IToken;
 import com.raygroupintl.vista.fnds.ITokenFactory;
 
 public class TFOperator implements ITokenFactory {
-	private int getOperatorLength(String line, int fromIndex, String possible, char extra) {
-		char ch = line.charAt(fromIndex);
-		if (possible.indexOf(ch, 0) >= 0) {
-			if (ch == extra) {
-				int index = fromIndex + 1;
-				if ((index < line.length()) && (line.charAt(index) == extra)) {
-					return 2;
-				}
-			}			
-			return 1;				
+	private static final char[] OPERATOR_CHARS = {
+		'!', '#', '&', '\'', '*', '+', '-', '/', '<', '=', '>', '?', '[', '\\', ']', '_'
+	};
+
+	private static Set<String> OPERATORS = new HashSet<String>();
+	static {
+		String[] ops = {
+				"-", "+", "_", "*", "/", "#", "\\", "**", 
+				"&", "!", "=", "<", ">", "[", "]", "?", "]]",
+				"'&", "'!", "'=", "'<", "'>", "'[", "']", "'?", "']]"
+		};
+		for (String op : ops) {
+			OPERATORS.add(op);
+		}; 
+	}
+	
+	public static void addOperator(String op) {
+		for (int i=0; i<op.length(); ++i) {
+			char ch = op.charAt(i);
+			if (Arrays.binarySearch(OPERATOR_CHARS, ch) < 0) {
+				throw new IllegalArgumentException();
+			}
 		}
-		return 0;
+		OPERATORS.add(op);
 	}
 	
 	@Override
 	public IToken tokenize(String line, int fromIndex) {
-		int endIndex = line.length();		
-		if (fromIndex < endIndex) {
-			int opLength = this.getOperatorLength(line, fromIndex, "-+_*/#\\", '*');
-			if (opLength == 0) {
-				char ch = line.charAt(fromIndex);
-				int index = fromIndex;
-				if (ch == '\'') {
-					++index;
-					if (index == endIndex) {
-						return null;
-					}
-				}
-				opLength = this.getOperatorLength(line, index, "&!=<>][?", ']');
-				if (opLength > 0) {
-					if (ch == '\'') {
-						++opLength;
-					}					
-				}
-			}
-			if (opLength > 0) {
-				return new TOperator(line.substring(fromIndex, fromIndex+opLength));
+		int endIndex = line.length();
+		int index = fromIndex;
+		while (index < endIndex) {
+			char ch = line.charAt(fromIndex);
+			if (Arrays.binarySearch(OPERATOR_CHARS, ch) < 0) break;
+			++index;
+		}
+		for (int i=index; i>fromIndex; --i) {
+			String op = line.substring(fromIndex, i);
+			if (OPERATORS.contains(op)) {
+				return new TOperator(op);
 			}
 		}
 		return null;	

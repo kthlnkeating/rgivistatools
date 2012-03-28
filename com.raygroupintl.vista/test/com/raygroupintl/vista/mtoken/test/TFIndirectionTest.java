@@ -13,5 +13,7 @@ public class TFIndirectionTest {
 		TFCommonTest.validCheck(f, "@XARRAY@(FROMX1,TO1)");
 		TFCommonTest.validCheck(f, "@RCVAR@(Z,\"\")");
 		TFCommonTest.validCheck(f, "@RCVAR@(Z,\"*\")");
+		TFCommonTest.validCheck(f, "@CLIN@(0)");
+		TFCommonTest.validCheck(f, "@(\"PSBTAB\"_(FLD-1))");		
 	}
 }

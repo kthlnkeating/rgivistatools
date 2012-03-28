@@ -106,7 +106,7 @@ public class TFPattern extends TFParallelCharBased {
 			return new TFDelimitedList() {
 				@Override
 				protected ITokenFactory getElementFactory() {
-					return new TFPatAtom();
+					return TFList.getInstance(new TFPatAtom());
 				}
 				
 				@Override

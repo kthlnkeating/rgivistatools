@@ -9,7 +9,7 @@ public class TCommandSetTest {
 	@Test
 	public void test() {
 		ITokenFactory f = new TFCommand();
-		//TFCommonTest.validCheck(f, "S X=$$MG^XMBGRP(\"RCCPC STATEMENTS\",0,.5,1,\"\",.DES,1)");
+		TFCommonTest.validCheck(f, "S X=$$MG^XMBGRP(\"RCCPC STATEMENTS\",0,.5,1,\"\",.DES,1)");
 		TFCommonTest.validCheck(f, "S @^%ZOSF(\"TRAP\")");
 		TFCommonTest.validCheck(f, "S X=\"ERROR^PRCAHV\",@^%ZOSF(\"TRAP\")");
 		TFCommonTest.validCheck(f, "S A=B");
@@ -20,5 +20,7 @@ public class TCommandSetTest {
 		TFCommonTest.validCheck(f, "S A=B,C=F,D=YSH");
 		TFCommonTest.validCheck(f, "S @A=\"S\"");
 		TFCommonTest.validCheck(f, "S @H@(0)=3");
+		TFCommonTest.validCheck(f, "S XT4=\"I 1\"   ");
+		TFCommonTest.validCheck(f, "S IOP=IOP_\";255\",%ZIS=\"\"");
 	}
 }

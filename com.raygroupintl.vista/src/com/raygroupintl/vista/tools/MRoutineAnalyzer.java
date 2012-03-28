@@ -7,6 +7,8 @@ import java.nio.file.Path;
 import java.util.logging.Logger;
 
 import com.raygroupintl.vista.fnds.IFileAction;
+import com.raygroupintl.vista.mtoken.TFIntrinsic;
+import com.raygroupintl.vista.mtoken.TFOperator;
 import com.raygroupintl.vista.mtoken.TRoutine;
 import com.raygroupintl.vista.repository.MFileVisitor;
 
@@ -35,6 +37,22 @@ public class MRoutineAnalyzer {
 	}
 		
 	public static void main(String[] args) throws Exception {
+		TFOperator.addOperator(">=");
+		TFOperator.addOperator("<=");
+		TFOperator.addOperator("&&");
+		
+		TFIntrinsic.addVariable("ZA");
+		TFIntrinsic.addVariable("ZB");
+		TFIntrinsic.addVariable("ZE");
+		TFIntrinsic.addVariable("ZT");
+		TFIntrinsic.addVariable("ZV");
+
+		TFIntrinsic.addFunction("ZC");
+		TFIntrinsic.addFunction("ZF");
+		TFIntrinsic.addFunction("ZU");
+		TFIntrinsic.addFunction("ZUTIL");
+		TFIntrinsic.addFunction("ZTRNLNM");		
+		
 		if (args.length == 0) {
 			LOGGER.info("A path needs to be specified.");
 			return;

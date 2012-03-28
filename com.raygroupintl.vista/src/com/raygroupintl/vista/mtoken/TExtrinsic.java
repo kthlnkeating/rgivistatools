@@ -1,12 +1,13 @@
 package com.raygroupintl.vista.mtoken;
 
-import com.raygroupintl.vista.token.TPair;
+import com.raygroupintl.vista.fnds.IToken;
+import com.raygroupintl.vista.token.TCopy;
 
-public class TExtrinsicFunc extends TPair {
-	public TExtrinsicFunc(TLabelRef func, TActualList argument) {
-		super(func, argument);
+public class TExtrinsic extends TCopy {
+	public TExtrinsic(IToken source) {
+		super(source);
 	}
-
+	
 	@Override
 	public String getStringValue() {
 		return "$$" + super.getStringValue();

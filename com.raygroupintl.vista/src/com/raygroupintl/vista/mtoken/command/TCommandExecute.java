@@ -2,6 +2,7 @@ package com.raygroupintl.vista.mtoken.command;
 
 import com.raygroupintl.vista.fnds.ITokenFactory;
 import com.raygroupintl.vista.mtoken.TCommandName;
+import com.raygroupintl.vista.mtoken.TFDelimitedList;
 import com.raygroupintl.vista.mtoken.TFExpr;
 import com.raygroupintl.vista.mtoken.TFIndirection;
 import com.raygroupintl.vista.struct.MNameWithMnemonic;
@@ -17,7 +18,7 @@ public class TCommandExecute extends TCommandName {
 	public ITokenFactory getArgumentFactory() {
 		ITokenFactory tf = TFParallelCharBased.getInstance(TFExpr.getInstance(), '@', TFIndirection.getInstance());
 		ITokenFactory pc = getTFPostCondition(null);
-		return TFSerialRO.getInstance(tf, pc);
+		return TFDelimitedList.getInstance(TFSerialRO.getInstance(tf, pc), ',');
 	}
  	
 	@Override

@@ -4,22 +4,9 @@ import com.raygroupintl.vista.fnds.ITokenFactory;
 import com.raygroupintl.vista.mtoken.TCommandName;
 import com.raygroupintl.vista.mtoken.TFCommaDelimitedList;
 import com.raygroupintl.vista.mtoken.TFExpr;
-import com.raygroupintl.vista.mtoken.TFIndirection;
 import com.raygroupintl.vista.struct.MNameWithMnemonic;
-import com.raygroupintl.vista.token.TFParallelCharBased;
 
 public class TCommandIf extends TCommandName {	
-	private static class TFArgument extends TFParallelCharBased {
-		@Override
-		protected ITokenFactory getFactory(char ch) {
-			if (ch == '@') {
-				return TFIndirection.getInstance();
-			} else {
-				return TFExpr.getInstance();
-			}
-		}
-	}
-			
 	public TCommandIf(String identifier) {
 		super(identifier);
 	}
@@ -31,6 +18,6 @@ public class TCommandIf extends TCommandName {
 	
 	@Override
 	public ITokenFactory getArgumentFactory() {
-		return TFCommaDelimitedList.getInstance(new TFArgument());
+		return TFCommaDelimitedList.getInstance(TFExpr.getInstance());
 	}
 }

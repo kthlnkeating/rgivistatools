@@ -50,8 +50,10 @@ public abstract class TFSerialBase implements ITokenFactory {
 			int index = fromIndex;
 			IToken[] foundTokens = new IToken[0];
 			ITokenFactorySupply supply = this.getFactorySupply();
-			ITokenFactory factory = supply.get(foundTokens);			
-			while (factory != null) {
+			int factoryCount = supply.getCount();
+			for (int i=0; i<factoryCount; ++i) {
+				ITokenFactory factory = supply.get(foundTokens);
+				assert(factory != null);
 				IToken token = factory.tokenize(line, index);				
 				
 				if ((token != null) && (token instanceof TSyntaxError)) {
@@ -71,11 +73,10 @@ public abstract class TFSerialBase implements ITokenFactory {
 
 				foundTokens = Arrays.copyOf(foundTokens, foundTokens.length+1);
 				foundTokens[foundTokens.length-1] = token;
-				factory = supply.get(foundTokens);								
 				if (token == null) continue;				
 				index += token.getStringSize();					
 				
-				if ((index >= endIndex) && (factory != null)) {
+				if ((index >= endIndex) && (i < factoryCount-1)) {
 					int endCode = this.getCodeStringEnds(foundTokens);
 					if (endCode > 0) {
 						return TSyntaxError.getInstance(endCode, line, index, fromIndex);
@@ -83,9 +84,8 @@ public abstract class TFSerialBase implements ITokenFactory {
 					break;
 				}
 			}
-			int count = supply.getCount();
-			if (foundTokens.length < count) {
-				foundTokens = Arrays.copyOf(foundTokens, count);
+			if (foundTokens.length < factoryCount) {
+				foundTokens = Arrays.copyOf(foundTokens, factoryCount);
 			}
 			return this.getToken(foundTokens);
 		}		

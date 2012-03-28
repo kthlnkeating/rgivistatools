@@ -4,7 +4,7 @@ import com.raygroupintl.vista.fnds.IToken;
 import com.raygroupintl.vista.fnds.ITokenFactory;
 import com.raygroupintl.vista.token.TFAllRequired;
 import com.raygroupintl.vista.token.TFConstChar;
-import com.raygroupintl.vista.token.TFConstChars;
+import com.raygroupintl.vista.token.TFConstString;
 import com.raygroupintl.vista.token.TFParallelCharBased;
 import com.raygroupintl.vista.token.TFSyntaxError;
 
@@ -26,7 +26,7 @@ public class TFGvnAll extends TFParallelCharBased {
 	static class TFGvnSsvn extends TFAllRequired {
 		@Override
 		protected ITokenFactory[] getFactories() {
-			ITokenFactory c = new TFConstChars("^$");
+			ITokenFactory c = new TFConstString("^$");
 			ITokenFactory i = new TFIdent();
 			ITokenFactory p = new TFInParantheses() {				
 				@Override

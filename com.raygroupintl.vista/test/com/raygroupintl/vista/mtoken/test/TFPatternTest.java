@@ -12,5 +12,7 @@ public class TFPatternTest {
 		TFCommonTest.validCheck(f, "1\"C-\".E ","1\"C-\".E");
 		TFCommonTest.validCheck(f, ".P1N.NP");
 		TFCommonTest.validCheck(f, ".P1N.NP ", ".P1N.NP");		
+		TFCommonTest.validCheck(f, "1.N");		
+		TFCommonTest.validCheck(f, "1(1N.E,1\".\".E)");		
 	}
 }

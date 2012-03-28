@@ -63,6 +63,12 @@ public class TLineTest0 {
 		lineTest(" .S BREAK=0 F  Q:BREAK||READER.EOF||'READER.Read()  D", false);
 		lineTest(" F STAT=42,16 F  S BILLN=$O(^PRCA(430,\"AC\",STAT,BILLN)) Q:'BILLN  I $$ACCK(BILLN) D");
 		lineTest(" S PRCANODE=.11 S:$P(Y,\";\",2)=\"DIC(4,\" PRCANODE=1 S PRCANODE=\"^\"_$P(Y,\";\",2)_+$P(Y,\"^\",2)_\",\"_PRCANODE_\")\",PRCANODE=$G(@PRCANODE)");
+		lineTest(" . D SENDMSG^XMXAPI(.5,RCSUBJ,XMBODY,.XMTO,,.XMZ)");
+		lineTest("CONT F XT1=1:1 S XT2=$T(ROU+XT1) Q:XT2=\"\"  S X=$P(XT2,\" \",1),XT3=$P(XT2,\";\",3) X XT4 I $T W !,X X ^%ZOSF(\"TEST\") S:'$T XT3=0 X:XT3 ^%ZOSF(\"RSUM\") W ?10,$S('XT3:\"Routine not in UCI\",XT3'=Y:\"Calculated \"_$C(7)_Y_\", off by \"_(Y-XT3),1:\"ok\")");
+		lineTest(" S XT4=\"I 1\",X=$T(+3) W !!,\"Checksum routine created on \",$P(X,\";\",4),\" by KERNEL V\",$P(X,\";\",3),!");
+		lineTest(" S IOP=IOP_\";255\",%ZIS=\"\" D ^%ZIS G:POP H^XUS U IO X ^%ZOSF(\"TYPE-AHEAD\"),^%ZOSF(\"LABOFF\") S X=0 X ^%ZOSF(\"RM\")");
+		lineTest(" I $D(@G)#10 D WRITE(IO,G)");
+		lineTest(" .I $Y>(IOSL-9) D UP^DVBCRPR1,NEXT,HDR^DVBCRPR1 W:$O(^DVB(396.4,OLDA,\"RES\",LINE))]\"\"&('+$G(DVBGUI)) !!,\"Exam Results Continued\",!!");
 
 	}
 	
