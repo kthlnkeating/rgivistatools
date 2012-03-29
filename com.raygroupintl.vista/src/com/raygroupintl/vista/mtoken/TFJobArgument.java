@@ -7,10 +7,12 @@ import com.raygroupintl.vista.token.TFAllRequired;
 import com.raygroupintl.vista.token.TFConstChar;
 import com.raygroupintl.vista.token.TFNull;
 import com.raygroupintl.vista.token.TFParallel;
+import com.raygroupintl.vista.token.TFParallelCharBased;
 import com.raygroupintl.vista.token.TFSerialBase;
 import com.raygroupintl.vista.token.TFSerialOR;
+import com.raygroupintl.vista.token.TFSerialRO;
 
-public class TFGotoArgument extends TFSerialBase {
+public class TFJobArgument extends TFSerialBase {
 	private static ITokenFactory getFactory0(IToken[] previousTokens) {
 		TFLabel tfl = TFLabel.getInstance();
 		TFIndirection tfi = TFIndirection.getInstance();
@@ -19,14 +21,18 @@ public class TFGotoArgument extends TFSerialBase {
 	}
 	
 	private static ITokenFactory getFactory1(IToken[] previousTokens) {
-		return new TFAllRequired() {								
-			@Override
-			protected ITokenFactory[] getFactories() {
-				TFConstChar tfc = TFConstChar.getInstance('+');
-				TFExpr tfe = TFExpr.getInstance();
-				return new ITokenFactory[]{tfc, tfe};
-			}
-		};
+		if (previousTokens[0] == null) {
+			return new TFNull();
+		} else {
+			return new TFAllRequired() {								
+				@Override
+				protected ITokenFactory[] getFactories() {
+					TFConstChar tfc = TFConstChar.getInstance('+');
+					TFExpr tfe = TFExpr.getInstance();
+					return new ITokenFactory[]{tfc, tfe};
+				}
+			};
+		}
 	}
 
 	private static ITokenFactory getFactory2(IToken[] previousTokens) {
@@ -45,22 +51,39 @@ public class TFGotoArgument extends TFSerialBase {
 		}
 	}
 
-	private static ITokenFactorySupply getFactorySupply(final int count) {
+	private static ITokenFactory getFactory4(IToken[] previousTokens) {
+		if ((previousTokens[1] != null) || (previousTokens[3] instanceof TIndirection)) {
+			return new TFNull();
+		} else {
+			return new TFActualList();
+		}
+	}
+
+	private static ITokenFactory getFactory5(IToken[] previousTokens) {
+		TFExpr e = TFExpr.getInstance();
+		TFDelimitedList re = TFDelimitedList.getInstance(e, ':');
+		ITokenFactory processParams = TFParallelCharBased.getInstance(e, '(', TFInParantheses.getInstance(re));
+		ITokenFactory jobParams = TFAllRequired.getInstance(TFConstChar.getInstance(':'), processParams); 
+		return TFSerialRO.getInstance(jobParams, TFTimeout.getInstance());
+	}
+
+	protected ITokenFactorySupply getFactorySupply() {
 		return new ITokenFactorySupply() {				
 			@Override
 			public int getCount() {
-				return count;
+				return 6;
 			}
 			
 			@Override
 			public ITokenFactory get(IToken[] previousTokens) {
 				int n = previousTokens.length;
 				switch (n) {
-					case 0: return TFGotoArgument.getFactory0(previousTokens); 
-					case 1: return TFGotoArgument.getFactory1(previousTokens); 
-					case 2: return TFGotoArgument.getFactory2(previousTokens); 
-					case 3: return TFGotoArgument.getFactory3(previousTokens); 
-					case 4: return TCommandName.getTFPostCondition(previousTokens);
+					case 0: return TFJobArgument.getFactory0(previousTokens); 
+					case 1: return TFJobArgument.getFactory1(previousTokens); 
+					case 2: return TFJobArgument.getFactory2(previousTokens); 
+					case 3: return TFJobArgument.getFactory3(previousTokens); 
+					case 4: return TFJobArgument.getFactory4(previousTokens); 
+					case 5: return TFJobArgument.getFactory5(previousTokens);
 					default:
 						assert(false);
 						return null;
@@ -69,15 +92,10 @@ public class TFGotoArgument extends TFSerialBase {
 		};
 	}
 
-	protected ITokenFactorySupply getFactorySupply() {
-		return  getFactorySupply(5);
-	}
-
-	@Override
 	protected int getCodeNextIsNull(IToken[] foundTokens) {
 		int n = foundTokens.length;
 		if (n == 2) {
-			if ((foundTokens[0] == null) && (foundTokens[1] == null)) {
+			if (foundTokens[0] == null) {
 				return RETURN_NULL;
 			} 
 		}
@@ -89,30 +107,10 @@ public class TFGotoArgument extends TFSerialBase {
 		return CONTINUE;
 	}
 	
-	@Override		
 	protected int getCodeStringEnds(IToken[] foundTokens) {
 		if (foundTokens.length == 3) {
 			return this.getErrorCode();
 		}
 		return 0;
 	}
-	
-	private static class TFGotoArgumentNoPostCondition extends TFGotoArgument {
-		@Override
-		protected ITokenFactorySupply getFactorySupply() {
-			return getFactorySupply(4);
-		}
-	}
-		
-	public static TFGotoArgument getInstance() {
-		return new TFGotoArgument();
-	}
-	
-	public static TFGotoArgument getInstance(boolean noPostCondition) {
-		if (noPostCondition) {
-			return new TFGotoArgumentNoPostCondition();
-		} else {
-			return new TFGotoArgument();
-		}
-	}	
-}
+}	

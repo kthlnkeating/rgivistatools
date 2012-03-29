@@ -20,6 +20,8 @@ public class TFTest {
 		TFCommonTest.validCheck(f, "^PRCA(430,+$G(PRCABN),0)");
 		TFCommonTest.validCheck(f, "^(430,+$G(PRCABN),0)");
 		TFCommonTest.validCheck(f, "^$ROUTINE(ROU)");
+		TFCommonTest.validCheck(f, "^[ZTM,ZTN]%ZTSCH");
+		TFCommonTest.validCheck(f, "^$W(\"ZISGTRM\")");
 	}
 
 	@Test
@@ -33,6 +35,7 @@ public class TFTest {
 		TFCommonTest.validCheck(f, "5+A-B   ", "5+A-B");
 		TFCommonTest.validCheck(f, "@(\"PSBTAB\"_(FLD-1))+1");
 		TFCommonTest.validCheck(f, "((@(\"PSBTAB\"_(FLD))-(@(\"PSBTAB\"_(FLD-1))+1)))");
+		TFCommonTest.validCheck(f, ".@VAR");
 	}
 
 	@Test
@@ -53,5 +56,6 @@ public class TFTest {
 		TFCommonTest.validCheck(f, "$T(NTRTMSG^HDISVAP)");
 		TFCommonTest.validCheck(f, "$T(+3)");
 		TFCommonTest.validCheck(f, "0");
+		TFCommonTest.validCheck(f, "$$STOREVAR^HLEME(EVENT,.@VAR,VAR)");
 	}
 }

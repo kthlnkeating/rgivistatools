@@ -27,7 +27,7 @@ public class TLineTest1 {
 				try {
 					Scanner scanner = new Scanner(path);
 					int index = 0;
-					//if (! path.getFileName().toString().equals("PSSFDBRT.m")) return;
+					//if (! path.getFileName().toString().equals("HLCSTCP.m")) return;
 					LOGGER.info(path.getFileName().toString());
 					while (scanner.hasNextLine()) {
 						String line = scanner.nextLine();

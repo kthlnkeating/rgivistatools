@@ -57,11 +57,11 @@ public class TFDoArgument extends TFSerialBase {
 		}
 	}
 
-	protected ITokenFactorySupply getFactorySupply() {
+	protected ITokenFactorySupply getFactorySupply(final int count) {
 		return new ITokenFactorySupply() {				
 			@Override
 			public int getCount() {
-				return 6;
+				return count;
 			}
 			
 			@Override
@@ -82,6 +82,12 @@ public class TFDoArgument extends TFSerialBase {
 		};
 	}
 
+	@Override
+	protected ITokenFactorySupply getFactorySupply() {
+		return this.getFactorySupply(6);
+	}
+	
+	
 	protected int getCodeNextIsNull(IToken[] foundTokens) {
 		int n = foundTokens.length;
 		if (n == 2) {
@@ -104,8 +110,23 @@ public class TFDoArgument extends TFSerialBase {
 		return 0;
 	}
 	
+	private static class TFDoArgumentNoPostCondition extends TFDoArgument {
+		@Override
+		protected ITokenFactorySupply getFactorySupply() {
+			return getFactorySupply(5);
+		}
+	}
+		
 	public static TFDoArgument getInstance() {
 		return new TFDoArgument();
 	}
+	
+	public static TFDoArgument getInstance(boolean noPostCondition) {
+		if (noPostCondition) {
+			return new TFDoArgumentNoPostCondition();
+		} else {
+			return new TFDoArgument();
+		}
+	}	
 }	
 

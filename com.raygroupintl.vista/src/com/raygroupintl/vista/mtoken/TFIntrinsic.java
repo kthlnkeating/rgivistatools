@@ -166,6 +166,7 @@ public class TFIntrinsic extends TFSerialBase {
 		addFunction("E", 1, 3); 	
 		addFunction("F", 2, 3); 	
 		addFunction("G", 1, 2); 	
+		addFunction("I", 1, 2); 	
 		addFunction("J", 2, 3); 	
 		addFunction("L", 1, 2); 		
 		FunctionInfo o = addFunction("O", 1, 2); 	

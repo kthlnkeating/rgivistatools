@@ -31,7 +31,7 @@ public class TFGvnAll extends TFParallelCharBased {
 			ITokenFactory p = new TFInParantheses() {				
 				@Override
 				protected ITokenFactory getInnerfactory() {
-					return new TFExpr();
+					return TFDelimitedList.getInstance(TFExpr.getInstance(), ',');
 				}
 			};
 			return new ITokenFactory[]{c, i, p};
@@ -58,6 +58,7 @@ public class TFGvnAll extends TFParallelCharBased {
 					return new TFGvnNaked();
 				case '%':
 				case '|':
+				case '[':
 					return new TFGvn();							
 				default: 
 					if (Library.isIdent(ch2)) {

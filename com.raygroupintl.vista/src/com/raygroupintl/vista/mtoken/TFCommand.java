@@ -1,6 +1,5 @@
 package com.raygroupintl.vista.mtoken;
 
-import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -8,427 +7,217 @@ import java.util.Map;
 import com.raygroupintl.vista.fnds.IToken;
 import com.raygroupintl.vista.fnds.ITokenFactory;
 import com.raygroupintl.vista.fnds.ITokenFactorySupply;
-import com.raygroupintl.vista.mtoken.command.TCommandClose;
-import com.raygroupintl.vista.mtoken.command.TCommandDo;
-import com.raygroupintl.vista.mtoken.command.TCommandExecute;
-import com.raygroupintl.vista.mtoken.command.TCommandFor;
-import com.raygroupintl.vista.mtoken.command.TCommandGoto;
-import com.raygroupintl.vista.mtoken.command.TCommandIf;
-import com.raygroupintl.vista.mtoken.command.TCommandJob;
-import com.raygroupintl.vista.mtoken.command.TCommandKill;
-import com.raygroupintl.vista.mtoken.command.TCommandLock;
-import com.raygroupintl.vista.mtoken.command.TCommandMerge;
-import com.raygroupintl.vista.mtoken.command.TCommandNew;
-import com.raygroupintl.vista.mtoken.command.TCommandOpen;
-import com.raygroupintl.vista.mtoken.command.TCommandQuit;
-import com.raygroupintl.vista.mtoken.command.TCommandRead;
-import com.raygroupintl.vista.mtoken.command.TCommandSet;
-import com.raygroupintl.vista.mtoken.command.TCommandUse;
-import com.raygroupintl.vista.mtoken.command.TCommandWrite;
 import com.raygroupintl.vista.struct.MError;
 import com.raygroupintl.vista.struct.MNameWithMnemonic;
+import com.raygroupintl.vista.token.TBasic;
+import com.raygroupintl.vista.token.TEmpty;
 import com.raygroupintl.vista.token.TFAllRequired;
-import com.raygroupintl.vista.token.TFAnyBut;
 import com.raygroupintl.vista.token.TFBasic;
 import com.raygroupintl.vista.token.TFConstChar;
+import com.raygroupintl.vista.token.TFConstChars;
 import com.raygroupintl.vista.token.TFEmpty;
+import com.raygroupintl.vista.token.TFParallelCharBased;
 import com.raygroupintl.vista.token.TFSerialBase;
+import com.raygroupintl.vista.token.TFSerialORO;
+import com.raygroupintl.vista.token.TFSerialRO;
+import com.raygroupintl.vista.token.TFSerialROO;
+import com.raygroupintl.vista.token.TSyntaxError;
 
 public class TFCommand extends TFSerialBase {
-	private static abstract class CommandFactory {
-		public abstract TCommandName getInstance(String identifier);
-	}
-
-	protected static abstract class TCommandAnyArgument extends TCommandName {
-		public TCommandAnyArgument(String identifier) {
-			super(identifier);
-		}
-		
-		@Override
-		public ITokenFactory getArgumentFactory() {
-			return TFAnyBut.getInstance();
-		}		
-	}
-	
-	private static class TCommandBreak extends TCommandAnyArgument {
-		public TCommandBreak(String identifier) {
-			super(identifier);
-		}
-
-		@Override
-		protected MNameWithMnemonic getNameWithMnemonic() {
-			return new MNameWithMnemonic("B", "BREAK");
-		}		
-	}
-	
-	private static class TCommandHalt extends TCommandAnyArgument {
-		public TCommandHalt(String identifier) {
-			super(identifier);
-		}
-
-		@Override
-		protected MNameWithMnemonic getNameWithMnemonic() {
-			return new MNameWithMnemonic("H", "HALT");
-		}		
-	}
-
-	private static class TCommandHang extends TCommandAnyArgument {
-		public TCommandHang(String identifier) {
-			super(identifier);
-		}
-
-		@Override
-		protected MNameWithMnemonic getNameWithMnemonic() {
-			return new MNameWithMnemonic("H", "HANG");
-		}		
-	}
-
-	private static class TCommandView extends TCommandAnyArgument {
-		public TCommandView(String identifier) {
-			super(identifier);
-		}
-
-		@Override
-		protected MNameWithMnemonic getNameWithMnemonic() {
-			return new MNameWithMnemonic("V", "VIEW");
-		}		
-	}
-	
-	private static class TCommandGeneric extends TCommandAnyArgument {
-		public TCommandGeneric(String identifier) {
-			super(identifier);
-		}
-
-		@Override
-		protected MNameWithMnemonic getNameWithMnemonic() {
-			String id = this.getIdentier();
-			return new MNameWithMnemonic(id, id);
-		}	
-		
-		public List<MError> auxGetErrors() {
-			String id = this.getIdentier();
-			char ch = id.charAt(0);
-			if (ch == 'Z' || ch == 'z') {
-				return null;
-			} else if (Character.isLetterOrDigit(ch)) {
-				return Arrays.asList(new MError[]{new MError(MError.ERR_UNDEFINED_COMMAND)});
-			} else {
-				return Arrays.asList(new MError[]{new MError(MError.ERR_GENERAL_SYNTAX)});				
-			}
-		}		
-		
-		@Override
-		public List<MError> getErrors() {
-			List<MError> errors = this.auxGetErrors();
-			List<MError> parentErrors = super.getErrors();
-			if (errors == null) {
-				return parentErrors;
-			} else {
-				if (parentErrors != null) {
-					errors.addAll(parentErrors);
-				}
-				return errors;
-			}
-		}		
-	}
-
-	protected static abstract class TCommandNoArgument extends TCommandName {
-		public TCommandNoArgument(String identifier) {
-			super(identifier);
-		}
-		
-		@Override
-		public ITokenFactory getArgumentFactory() {
-			return TFEmpty.getInstance();
-		}		
-	}
-	
-	private static class TCommandElse extends TCommandNoArgument {
-		public TCommandElse(String identifier) {
-			super(identifier);
-		}
-
-		@Override
-		protected MNameWithMnemonic getNameWithMnemonic() {
-			return new MNameWithMnemonic("E", "ELSE");
-		}		
-	}
-
-	private static class TCommandTCommit extends TCommandNoArgument {
-		public TCommandTCommit(String identifier) {
-			super(identifier);
-		}
-
-		@Override
-		protected MNameWithMnemonic getNameWithMnemonic() {
-			return new MNameWithMnemonic("TC", "TCOMMIT");
-		}		
-	}
-	
-	private static class TCommandTRestart extends TCommandNoArgument {
-		public TCommandTRestart(String identifier) {
-			super(identifier);
-		}
-
-		@Override
-		protected MNameWithMnemonic getNameWithMnemonic() {
-			return new MNameWithMnemonic("TR", "TRESTART");
-		}		
-	}
-	
-	private static class TCommandTRollback extends TCommandNoArgument {
-		public TCommandTRollback(String identifier) {
-			super(identifier);
-		}
-
-		@Override
-		protected MNameWithMnemonic getNameWithMnemonic() {
-			return new MNameWithMnemonic("TRO", "TROLLBACK");
-		}		
-	}
-	
-	private static class TCommandTStart extends TCommandNoArgument {
-		public TCommandTStart(String identifier) {
-			super(identifier);
-		}
-
-		@Override
-		protected MNameWithMnemonic getNameWithMnemonic() {
-			return new MNameWithMnemonic("TS", "TSTART");
-		}		
-	}
-	
-	private static final Map<String, CommandFactory> COMMANDS = new HashMap<String, CommandFactory>();
+	private static MNameWithMnemonic.Map COMMAND_NAMES = new MNameWithMnemonic.Map();
 	static {
-		CommandFactory b = new CommandFactory() {			
+		COMMAND_NAMES.update("B", "BREAK"); 	
+		COMMAND_NAMES.update("H", "HALT"); 	
+		COMMAND_NAMES.update("H", "HANG"); 	
+		COMMAND_NAMES.update("V", "VIEW"); 	
+		COMMAND_NAMES.update("E", "ELSE"); 	
+		COMMAND_NAMES.update("TC", "TCOMMIT"); 	
+		COMMAND_NAMES.update("TR", "TRESTART"); 	
+		COMMAND_NAMES.update("TRO", "TROLLBACK"); 	
+		COMMAND_NAMES.update("TS", "TSTART"); 	
+		COMMAND_NAMES.update("C", "CLOSE"); 	
+		COMMAND_NAMES.update("D", "DO"); 	
+		COMMAND_NAMES.update("E", "XECUTE"); 	
+		COMMAND_NAMES.update("F", "FOR"); 	
+		COMMAND_NAMES.update("G", "GOTO"); 	
+		COMMAND_NAMES.update("I", "IF"); 	
+		COMMAND_NAMES.update("J", "JOB"); 	
+		COMMAND_NAMES.update("K", "KILL"); 	
+		COMMAND_NAMES.update("L", "LOCK"); 	
+		COMMAND_NAMES.update("M", "MERGE"); 	
+		COMMAND_NAMES.update("N", "NEW");		
+		COMMAND_NAMES.update("O", "OPEN"); 	
+		COMMAND_NAMES.update("Q", "QUIT"); 	
+		COMMAND_NAMES.update("R", "READ"); 	
+		COMMAND_NAMES.update("S", "SET"); 	
+		COMMAND_NAMES.update("U", "USE");
+		COMMAND_NAMES.update("W", "WRITE");		
+		COMMAND_NAMES.update("X", "XECUTE");		
+	}
+	
+	public static ITokenFactory getTFPostCondition(IToken[] previousTokens) {
+		ITokenFactory tfColon = TFConstChar.getInstance(':');
+		ITokenFactory tfExpr = TFExpr.getInstance();
+		return TFAllRequired.getInstance(tfColon, tfExpr);
+	}
+
+	private static ITokenFactory getXArgumentFactory() {
+		ITokenFactory tf = TFParallelCharBased.getInstance(TFExpr.getInstance(), '@', TFIndirection.getInstance());
+		ITokenFactory pc = getTFPostCondition(null);
+		return TFDelimitedList.getInstance(TFSerialRO.getInstance(tf, pc), ',');
+	}
+	
+	private static ITokenFactory getFArgumentFactory() {
+		TFExpr tfExpr = TFExpr.getInstance();
+		TFAllRequired tfFromTo = TFAllRequired.getInstance(TFConstChar.getInstance(':'), tfExpr);
+		ITokenFactory RHS = TFSerialROO.getInstance(tfExpr, tfFromTo, tfFromTo);
+		ITokenFactory RHSs = TFCommaDelimitedList.getInstance(RHS);
+		return TFAllRequired.getInstance(TFLvn.getInstance(), TFConstChar.getInstance('='), RHSs); 
+	}
+
+	private static ITokenFactory getLArgumentFactory() {
+		ITokenFactory tfNRef = TFParallelCharBased.getInstance(TFLvn.getInstance(), '^', TFGvn.getInstance(), '@', TFIndirection.getInstance());		
+		ITokenFactory tfNRefOrList = TFParallelCharBased.getInstance(tfNRef, '(', TFDelimitedList.getInstance(tfNRef, ',', true));
+		ITokenFactory e = TFSerialORO.getInstance(TFConstChars.getInstance("+-"), tfNRefOrList, TFTimeout.getInstance());
+		return TFCommaDelimitedList.getInstance(e);
+	}
+
+	private static Map<String, ITokenFactory> ARGUMENT_FACTORIES = new HashMap<String, ITokenFactory>();
+	static {
+		TFEmpty empty = TFEmpty.getInstance();
+		ARGUMENT_FACTORIES.put("E", empty); 	
+		ARGUMENT_FACTORIES.put("TC", empty); 	
+		ARGUMENT_FACTORIES.put("TR", empty); 	
+		ARGUMENT_FACTORIES.put("TRO", empty); 	
+		ARGUMENT_FACTORIES.put("TS", empty); 	
+		
+		ITokenFactory c = TFCommaDelimitedList.getInstance(new TFParallelCharBased() {			
 			@Override
-			public TCommandName getInstance(String identifier) {
-				return new TCommandBreak(identifier);
+			protected ITokenFactory getFactory(char ch) {
+				if (ch == '@') {
+					return TFIndirection.getInstance();
+				} else {
+					return TFSerialRO.getInstance(TFExpr.getInstance(), TFAllRequired.getInstance(TFConstChar.getInstance(':'), new TFDeviceParams()));
+				}
 			}
-		};
-		COMMANDS.put("B", b);
-		COMMANDS.put("BREAK", b);
-		CommandFactory c = new CommandFactory() {			
+		});
+		ARGUMENT_FACTORIES.put("C", c); 	
+		
+		
+		ARGUMENT_FACTORIES.put("D", TFCommaDelimitedList.getInstance(TFDoArgument.getInstance()));		
+		ARGUMENT_FACTORIES.put("X", getXArgumentFactory()); 	
+		ARGUMENT_FACTORIES.put("F", getFArgumentFactory()); 	
+		ARGUMENT_FACTORIES.put("G", TFCommaDelimitedList.getInstance(new TFGotoArgument())); 	
+		ARGUMENT_FACTORIES.put("I", TFCommaDelimitedList.getInstance(TFExpr.getInstance())); 	
+		ARGUMENT_FACTORIES.put("J", TFCommaDelimitedList.getInstance(new TFJobArgument())); 	
+		ARGUMENT_FACTORIES.put("K", TFCommaDelimitedList.getInstance(new TFKillArgument())); 	
+		ARGUMENT_FACTORIES.put("L", getLArgumentFactory()); 	
+		ARGUMENT_FACTORIES.put("M", TFCommaDelimitedList.getInstance(new TFMergeArgument())); 	
+		
+		ITokenFactory n = new TFParallelCharBased() {
 			@Override
-			public TCommandName getInstance(String identifier) {
-				return new TCommandClose(identifier);
+			protected ITokenFactory getFactory(char ch) {
+				switch(ch) {
+				case '(': 
+					return TFCommaDelimitedList.getInstance(TFLvn.getInstance());
+				case '@':
+					return TFIndirection.getInstance();
+				case '$':
+					return TFIntrinsic.getInstance();
+				default:
+					return TFName.getInstance();
+				}
 			}
 		};		
-		COMMANDS.put("C", c);
-		COMMANDS.put("CLOSE", c);
-		CommandFactory d = new CommandFactory() {			
+		ARGUMENT_FACTORIES.put("N", TFCommaDelimitedList.getInstance(n));		
+		
+		ARGUMENT_FACTORIES.put("O", TFCommaDelimitedList.getInstance(new TFOpenArgument())); 	
+		ARGUMENT_FACTORIES.put("Q", TFParallelCharBased.getInstance(TFExpr.getInstance(), '@', TFIndirection.getInstance())); 	
+		ARGUMENT_FACTORIES.put("R", TFCommaDelimitedList.getInstance(new TFReadArgument())); 	
+		ARGUMENT_FACTORIES.put("S", TFCommaDelimitedList.getInstance(new TFSetArgument())); 	
+		ARGUMENT_FACTORIES.put("U", TFCommaDelimitedList.getInstance(new TFUseArgument()));
+		
+		ITokenFactory w = new TFParallelCharBased() {
 			@Override
-			public TCommandName getInstance(String identifier) {
-				return new TCommandDo(identifier);
+			protected ITokenFactory getFactory(char ch) {
+				switch(ch) {
+					case '!':
+					case '#':
+					case '?':
+					case '/':
+						return TFFormat.getInstance();
+					case '*':
+						return TFAllRequired.getInstance(TFConstChar.getInstance('*'), TFExpr.getInstance());
+					case '@':
+						return TFIndirection.getInstance();
+					default:
+						return TFExpr.getInstance();
+				}
 			}
-		};				
-		COMMANDS.put("D", d);
-		COMMANDS.put("DO", d);
-		CommandFactory e = new CommandFactory() {			
-			@Override
-			public TCommandName getInstance(String identifier) {
-				return new TCommandElse(identifier);
-			}
-		};						
-		COMMANDS.put("E", e);
-		COMMANDS.put("ELSE", e);
-		CommandFactory f = new CommandFactory() {			
-			@Override
-			public TCommandName getInstance(String identifier) {
-				return new TCommandFor(identifier);
-			}
-		};						
-		COMMANDS.put("F", f);
-		COMMANDS.put("FOR", f);
-		CommandFactory g = new CommandFactory() {			
-			@Override
-			public TCommandName getInstance(String identifier) {
-				return new TCommandGoto(identifier);
-			}
-		};						
-		COMMANDS.put("G", g);
-		COMMANDS.put("GOTO", g);
-		CommandFactory h = new CommandFactory() {			
-			@Override
-			public TCommandName getInstance(String identifier) {
-				return new TCommandHalt(identifier);
-			}
-		};								
-		COMMANDS.put("H", h);
-		COMMANDS.put("HALT", h);
-		CommandFactory hh = new CommandFactory() {			
-			@Override
-			public TCommandName getInstance(String identifier) {
-				return new TCommandHang(identifier);
-			}
-		};										
-		COMMANDS.put("H", hh);
-		COMMANDS.put("HANG", hh);
-		CommandFactory i = new CommandFactory() {			
-			@Override
-			public TCommandName getInstance(String identifier) {
-				return new TCommandIf(identifier);
-			}
-		};												
-		COMMANDS.put("I", i);
-		COMMANDS.put("IF", i);
-		CommandFactory j = new CommandFactory() {			
-			@Override
-			public TCommandName getInstance(String identifier) {
-				return new TCommandJob(identifier);
-			}
-		};												
-		COMMANDS.put("J", j);
-		COMMANDS.put("JOB", j);
-		CommandFactory k = new CommandFactory() {			
-			@Override
-			public TCommandName getInstance(String identifier) {
-				return new TCommandKill(identifier);
-			}
-		};												
-		COMMANDS.put("K", k);
-		COMMANDS.put("KILL", k);
-		CommandFactory l = new CommandFactory() {			
-			@Override
-			public TCommandName getInstance(String identifier) {
-				return new TCommandLock(identifier);
-			}
-		};												
-		COMMANDS.put("L", l);
-		COMMANDS.put("LOCK", l);
-		CommandFactory m = new CommandFactory() {			
-			@Override
-			public TCommandName getInstance(String identifier) {
-				return new TCommandMerge(identifier);
-			}
-		};												
-		COMMANDS.put("M", m);
-		COMMANDS.put("MERGE", m);
-		CommandFactory n = new CommandFactory() {			
-			@Override
-			public TCommandName getInstance(String identifier) {
-				return new TCommandNew(identifier);
-			}
-		};												
-		COMMANDS.put("N", n);
-		COMMANDS.put("NEW", n);
-		CommandFactory o = new CommandFactory() {			
-			@Override
-			public TCommandName getInstance(String identifier) {
-				return new TCommandOpen(identifier);
-			}
-		};												
-		COMMANDS.put("O", o);
-		COMMANDS.put("OPEN", o);
-		CommandFactory q = new CommandFactory() {			
-			@Override
-			public TCommandName getInstance(String identifier) {
-				return new TCommandQuit(identifier);
-			}
-		};												
-		COMMANDS.put("Q", q);
-		COMMANDS.put("QUIT", q);
-		CommandFactory r = new CommandFactory() {			
-			@Override
-			public TCommandName getInstance(String identifier) {
-				return new TCommandRead(identifier);
-			}
-		};												
-		COMMANDS.put("R", r);
-		COMMANDS.put("READ", r);
-		CommandFactory s = new CommandFactory() {			
-			@Override
-			public TCommandName getInstance(String identifier) {
-				return new TCommandSet(identifier);
-			}
-		};												
-		COMMANDS.put("S", s);
-		COMMANDS.put("SET", s);
-		CommandFactory tc = new CommandFactory() {			
-			@Override
-			public TCommandName getInstance(String identifier) {
-				return new TCommandTCommit(identifier);
-			}
-		};												
-		COMMANDS.put("TC", tc);
-		COMMANDS.put("TCOMMIT", tc);
-		CommandFactory tr = new CommandFactory() {			
-			@Override
-			public TCommandName getInstance(String identifier) {
-				return new TCommandTRestart(identifier);
-			}
-		};												
-		COMMANDS.put("TR", tr);
-		COMMANDS.put("TRESTART", tr);
-		CommandFactory tro = new CommandFactory() {			
-			@Override
-			public TCommandName getInstance(String identifier) {
-				return new TCommandTRollback(identifier);
-			}
-		};												
-		COMMANDS.put("TRO", tro);
-		COMMANDS.put("TROLLBACK", tro);
-		CommandFactory ts = new CommandFactory() {			
-			@Override
-			public TCommandName getInstance(String identifier) {
-				return new TCommandTStart(identifier);
-			}
-		};												
-		COMMANDS.put("TS", ts);
-		COMMANDS.put("TSTART", ts);
-		CommandFactory u = new CommandFactory() {			
-			@Override
-			public TCommandName getInstance(String identifier) {
-				return new TCommandUse(identifier);
-			}
-		};												
-		COMMANDS.put("U", u);
-		COMMANDS.put("USE", u);
-		CommandFactory v = new CommandFactory() {			
-			@Override
-			public TCommandName getInstance(String identifier) {
-				return new TCommandView(identifier);
-			}
-		};												
-		COMMANDS.put("V", v);
-		COMMANDS.put("VIEW", v);
-		CommandFactory w = new CommandFactory() {			
-			@Override
-			public TCommandName getInstance(String identifier) {
-				return new TCommandWrite(identifier);
-			}
-		};												
-		COMMANDS.put("W", w);
-		COMMANDS.put("WRITE", w);
-		CommandFactory x = new CommandFactory() {			
-			@Override
-			public TCommandName getInstance(String identifier) {
-				return new TCommandExecute(identifier);
-			}
-		};												
-		COMMANDS.put("X", x);
-		COMMANDS.put("XECUTE", x);
+		};		
+		ARGUMENT_FACTORIES.put("W", TFCommaDelimitedList.getInstance(w));		
 	}
 	
-	private static TCommandName getCommand(String identifier) {
-		CommandFactory f = COMMANDS.get(identifier.toUpperCase());
-		if (f != null) {
-			TCommandName command = f.getInstance(identifier);
-			return command;
-		} else {
-			TCommandName command = new TCommandGeneric(identifier);
-			return command;
+	public static void addCommand(String name) {
+		COMMAND_NAMES.update(name, name);
+	}
+	
+	private static class TCommandName extends TKeyword {
+		private TCommandName(String value) {
+			super(value);
+		}
+	
+		@Override
+		public List<MError> getErrors() {
+			return null;
+		}
+		
+		@Override
+		protected MNameWithMnemonic getNameWithMnemonic() {
+			String value = this.getStringValue().toUpperCase();
+			MNameWithMnemonic name = COMMAND_NAMES.get(value);
+			return name;
 		}
 	}
 	
-	private static class TFIdentCommand extends TFIdent {
+	private static class TFGeneric implements ITokenFactory {
 		@Override
-		protected TCommandName getToken(String value) {
-			return getCommand(value);
-		}				
+		public IToken tokenize(String line, int fromIndex) {
+			int endIndex = line.length();
+			int index = fromIndex;
+			boolean inQuotes = false;
+			while (index < endIndex) {
+				char ch = line.charAt(index);
+								
+				if (ch == '"') {
+					inQuotes = ! inQuotes;
+				} else if (ch == ' ') {
+					if (! inQuotes) break;
+				}
+				++index;
+			}
+			if (index > fromIndex) {
+				return new TBasic(line.substring(fromIndex, index));
+			} else {
+				return new TEmpty();
+			}
+		}
+	}
 		
-		public static TFIdentCommand getInstance() {
-			return new TFIdentCommand();
+	private static class TFCommandName extends TFIdent {
+		@Override
+		public IToken tokenize(String line, int fromIndex) {
+			IToken result = super.tokenize(line, fromIndex);
+			String cmdName = result.getStringValue().toUpperCase();
+			if (COMMAND_NAMES.containsKey(cmdName)) {
+				return new TCommandName(result.getStringValue());
+			} else {
+				return new TSyntaxError(MError.ERR_UNDEFINED_COMMAND , line, fromIndex);
+			}			
+		}
+				
+		public static TFCommandName getInstance() {
+			return new TFCommandName();
 		}
 	}
 		
@@ -437,14 +226,20 @@ public class TFCommand extends TFSerialBase {
 			int n = previousTokens.length;
 			switch (n) {
 				case 0:
-					return TFIdentCommand.getInstance();
+					return TFCommandName.getInstance();
 				case 1:
 					return TFAllRequired.getInstance(TFConstChar.getInstance(':'), TFExpr.getInstance());
 				case 2:
 					return TFConstChar.getInstance(' ');
 				case 3: {
 					TCommandName cmd = (TCommandName) previousTokens[0];
-					return cmd.getArgumentFactory();
+					String key = cmd.getNameWithMnemonic().getMnemonic();
+					ITokenFactory f = ARGUMENT_FACTORIES.get(key);
+					if (f == null) {
+						return new TFGeneric();
+					} else {
+						return f;
+					}
 				}					
 				case 4:
 					return TFBasic.getInstance(' ');

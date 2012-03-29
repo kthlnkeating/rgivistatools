@@ -26,6 +26,8 @@ public class TFActual extends TFParallelCharBased {
 				return TFNumLit.getInstance();
 			} else if ((ch2 == '%') || Library.isIdent(ch2)) {
 				return TFAllRequired.getInstance(TFConstChar.getInstance('.'), TFName.getInstance());
+			} else if (ch2 == '@') {
+				return TFAllRequired.getInstance(TFConstChar.getInstance('.'), TFIndirection.getInstance());
 			} else {
 				return TFSyntaxError.getInstance();
 			}

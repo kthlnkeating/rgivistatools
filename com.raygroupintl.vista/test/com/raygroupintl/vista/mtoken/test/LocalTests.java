@@ -5,7 +5,7 @@ import org.junit.runners.Suite;
 import org.junit.runners.Suite.SuiteClasses;
 
 @RunWith(Suite.class)
-@SuiteClasses({ TCommandForTest.class, TCommandKillTest.class,
+@SuiteClasses({ TCommandKillTest.class,
 		TCommandReadTest.class, TCommandSetTest.class,
 		TFActualListTest.class, TFCommandTest.class,
 		TFDelimitedListTest.class, TFExprTest.class,

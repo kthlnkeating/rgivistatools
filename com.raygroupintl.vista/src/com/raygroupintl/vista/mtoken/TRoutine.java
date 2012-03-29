@@ -62,7 +62,7 @@ public class TRoutine extends TBase {
 		}	
 	}
 	
-	private static String getEOL() {
+	public static String getEOL() {
 		String eol = System.getProperty("line.separator");
 		if (eol == null) {
 			eol = "\n";
@@ -79,9 +79,10 @@ public class TRoutine extends TBase {
 		}		
 	}
 		
-	public void writeErrors(OutputStream os) throws IOException {
+	public int writeErrors(OutputStream os) throws IOException {
 		String eol = getEOL();
 		String lastTag = this.name;
+		int count = 0;
 		int index = 0;
 		boolean first = true;
 		for (TLine line : this.lines) {
@@ -100,14 +101,17 @@ public class TRoutine extends TBase {
 				if (lineFirst) {
 					String offset = (index == 0 ? "" : '+' + String.valueOf(index));
 					os.write(("  " + lastTag + offset + eol).getBytes());
+					os.write(("    " + line.getStringValue() + eol).getBytes());
 					lineFirst = false;
 				}
 				for (MError error : errors) {
 					os.write(("    " + error.getText() + eol).getBytes());
+					++count;
 				}
 			}
 			++index;
 		}		
+		return count;
 	}
 		
 	public void write(Path path) throws IOException {

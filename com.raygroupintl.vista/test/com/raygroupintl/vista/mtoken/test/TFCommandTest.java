@@ -17,6 +17,13 @@ public class TFCommandTest {
 	}
 
 	@Test
+	public void testFor() {
+		ITokenFactory f = new TFCommand();
+		TFCommonTest.validCheck(f, "F FLD=1:1:$L(LST,\",\")");
+		TFCommonTest.validCheck(f, "F STAT=42,16");
+	}
+
+	@Test
 	public void testGoto() {
 		ITokenFactory f = new TFCommand();
 		TFCommonTest.validCheck(f, "G:POP H^XUS");
@@ -42,8 +49,15 @@ public class TFCommandTest {
 		TFCommonTest.validCheck(f, "L +(^LRO(68,LRAA,1,LRAD,1,LRAN))");
 		TFCommonTest.validCheck(f, "L +(^LR(LRDFN,\"MI\",LRIDT),^LRO(68,LRAA,1,LRAD,1,LRAN)):0");
 		TFCommonTest.validCheck(f, "L -(^LR(LRDFN,\"MI\",LRIDT),^LRO(68,LRAA,1,LRAD,1,LRAN))");
+		TFCommonTest.validCheck(f, "L +PSX(550.1):3");	
 	}
 
+	@Test
+	public void testOpen() {
+		ITokenFactory f = new TFCommand();
+		TFCommonTest.validCheck(f, "O:$G(LOGICAL)]\"\" HLCSTATE(\"DEVICE\"):(TCPDEV:BLOCKSIZE=512):HLCSTATE(\"OPEN TIMEOUT\")");
+	}	
+	
 	@Test
 	public void testWrite() {
 		ITokenFactory f = new TFCommand();
@@ -66,6 +80,13 @@ public class TFCommandTest {
 	public void testXecute() {
 		ITokenFactory f = new TFCommand();
 		TFCommonTest.validCheck(f, "X ^%ZOSF(\"TYPE-AHEAD\"),^%ZOSF(\"LABOFF\")");
+	}
+	
+	@Test
+	public void testZ() {
+		TFCommand.addCommand("ZB");
+		ITokenFactory f = new TFCommand();
+		TFCommonTest.validCheck(f, "ZB ZB0^HLOQUE:\"N\":1:\"S RET=0\"");
 	}
 }
 

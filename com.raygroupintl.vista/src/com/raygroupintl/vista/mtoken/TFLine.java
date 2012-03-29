@@ -5,7 +5,7 @@ import java.util.Arrays;
 import com.raygroupintl.vista.fnds.IToken;
 import com.raygroupintl.vista.fnds.ITokenFactory;
 import com.raygroupintl.vista.token.TFBasic;
-import com.raygroupintl.vista.token.TFConstChar;
+import com.raygroupintl.vista.token.TFConstChars;
 import com.raygroupintl.vista.token.TFParallelCharBased;
 import com.raygroupintl.vista.token.TFSerial;
 import com.raygroupintl.vista.token.TFSyntaxError;
@@ -44,7 +44,7 @@ public class TFLine extends TFSerial {
 		return new ITokenFactory[]{
 				TFLabel.getInstance(),
 				getTFFormal(),
-				TFConstChar.getInstance(' '),
+				TFConstChars.getInstance(" \t"),
 				TFBasic.getInstance('.', ' '),
 				getTFCommands()
 		};

@@ -22,5 +22,7 @@ public class TCommandSetTest {
 		TFCommonTest.validCheck(f, "S @H@(0)=3");
 		TFCommonTest.validCheck(f, "S XT4=\"I 1\"   ");
 		TFCommonTest.validCheck(f, "S IOP=IOP_\";255\",%ZIS=\"\"");
+		TFCommonTest.validCheck(f, "S X=$I(^HLCS(870,DP,P),$S($G(Z):-1,1:1))");
+		TFCommonTest.validCheck(f, "S ^$W(\"ZISGTRM\",\"VISIBLE\")=1");
 	}
 }

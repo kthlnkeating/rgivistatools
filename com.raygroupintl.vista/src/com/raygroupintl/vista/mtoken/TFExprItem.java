@@ -11,7 +11,7 @@ public class TFExprItem extends TFParallelCharBased {
 	private static final class TFExtrinsic extends TFAllRequired {
 		@Override
 		protected final ITokenFactory[] getFactories() {
-			return new ITokenFactory[]{new TFConstString("$$"), TFDoArgument.getInstance()};
+			return new ITokenFactory[]{new TFConstString("$$"), TFDoArgument.getInstance(true)};
 		}
 
 		@Override
