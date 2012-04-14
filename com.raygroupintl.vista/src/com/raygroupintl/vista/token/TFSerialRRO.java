@@ -4,13 +4,13 @@ import com.raygroupintl.vista.fnds.IToken;
 import com.raygroupintl.vista.fnds.ITokenFactory;
 
 public abstract class TFSerialRRO extends TFSerial {
-	protected IToken getTokenWhenNoOptional(IToken[] foundTokens) {
-		return new TPair(foundTokens[0], foundTokens[1]);
-	}
+	//protected IToken getTokenWhenNoOptional(IToken[] foundTokens) {
+	//	return new TPair(foundTokens[0], foundTokens[1]);
+	//}
 	
-	protected IToken getTokenWhenAll(IToken[] foundTokens) {
-		return new TArray(foundTokens);
-	}
+	//protected IToken getTokenWhenAll(IToken[] foundTokens) {
+	//	return new TArray(foundTokens);
+	//}
 	
 	@Override
 	protected final int getCodeNextIsNull(IToken[] foundTokens) {
@@ -35,14 +35,14 @@ public abstract class TFSerialRRO extends TFSerial {
 		}
 	}
 	
-	@Override
-	protected final IToken getToken(IToken[] foundTokens) {
-		if (foundTokens[2] == null) {
-			return this.getTokenWhenNoOptional(foundTokens);
-		} else {
-			return this.getTokenWhenAll(foundTokens);				
-		}
-	}
+	//@Override
+	//protected final IToken getToken(IToken[] foundTokens) {
+	//	if (foundTokens[2] == null) {
+	//		return this.getTokenWhenNoOptional(foundTokens);
+	//	} else {
+	//		return this.getTokenWhenAll(foundTokens);				
+	//	}
+	//}
 	
 	public static TFSerialRRO getInstance(final ITokenFactory f0, final ITokenFactory f1, final ITokenFactory f2) {
 		return new TFSerialRRO() {			

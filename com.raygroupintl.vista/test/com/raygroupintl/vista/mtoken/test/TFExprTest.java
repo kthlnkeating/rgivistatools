@@ -2,12 +2,12 @@ package com.raygroupintl.vista.mtoken.test;
 
 import org.junit.Test;
 
+import com.raygroupintl.vista.mtoken.MVersion;
 import com.raygroupintl.vista.mtoken.TFExpr;
 
 public class TFExprTest {
-	@Test
-	public void test() {
-		TFExpr f = TFExpr.getInstance();
+	private void test(MVersion version) {
+		TFExpr f = TFExpr.getInstance(version);
 		TFCommonTest.validCheck(f, "@^%ZOSF(\"TRAP\")");
 		TFCommonTest.validCheck(f, "^A");
 		TFCommonTest.validCheck(f, "^A(1)");
@@ -24,5 +24,11 @@ public class TFExprTest {
 		TFCommonTest.validCheck(f, "LA7VAL?1(1N.E,1\".\".E)");
 		TFCommonTest.validCheck(f, "$D(@G)#10");
 		TFCommonTest.validCheck(f, "$O(^$ROUTINE(ROU))");
+	}
+
+	@Test
+	public void test() {
+		test(MVersion.CACHE);
+		test(MVersion.ANSI_STD_95);
 	}
 }

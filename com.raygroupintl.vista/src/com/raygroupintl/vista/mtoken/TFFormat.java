@@ -8,12 +8,18 @@ import com.raygroupintl.vista.token.TFParallelCharBased;
 import com.raygroupintl.vista.token.TFSerialRO;
 
 public class TFFormat extends TFParallelCharBased {
-	private static ITokenFactory getTFTabFormat() {
-		return TFAllRequired.getInstance(TFConstChar.getInstance('?'), TFExpr.getInstance());
+	private MVersion version;
+	
+	private TFFormat(MVersion version) {
+		this.version = version;
+	}
+	
+	private static ITokenFactory getTFTabFormat(MVersion version) {
+		return TFAllRequired.getInstance(TFConstChar.getInstance('?'), TFExpr.getInstance(version));
 	}
 		
-	private static ITokenFactory getTFPositionXTabFormat() {
-		return TFSerialRO.getInstance(TFBasic.getInstance('!','#'), getTFTabFormat());
+	private static ITokenFactory getTFPositionXTabFormat(MVersion version) {
+		return TFSerialRO.getInstance(TFBasic.getInstance('!','#'), getTFTabFormat(version));
 	}
 		
 	@Override
@@ -21,9 +27,9 @@ public class TFFormat extends TFParallelCharBased {
 		switch(ch) {
 			case '!':
 			case '#':
-				return getTFPositionXTabFormat();
+				return getTFPositionXTabFormat(version);
 			case '?':
-				return getTFTabFormat();
+				return getTFTabFormat(version);
 			case '/':
 				return null;
 			default:
@@ -31,7 +37,7 @@ public class TFFormat extends TFParallelCharBased {
 		}
 	}
 	
-	public static TFFormat getInstance() {
-		return  new TFFormat();
+	public static TFFormat getInstance(MVersion version) {
+		return  new TFFormat(version);
 	}
 }

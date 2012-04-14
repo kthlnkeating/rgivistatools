@@ -7,10 +7,16 @@ import com.raygroupintl.vista.token.TFSerialROR;
 import com.raygroupintl.vista.token.TList;
 
 public class TFActualList extends TFSerialROR {
+	private MVersion version;
+	
+	private TFActualList(MVersion version) {
+		this.version = version;
+	}
+	
 	@Override
 	protected ITokenFactory[] getFactories() {
 		TFConstChar lp = TFConstChar.getInstance('(');
-		TFDelimitedList al = TFDelimitedList.getInstance(TFActual.getInstance(), ',');
+		TFDelimitedList al = TFDelimitedList.getInstance(TFActual.getInstance(this.version), ',');
 		TFConstChar rp = TFConstChar.getInstance(')');
 		return new ITokenFactory[]{lp, al, rp};
 	}
@@ -21,7 +27,7 @@ public class TFActualList extends TFSerialROR {
 		return new TActualList(list);
 	}
 	
-	public static TFActualList getInstance() {
-		return new TFActualList();
+	public static TFActualList getInstance(MVersion version) {
+		return new TFActualList(version);
 	}
 }

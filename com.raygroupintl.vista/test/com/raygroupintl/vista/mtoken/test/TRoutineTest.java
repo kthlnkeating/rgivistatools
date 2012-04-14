@@ -7,14 +7,13 @@ import junit.framework.Assert;
 import org.junit.Test;
 
 import com.raygroupintl.vista.fnds.IToken;
+import com.raygroupintl.vista.mtoken.MVersion;
 import com.raygroupintl.vista.mtoken.TFLine;
 import com.raygroupintl.vista.mtoken.TLine;
 import com.raygroupintl.vista.mtoken.TRoutine;
 
 public class TRoutineTest {
-
-	@Test
-	public void testBeautify() {
+	public void testBeautify(MVersion version) {
 		String[] lines = new String[]{
 				"IBDF14 ;ALB/CJM - AICS LIST CLINIC SETUP ; JUL 20,1993",
 				" ;;3.0;AUTOMATED INFO COLLECTION SYS;;APR 24, 1997",
@@ -33,7 +32,7 @@ public class TRoutineTest {
 		TRoutine r = new TRoutine("XRGITST0.m");
 		for (int i=0; i<lines.length; ++i) {
 			String line = lines[i];
-			TFLine f = TFLine.getInstance();
+			TFLine f = TFLine.getInstance(version);
 			TLine l = (TLine) f.tokenize(line, 0);
 			r.add(l);
 		}
@@ -63,10 +62,21 @@ public class TRoutineTest {
 	}
 	
 	@Test
-	public void testNonErrorFiles() {
+	public void testBeautify() {
+		testBeautify(MVersion.CACHE);
+		testBeautify(MVersion.ANSI_STD_95);
+	}
+		
+	public void testNonErrorFiles(MVersion version) {
 		String fileName = "resource/XRGITST0.m";
 		InputStream is = this.getClass().getResourceAsStream(fileName);
-		TRoutine r = TRoutine.getInstance("XRGITST0.m", is);
+		TRoutine r = TRoutine.getInstance(version, "XRGITST0.m", is);
 		Assert.assertFalse("Unexpected error: " + fileName, r.hasError() || r.hasFatalError());	
 	}	
+
+	@Test
+	public void testNonErrorFiles() {
+		testNonErrorFiles(MVersion.CACHE);
+		testNonErrorFiles(MVersion.ANSI_STD_95);
+	}
 }

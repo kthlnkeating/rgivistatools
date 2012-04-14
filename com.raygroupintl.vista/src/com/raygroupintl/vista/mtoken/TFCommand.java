@@ -24,6 +24,12 @@ import com.raygroupintl.vista.token.TFSerialROO;
 import com.raygroupintl.vista.token.TSyntaxError;
 
 public class TFCommand extends TFSerialBase {
+	private MVersion version;
+	
+	private TFCommand(MVersion version) {
+		this.version = version;
+	}
+		
 	private static MNameWithMnemonic.Map COMMAND_NAMES = new MNameWithMnemonic.Map();
 	static {
 		COMMAND_NAMES.update("B", "BREAK"); 	
@@ -55,108 +61,34 @@ public class TFCommand extends TFSerialBase {
 		COMMAND_NAMES.update("X", "XECUTE");		
 	}
 	
-	public static ITokenFactory getTFPostCondition(IToken[] previousTokens) {
+	public static ITokenFactory getTFPostCondition(IToken[] previousTokens, MVersion version) {
 		ITokenFactory tfColon = TFConstChar.getInstance(':');
-		ITokenFactory tfExpr = TFExpr.getInstance();
+		ITokenFactory tfExpr = TFExpr.getInstance(version);
 		return TFAllRequired.getInstance(tfColon, tfExpr);
 	}
 
-	private static ITokenFactory getXArgumentFactory() {
-		ITokenFactory tf = TFParallelCharBased.getInstance(TFExpr.getInstance(), '@', TFIndirection.getInstance());
-		ITokenFactory pc = getTFPostCondition(null);
+	private static ITokenFactory getXArgumentFactory(MVersion version) {
+		ITokenFactory tf = TFParallelCharBased.getInstance(TFExpr.getInstance(version), '@', TFIndirection.getInstance(version));
+		ITokenFactory pc = getTFPostCondition(null, version);
 		return TFDelimitedList.getInstance(TFSerialRO.getInstance(tf, pc), ',');
 	}
 	
-	private static ITokenFactory getFArgumentFactory() {
-		TFExpr tfExpr = TFExpr.getInstance();
+	private static ITokenFactory getFArgumentFactory(MVersion version) {
+		TFExpr tfExpr = TFExpr.getInstance(version);
 		TFAllRequired tfFromTo = TFAllRequired.getInstance(TFConstChar.getInstance(':'), tfExpr);
 		ITokenFactory RHS = TFSerialROO.getInstance(tfExpr, tfFromTo, tfFromTo);
 		ITokenFactory RHSs = TFCommaDelimitedList.getInstance(RHS);
-		return TFAllRequired.getInstance(TFLvn.getInstance(), TFConstChar.getInstance('='), RHSs); 
+		return TFAllRequired.getInstance(TFLvn.getInstance(version), TFConstChar.getInstance('='), RHSs); 
 	}
 
-	private static ITokenFactory getLArgumentFactory() {
-		ITokenFactory tfNRef = TFParallelCharBased.getInstance(TFLvn.getInstance(), '^', TFGvn.getInstance(), '@', TFIndirection.getInstance());		
+	private static ITokenFactory getLArgumentFactory(MVersion version) {
+		ITokenFactory tfNRef = TFParallelCharBased.getInstance(TFLvn.getInstance(version), '^', TFGvn.getInstance(version), '@', TFIndirection.getInstance(version));		
 		ITokenFactory tfNRefOrList = TFParallelCharBased.getInstance(tfNRef, '(', TFDelimitedList.getInstance(tfNRef, ',', true));
-		ITokenFactory e = TFSerialORO.getInstance(TFConstChars.getInstance("+-"), tfNRefOrList, TFTimeout.getInstance());
+		ITokenFactory e = TFSerialORO.getInstance(TFConstChars.getInstance("+-"), tfNRefOrList, TFTimeout.getInstance(version));
 		return TFCommaDelimitedList.getInstance(e);
 	}
 
-	private static Map<String, ITokenFactory> ARGUMENT_FACTORIES = new HashMap<String, ITokenFactory>();
-	static {
-		TFEmpty empty = TFEmpty.getInstance();
-		ARGUMENT_FACTORIES.put("E", empty); 	
-		ARGUMENT_FACTORIES.put("TC", empty); 	
-		ARGUMENT_FACTORIES.put("TR", empty); 	
-		ARGUMENT_FACTORIES.put("TRO", empty); 	
-		ARGUMENT_FACTORIES.put("TS", empty); 	
-		
-		ITokenFactory c = TFCommaDelimitedList.getInstance(new TFParallelCharBased() {			
-			@Override
-			protected ITokenFactory getFactory(char ch) {
-				if (ch == '@') {
-					return TFIndirection.getInstance();
-				} else {
-					return TFSerialRO.getInstance(TFExpr.getInstance(), TFAllRequired.getInstance(TFConstChar.getInstance(':'), new TFDeviceParams()));
-				}
-			}
-		});
-		ARGUMENT_FACTORIES.put("C", c); 	
-		
-		
-		ARGUMENT_FACTORIES.put("D", TFCommaDelimitedList.getInstance(TFDoArgument.getInstance()));		
-		ARGUMENT_FACTORIES.put("X", getXArgumentFactory()); 	
-		ARGUMENT_FACTORIES.put("F", getFArgumentFactory()); 	
-		ARGUMENT_FACTORIES.put("G", TFCommaDelimitedList.getInstance(new TFGotoArgument())); 	
-		ARGUMENT_FACTORIES.put("I", TFCommaDelimitedList.getInstance(TFExpr.getInstance())); 	
-		ARGUMENT_FACTORIES.put("J", TFCommaDelimitedList.getInstance(new TFJobArgument())); 	
-		ARGUMENT_FACTORIES.put("K", TFCommaDelimitedList.getInstance(new TFKillArgument())); 	
-		ARGUMENT_FACTORIES.put("L", getLArgumentFactory()); 	
-		ARGUMENT_FACTORIES.put("M", TFCommaDelimitedList.getInstance(new TFMergeArgument())); 	
-		
-		ITokenFactory n = new TFParallelCharBased() {
-			@Override
-			protected ITokenFactory getFactory(char ch) {
-				switch(ch) {
-				case '(': 
-					return TFCommaDelimitedList.getInstance(TFLvn.getInstance());
-				case '@':
-					return TFIndirection.getInstance();
-				case '$':
-					return TFIntrinsic.getInstance();
-				default:
-					return TFName.getInstance();
-				}
-			}
-		};		
-		ARGUMENT_FACTORIES.put("N", TFCommaDelimitedList.getInstance(n));		
-		
-		ARGUMENT_FACTORIES.put("O", TFCommaDelimitedList.getInstance(new TFOpenArgument())); 	
-		ARGUMENT_FACTORIES.put("Q", TFParallelCharBased.getInstance(TFExpr.getInstance(), '@', TFIndirection.getInstance())); 	
-		ARGUMENT_FACTORIES.put("R", TFCommaDelimitedList.getInstance(new TFReadArgument())); 	
-		ARGUMENT_FACTORIES.put("S", TFCommaDelimitedList.getInstance(new TFSetArgument())); 	
-		ARGUMENT_FACTORIES.put("U", TFCommaDelimitedList.getInstance(new TFUseArgument()));
-		
-		ITokenFactory w = new TFParallelCharBased() {
-			@Override
-			protected ITokenFactory getFactory(char ch) {
-				switch(ch) {
-					case '!':
-					case '#':
-					case '?':
-					case '/':
-						return TFFormat.getInstance();
-					case '*':
-						return TFAllRequired.getInstance(TFConstChar.getInstance('*'), TFExpr.getInstance());
-					case '@':
-						return TFIndirection.getInstance();
-					default:
-						return TFExpr.getInstance();
-				}
-			}
-		};		
-		ARGUMENT_FACTORIES.put("W", TFCommaDelimitedList.getInstance(w));		
-	}
+
 	
 	public static void addCommand(String name) {
 		COMMAND_NAMES.update(name, name);
@@ -222,18 +154,104 @@ public class TFCommand extends TFSerialBase {
 	}
 		
 	private static class TFSCommand implements ITokenFactorySupply {
+		private static Map<String, ITokenFactory> ARGUMENT_FACTORIES;
+		private static void initialize(final MVersion version) {
+			ARGUMENT_FACTORIES = new HashMap<String, ITokenFactory>();
+			TFEmpty empty = TFEmpty.getInstance();
+			ARGUMENT_FACTORIES.put("E", empty); 	
+			ARGUMENT_FACTORIES.put("TC", empty); 	
+			ARGUMENT_FACTORIES.put("TR", empty); 	
+			ARGUMENT_FACTORIES.put("TRO", empty); 	
+			ARGUMENT_FACTORIES.put("TS", empty); 	
+			
+			ITokenFactory c = TFCommaDelimitedList.getInstance(new TFParallelCharBased() {			
+				@Override
+				protected ITokenFactory getFactory(char ch) {
+					if (ch == '@') {
+						return TFIndirection.getInstance(version);
+					} else {
+						return TFSerialRO.getInstance(TFExpr.getInstance(version), TFAllRequired.getInstance(TFConstChar.getInstance(':'), new TFDeviceParams(version)));
+					}
+				}
+			});
+			ARGUMENT_FACTORIES.put("C", c); 	
+			
+			
+			ARGUMENT_FACTORIES.put("D", TFCommaDelimitedList.getInstance(TFDoArgument.getInstance(version)));		
+			ARGUMENT_FACTORIES.put("X", getXArgumentFactory(version)); 	
+			ARGUMENT_FACTORIES.put("F", getFArgumentFactory(version)); 	
+			ARGUMENT_FACTORIES.put("G", TFCommaDelimitedList.getInstance(TFGotoArgument.getInstance(version))); 	
+			ARGUMENT_FACTORIES.put("I", TFCommaDelimitedList.getInstance(TFExpr.getInstance(version))); 	
+			ARGUMENT_FACTORIES.put("J", TFCommaDelimitedList.getInstance(TFJobArgument.getInstance(version))); 	
+			ARGUMENT_FACTORIES.put("K", TFCommaDelimitedList.getInstance(TFKillArgument.getInstance(version))); 	
+			ARGUMENT_FACTORIES.put("L", getLArgumentFactory(version)); 	
+			ARGUMENT_FACTORIES.put("M", TFCommaDelimitedList.getInstance(TFMergeArgument.getInstance(version))); 	
+			
+			ITokenFactory n = new TFParallelCharBased() {
+				@Override
+				protected ITokenFactory getFactory(char ch) {
+					switch(ch) {
+					case '(': 
+						return TFCommaDelimitedList.getInstance(TFLvn.getInstance(version));
+					case '@':
+						return TFIndirection.getInstance(version);
+					case '$':
+						return TFIntrinsic.getInstance(version);
+					default:
+						return TFName.getInstance();
+					}
+				}
+			};		
+			ARGUMENT_FACTORIES.put("N", TFCommaDelimitedList.getInstance(n));		
+			
+			ARGUMENT_FACTORIES.put("O", TFCommaDelimitedList.getInstance(TFOpenArgument.getInstance(version))); 	
+			ARGUMENT_FACTORIES.put("Q", TFParallelCharBased.getInstance(TFExpr.getInstance(version), '@', TFIndirection.getInstance(version))); 	
+			ARGUMENT_FACTORIES.put("R", TFCommaDelimitedList.getInstance(TFReadArgument.getInstance(version))); 	
+			ARGUMENT_FACTORIES.put("S", TFCommaDelimitedList.getInstance(TFSetArgument.getInstance(version))); 	
+			ARGUMENT_FACTORIES.put("U", TFCommaDelimitedList.getInstance(TFUseArgument.getInstance(version)));
+			
+			ITokenFactory w = new TFParallelCharBased() {
+				@Override
+				protected ITokenFactory getFactory(char ch) {
+					switch(ch) {
+						case '!':
+						case '#':
+						case '?':
+						case '/':
+							return TFFormat.getInstance(version);
+						case '*':
+							return TFAllRequired.getInstance(TFConstChar.getInstance('*'), TFExpr.getInstance(version));
+						case '@':
+							return TFIndirection.getInstance(version);
+						default:
+							return TFExpr.getInstance(version);
+					}
+				}
+			};		
+			ARGUMENT_FACTORIES.put("W", TFCommaDelimitedList.getInstance(w));		
+		}
+		
+		private MVersion version;
+		
+		private TFSCommand(MVersion version) {
+			this.version = version;
+		}
+			
 		public ITokenFactory get(IToken[] previousTokens) {
 			int n = previousTokens.length;
 			switch (n) {
 				case 0:
 					return TFCommandName.getInstance();
 				case 1:
-					return TFAllRequired.getInstance(TFConstChar.getInstance(':'), TFExpr.getInstance());
+					return TFAllRequired.getInstance(TFConstChar.getInstance(':'), TFExpr.getInstance(this.version));
 				case 2:
 					return TFConstChar.getInstance(' ');
 				case 3: {
 					TCommandName cmd = (TCommandName) previousTokens[0];
 					String key = cmd.getNameWithMnemonic().getMnemonic();
+					if (ARGUMENT_FACTORIES == null) {
+						initialize(this.version);
+					}
 					ITokenFactory f = ARGUMENT_FACTORIES.get(key);
 					if (f == null) {
 						return new TFGeneric();
@@ -256,7 +274,7 @@ public class TFCommand extends TFSerialBase {
 	
 	@Override
 	protected ITokenFactorySupply getFactorySupply() {
-		return new TFSCommand();
+		return new TFSCommand(this.version);
 	}
 
 	@Override
@@ -274,5 +292,9 @@ public class TFCommand extends TFSerialBase {
 	@Override
 	protected int getCodeStringEnds(IToken[] foundTokens) {
 		return 0;
+	}
+
+	public static TFCommand getInstance(MVersion version) {
+		return new TFCommand(version);
 	}
 }

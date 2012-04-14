@@ -128,9 +128,9 @@ public class TRoutine extends TBase {
 	}
 	
 	
-	private static TRoutine getInstance(String fileName, Scanner scanner) {
+	private static TRoutine getInstance(MVersion version, String fileName, Scanner scanner) {
 		TRoutine result = new TRoutine(fileName);
-		TFLine f = TFLine.getInstance();
+		TFLine f = TFLine.getInstance(version);
 		while (scanner.hasNextLine()) {
 			String line = scanner.nextLine();
 			TLine tokens = (TLine) f.tokenize(line, 0);
@@ -139,17 +139,17 @@ public class TRoutine extends TBase {
 		return result;				
 	}
 	
-	public static TRoutine getInstance(String fileName, InputStream is) {
+	public static TRoutine getInstance(MVersion version, String fileName, InputStream is) {
 		Scanner scanner = new Scanner(is);
-		TRoutine result = getInstance(fileName, scanner);
+		TRoutine result = getInstance(version, fileName, scanner);
 		scanner.close();
 		return result;				
 	}
 	
-	public static TRoutine getInstance(Path file) throws IOException {
+	public static TRoutine getInstance(MVersion version, Path file) throws IOException {
 		String fileName = file.getFileName().toString();
 		Scanner scanner = new Scanner(file);
-		TRoutine result = getInstance(fileName, scanner);
+		TRoutine result = getInstance(version, fileName, scanner);
 		scanner.close();
 		return result;		
 	}

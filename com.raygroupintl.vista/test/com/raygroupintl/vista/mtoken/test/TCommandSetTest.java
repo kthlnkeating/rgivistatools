@@ -3,12 +3,12 @@ package com.raygroupintl.vista.mtoken.test;
 import org.junit.Test;
 
 import com.raygroupintl.vista.fnds.ITokenFactory;
+import com.raygroupintl.vista.mtoken.MVersion;
 import com.raygroupintl.vista.mtoken.TFCommand;
 
 public class TCommandSetTest {
-	@Test
-	public void test() {
-		ITokenFactory f = new TFCommand();
+	private void test(MVersion version) {
+		ITokenFactory f = TFCommand.getInstance(version);
 		TFCommonTest.validCheck(f, "S X=$$MG^XMBGRP(\"RCCPC STATEMENTS\",0,.5,1,\"\",.DES,1)");
 		TFCommonTest.validCheck(f, "S @^%ZOSF(\"TRAP\")");
 		TFCommonTest.validCheck(f, "S X=\"ERROR^PRCAHV\",@^%ZOSF(\"TRAP\")");
@@ -24,5 +24,11 @@ public class TCommandSetTest {
 		TFCommonTest.validCheck(f, "S IOP=IOP_\";255\",%ZIS=\"\"");
 		TFCommonTest.validCheck(f, "S X=$I(^HLCS(870,DP,P),$S($G(Z):-1,1:1))");
 		TFCommonTest.validCheck(f, "S ^$W(\"ZISGTRM\",\"VISIBLE\")=1");
+	}
+
+	@Test
+	public void test() {
+		test(MVersion.CACHE);
+		test(MVersion.ANSI_STD_95);
 	}
 }

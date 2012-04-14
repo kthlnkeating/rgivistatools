@@ -8,27 +8,53 @@ import com.raygroupintl.vista.token.TFParallelCharBased;
 import com.raygroupintl.vista.token.TFSerialRO;
 
 public class TFUseArgument extends TFParallelCharBased {
+	private MVersion version;
+	
+	private TFUseArgument(MVersion version) {
+		this.version = version;
+	}
+	
 	private static class TFUseDeviceParam extends TFParallelCharBased {
+		private MVersion version;
+	
+		private TFUseDeviceParam(MVersion version) {
+			this.version = version;
+		}
+		
 		protected ITokenFactory getFactory(char ch) {
 			switch (ch) {
 				case ':':
 				case ')':
 					return TFEmpty.getInstance(ch);
 				default:
-					return TFExpr.getInstance();
+					return TFExpr.getInstance(this.version);
 			}
 		}
+		
+		//public static TFUseDeviceParam getInstance(MVersion version) {
+		//	return new TFUseDeviceParam(version);
+		//}
 	}
 		
 	private static class TFUseDeviceParams extends TFParallelCharBased {			
+		private MVersion version;
+		
+		private TFUseDeviceParams(MVersion version) {
+			this.version = version;
+		}
+		
 		@Override
 		protected ITokenFactory getFactory(char ch) {
-			ITokenFactory f = new TFUseDeviceParam();
+			ITokenFactory f = new TFUseDeviceParam(this.version);
 			if (ch == '(') {
 				return TFInParantheses.getInstance(TFDelimitedList.getInstance(f, ':'));
 			} else {
 				return f;
 			}
+		}
+		
+		public static TFUseDeviceParams getInstance(MVersion version) {
+			return new TFUseDeviceParams(version);
 		}
 	}
 
@@ -46,9 +72,13 @@ public class TFUseArgument extends TFParallelCharBased {
 	@Override
 	protected ITokenFactory getFactory(char ch) {
 		if (ch == '@') {
-			return TFIndirection.getInstance();
+			return TFIndirection.getInstance(this.version);
 		} else {
-			return TFSerialRO.getInstance(TFExpr.getInstance(), TFAllRequired.getInstance(TFConstChar.getInstance(':'), new TFUseDeviceParams()));
+			return TFSerialRO.getInstance(TFExpr.getInstance(this.version), TFAllRequired.getInstance(TFConstChar.getInstance(':'), TFUseDeviceParams.getInstance(this.version)));
 		}
+	}
+	
+	public static TFUseArgument getInstance(MVersion version) {
+		return new TFUseArgument(version);
 	}
 }

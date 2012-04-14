@@ -4,14 +4,21 @@ import com.raygroupintl.vista.fnds.ITokenFactory;
 import com.raygroupintl.vista.token.TFParallel;
 
 public class TFExprAtom extends TFParallel {
-	private TFExprAtom() {		
+	private MVersion version;
+	
+	private TFExprAtom(MVersion version) {		
+		this.version = version;
 	}
 	
 	protected ITokenFactory[] getFactories() {
-		return new ITokenFactory[]{new TFGlvn(), new TFExprItem()};
+		if (this.version == MVersion.CACHE) {
+			return new ITokenFactory[]{TFGlvn.getInstance(this.version), TFExprItem.getInstance(this.version), TFCacheClassMethod.getInstance()} ;
+		} else {
+			return new ITokenFactory[]{TFGlvn.getInstance(this.version), TFExprItem.getInstance(this.version)};
+		}
 	}
 	
-	static public TFExprAtom getInstance() {
-		return new TFExprAtom();
+	static public TFExprAtom getInstance(MVersion version) {
+		return new TFExprAtom(version);
 	}
 }

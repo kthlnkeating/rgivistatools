@@ -15,6 +15,10 @@ public abstract class TFList implements ITokenFactory {
 		return new TList(list);
 	}
 
+	protected IToken getNullToken() {
+		return null;
+	}
+	
 	@Override
 	public IToken tokenize(String line, int fromIndex) {
 		int endIndex = line.length();
@@ -26,7 +30,7 @@ public abstract class TFList implements ITokenFactory {
 				IToken token = f.tokenize(line, index);
 				if (token == null) {
 					if (list == null) {
-						return null;
+						return this.getNullToken();
 					} else {
 						return this.getToken(list);
 					}
@@ -47,12 +51,38 @@ public abstract class TFList implements ITokenFactory {
 		return null;
 	}
 	
-	public static TFList getInstance(final ITokenFactory elementToken) {
-		return new TFList() {			
-			@Override
-			protected ITokenFactory getFactory() {
-				return elementToken;
-			}
-		};
+	private static class TFRequiredList extends TFList {
+		private ITokenFactory elementFactory;
+		
+		public TFRequiredList(ITokenFactory elementFactory) {
+			this.elementFactory = elementFactory;
+		}
+		
+		protected ITokenFactory getFactory() {
+			return this.elementFactory;
+		}
+	}
+	
+	private static class TFOptionalList extends TFRequiredList {
+		public TFOptionalList(ITokenFactory elementFactory) {
+			super(elementFactory);
+		}
+
+		@Override
+		protected IToken getNullToken() {
+			return new TList();
+		}
+	}
+	
+	public static TFList getInstance(ITokenFactory elementFactory, boolean optional) {
+		if (optional) {
+			return new TFOptionalList(elementFactory);
+		} else {
+			return new TFRequiredList(elementFactory);
+		}
+	}
+	
+	public static TFList getInstance(ITokenFactory elementFactory) {
+		return getInstance(elementFactory, false);
 	}
 }

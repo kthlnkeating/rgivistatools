@@ -2,16 +2,26 @@ package com.raygroupintl.vista.mtoken.test;
 
 import org.junit.Test;
 
+import com.raygroupintl.vista.mtoken.MVersion;
 import com.raygroupintl.vista.mtoken.TFIntrinsic;
 import com.raygroupintl.vista.struct.MError;
 
 public class TFIntrinsicTest {
-	@Test
-	public void test() {
-		TFIntrinsic f = TFIntrinsic.getInstance();
+	private void testTFIntrinsic(MVersion version) {
+		TFIntrinsic f = TFIntrinsic.getInstance(version);
 		TFCommonTest.validCheck(f, "$P(LST,\",\",FLD)");		
 		TFCommonTest.validCheck(f, "$S(LST=\"A\":0,1:1)");		
 		TFCommonTest.validCheck(f, "$S(A>$$A^B:0,1:1)");		
-		TFCommonTest.validCheck(f, "$XX(LST=\"A\":0,1:1)", MError.ERR_UNKNOWN_INTRINSIC_FUNCTION);		
+		TFCommonTest.validCheck(f, "$XX(LST=\"A\":0,1:1)", MError.ERR_UNKNOWN_INTRINSIC_FUNCTION);
+		if (version == MVersion.CACHE) {
+			TFCommonTest.validCheck(f, "$SYSTEM.Util.GetEnviron(\"SSH_CLIENT\")");					
+			TFCommonTest.validCheck(f, "$SYSTEM.Util.GetEnviron()");					
+		}
+	}
+
+	@Test
+	public void testTFIntrinsic() {
+		testTFIntrinsic(MVersion.CACHE);
+		testTFIntrinsic(MVersion.ANSI_STD_95);
 	}
 }

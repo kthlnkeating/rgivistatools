@@ -6,15 +6,20 @@ import com.raygroupintl.vista.token.TFConstChar;
 import com.raygroupintl.vista.token.TFParallelCharBased;
 
 public class TFEnvironment extends TFParallelCharBased {
+	private MVersion version;
 	
+	private TFEnvironment(MVersion version) {
+		this.version = version;
+	}
+		
 	@Override
 	protected ITokenFactory getFactory(char ch) {
 		if (ch == '|') {
 			ITokenFactory d = new TFConstChar('|');
-			return TFAllRequired.getInstance(d, TFExpr.getInstance(), d);
+			return TFAllRequired.getInstance(d, TFExpr.getInstance(this.version), d);
 		} else if (ch == '[') {
 			ITokenFactory l = new TFConstChar('[');
-			ITokenFactory f = TFCommaDelimitedList.getInstance(TFExprAtom.getInstance(), ',');
+			ITokenFactory f = TFCommaDelimitedList.getInstance(TFExprAtom.getInstance(this.version), ',');
 			ITokenFactory r = new TFConstChar(']');			
 			return TFAllRequired.getInstance(l, f, r);
 		} else {
@@ -22,7 +27,7 @@ public class TFEnvironment extends TFParallelCharBased {
 		}
 	}
 	
-	public static TFEnvironment getInstance() {
-		return new TFEnvironment();
+	public static TFEnvironment getInstance(MVersion version) {
+		return new TFEnvironment(version);
 	}
 }

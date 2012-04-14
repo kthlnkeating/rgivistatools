@@ -7,44 +7,67 @@ import com.raygroupintl.vista.token.TFParallelCharBased;
 import com.raygroupintl.vista.token.TFSerial;
 
 public class TFSetArgument extends TFSerial {
+	private MVersion version;
+	
+	private TFSetArgument(MVersion version) {
+		this.version = version;
+	}
+		
 	private static class TFSetLeft extends TFParallelCharBased {
+		private MVersion version;
+		
+		private TFSetLeft(MVersion version) {
+			this.version = version;
+		}
+			
 		@Override
 		protected ITokenFactory getFactory(char ch) {
 			switch(ch) {
 			case '$':
-				return TFIntrinsic.getInstance();
+				return TFIntrinsic.getInstance(this.version);
 			case '@':
-				return TFIndirection.getInstance();
+				return TFIndirection.getInstance(this.version);
 			default:
-				return TFGlvn.getInstance();
+				return TFGlvn.getInstance(this.version);
 			}
 		}
 		
-		public static TFSetLeft getInstance() {
-			return new TFSetLeft();
+		public static TFSetLeft getInstance(MVersion version) {
+			return new TFSetLeft(version);
 		}
 	}
 
 	private static class TFSetDestination extends TFParallelCharBased {
+		private MVersion version;
+		
+		private TFSetDestination(MVersion version) {
+			this.version = version;
+		}
+			
 		@Override
 		protected ITokenFactory getFactory(char ch) {
-			TFSetLeft tfSL = TFSetLeft.getInstance();
+			TFSetLeft tfSL = TFSetLeft.getInstance(this.version);
 			if (ch == '(') {
 				TFDelimitedList tfDL = TFDelimitedList.getInstance(tfSL, ',');
 				return TFInParantheses.getInstance(tfDL);
 			} else {
-				return new TFSetLeft();
+				return new TFSetLeft(this.version);
 			}
 		}		
 		
-		public static TFSetDestination getInstance() {
-			return new TFSetDestination();
+		public static TFSetDestination getInstance(MVersion version) {
+			return new TFSetDestination(version);
 		}
 	}
 		
 	@Override
 	protected ITokenFactory[] getFactories() {
-		return new ITokenFactory[]{TFSetDestination.getInstance(), TFConstChar.getInstance('='), TFExpr.getInstance()}; 
+		TFExpr expr = TFExpr.getInstance(this.version);
+		return new ITokenFactory[]{ 
+				TFSetDestination.getInstance(this.version), 
+				TFConstChar.getInstance('='), 
+				(this.version == MVersion.CACHE) ? TFParallelCharBased.getInstance(expr, '#', TFCacheClassMethod.getInstance()) : expr
+			}; 
 	}
 
 	@Override
@@ -71,6 +94,10 @@ public class TFSetArgument extends TFSerial {
 		} else {
 			return this.getErrorCode();
 		}
+	}
+	
+	public static TFSetArgument getInstance(MVersion version) {
+		return new TFSetArgument(version);
 	}
 }	
 

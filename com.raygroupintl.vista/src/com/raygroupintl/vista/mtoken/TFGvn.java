@@ -8,12 +8,18 @@ import com.raygroupintl.vista.token.TFConstChar;
 import com.raygroupintl.vista.token.TFSerialORO;
 
 public class TFGvn extends TFAllRequired {
+	private MVersion version;
+	
+	private TFGvn(MVersion version) {
+		this.version = version;
+	}
+	
 	@Override
 	protected ITokenFactory[] getFactories() {
 		TFConstChar c = TFConstChar.getInstance('^');
-		TFEnvironment env = new TFEnvironment();
+		TFEnvironment env = TFEnvironment.getInstance(this.version);
 		TFName name = new TFName();
-		TFExprListInParantheses exprList = new TFExprListInParantheses();
+		TFExprListInParantheses exprList = TFExprListInParantheses.getInstance(this.version);
 		ITokenFactory r = TFSerialORO.getInstance(env, name, exprList);
 		return new ITokenFactory[]{c, r};
 	}
@@ -23,8 +29,8 @@ public class TFGvn extends TFAllRequired {
 		return new TGlobalNamed((TArray) foundTokens[1]);
 	}		
 
-	public static TFGvn getInstance() {
-		return new TFGvn();
+	public static TFGvn getInstance(MVersion version) {
+		return new TFGvn(version);
 	}
 }
 

@@ -82,6 +82,10 @@ public class TArray implements IToken, ITokenArray {
 	
 	@Override
 	public IToken get(int i) {
-		return this.tokens[i];
+		if (this.tokens.length > i) {
+			return this.tokens[i];
+		} else {
+			return null;
+		}
 	}
 }

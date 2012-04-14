@@ -16,4 +16,25 @@ public abstract class TFChar implements ITokenFactory {
 		}
 		return null;
 	}
+	
+	public static final TFChar DOT = new TFChar() {		
+		@Override
+		protected boolean isValid(char ch) {
+			return ch == '.';
+		}
+	};
+
+	public static final TFChar LEFT_PAR = new TFChar() {		
+		@Override
+		protected boolean isValid(char ch) {
+			return ch == '(';
+		}
+	};
+	
+	public static final TFChar RIGHT_PAR = new TFChar() {		
+		@Override
+		protected boolean isValid(char ch) {
+			return ch == ')';
+		}
+	};	
 }

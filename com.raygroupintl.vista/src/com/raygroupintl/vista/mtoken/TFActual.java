@@ -8,6 +8,12 @@ import com.raygroupintl.vista.token.TFParallelCharBased;
 import com.raygroupintl.vista.token.TFSyntaxError;
 
 public class TFActual extends TFParallelCharBased {
+	private MVersion version;
+	
+	protected TFActual(MVersion version) {		
+		this.version = version;
+	}
+	
 	protected ITokenFactory getFactory(char ch) {
 		switch (ch) {
 			case '.':
@@ -16,7 +22,7 @@ public class TFActual extends TFParallelCharBased {
 			case ')':
 				return TFEmpty.getInstance(ch);
 			default:
-				return TFExpr.getInstance();
+				return TFExpr.getInstance(this.version);
 		}
 	}
 	
@@ -27,7 +33,7 @@ public class TFActual extends TFParallelCharBased {
 			} else if ((ch2 == '%') || Library.isIdent(ch2)) {
 				return TFAllRequired.getInstance(TFConstChar.getInstance('.'), TFName.getInstance());
 			} else if (ch2 == '@') {
-				return TFAllRequired.getInstance(TFConstChar.getInstance('.'), TFIndirection.getInstance());
+				return TFAllRequired.getInstance(TFConstChar.getInstance('.'), TFIndirection.getInstance(this.version));
 			} else {
 				return TFSyntaxError.getInstance();
 			}
@@ -36,7 +42,7 @@ public class TFActual extends TFParallelCharBased {
 		}
 	}
 
-	public static TFActual getInstance() {
-		return new TFActual();
+	public static TFActual getInstance(MVersion version) {
+		return new TFActual(version);
 	}
 }

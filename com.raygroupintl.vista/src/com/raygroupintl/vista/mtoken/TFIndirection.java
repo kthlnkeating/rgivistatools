@@ -10,9 +10,15 @@ import com.raygroupintl.vista.token.TFConstString;
 import com.raygroupintl.vista.token.TFSerialRO;
 
 public class TFIndirection extends TFSerialRO {
+	private MVersion version;
+	
+	private TFIndirection(MVersion version) {
+		this.version = version;
+	}
+		
 	@Override
 	protected ITokenFactory getRequired() {
-		return TFAllRequired.getInstance(TFConstChar.getInstance('@'), TFExprAtom.getInstance());
+		return TFAllRequired.getInstance(TFConstChar.getInstance('@'), TFExprAtom.getInstance(this.version));
 	}
 	
 	@Override
@@ -20,7 +26,7 @@ public class TFIndirection extends TFSerialRO {
 		return new TFAllRequired() {			
 			@Override
 			protected ITokenFactory[] getFactories() {
-				return new ITokenFactory[]{new TFConstString("@("), TFExprList.getInstance(), new TFConstChar(')')};
+				return new ITokenFactory[]{new TFConstString("@("), TFExprList.getInstance(TFIndirection.this.version), new TFConstChar(')')};
 			}
 		};
 	}
@@ -39,7 +45,7 @@ public class TFIndirection extends TFSerialRO {
 		return new TIndirection(tReqArray.get(1), subscripts);
 	}
 
-	public static TFIndirection getInstance() {
-		return new TFIndirection();
+	public static TFIndirection getInstance(MVersion version) {
+		return new TFIndirection(version);
 	}
 }

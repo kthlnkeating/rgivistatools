@@ -10,6 +10,7 @@ import org.junit.Test;
 
 import com.raygroupintl.vista.fnds.IFileAction;
 import com.raygroupintl.vista.fnds.IToken;
+import com.raygroupintl.vista.mtoken.MVersion;
 import com.raygroupintl.vista.mtoken.TFLine;
 import com.raygroupintl.vista.repository.MFileVisitor;
 import com.raygroupintl.vista.tools.MRoutineAnalyzer;
@@ -27,12 +28,12 @@ public class TLineTest1 {
 				try {
 					Scanner scanner = new Scanner(path);
 					int index = 0;
-					//if (! path.getFileName().toString().equals("HLCSTCP.m")) return;
+					//if (! path.getFileName().toString().equals("ZIS4ONT.m")) return;
 					LOGGER.info(path.getFileName().toString());
 					while (scanner.hasNextLine()) {
 						String line = scanner.nextLine();
 						//LOGGER.info(">>> " + line);
-						TFLine f = TFLine.getInstance();
+						TFLine f = TFLine.getInstance(MVersion.CACHE);
 						IToken tokens = f.tokenize(line, 0);
 						String readLine = tokens.getStringValue();
 						String msg = path.getFileName().toString() + " Line " +  String.valueOf(index);

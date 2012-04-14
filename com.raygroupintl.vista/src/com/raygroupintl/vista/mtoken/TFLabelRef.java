@@ -7,6 +7,12 @@ import com.raygroupintl.vista.token.TFSerialOR;
 import com.raygroupintl.vista.token.TFSerialXYY;
 
 public class TFLabelRef extends TFSerialXYY {	
+	private MVersion version;
+	
+	private TFLabelRef(MVersion version) {
+		this.version = version;
+	}
+		
 	@Override
 	protected ITokenFactory[] getFactories() {
 		TFSerialOR envName = new TFSerialOR() {
@@ -17,7 +23,7 @@ public class TFLabelRef extends TFSerialXYY {
 			
 			@Override
 			protected ITokenFactory getOptional() {
-				return new TFEnvironment();			
+				return TFEnvironment.getInstance(TFLabelRef.this.version);			
 			}
 		};
 		return new ITokenFactory[]{new TFLabel(), new TFConstChar('^'), envName};
@@ -26,5 +32,9 @@ public class TFLabelRef extends TFSerialXYY {
 	@Override
 	protected IToken getToken(IToken[] foundTokens) {
 		return new TLabelRef(foundTokens);
+	}
+	
+	public static TFLabelRef getInstance(MVersion version) {
+		return new TFLabelRef(version);
 	}
 }

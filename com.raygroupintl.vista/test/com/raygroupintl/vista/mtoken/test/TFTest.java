@@ -2,21 +2,26 @@ package com.raygroupintl.vista.mtoken.test;
 
 import org.junit.Test;
 
+import com.raygroupintl.vista.mtoken.MVersion;
 import com.raygroupintl.vista.mtoken.TFActual;
 import com.raygroupintl.vista.mtoken.TFExprItem;
 import com.raygroupintl.vista.mtoken.TFGvn;
 import com.raygroupintl.vista.mtoken.TFGvnAll;
 
 public class TFTest {
-	@Test
-	public void testTFGvn() {
-		TFGvn f = TFGvn.getInstance();
+	public void testTFGvn(MVersion version) {
+		TFGvn f = TFGvn.getInstance(version);
 		TFCommonTest.validCheck(f, "^PRCA(430,+$G(PRCABN),0)");
 	}
 
 	@Test
-	public void testTFGvnAll() {
-		TFGvnAll f = TFGvnAll.getInstance();
+	public void testTFGvn() {
+		testTFGvn(MVersion.CACHE);
+		testTFGvn(MVersion.ANSI_STD_95);		
+	}
+
+	public void testTFGvnAll(MVersion version) {
+		TFGvnAll f = TFGvnAll.getInstance(version);
 		TFCommonTest.validCheck(f, "^PRCA(430,+$G(PRCABN),0)");
 		TFCommonTest.validCheck(f, "^(430,+$G(PRCABN),0)");
 		TFCommonTest.validCheck(f, "^$ROUTINE(ROU)");
@@ -25,8 +30,13 @@ public class TFTest {
 	}
 
 	@Test
-	public void testTFActual() {
-		TFActual f = TFActual.getInstance();
+	public void testTFGvnAll() {
+		testTFGvnAll(MVersion.CACHE);
+		testTFGvnAll(MVersion.ANSI_STD_95);		
+	}
+
+	public void testTFActual(MVersion version) {
+		TFActual f = TFActual.getInstance(version);
 		TFCommonTest.validCheck(f, ".57");
 		TFCommonTest.validCheck(f, ".57  ", ".57");
 		TFCommonTest.validCheck(f, ".INPUT");
@@ -39,8 +49,13 @@ public class TFTest {
 	}
 
 	@Test
-	public void testTFExprItem() {
-		TFExprItem f = TFExprItem.getInstance();
+	public void testTFActual() {
+		testTFActual(MVersion.CACHE);
+		testTFActual(MVersion.ANSI_STD_95);		
+	}
+
+	public void testTFExprItem(MVersion version) {
+		TFExprItem f = TFExprItem.getInstance(version);
 		TFCommonTest.validCheck(f, "$$TEST(A)");
 		TFCommonTest.validCheck(f, "$$TEST^DOHA");
 		TFCommonTest.validCheck(f, "$$TEST");
@@ -57,5 +72,11 @@ public class TFTest {
 		TFCommonTest.validCheck(f, "$T(+3)");
 		TFCommonTest.validCheck(f, "0");
 		TFCommonTest.validCheck(f, "$$STOREVAR^HLEME(EVENT,.@VAR,VAR)");
+	}
+
+	@Test
+	public void testTFExprItem() {
+		testTFExprItem(MVersion.CACHE);
+		testTFExprItem(MVersion.ANSI_STD_95);		
 	}
 }

@@ -11,19 +11,25 @@ import com.raygroupintl.vista.token.TFSerialBase;
 import com.raygroupintl.vista.token.TFSerialOR;
 
 public class TFGotoArgument extends TFSerialBase {
-	private static ITokenFactory getFactory0(IToken[] previousTokens) {
+	protected MVersion version;
+	
+	private TFGotoArgument(MVersion version) {
+		this.version = version;
+	}	
+	
+	private static ITokenFactory getFactory0(IToken[] previousTokens, final MVersion version) {
 		TFLabel tfl = TFLabel.getInstance();
-		TFIndirection tfi = TFIndirection.getInstance();
+		TFIndirection tfi = TFIndirection.getInstance(version);
 		TFParallel tf = TFParallel.getInstance(tfl, tfi);
 		return tf; 
 	}
 	
-	private static ITokenFactory getFactory1(IToken[] previousTokens) {
+	private static ITokenFactory getFactory1(IToken[] previousTokens, final MVersion version) {
 		return new TFAllRequired() {								
 			@Override
 			protected ITokenFactory[] getFactories() {
 				TFConstChar tfc = TFConstChar.getInstance('+');
-				TFExpr tfe = TFExpr.getInstance();
+				TFExpr tfe = TFExpr.getInstance(version);
 				return new ITokenFactory[]{tfc, tfe};
 			}
 		};
@@ -33,19 +39,19 @@ public class TFGotoArgument extends TFSerialBase {
 		return TFConstChar.getInstance('^');
 	}
 
-	private static ITokenFactory getFactory3(IToken[] previousTokens) {
+	private static ITokenFactory getFactory3(IToken[] previousTokens, MVersion version) {
 		if (previousTokens[2] == null) {
 			return new TFNull();
 		} else {
-			ITokenFactory tfEnv = TFEnvironment.getInstance();
+			ITokenFactory tfEnv = TFEnvironment.getInstance(version);
 			ITokenFactory tfName = TFName.getInstance();
 			ITokenFactory tfEnvName = TFSerialOR.getInstance(tfEnv, tfName);
-			ITokenFactory tfInd = TFIndirection.getInstance();
+			ITokenFactory tfInd = TFIndirection.getInstance(version);
 			return TFParallel.getInstance(tfEnvName, tfInd);
 		}
 	}
 
-	private static ITokenFactorySupply getFactorySupply(final int count) {
+	private static ITokenFactorySupply getFactorySupply(final MVersion version, final int count) {
 		return new ITokenFactorySupply() {				
 			@Override
 			public int getCount() {
@@ -56,11 +62,11 @@ public class TFGotoArgument extends TFSerialBase {
 			public ITokenFactory get(IToken[] previousTokens) {
 				int n = previousTokens.length;
 				switch (n) {
-					case 0: return TFGotoArgument.getFactory0(previousTokens); 
-					case 1: return TFGotoArgument.getFactory1(previousTokens); 
+					case 0: return TFGotoArgument.getFactory0(previousTokens, version); 
+					case 1: return TFGotoArgument.getFactory1(previousTokens, version); 
 					case 2: return TFGotoArgument.getFactory2(previousTokens); 
-					case 3: return TFGotoArgument.getFactory3(previousTokens); 
-					case 4: return TCommandName.getTFPostCondition(previousTokens);
+					case 3: return TFGotoArgument.getFactory3(previousTokens, version); 
+					case 4: return TCommandName.getTFPostCondition(previousTokens, version);
 					default:
 						assert(false);
 						return null;
@@ -70,7 +76,7 @@ public class TFGotoArgument extends TFSerialBase {
 	}
 
 	protected ITokenFactorySupply getFactorySupply() {
-		return  getFactorySupply(5);
+		return  getFactorySupply(this.version, 5);
 	}
 
 	@Override
@@ -98,21 +104,25 @@ public class TFGotoArgument extends TFSerialBase {
 	}
 	
 	private static class TFGotoArgumentNoPostCondition extends TFGotoArgument {
+		private TFGotoArgumentNoPostCondition(MVersion version) {
+			super(version);
+		}	
+		
 		@Override
 		protected ITokenFactorySupply getFactorySupply() {
-			return getFactorySupply(4);
+			return getFactorySupply(this.version, 4);
 		}
 	}
 		
-	public static TFGotoArgument getInstance() {
-		return new TFGotoArgument();
+	public static TFGotoArgument getInstance(MVersion version) {
+		return new TFGotoArgument(version);
 	}
 	
-	public static TFGotoArgument getInstance(boolean noPostCondition) {
+	public static TFGotoArgument getInstance(MVersion version, boolean noPostCondition) {
 		if (noPostCondition) {
-			return new TFGotoArgumentNoPostCondition();
+			return new TFGotoArgumentNoPostCondition(version);
 		} else {
-			return new TFGotoArgument();
+			return new TFGotoArgument(version);
 		}
 	}	
 }

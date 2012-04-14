@@ -11,6 +11,12 @@ import com.raygroupintl.vista.token.TFSerialOR;
 import com.raygroupintl.vista.token.TFAllRequired;
 	
 public class TFPattern extends TFParallelCharBased {
+	private MVersion version;
+	
+	private TFPattern(MVersion version) {
+		this.version = version;
+	}
+		
 	static class TFPatOnYy extends  TFAllRequired {
 		@Override
 		protected ITokenFactory[] getFactories() {
@@ -120,18 +126,18 @@ public class TFPattern extends TFParallelCharBased {
 	@Override
 	protected ITokenFactory getFactory(char ch) {
 		if (ch == '@') {
-			return new TFIndirection();
+			return TFIndirection.getInstance(this.version);
 		} else {
 			return TFList.getInstance(new TFPatAtom());
 		}
 	}
 	
-	public static IToken run(String line, int fromIndex) {
-		ITokenFactory f = new TFPattern();
-		return f.tokenize(line, fromIndex);
-	}
+	//public static IToken run(String line, int fromIndex) {
+	//	ITokenFactory f = new TFPattern();
+	//	return f.tokenize(line, fromIndex);
+	//}
 
-	public static TFPattern getInstance() {
-		return new TFPattern();
+	public static TFPattern getInstance(MVersion version) {
+		return new TFPattern(version);
 	}
 }

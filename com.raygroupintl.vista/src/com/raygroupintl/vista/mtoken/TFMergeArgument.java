@@ -6,9 +6,15 @@ import com.raygroupintl.vista.token.TFConstChar;
 import com.raygroupintl.vista.token.TFSerial;
 
 public class TFMergeArgument extends TFSerial {
+	private MVersion version;
+	
+	private TFMergeArgument(MVersion version) {
+		this.version = version;
+	}
+	
 	@Override
 	protected ITokenFactory[] getFactories() {
-		return new ITokenFactory[]{TFGlvn.getInstance(), TFConstChar.getInstance('='), TFExpr.getInstance()}; 
+		return new ITokenFactory[]{TFGlvn.getInstance(this.version), TFConstChar.getInstance('='), TFExpr.getInstance(this.version)}; 
 	}
 
 	@Override
@@ -35,5 +41,9 @@ public class TFMergeArgument extends TFSerial {
 		} else {
 			return this.getErrorCode();
 		}
+	}
+	
+	public static TFMergeArgument getInstance(MVersion version) {
+		return new TFMergeArgument(version);
 	}
 }	

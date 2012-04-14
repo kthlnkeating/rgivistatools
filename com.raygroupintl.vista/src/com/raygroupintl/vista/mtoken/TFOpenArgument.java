@@ -8,11 +8,23 @@ import com.raygroupintl.vista.token.TFParallelCharBased;
 import com.raygroupintl.vista.token.TFSerialRO;
 
 public class TFOpenArgument extends TFParallelCharBased {
+	private MVersion version;
+	
+	private TFOpenArgument(MVersion version) {
+		this.version = version;
+	}
+	
 	private static class TFOpenParameters extends TFAllOptional {
+		private MVersion version;
+		
+		private TFOpenParameters(MVersion version) {
+			this.version = version;
+		}
+
 		@Override
 		protected ITokenFactory[] getFactories() {
-			TFDeviceParams p = new TFDeviceParams();
-			TFExpr e = TFExpr.getInstance();
+			TFDeviceParams p = new TFDeviceParams(this.version);
+			TFExpr e = TFExpr.getInstance(this.version);
 			ITokenFactory f = TFParallelCharBased.getInstance(e, '(', TFCommaDelimitedList.getInstance(e));
 			ITokenFactory c = TFConstChar.getInstance(':');
 			return new ITokenFactory[]{p, c, e, c, f};
@@ -22,9 +34,14 @@ public class TFOpenArgument extends TFParallelCharBased {
 	@Override
 	protected ITokenFactory getFactory(char ch) {
 		if (ch == '@') {
-			return TFIndirection.getInstance();
+			return TFIndirection.getInstance(this.version);
 		} else {
-			return TFSerialRO.getInstance(TFExpr.getInstance(), TFAllRequired.getInstance(TFConstChar.getInstance(':'), new TFOpenParameters()));
+			return TFSerialRO.getInstance(TFExpr.getInstance(this.version), TFAllRequired.getInstance(TFConstChar.getInstance(':'), new TFOpenParameters(this.version)));
 		}
 	}
+	
+	public static TFOpenArgument getInstance(MVersion version) {
+		return new TFOpenArgument(version);
+	}
+	
 }

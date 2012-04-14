@@ -13,14 +13,20 @@ import com.raygroupintl.vista.token.TFSerialOR;
 import com.raygroupintl.vista.token.TFSerialRO;
 
 public class TFJobArgument extends TFSerialBase {
-	private static ITokenFactory getFactory0(IToken[] previousTokens) {
+	private MVersion version;
+	
+	private TFJobArgument(MVersion version) {
+		this.version = version;
+	}
+	
+	private static ITokenFactory getFactory0(IToken[] previousTokens, MVersion version) {
 		TFLabel tfl = TFLabel.getInstance();
-		TFIndirection tfi = TFIndirection.getInstance();
+		TFIndirection tfi = TFIndirection.getInstance(version);
 		TFParallel tf = TFParallel.getInstance(tfl, tfi);
 		return tf; 
 	}
 	
-	private static ITokenFactory getFactory1(IToken[] previousTokens) {
+	private static ITokenFactory getFactory1(IToken[] previousTokens, final MVersion version) {
 		if (previousTokens[0] == null) {
 			return new TFNull();
 		} else {
@@ -28,7 +34,7 @@ public class TFJobArgument extends TFSerialBase {
 				@Override
 				protected ITokenFactory[] getFactories() {
 					TFConstChar tfc = TFConstChar.getInstance('+');
-					TFExpr tfe = TFExpr.getInstance();
+					TFExpr tfe = TFExpr.getInstance(version);
 					return new ITokenFactory[]{tfc, tfe};
 				}
 			};
@@ -39,32 +45,32 @@ public class TFJobArgument extends TFSerialBase {
 		return TFConstChar.getInstance('^');
 	}
 
-	private static ITokenFactory getFactory3(IToken[] previousTokens) {
+	private static ITokenFactory getFactory3(IToken[] previousTokens, final MVersion version) {
 		if (previousTokens[2] == null) {
 			return new TFNull();
 		} else {
-			ITokenFactory tfEnv = TFEnvironment.getInstance();
+			ITokenFactory tfEnv = TFEnvironment.getInstance(version);
 			ITokenFactory tfName = TFName.getInstance();
 			ITokenFactory tfEnvName = TFSerialOR.getInstance(tfEnv, tfName);
-			ITokenFactory tfInd = TFIndirection.getInstance();
+			ITokenFactory tfInd = TFIndirection.getInstance(version);
 			return TFParallel.getInstance(tfEnvName, tfInd);
 		}
 	}
 
-	private static ITokenFactory getFactory4(IToken[] previousTokens) {
+	private static ITokenFactory getFactory4(IToken[] previousTokens, final MVersion version) {
 		if ((previousTokens[1] != null) || (previousTokens[3] instanceof TIndirection)) {
 			return new TFNull();
 		} else {
-			return new TFActualList();
+			return TFActualList.getInstance(version);
 		}
 	}
 
-	private static ITokenFactory getFactory5(IToken[] previousTokens) {
-		TFExpr e = TFExpr.getInstance();
+	private static ITokenFactory getFactory5(IToken[] previousTokens, final MVersion version) {
+		TFExpr e = TFExpr.getInstance(version);
 		TFDelimitedList re = TFDelimitedList.getInstance(e, ':');
 		ITokenFactory processParams = TFParallelCharBased.getInstance(e, '(', TFInParantheses.getInstance(re));
 		ITokenFactory jobParams = TFAllRequired.getInstance(TFConstChar.getInstance(':'), processParams); 
-		return TFSerialRO.getInstance(jobParams, TFTimeout.getInstance());
+		return TFSerialRO.getInstance(jobParams, TFTimeout.getInstance(version));
 	}
 
 	protected ITokenFactorySupply getFactorySupply() {
@@ -78,12 +84,12 @@ public class TFJobArgument extends TFSerialBase {
 			public ITokenFactory get(IToken[] previousTokens) {
 				int n = previousTokens.length;
 				switch (n) {
-					case 0: return TFJobArgument.getFactory0(previousTokens); 
-					case 1: return TFJobArgument.getFactory1(previousTokens); 
+					case 0: return TFJobArgument.getFactory0(previousTokens, TFJobArgument.this.version); 
+					case 1: return TFJobArgument.getFactory1(previousTokens, TFJobArgument.this.version); 
 					case 2: return TFJobArgument.getFactory2(previousTokens); 
-					case 3: return TFJobArgument.getFactory3(previousTokens); 
-					case 4: return TFJobArgument.getFactory4(previousTokens); 
-					case 5: return TFJobArgument.getFactory5(previousTokens);
+					case 3: return TFJobArgument.getFactory3(previousTokens, TFJobArgument.this.version); 
+					case 4: return TFJobArgument.getFactory4(previousTokens, TFJobArgument.this.version); 
+					case 5: return TFJobArgument.getFactory5(previousTokens, TFJobArgument.this.version);
 					default:
 						assert(false);
 						return null;
@@ -112,5 +118,9 @@ public class TFJobArgument extends TFSerialBase {
 			return this.getErrorCode();
 		}
 		return 0;
+	}
+	
+	public static TFJobArgument getInstance(MVersion version) {
+		return new TFJobArgument(version);
 	}
 }	

@@ -128,20 +128,35 @@ public class External {
 	}
 			
 	public static final class TF extends TFSerialRRO {
+		private MVersion version;
+		
+		protected TF(MVersion version) {		
+			this.version = version;
+		}
+			
 		@Override
 		protected final ITokenFactory[] getFactories() {
-			return new ITokenFactory[]{new TFConstChar('&'), new TFAmpersandTail(), new TFActualList()};
+			return new ITokenFactory[]{new TFConstChar('&'), new TFAmpersandTail(), TFActualList.getInstance(this.version)};
 		}
 
 		@Override
-		protected final IToken getTokenWhenNoOptional(IToken[] foundTokens) {
-			return foundTokens[1];
+		protected final IToken getToken(IToken[] foundTokens) {
+			if (foundTokens[2] == null) {
+				return foundTokens[1];
+			} else {
+				return new TReferenceWithArgument((TReference) foundTokens[1], (TActualList) foundTokens[2]);
+			}
 		}
-		
-		@Override
-		protected final IToken getTokenWhenAll(IToken[] foundTokens) {
-			return new TReferenceWithArgument((TReference) foundTokens[1], (TActualList) foundTokens[2]);			
-		}
+
+		//@Override
+		//protected final IToken getTokenWhenNoOptional(IToken[] foundTokens) {
+		//	return foundTokens[1];
+		//}
+		//
+		//@Override
+		//protected final IToken getTokenWhenAll(IToken[] foundTokens) {
+		//	return new TReferenceWithArgument((TReference) foundTokens[1], (TActualList) foundTokens[2]);			
+		//}
 	}
 	
 	public static boolean isTFCreated(IToken token) {

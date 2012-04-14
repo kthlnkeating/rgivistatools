@@ -8,8 +8,14 @@ import com.raygroupintl.vista.token.TFSerialROO;
 import com.raygroupintl.vista.token.TFSerialRRO;
 
 public class TFReadArgument extends TFParallelCharBased {
-	private static ITokenFactory getTFReadcountInstance() {
-		return TFAllRequired.getInstance(TFConstChar.getInstance('#'), TFExpr.getInstance());
+	private MVersion version;
+	
+	private TFReadArgument(MVersion version) {
+		this.version = version;
+	}
+	
+	private static ITokenFactory getTFReadcountInstance(MVersion version) {
+		return TFAllRequired.getInstance(TFConstChar.getInstance('#'), TFExpr.getInstance(version));
 	}
 
 	@Override
@@ -19,15 +25,19 @@ public class TFReadArgument extends TFParallelCharBased {
 			case '#':
 			case '?':
 			case '/':
-				return TFFormat.getInstance();
+				return TFFormat.getInstance(this.version);
 			case '"':
 				return TFStringLiteral.getInstance();
 			case '*':
-				return TFSerialRRO.getInstance(TFConstChar.getInstance('*'), TFGlvn.getInstance(), TFTimeout.getInstance());
+				return TFSerialRRO.getInstance(TFConstChar.getInstance('*'), TFGlvn.getInstance(this.version), TFTimeout.getInstance(this.version));
 			case '@':
-				return TFIndirection.getInstance();
+				return TFIndirection.getInstance(this.version);
 			default: 
-				return TFSerialROO.getInstance(TFGlvn.getInstance(), getTFReadcountInstance(), TFTimeout.getInstance());
+				return TFSerialROO.getInstance(TFGlvn.getInstance(this.version), getTFReadcountInstance(this.version), TFTimeout.getInstance(this.version));
 		}
+	}
+
+	public static TFReadArgument getInstance(MVersion version) {
+		return new TFReadArgument(version);
 	}
 }

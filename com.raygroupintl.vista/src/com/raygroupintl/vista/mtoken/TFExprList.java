@@ -3,15 +3,18 @@ package com.raygroupintl.vista.mtoken;
 import com.raygroupintl.vista.fnds.ITokenFactory;
 
 public class TFExprList extends TFCommaDelimitedList {
-	private TFExprList() {		
+	private MVersion version;
+	
+	private TFExprList(MVersion version) {		
+		this.version = version;
 	}
 	
 	@Override
 	protected final ITokenFactory getElementFactory() {
-		return new TFExpr();
+		return TFExpr.getInstance(this.version);
 	}
 	
-	public static TFExprList getInstance() {
-		return new TFExprList();
+	public static TFExprList getInstance(MVersion version) {
+		return new TFExprList(version);
 	}
 }

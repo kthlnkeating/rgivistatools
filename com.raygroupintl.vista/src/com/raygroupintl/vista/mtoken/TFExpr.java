@@ -3,12 +3,25 @@ package com.raygroupintl.vista.mtoken;
 import com.raygroupintl.vista.fnds.IToken;
 import com.raygroupintl.vista.fnds.ITokenFactory;
 import com.raygroupintl.vista.fnds.ITokenFactorySupply;
+import com.raygroupintl.vista.token.TFParallelCharBased;
 import com.raygroupintl.vista.token.TFSerialBase;
 import com.raygroupintl.vista.token.TFSerialRO;
 import com.raygroupintl.vista.token.TList;
 
 public class TFExpr extends TFSerialRO {
+	private MVersion version;
+	
+	private TFExpr(MVersion version) {
+		this.version = version;
+	}
+	
 	private static class TFExprTail extends TFSerialBase {
+		private MVersion version;
+		
+		private TFExprTail(MVersion version) {
+			this.version = version;
+		}
+		
 		protected ITokenFactorySupply getFactorySupply() {
 			return new ITokenFactorySupply() {			
 				@Override
@@ -19,9 +32,9 @@ public class TFExpr extends TFSerialRO {
 				private ITokenFactory choose1st(IToken token0th) {
 					String value = token0th.getStringValue();
 					if (value.charAt(value.length()-1) == '?') {
-						return TFPattern.getInstance();
+						return TFPattern.getInstance(TFExprTail.this.version);
 					} else {
-						return TFExprAtom.getInstance();
+						return TFExprAtom.getInstance(TFExprTail.this.version);
 					}
 				}
 				
@@ -61,19 +74,23 @@ public class TFExpr extends TFSerialRO {
 			return this.getErrorCode();
 		}
 	
-		public static TFExprTail getInstance() {
-			return new TFExprTail();
+		public static TFExprTail getInstance(MVersion version) {
+			return new TFExprTail(version);
 		}
 	}
 	
 	@Override
 	protected ITokenFactory getRequired() {
-		return TFExprAtom.getInstance();
+		if (this.version == MVersion.CACHE) {
+			return TFParallelCharBased.getInstance(TFExprAtom.getInstance(this.version), '#', TFCacheClassMethod.getInstance());
+		} else {
+			return TFExprAtom.getInstance(this.version);
+		}
 	}
 	
 	@Override
 	protected ITokenFactory getOptional() {
-		TFExprTail et = TFExprTail.getInstance(); 
+		TFExprTail et = TFExprTail.getInstance(this.version); 
 		return TFList.getInstance(et);
 	}
 	
@@ -91,7 +108,7 @@ public class TFExpr extends TFSerialRO {
 		return expr;
 	}
 	
-	public static TFExpr getInstance() {
-		return new TFExpr();
+	public static TFExpr getInstance(MVersion version) {
+		return new TFExpr(version);
 	}
 }

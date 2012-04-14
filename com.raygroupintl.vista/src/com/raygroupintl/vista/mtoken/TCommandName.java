@@ -18,9 +18,9 @@ public abstract class TCommandName extends TKeyword {
 		return null;
 	}
 
-	protected static ITokenFactory getTFPostCondition(IToken[] previousTokens) {
+	protected static ITokenFactory getTFPostCondition(IToken[] previousTokens, MVersion version) {
 		ITokenFactory tfColon = TFConstChar.getInstance(':');
-		ITokenFactory tfExpr = TFExpr.getInstance();
+		ITokenFactory tfExpr = TFExpr.getInstance(version);
 		return TFAllRequired.getInstance(tfColon, tfExpr);
 	}
 	

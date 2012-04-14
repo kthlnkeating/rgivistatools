@@ -3,12 +3,18 @@ package com.raygroupintl.vista.mtoken;
 import com.raygroupintl.vista.fnds.ITokenFactory;
 
 public class TFExprListInParantheses extends TFInParantheses {
+	protected MVersion version;
+	
+	protected TFExprListInParantheses(MVersion version) {		
+		this.version = version;
+	}
+		
 	@Override
 	protected ITokenFactory getInnerfactory() {
-		return TFExprList.getInstance();
+		return TFExprList.getInstance(this.version);
 	}
 	
-	public static TFExprListInParantheses getInstance() {
-		return new TFExprListInParantheses();
+	public static TFExprListInParantheses getInstance(MVersion version) {
+		return new TFExprListInParantheses(version);
 	}
 }

@@ -12,6 +12,12 @@ import com.raygroupintl.vista.token.TFSyntaxError;
 import com.raygroupintl.vista.token.TSyntaxError;
 
 public class TFLine extends TFSerial {
+	private MVersion version;
+	
+	private TFLine(MVersion version) {
+		this.version = version;
+	}
+	
 	private static final int NUM_LOGICAL_TOKENS = 5; // label, formals, space, level, commands
 	
 	private static ITokenFactory getTFFormal() {
@@ -21,10 +27,16 @@ public class TFLine extends TFSerial {
 	}
 			
 	private static class TFCommandOrComment extends TFParallelCharBased {
+		private MVersion version;
+		
+		private TFCommandOrComment(MVersion version) {
+			this.version = version;
+		}
+
 		@Override
 		protected ITokenFactory getFactory(char ch) {
 			if (Library.isIdent(ch)) {
-				return new TFCommand();
+				return TFCommand.getInstance(this.version);
 			} else if (ch == ';') {
 				return new TFComment();
 			} else {
@@ -33,8 +45,8 @@ public class TFLine extends TFSerial {
 		}		
 	}
 	
-	private static ITokenFactory getTFCommands() {
-		ITokenFactory f = new TFCommandOrComment();
+	private static ITokenFactory getTFCommands(MVersion version) {
+		ITokenFactory f = new TFCommandOrComment(version);
 		return TFList.getInstance(f);
 	}
  	
@@ -46,7 +58,7 @@ public class TFLine extends TFSerial {
 				getTFFormal(),
 				TFConstChars.getInstance(" \t"),
 				TFBasic.getInstance('.', ' '),
-				getTFCommands()
+				getTFCommands(this.version)
 		};
 	}
 
@@ -74,7 +86,7 @@ public class TFLine extends TFSerial {
 		return new TLine(found);
 	}
 	
-	public static TFLine getInstance() {
-		return new TFLine();
+	public static TFLine getInstance(MVersion version) {
+		return new TFLine(version);
 	}
 }
