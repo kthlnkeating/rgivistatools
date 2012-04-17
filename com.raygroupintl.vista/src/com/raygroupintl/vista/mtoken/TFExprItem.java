@@ -50,7 +50,7 @@ public class TFExprItem extends TFParallelCharBased {
 			if (ch2 == '$') {
 				return new TFExtrinsic(this.version);
 			} else if (ch2 == '&') {
-				return new External.TF(this.version);
+				return new TFExternal(this.version);
 			} else if (Library.isIdent(ch2)) {
 				return TFIntrinsic.getInstance(this.version);
 			} else {

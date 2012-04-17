@@ -9,7 +9,7 @@ import com.raygroupintl.vista.fnds.ITokenFactory;
 
 public class TFOperator implements ITokenFactory {
 	private static final char[] OPERATOR_CHARS = {
-		'!', '#', '&', '\'', '*', '+', '-', '/', '<', '=', '>', '?', '[', '\\', ']', '_'
+		'!', '#', '&', '\'', '*', '+', '-', '/', '<', '=', '>', '?', '[', '\\', ']', '_', '|'
 	};
 
 	private static Set<String> OPERATORS = new HashSet<String>();

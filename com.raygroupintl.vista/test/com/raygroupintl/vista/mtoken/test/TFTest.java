@@ -6,10 +6,23 @@ import com.raygroupintl.vista.mtoken.MVersion;
 import com.raygroupintl.vista.mtoken.TFActual;
 import com.raygroupintl.vista.mtoken.TFDeviceParams;
 import com.raygroupintl.vista.mtoken.TFExprItem;
+import com.raygroupintl.vista.mtoken.TFExternal;
 import com.raygroupintl.vista.mtoken.TFGvn;
 import com.raygroupintl.vista.mtoken.TFGvnAll;
+import com.raygroupintl.vista.mtoken.TFStringLiteral;
 
 public class TFTest {
+	public void testTFExternal(MVersion version) {
+		TFExternal f = TFExternal.getInstance(version);
+		TFCommonTest.validCheck(f, "$&ZLIB.%GETDVI(%XX,\"DEVCLASS\")");
+	}
+
+	@Test
+	public void testTFExternal() {
+		testTFExternal(MVersion.CACHE);
+		testTFExternal(MVersion.ANSI_STD_95);		
+	}
+
 	public void testTFGvn(MVersion version) {
 		TFGvn f = TFGvn.getInstance(version);
 		TFCommonTest.validCheck(f, "^PRCA(430,+$G(PRCABN),0)");
@@ -55,6 +68,17 @@ public class TFTest {
 		testTFActual(MVersion.ANSI_STD_95);		
 	}
 
+	public void TFDeviceParams(MVersion version) {
+		TFDeviceParams f = TFDeviceParams.getInstance(version);
+		TFCommonTest.validCheck(f, "(:XOBPORT:\"AT\")");
+	}
+	
+	@Test
+	public void testTFDeviceParams() {
+		TFDeviceParams(MVersion.CACHE);
+		TFDeviceParams(MVersion.ANSI_STD_95);		
+	}
+
 	public void testTFExprItem(MVersion version) {
 		TFExprItem f = TFExprItem.getInstance(version);
 		TFCommonTest.validCheck(f, "$$TEST(A)");
@@ -81,14 +105,9 @@ public class TFTest {
 		testTFExprItem(MVersion.ANSI_STD_95);		
 	}
 
-	public void TFDeviceParams(MVersion version) {
-		TFDeviceParams f = TFDeviceParams.getInstance(version);
-		TFCommonTest.validCheck(f, "(:XOBPORT:\"AT\")");
-	}
-	
 	@Test
-	public void testTFDeviceParams() {
-		TFDeviceParams(MVersion.CACHE);
-		TFDeviceParams(MVersion.ANSI_STD_95);		
+	public void testTFStringLiteral() {
+		TFStringLiteral f = TFStringLiteral.getInstance();
+		TFCommonTest.validCheck(f, "\"\"\"\"\"\"");
 	}
 }

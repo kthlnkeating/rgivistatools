@@ -337,6 +337,8 @@ public class TFIntrinsic extends TFSerialBase {
 			} else {
 				return MError.ERR_UNKNOWN_INTRINSIC_VARIABLE;	
 			}
+		} else if (n == 2) {
+			return MError.ERR_GENERAL_SYNTAX;
 		} else {
 			return MError.ERR_UNMATCHED_PARANTHESIS;
 		}

@@ -44,4 +44,25 @@ public abstract class TFChar implements ITokenFactory {
 			return ch == ':';
 		}
 	};
+	
+	public static final TFChar DOLLAR = new TFChar() {		
+		@Override
+		protected boolean isValid(char ch) {
+			return ch == '$';
+		}
+	};
+
+	public static final TFChar AMPERSAND = new TFChar() {		
+		@Override
+		protected boolean isValid(char ch) {
+			return ch == '$';
+		}
+	};
+
+	public static final TFChar SLASH = new TFChar() {		
+		@Override
+		protected boolean isValid(char ch) {
+			return ch == '/';
+		}
+	};
 }

@@ -12,9 +12,9 @@ public class ErrorExemptionsTest {
 	@Test
 	public void test() {
 		ErrorExemptions exemptions = new ErrorExemptions();
-		exemptions.add("ANRVRRL", "BEGIN", 3);
-		exemptions.add("ANRVRRL", "A1R", 2);
-		Set<MLineLocation> locations = exemptions.get("ANRVRRL");
+		exemptions.addLine("ANRVRRL", "BEGIN", 3);
+		exemptions.addLine("ANRVRRL", "A1R", 2);
+		Set<MLineLocation> locations = exemptions.getLines("ANRVRRL");
 		Assert.assertTrue(locations.contains(new MLineLocation("BEGIN", 3)));		
 		Assert.assertFalse(locations.contains(new MLineLocation("BEGINX", 3)));		
 		Assert.assertFalse(locations.contains(new MLineLocation("BEGIN", 4)));		

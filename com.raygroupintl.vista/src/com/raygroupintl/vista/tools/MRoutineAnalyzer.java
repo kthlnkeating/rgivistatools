@@ -30,8 +30,10 @@ public class MRoutineAnalyzer {
 				try {
 					TRoutine r = TRoutine.getInstance(version, path);
 					final String name = r.getName();
-					Set<MLineLocation> locations = exemptions.get(name);
-					errorCount += r.writeErrors(os, locations);
+					if (! exemptions.containsRoutine(name)) {
+						Set<MLineLocation> locations = exemptions.getLines(name);
+						errorCount += r.writeErrors(os, locations);
+					}
 				} catch(Throwable t) {
 					String fileName = path.getFileName().toString();
 					MRoutineAnalyzer.LOGGER.info("Exception: " + fileName);
@@ -54,6 +56,7 @@ public class MRoutineAnalyzer {
 		TFOperator.addOperator(">=");
 		TFOperator.addOperator("<=");
 		TFOperator.addOperator("&&");
+		TFOperator.addOperator("||");
 				
 		TFCommand.addCommand("ZB");
 		TFCommand.addCommand("ZS");
@@ -83,8 +86,20 @@ public class MRoutineAnalyzer {
 		MRoutineAnalyzer m = new MRoutineAnalyzer();
 		
 		ErrorExemptions exemptions = new ErrorExemptions();
-		exemptions.add("ANRVRRL", "BEGIN", 3);
-		exemptions.add("ANRVRRL", "A1R", 2);
+		exemptions.addLine("ANRVRRL", "BEGIN", 3);
+		exemptions.addLine("ANRVRRL", "A1R", 2);
+		exemptions.addLine("DINVMSM", "T0", 2);
+		exemptions.addLine("DINVMSM", "T1", 2);
+		exemptions.addLine("ZOSVMSM", "T0", 2);
+		exemptions.addLine("ZOSVMSM", "T1", 2);
+		exemptions.addLine("MUSMCR3", "BEG", 2);
+		exemptions.addLine("MUSMCR3", "BEG", 6);
+		exemptions.addLine("DENTA14", "P1", 0);
+		exemptions.addLine("HLOTCP", "RETRY", 8);
+		exemptions.addLine("HLOTCP", "RETRY", 9);
+		exemptions.addLine("HLOTCP", "RETRY", 14);
+		exemptions.addLine("RGUTRRC", "JOBIT", 2);
+		exemptions.addRoutine("PSORELD1");
 		
 		m.writeErrors(version, exemptions, outputFile);		
 	}

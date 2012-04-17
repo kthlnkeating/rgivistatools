@@ -8,13 +8,15 @@ import com.raygroupintl.vista.fnds.ITokenFactory;
 import com.raygroupintl.vista.struct.MError;
 import com.raygroupintl.vista.token.TFAllRequired;
 import com.raygroupintl.vista.token.TFConstChar;
+import com.raygroupintl.vista.token.TFConstString;
 import com.raygroupintl.vista.token.TFSerialROO;
 import com.raygroupintl.vista.token.TFSerialRRO;
 import com.raygroupintl.vista.token.TPair;
 import com.raygroupintl.vista.token.TBase;
+import com.raygroupintl.vista.token.TPrefixedCopy;
 
-public class External {
-	public static class TReference extends TBase {
+public class TFExternal extends TFSerialRRO {
+	private static class TReference extends TBase {
 		private String routineName;
 		private String packageName;
 		private String label;
@@ -25,13 +27,9 @@ public class External {
 			this.label = label;
 		}
 		
-		public TReference(TReference r) {
-			this(r.routineName, r.packageName, r.label);
-		}
-		
 		@Override
 		public String getStringValue() {
-			String result = "&";
+			String result = "";
 			if (this.packageName != null) {
 				result += this.packageName + ".";
 			}
@@ -52,48 +50,16 @@ public class External {
 		}
 	}
 	
-	public static class TReferenceWithArgument extends TPair {
+	private static class TReferenceWithArgument extends TPair {
 		public TReferenceWithArgument(TReference reference, TActualList actualList) {
 			super(reference, actualList);
 		}
 
 		public TReferenceWithArgument(TPair p) {
 			super(p);
-		}		
+		}				
 	}
-	
-	public static class TVariable extends TReference {
-		public TVariable(TReference r) {
-			super(r);
-		}
 
-		@Override
-		public String getStringValue() {
-			return '$' + super.getStringValue();
-		}
-	
-		@Override
-		public int getStringSize() {
-			return 1 + super.getStringSize();
-		}
-	}
-	
-	public static class TFunction extends TReferenceWithArgument {
-		public TFunction(TPair p) {
-			super(p);
-		}
-
-		@Override
-		public String getStringValue() {
-			return '$' + super.getStringValue();
-		}
-	
-		@Override
-		public int getStringSize() {
-			return 1 + super.getStringSize();
-		}
-	}
-	
 	private static final class TFAmpersandTail extends TFSerialROO {
 		@Override
 		protected final ITokenFactory[] getFactories() {
@@ -127,39 +93,28 @@ public class External {
 		}
 	}
 			
-	public static final class TF extends TFSerialRRO {
-		private MVersion version;
+	private MVersion version;
+	
+	protected TFExternal(MVersion version) {		
+		this.version = version;
+	}
 		
-		protected TF(MVersion version) {		
-			this.version = version;
-		}
-			
-		@Override
-		protected final ITokenFactory[] getFactories() {
-			return new ITokenFactory[]{new TFConstChar('&'), new TFAmpersandTail(), TFActualList.getInstance(this.version)};
-		}
+	@Override
+	protected final ITokenFactory[] getFactories() {
+		return new ITokenFactory[]{new TFConstString("$&"), new TFAmpersandTail(), TFActualList.getInstance(this.version)};
+	}
 
-		@Override
-		protected final IToken getToken(IToken[] foundTokens) {
-			if (foundTokens[2] == null) {
-				return foundTokens[1];
-			} else {
-				return new TReferenceWithArgument((TReference) foundTokens[1], (TActualList) foundTokens[2]);
-			}
+	@Override
+	protected final IToken getToken(IToken[] foundTokens) {
+		if (foundTokens[2] == null) {
+			return new TPrefixedCopy(foundTokens[1], "$&");
+		} else {
+			IToken t = new TReferenceWithArgument((TReference) foundTokens[1], (TActualList) foundTokens[2]);
+			return new TPrefixedCopy(t, "$&");
 		}
-
-		//@Override
-		//protected final IToken getTokenWhenNoOptional(IToken[] foundTokens) {
-		//	return foundTokens[1];
-		//}
-		//
-		//@Override
-		//protected final IToken getTokenWhenAll(IToken[] foundTokens) {
-		//	return new TReferenceWithArgument((TReference) foundTokens[1], (TActualList) foundTokens[2]);			
-		//}
 	}
 	
-	public static boolean isTFCreated(IToken token) {
-		return (token instanceof TReference) || (token instanceof TReferenceWithArgument);
+	public static TFExternal getInstance(MVersion version) {
+		return new TFExternal(version);
 	}
 }

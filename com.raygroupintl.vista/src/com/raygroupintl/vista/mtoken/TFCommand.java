@@ -13,6 +13,7 @@ import com.raygroupintl.vista.token.TBasic;
 import com.raygroupintl.vista.token.TEmpty;
 import com.raygroupintl.vista.token.TFAllRequired;
 import com.raygroupintl.vista.token.TFBasic;
+import com.raygroupintl.vista.token.TFChar;
 import com.raygroupintl.vista.token.TFConstChar;
 import com.raygroupintl.vista.token.TFConstChars;
 import com.raygroupintl.vista.token.TFEmpty;
@@ -217,8 +218,9 @@ public class TFCommand extends TFSerialBase {
 						case '!':
 						case '#':
 						case '?':
-						case '/':
 							return TFFormat.getInstance(version);
+						case '/':
+							return TFAllRequired.getInstance(TFChar.SLASH, TFName.getInstance(), TFActualList.getInstance(version));
 						case '*':
 							return TFAllRequired.getInstance(TFConstChar.getInstance('*'), TFExpr.getInstance(version));
 						case '@':

@@ -13,6 +13,8 @@ public class TFIntrinsicTest {
 		TFCommonTest.validCheck(f, "$S(LST=\"A\":0,1:1)");		
 		TFCommonTest.validCheck(f, "$S(A>$$A^B:0,1:1)");		
 		TFCommonTest.validCheck(f, "$XX(LST=\"A\":0,1:1)", MError.ERR_UNKNOWN_INTRINSIC_FUNCTION);
+		TFCommonTest.validCheck(f, "$V(#46C,-3,4)", MError.ERR_GENERAL_SYNTAX);
+		TFCommonTest.validCheck(f, "$S(+Y:$$HLNAME^HLFNC($P(Y,\"^\",2)),1:\"\"\"\"\"\")");
 		if (version == MVersion.CACHE) {
 			TFCommonTest.validCheck(f, "$SYSTEM.Util.GetEnviron(\"SSH_CLIENT\")");					
 			TFCommonTest.validCheck(f, "$SYSTEM.Util.GetEnviron()");					

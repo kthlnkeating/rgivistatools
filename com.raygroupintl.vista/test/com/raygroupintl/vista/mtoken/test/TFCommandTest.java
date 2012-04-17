@@ -66,6 +66,7 @@ public class TFCommandTest {
 	private void testJob(MVersion version) {
 		ITokenFactory f = TFCommand.getInstance(version);
 		TFCommonTest.validCheck(f, "JOB CHILDNT^XOBVTCPL():(:4:XOBIO:XOBIO):10");
+		TFCommonTest.validCheck(f, "J LISTENER^XOBVTCPL(XOBPORT,$GET(XOBCFG))::5");
 	}
 	
 	@Test
@@ -115,19 +116,6 @@ public class TFCommandTest {
 		testOpen(MVersion.ANSI_STD_95);
 	}
 
-	private void testWrite(MVersion version) {
-		ITokenFactory f = TFCommand.getInstance(version);
-		TFCommonTest.validCheck(f, "W !!,^YTT(601,YSTEST,\"G\",L,1,1,0)");
-		TFCommonTest.validCheck(f, "W !,$S($D(ZTSK):\"REQUEST QUEUED TASK=\"_ZTSK,1:\"REQUEST CANCELLED\")");
-		TFCommonTest.validCheck(f, "W:$O(^DVB(396.4,OLDA,\"RES\",LINE))]\"\"&('+$G(DVBGUI)) !!,\"Exam Results Continued\",!!");
-	}
-	
-	@Test
-	public void testWrite() {
-		testWrite(MVersion.CACHE);
-		testWrite(MVersion.ANSI_STD_95);
-	}
-
 	private void testUse(MVersion version) {
 		ITokenFactory f = TFCommand.getInstance(version);
 		TFCommonTest.validCheck(f, "U IO");
@@ -152,6 +140,20 @@ public class TFCommandTest {
 	public void testXecute() {
 		testXecute(MVersion.CACHE);
 		testXecute(MVersion.ANSI_STD_95);
+	}
+
+	private void testWrite(MVersion version) {
+		ITokenFactory f = TFCommand.getInstance(version);
+		TFCommonTest.validCheck(f, "W !!,^YTT(601,YSTEST,\"G\",L,1,1,0)");
+		TFCommonTest.validCheck(f, "W !,$S($D(ZTSK):\"REQUEST QUEUED TASK=\"_ZTSK,1:\"REQUEST CANCELLED\")");
+		TFCommonTest.validCheck(f, "W:$O(^DVB(396.4,OLDA,\"RES\",LINE))]\"\"&('+$G(DVBGUI)) !!,\"Exam Results Continued\",!!");
+		TFCommonTest.validCheck(f, "W /LISTEN(1)");
+	}
+	
+	@Test
+	public void testWrite() {
+		testWrite(MVersion.CACHE);
+		testWrite(MVersion.ANSI_STD_95);
 	}
 
 	private void testZ(MVersion version) {

@@ -8,34 +8,51 @@ import java.util.Set;
 import com.raygroupintl.vista.struct.MLineLocation;
 
 public class ErrorExemptions {
-	private Map<String, Set<MLineLocation>> exemptions = new HashMap<String, Set<MLineLocation>>();
-		
-	public void add(String routineName, MLineLocation lineLocation) {
-		Set<MLineLocation> locations = this.exemptions.get(routineName);
+	private Map<String, Set<MLineLocation>> lines;
+	private Set<String> routines;
+	
+	public void addLine(String routineName, MLineLocation lineLocation) {
+		if (this.lines == null) {
+			this.lines =  new HashMap<String, Set<MLineLocation>>();
+		}
+		Set<MLineLocation> locations = this.lines.get(routineName);
 		if (locations == null) {
 			locations = new HashSet<>();
-			this.exemptions.put(routineName, locations);
+			this.lines.put(routineName, locations);
 		}		
 		locations.add(lineLocation);
 	}
 	
-	public void add(String routineName, String tag, int offset) {
-		this.add(routineName, new MLineLocation(tag, offset));
+	public void addLine(String routineName, String tag, int offset) {
+		this.addLine(routineName, new MLineLocation(tag, offset));
 	}
 	
-	public boolean contains(String routineName, MLineLocation lineLocation) {
-		Set<MLineLocation> locations = this.exemptions.get(routineName);
-		if (locations != null) {
-			return locations.contains(lineLocation);
-		}		
+	public void addRoutine(String routineName) {
+		if (this.routines == null) {
+			this.routines =  new HashSet<String>();
+		}
+		this.routines.add(routineName);
+	}
+	
+	public boolean containsLine(String routineName, MLineLocation lineLocation) {
+		if (this.lines != null) {
+			Set<MLineLocation> locations = this.lines.get(routineName);
+			if (locations != null) {
+				return locations.contains(lineLocation);
+			}
+		}
 		return false;	
 	}
 
-	public boolean contains(String routineName, String tag, int offset) {
-		return contains(routineName, new MLineLocation(tag, offset));	
+	public boolean containsLine(String routineName, String tag, int offset) {
+		return containsLine(routineName, new MLineLocation(tag, offset));	
 	}
 	
-	public Set<MLineLocation> get(String routine) {
-		return this.exemptions.get(routine);
+	public boolean containsRoutine(String routineName) {
+		return (this.routines != null) && this.routines.contains(routineName);	
+	}
+	
+	public Set<MLineLocation> getLines(String routine) {
+		return this.lines.get(routine);
 	}
 }
