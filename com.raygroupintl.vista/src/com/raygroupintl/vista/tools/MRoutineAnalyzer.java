@@ -4,6 +4,7 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.nio.file.Path;
+import java.util.Set;
 import java.util.logging.Logger;
 
 import com.raygroupintl.vista.fnds.IFileAction;
@@ -12,13 +13,14 @@ import com.raygroupintl.vista.mtoken.TFCommand;
 import com.raygroupintl.vista.mtoken.TFOperator;
 import com.raygroupintl.vista.mtoken.TRoutine;
 import com.raygroupintl.vista.repository.MFileVisitor;
+import com.raygroupintl.vista.struct.MLineLocation;
 
 public class MRoutineAnalyzer {
 	private final static Logger LOGGER = Logger.getLogger(MRoutineAnalyzer.class.getName());
 
 	private static int errorCount = 0;
 	
-	public void writeErrors(final MVersion version, String outputPath) throws IOException {
+	public void writeErrors(final MVersion version, final ErrorExemptions exemptions, String outputPath) throws IOException {
 		errorCount = 0;
 		final File file = new File(outputPath);
 		final FileOutputStream os = new FileOutputStream(file);
@@ -27,7 +29,9 @@ public class MRoutineAnalyzer {
 			public void handle(Path path) {
 				try {
 					TRoutine r = TRoutine.getInstance(version, path);
-					errorCount += r.writeErrors(os);
+					final String name = r.getName();
+					Set<MLineLocation> locations = exemptions.get(name);
+					errorCount += r.writeErrors(os, locations);
 				} catch(Throwable t) {
 					String fileName = path.getFileName().toString();
 					MRoutineAnalyzer.LOGGER.info("Exception: " + fileName);
@@ -36,6 +40,7 @@ public class MRoutineAnalyzer {
 		};
 		
 		MFileVisitor v = new MFileVisitor(action);
+		//v.addPath("C:\\Users\\Afsin\\git\\VistA-FOIA\\Packages\\Visual Impairment Service Team");
 		v.addVistAFOIA();
 		v.run();
 		String eol = TRoutine.getEOL();
@@ -76,6 +81,11 @@ public class MRoutineAnalyzer {
 		}
 		String outputFile = args[0]; 
 		MRoutineAnalyzer m = new MRoutineAnalyzer();
-		m.writeErrors(version, outputFile);		
+		
+		ErrorExemptions exemptions = new ErrorExemptions();
+		exemptions.add("ANRVRRL", "BEGIN", 3);
+		exemptions.add("ANRVRRL", "A1R", 2);
+		
+		m.writeErrors(version, exemptions, outputFile);		
 	}
 }

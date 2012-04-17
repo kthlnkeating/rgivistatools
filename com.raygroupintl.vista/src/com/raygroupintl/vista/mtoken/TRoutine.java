@@ -9,9 +9,11 @@ import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
+import java.util.Set;
 
 import com.raygroupintl.vista.fnds.IToken;
 import com.raygroupintl.vista.struct.MError;
+import com.raygroupintl.vista.struct.MLineLocation;
 import com.raygroupintl.vista.token.TBase;
 
 public class TRoutine extends TBase {
@@ -20,6 +22,14 @@ public class TRoutine extends TBase {
 	
 	public TRoutine(String name) {
 		this.name = name;
+	}
+	
+	public String getName() {
+		if (this.name.endsWith(".m")) {
+			return this.name.substring(0, this.name.length()-2);
+		} else {
+			return this.name;
+		}
 	}
 	
 	public void add(TLine line) {
@@ -79,7 +89,7 @@ public class TRoutine extends TBase {
 		}		
 	}
 		
-	public int writeErrors(OutputStream os) throws IOException {
+	public int writeErrors(OutputStream os, Set<MLineLocation> exemptions) throws IOException {
 		String eol = getEOL();
 		String lastTag = this.name;
 		int count = 0;
@@ -91,22 +101,25 @@ public class TRoutine extends TBase {
 				lastTag = tag;
 				index = 0;
 			}
-			List<MError> errors = line.getErrors();
-			boolean lineFirst = true;
-			if ((errors != null) && (errors.size() > 0)) {
-				if (first) {
-					os.write((eol + eol + this.name + eol).getBytes());
-					first = false;
-				}
-				if (lineFirst) {
-					String offset = (index == 0 ? "" : '+' + String.valueOf(index));
-					os.write(("  " + lastTag + offset + eol).getBytes());
-					os.write(("    " + line.getStringValue() + eol).getBytes());
-					lineFirst = false;
-				}
-				for (MError error : errors) {
-					os.write(("    " + error.getText() + eol).getBytes());
-					++count;
+			MLineLocation location = new MLineLocation(lastTag, index);
+			if ((exemptions == null) || (! exemptions.contains(location))) {
+				List<MError> errors = line.getErrors();
+				boolean lineFirst = true;
+				if ((errors != null) && (errors.size() > 0)) {
+					if (first) {
+						os.write((eol + eol + this.name + eol).getBytes());
+						first = false;
+					}
+					if (lineFirst) {
+						String offset = (index == 0 ? "" : '+' + String.valueOf(index));
+						os.write(("  " + lastTag + offset + eol).getBytes());
+						os.write(("    " + line.getStringValue() + eol).getBytes());
+						lineFirst = false;
+					}
+					for (MError error : errors) {
+						os.write(("    " + error.getText() + eol).getBytes());
+						++count;
+					}
 				}
 			}
 			++index;

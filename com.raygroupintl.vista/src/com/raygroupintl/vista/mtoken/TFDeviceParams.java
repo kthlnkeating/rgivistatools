@@ -33,9 +33,13 @@ public class TFDeviceParams extends TFParallelCharBased {
 	protected ITokenFactory getFactory(char ch) {
 		ITokenFactory f = new TFDeviceParam(this.version);
 		if (ch == '(') {
-			return TFInParantheses.getInstance(TFDelimitedList.getInstance(f, ':'));
+			return TFDelimitedList.getInstance(f, ':', true, true);
 		} else {
 			return f;
 		}
+	}
+	
+	public static TFDeviceParams getInstance(MVersion version) {
+		return new TFDeviceParams(version);
 	}
 }

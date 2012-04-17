@@ -14,9 +14,10 @@ public class TFIndirectionTest {
 		TFCommonTest.validCheck(f, "@RCVAR@(Z,\"\")");
 		TFCommonTest.validCheck(f, "@RCVAR@(Z,\"*\")");
 		TFCommonTest.validCheck(f, "@CLIN@(0)");
-		TFCommonTest.validCheck(f, "@(\"PSBTAB\"_(FLD-1))");		
+		TFCommonTest.validCheck(f, "@(\"PSBTAB\"_(FLD-1))");
+		TFCommonTest.validCheck(f, "@SCLIST@(0)");
 	}
-
+	
 	@Test
 	public void test() {
 		test(MVersion.CACHE);

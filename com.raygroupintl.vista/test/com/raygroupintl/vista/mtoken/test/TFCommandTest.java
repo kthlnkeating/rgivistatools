@@ -63,6 +63,17 @@ public class TFCommandTest {
 		testIf(MVersion.ANSI_STD_95);
 	}
 
+	private void testJob(MVersion version) {
+		ITokenFactory f = TFCommand.getInstance(version);
+		TFCommonTest.validCheck(f, "JOB CHILDNT^XOBVTCPL():(:4:XOBIO:XOBIO):10");
+	}
+	
+	@Test
+	public void testJob() {
+		testJob(MVersion.CACHE);
+		testJob(MVersion.ANSI_STD_95);
+	}
+
 	private void testLock(MVersion version) {
 		ITokenFactory f = TFCommand.getInstance(version);
 		TFCommonTest.validCheck(f, "L -^PRCA(430,+$G(PRCABN),0)");
@@ -81,9 +92,21 @@ public class TFCommandTest {
 		testLock(MVersion.ANSI_STD_95);
 	}
 
+	private void testQuit(MVersion version) {
+		ITokenFactory f = TFCommand.getInstance(version);
+		TFCommonTest.validCheck(f, "Q @SCLIST@(0)>0");
+	}
+
+	@Test
+	public void testQuit() {
+		testQuit(MVersion.CACHE);
+		testQuit(MVersion.ANSI_STD_95);
+	}
+
 	private void testOpen(MVersion version) {
 		ITokenFactory f = TFCommand.getInstance(version);
 		TFCommonTest.validCheck(f, "O:$G(LOGICAL)]\"\" HLCSTATE(\"DEVICE\"):(TCPDEV:BLOCKSIZE=512):HLCSTATE(\"OPEN TIMEOUT\")");
+		TFCommonTest.validCheck(f, "OPEN XOBIO:(:XOBPORT:\"AT\"):30");
 	}	
 	
 	@Test

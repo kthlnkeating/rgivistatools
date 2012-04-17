@@ -24,6 +24,7 @@ public class TFExprTest {
 		TFCommonTest.validCheck(f, "LA7VAL?1(1N.E,1\".\".E)");
 		TFCommonTest.validCheck(f, "$D(@G)#10");
 		TFCommonTest.validCheck(f, "$O(^$ROUTINE(ROU))");
+		TFCommonTest.validCheck(f, "@SCLIST@(0)>0");
 	}
 
 	@Test

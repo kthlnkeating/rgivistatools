@@ -36,5 +36,12 @@ public abstract class TFChar implements ITokenFactory {
 		protected boolean isValid(char ch) {
 			return ch == ')';
 		}
-	};	
+	};
+	
+	public static final TFChar COLON = new TFChar() {		
+		@Override
+		protected boolean isValid(char ch) {
+			return ch == ':';
+		}
+	};
 }

@@ -205,7 +205,7 @@ public class TFCommand extends TFSerialBase {
 			ARGUMENT_FACTORIES.put("N", TFCommaDelimitedList.getInstance(n));		
 			
 			ARGUMENT_FACTORIES.put("O", TFCommaDelimitedList.getInstance(TFOpenArgument.getInstance(version))); 	
-			ARGUMENT_FACTORIES.put("Q", TFParallelCharBased.getInstance(TFExpr.getInstance(version), '@', TFIndirection.getInstance(version))); 	
+			ARGUMENT_FACTORIES.put("Q", TFExpr.getInstance(version)); 	
 			ARGUMENT_FACTORIES.put("R", TFCommaDelimitedList.getInstance(TFReadArgument.getInstance(version))); 	
 			ARGUMENT_FACTORIES.put("S", TFCommaDelimitedList.getInstance(TFSetArgument.getInstance(version))); 	
 			ARGUMENT_FACTORIES.put("U", TFCommaDelimitedList.getInstance(TFUseArgument.getInstance(version)));

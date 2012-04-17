@@ -4,6 +4,7 @@ import org.junit.Test;
 
 import com.raygroupintl.vista.mtoken.MVersion;
 import com.raygroupintl.vista.mtoken.TFActual;
+import com.raygroupintl.vista.mtoken.TFDeviceParams;
 import com.raygroupintl.vista.mtoken.TFExprItem;
 import com.raygroupintl.vista.mtoken.TFGvn;
 import com.raygroupintl.vista.mtoken.TFGvnAll;
@@ -78,5 +79,16 @@ public class TFTest {
 	public void testTFExprItem() {
 		testTFExprItem(MVersion.CACHE);
 		testTFExprItem(MVersion.ANSI_STD_95);		
+	}
+
+	public void TFDeviceParams(MVersion version) {
+		TFDeviceParams f = TFDeviceParams.getInstance(version);
+		TFCommonTest.validCheck(f, "(:XOBPORT:\"AT\")");
+	}
+	
+	@Test
+	public void testTFDeviceParams() {
+		TFDeviceParams(MVersion.CACHE);
+		TFDeviceParams(MVersion.ANSI_STD_95);		
 	}
 }

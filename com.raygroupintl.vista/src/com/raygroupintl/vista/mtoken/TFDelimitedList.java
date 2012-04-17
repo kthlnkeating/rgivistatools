@@ -4,6 +4,8 @@ import com.raygroupintl.vista.fnds.IToken;
 import com.raygroupintl.vista.fnds.ITokenFactory;
 import com.raygroupintl.vista.token.TFAllRequired;
 import com.raygroupintl.vista.token.TFConstChar;
+import com.raygroupintl.vista.token.TFEmpty;
+import com.raygroupintl.vista.token.TFParallelCharBased;
 import com.raygroupintl.vista.token.TFSerialRO;
 import com.raygroupintl.vista.token.TList;
 
@@ -61,4 +63,14 @@ public abstract class TFDelimitedList extends TFSerialRO {
 			return fList;
 		}
 	}
+
+	public static ITokenFactory getInstance(final ITokenFactory f, final char ch, final boolean inParan, boolean optional) {
+		if (optional) {
+			ITokenFactory fOptional = TFParallelCharBased.getInstance(f, ch, TFEmpty.getInstance(ch), ')', TFEmpty.getInstance(')'));
+			return getInstance(fOptional, ch, inParan);
+		} else {
+			return getInstance(f, ch, inParan);
+		}
+	}
+
 }
