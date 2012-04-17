@@ -55,4 +55,36 @@ public class ErrorExemptions {
 	public Set<MLineLocation> getLines(String routine) {
 		return this.lines.get(routine);
 	}
+	
+	public static ErrorExemptions getVistAFOIAInstance() {
+		ErrorExemptions r = new ErrorExemptions();
+		r.addLine("ANRVRRL", "BEGIN", 3);
+		r.addLine("ANRVRRL", "A1R", 2);
+		r.addLine("DINVMSM", "T0", 2);
+		r.addLine("DINVMSM", "T1", 2);
+		r.addLine("ZOSVMSM", "T0", 2);
+		r.addLine("ZOSVMSM", "T1", 2);
+		r.addLine("MUSMCR3", "BEG", 2);
+		r.addLine("MUSMCR3", "BEG", 6);
+		r.addLine("MUSMCR1", "EN11", 3);
+		r.addLine("DENTA14", "P1", 0);
+		r.addLine("HLOTCP", "RETRY", 8);
+		r.addLine("HLOTCP", "RETRY", 9);
+		r.addLine("HLOTCP", "RETRY", 14);
+		r.addLine("RGUTRRC", "JOBIT", 2);
+		r.addLine("ZISHMSU", "OPEN", 9);
+		r.addLine("ZISG3", "SUBITEM", 4);
+		r.addLine("PRCBR1", "LOCK", 1);
+		r.addLine("ZISTCP", "CVXD", 2);
+		r.addLine("ZOSVKRV", "JT", 11);
+		r.addLine("ZTMB", "RESTART", 21);
+		r.addLine("LEXAR7", "MAILQ", 1);
+		r.addLine("XMRTCP", "SOC25", 3);
+		r.addLine("ORRDI2", "TCOLD", 6);
+		r.addLine("PSSFDBRT", "POST", 21);
+		r.addLine("PSSHTTP", "PEPSPOST", 26);
+		r.addLine("PSSHTTP", "PEPSPOST", 34);
+		r.addRoutine("PSORELD1");
+		return r;
+	}
 }

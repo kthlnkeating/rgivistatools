@@ -1,14 +1,12 @@
 package com.raygroupintl.vista.mtoken;
 
 import java.io.IOException;
-import java.io.InputStream;
 import java.io.OutputStream;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Scanner;
 import java.util.Set;
 
 import com.raygroupintl.vista.fnds.IToken;
@@ -138,32 +136,5 @@ public class TRoutine extends TBase {
 			}
 		}
 		Files.write(path, fileLines, StandardCharsets.UTF_8);
-	}
-	
-	
-	private static TRoutine getInstance(MVersion version, String fileName, Scanner scanner) {
-		TRoutine result = new TRoutine(fileName);
-		TFLine f = TFLine.getInstance(version);
-		while (scanner.hasNextLine()) {
-			String line = scanner.nextLine();
-			TLine tokens = (TLine) f.tokenize(line, 0);
-			result.lines.add(tokens);
-		}
-		return result;				
-	}
-	
-	public static TRoutine getInstance(MVersion version, String fileName, InputStream is) {
-		Scanner scanner = new Scanner(is);
-		TRoutine result = getInstance(version, fileName, scanner);
-		scanner.close();
-		return result;				
-	}
-	
-	public static TRoutine getInstance(MVersion version, Path file) throws IOException {
-		String fileName = file.getFileName().toString();
-		Scanner scanner = new Scanner(file);
-		TRoutine result = getInstance(version, fileName, scanner);
-		scanner.close();
-		return result;		
 	}
 }

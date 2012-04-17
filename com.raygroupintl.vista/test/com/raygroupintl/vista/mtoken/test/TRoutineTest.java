@@ -9,6 +9,7 @@ import org.junit.Test;
 import com.raygroupintl.vista.fnds.IToken;
 import com.raygroupintl.vista.mtoken.MVersion;
 import com.raygroupintl.vista.mtoken.TFLine;
+import com.raygroupintl.vista.mtoken.TFRoutine;
 import com.raygroupintl.vista.mtoken.TLine;
 import com.raygroupintl.vista.mtoken.TRoutine;
 
@@ -70,7 +71,8 @@ public class TRoutineTest {
 	public void testNonErrorFiles(MVersion version) {
 		String fileName = "resource/XRGITST0.m";
 		InputStream is = this.getClass().getResourceAsStream(fileName);
-		TRoutine r = TRoutine.getInstance(version, "XRGITST0.m", is);
+		TFRoutine tf = TFRoutine.getInstance(version);
+		TRoutine r = tf.tokenize("XRGITST0.m", is);
 		Assert.assertFalse("Unexpected error: " + fileName, r.hasError() || r.hasFatalError());	
 	}	
 
