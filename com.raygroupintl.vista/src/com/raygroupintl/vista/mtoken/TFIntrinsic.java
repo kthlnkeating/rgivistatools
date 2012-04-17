@@ -10,11 +10,15 @@ import com.raygroupintl.vista.fnds.ITokenFactorySupply;
 import com.raygroupintl.vista.struct.MError;
 import com.raygroupintl.vista.struct.MNameWithMnemonic;
 import com.raygroupintl.vista.token.TArray;
+import com.raygroupintl.vista.token.TChar;
 import com.raygroupintl.vista.token.TFAllRequired;
 import com.raygroupintl.vista.token.TFChar;
 import com.raygroupintl.vista.token.TFConstChar;
+import com.raygroupintl.vista.token.TFEmpty;
+import com.raygroupintl.vista.token.TFParallelCharBased;
 import com.raygroupintl.vista.token.TFSerialBase;
 import com.raygroupintl.vista.token.TFSerialRO;
+import com.raygroupintl.vista.token.TFSerialROO;
 import com.raygroupintl.vista.token.TFSerialRRO;
 import com.raygroupintl.vista.token.TFSyntaxError;
 import com.raygroupintl.vista.token.TPair;
@@ -197,12 +201,23 @@ public class TFIntrinsic extends TFSerialBase {
 		addFunction(version, "WTFIT", 6, 6);
 		addFunction(version, "WTWIDTH", 5, 5);
 
+		if (version == MVersion.CACHE) {
+			FunctionInfo c = addFunction(version, "CASE", 1, Integer.MAX_VALUE);
+			ITokenFactory expr = TFExpr.getInstance(version);
+			ITokenFactory ci = TFAllRequired.getInstance(TFParallelCharBased.getInstance(expr, ':', TFEmpty.getInstance(':')), TFConstChar.getInstance(':'), expr);
+			ITokenFactory cases =  TFAllRequired.getInstance(TFChar.COMMA, TFDelimitedList.getInstance(ci, ','));
+			//ITokenFactory d = TFAllRequired.getInstance(TFChar.COMMA, TFChar.COLON,  expr);
+			ITokenFactory arg = TFAllRequired.getInstance(expr,  cases);
+			c.setArgumentFactory(arg);
+		}
+		
 		TFIntrinsic.addVariable("ZA");
 		TFIntrinsic.addVariable("ZB");
 		TFIntrinsic.addVariable("ZC");
 		TFIntrinsic.addVariable("ZE");
 		TFIntrinsic.addVariable("ZH");
 		TFIntrinsic.addVariable("ZJ");
+		TFIntrinsic.addVariable("ZJOB");	
 		TFIntrinsic.addVariable("ZR");
 		TFIntrinsic.addVariable("ZT");
 		TFIntrinsic.addVariable("ZV");
@@ -221,6 +236,8 @@ public class TFIntrinsic extends TFSerialBase {
 		TFIntrinsic.addVariable("ZERROR");
 		TFIntrinsic.addVariable("ZCMDLINE");
 		TFIntrinsic.addVariable("ZPOSITION");
+		TFIntrinsic.addFunction(version, "ZBITGET");
+		TFIntrinsic.addFunction(version, "ZBN");
 		TFIntrinsic.addFunction(version, "ZC");
 		TFIntrinsic.addFunction(version, "ZF");
 		TFIntrinsic.addFunction(version, "ZJ");
@@ -247,6 +264,9 @@ public class TFIntrinsic extends TFSerialBase {
 		TFIntrinsic.addFunction(version, "ZGETJPI");
 		TFIntrinsic.addFunction(version, "ZGETSYI");
 		TFIntrinsic.addFunction(version, "ZUTIL");	
+		TFIntrinsic.addFunction(version, "ZK");	
+		TFIntrinsic.addFunction(version, "ZWA");
+		TFIntrinsic.addFunction(version, "ZVERSION");
 	}
 
 	private static class TIntrinsicFunctionName extends TIntrinsicName {

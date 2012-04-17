@@ -72,6 +72,7 @@ public class MRoutineAnalyzer {
 		TFCommand.addCommand("ESTART");
 		TFCommand.addCommand("ESTOP");
 		TFCommand.addCommand("ABORT");
+		TFCommand.addCommand("ZRELPAGE");
 		TFCommand.addCommand("ZSYSTEM");
 		TFCommand.addCommand("ZLINK");		
 		TFCommand.addCommand("ZESCAPE");
@@ -94,11 +95,24 @@ public class MRoutineAnalyzer {
 		exemptions.addLine("ZOSVMSM", "T1", 2);
 		exemptions.addLine("MUSMCR3", "BEG", 2);
 		exemptions.addLine("MUSMCR3", "BEG", 6);
+		exemptions.addLine("MUSMCR1", "EN11", 3);
 		exemptions.addLine("DENTA14", "P1", 0);
 		exemptions.addLine("HLOTCP", "RETRY", 8);
 		exemptions.addLine("HLOTCP", "RETRY", 9);
 		exemptions.addLine("HLOTCP", "RETRY", 14);
 		exemptions.addLine("RGUTRRC", "JOBIT", 2);
+		exemptions.addLine("ZISHMSU", "OPEN", 9);
+		exemptions.addLine("ZISG3", "SUBITEM", 4);
+		exemptions.addLine("PRCBR1", "LOCK", 1);
+		exemptions.addLine("ZISTCP", "CVXD", 2);
+		exemptions.addLine("ZOSVKRV", "JT", 11);
+		exemptions.addLine("ZTMB", "RESTART", 21);
+		exemptions.addLine("LEXAR7", "MAILQ", 1);
+		exemptions.addLine("XMRTCP", "SOC25", 3);
+		exemptions.addLine("ORRDI2", "TCOLD", 6);
+		exemptions.addLine("PSSFDBRT", "POST", 21);
+		exemptions.addLine("PSSHTTP", "PEPSPOST", 26);
+		exemptions.addLine("PSSHTTP", "PEPSPOST", 34);
 		exemptions.addRoutine("PSORELD1");
 		
 		m.writeErrors(version, exemptions, outputFile);		

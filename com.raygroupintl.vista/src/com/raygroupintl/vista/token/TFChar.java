@@ -65,4 +65,11 @@ public abstract class TFChar implements ITokenFactory {
 			return ch == '/';
 		}
 	};
+
+	public static final TFChar COMMA = new TFChar() {		
+		@Override
+		protected boolean isValid(char ch) {
+			return ch == ',';
+		}
+	};
 }

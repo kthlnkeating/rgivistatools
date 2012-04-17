@@ -123,6 +123,7 @@ public class TFCommandTest {
 		TFCommonTest.validCheck(f, "U $I:(VT=1:ESCAPE=1)");
 		TFCommonTest.validCheck(f, "U $I:(:\"CT\")");
 		TFCommonTest.validCheck(f, "U $I:(ESCAPE)");
+		TFCommonTest.validCheck(f, "U 56::\"TCP\"");
 	}
 
 	@Test

@@ -18,6 +18,7 @@ public class TFIntrinsicTest {
 		if (version == MVersion.CACHE) {
 			TFCommonTest.validCheck(f, "$SYSTEM.Util.GetEnviron(\"SSH_CLIENT\")");					
 			TFCommonTest.validCheck(f, "$SYSTEM.Util.GetEnviron()");					
+			TFCommonTest.validCheck(f, "$CASE(%ZTBKBIG,0:$V(2040,0,\"3O\"),:$V($ZUTIL(40,32,4),0,4))");					
 		}
 	}
 

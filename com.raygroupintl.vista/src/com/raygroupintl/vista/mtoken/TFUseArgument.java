@@ -6,6 +6,7 @@ import com.raygroupintl.vista.token.TFConstChar;
 import com.raygroupintl.vista.token.TFEmpty;
 import com.raygroupintl.vista.token.TFParallelCharBased;
 import com.raygroupintl.vista.token.TFSerialRO;
+import com.raygroupintl.vista.token.TFSerialROO;
 
 public class TFUseArgument extends TFParallelCharBased {
 	private MVersion version;
@@ -48,6 +49,8 @@ public class TFUseArgument extends TFParallelCharBased {
 			ITokenFactory f = new TFUseDeviceParam(this.version);
 			if (ch == '(') {
 				return TFInParantheses.getInstance(TFDelimitedList.getInstance(f, ':'));
+			} else if (ch == ':') {
+				return TFEmpty.getInstance(':'); 
 			} else {
 				return f;
 			}
@@ -74,7 +77,9 @@ public class TFUseArgument extends TFParallelCharBased {
 		if (ch == '@') {
 			return TFIndirection.getInstance(this.version);
 		} else {
-			return TFSerialRO.getInstance(TFExpr.getInstance(this.version), TFAllRequired.getInstance(TFConstChar.getInstance(':'), TFUseDeviceParams.getInstance(this.version)));
+			return TFSerialROO.getInstance(TFExpr.getInstance(this.version), 
+					TFAllRequired.getInstance(TFConstChar.getInstance(':'), TFUseDeviceParams.getInstance(this.version)),
+					TFAllRequired.getInstance(TFConstChar.getInstance(':'), TFUseDeviceParams.getInstance(this.version)));
 		}
 	}
 	

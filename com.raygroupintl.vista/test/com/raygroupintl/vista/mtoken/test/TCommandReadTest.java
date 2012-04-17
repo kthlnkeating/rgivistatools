@@ -10,6 +10,7 @@ public class TCommandReadTest {
 	public void test(MVersion version) {
 		ITokenFactory f = TFCommand.getInstance(version);
 		TFCommonTest.validCheck(f, "R !,\"Select DEBTOR NAME or BILL NUMBER: \",X:DTIME");
+		TFCommonTest.validCheck(f, "R !,\"ANSWER= \",@YSR1:300");
 	}
 
 	@Test
