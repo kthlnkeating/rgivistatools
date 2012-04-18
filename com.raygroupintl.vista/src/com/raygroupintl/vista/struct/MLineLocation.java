@@ -9,6 +9,14 @@ public class MLineLocation {
 		this.offset = offset;
 	}
 	
+	public String getTag() {
+		return this.tag;
+	}
+	
+	public int getOffset() {
+		return this.offset;
+	}
+	
 	@Override
 	public boolean equals(Object rhs) {
 		if ((rhs != null) && (rhs instanceof MLineLocation)) {	

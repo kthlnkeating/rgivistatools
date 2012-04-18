@@ -67,7 +67,7 @@ public class TFSetArgument extends TFSerial {
 				TFSetDestination.getInstance(this.version), 
 				TFConstChar.getInstance('='), 
 				(this.version == MVersion.CACHE) ? TFParallelCharBased.getInstance(expr, '#', TFCacheClassMethod.getInstance()) : expr
-			}; 
+		}; 
 	}
 
 	@Override

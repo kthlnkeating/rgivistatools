@@ -12,6 +12,7 @@ import java.util.Set;
 import com.raygroupintl.vista.fnds.IToken;
 import com.raygroupintl.vista.struct.MError;
 import com.raygroupintl.vista.struct.MLineLocation;
+import com.raygroupintl.vista.struct.MLocationedError;
 import com.raygroupintl.vista.token.TBase;
 
 public class TRoutine extends TBase {
@@ -86,13 +87,11 @@ public class TRoutine extends TBase {
 			os.write(seperator.getBytes());
 		}		
 	}
-		
-	public int writeErrors(OutputStream os, Set<MLineLocation> exemptions) throws IOException {
-		String eol = getEOL();
+
+	public List<MLocationedError> getErrors(Set<MLineLocation> exemptions) throws IOException {
 		String lastTag = this.name;
-		int count = 0;
 		int index = 0;
-		boolean first = true;
+		List<MLocationedError> result = new ArrayList<MLocationedError>();
 		for (TLine line : this.lines) {
 			String tag = line.getTag();
 			if (tag != null) {
@@ -102,29 +101,18 @@ public class TRoutine extends TBase {
 			MLineLocation location = new MLineLocation(lastTag, index);
 			if ((exemptions == null) || (! exemptions.contains(location))) {
 				List<MError> errors = line.getErrors();
-				boolean lineFirst = true;
 				if ((errors != null) && (errors.size() > 0)) {
-					if (first) {
-						os.write((eol + eol + this.name + eol).getBytes());
-						first = false;
-					}
-					if (lineFirst) {
-						String offset = (index == 0 ? "" : '+' + String.valueOf(index));
-						os.write(("  " + lastTag + offset + eol).getBytes());
-						os.write(("    " + line.getStringValue() + eol).getBytes());
-						lineFirst = false;
-					}
 					for (MError error : errors) {
-						os.write(("    " + error.getText() + eol).getBytes());
-						++count;
+						MLocationedError p = new MLocationedError(error, location);
+						result.add(p);
 					}
 				}
 			}
 			++index;
 		}		
-		return count;
-	}
-		
+		return result;
+	}	
+	
 	public void write(Path path) throws IOException {
 		List<String> fileLines = new ArrayList<String>();
 		for (IToken line : this.lines) {

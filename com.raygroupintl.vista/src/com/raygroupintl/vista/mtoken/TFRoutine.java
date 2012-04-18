@@ -1,9 +1,6 @@
 package com.raygroupintl.vista.mtoken;
 
-import java.io.IOException;
-import java.io.InputStream;
-import java.nio.file.Path;
-import java.util.Scanner;
+import com.raygroupintl.vista.struct.MRoutineContent;
 
 public class TFRoutine {
 	private TFLine tfLine;
@@ -12,29 +9,14 @@ public class TFRoutine {
 		this.tfLine = TFLine.getInstance(version);
 	}
 	
-	private TRoutine tokenize(String fileName, Scanner scanner) {
-		TRoutine result = new TRoutine(fileName);
-		while (scanner.hasNextLine()) {
-			String line = scanner.nextLine();
+	public TRoutine tokenize(MRoutineContent content) {
+		String name = content.getName();
+		TRoutine result = new TRoutine(name);
+		for (String line : content.getLines()) {
 			TLine tokens = (TLine) this.tfLine.tokenize(line, 0);
-			result.add(tokens);
-		}
-		return result;				
-	}
-
-	public TRoutine tokenize(String fileName, InputStream is) {
-		Scanner scanner = new Scanner(is);
-		TRoutine result = this.tokenize(fileName, scanner);
-		scanner.close();
-		return result;				
-	}
-
-	public TRoutine tokenize(Path path) throws IOException {
-		String fileName = path.getFileName().toString();
-		Scanner scanner = new Scanner(path);
-		TRoutine result = this.tokenize(fileName, scanner);
-		scanner.close();
-		return result;		
+			result.add(tokens);			
+		}		
+		return result;
 	}
 	
 	public static TFRoutine getInstance(MVersion version) {

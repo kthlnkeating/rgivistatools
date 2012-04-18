@@ -12,6 +12,7 @@ import com.raygroupintl.vista.mtoken.TFLine;
 import com.raygroupintl.vista.mtoken.TFRoutine;
 import com.raygroupintl.vista.mtoken.TLine;
 import com.raygroupintl.vista.mtoken.TRoutine;
+import com.raygroupintl.vista.struct.MRoutineContent;
 
 public class TRoutineTest {
 	public void testBeautify(MVersion version) {
@@ -72,7 +73,8 @@ public class TRoutineTest {
 		String fileName = "resource/XRGITST0.m";
 		InputStream is = this.getClass().getResourceAsStream(fileName);
 		TFRoutine tf = TFRoutine.getInstance(version);
-		TRoutine r = tf.tokenize("XRGITST0.m", is);
+		MRoutineContent content = MRoutineContent.getInstance(fileName.split(".m")[0], is);
+		TRoutine r = tf.tokenize(content);
 		Assert.assertFalse("Unexpected error: " + fileName, r.hasError() || r.hasFatalError());	
 	}	
 
