@@ -18,7 +18,7 @@ public class TFIndirection extends TFSerialRO {
 		
 	@Override
 	protected ITokenFactory getRequired() {
-		return TFAllRequired.getInstance(TFConstChar.getInstance('@'), TFExprAtom.getInstance(this.version));
+		return TFAllRequired.getInstance(TFConstChar.getInstance('@'), MTFSupply.getInstance(this.version).getTFExprAtom());
 	}
 	
 	@Override

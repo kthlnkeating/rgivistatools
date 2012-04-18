@@ -6,7 +6,7 @@ import com.raygroupintl.vista.fnds.ITokenFactorySupply;
 import com.raygroupintl.vista.token.TFAllRequired;
 import com.raygroupintl.vista.token.TFConstChar;
 import com.raygroupintl.vista.token.TFNull;
-import com.raygroupintl.vista.token.TFParallel;
+import com.raygroupintl.vista.token.TFChoice;
 import com.raygroupintl.vista.token.TFSerialBase;
 import com.raygroupintl.vista.token.TFSerialOR;
 
@@ -20,7 +20,7 @@ public class TFGotoArgument extends TFSerialBase {
 	private static ITokenFactory getFactory0(IToken[] previousTokens, final MVersion version) {
 		TFLabel tfl = TFLabel.getInstance();
 		TFIndirection tfi = TFIndirection.getInstance(version);
-		TFParallel tf = TFParallel.getInstance(tfl, tfi);
+		TFChoice tf = TFChoice.getInstance(tfl, tfi);
 		return tf; 
 	}
 	
@@ -47,7 +47,7 @@ public class TFGotoArgument extends TFSerialBase {
 			ITokenFactory tfName = TFName.getInstance();
 			ITokenFactory tfEnvName = TFSerialOR.getInstance(tfEnv, tfName);
 			ITokenFactory tfInd = TFIndirection.getInstance(version);
-			return TFParallel.getInstance(tfEnvName, tfInd);
+			return TFChoice.getInstance(tfEnvName, tfInd);
 		}
 	}
 

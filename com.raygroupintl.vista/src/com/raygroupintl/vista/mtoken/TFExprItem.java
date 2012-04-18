@@ -34,7 +34,7 @@ public class TFExprItem extends TFParallelCharBased {
 		}
 				
 		protected ITokenFactory[] getFactories() {
-			return new ITokenFactory[]{new TFConstChars("+-\'"), TFExprAtom.getInstance(this.version)};
+			return new ITokenFactory[]{new TFConstChars("+-\'"), MTFSupply.getInstance(this.version).getTFExprAtom()};
 		}		
 	}
 	

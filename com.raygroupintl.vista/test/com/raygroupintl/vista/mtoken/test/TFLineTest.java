@@ -11,7 +11,7 @@ import com.raygroupintl.vista.mtoken.MVersion;
 import com.raygroupintl.vista.mtoken.TFLine;
 import com.raygroupintl.vista.struct.MError;
 
-public class TLineTest0 {
+public class TFLineTest {
 	private IToken lineTest(MVersion version, String line, boolean errorAsWell) {
 		TFLine f = TFLine.getInstance(version);
 		IToken t = f.tokenize(line, 0);

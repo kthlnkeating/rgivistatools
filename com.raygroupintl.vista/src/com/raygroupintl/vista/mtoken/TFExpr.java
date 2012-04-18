@@ -34,7 +34,7 @@ public class TFExpr extends TFSerialRO {
 					if (value.charAt(value.length()-1) == '?') {
 						return TFPattern.getInstance(TFExprTail.this.version);
 					} else {
-						return TFExprAtom.getInstance(TFExprTail.this.version);
+						return MTFSupply.getInstance((TFExprTail.this.version)).getTFExprAtom();
 					}
 				}
 				
@@ -82,9 +82,9 @@ public class TFExpr extends TFSerialRO {
 	@Override
 	protected ITokenFactory getRequired() {
 		if (this.version == MVersion.CACHE) {
-			return TFParallelCharBased.getInstance(TFExprAtom.getInstance(this.version), '#', TFCacheClassMethod.getInstance());
+			return TFParallelCharBased.getInstance(MTFSupply.getInstance(this.version).getTFExprAtom(), '#', TFCacheClassMethod.getInstance());
 		} else {
-			return TFExprAtom.getInstance(this.version);
+			return MTFSupply.getInstance(this.version).getTFExprAtom();
 		}
 	}
 	

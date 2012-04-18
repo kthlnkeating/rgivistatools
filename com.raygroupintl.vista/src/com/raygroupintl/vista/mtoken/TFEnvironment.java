@@ -19,7 +19,7 @@ public class TFEnvironment extends TFParallelCharBased {
 			return TFAllRequired.getInstance(d, TFExpr.getInstance(this.version), d);
 		} else if (ch == '[') {
 			ITokenFactory l = new TFConstChar('[');
-			ITokenFactory f = TFCommaDelimitedList.getInstance(TFExprAtom.getInstance(this.version), ',');
+			ITokenFactory f = TFCommaDelimitedList.getInstance(MTFSupply.getInstance(this.version).getTFExprAtom(), ',');
 			ITokenFactory r = new TFConstChar(']');			
 			return TFAllRequired.getInstance(l, f, r);
 		} else {

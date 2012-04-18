@@ -10,7 +10,7 @@ import org.junit.runners.Suite.SuiteClasses;
 		TFActualListTest.class, TFCommandTest.class,
 		TFDelimitedListTest.class, TFExprTest.class,
 		TFIndirectionTest.class, TFIntrinsicTest.class, TFNumLitTest.class,
-		TFPatternTest.class, TFTest.class, TLineTest0.class, TRoutineTest.class })
+		TFPatternTest.class, TFTest.class, TFLineTest.class, TRoutineTest.class })
 public class LocalTests {
 
 }

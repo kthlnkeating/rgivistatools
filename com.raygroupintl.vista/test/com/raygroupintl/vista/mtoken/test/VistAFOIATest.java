@@ -5,7 +5,6 @@ import static org.junit.Assert.fail;
 import java.nio.file.Path;
 import java.util.List;
 import java.util.Set;
-import java.util.logging.Logger;
 
 import org.junit.Test;
 
@@ -19,13 +18,10 @@ import com.raygroupintl.vista.struct.MLineLocation;
 import com.raygroupintl.vista.struct.MLocationedError;
 import com.raygroupintl.vista.struct.MRoutineContent;
 import com.raygroupintl.vista.tools.ErrorExemptions;
-import com.raygroupintl.vista.tools.MRoutineAnalyzer;
 
 import junit.framework.Assert;
 
-public class TLineTest1 {
-	private final static Logger LOGGER = Logger.getLogger(MRoutineAnalyzer.class.getName());
-
+public class VistAFOIATest {
 	@Test
 	public void testAll() {
 		final TFRoutine tf = TFRoutine.getInstance(MVersion.CACHE);
@@ -40,10 +36,7 @@ public class TLineTest1 {
 					List<TLine> results = r.asList();
 					int count = results.size();
 					Assert.assertEquals(lines.size(), count);
-					//if (! path.getFileName().toString().equals("ZIS4ONT.m")) return;
-					LOGGER.info(path.getFileName().toString());
 					for (int i=0; i<count; ++i) {
-						//LOGGER.info(">>> " + line);
 						String line = lines.get(i);
 						TLine result = results.get(i);
 						String readLine = result.getStringValue();

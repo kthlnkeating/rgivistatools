@@ -8,7 +8,7 @@ import com.raygroupintl.vista.token.TFChar;
 import com.raygroupintl.vista.token.TFConstChar;
 import com.raygroupintl.vista.token.TFConstString;
 import com.raygroupintl.vista.token.TFNull;
-import com.raygroupintl.vista.token.TFParallel;
+import com.raygroupintl.vista.token.TFChoice;
 import com.raygroupintl.vista.token.TFParallelCharBased;
 import com.raygroupintl.vista.token.TFSerialBase;
 import com.raygroupintl.vista.token.TFSerialOR;
@@ -36,7 +36,7 @@ public class TFDoArgument extends TFSerialBase {
 			ITokenFactory f = TFSerialRO.getInstance(tfl, TFAllRequired.getInstance(TFChar.DOT, TFName.getInstance()));
 			return TFParallelCharBased.getInstance(f, '@', tfi, '#', TFCacheClassMethod.getInstance(), '$', getCacheSystemCall());
 		} else {		
-			TFParallel tf = TFParallel.getInstance(tfl, tfi);
+			TFChoice tf = TFChoice.getInstance(tfl, tfi);
 			return tf;
 		}
 	}
@@ -81,7 +81,7 @@ public class TFDoArgument extends TFSerialBase {
 			//ITokenFactory tfName = TFName.getInstance();
 			ITokenFactory tfEnvName = getRoutineSpecification(version); //TFSerialOR.getInstance(tfEnv, tfName);
 			ITokenFactory tfInd = TFIndirection.getInstance(version);
-			return TFParallel.getInstance(tfEnvName, tfInd);
+			return TFChoice.getInstance(tfEnvName, tfInd);
 		}
 	}
 
