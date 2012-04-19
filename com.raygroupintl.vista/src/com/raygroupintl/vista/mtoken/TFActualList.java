@@ -16,7 +16,7 @@ public class TFActualList extends TFSerialROR {
 	@Override
 	protected ITokenFactory[] getFactories() {
 		TFConstChar lp = TFConstChar.getInstance('(');
-		TFDelimitedList al = TFDelimitedList.getInstance(TFActual.getInstance(this.version), ',');
+		TFDelimitedList al = TFDelimitedList.getInstance(MTFSupply.getInstance(this.version).getTFActual(), ',');
 		TFConstChar rp = TFConstChar.getInstance(')');
 		return new ITokenFactory[]{lp, al, rp};
 	}

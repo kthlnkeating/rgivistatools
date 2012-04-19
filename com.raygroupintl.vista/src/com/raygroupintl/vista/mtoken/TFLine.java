@@ -2,11 +2,14 @@ package com.raygroupintl.vista.mtoken;
 
 import java.util.Arrays;
 
+import com.raygroupintl.struct.CharPredicate;
+import com.raygroupintl.struct.LetterPredicate;
+import com.raygroupintl.vista.fnds.ICharPredicate;
 import com.raygroupintl.vista.fnds.IToken;
 import com.raygroupintl.vista.fnds.ITokenFactory;
+import com.raygroupintl.vista.token.ChoiceSupply;
 import com.raygroupintl.vista.token.TFBasic;
 import com.raygroupintl.vista.token.TFConstChars;
-import com.raygroupintl.vista.token.TFParallelCharBased;
 import com.raygroupintl.vista.token.TFSerial;
 import com.raygroupintl.vista.token.TFSyntaxError;
 import com.raygroupintl.vista.token.TSyntaxError;
@@ -26,27 +29,9 @@ public class TFLine extends TFSerial {
 		return TFInParantheses.getInstance(arguments, false);		
 	}
 			
-	private static class TFCommandOrComment extends TFParallelCharBased {
-		private MVersion version;
-		
-		private TFCommandOrComment(MVersion version) {
-			this.version = version;
-		}
-
-		@Override
-		protected ITokenFactory getFactory(char ch) {
-			if (Library.isIdent(ch)) {
-				return TFCommand.getInstance(this.version);
-			} else if (ch == ';') {
-				return new TFComment();
-			} else {
-				return new TFSyntaxError();
-			}
-		}		
-	}
-	
 	private static ITokenFactory getTFCommands(MVersion version) {
-		ITokenFactory f = new TFCommandOrComment(version);
+		ICharPredicate[] preds = {new LetterPredicate(), new CharPredicate(';')};
+		ITokenFactory f = ChoiceSupply.get(TFSyntaxError.getInstance(), preds, TFCommand.getInstance(version), new TFComment());
 		return TFList.getInstance(f);
 	}
  	

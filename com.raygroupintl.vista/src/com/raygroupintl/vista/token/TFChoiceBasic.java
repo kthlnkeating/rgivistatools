@@ -3,21 +3,24 @@ package com.raygroupintl.vista.token;
 import com.raygroupintl.vista.fnds.IToken;
 import com.raygroupintl.vista.fnds.ITokenFactory;
 
-public abstract class TFChoice implements ITokenFactory {
-	protected abstract ITokenFactory getFactory(char ch);
+class TFChoiceBasic implements ITokenFactory {
+	private ITokenFactory[] factories;
+	
+	public TFChoiceBasic(ITokenFactory[] factories) {
+		this.factories = factories;
+	}
 	
 	@Override
 	public IToken tokenize(String line, int fromIndex) {
 		int endIndex = line.length();
 		if (fromIndex < endIndex) {
-			char ch = line.charAt(fromIndex);			
-			ITokenFactory f = this.getFactory(ch);
-			if (f != null) {
+			for (ITokenFactory f : this.factories) {
 				IToken result = f.tokenize(line, fromIndex);
-				return result;
+				if (result != null) {
+					return result;
+				}
 			}
 		}
 		return null;
-	}
-
+	}		
 }

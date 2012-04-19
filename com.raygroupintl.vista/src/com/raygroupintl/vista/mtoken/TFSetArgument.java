@@ -4,7 +4,7 @@ import com.raygroupintl.vista.fnds.IToken;
 import com.raygroupintl.vista.fnds.ITokenFactory;
 import com.raygroupintl.vista.token.ChoiceSupply;
 import com.raygroupintl.vista.token.TFConstChar;
-import com.raygroupintl.vista.token.TFParallelCharBased;
+import com.raygroupintl.vista.token.TFChoice;
 import com.raygroupintl.vista.token.TFSerial;
 
 public class TFSetArgument extends TFSerial {
@@ -14,7 +14,7 @@ public class TFSetArgument extends TFSerial {
 		this.version = version;
 	}
 		
-	private static class TFSetLeft extends TFParallelCharBased {
+	private static class TFSetLeft extends TFChoice {
 		private MVersion version;
 		
 		private TFSetLeft(MVersion version) {
@@ -29,7 +29,7 @@ public class TFSetArgument extends TFSerial {
 			case '@':
 				return TFIndirection.getInstance(this.version);
 			default:
-				return TFGlvn.getInstance(this.version);
+				return MTFSupply.getInstance(version).getTFGlvn();
 			}
 		}
 		
@@ -38,7 +38,7 @@ public class TFSetArgument extends TFSerial {
 		}
 	}
 
-	private static class TFSetDestination extends TFParallelCharBased {
+	private static class TFSetDestination extends TFChoice {
 		private MVersion version;
 		
 		private TFSetDestination(MVersion version) {

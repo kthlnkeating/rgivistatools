@@ -5,10 +5,10 @@ import com.raygroupintl.vista.token.TFAllOptional;
 import com.raygroupintl.vista.token.TFAllRequired;
 import com.raygroupintl.vista.token.ChoiceSupply;
 import com.raygroupintl.vista.token.TFConstChar;
-import com.raygroupintl.vista.token.TFParallelCharBased;
+import com.raygroupintl.vista.token.TFChoice;
 import com.raygroupintl.vista.token.TFSerialRO;
 
-public class TFOpenArgument extends TFParallelCharBased {
+public class TFOpenArgument extends TFChoice {
 	private MVersion version;
 	
 	private TFOpenArgument(MVersion version) {

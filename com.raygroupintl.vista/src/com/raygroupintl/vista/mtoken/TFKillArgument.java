@@ -1,16 +1,16 @@
 package com.raygroupintl.vista.mtoken;
 
 import com.raygroupintl.vista.fnds.ITokenFactory;
-import com.raygroupintl.vista.token.TFParallelCharBased;
+import com.raygroupintl.vista.token.TFChoice;
 
-public class TFKillArgument extends TFParallelCharBased {
+public class TFKillArgument extends TFChoice {
 	private MVersion version;
 	
 	private TFKillArgument(MVersion version) {
 		this.version = version;
 	}
 	
-	private static class TFExclusiveArgument extends TFParallelCharBased {
+	private static class TFExclusiveArgument extends TFChoice {
 		private MVersion version;
 		
 		private TFExclusiveArgument(MVersion version) {
@@ -38,7 +38,7 @@ public class TFKillArgument extends TFParallelCharBased {
 		case '@':
 			return TFIndirection.getInstance(this.version);
 		default:
-			return TFGlvn.getInstance(this.version);
+			return MTFSupply.getInstance(version).getTFGlvn();
 		}
 	}
 	

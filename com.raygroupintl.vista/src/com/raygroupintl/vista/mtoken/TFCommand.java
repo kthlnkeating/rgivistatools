@@ -19,7 +19,7 @@ import com.raygroupintl.vista.token.ChoiceSupply;
 import com.raygroupintl.vista.token.TFConstChar;
 import com.raygroupintl.vista.token.TFConstChars;
 import com.raygroupintl.vista.token.TFEmpty;
-import com.raygroupintl.vista.token.TFParallelCharBased;
+import com.raygroupintl.vista.token.TFChoice;
 import com.raygroupintl.vista.token.TFSerialBase;
 import com.raygroupintl.vista.token.TFSerialORO;
 import com.raygroupintl.vista.token.TFSerialRO;
@@ -167,7 +167,7 @@ public class TFCommand extends TFSerialBase {
 			ARGUMENT_FACTORIES.put("TRO", empty); 	
 			ARGUMENT_FACTORIES.put("TS", empty); 	
 			
-			ITokenFactory c = TFCommaDelimitedList.getInstance(new TFParallelCharBased() {			
+			ITokenFactory c = TFCommaDelimitedList.getInstance(new TFChoice() {			
 				@Override
 				protected ITokenFactory getFactory(char ch) {
 					if (ch == '@') {
@@ -190,7 +190,7 @@ public class TFCommand extends TFSerialBase {
 			ARGUMENT_FACTORIES.put("L", getLArgumentFactory(version)); 	
 			ARGUMENT_FACTORIES.put("M", TFCommaDelimitedList.getInstance(TFMergeArgument.getInstance(version))); 	
 			
-			ITokenFactory n = new TFParallelCharBased() {
+			ITokenFactory n = new TFChoice() {
 				@Override
 				protected ITokenFactory getFactory(char ch) {
 					switch(ch) {
@@ -213,7 +213,7 @@ public class TFCommand extends TFSerialBase {
 			ARGUMENT_FACTORIES.put("S", TFCommaDelimitedList.getInstance(TFSetArgument.getInstance(version))); 	
 			ARGUMENT_FACTORIES.put("U", TFCommaDelimitedList.getInstance(TFUseArgument.getInstance(version)));
 			
-			ITokenFactory w = new TFParallelCharBased() {
+			ITokenFactory w = new TFChoice() {
 				@Override
 				protected ITokenFactory getFactory(char ch) {
 					switch(ch) {

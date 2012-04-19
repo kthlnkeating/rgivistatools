@@ -1,14 +1,11 @@
 package com.raygroupintl.vista.token;
 
+import com.raygroupintl.vista.fnds.ICharPredicate;
 import com.raygroupintl.vista.fnds.ITokenFactory;
 
-public class TFChoiceOnChar0th extends TFChoiceOnChar {
-	public TFChoiceOnChar0th(ITokenFactory defaultFactory, String keys, ITokenFactory... factories) {
-		super(defaultFactory, keys, factories);
-	}
-
-	public TFChoiceOnChar0th(ITokenFactory defaultFactory, char key, ITokenFactory factory) {
-		this(defaultFactory, String.valueOf(key), factory);
+class TFChoiceOnChar0th extends TFChoiceOnChar {
+	public TFChoiceOnChar0th(ITokenFactory defaultFactory, ICharPredicate[] predicates, ITokenFactory... factories) {
+		super(defaultFactory, predicates, factories);
 	}
 
 	@Override

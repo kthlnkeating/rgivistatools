@@ -1,26 +1,28 @@
 package com.raygroupintl.vista.token;
 
+import com.raygroupintl.vista.fnds.ICharPredicate;
 import com.raygroupintl.vista.fnds.IToken;
 import com.raygroupintl.vista.fnds.ITokenFactory;
 
-public abstract class TFChoiceOnChar implements ITokenFactory {
+abstract class TFChoiceOnChar implements ITokenFactory {
 	private ITokenFactory defaultFactory;
-	private String keys;
+	private ICharPredicate[] predicates;
 	private ITokenFactory[] factories;
 			
-	public TFChoiceOnChar(ITokenFactory defaultFactory, String keys, ITokenFactory[] factories) {
+	public TFChoiceOnChar(ITokenFactory defaultFactory,  ICharPredicate[] predicates, ITokenFactory[] factories) {
 		this.defaultFactory = defaultFactory;
-		this.keys = keys;
+		this.predicates = predicates;
 		this.factories = factories;
 	}
 
 	protected ITokenFactory getFactory(char ch) {
-		int factoryIndex = this.keys.indexOf(ch);
-		if (factoryIndex < 0) {
-			return this.defaultFactory;
-		} else {
-			return this.factories[factoryIndex];
-		}						
+		for (int i=0; i<this.predicates.length; ++i) {
+			ICharPredicate predicate = this.predicates[i];
+			if (predicate.check(ch)) {
+				return this.factories[i];
+			}
+		}
+		return this.defaultFactory;
 	}
 	
 	protected abstract ITokenFactory getFactory(String line, int index);

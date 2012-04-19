@@ -4,10 +4,10 @@ import com.raygroupintl.vista.fnds.ITokenFactory;
 import com.raygroupintl.vista.token.TFAllRequired;
 import com.raygroupintl.vista.token.TFBasic;
 import com.raygroupintl.vista.token.TFConstChar;
-import com.raygroupintl.vista.token.TFParallelCharBased;
+import com.raygroupintl.vista.token.TFChoice;
 import com.raygroupintl.vista.token.TFSerialRO;
 
-public class TFFormat extends TFParallelCharBased {
+public class TFFormat extends TFChoice {
 	private MVersion version;
 	
 	private TFFormat(MVersion version) {

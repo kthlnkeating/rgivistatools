@@ -4,18 +4,17 @@ import com.raygroupintl.vista.fnds.ITokenFactory;
 import com.raygroupintl.vista.token.TFAllRequired;
 import com.raygroupintl.vista.token.TFConstChar;
 import com.raygroupintl.vista.token.TFEmpty;
-import com.raygroupintl.vista.token.TFParallelCharBased;
-import com.raygroupintl.vista.token.TFSerialRO;
+import com.raygroupintl.vista.token.TFChoice;
 import com.raygroupintl.vista.token.TFSerialROO;
 
-public class TFUseArgument extends TFParallelCharBased {
+public class TFUseArgument extends TFChoice {
 	private MVersion version;
 	
 	private TFUseArgument(MVersion version) {
 		this.version = version;
 	}
 	
-	private static class TFUseDeviceParam extends TFParallelCharBased {
+	private static class TFUseDeviceParam extends TFChoice {
 		private MVersion version;
 	
 		private TFUseDeviceParam(MVersion version) {
@@ -37,7 +36,7 @@ public class TFUseArgument extends TFParallelCharBased {
 		//}
 	}
 		
-	private static class TFUseDeviceParams extends TFParallelCharBased {			
+	private static class TFUseDeviceParams extends TFChoice {			
 		private MVersion version;
 		
 		private TFUseDeviceParams(MVersion version) {
@@ -60,17 +59,6 @@ public class TFUseArgument extends TFParallelCharBased {
 			return new TFUseDeviceParams(version);
 		}
 	}
-
-	/*	private static class TFUseParameters extends TFAllOptional {
-		@Override
-		protected ITokenFactory[] getFactories() {
-			TFDeviceParams p = new TFDeviceParams();
-			TFExpr e = TFExpr.getInstance();
-			ITokenFactory c = TFConstChar.getInstance(':');
-			return new ITokenFactory[]{p, c, e};
-		}
-	}
-	*/	
 
 	@Override
 	protected ITokenFactory getFactory(char ch) {

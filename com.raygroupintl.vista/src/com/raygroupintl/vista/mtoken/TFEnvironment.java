@@ -3,9 +3,9 @@ package com.raygroupintl.vista.mtoken;
 import com.raygroupintl.vista.fnds.ITokenFactory;
 import com.raygroupintl.vista.token.TFAllRequired;
 import com.raygroupintl.vista.token.TFConstChar;
-import com.raygroupintl.vista.token.TFParallelCharBased;
+import com.raygroupintl.vista.token.TFChoice;
 
-public class TFEnvironment extends TFParallelCharBased {
+public class TFEnvironment extends TFChoice {
 	private MVersion version;
 	
 	private TFEnvironment(MVersion version) {

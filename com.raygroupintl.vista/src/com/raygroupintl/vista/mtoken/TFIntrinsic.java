@@ -16,7 +16,7 @@ import com.raygroupintl.vista.token.TFChar;
 import com.raygroupintl.vista.token.ChoiceSupply;
 import com.raygroupintl.vista.token.TFConstChar;
 import com.raygroupintl.vista.token.TFEmpty;
-import com.raygroupintl.vista.token.TFParallelCharBased;
+import com.raygroupintl.vista.token.TFChoice;
 import com.raygroupintl.vista.token.TFSerialBase;
 import com.raygroupintl.vista.token.TFSerialRO;
 import com.raygroupintl.vista.token.TFSerialROO;
@@ -167,7 +167,7 @@ public class TFIntrinsic extends TFSerialBase {
 		o.setArgumentFactory(new TFSerialRO() {
 			@Override
 			protected ITokenFactory getRequired() {
-				return TFGlvn.getInstance(version);
+				return MTFSupply.getInstance(version).getTFGlvn();
 			}
 			
 			@Override
@@ -324,8 +324,7 @@ public class TFIntrinsic extends TFSerialBase {
 						String name = getFoundIntrinsicName(previousTokens);
 						if (TFIntrinsic.this.version == MVersion.CACHE) {
 							if (name.equals("SYSTEM") || name.equals("SY")) {
-								return TFDelimitedList.getInstance(TFActual.getInstance(TFIntrinsic.this.version), ',');
-								//return TFList.getInstance(TFActual.getInstance(TFIntrinsic.this.version), true);
+								return TFDelimitedList.getInstance(MTFSupply.getInstance(TFIntrinsic.this.version).getTFActual(), ',');
 							}
 						}
 						MNameWithMnemonic mName = INTRINSIC_FUNCTIONS.get(name);

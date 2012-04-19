@@ -2,13 +2,12 @@ package com.raygroupintl.vista.mtoken.test;
 
 import org.junit.Test;
 
+import com.raygroupintl.vista.fnds.ITokenFactory;
+import com.raygroupintl.vista.mtoken.MTFSupply;
 import com.raygroupintl.vista.mtoken.MVersion;
-import com.raygroupintl.vista.mtoken.TFActual;
 import com.raygroupintl.vista.mtoken.TFDeviceParams;
-import com.raygroupintl.vista.mtoken.TFExprItem;
 import com.raygroupintl.vista.mtoken.TFExternal;
 import com.raygroupintl.vista.mtoken.TFGvn;
-import com.raygroupintl.vista.mtoken.TFGvnAll;
 import com.raygroupintl.vista.mtoken.TFStringLiteral;
 
 public class TFTest {
@@ -35,7 +34,8 @@ public class TFTest {
 	}
 
 	public void testTFGvnAll(MVersion version) {
-		TFGvnAll f = TFGvnAll.getInstance(version);
+		MTFSupply m = MTFSupply.getInstance(version);
+		ITokenFactory f = m.getTFGvnAll();
 		TFCommonTest.validCheck(f, "^PRCA(430,+$G(PRCABN),0)");
 		TFCommonTest.validCheck(f, "^(430,+$G(PRCABN),0)");
 		TFCommonTest.validCheck(f, "^$ROUTINE(ROU)");
@@ -50,7 +50,8 @@ public class TFTest {
 	}
 
 	public void testTFActual(MVersion version) {
-		TFActual f = TFActual.getInstance(version);
+		MTFSupply m = MTFSupply.getInstance(version);
+		ITokenFactory f = m.getTFActual();
 		TFCommonTest.validCheck(f, ".57");
 		TFCommonTest.validCheck(f, ".57  ", ".57");
 		TFCommonTest.validCheck(f, ".INPUT");
@@ -80,7 +81,8 @@ public class TFTest {
 	}
 
 	public void testTFExprItem(MVersion version) {
-		TFExprItem f = TFExprItem.getInstance(version);
+		MTFSupply m = MTFSupply.getInstance(version);
+		ITokenFactory f = m.getTFExprItem();
 		TFCommonTest.validCheck(f, "$$TEST(A)");
 		TFCommonTest.validCheck(f, "$$TEST^DOHA");
 		TFCommonTest.validCheck(f, "$$TEST");

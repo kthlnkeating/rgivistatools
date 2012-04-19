@@ -14,7 +14,7 @@ public class TFMergeArgument extends TFSerial {
 	
 	@Override
 	protected ITokenFactory[] getFactories() {
-		return new ITokenFactory[]{TFGlvn.getInstance(this.version), TFConstChar.getInstance('='), TFExpr.getInstance(this.version)}; 
+		return new ITokenFactory[]{MTFSupply.getInstance(version).getTFGlvn(), TFConstChar.getInstance('='), TFExpr.getInstance(this.version)}; 
 	}
 
 	@Override

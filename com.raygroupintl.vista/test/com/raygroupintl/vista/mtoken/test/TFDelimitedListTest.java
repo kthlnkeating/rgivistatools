@@ -2,8 +2,9 @@ package com.raygroupintl.vista.mtoken.test;
 
 import org.junit.Test;
 
+import com.raygroupintl.vista.fnds.ITokenFactory;
+import com.raygroupintl.vista.mtoken.MTFSupply;
 import com.raygroupintl.vista.mtoken.MVersion;
-import com.raygroupintl.vista.mtoken.TFActual;
 import com.raygroupintl.vista.mtoken.TFDelimitedList;
 import com.raygroupintl.vista.mtoken.TFExpr;
 
@@ -22,7 +23,9 @@ public class TFDelimitedListTest {
 	}
 
 	private void testActual(MVersion version) {
-		TFDelimitedList f = TFDelimitedList.getInstance(TFActual.getInstance(version), ',');
+		MTFSupply m = MTFSupply.getInstance(version);
+		ITokenFactory fActual = m.getTFActual();
+		TFDelimitedList f = TFDelimitedList.getInstance(fActual, ',');
 		TFCommonTest.validCheck(f, "LST,\",\",FLD");
 	}
 

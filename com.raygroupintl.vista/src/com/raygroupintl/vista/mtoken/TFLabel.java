@@ -1,9 +1,9 @@
 package com.raygroupintl.vista.mtoken;
 
 import com.raygroupintl.vista.fnds.ITokenFactory;
-import com.raygroupintl.vista.token.TFParallelCharBased;
+import com.raygroupintl.vista.token.TFChoice;
 
-public class TFLabel extends TFParallelCharBased {
+public class TFLabel extends TFChoice {
 	protected ITokenFactory getFactory(char ch) {
 		if (Library.isIdent(ch) || (ch == '%')) {
 			return new TFName();

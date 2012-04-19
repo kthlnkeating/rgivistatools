@@ -6,11 +6,11 @@ import com.raygroupintl.vista.token.TFAllOptional;
 import com.raygroupintl.vista.token.TFBasic;
 import com.raygroupintl.vista.token.TFConstChar;
 import com.raygroupintl.vista.token.TFConstChars;
-import com.raygroupintl.vista.token.TFParallelCharBased;
+import com.raygroupintl.vista.token.TFChoice;
 import com.raygroupintl.vista.token.TFSerialOR;
 import com.raygroupintl.vista.token.TFAllRequired;
 	
-public class TFPattern extends TFParallelCharBased {
+public class TFPattern extends TFChoice {
 	private MVersion version;
 	
 	private TFPattern(MVersion version) {
@@ -52,7 +52,7 @@ public class TFPattern extends TFParallelCharBased {
 		}
 	}
 	
-	static class TFPatOns extends TFParallelCharBased {
+	static class TFPatOns extends TFChoice {
 		@Override
 		protected ITokenFactory getFactory(char ch) {
 			if (((ch >= 'a') && (ch < 'y')) || ((ch >= 'A') && (ch <'Y'))) {
@@ -93,7 +93,7 @@ public class TFPattern extends TFParallelCharBased {
 		@Override
 		protected ITokenFactory[] getFactories() {
 			ITokenFactory r = new TFRepCount();
-			ITokenFactory c = new TFParallelCharBased() {
+			ITokenFactory c = new TFChoice() {
 				@Override
 				protected ITokenFactory getFactory(char ch) {
 					if (ch == '(') return new TFAlternation();
