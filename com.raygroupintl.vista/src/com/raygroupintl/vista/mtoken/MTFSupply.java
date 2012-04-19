@@ -3,7 +3,7 @@ package com.raygroupintl.vista.mtoken;
 import java.util.EnumMap;
 
 import com.raygroupintl.vista.fnds.ITokenFactory;
-import com.raygroupintl.vista.token.TFChoice;
+import com.raygroupintl.vista.token.ChoiceSupply;
 
 public class MTFSupply {
 	private MVersion version;
@@ -17,9 +17,9 @@ public class MTFSupply {
 	public ITokenFactory getTFExprAtom() {
 		if (exprAtom == null) {
 			if (version == MVersion.CACHE) {
-				exprAtom = TFChoice.getInstance(TFGlvn.getInstance(version), TFExprItem.getInstance(version), TFCacheClassMethod.getInstance()) ;
+				exprAtom = ChoiceSupply.get(TFGlvn.getInstance(version), TFExprItem.getInstance(version), TFCacheClassMethod.getInstance()) ;
 			} else {
-				exprAtom = TFChoice.getInstance(TFGlvn.getInstance(version), TFExprItem.getInstance(version));
+				exprAtom = ChoiceSupply.get(TFGlvn.getInstance(version), TFExprItem.getInstance(version));
 			}			
 		}
 		return exprAtom;

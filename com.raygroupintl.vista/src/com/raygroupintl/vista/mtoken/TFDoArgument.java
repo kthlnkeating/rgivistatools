@@ -8,7 +8,7 @@ import com.raygroupintl.vista.token.TFChar;
 import com.raygroupintl.vista.token.TFConstChar;
 import com.raygroupintl.vista.token.TFConstString;
 import com.raygroupintl.vista.token.TFNull;
-import com.raygroupintl.vista.token.TFChoice;
+import com.raygroupintl.vista.token.ChoiceSupply;
 import com.raygroupintl.vista.token.TFSerialBase;
 import com.raygroupintl.vista.token.TFSerialOR;
 import com.raygroupintl.vista.token.TFSerialRO;
@@ -33,9 +33,9 @@ public class TFDoArgument extends TFSerialBase {
 		TFIndirection tfi = TFIndirection.getInstance(version);
 		if (version == MVersion.CACHE) {
 			ITokenFactory f = TFSerialRO.getInstance(tfl, TFAllRequired.getInstance(TFChar.DOT, TFName.getInstance()));
-			return TFChoice.getInstance(f, "@#$", tfi, TFCacheClassMethod.getInstance(), getCacheSystemCall());
+			return ChoiceSupply.get(f, "@#$", tfi, TFCacheClassMethod.getInstance(), getCacheSystemCall());
 		} else {		
-			TFChoice tf = TFChoice.getInstance(tfl, tfi);
+			ITokenFactory tf = ChoiceSupply.get(tfl, tfi);
 			return tf;
 		}
 	}
@@ -80,7 +80,7 @@ public class TFDoArgument extends TFSerialBase {
 			//ITokenFactory tfName = TFName.getInstance();
 			ITokenFactory tfEnvName = getRoutineSpecification(version); //TFSerialOR.getInstance(tfEnv, tfName);
 			ITokenFactory tfInd = TFIndirection.getInstance(version);
-			return TFChoice.getInstance(tfEnvName, tfInd);
+			return ChoiceSupply.get(tfEnvName, tfInd);
 		}
 	}
 

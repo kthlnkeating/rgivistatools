@@ -13,7 +13,7 @@ import com.raygroupintl.vista.token.TArray;
 import com.raygroupintl.vista.token.TChar;
 import com.raygroupintl.vista.token.TFAllRequired;
 import com.raygroupintl.vista.token.TFChar;
-import com.raygroupintl.vista.token.TFChoice;
+import com.raygroupintl.vista.token.ChoiceSupply;
 import com.raygroupintl.vista.token.TFConstChar;
 import com.raygroupintl.vista.token.TFEmpty;
 import com.raygroupintl.vista.token.TFParallelCharBased;
@@ -205,7 +205,7 @@ public class TFIntrinsic extends TFSerialBase {
 		if (version == MVersion.CACHE) {
 			FunctionInfo c = addFunction(version, "CASE", 1, Integer.MAX_VALUE);
 			ITokenFactory expr = TFExpr.getInstance(version);
-			ITokenFactory ci = TFAllRequired.getInstance(TFChoice.getInstance(expr, ':', TFEmpty.getInstance(':')), TFConstChar.getInstance(':'), expr);
+			ITokenFactory ci = TFAllRequired.getInstance(ChoiceSupply.get(expr, ':', TFEmpty.getInstance(':')), TFConstChar.getInstance(':'), expr);
 			ITokenFactory cases =  TFAllRequired.getInstance(TFChar.COMMA, TFDelimitedList.getInstance(ci, ','));
 			//ITokenFactory d = TFAllRequired.getInstance(TFChar.COMMA, TFChar.COLON,  expr);
 			ITokenFactory arg = TFAllRequired.getInstance(expr,  cases);

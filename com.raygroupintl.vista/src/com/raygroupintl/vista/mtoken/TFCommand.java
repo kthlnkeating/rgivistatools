@@ -9,12 +9,13 @@ import com.raygroupintl.vista.fnds.ITokenFactory;
 import com.raygroupintl.vista.fnds.ITokenFactorySupply;
 import com.raygroupintl.vista.struct.MError;
 import com.raygroupintl.vista.struct.MNameWithMnemonic;
+import com.raygroupintl.vista.token.ChoiceSupply;
 import com.raygroupintl.vista.token.TBasic;
 import com.raygroupintl.vista.token.TEmpty;
 import com.raygroupintl.vista.token.TFAllRequired;
 import com.raygroupintl.vista.token.TFBasic;
 import com.raygroupintl.vista.token.TFChar;
-import com.raygroupintl.vista.token.TFChoice;
+import com.raygroupintl.vista.token.ChoiceSupply;
 import com.raygroupintl.vista.token.TFConstChar;
 import com.raygroupintl.vista.token.TFConstChars;
 import com.raygroupintl.vista.token.TFEmpty;
@@ -70,7 +71,7 @@ public class TFCommand extends TFSerialBase {
 	}
 
 	private static ITokenFactory getXArgumentFactory(MVersion version) {
-		ITokenFactory tf = TFChoice.getInstance(TFExpr.getInstance(version), '@', TFIndirection.getInstance(version));
+		ITokenFactory tf = ChoiceSupply.get(TFExpr.getInstance(version), '@', TFIndirection.getInstance(version));
 		ITokenFactory pc = getTFPostCondition(null, version);
 		return TFDelimitedList.getInstance(TFSerialRO.getInstance(tf, pc), ',');
 	}
@@ -84,8 +85,8 @@ public class TFCommand extends TFSerialBase {
 	}
 
 	private static ITokenFactory getLArgumentFactory(MVersion version) {
-		ITokenFactory tfNRef = TFChoice.getInstance(TFLvn.getInstance(version), "^@", TFGvn.getInstance(version), TFIndirection.getInstance(version));		
-		ITokenFactory tfNRefOrList = TFChoice.getInstance(tfNRef, '(', TFDelimitedList.getInstance(tfNRef, ',', true));
+		ITokenFactory tfNRef = ChoiceSupply.get(TFLvn.getInstance(version), "^@", TFGvn.getInstance(version), TFIndirection.getInstance(version));		
+		ITokenFactory tfNRefOrList = ChoiceSupply.get(tfNRef, '(', TFDelimitedList.getInstance(tfNRef, ',', true));
 		ITokenFactory e = TFSerialORO.getInstance(TFConstChars.getInstance("+-"), tfNRefOrList, TFTimeout.getInstance(version));
 		return TFCommaDelimitedList.getInstance(e);
 	}

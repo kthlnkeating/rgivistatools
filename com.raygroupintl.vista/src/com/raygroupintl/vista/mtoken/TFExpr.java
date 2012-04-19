@@ -3,7 +3,7 @@ package com.raygroupintl.vista.mtoken;
 import com.raygroupintl.vista.fnds.IToken;
 import com.raygroupintl.vista.fnds.ITokenFactory;
 import com.raygroupintl.vista.fnds.ITokenFactorySupply;
-import com.raygroupintl.vista.token.TFChoice;
+import com.raygroupintl.vista.token.ChoiceSupply;
 import com.raygroupintl.vista.token.TFSerialBase;
 import com.raygroupintl.vista.token.TFSerialRO;
 import com.raygroupintl.vista.token.TList;
@@ -82,7 +82,7 @@ public class TFExpr extends TFSerialRO {
 	@Override
 	protected ITokenFactory getRequired() {
 		if (this.version == MVersion.CACHE) {
-			return TFChoice.getInstance(MTFSupply.getInstance(this.version).getTFExprAtom(), '#', TFCacheClassMethod.getInstance());
+			return ChoiceSupply.get(MTFSupply.getInstance(this.version).getTFExprAtom(), '#', TFCacheClassMethod.getInstance());
 		} else {
 			return MTFSupply.getInstance(this.version).getTFExprAtom();
 		}

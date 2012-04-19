@@ -3,7 +3,7 @@ package com.raygroupintl.vista.mtoken;
 import com.raygroupintl.vista.fnds.ITokenFactory;
 import com.raygroupintl.vista.token.TFAllOptional;
 import com.raygroupintl.vista.token.TFAllRequired;
-import com.raygroupintl.vista.token.TFChoice;
+import com.raygroupintl.vista.token.ChoiceSupply;
 import com.raygroupintl.vista.token.TFConstChar;
 import com.raygroupintl.vista.token.TFParallelCharBased;
 import com.raygroupintl.vista.token.TFSerialRO;
@@ -26,7 +26,7 @@ public class TFOpenArgument extends TFParallelCharBased {
 		protected ITokenFactory[] getFactories() {
 			TFDeviceParams p = new TFDeviceParams(this.version);
 			TFExpr e = TFExpr.getInstance(this.version);
-			ITokenFactory f = TFChoice.getInstance(e, '(', TFCommaDelimitedList.getInstance(e));
+			ITokenFactory f = ChoiceSupply.get(e, '(', TFCommaDelimitedList.getInstance(e));
 			ITokenFactory c = TFConstChar.getInstance(':');
 			return new ITokenFactory[]{p, c, e, c, f};
 		}

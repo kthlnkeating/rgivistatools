@@ -3,7 +3,7 @@ package com.raygroupintl.vista.mtoken;
 import com.raygroupintl.vista.fnds.IToken;
 import com.raygroupintl.vista.fnds.ITokenFactory;
 import com.raygroupintl.vista.token.TFAllRequired;
-import com.raygroupintl.vista.token.TFChoice;
+import com.raygroupintl.vista.token.ChoiceSupply;
 import com.raygroupintl.vista.token.TFConstChar;
 import com.raygroupintl.vista.token.TFEmpty;
 import com.raygroupintl.vista.token.TFSerialRO;
@@ -67,7 +67,7 @@ public abstract class TFDelimitedList extends TFSerialRO {
 	public static ITokenFactory getInstance(final ITokenFactory f, final char ch, final boolean inParan, boolean optional) {
 		if (optional) {
 			char[] selectionChars = {ch, ')'};
-			ITokenFactory fOptional = TFChoice.getInstance(f, String.valueOf(selectionChars), TFEmpty.getInstance(ch), TFEmpty.getInstance(')'));
+			ITokenFactory fOptional = ChoiceSupply.get(f, String.valueOf(selectionChars), TFEmpty.getInstance(ch), TFEmpty.getInstance(')'));
 			return getInstance(fOptional, ch, inParan);
 		} else {
 			return getInstance(f, ch, inParan);
