@@ -9,7 +9,6 @@ import com.raygroupintl.vista.token.TFConstChar;
 import com.raygroupintl.vista.token.TFConstString;
 import com.raygroupintl.vista.token.TFNull;
 import com.raygroupintl.vista.token.TFChoice;
-import com.raygroupintl.vista.token.TFParallelCharBased;
 import com.raygroupintl.vista.token.TFSerialBase;
 import com.raygroupintl.vista.token.TFSerialOR;
 import com.raygroupintl.vista.token.TFSerialRO;
@@ -34,7 +33,7 @@ public class TFDoArgument extends TFSerialBase {
 		TFIndirection tfi = TFIndirection.getInstance(version);
 		if (version == MVersion.CACHE) {
 			ITokenFactory f = TFSerialRO.getInstance(tfl, TFAllRequired.getInstance(TFChar.DOT, TFName.getInstance()));
-			return TFParallelCharBased.getInstance(f, '@', tfi, '#', TFCacheClassMethod.getInstance(), '$', getCacheSystemCall());
+			return TFChoice.getInstance(f, "@#$", tfi, TFCacheClassMethod.getInstance(), getCacheSystemCall());
 		} else {		
 			TFChoice tf = TFChoice.getInstance(tfl, tfi);
 			return tf;

@@ -2,6 +2,7 @@ package com.raygroupintl.vista.mtoken;
 
 import com.raygroupintl.vista.fnds.IToken;
 import com.raygroupintl.vista.fnds.ITokenFactory;
+import com.raygroupintl.vista.token.TFChoice;
 import com.raygroupintl.vista.token.TFConstChar;
 import com.raygroupintl.vista.token.TFParallelCharBased;
 import com.raygroupintl.vista.token.TFSerial;
@@ -66,7 +67,7 @@ public class TFSetArgument extends TFSerial {
 		return new ITokenFactory[]{ 
 				TFSetDestination.getInstance(this.version), 
 				TFConstChar.getInstance('='), 
-				(this.version == MVersion.CACHE) ? TFParallelCharBased.getInstance(expr, '#', TFCacheClassMethod.getInstance()) : expr
+				(this.version == MVersion.CACHE) ? TFChoice.getInstance(expr, '#', TFCacheClassMethod.getInstance()) : expr
 		}; 
 	}
 

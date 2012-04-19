@@ -14,6 +14,7 @@ import com.raygroupintl.vista.token.TEmpty;
 import com.raygroupintl.vista.token.TFAllRequired;
 import com.raygroupintl.vista.token.TFBasic;
 import com.raygroupintl.vista.token.TFChar;
+import com.raygroupintl.vista.token.TFChoice;
 import com.raygroupintl.vista.token.TFConstChar;
 import com.raygroupintl.vista.token.TFConstChars;
 import com.raygroupintl.vista.token.TFEmpty;
@@ -69,7 +70,7 @@ public class TFCommand extends TFSerialBase {
 	}
 
 	private static ITokenFactory getXArgumentFactory(MVersion version) {
-		ITokenFactory tf = TFParallelCharBased.getInstance(TFExpr.getInstance(version), '@', TFIndirection.getInstance(version));
+		ITokenFactory tf = TFChoice.getInstance(TFExpr.getInstance(version), '@', TFIndirection.getInstance(version));
 		ITokenFactory pc = getTFPostCondition(null, version);
 		return TFDelimitedList.getInstance(TFSerialRO.getInstance(tf, pc), ',');
 	}
@@ -83,8 +84,8 @@ public class TFCommand extends TFSerialBase {
 	}
 
 	private static ITokenFactory getLArgumentFactory(MVersion version) {
-		ITokenFactory tfNRef = TFParallelCharBased.getInstance(TFLvn.getInstance(version), '^', TFGvn.getInstance(version), '@', TFIndirection.getInstance(version));		
-		ITokenFactory tfNRefOrList = TFParallelCharBased.getInstance(tfNRef, '(', TFDelimitedList.getInstance(tfNRef, ',', true));
+		ITokenFactory tfNRef = TFChoice.getInstance(TFLvn.getInstance(version), "^@", TFGvn.getInstance(version), TFIndirection.getInstance(version));		
+		ITokenFactory tfNRefOrList = TFChoice.getInstance(tfNRef, '(', TFDelimitedList.getInstance(tfNRef, ',', true));
 		ITokenFactory e = TFSerialORO.getInstance(TFConstChars.getInstance("+-"), tfNRefOrList, TFTimeout.getInstance(version));
 		return TFCommaDelimitedList.getInstance(e);
 	}

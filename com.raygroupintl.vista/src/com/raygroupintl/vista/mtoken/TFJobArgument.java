@@ -8,7 +8,6 @@ import com.raygroupintl.vista.token.TFConstChar;
 import com.raygroupintl.vista.token.TFEmpty;
 import com.raygroupintl.vista.token.TFNull;
 import com.raygroupintl.vista.token.TFChoice;
-import com.raygroupintl.vista.token.TFParallelCharBased;
 import com.raygroupintl.vista.token.TFSerialBase;
 import com.raygroupintl.vista.token.TFSerialOR;
 import com.raygroupintl.vista.token.TFSerialRO;
@@ -68,7 +67,7 @@ public class TFJobArgument extends TFSerialBase {
 
 	private static ITokenFactory getFactory5(IToken[] previousTokens, final MVersion version) {
 		TFExpr e = TFExpr.getInstance(version);
-		ITokenFactory processParams = TFParallelCharBased.getInstance(e, ':', TFEmpty.getInstance(':'), '(', TFDelimitedList.getInstance(e, ':', true, true));
+		ITokenFactory processParams = TFChoice.getInstance(e, ":(", TFEmpty.getInstance(':'), TFDelimitedList.getInstance(e, ':', true, true));
 		ITokenFactory jobParams = TFAllRequired.getInstance(TFConstChar.getInstance(':'), processParams); 
 		return TFSerialRO.getInstance(jobParams, TFTimeout.getInstance(version));
 	}

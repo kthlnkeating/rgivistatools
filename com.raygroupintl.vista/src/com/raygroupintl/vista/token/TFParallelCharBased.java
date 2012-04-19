@@ -27,45 +27,5 @@ public abstract class TFParallelCharBased implements ITokenFactory {
 		}
 		return null;
 	}
-	
-	public static TFParallelCharBased getInstance(final ITokenFactory fDefault, final char ch0, final ITokenFactory f0, final char ch1, final ITokenFactory f1) {
-		return new TFParallelCharBased() {			
-			@Override
-			protected ITokenFactory getFactory(char ch) {
-				if (ch == ch0) return f0;
-				else if (ch == ch1) return f1;
-				return fDefault;
-			}
-		};
-	}
 
-	public static TFParallelCharBased getInstance(final ITokenFactory fDefault, 
-			final char ch0, final ITokenFactory f0, 
-			final char ch1, final ITokenFactory f1,
-			final char ch2, final ITokenFactory f2) {
-		return new TFParallelCharBased() {			
-			@Override
-			protected ITokenFactory getFactory(char ch) {
-				if (ch == ch0) return f0;
-				else if (ch == ch1) return f1;
-				else if (ch == ch2) {
-					return f2;
-				}
-				return fDefault;
-			}
-		};
-	}
-
-	public static TFParallelCharBased getInstance(final ITokenFactory fDefault, final char chOther, final ITokenFactory f) {
-		return new TFParallelCharBased() {			
-			@Override
-			protected ITokenFactory getFactory(char ch) {
-				if (ch == chOther) {
-					return f;
-				} else {
-					return fDefault;
-				}
-			}
-		};
-	}
 }
