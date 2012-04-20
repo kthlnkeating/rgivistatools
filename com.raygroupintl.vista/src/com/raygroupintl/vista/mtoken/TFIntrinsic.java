@@ -346,18 +346,17 @@ public class TFIntrinsic extends TFSeq {
 	}
 
 	@Override
-	protected int getCodeNextIsNull(IToken[] foundTokens) {
-		int n = foundTokens.length;
-		if (n == 0) {
+	protected int validateNull(int seqIndex, IToken[] foundTokens) {
+		if (seqIndex == 0) {
 			return RETURN_NULL;
-		} else if (n == 1) {
+		} else if (seqIndex == 1) {
 			String name = getFoundIntrinsicName(foundTokens);
 			if (INTRINSIC_VARIABLES.containsKey(name)) {
 				return RETURN_TOKEN;
 			} else {
 				return MError.ERR_UNKNOWN_INTRINSIC_VARIABLE;	
 			}
-		} else if (n == 2) {
+		} else if (seqIndex == 2) {
 			return MError.ERR_GENERAL_SYNTAX;
 		} else {
 			return MError.ERR_UNMATCHED_PARANTHESIS;
@@ -365,9 +364,8 @@ public class TFIntrinsic extends TFSeq {
 	}
 	
 	@Override
-	protected int getCodeStringEnds(IToken[] foundTokens) {
-		int n = foundTokens.length;
-		if (n == 1) {
+	protected int validateEnd(int seqIndex, IToken[] foundTokens) {
+		if (seqIndex == 0) {
 			return 0;
 		} else {
 			return MError.ERR_UNMATCHED_PARANTHESIS;	

@@ -5,8 +5,8 @@ import com.raygroupintl.vista.fnds.ITokenFactory;
 
 public abstract class TFSeqRequired extends TFSeqStatic {
 	@Override
-	protected final int getCodeNextIsNull(IToken[] foundTokens) {
-		if (foundTokens.length == 0) {
+	protected final int validateNull(int seqIndex, IToken[] foundTokens) {
+		if (seqIndex == 0) {
 			return RETURN_NULL;
 		} else {
 			return this.getErrorCode();
@@ -14,7 +14,7 @@ public abstract class TFSeqRequired extends TFSeqStatic {
 	}
 	
 	@Override
-	protected final int getCodeStringEnds(IToken[] foundTokens) {
+	protected final int validateEnd(int seqIndex, IToken[] foundTokens) {
 		return this.getErrorCode();
 	}
 	

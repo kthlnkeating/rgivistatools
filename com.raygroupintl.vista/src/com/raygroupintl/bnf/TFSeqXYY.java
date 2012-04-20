@@ -5,23 +5,23 @@ import com.raygroupintl.vista.fnds.ITokenFactory;
 
 public abstract class TFSeqXYY extends TFSeqStatic {
 	@Override
-	protected final int getCodeNextIsNull(IToken[] foundTokens) {
-		if (foundTokens.length == 1) {
+	protected final int validateNull(int seqIndex, IToken[] foundTokens) {
+		if (seqIndex == 1) {
 			if (foundTokens[0] == null) {
 				return RETURN_NULL;
 			} else {
 				return RETURN_TOKEN;
 			}
 		}
-		if (foundTokens.length == 2) {
+		if (seqIndex == 2) {
 			return this.getErrorCode();
 		}
 		return CONTINUE;
 	}
 	
 	@Override
-	protected final int getCodeStringEnds(IToken[] foundTokens) {
-		if (foundTokens.length == 2) {
+	protected final int validateEnd(int seqIndex, IToken[] foundTokens) {
+		if (seqIndex == 1) {
 			return this.getErrorCode();
 		} else {
 			return 0;

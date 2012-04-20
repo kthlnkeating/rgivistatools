@@ -56,9 +56,8 @@ public class TFExpr extends TFSeqRO {
 			};
 		}
 	
-		protected int getCodeNextIsNull(IToken[] foundTokens) {
-			int n = foundTokens.length;
-			switch (n) {
+		protected int validateNull(int seqIndex, IToken[] foundTokens) {
+			switch (seqIndex) {
 			case 0: 
 				return RETURN_NULL;
 			case 1:
@@ -69,8 +68,8 @@ public class TFExpr extends TFSeqRO {
 			}
 		}
 		
-		protected int getCodeStringEnds(IToken[] foundTokens) {
-			assert(foundTokens.length == 1);
+		protected int validateEnd(int seqIndex, IToken[] foundTokens) {
+			assert(seqIndex == 0);
 			return this.getErrorCode();
 		}
 	

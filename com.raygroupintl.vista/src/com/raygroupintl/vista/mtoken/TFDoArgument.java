@@ -123,14 +123,13 @@ public class TFDoArgument extends TFSeq {
 	}
 	
 	
-	protected int getCodeNextIsNull(IToken[] foundTokens) {
-		int n = foundTokens.length;
-		if (n == 2) {
+	protected int validateNull(int seqIndex, IToken[] foundTokens) {
+		if (seqIndex == 2) {
 			if (foundTokens[0] == null) {
 				return RETURN_NULL;
 			} 
 		}
-		if (n == 3) {
+		if (seqIndex == 3) {
 			if (foundTokens[2] != null) {
 				return this.getErrorCode();
 			}
@@ -138,8 +137,8 @@ public class TFDoArgument extends TFSeq {
 		return CONTINUE;
 	}
 	
-	protected int getCodeStringEnds(IToken[] foundTokens) {
-		if (foundTokens.length == 3) {
+	protected int validateEnd(int seqIndex, IToken[] foundTokens) {
+		if (seqIndex == 2) {
 			return this.getErrorCode();
 		}
 		return 0;

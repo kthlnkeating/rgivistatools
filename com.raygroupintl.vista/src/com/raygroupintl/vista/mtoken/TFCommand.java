@@ -281,19 +281,18 @@ public class TFCommand extends TFSeq {
 	}
 
 	@Override
-	protected int getCodeNextIsNull(IToken[] foundTokens) {
-		int n = foundTokens.length;
-		if (n == 0) {
+	protected int validateNull(int seqIndex, IToken[] foundTokens) {
+		if (seqIndex == 0) {
 			return RETURN_NULL;
 		}
-		if (n == 2) {
+		if (seqIndex == 2) {
 			return this.getErrorCode();
 		}
 		return CONTINUE;				
 	}
 
 	@Override
-	protected int getCodeStringEnds(IToken[] foundTokens) {
+	protected int validateEnd(int seqIndex, IToken[] foundTokens) {
 		return 0;
 	}
 

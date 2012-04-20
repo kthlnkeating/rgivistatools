@@ -18,12 +18,11 @@ public class TFMergeArgument extends TFSeqStatic {
 	}
 
 	@Override
-	protected int getCodeNextIsNull(IToken[] foundTokens) {
-		int n = foundTokens.length;
-		if (n == 0) {
+	protected int validateNull(int seqIndex, IToken[] foundTokens) {
+		if (seqIndex == 0) {
 			return RETURN_NULL;
 		}
-		if (n == 1) {
+		if (seqIndex == 1) {
 			if (foundTokens[0] instanceof TIndirection) {
 				return RETURN_TOKEN;
 			} else {
@@ -34,13 +33,8 @@ public class TFMergeArgument extends TFSeqStatic {
 	}
 	
 	@Override		
-	protected int getCodeStringEnds(IToken[] foundTokens) {
-		int n = foundTokens.length;
-		if ((n == 0) && (foundTokens[0] instanceof TIndirection)) {
-			return 0;
-		} else {
-			return this.getErrorCode();
-		}
+	protected int validateEnd(int seqIndex, IToken[] foundTokens) {
+		return this.getErrorCode();
 	}
 	
 	public static TFMergeArgument getInstance(MVersion version) {

@@ -18,23 +18,23 @@ public abstract class TFSeq implements ITokenFactory {
 	
 	protected abstract ITokenFactorySupply getFactorySupply();
 
-	protected abstract int getCodeNextIsNull(IToken[] foundTokens);
+	protected abstract int validateNull(int seqIndex, IToken[] foundTokens);
 	
-	protected int getCodeNextIsFound(IToken[] foundTokens, IToken nextToken) {
+	protected int validateNext(int seqIndex, IToken[] foundTokens, IToken nextToken) {
 		return CONTINUE;
 	}
 	
-	protected abstract int getCodeStringEnds(IToken[] foundTokens);
+	protected abstract int validateEnd(int seqIndex, IToken[] foundTokens);
 	
 	protected IToken getToken(IToken[] foundTokens) {
 		return new TArray(foundTokens);
 	}
 	
-	private int validate(IToken[] foundTokens, IToken nextToken) {
+	private int validate(int seqIndex, IToken[] foundTokens, IToken nextToken) {
 		if (nextToken == null) {
-			return this.getCodeNextIsNull(foundTokens);
+			return this.validateNull(seqIndex, foundTokens);
 		} else {
-			return this.getCodeNextIsFound(foundTokens, nextToken);			
+			return this.validateNext(seqIndex, foundTokens, nextToken);			
 		}
 	}
 	
@@ -60,7 +60,7 @@ public abstract class TFSeq implements ITokenFactory {
 					return this.getTokenWhenSyntaxError(foundTokens, (TSyntaxError) token, fromIndex);
 				}
 
-				int code = this.validate(foundTokens, token);
+				int code = this.validate(i, foundTokens, token);
 				if (code == RETURN_TOKEN) {
 					break;
 				}
@@ -77,7 +77,7 @@ public abstract class TFSeq implements ITokenFactory {
 				index += token.getStringSize();					
 				
 				if ((index >= endIndex) && (i < factoryCount-1)) {
-					int endCode = this.getCodeStringEnds(foundTokens);
+					int endCode = this.validateEnd(i, foundTokens);
 					if (endCode > 0) {
 						return TSyntaxError.getInstance(endCode, line, index, fromIndex);
 					}

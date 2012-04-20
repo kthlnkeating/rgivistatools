@@ -13,15 +13,15 @@ public abstract class TFSeqROO extends TFSeqStatic {
 	}
 	
 	@Override
-	protected final int getCodeNextIsNull(IToken[] foundTokens) {
-		if (foundTokens.length == 0) {
+	protected final int validateNull(int seqIndex, IToken[] foundTokens) {
+		if (seqIndex == 0) {
 			return RETURN_NULL;
 		}		
 		return CONTINUE;
 	}
 	
 	@Override
-	protected final int getCodeStringEnds(IToken[] foundTokens) {
+	protected final int validateEnd(int seqIndex, IToken[] foundTokens) {
 		return 0;
 	}
 	

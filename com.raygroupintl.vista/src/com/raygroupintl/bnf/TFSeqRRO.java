@@ -4,45 +4,28 @@ import com.raygroupintl.vista.fnds.IToken;
 import com.raygroupintl.vista.fnds.ITokenFactory;
 
 public abstract class TFSeqRRO extends TFSeqStatic {
-	//protected IToken getTokenWhenNoOptional(IToken[] foundTokens) {
-	//	return new TPair(foundTokens[0], foundTokens[1]);
-	//}
-	
-	//protected IToken getTokenWhenAll(IToken[] foundTokens) {
-	//	return new TArray(foundTokens);
-	//}
-	
 	@Override
-	protected final int getCodeNextIsNull(IToken[] foundTokens) {
-		if (foundTokens.length == 0) {
+	protected final int validateNull(int seqIndex, IToken[] foundTokens) {
+		if (seqIndex == 0) {
 			return RETURN_NULL;
 		}		
-		if (foundTokens.length == 1) {
+		if (seqIndex == 1) {
 			return this.getErrorCode();
 		}
-		if (foundTokens.length == 2) {
+		if (seqIndex == 2) {
 			return RETURN_TOKEN;
 		}
 		return CONTINUE;
 	}
 	
 	@Override
-	protected final int getCodeStringEnds(IToken[] foundTokens) {
-		if (foundTokens.length == 1) {
+	protected final int validateEnd(int seqIndex, IToken[] foundTokens) {
+		if (seqIndex == 0) {
 			return this.getErrorCode();
 		} else {
 			return 0;
 		}
 	}
-	
-	//@Override
-	//protected final IToken getToken(IToken[] foundTokens) {
-	//	if (foundTokens[2] == null) {
-	//		return this.getTokenWhenNoOptional(foundTokens);
-	//	} else {
-	//		return this.getTokenWhenAll(foundTokens);				
-	//	}
-	//}
 	
 	public static TFSeqRRO getInstance(final ITokenFactory f0, final ITokenFactory f1, final ITokenFactory f2) {
 		return new TFSeqRRO() {			

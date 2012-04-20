@@ -16,8 +16,8 @@ public abstract class TFSeqOR extends TFSeqStatic {
 	}
 
 	@Override
-	protected final int getCodeNextIsNull(IToken[] foundTokens) {
-		if (foundTokens.length == 1) {
+	protected final int validateNull(int seqIndex, IToken[] foundTokens) {
+		if (seqIndex == 1) {
 			if (foundTokens[0] == null) {
 				return RETURN_NULL;
 			} else {
@@ -29,8 +29,8 @@ public abstract class TFSeqOR extends TFSeqStatic {
 	}
 	
 	@Override
-	protected final int getCodeStringEnds(IToken[] foundTokens) {
-		if (foundTokens.length == 1) {
+	protected final int validateEnd(int seqIndex, IToken[] foundTokens) {
+		if (seqIndex == 0) {
 			return this.getErrorCode();
 		} else {
 			return 0;

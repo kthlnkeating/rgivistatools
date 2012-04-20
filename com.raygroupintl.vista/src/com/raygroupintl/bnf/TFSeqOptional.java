@@ -5,12 +5,12 @@ import com.raygroupintl.vista.fnds.ITokenFactory;
 
 public abstract class TFSeqOptional extends TFSeqStatic {
 	@Override
-	protected final int getCodeNextIsNull(IToken[] foundTokens) {
+	protected final int validateNull(int seqIndex, IToken[] foundTokens) {
 		return CONTINUE;
 	}
 	
 	@Override
-	protected final int getCodeStringEnds(IToken[] foundTokens) {
+	protected final int validateEnd(int seqIndex, IToken[] foundTokens) {
 		return 0;
 	}
 	

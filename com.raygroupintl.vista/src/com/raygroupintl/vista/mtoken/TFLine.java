@@ -48,12 +48,12 @@ public class TFLine extends TFSeqStatic {
 	}
 
 	@Override
-	protected int getCodeNextIsNull(IToken[] foundTokens) {
+	protected int validateNull(int seqIndex, IToken[] foundTokens) {
 		return 0;
 	}
 
 	@Override
-	protected int getCodeStringEnds(IToken[] foundTokens) {
+	protected int validateEnd(int seqIndex, IToken[] foundTokens) {
 		return 0;
 	}
 

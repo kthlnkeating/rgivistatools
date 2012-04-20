@@ -18,7 +18,7 @@ public abstract class TFInParantheses extends TFSeqStatic {
 	}
 
 	@Override
-	protected final int getCodeStringEnds(IToken[] foundTokens) {
+	protected final int validateEnd(int seqIndex, IToken[] foundTokens) {
 		return this.getErrorCode();
 	}		
 	
@@ -32,8 +32,8 @@ public abstract class TFInParantheses extends TFSeqStatic {
 	}		
 	
 	@Override
-	protected int getCodeNextIsNull(IToken[] foundTokens) {
-		if (foundTokens.length == 0) {
+	protected int validateNull(int seqIndex, IToken[] foundTokens) {
+		if (seqIndex == 0) {
 			return RETURN_NULL;
 		} else {
 			return this.getErrorCode();
@@ -42,8 +42,8 @@ public abstract class TFInParantheses extends TFSeqStatic {
 
 	private static abstract class TFInParanthesesOptional extends TFInParantheses {
 		@Override
-		protected final int getCodeNextIsNull(IToken[] foundTokens) {
-			if (foundTokens.length == 0) {
+		protected final int validateNull(int seqIndex, IToken[] foundTokens) {
+			if (seqIndex == 0) {
 				return RETURN_NULL;
 			} else if (foundTokens.length == 1) {
 				return CONTINUE;
