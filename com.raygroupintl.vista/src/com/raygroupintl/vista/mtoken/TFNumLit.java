@@ -1,16 +1,16 @@
 package com.raygroupintl.vista.mtoken;
 
+import com.raygroupintl.bnf.TFConstChar;
+import com.raygroupintl.bnf.TFConstChars;
+import com.raygroupintl.bnf.TFSeqOR;
+import com.raygroupintl.bnf.TFSeqRO;
+import com.raygroupintl.bnf.TFSeqROR;
+import com.raygroupintl.bnf.TFSeqXYY;
 import com.raygroupintl.vista.fnds.IToken;
 import com.raygroupintl.vista.fnds.ITokenFactory;
-import com.raygroupintl.vista.token.TFConstChar;
-import com.raygroupintl.vista.token.TFConstChars;
-import com.raygroupintl.vista.token.TFSerialOR;
-import com.raygroupintl.vista.token.TFSerialRO;
-import com.raygroupintl.vista.token.TFSerialROR;
-import com.raygroupintl.vista.token.TFSerialXYY;
 
-public class TFNumLit extends TFSerialRO {
-	private static class TFExp extends TFSerialROR {
+public class TFNumLit extends TFSeqRO {
+	private static class TFExp extends TFSeqROR {
 		protected ITokenFactory[] getFactories() {
 			ITokenFactory f = TIntLit.getFactory();
 			return new ITokenFactory[]{new TFConstChar('E'), new TFConstChars("+-"), f};
@@ -21,8 +21,8 @@ public class TFNumLit extends TFSerialRO {
 	protected ITokenFactory getRequired() {
 		ITokenFactory f = TIntLit.getFactory();
 		ITokenFactory p = new TFConstChar('.');
-		TFSerialXYY number = TFSerialXYY.getInstance(f, p, f);
-		return TFSerialOR.getInstance(TFConstChars.getInstance("-+"), number);
+		TFSeqXYY number = TFSeqXYY.getInstance(f, p, f);
+		return TFSeqOR.getInstance(TFConstChars.getInstance("-+"), number);
 	}
 	
 	@Override
@@ -31,15 +31,14 @@ public class TFNumLit extends TFSerialRO {
 	}
 	
 	@Override
-	protected IToken getTokenRequired(IToken requiredToken) {
-		String value = requiredToken.getStringValue();
-		return new TNumLit(value);
-	}
-	
-	@Override
-	protected IToken getTokenBoth(IToken requiredToken, IToken optionalToken) {
-		String value = requiredToken.getStringValue() + optionalToken.getStringValue();
-		return new TNumLit(value);
+	protected IToken getToken(IToken[] foundTokens) {
+		if (foundTokens[1] == null) {
+			String value = foundTokens[0].getStringValue();
+			return new TNumLit(value);			
+		} else {		
+			String value = foundTokens[0].getStringValue() + foundTokens[1].getStringValue();
+			return new TNumLit(value);
+		}	
 	}
 	
 	public static TFNumLit getInstance() {

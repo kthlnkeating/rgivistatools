@@ -1,7 +1,7 @@
 package com.raygroupintl.vista.mtoken;
 
+import com.raygroupintl.bnf.TCopy;
 import com.raygroupintl.vista.fnds.IToken;
-import com.raygroupintl.vista.token.TCopy;
 
 public class TGlobalNaked extends TCopy {
 	public TGlobalNaked(IToken source) {

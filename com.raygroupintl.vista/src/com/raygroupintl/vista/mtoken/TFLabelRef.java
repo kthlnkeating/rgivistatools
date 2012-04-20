@@ -1,12 +1,12 @@
 package com.raygroupintl.vista.mtoken;
 
+import com.raygroupintl.bnf.TFConstChar;
+import com.raygroupintl.bnf.TFSeqOR;
+import com.raygroupintl.bnf.TFSeqXYY;
 import com.raygroupintl.vista.fnds.IToken;
 import com.raygroupintl.vista.fnds.ITokenFactory;
-import com.raygroupintl.vista.token.TFConstChar;
-import com.raygroupintl.vista.token.TFSerialOR;
-import com.raygroupintl.vista.token.TFSerialXYY;
 
-public class TFLabelRef extends TFSerialXYY {	
+public class TFLabelRef extends TFSeqXYY {	
 	private MVersion version;
 	
 	private TFLabelRef(MVersion version) {
@@ -15,7 +15,7 @@ public class TFLabelRef extends TFSerialXYY {
 		
 	@Override
 	protected ITokenFactory[] getFactories() {
-		TFSerialOR envName = new TFSerialOR() {
+		TFSeqOR envName = new TFSeqOR() {
 			@Override
 			protected ITokenFactory getRequired() {
 				return new TFName();

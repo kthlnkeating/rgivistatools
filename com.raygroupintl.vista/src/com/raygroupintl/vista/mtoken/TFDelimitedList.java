@@ -1,15 +1,15 @@
 package com.raygroupintl.vista.mtoken;
 
+import com.raygroupintl.bnf.ChoiceSupply;
+import com.raygroupintl.bnf.TFConstChar;
+import com.raygroupintl.bnf.TFEmpty;
+import com.raygroupintl.bnf.TFSeqRO;
+import com.raygroupintl.bnf.TFSeqRequired;
+import com.raygroupintl.bnf.TList;
 import com.raygroupintl.vista.fnds.IToken;
 import com.raygroupintl.vista.fnds.ITokenFactory;
-import com.raygroupintl.vista.token.TFAllRequired;
-import com.raygroupintl.vista.token.ChoiceSupply;
-import com.raygroupintl.vista.token.TFConstChar;
-import com.raygroupintl.vista.token.TFEmpty;
-import com.raygroupintl.vista.token.TFSerialRO;
-import com.raygroupintl.vista.token.TList;
 
-public abstract class TFDelimitedList extends TFSerialRO {
+public abstract class TFDelimitedList extends TFSeqRO {
 	protected abstract ITokenFactory getElementFactory();
 	
 	protected abstract ITokenFactory getDelimitedFactory();
@@ -21,24 +21,19 @@ public abstract class TFDelimitedList extends TFSerialRO {
 
 	@Override
 	protected ITokenFactory getOptional() {
-		TFAllRequired r = TFAllRequired.getInstance(this.getDelimitedFactory(), this.getElementFactory());
+		TFSeqRequired r = TFSeqRequired.getInstance(this.getDelimitedFactory(), this.getElementFactory());
 		return TFList.getInstance(r);
 	}
 
-	protected IToken getToken(TList listToken) {
-		return listToken;
-	}
-	
 	@Override
-	protected IToken getTokenRequired(IToken requiredToken) {
-		return this.getToken(new TList(requiredToken));
-	}
-	
-	@Override
-	protected IToken getTokenBoth(IToken requiredToken, IToken optionalToken) {
-		TList result = (TList) optionalToken;
-		result.add(0, requiredToken);
-		return  this.getToken(result);
+	protected IToken getToken(IToken[] foundTokens) {
+		if (foundTokens[1] == null) {
+			return new TList(foundTokens[0]);	
+		} else {		
+			TList result = (TList) foundTokens[1];
+			result.add(0, foundTokens[0]);
+			return result;
+		}
 	}
 	
 	public static TFDelimitedList getInstance(final ITokenFactory tfElement, final char ch) {

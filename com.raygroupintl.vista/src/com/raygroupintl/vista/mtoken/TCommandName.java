@@ -2,11 +2,11 @@ package com.raygroupintl.vista.mtoken;
 
 import java.util.List;
 
+import com.raygroupintl.bnf.TFConstChar;
+import com.raygroupintl.bnf.TFSeqRequired;
 import com.raygroupintl.vista.fnds.IToken;
 import com.raygroupintl.vista.fnds.ITokenFactory;
 import com.raygroupintl.vista.struct.MError;
-import com.raygroupintl.vista.token.TFAllRequired;
-import com.raygroupintl.vista.token.TFConstChar;
 
 public abstract class TCommandName extends TKeyword {
 	public TCommandName(String identifier) {
@@ -21,7 +21,7 @@ public abstract class TCommandName extends TKeyword {
 	protected static ITokenFactory getTFPostCondition(IToken[] previousTokens, MVersion version) {
 		ITokenFactory tfColon = TFConstChar.getInstance(':');
 		ITokenFactory tfExpr = TFExpr.getInstance(version);
-		return TFAllRequired.getInstance(tfColon, tfExpr);
+		return TFSeqRequired.getInstance(tfColon, tfExpr);
 	}
 	
 	public abstract ITokenFactory getArgumentFactory();

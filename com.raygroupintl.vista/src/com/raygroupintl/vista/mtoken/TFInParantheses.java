@@ -1,12 +1,12 @@
 package com.raygroupintl.vista.mtoken;
 
+import com.raygroupintl.bnf.TEmpty;
+import com.raygroupintl.bnf.TFConstChar;
+import com.raygroupintl.bnf.TFSeqStatic;
 import com.raygroupintl.vista.fnds.IToken;
 import com.raygroupintl.vista.fnds.ITokenFactory;
-import com.raygroupintl.vista.token.TEmpty;
-import com.raygroupintl.vista.token.TFConstChar;
-import com.raygroupintl.vista.token.TFSerial;
 
-public abstract class TFInParantheses extends TFSerial {
+public abstract class TFInParantheses extends TFSeqStatic {
 	protected abstract ITokenFactory getInnerfactory();
 	
 	@Override

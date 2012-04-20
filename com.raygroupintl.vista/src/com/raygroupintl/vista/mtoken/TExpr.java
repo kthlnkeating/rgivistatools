@@ -1,6 +1,6 @@
 package com.raygroupintl.vista.mtoken;
 
-import com.raygroupintl.vista.token.TList;;
+import com.raygroupintl.bnf.TList;
 
 public class TExpr extends TList {
 }

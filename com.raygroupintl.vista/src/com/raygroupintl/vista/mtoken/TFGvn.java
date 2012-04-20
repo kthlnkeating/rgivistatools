@@ -1,13 +1,13 @@
 package com.raygroupintl.vista.mtoken;
 
+import com.raygroupintl.bnf.TArray;
+import com.raygroupintl.bnf.TFConstChar;
+import com.raygroupintl.bnf.TFSeqORO;
+import com.raygroupintl.bnf.TFSeqRequired;
 import com.raygroupintl.vista.fnds.IToken;
 import com.raygroupintl.vista.fnds.ITokenFactory;
-import com.raygroupintl.vista.token.TArray;
-import com.raygroupintl.vista.token.TFAllRequired;
-import com.raygroupintl.vista.token.TFConstChar;
-import com.raygroupintl.vista.token.TFSerialORO;
 
-public class TFGvn extends TFAllRequired {
+public class TFGvn extends TFSeqRequired {
 	private MVersion version;
 	
 	private TFGvn(MVersion version) {
@@ -20,7 +20,7 @@ public class TFGvn extends TFAllRequired {
 		TFEnvironment env = TFEnvironment.getInstance(this.version);
 		TFName name = new TFName();
 		TFExprListInParantheses exprList = TFExprListInParantheses.getInstance(this.version);
-		ITokenFactory r = TFSerialORO.getInstance(env, name, exprList);
+		ITokenFactory r = TFSeqORO.getInstance(env, name, exprList);
 		return new ITokenFactory[]{c, r};
 	}
 

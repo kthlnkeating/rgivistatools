@@ -4,29 +4,28 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import com.raygroupintl.bnf.ChoiceSupply;
+import com.raygroupintl.bnf.TBasic;
+import com.raygroupintl.bnf.TEmpty;
+import com.raygroupintl.bnf.TFBasic;
+import com.raygroupintl.bnf.TFChar;
+import com.raygroupintl.bnf.TFChoice;
+import com.raygroupintl.bnf.TFConstChar;
+import com.raygroupintl.bnf.TFConstChars;
+import com.raygroupintl.bnf.TFEmpty;
+import com.raygroupintl.bnf.TFSeq;
+import com.raygroupintl.bnf.TFSeqORO;
+import com.raygroupintl.bnf.TFSeqRO;
+import com.raygroupintl.bnf.TFSeqROO;
+import com.raygroupintl.bnf.TFSeqRequired;
+import com.raygroupintl.bnf.TSyntaxError;
 import com.raygroupintl.vista.fnds.IToken;
 import com.raygroupintl.vista.fnds.ITokenFactory;
 import com.raygroupintl.vista.fnds.ITokenFactorySupply;
 import com.raygroupintl.vista.struct.MError;
 import com.raygroupintl.vista.struct.MNameWithMnemonic;
-import com.raygroupintl.vista.token.ChoiceSupply;
-import com.raygroupintl.vista.token.TBasic;
-import com.raygroupintl.vista.token.TEmpty;
-import com.raygroupintl.vista.token.TFAllRequired;
-import com.raygroupintl.vista.token.TFBasic;
-import com.raygroupintl.vista.token.TFChar;
-import com.raygroupintl.vista.token.ChoiceSupply;
-import com.raygroupintl.vista.token.TFConstChar;
-import com.raygroupintl.vista.token.TFConstChars;
-import com.raygroupintl.vista.token.TFEmpty;
-import com.raygroupintl.vista.token.TFChoice;
-import com.raygroupintl.vista.token.TFSerialBase;
-import com.raygroupintl.vista.token.TFSerialORO;
-import com.raygroupintl.vista.token.TFSerialRO;
-import com.raygroupintl.vista.token.TFSerialROO;
-import com.raygroupintl.vista.token.TSyntaxError;
 
-public class TFCommand extends TFSerialBase {
+public class TFCommand extends TFSeq {
 	private MVersion version;
 	
 	private TFCommand(MVersion version) {
@@ -67,27 +66,27 @@ public class TFCommand extends TFSerialBase {
 	public static ITokenFactory getTFPostCondition(IToken[] previousTokens, MVersion version) {
 		ITokenFactory tfColon = TFConstChar.getInstance(':');
 		ITokenFactory tfExpr = TFExpr.getInstance(version);
-		return TFAllRequired.getInstance(tfColon, tfExpr);
+		return TFSeqRequired.getInstance(tfColon, tfExpr);
 	}
 
 	private static ITokenFactory getXArgumentFactory(MVersion version) {
 		ITokenFactory tf = ChoiceSupply.get(TFExpr.getInstance(version), '@', TFIndirection.getInstance(version));
 		ITokenFactory pc = getTFPostCondition(null, version);
-		return TFDelimitedList.getInstance(TFSerialRO.getInstance(tf, pc), ',');
+		return TFDelimitedList.getInstance(TFSeqRO.getInstance(tf, pc), ',');
 	}
 	
 	private static ITokenFactory getFArgumentFactory(MVersion version) {
 		TFExpr tfExpr = TFExpr.getInstance(version);
-		TFAllRequired tfFromTo = TFAllRequired.getInstance(TFConstChar.getInstance(':'), tfExpr);
-		ITokenFactory RHS = TFSerialROO.getInstance(tfExpr, tfFromTo, tfFromTo);
+		TFSeqRequired tfFromTo = TFSeqRequired.getInstance(TFConstChar.getInstance(':'), tfExpr);
+		ITokenFactory RHS = TFSeqROO.getInstance(tfExpr, tfFromTo, tfFromTo);
 		ITokenFactory RHSs = TFCommaDelimitedList.getInstance(RHS);
-		return TFAllRequired.getInstance(TFLvn.getInstance(version), TFConstChar.getInstance('='), RHSs); 
+		return TFSeqRequired.getInstance(TFLvn.getInstance(version), TFConstChar.getInstance('='), RHSs); 
 	}
 
 	private static ITokenFactory getLArgumentFactory(MVersion version) {
 		ITokenFactory tfNRef = ChoiceSupply.get(TFLvn.getInstance(version), "^@", TFGvn.getInstance(version), TFIndirection.getInstance(version));		
 		ITokenFactory tfNRefOrList = ChoiceSupply.get(tfNRef, '(', TFDelimitedList.getInstance(tfNRef, ',', true));
-		ITokenFactory e = TFSerialORO.getInstance(TFConstChars.getInstance("+-"), tfNRefOrList, TFTimeout.getInstance(version));
+		ITokenFactory e = TFSeqORO.getInstance(TFConstChars.getInstance("+-"), tfNRefOrList, TFTimeout.getInstance(version));
 		return TFCommaDelimitedList.getInstance(e);
 	}
 
@@ -173,7 +172,7 @@ public class TFCommand extends TFSerialBase {
 					if (ch == '@') {
 						return TFIndirection.getInstance(version);
 					} else {
-						return TFSerialRO.getInstance(TFExpr.getInstance(version), TFAllRequired.getInstance(TFConstChar.getInstance(':'), new TFDeviceParams(version)));
+						return TFSeqRO.getInstance(TFExpr.getInstance(version), TFSeqRequired.getInstance(TFConstChar.getInstance(':'), new TFDeviceParams(version)));
 					}
 				}
 			});
@@ -222,9 +221,9 @@ public class TFCommand extends TFSerialBase {
 						case '?':
 							return TFFormat.getInstance(version);
 						case '/':
-							return TFAllRequired.getInstance(TFChar.SLASH, TFName.getInstance(), TFActualList.getInstance(version));
+							return TFSeqRequired.getInstance(TFChar.SLASH, TFName.getInstance(), TFActualList.getInstance(version));
 						case '*':
-							return TFAllRequired.getInstance(TFConstChar.getInstance('*'), TFExpr.getInstance(version));
+							return TFSeqRequired.getInstance(TFConstChar.getInstance('*'), TFExpr.getInstance(version));
 						case '@':
 							return TFIndirection.getInstance(version);
 						default:
@@ -247,7 +246,7 @@ public class TFCommand extends TFSerialBase {
 				case 0:
 					return TFCommandName.getInstance();
 				case 1:
-					return TFAllRequired.getInstance(TFConstChar.getInstance(':'), TFExpr.getInstance(this.version));
+					return TFSeqRequired.getInstance(TFConstChar.getInstance(':'), TFExpr.getInstance(this.version));
 				case 2:
 					return TFConstChar.getInstance(' ');
 				case 3: {

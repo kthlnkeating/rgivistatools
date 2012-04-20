@@ -1,7 +1,7 @@
 package com.raygroupintl.vista.mtoken;
 
+import com.raygroupintl.bnf.TArray;
 import com.raygroupintl.vista.fnds.IToken;
-import com.raygroupintl.vista.token.TArray;
 
 public class TLine extends TArray {	
 	public TLine(IToken[] tokens) {

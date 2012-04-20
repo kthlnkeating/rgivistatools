@@ -1,10 +1,10 @@
 package com.raygroupintl.vista.mtoken;
 
+import com.raygroupintl.bnf.TFChoice;
+import com.raygroupintl.bnf.TFConstChar;
+import com.raygroupintl.bnf.TFSeqRO;
+import com.raygroupintl.bnf.TFSeqRequired;
 import com.raygroupintl.vista.fnds.ITokenFactory;
-import com.raygroupintl.vista.token.TFAllRequired;
-import com.raygroupintl.vista.token.TFConstChar;
-import com.raygroupintl.vista.token.TFChoice;
-import com.raygroupintl.vista.token.TFSerialRO;
 
 public class TFDeviceParams extends TFChoice {
 	private MVersion version;
@@ -13,7 +13,7 @@ public class TFDeviceParams extends TFChoice {
 		this.version = version;
 	}
 	
-	private static class TFDeviceParam extends TFSerialRO {
+	private static class TFDeviceParam extends TFSeqRO {
 		private MVersion version;
 		
 		protected TFDeviceParam(MVersion version) {		
@@ -25,7 +25,7 @@ public class TFDeviceParams extends TFChoice {
 		}
 		
 		protected ITokenFactory getOptional() {
-			return TFAllRequired.getInstance(TFConstChar.getInstance('='), TFExpr.getInstance(this.version));	
+			return TFSeqRequired.getInstance(TFConstChar.getInstance('='), TFExpr.getInstance(this.version));	
 		}
 	}
 		

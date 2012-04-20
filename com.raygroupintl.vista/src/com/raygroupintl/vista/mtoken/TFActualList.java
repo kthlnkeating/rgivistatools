@@ -1,12 +1,12 @@
 package com.raygroupintl.vista.mtoken;
 
+import com.raygroupintl.bnf.TFConstChar;
+import com.raygroupintl.bnf.TFSeqROR;
+import com.raygroupintl.bnf.TList;
 import com.raygroupintl.vista.fnds.IToken;
 import com.raygroupintl.vista.fnds.ITokenFactory;
-import com.raygroupintl.vista.token.TFConstChar;
-import com.raygroupintl.vista.token.TFSerialROR;
-import com.raygroupintl.vista.token.TList;
 
-public class TFActualList extends TFSerialROR {
+public class TFActualList extends TFSeqROR {
 	private MVersion version;
 	
 	private TFActualList(MVersion version) {

@@ -1,12 +1,12 @@
 package com.raygroupintl.vista.mtoken;
 
+import com.raygroupintl.bnf.TFChoice;
+import com.raygroupintl.bnf.TFConstChar;
+import com.raygroupintl.bnf.TFSeqRO;
+import com.raygroupintl.bnf.TFSeqROO;
+import com.raygroupintl.bnf.TFSeqRRO;
+import com.raygroupintl.bnf.TFSeqRequired;
 import com.raygroupintl.vista.fnds.ITokenFactory;
-import com.raygroupintl.vista.token.TFAllRequired;
-import com.raygroupintl.vista.token.TFConstChar;
-import com.raygroupintl.vista.token.TFChoice;
-import com.raygroupintl.vista.token.TFSerialRO;
-import com.raygroupintl.vista.token.TFSerialROO;
-import com.raygroupintl.vista.token.TFSerialRRO;
 
 public class TFReadArgument extends TFChoice {
 	private MVersion version;
@@ -16,7 +16,7 @@ public class TFReadArgument extends TFChoice {
 	}
 	
 	private static ITokenFactory getTFReadcountInstance(MVersion version) {
-		return TFAllRequired.getInstance(TFConstChar.getInstance('#'), TFExpr.getInstance(version));
+		return TFSeqRequired.getInstance(TFConstChar.getInstance('#'), TFExpr.getInstance(version));
 	}
 
 	@Override
@@ -30,11 +30,11 @@ public class TFReadArgument extends TFChoice {
 			case '"':
 				return TFStringLiteral.getInstance();
 			case '*':
-				return TFSerialRRO.getInstance(TFConstChar.getInstance('*'), MTFSupply.getInstance(version).getTFGlvn(), TFTimeout.getInstance(this.version));
+				return TFSeqRRO.getInstance(TFConstChar.getInstance('*'), MTFSupply.getInstance(version).getTFGlvn(), TFTimeout.getInstance(this.version));
 			case '@':
-				return TFSerialRO.getInstance(TFIndirection.getInstance(this.version), TFTimeout.getInstance(this.version));
+				return TFSeqRO.getInstance(TFIndirection.getInstance(this.version), TFTimeout.getInstance(this.version));
 			default: 
-				return TFSerialROO.getInstance(MTFSupply.getInstance(version).getTFGlvn(), getTFReadcountInstance(this.version), TFTimeout.getInstance(this.version));
+				return TFSeqROO.getInstance(MTFSupply.getInstance(version).getTFGlvn(), getTFReadcountInstance(this.version), TFTimeout.getInstance(this.version));
 		}
 	}
 

@@ -1,14 +1,14 @@
 package com.raygroupintl.vista.mtoken;
 
+import com.raygroupintl.bnf.TFBasic;
+import com.raygroupintl.bnf.TFChoice;
+import com.raygroupintl.bnf.TFConstChar;
+import com.raygroupintl.bnf.TFConstChars;
+import com.raygroupintl.bnf.TFSeqOR;
+import com.raygroupintl.bnf.TFSeqOptional;
+import com.raygroupintl.bnf.TFSeqRequired;
 import com.raygroupintl.vista.fnds.IToken;
 import com.raygroupintl.vista.fnds.ITokenFactory;
-import com.raygroupintl.vista.token.TFAllOptional;
-import com.raygroupintl.vista.token.TFBasic;
-import com.raygroupintl.vista.token.TFConstChar;
-import com.raygroupintl.vista.token.TFConstChars;
-import com.raygroupintl.vista.token.TFChoice;
-import com.raygroupintl.vista.token.TFSerialOR;
-import com.raygroupintl.vista.token.TFAllRequired;
 	
 public class TFPattern extends TFChoice {
 	private MVersion version;
@@ -17,7 +17,7 @@ public class TFPattern extends TFChoice {
 		this.version = version;
 	}
 		
-	static class TFPatOnYy extends  TFAllRequired {
+	static class TFPatOnYy extends  TFSeqRequired {
 		@Override
 		protected ITokenFactory[] getFactories() {
 			ITokenFactory y = TFConstChars.getInstance("Zz");
@@ -31,7 +31,7 @@ public class TFPattern extends TFChoice {
 		}
 	}
 	
-	static class TFPatOnZz extends TFAllRequired {
+	static class TFPatOnZz extends TFSeqRequired {
 		@Override
 		protected ITokenFactory[] getFactories() {
 			ITokenFactory z = TFConstChars.getInstance("Zz");
@@ -68,7 +68,7 @@ public class TFPattern extends TFChoice {
 		}
 	}
 	
-	static class TFPatCode extends TFSerialOR {
+	static class TFPatCode extends TFSeqOR {
 		@Override
 		protected ITokenFactory getRequired() {
 			return new TFPatOns();
@@ -80,7 +80,7 @@ public class TFPattern extends TFChoice {
 		}
 	}
 	
-	static class TFRepCount extends TFAllOptional {
+	static class TFRepCount extends TFSeqOptional {
 		@Override
 		protected ITokenFactory[] getFactories() {
 			ITokenFactory f = new TIntLit.Factory();
@@ -89,7 +89,7 @@ public class TFPattern extends TFChoice {
 		}
 	}
 	
-	static class TFPatAtom extends TFAllRequired {
+	static class TFPatAtom extends TFSeqRequired {
 		@Override
 		protected ITokenFactory[] getFactories() {
 			ITokenFactory r = new TFRepCount();

@@ -1,7 +1,7 @@
 package com.raygroupintl.vista.mtoken;
 
-import com.raygroupintl.vista.token.TList;
-import com.raygroupintl.vista.token.TCopy;
+import com.raygroupintl.bnf.TCopy;
+import com.raygroupintl.bnf.TList;
 
 public class TActualList extends TCopy {
 	public TActualList(TList list) {

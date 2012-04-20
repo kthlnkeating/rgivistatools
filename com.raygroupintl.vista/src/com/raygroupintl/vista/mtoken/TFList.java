@@ -3,10 +3,10 @@ package com.raygroupintl.vista.mtoken;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.raygroupintl.bnf.TList;
+import com.raygroupintl.bnf.TSyntaxError;
 import com.raygroupintl.vista.fnds.IToken;
 import com.raygroupintl.vista.fnds.ITokenFactory;
-import com.raygroupintl.vista.token.TList;
-import com.raygroupintl.vista.token.TSyntaxError;
 
 public abstract class TFList implements ITokenFactory {
 	protected abstract ITokenFactory getFactory();

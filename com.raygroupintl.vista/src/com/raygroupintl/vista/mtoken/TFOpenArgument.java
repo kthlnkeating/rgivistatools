@@ -1,12 +1,12 @@
 package com.raygroupintl.vista.mtoken;
 
+import com.raygroupintl.bnf.ChoiceSupply;
+import com.raygroupintl.bnf.TFChoice;
+import com.raygroupintl.bnf.TFConstChar;
+import com.raygroupintl.bnf.TFSeqOptional;
+import com.raygroupintl.bnf.TFSeqRO;
+import com.raygroupintl.bnf.TFSeqRequired;
 import com.raygroupintl.vista.fnds.ITokenFactory;
-import com.raygroupintl.vista.token.TFAllOptional;
-import com.raygroupintl.vista.token.TFAllRequired;
-import com.raygroupintl.vista.token.ChoiceSupply;
-import com.raygroupintl.vista.token.TFConstChar;
-import com.raygroupintl.vista.token.TFChoice;
-import com.raygroupintl.vista.token.TFSerialRO;
 
 public class TFOpenArgument extends TFChoice {
 	private MVersion version;
@@ -15,7 +15,7 @@ public class TFOpenArgument extends TFChoice {
 		this.version = version;
 	}
 	
-	private static class TFOpenParameters extends TFAllOptional {
+	private static class TFOpenParameters extends TFSeqOptional {
 		private MVersion version;
 		
 		private TFOpenParameters(MVersion version) {
@@ -37,7 +37,7 @@ public class TFOpenArgument extends TFChoice {
 		if (ch == '@') {
 			return TFIndirection.getInstance(this.version);
 		} else {
-			return TFSerialRO.getInstance(TFExpr.getInstance(this.version), TFAllRequired.getInstance(TFConstChar.getInstance(':'), new TFOpenParameters(this.version)));
+			return TFSeqRO.getInstance(TFExpr.getInstance(this.version), TFSeqRequired.getInstance(TFConstChar.getInstance(':'), new TFOpenParameters(this.version)));
 		}
 	}
 	

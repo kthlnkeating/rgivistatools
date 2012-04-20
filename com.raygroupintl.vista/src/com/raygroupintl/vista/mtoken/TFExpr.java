@@ -1,21 +1,21 @@
 package com.raygroupintl.vista.mtoken;
 
+import com.raygroupintl.bnf.ChoiceSupply;
+import com.raygroupintl.bnf.TFSeq;
+import com.raygroupintl.bnf.TFSeqRO;
+import com.raygroupintl.bnf.TList;
 import com.raygroupintl.vista.fnds.IToken;
 import com.raygroupintl.vista.fnds.ITokenFactory;
 import com.raygroupintl.vista.fnds.ITokenFactorySupply;
-import com.raygroupintl.vista.token.ChoiceSupply;
-import com.raygroupintl.vista.token.TFSerialBase;
-import com.raygroupintl.vista.token.TFSerialRO;
-import com.raygroupintl.vista.token.TList;
 
-public class TFExpr extends TFSerialRO {
+public class TFExpr extends TFSeqRO {
 	private MVersion version;
 	
 	private TFExpr(MVersion version) {
 		this.version = version;
 	}
 	
-	private static class TFExprTail extends TFSerialBase {
+	private static class TFExprTail extends TFSeq {
 		private MVersion version;
 		
 		private TFExprTail(MVersion version) {
@@ -95,17 +95,13 @@ public class TFExpr extends TFSerialRO {
 	}
 	
 	@Override
-	protected TExpr getTokenRequired(IToken requiredToken) {
+	protected TExpr getToken(IToken[] foundTokens) {
 		TExpr result = new TExpr();
-		result.add(requiredToken);
+		result.add(foundTokens[0]);
+		if (foundTokens[1] != null) {
+			result.addAll((TList) foundTokens[1]);
+		}
 		return result;
-	}
-	
-	@Override
-	protected TExpr getTokenBoth(IToken requiredToken, IToken optionalToken) {
-		TExpr expr = this.getTokenRequired(requiredToken);
-		expr.addAll((TList) optionalToken);
-		return expr;
 	}
 	
 	public static TFExpr getInstance(MVersion version) {

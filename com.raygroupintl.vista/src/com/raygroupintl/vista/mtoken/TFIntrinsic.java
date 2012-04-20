@@ -4,27 +4,27 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import com.raygroupintl.bnf.ChoiceSupply;
+import com.raygroupintl.bnf.TArray;
+import com.raygroupintl.bnf.TChar;
+import com.raygroupintl.bnf.TFChar;
+import com.raygroupintl.bnf.TFChoice;
+import com.raygroupintl.bnf.TFConstChar;
+import com.raygroupintl.bnf.TFEmpty;
+import com.raygroupintl.bnf.TFSeq;
+import com.raygroupintl.bnf.TFSeqRO;
+import com.raygroupintl.bnf.TFSeqROO;
+import com.raygroupintl.bnf.TFSeqRRO;
+import com.raygroupintl.bnf.TFSeqRequired;
+import com.raygroupintl.bnf.TFSyntaxError;
+import com.raygroupintl.bnf.TPair;
 import com.raygroupintl.vista.fnds.IToken;
 import com.raygroupintl.vista.fnds.ITokenFactory;
 import com.raygroupintl.vista.fnds.ITokenFactorySupply;
 import com.raygroupintl.vista.struct.MError;
 import com.raygroupintl.vista.struct.MNameWithMnemonic;
-import com.raygroupintl.vista.token.TArray;
-import com.raygroupintl.vista.token.TChar;
-import com.raygroupintl.vista.token.TFAllRequired;
-import com.raygroupintl.vista.token.TFChar;
-import com.raygroupintl.vista.token.ChoiceSupply;
-import com.raygroupintl.vista.token.TFConstChar;
-import com.raygroupintl.vista.token.TFEmpty;
-import com.raygroupintl.vista.token.TFChoice;
-import com.raygroupintl.vista.token.TFSerialBase;
-import com.raygroupintl.vista.token.TFSerialRO;
-import com.raygroupintl.vista.token.TFSerialROO;
-import com.raygroupintl.vista.token.TFSerialRRO;
-import com.raygroupintl.vista.token.TFSyntaxError;
-import com.raygroupintl.vista.token.TPair;
 
-public class TFIntrinsic extends TFSerialBase {	
+public class TFIntrinsic extends TFSeq {	
 	private static MNameWithMnemonic.Map INTRINSIC_VARIABLES = new MNameWithMnemonic.Map();
 
 	private MVersion version;
@@ -164,7 +164,7 @@ public class TFIntrinsic extends TFSerialBase {
 		addFunction(version, "J", "JUSTIFY", 2, 3); 	
 		addFunction(version, "L", "LENGTH", 1, 2); 		
 		FunctionInfo o = addFunction(version, "O", "ORDER", 1, 2); 	
-		o.setArgumentFactory(new TFSerialRO() {
+		o.setArgumentFactory(new TFSeqRO() {
 			@Override
 			protected ITokenFactory getRequired() {
 				return MTFSupply.getInstance(version).getTFGlvn();
@@ -172,7 +172,7 @@ public class TFIntrinsic extends TFSerialBase {
 			
 			@Override
 			protected ITokenFactory getOptional() {
-				return TFAllRequired.getInstance(TFConstChar.getInstance(','), TFExpr.getInstance(version));
+				return TFSeqRequired.getInstance(TFConstChar.getInstance(','), TFExpr.getInstance(version));
 			}
 		});		
 		addFunction(version, "P", "PIECE", 2, 4); 	
@@ -184,7 +184,7 @@ public class TFIntrinsic extends TFSerialBase {
 			@Override
 			protected ITokenFactory getElementFactory() {
 				ITokenFactory expr = TFExpr.getInstance(version);
-				return TFAllRequired.getInstance(expr, TFConstChar.getInstance(':'), expr);
+				return TFSeqRequired.getInstance(expr, TFConstChar.getInstance(':'), expr);
 			}
 		});
 		FunctionInfo t = addFunction(version, "T", "TEXT", 1, 1); 
@@ -205,10 +205,10 @@ public class TFIntrinsic extends TFSerialBase {
 		if (version == MVersion.CACHE) {
 			FunctionInfo c = addFunction(version, "CASE", 1, Integer.MAX_VALUE);
 			ITokenFactory expr = TFExpr.getInstance(version);
-			ITokenFactory ci = TFAllRequired.getInstance(ChoiceSupply.get(expr, ':', TFEmpty.getInstance(':')), TFConstChar.getInstance(':'), expr);
-			ITokenFactory cases =  TFAllRequired.getInstance(TFChar.COMMA, TFDelimitedList.getInstance(ci, ','));
+			ITokenFactory ci = TFSeqRequired.getInstance(ChoiceSupply.get(expr, ':', TFEmpty.getInstance(':')), TFConstChar.getInstance(':'), expr);
+			ITokenFactory cases =  TFSeqRequired.getInstance(TFChar.COMMA, TFDelimitedList.getInstance(ci, ','));
 			//ITokenFactory d = TFAllRequired.getInstance(TFChar.COMMA, TFChar.COLON,  expr);
-			ITokenFactory arg = TFAllRequired.getInstance(expr,  cases);
+			ITokenFactory arg = TFSeqRequired.getInstance(expr,  cases);
 			c.setArgumentFactory(arg);
 		}
 		
@@ -313,9 +313,9 @@ public class TFIntrinsic extends TFSerialBase {
 				switch (n) {
 					case 0: {
 						if (TFIntrinsic.this.version == MVersion.CACHE) {
-							return TFSerialRRO.getInstance(TFConstChar.getInstance('$'), TFIdent.getInstance(), TFList.getInstance(TFAllRequired.getInstance(TFChar.DOT, TFName.getInstance())));
+							return TFSeqRRO.getInstance(TFConstChar.getInstance('$'), TFIdent.getInstance(), TFList.getInstance(TFSeqRequired.getInstance(TFChar.DOT, TFName.getInstance())));
 						} else {
-							return TFAllRequired.getInstance(TFConstChar.getInstance('$'), TFIdent.getInstance());
+							return TFSeqRequired.getInstance(TFConstChar.getInstance('$'), TFIdent.getInstance());
 						}
 					}
 					case 1:

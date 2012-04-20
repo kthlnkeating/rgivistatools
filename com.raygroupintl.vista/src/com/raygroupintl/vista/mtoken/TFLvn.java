@@ -1,12 +1,12 @@
 package com.raygroupintl.vista.mtoken;
 
+import com.raygroupintl.bnf.TFConstChar;
+import com.raygroupintl.bnf.TFSeqRO;
+import com.raygroupintl.bnf.TFSeqRequired;
 import com.raygroupintl.vista.fnds.IToken;
 import com.raygroupintl.vista.fnds.ITokenFactory;
-import com.raygroupintl.vista.token.TFAllRequired;
-import com.raygroupintl.vista.token.TFConstChar;
-import com.raygroupintl.vista.token.TFSerialRO;
 
-public class TFLvn extends TFSerialRO {
+public class TFLvn extends TFSeqRO {
 	private MVersion version;
 	
 	private TFLvn(MVersion version) {
@@ -16,9 +16,9 @@ public class TFLvn extends TFSerialRO {
 	@Override
 	protected ITokenFactory getRequired() {
 		if (this.version == MVersion.CACHE) {
-			ITokenFactory methodOrProperty = TFAllRequired.getInstance(TFConstChar.getInstance('.'), TFName.getInstance());
+			ITokenFactory methodOrProperty = TFSeqRequired.getInstance(TFConstChar.getInstance('.'), TFName.getInstance());
 			ITokenFactory methodOrPropertyList = TFList.getInstance(methodOrProperty);
-			return TFSerialRO.getInstance(TFName.getInstance(), methodOrPropertyList);		
+			return TFSeqRO.getInstance(TFName.getInstance(), methodOrPropertyList);		
 		} else {		
 			return TFName.getInstance();
 		}

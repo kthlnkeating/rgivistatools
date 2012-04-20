@@ -1,38 +1,38 @@
 package com.raygroupintl.vista.mtoken;
 
+import com.raygroupintl.bnf.ChoiceSupply;
+import com.raygroupintl.bnf.TFChar;
+import com.raygroupintl.bnf.TFConstChar;
+import com.raygroupintl.bnf.TFConstString;
+import com.raygroupintl.bnf.TFNull;
+import com.raygroupintl.bnf.TFSeq;
+import com.raygroupintl.bnf.TFSeqOR;
+import com.raygroupintl.bnf.TFSeqRO;
+import com.raygroupintl.bnf.TFSeqROR;
+import com.raygroupintl.bnf.TFSeqRequired;
 import com.raygroupintl.vista.fnds.IToken;
 import com.raygroupintl.vista.fnds.ITokenFactory;
 import com.raygroupintl.vista.fnds.ITokenFactorySupply;
-import com.raygroupintl.vista.token.TFAllRequired;
-import com.raygroupintl.vista.token.TFChar;
-import com.raygroupintl.vista.token.TFConstChar;
-import com.raygroupintl.vista.token.TFConstString;
-import com.raygroupintl.vista.token.TFNull;
-import com.raygroupintl.vista.token.ChoiceSupply;
-import com.raygroupintl.vista.token.TFSerialBase;
-import com.raygroupintl.vista.token.TFSerialOR;
-import com.raygroupintl.vista.token.TFSerialRO;
-import com.raygroupintl.vista.token.TFSerialROR;
 
-public class TFDoArgument extends TFSerialBase {
+public class TFDoArgument extends TFSeq {
 	private MVersion version;
 	
 	protected TFDoArgument(MVersion version) {		
 		this.version = version;
 	}
 	
-	private static TFSerialROR getCacheSystemCall() {
+	private static TFSeqROR getCacheSystemCall() {
 		ITokenFactory system = new TFConstString("$SYSTEM", true);
-		ITokenFactory methods = TFList.getInstance(TFAllRequired.getInstance(TFChar.DOT, TFName.getInstance()));
+		ITokenFactory methods = TFList.getInstance(TFSeqRequired.getInstance(TFChar.DOT, TFName.getInstance()));
 		ITokenFactory arguments = TFActualList.getInstance(MVersion.CACHE);
-		return TFSerialROR.getInstance(system, methods, arguments);
+		return TFSeqROR.getInstance(system, methods, arguments);
 	}
 	
 	private static ITokenFactory getFactory0(IToken[] previousTokens, final MVersion version) {
 		TFLabel tfl = TFLabel.getInstance();
 		TFIndirection tfi = TFIndirection.getInstance(version);
 		if (version == MVersion.CACHE) {
-			ITokenFactory f = TFSerialRO.getInstance(tfl, TFAllRequired.getInstance(TFChar.DOT, TFName.getInstance()));
+			ITokenFactory f = TFSeqRO.getInstance(tfl, TFSeqRequired.getInstance(TFChar.DOT, TFName.getInstance()));
 			return ChoiceSupply.get(f, "@#$", tfi, TFCacheClassMethod.getInstance(), getCacheSystemCall());
 		} else {		
 			ITokenFactory tf = ChoiceSupply.get(tfl, tfi);
@@ -44,7 +44,7 @@ public class TFDoArgument extends TFSerialBase {
 		if (previousTokens[0] == null) {
 			return new TFNull();
 		} else {
-			return new TFAllRequired() {								
+			return new TFSeqRequired() {								
 				@Override
 				protected ITokenFactory[] getFactories() {
 					TFConstChar tfc = TFConstChar.getInstance('+');
@@ -63,12 +63,12 @@ public class TFDoArgument extends TFSerialBase {
 		ITokenFactory tfEnv = TFEnvironment.getInstance(version);
 		if (version == MVersion.CACHE) {
 			ITokenFactory tfNameOrObj = TFName.getInstance();
-			ITokenFactory objMethod = TFAllRequired.getInstance(TFConstChar.getInstance('.'), TFName.getInstance());			
-			ITokenFactory tfName = TFSerialRO.getInstance(tfNameOrObj, objMethod);
-			return TFSerialOR.getInstance(tfEnv, tfName);
+			ITokenFactory objMethod = TFSeqRequired.getInstance(TFConstChar.getInstance('.'), TFName.getInstance());			
+			ITokenFactory tfName = TFSeqRO.getInstance(tfNameOrObj, objMethod);
+			return TFSeqOR.getInstance(tfEnv, tfName);
 		} else {
 			ITokenFactory tfName = TFName.getInstance();
-			return TFSerialOR.getInstance(tfEnv, tfName);
+			return TFSeqOR.getInstance(tfEnv, tfName);
 		}
 	}
 	

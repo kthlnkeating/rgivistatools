@@ -1,11 +1,11 @@
 package com.raygroupintl.vista.mtoken;
 
+import com.raygroupintl.bnf.TFChoice;
+import com.raygroupintl.bnf.TFConstChar;
+import com.raygroupintl.bnf.TFEmpty;
+import com.raygroupintl.bnf.TFSeqROO;
+import com.raygroupintl.bnf.TFSeqRequired;
 import com.raygroupintl.vista.fnds.ITokenFactory;
-import com.raygroupintl.vista.token.TFAllRequired;
-import com.raygroupintl.vista.token.TFConstChar;
-import com.raygroupintl.vista.token.TFEmpty;
-import com.raygroupintl.vista.token.TFChoice;
-import com.raygroupintl.vista.token.TFSerialROO;
 
 public class TFUseArgument extends TFChoice {
 	private MVersion version;
@@ -65,9 +65,9 @@ public class TFUseArgument extends TFChoice {
 		if (ch == '@') {
 			return TFIndirection.getInstance(this.version);
 		} else {
-			return TFSerialROO.getInstance(TFExpr.getInstance(this.version), 
-					TFAllRequired.getInstance(TFConstChar.getInstance(':'), TFUseDeviceParams.getInstance(this.version)),
-					TFAllRequired.getInstance(TFConstChar.getInstance(':'), TFUseDeviceParams.getInstance(this.version)));
+			return TFSeqROO.getInstance(TFExpr.getInstance(this.version), 
+					TFSeqRequired.getInstance(TFConstChar.getInstance(':'), TFUseDeviceParams.getInstance(this.version)),
+					TFSeqRequired.getInstance(TFConstChar.getInstance(':'), TFUseDeviceParams.getInstance(this.version)));
 		}
 	}
 	

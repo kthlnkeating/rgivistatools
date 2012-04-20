@@ -1,6 +1,6 @@
 package com.raygroupintl.vista.mtoken;
 
-import com.raygroupintl.vista.token.TBasic;
+import com.raygroupintl.bnf.TBasic;
 
 public class TIdent extends TBasic {
 	public TIdent(String value) {

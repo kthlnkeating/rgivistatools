@@ -1,18 +1,18 @@
 package com.raygroupintl.vista.mtoken;
 
+import com.raygroupintl.bnf.ChoiceSupply;
+import com.raygroupintl.bnf.TFConstChar;
+import com.raygroupintl.bnf.TFEmpty;
+import com.raygroupintl.bnf.TFNull;
+import com.raygroupintl.bnf.TFSeq;
+import com.raygroupintl.bnf.TFSeqOR;
+import com.raygroupintl.bnf.TFSeqRO;
+import com.raygroupintl.bnf.TFSeqRequired;
 import com.raygroupintl.vista.fnds.IToken;
 import com.raygroupintl.vista.fnds.ITokenFactory;
 import com.raygroupintl.vista.fnds.ITokenFactorySupply;
-import com.raygroupintl.vista.token.TFAllRequired;
-import com.raygroupintl.vista.token.TFConstChar;
-import com.raygroupintl.vista.token.TFEmpty;
-import com.raygroupintl.vista.token.TFNull;
-import com.raygroupintl.vista.token.ChoiceSupply;
-import com.raygroupintl.vista.token.TFSerialBase;
-import com.raygroupintl.vista.token.TFSerialOR;
-import com.raygroupintl.vista.token.TFSerialRO;
 
-public class TFJobArgument extends TFSerialBase {
+public class TFJobArgument extends TFSeq {
 	private MVersion version;
 	
 	private TFJobArgument(MVersion version) {
@@ -30,7 +30,7 @@ public class TFJobArgument extends TFSerialBase {
 		if (previousTokens[0] == null) {
 			return new TFNull();
 		} else {
-			return new TFAllRequired() {								
+			return new TFSeqRequired() {								
 				@Override
 				protected ITokenFactory[] getFactories() {
 					TFConstChar tfc = TFConstChar.getInstance('+');
@@ -51,7 +51,7 @@ public class TFJobArgument extends TFSerialBase {
 		} else {
 			ITokenFactory tfEnv = TFEnvironment.getInstance(version);
 			ITokenFactory tfName = TFName.getInstance();
-			ITokenFactory tfEnvName = TFSerialOR.getInstance(tfEnv, tfName);
+			ITokenFactory tfEnvName = TFSeqOR.getInstance(tfEnv, tfName);
 			ITokenFactory tfInd = TFIndirection.getInstance(version);
 			return ChoiceSupply.get(tfEnvName, tfInd);
 		}
@@ -68,8 +68,8 @@ public class TFJobArgument extends TFSerialBase {
 	private static ITokenFactory getFactory5(IToken[] previousTokens, final MVersion version) {
 		TFExpr e = TFExpr.getInstance(version);
 		ITokenFactory processParams = ChoiceSupply.get(e, ":(", TFEmpty.getInstance(':'), TFDelimitedList.getInstance(e, ':', true, true));
-		ITokenFactory jobParams = TFAllRequired.getInstance(TFConstChar.getInstance(':'), processParams); 
-		return TFSerialRO.getInstance(jobParams, TFTimeout.getInstance(version));
+		ITokenFactory jobParams = TFSeqRequired.getInstance(TFConstChar.getInstance(':'), processParams); 
+		return TFSeqRO.getInstance(jobParams, TFTimeout.getInstance(version));
 	}
 
 	protected ITokenFactorySupply getFactorySupply() {

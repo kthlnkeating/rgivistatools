@@ -1,16 +1,16 @@
 package com.raygroupintl.vista.mtoken;
 
+import com.raygroupintl.bnf.ChoiceSupply;
+import com.raygroupintl.bnf.TFConstChar;
+import com.raygroupintl.bnf.TFNull;
+import com.raygroupintl.bnf.TFSeq;
+import com.raygroupintl.bnf.TFSeqOR;
+import com.raygroupintl.bnf.TFSeqRequired;
 import com.raygroupintl.vista.fnds.IToken;
 import com.raygroupintl.vista.fnds.ITokenFactory;
 import com.raygroupintl.vista.fnds.ITokenFactorySupply;
-import com.raygroupintl.vista.token.TFAllRequired;
-import com.raygroupintl.vista.token.TFConstChar;
-import com.raygroupintl.vista.token.TFNull;
-import com.raygroupintl.vista.token.ChoiceSupply;
-import com.raygroupintl.vista.token.TFSerialBase;
-import com.raygroupintl.vista.token.TFSerialOR;
 
-public class TFGotoArgument extends TFSerialBase {
+public class TFGotoArgument extends TFSeq {
 	protected MVersion version;
 	
 	private TFGotoArgument(MVersion version) {
@@ -25,7 +25,7 @@ public class TFGotoArgument extends TFSerialBase {
 	}
 	
 	private static ITokenFactory getFactory1(IToken[] previousTokens, final MVersion version) {
-		return new TFAllRequired() {								
+		return new TFSeqRequired() {								
 			@Override
 			protected ITokenFactory[] getFactories() {
 				TFConstChar tfc = TFConstChar.getInstance('+');
@@ -45,7 +45,7 @@ public class TFGotoArgument extends TFSerialBase {
 		} else {
 			ITokenFactory tfEnv = TFEnvironment.getInstance(version);
 			ITokenFactory tfName = TFName.getInstance();
-			ITokenFactory tfEnvName = TFSerialOR.getInstance(tfEnv, tfName);
+			ITokenFactory tfEnvName = TFSeqOR.getInstance(tfEnv, tfName);
 			ITokenFactory tfInd = TFIndirection.getInstance(version);
 			return ChoiceSupply.get(tfEnvName, tfInd);
 		}

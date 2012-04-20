@@ -1,10 +1,10 @@
 package com.raygroupintl.vista.mtoken;
 
+import com.raygroupintl.bnf.TFConstChar;
+import com.raygroupintl.bnf.TFSeqRequired;
 import com.raygroupintl.vista.fnds.ITokenFactory;
-import com.raygroupintl.vista.token.TFAllRequired;
-import com.raygroupintl.vista.token.TFConstChar;
 
-public class TFTimeout extends TFAllRequired {
+public class TFTimeout extends TFSeqRequired {
 	private MVersion version;
 	
 	private TFTimeout(MVersion version) {

@@ -2,19 +2,19 @@ package com.raygroupintl.vista.mtoken;
 
 import java.util.Arrays;
 
+import com.raygroupintl.bnf.ChoiceSupply;
+import com.raygroupintl.bnf.TFBasic;
+import com.raygroupintl.bnf.TFConstChars;
+import com.raygroupintl.bnf.TFSeqStatic;
+import com.raygroupintl.bnf.TFSyntaxError;
+import com.raygroupintl.bnf.TSyntaxError;
 import com.raygroupintl.struct.CharPredicate;
 import com.raygroupintl.struct.LetterPredicate;
 import com.raygroupintl.vista.fnds.ICharPredicate;
 import com.raygroupintl.vista.fnds.IToken;
 import com.raygroupintl.vista.fnds.ITokenFactory;
-import com.raygroupintl.vista.token.ChoiceSupply;
-import com.raygroupintl.vista.token.TFBasic;
-import com.raygroupintl.vista.token.TFConstChars;
-import com.raygroupintl.vista.token.TFSerial;
-import com.raygroupintl.vista.token.TFSyntaxError;
-import com.raygroupintl.vista.token.TSyntaxError;
 
-public class TFLine extends TFSerial {
+public class TFLine extends TFSeqStatic {
 	private MVersion version;
 	
 	private TFLine(MVersion version) {

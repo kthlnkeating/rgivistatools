@@ -1,7 +1,7 @@
 package com.raygroupintl.vista.mtoken;
 
+import com.raygroupintl.bnf.TBase;
 import com.raygroupintl.vista.struct.MNameWithMnemonic;
-import com.raygroupintl.vista.token.TBase;
 
 public abstract class TKeyword extends TBase {
 	private String value;

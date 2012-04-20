@@ -1,11 +1,11 @@
 package com.raygroupintl.vista.mtoken;
 
+import com.raygroupintl.bnf.TFConstChar;
+import com.raygroupintl.bnf.TFSeqStatic;
 import com.raygroupintl.vista.fnds.IToken;
 import com.raygroupintl.vista.fnds.ITokenFactory;
-import com.raygroupintl.vista.token.TFConstChar;
-import com.raygroupintl.vista.token.TFSerial;
 
-public class TFMergeArgument extends TFSerial {
+public class TFMergeArgument extends TFSeqStatic {
 	private MVersion version;
 	
 	private TFMergeArgument(MVersion version) {

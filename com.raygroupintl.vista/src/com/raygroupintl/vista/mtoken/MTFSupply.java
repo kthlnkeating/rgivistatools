@@ -2,6 +2,13 @@ package com.raygroupintl.vista.mtoken;
 
 import java.util.EnumMap;
 
+import com.raygroupintl.bnf.ChoiceSupply;
+import com.raygroupintl.bnf.TFConstChar;
+import com.raygroupintl.bnf.TFConstChars;
+import com.raygroupintl.bnf.TFConstString;
+import com.raygroupintl.bnf.TFEmpty;
+import com.raygroupintl.bnf.TFSeqRequired;
+import com.raygroupintl.bnf.TFSyntaxError;
 import com.raygroupintl.m.struct.IdentifierStartPredicate;
 import com.raygroupintl.struct.CharPredicate;
 import com.raygroupintl.struct.CharsPredicate;
@@ -10,16 +17,9 @@ import com.raygroupintl.struct.LetterPredicate;
 import com.raygroupintl.vista.fnds.ICharPredicate;
 import com.raygroupintl.vista.fnds.IToken;
 import com.raygroupintl.vista.fnds.ITokenFactory;
-import com.raygroupintl.vista.token.ChoiceSupply;
-import com.raygroupintl.vista.token.TFAllRequired;
-import com.raygroupintl.vista.token.TFConstChar;
-import com.raygroupintl.vista.token.TFConstChars;
-import com.raygroupintl.vista.token.TFConstString;
-import com.raygroupintl.vista.token.TFEmpty;
-import com.raygroupintl.vista.token.TFSyntaxError;
 
 public class MTFSupply {
-	private static final class TFExtrinsic extends TFAllRequired {
+	private static final class TFExtrinsic extends TFSeqRequired {
 		private MVersion version; 
 		
 		private TFExtrinsic(MVersion version) {			
@@ -55,7 +55,7 @@ public class MTFSupply {
 		}		
 	}
 	
-	static class TFGvnSsvn extends TFAllRequired {
+	static class TFGvnSsvn extends TFSeqRequired {
 		private MVersion version;
 		
 		private TFGvnSsvn(MVersion version) {
@@ -81,7 +81,7 @@ public class MTFSupply {
 		}		
 	}
 	
-	class TFUnaryOperatedExprItem extends TFAllRequired {
+	class TFUnaryOperatedExprItem extends TFSeqRequired {
 		@Override
 		protected ITokenFactory[] getFactories() {
 			ITokenFactory[] result = {new TFConstChars("+-\'"), getTFExprAtom()};
@@ -154,8 +154,8 @@ public class MTFSupply {
 			ICharPredicate[] predsDot = {new DigitPredicate(), new IdentifierStartPredicate(), new CharPredicate('@')};
 			ITokenFactory[] fsDot = {
 					TFNumLit.getInstance(),
-					TFAllRequired.getInstance(TFConstChar.getInstance('.'), TFName.getInstance()),
-					TFAllRequired.getInstance(TFConstChar.getInstance('.'), TFIndirection.getInstance(this.version))
+					TFSeqRequired.getInstance(TFConstChar.getInstance('.'), TFName.getInstance()),
+					TFSeqRequired.getInstance(TFConstChar.getInstance('.'), TFIndirection.getInstance(this.version))
 			};				
 			ITokenFactory fDot = ChoiceSupply.get('.', TFSyntaxError.getInstance(), predsDot, fsDot);
 			ITokenFactory f0 = TFEmpty.getInstance(',');

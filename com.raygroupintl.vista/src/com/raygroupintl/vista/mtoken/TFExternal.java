@@ -2,20 +2,20 @@ package com.raygroupintl.vista.mtoken;
 
 import java.util.List;
 
+import com.raygroupintl.bnf.TBase;
+import com.raygroupintl.bnf.TFConstChar;
+import com.raygroupintl.bnf.TFConstString;
+import com.raygroupintl.bnf.TFSeqROO;
+import com.raygroupintl.bnf.TFSeqRRO;
+import com.raygroupintl.bnf.TFSeqRequired;
+import com.raygroupintl.bnf.TPair;
+import com.raygroupintl.bnf.TPrefixedCopy;
 import com.raygroupintl.vista.fnds.IToken;
 import com.raygroupintl.vista.fnds.ITokenArray;
 import com.raygroupintl.vista.fnds.ITokenFactory;
 import com.raygroupintl.vista.struct.MError;
-import com.raygroupintl.vista.token.TFAllRequired;
-import com.raygroupintl.vista.token.TFConstChar;
-import com.raygroupintl.vista.token.TFConstString;
-import com.raygroupintl.vista.token.TFSerialROO;
-import com.raygroupintl.vista.token.TFSerialRRO;
-import com.raygroupintl.vista.token.TPair;
-import com.raygroupintl.vista.token.TBase;
-import com.raygroupintl.vista.token.TPrefixedCopy;
 
-public class TFExternal extends TFSerialRRO {
+public class TFExternal extends TFSeqRRO {
 	private static class TReference extends TBase {
 		private String routineName;
 		private String packageName;
@@ -60,12 +60,12 @@ public class TFExternal extends TFSerialRRO {
 		}				
 	}
 
-	private static final class TFAmpersandTail extends TFSerialROO {
+	private static final class TFAmpersandTail extends TFSeqROO {
 		@Override
 		protected final ITokenFactory[] getFactories() {
 			TFName n = new TFName();
-			TFAllRequired p = TFAllRequired.getInstance(new TFConstChar('.'), n);
-			TFAllRequired r = TFAllRequired.getInstance(new TFConstChar('^'), n);
+			TFSeqRequired p = TFSeqRequired.getInstance(new TFConstChar('.'), n);
+			TFSeqRequired r = TFSeqRequired.getInstance(new TFConstChar('^'), n);
 			return new ITokenFactory[]{n, p, r};
 		}
 		

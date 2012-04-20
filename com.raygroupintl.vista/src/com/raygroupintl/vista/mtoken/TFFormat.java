@@ -1,11 +1,11 @@
 package com.raygroupintl.vista.mtoken;
 
+import com.raygroupintl.bnf.TFBasic;
+import com.raygroupintl.bnf.TFChoice;
+import com.raygroupintl.bnf.TFConstChar;
+import com.raygroupintl.bnf.TFSeqRO;
+import com.raygroupintl.bnf.TFSeqRequired;
 import com.raygroupintl.vista.fnds.ITokenFactory;
-import com.raygroupintl.vista.token.TFAllRequired;
-import com.raygroupintl.vista.token.TFBasic;
-import com.raygroupintl.vista.token.TFConstChar;
-import com.raygroupintl.vista.token.TFChoice;
-import com.raygroupintl.vista.token.TFSerialRO;
 
 public class TFFormat extends TFChoice {
 	private MVersion version;
@@ -15,11 +15,11 @@ public class TFFormat extends TFChoice {
 	}
 	
 	private static ITokenFactory getTFTabFormat(MVersion version) {
-		return TFAllRequired.getInstance(TFConstChar.getInstance('?'), TFExpr.getInstance(version));
+		return TFSeqRequired.getInstance(TFConstChar.getInstance('?'), TFExpr.getInstance(version));
 	}
 		
 	private static ITokenFactory getTFPositionXTabFormat(MVersion version) {
-		return TFSerialRO.getInstance(TFBasic.getInstance('!','#'), getTFTabFormat(version));
+		return TFSeqRO.getInstance(TFBasic.getInstance('!','#'), getTFTabFormat(version));
 	}
 		
 	@Override

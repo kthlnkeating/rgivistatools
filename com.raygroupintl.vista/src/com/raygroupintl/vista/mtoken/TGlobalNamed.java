@@ -1,6 +1,6 @@
 package com.raygroupintl.vista.mtoken;
 
-import com.raygroupintl.vista.token.TArray;
+import com.raygroupintl.bnf.TArray;
 
 public class TGlobalNamed extends TArray {
 	public TGlobalNamed(TArray spec) {

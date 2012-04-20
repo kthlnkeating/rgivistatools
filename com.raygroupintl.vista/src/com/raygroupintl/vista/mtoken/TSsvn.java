@@ -3,10 +3,10 @@ package com.raygroupintl.vista.mtoken;
 import java.util.Arrays;
 import java.util.List;
 
+import com.raygroupintl.bnf.TArray;
 import com.raygroupintl.vista.fnds.IToken;
 import com.raygroupintl.vista.struct.MError;
 import com.raygroupintl.vista.struct.MNameWithMnemonic;
-import com.raygroupintl.vista.token.TArray;
 
 public class TSsvn extends TArray {
 	private static final MNameWithMnemonic.Map SSVS = new MNameWithMnemonic.Map();

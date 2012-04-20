@@ -1,12 +1,12 @@
 package com.raygroupintl.vista.mtoken;
 
+import com.raygroupintl.bnf.TFChar;
+import com.raygroupintl.bnf.TFConstString;
+import com.raygroupintl.bnf.TFSeqRO;
+import com.raygroupintl.bnf.TFSeqRequired;
 import com.raygroupintl.vista.fnds.ITokenFactory;
-import com.raygroupintl.vista.token.TFAllRequired;
-import com.raygroupintl.vista.token.TFChar;
-import com.raygroupintl.vista.token.TFConstString;
-import com.raygroupintl.vista.token.TFSerialRO;
 
-public class TFCacheClassMethod extends TFAllRequired {
+public class TFCacheClassMethod extends TFSeqRequired {
 	private static TFCacheClassMethod INSTANCE;
 	
 	private TFCacheClassMethod() {		
@@ -17,9 +17,9 @@ public class TFCacheClassMethod extends TFAllRequired {
 		return new ITokenFactory[] {
 				new TFConstString("##class"),
 				TFChar.LEFT_PAR,
-				TFSerialRO.getInstance(
+				TFSeqRO.getInstance(
 						TFName.getInstance(),
-						TFList.getInstance(TFAllRequired.getInstance(TFChar.DOT, TFName.getInstance()))),
+						TFList.getInstance(TFSeqRequired.getInstance(TFChar.DOT, TFName.getInstance()))),
 				TFChar.RIGHT_PAR,
 				TFChar.DOT,
 				TFName.getInstance(),
