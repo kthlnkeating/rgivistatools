@@ -4,7 +4,7 @@ import com.raygroupintl.bnf.TFChoice;
 import com.raygroupintl.bnf.TFConstChar;
 import com.raygroupintl.bnf.TFSeqRO;
 import com.raygroupintl.bnf.TFSeqRequired;
-import com.raygroupintl.vista.fnds.ITokenFactory;
+import com.raygroupintl.fnds.ITokenFactory;
 
 public class TFDeviceParams extends TFChoice {
 	private MVersion version;

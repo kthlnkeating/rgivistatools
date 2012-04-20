@@ -8,7 +8,7 @@ import java.util.Set;
 
 import org.junit.Test;
 
-import com.raygroupintl.vista.fnds.IFileAction;
+import com.raygroupintl.fnds.IFileAction;
 import com.raygroupintl.vista.mtoken.MVersion;
 import com.raygroupintl.vista.mtoken.TFRoutine;
 import com.raygroupintl.vista.mtoken.TLine;

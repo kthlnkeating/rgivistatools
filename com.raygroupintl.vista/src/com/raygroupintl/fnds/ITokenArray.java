@@ -1,4 +1,4 @@
-package com.raygroupintl.vista.fnds;
+package com.raygroupintl.fnds;
 
 public interface ITokenArray {
 	int getCount();

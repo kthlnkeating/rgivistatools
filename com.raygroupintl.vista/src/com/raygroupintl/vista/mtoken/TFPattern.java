@@ -7,8 +7,8 @@ import com.raygroupintl.bnf.TFConstChars;
 import com.raygroupintl.bnf.TFSeqOR;
 import com.raygroupintl.bnf.TFSeqOptional;
 import com.raygroupintl.bnf.TFSeqRequired;
-import com.raygroupintl.vista.fnds.IToken;
-import com.raygroupintl.vista.fnds.ITokenFactory;
+import com.raygroupintl.fnds.IToken;
+import com.raygroupintl.fnds.ITokenFactory;
 	
 public class TFPattern extends TFChoice {
 	private MVersion version;

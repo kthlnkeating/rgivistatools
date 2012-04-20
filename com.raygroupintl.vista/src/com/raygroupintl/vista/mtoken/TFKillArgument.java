@@ -1,7 +1,7 @@
 package com.raygroupintl.vista.mtoken;
 
 import com.raygroupintl.bnf.TFChoice;
-import com.raygroupintl.vista.fnds.ITokenFactory;
+import com.raygroupintl.fnds.ITokenFactory;
 
 public class TFKillArgument extends TFChoice {
 	private MVersion version;

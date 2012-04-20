@@ -4,8 +4,8 @@ import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Set;
 
-import com.raygroupintl.vista.fnds.IToken;
-import com.raygroupintl.vista.fnds.ITokenFactory;
+import com.raygroupintl.fnds.IToken;
+import com.raygroupintl.fnds.ITokenFactory;
 
 public class TFOperator implements ITokenFactory {
 	private static final char[] OPERATOR_CHARS = {

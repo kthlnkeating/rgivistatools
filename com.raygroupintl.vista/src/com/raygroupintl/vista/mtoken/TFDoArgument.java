@@ -10,9 +10,9 @@ import com.raygroupintl.bnf.TFSeqOR;
 import com.raygroupintl.bnf.TFSeqRO;
 import com.raygroupintl.bnf.TFSeqROR;
 import com.raygroupintl.bnf.TFSeqRequired;
-import com.raygroupintl.vista.fnds.IToken;
-import com.raygroupintl.vista.fnds.ITokenFactory;
-import com.raygroupintl.vista.fnds.ITokenFactorySupply;
+import com.raygroupintl.fnds.IToken;
+import com.raygroupintl.fnds.ITokenFactory;
+import com.raygroupintl.fnds.ITokenFactorySupply;
 
 public class TFDoArgument extends TFSeq {
 	private MVersion version;
@@ -76,8 +76,6 @@ public class TFDoArgument extends TFSeq {
 		if (previousTokens[2] == null) {
 			return new TFNull();
 		} else {
-			//ITokenFactory tfEnv = TFEnvironment.getInstance();
-			//ITokenFactory tfName = TFName.getInstance();
 			ITokenFactory tfEnvName = getRoutineSpecification(version); //TFSerialOR.getInstance(tfEnv, tfName);
 			ITokenFactory tfInd = TFIndirection.getInstance(version);
 			return ChoiceSupply.get(tfEnvName, tfInd);
@@ -100,9 +98,8 @@ public class TFDoArgument extends TFSeq {
 			}
 			
 			@Override
-			public ITokenFactory get(IToken[] previousTokens) {
-				int n = previousTokens.length;
-				switch (n) {
+			public ITokenFactory get(int seqIndex, IToken[] previousTokens) {
+				switch (seqIndex) {
 					case 0: return TFDoArgument.getFactory0(previousTokens, TFDoArgument.this.version); 
 					case 1: return TFDoArgument.getFactory1(previousTokens, TFDoArgument.this.version); 
 					case 2: return TFDoArgument.getFactory2(previousTokens); 

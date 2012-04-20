@@ -6,7 +6,7 @@ import com.raygroupintl.bnf.TFConstChar;
 import com.raygroupintl.bnf.TFSeqOptional;
 import com.raygroupintl.bnf.TFSeqRO;
 import com.raygroupintl.bnf.TFSeqRequired;
-import com.raygroupintl.vista.fnds.ITokenFactory;
+import com.raygroupintl.fnds.ITokenFactory;
 
 public class TFOpenArgument extends TFChoice {
 	private MVersion version;

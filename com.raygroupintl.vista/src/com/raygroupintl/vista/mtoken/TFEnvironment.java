@@ -3,7 +3,7 @@ package com.raygroupintl.vista.mtoken;
 import com.raygroupintl.bnf.TFChoice;
 import com.raygroupintl.bnf.TFConstChar;
 import com.raygroupintl.bnf.TFSeqRequired;
-import com.raygroupintl.vista.fnds.ITokenFactory;
+import com.raygroupintl.fnds.ITokenFactory;
 
 public class TFEnvironment extends TFChoice {
 	private MVersion version;

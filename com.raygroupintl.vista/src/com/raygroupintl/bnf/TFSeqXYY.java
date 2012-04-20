@@ -1,7 +1,7 @@
 package com.raygroupintl.bnf;
 
-import com.raygroupintl.vista.fnds.IToken;
-import com.raygroupintl.vista.fnds.ITokenFactory;
+import com.raygroupintl.fnds.IToken;
+import com.raygroupintl.fnds.ITokenFactory;
 
 public abstract class TFSeqXYY extends TFSeqStatic {
 	@Override

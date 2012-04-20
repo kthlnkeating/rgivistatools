@@ -6,8 +6,8 @@ import com.raygroupintl.bnf.TFSeqOR;
 import com.raygroupintl.bnf.TFSeqRO;
 import com.raygroupintl.bnf.TFSeqROR;
 import com.raygroupintl.bnf.TFSeqXYY;
-import com.raygroupintl.vista.fnds.IToken;
-import com.raygroupintl.vista.fnds.ITokenFactory;
+import com.raygroupintl.fnds.IToken;
+import com.raygroupintl.fnds.ITokenFactory;
 
 public class TFNumLit extends TFSeqRO {
 	private static class TFExp extends TFSeqROR {

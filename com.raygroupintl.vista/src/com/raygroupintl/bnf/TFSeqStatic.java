@@ -1,8 +1,8 @@
 package com.raygroupintl.bnf;
 
-import com.raygroupintl.vista.fnds.IToken;
-import com.raygroupintl.vista.fnds.ITokenFactory;
-import com.raygroupintl.vista.fnds.ITokenFactorySupply;
+import com.raygroupintl.fnds.IToken;
+import com.raygroupintl.fnds.ITokenFactory;
+import com.raygroupintl.fnds.ITokenFactorySupply;
 
 public abstract class TFSeqStatic extends TFSeq {
 	private ITokenFactorySupply supply;
@@ -13,10 +13,9 @@ public abstract class TFSeqStatic extends TFSeq {
 		final ITokenFactory[] factories = this.getFactories();
 		this.supply = new ITokenFactorySupply() {			
 			@Override
-			public ITokenFactory get(IToken[] previousTokens) {
-				int index = previousTokens.length;
-				if (index < factories.length) {				
-					return factories[index];
+			public ITokenFactory get(int seqIndex, IToken[] previousTokens) {
+				if (seqIndex < factories.length) {				
+					return factories[seqIndex];
 				} else {
 					return null;
 				}

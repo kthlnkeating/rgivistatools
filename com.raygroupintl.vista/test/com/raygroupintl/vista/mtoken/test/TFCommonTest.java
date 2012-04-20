@@ -3,8 +3,8 @@ package com.raygroupintl.vista.mtoken.test;
 import junit.framework.Assert;
 
 import com.raygroupintl.bnf.TSyntaxError;
-import com.raygroupintl.vista.fnds.IToken;
-import com.raygroupintl.vista.fnds.ITokenFactory;
+import com.raygroupintl.fnds.IToken;
+import com.raygroupintl.fnds.ITokenFactory;
 import com.raygroupintl.vista.mtoken.TFCommand;
 import com.raygroupintl.vista.mtoken.TFLine;
 

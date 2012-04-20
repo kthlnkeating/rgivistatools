@@ -2,7 +2,7 @@ package com.raygroupintl.vista.mtoken;
 
 import java.util.List;
 
-import com.raygroupintl.vista.fnds.IToken;
+import com.raygroupintl.fnds.IToken;
 
 public class Library {
 	public static void append(StringBuilder sb, IToken token) {

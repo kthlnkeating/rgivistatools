@@ -4,7 +4,7 @@ import com.raygroupintl.bnf.TFChar;
 import com.raygroupintl.bnf.TFConstString;
 import com.raygroupintl.bnf.TFSeqRO;
 import com.raygroupintl.bnf.TFSeqRequired;
-import com.raygroupintl.vista.fnds.ITokenFactory;
+import com.raygroupintl.fnds.ITokenFactory;
 
 public class TFCacheClassMethod extends TFSeqRequired {
 	private static TFCacheClassMethod INSTANCE;

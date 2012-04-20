@@ -9,14 +9,14 @@ import com.raygroupintl.bnf.TFConstString;
 import com.raygroupintl.bnf.TFEmpty;
 import com.raygroupintl.bnf.TFSeqRequired;
 import com.raygroupintl.bnf.TFSyntaxError;
+import com.raygroupintl.fnds.ICharPredicate;
+import com.raygroupintl.fnds.IToken;
+import com.raygroupintl.fnds.ITokenFactory;
 import com.raygroupintl.m.struct.IdentifierStartPredicate;
 import com.raygroupintl.struct.CharPredicate;
 import com.raygroupintl.struct.CharsPredicate;
 import com.raygroupintl.struct.DigitPredicate;
 import com.raygroupintl.struct.LetterPredicate;
-import com.raygroupintl.vista.fnds.ICharPredicate;
-import com.raygroupintl.vista.fnds.IToken;
-import com.raygroupintl.vista.fnds.ITokenFactory;
 
 public class MTFSupply {
 	private static final class TFExtrinsic extends TFSeqRequired {

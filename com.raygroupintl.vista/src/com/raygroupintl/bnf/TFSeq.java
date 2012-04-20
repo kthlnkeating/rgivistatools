@@ -2,9 +2,9 @@ package com.raygroupintl.bnf;
 
 import java.util.Arrays;
 
-import com.raygroupintl.vista.fnds.IToken;
-import com.raygroupintl.vista.fnds.ITokenFactory;
-import com.raygroupintl.vista.fnds.ITokenFactorySupply;
+import com.raygroupintl.fnds.IToken;
+import com.raygroupintl.fnds.ITokenFactory;
+import com.raygroupintl.fnds.ITokenFactorySupply;
 import com.raygroupintl.vista.struct.MError;
 
 public abstract class TFSeq implements ITokenFactory {
@@ -48,11 +48,11 @@ public abstract class TFSeq implements ITokenFactory {
 		int endIndex = line.length();
 		if (fromIndex < endIndex) {
 			int index = fromIndex;
-			IToken[] foundTokens = new IToken[0];
 			ITokenFactorySupply supply = this.getFactorySupply();
 			int factoryCount = supply.getCount();
+			IToken[] foundTokens = new IToken[0];
 			for (int i=0; i<factoryCount; ++i) {
-				ITokenFactory factory = supply.get(foundTokens);
+				ITokenFactory factory = supply.get(i, foundTokens);
 				assert(factory != null);
 				IToken token = factory.tokenize(line, index);				
 				

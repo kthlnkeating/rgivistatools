@@ -1,6 +1,6 @@
 package com.raygroupintl.vista.mtoken;
 
-import com.raygroupintl.vista.fnds.ITokenFactory;
+import com.raygroupintl.fnds.ITokenFactory;
 
 public class TFExprList extends TFCommaDelimitedList {
 	private MVersion version;

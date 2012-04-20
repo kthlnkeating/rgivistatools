@@ -3,8 +3,8 @@ package com.raygroupintl.bnf;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.raygroupintl.vista.fnds.IToken;
-import com.raygroupintl.vista.fnds.ITokenArray;
+import com.raygroupintl.fnds.IToken;
+import com.raygroupintl.fnds.ITokenArray;
 import com.raygroupintl.vista.struct.MError;
 
 public class TArray implements IToken, ITokenArray {

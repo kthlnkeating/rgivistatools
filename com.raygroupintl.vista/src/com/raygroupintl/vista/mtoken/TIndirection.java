@@ -3,7 +3,7 @@ package com.raygroupintl.vista.mtoken;
 import java.util.List;
 
 import com.raygroupintl.bnf.TBase;
-import com.raygroupintl.vista.fnds.IToken;
+import com.raygroupintl.fnds.IToken;
 import com.raygroupintl.vista.struct.MError;
 
 public class TIndirection extends TBase {

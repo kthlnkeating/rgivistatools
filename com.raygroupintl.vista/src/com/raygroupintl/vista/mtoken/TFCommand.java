@@ -19,9 +19,9 @@ import com.raygroupintl.bnf.TFSeqRO;
 import com.raygroupintl.bnf.TFSeqROO;
 import com.raygroupintl.bnf.TFSeqRequired;
 import com.raygroupintl.bnf.TSyntaxError;
-import com.raygroupintl.vista.fnds.IToken;
-import com.raygroupintl.vista.fnds.ITokenFactory;
-import com.raygroupintl.vista.fnds.ITokenFactorySupply;
+import com.raygroupintl.fnds.IToken;
+import com.raygroupintl.fnds.ITokenFactory;
+import com.raygroupintl.fnds.ITokenFactorySupply;
 import com.raygroupintl.vista.struct.MError;
 import com.raygroupintl.vista.struct.MNameWithMnemonic;
 
@@ -240,9 +240,8 @@ public class TFCommand extends TFSeq {
 			this.version = version;
 		}
 			
-		public ITokenFactory get(IToken[] previousTokens) {
-			int n = previousTokens.length;
-			switch (n) {
+		public ITokenFactory get(int seqIndex, IToken[] previousTokens) {
+			switch (seqIndex) {
 				case 0:
 					return TFCommandName.getInstance();
 				case 1:
@@ -265,7 +264,7 @@ public class TFCommand extends TFSeq {
 				case 4:
 					return TFBasic.getInstance(' ');
 				default:
-					assert(n == 5);
+					assert(seqIndex == 5);
 					return null;
 			}
 		}

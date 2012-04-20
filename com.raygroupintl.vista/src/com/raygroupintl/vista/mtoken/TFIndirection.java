@@ -5,9 +5,9 @@ import com.raygroupintl.bnf.TFConstChar;
 import com.raygroupintl.bnf.TFConstString;
 import com.raygroupintl.bnf.TFSeqRO;
 import com.raygroupintl.bnf.TFSeqRequired;
-import com.raygroupintl.vista.fnds.IToken;
-import com.raygroupintl.vista.fnds.ITokenArray;
-import com.raygroupintl.vista.fnds.ITokenFactory;
+import com.raygroupintl.fnds.IToken;
+import com.raygroupintl.fnds.ITokenArray;
+import com.raygroupintl.fnds.ITokenFactory;
 
 public class TFIndirection extends TFSeqRO {
 	private MVersion version;

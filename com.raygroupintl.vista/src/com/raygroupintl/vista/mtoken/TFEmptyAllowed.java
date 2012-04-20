@@ -1,8 +1,8 @@
 package com.raygroupintl.vista.mtoken;
 
 import com.raygroupintl.bnf.TEmpty;
-import com.raygroupintl.vista.fnds.IToken;
-import com.raygroupintl.vista.fnds.ITokenFactory;
+import com.raygroupintl.fnds.IToken;
+import com.raygroupintl.fnds.ITokenFactory;
 
 public abstract class TFEmptyAllowed implements ITokenFactory {
 	protected abstract ITokenFactory getFactory();

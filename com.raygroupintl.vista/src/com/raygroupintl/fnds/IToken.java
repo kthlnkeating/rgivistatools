@@ -1,4 +1,4 @@
-package com.raygroupintl.vista.fnds;
+package com.raygroupintl.fnds;
 
 import java.util.List;
 

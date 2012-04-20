@@ -1,8 +1,8 @@
 package com.raygroupintl.bnf;
 
+import com.raygroupintl.fnds.ICharPredicate;
+import com.raygroupintl.fnds.ITokenFactory;
 import com.raygroupintl.struct.CharPredicate;
-import com.raygroupintl.vista.fnds.ICharPredicate;
-import com.raygroupintl.vista.fnds.ITokenFactory;
 
 public class ChoiceSupply {
 	public static ITokenFactory get(ITokenFactory... factories) {

@@ -5,7 +5,7 @@ import com.raygroupintl.bnf.TFConstChar;
 import com.raygroupintl.bnf.TFEmpty;
 import com.raygroupintl.bnf.TFSeqROO;
 import com.raygroupintl.bnf.TFSeqRequired;
-import com.raygroupintl.vista.fnds.ITokenFactory;
+import com.raygroupintl.fnds.ITokenFactory;
 
 public class TFUseArgument extends TFChoice {
 	private MVersion version;

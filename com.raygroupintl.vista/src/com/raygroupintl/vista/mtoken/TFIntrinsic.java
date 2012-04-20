@@ -18,9 +18,9 @@ import com.raygroupintl.bnf.TFSeqRRO;
 import com.raygroupintl.bnf.TFSeqRequired;
 import com.raygroupintl.bnf.TFSyntaxError;
 import com.raygroupintl.bnf.TPair;
-import com.raygroupintl.vista.fnds.IToken;
-import com.raygroupintl.vista.fnds.ITokenFactory;
-import com.raygroupintl.vista.fnds.ITokenFactorySupply;
+import com.raygroupintl.fnds.IToken;
+import com.raygroupintl.fnds.ITokenFactory;
+import com.raygroupintl.fnds.ITokenFactorySupply;
 import com.raygroupintl.vista.struct.MError;
 import com.raygroupintl.vista.struct.MNameWithMnemonic;
 
@@ -308,9 +308,8 @@ public class TFIntrinsic extends TFSeq {
 			}
 			
 			@Override
-			public ITokenFactory get(IToken[] previousTokens) {
-				int n = previousTokens.length;
-				switch (n) {
+			public ITokenFactory get(int seqIndex, IToken[] previousTokens) {
+				switch (seqIndex) {
 					case 0: {
 						if (TFIntrinsic.this.version == MVersion.CACHE) {
 							return TFSeqRRO.getInstance(TFConstChar.getInstance('$'), TFIdent.getInstance(), TFList.getInstance(TFSeqRequired.getInstance(TFChar.DOT, TFName.getInstance())));

@@ -1,6 +1,6 @@
 package com.raygroupintl.struct;
 
-import com.raygroupintl.vista.fnds.ICharPredicate;
+import com.raygroupintl.fnds.ICharPredicate;
 
 public class LetterPredicate implements ICharPredicate {
 	@Override

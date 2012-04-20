@@ -3,8 +3,8 @@ package com.raygroupintl.vista.mtoken;
 import com.raygroupintl.bnf.TFConstChar;
 import com.raygroupintl.bnf.TFSeqOR;
 import com.raygroupintl.bnf.TFSeqXYY;
-import com.raygroupintl.vista.fnds.IToken;
-import com.raygroupintl.vista.fnds.ITokenFactory;
+import com.raygroupintl.fnds.IToken;
+import com.raygroupintl.fnds.ITokenFactory;
 
 public class TFLabelRef extends TFSeqXYY {	
 	private MVersion version;

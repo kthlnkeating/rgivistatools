@@ -5,8 +5,8 @@ import java.util.List;
 
 import com.raygroupintl.bnf.TList;
 import com.raygroupintl.bnf.TSyntaxError;
-import com.raygroupintl.vista.fnds.IToken;
-import com.raygroupintl.vista.fnds.ITokenFactory;
+import com.raygroupintl.fnds.IToken;
+import com.raygroupintl.fnds.ITokenFactory;
 
 public abstract class TFList implements ITokenFactory {
 	protected abstract ITokenFactory getFactory();

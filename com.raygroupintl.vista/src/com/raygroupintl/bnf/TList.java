@@ -3,7 +3,7 @@ package com.raygroupintl.bnf;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.raygroupintl.vista.fnds.IToken;
+import com.raygroupintl.fnds.IToken;
 import com.raygroupintl.vista.mtoken.TCommandName;
 import com.raygroupintl.vista.struct.MError;
 

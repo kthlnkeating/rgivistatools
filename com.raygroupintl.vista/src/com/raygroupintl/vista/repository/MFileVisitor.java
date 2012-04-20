@@ -10,7 +10,7 @@ import java.nio.file.attribute.BasicFileAttributes;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.raygroupintl.vista.fnds.IFileAction;
+import com.raygroupintl.fnds.IFileAction;
 
 public class MFileVisitor extends SimpleFileVisitor<Path> {
 	private IFileAction action;

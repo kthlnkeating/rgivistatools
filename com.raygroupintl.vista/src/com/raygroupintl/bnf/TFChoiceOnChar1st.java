@@ -1,7 +1,7 @@
 package com.raygroupintl.bnf;
 
-import com.raygroupintl.vista.fnds.ICharPredicate;
-import com.raygroupintl.vista.fnds.ITokenFactory;
+import com.raygroupintl.fnds.ICharPredicate;
+import com.raygroupintl.fnds.ITokenFactory;
 
 class TFChoiceOnChar1st extends TFChoiceOnChar {
 	private char leadingChar;

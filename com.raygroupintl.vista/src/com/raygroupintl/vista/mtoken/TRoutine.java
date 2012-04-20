@@ -10,7 +10,7 @@ import java.util.List;
 import java.util.Set;
 
 import com.raygroupintl.bnf.TBase;
-import com.raygroupintl.vista.fnds.IToken;
+import com.raygroupintl.fnds.IToken;
 import com.raygroupintl.vista.struct.MError;
 import com.raygroupintl.vista.struct.MLineLocation;
 import com.raygroupintl.vista.struct.MLocationedError;

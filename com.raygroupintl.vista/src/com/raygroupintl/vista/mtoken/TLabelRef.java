@@ -3,7 +3,7 @@ package com.raygroupintl.vista.mtoken;
 import java.util.Arrays;
 
 import com.raygroupintl.bnf.TArray;
-import com.raygroupintl.vista.fnds.IToken;
+import com.raygroupintl.fnds.IToken;
 
 public class TLabelRef extends TArray {
 	public TLabelRef(IToken[] tokens) {

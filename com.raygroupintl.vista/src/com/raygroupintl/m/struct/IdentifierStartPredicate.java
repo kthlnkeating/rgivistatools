@@ -1,7 +1,7 @@
 package com.raygroupintl.m.struct;
 
+import com.raygroupintl.fnds.ICharPredicate;
 import com.raygroupintl.struct.LetterPredicate;
-import com.raygroupintl.vista.fnds.ICharPredicate;
 
 public class IdentifierStartPredicate implements ICharPredicate {
 	private LetterPredicate letterPred = new LetterPredicate();

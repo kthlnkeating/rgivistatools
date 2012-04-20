@@ -3,8 +3,8 @@ package com.raygroupintl.vista.mtoken;
 import com.raygroupintl.bnf.TFConstChar;
 import com.raygroupintl.bnf.TFSeqROR;
 import com.raygroupintl.bnf.TList;
-import com.raygroupintl.vista.fnds.IToken;
-import com.raygroupintl.vista.fnds.ITokenFactory;
+import com.raygroupintl.fnds.IToken;
+import com.raygroupintl.fnds.ITokenFactory;
 
 public class TFActualList extends TFSeqROR {
 	private MVersion version;

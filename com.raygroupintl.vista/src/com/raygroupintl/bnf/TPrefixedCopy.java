@@ -1,6 +1,6 @@
 package com.raygroupintl.bnf;
 
-import com.raygroupintl.vista.fnds.IToken;
+import com.raygroupintl.fnds.IToken;
 
 public class TPrefixedCopy extends TCopy {
 	private String prefix;

@@ -2,8 +2,8 @@ package com.raygroupintl.vista.mtoken;
 
 import com.raygroupintl.bnf.TFConstChar;
 import com.raygroupintl.bnf.TFSeqStatic;
-import com.raygroupintl.vista.fnds.IToken;
-import com.raygroupintl.vista.fnds.ITokenFactory;
+import com.raygroupintl.fnds.IToken;
+import com.raygroupintl.fnds.ITokenFactory;
 
 public class TFMergeArgument extends TFSeqStatic {
 	private MVersion version;

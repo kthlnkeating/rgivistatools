@@ -8,11 +8,11 @@ import com.raygroupintl.bnf.TFConstChars;
 import com.raygroupintl.bnf.TFSeqStatic;
 import com.raygroupintl.bnf.TFSyntaxError;
 import com.raygroupintl.bnf.TSyntaxError;
+import com.raygroupintl.fnds.ICharPredicate;
+import com.raygroupintl.fnds.IToken;
+import com.raygroupintl.fnds.ITokenFactory;
 import com.raygroupintl.struct.CharPredicate;
 import com.raygroupintl.struct.LetterPredicate;
-import com.raygroupintl.vista.fnds.ICharPredicate;
-import com.raygroupintl.vista.fnds.IToken;
-import com.raygroupintl.vista.fnds.ITokenFactory;
 
 public class TFLine extends TFSeqStatic {
 	private MVersion version;

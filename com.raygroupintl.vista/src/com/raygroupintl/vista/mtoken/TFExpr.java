@@ -4,9 +4,9 @@ import com.raygroupintl.bnf.ChoiceSupply;
 import com.raygroupintl.bnf.TFSeq;
 import com.raygroupintl.bnf.TFSeqRO;
 import com.raygroupintl.bnf.TList;
-import com.raygroupintl.vista.fnds.IToken;
-import com.raygroupintl.vista.fnds.ITokenFactory;
-import com.raygroupintl.vista.fnds.ITokenFactorySupply;
+import com.raygroupintl.fnds.IToken;
+import com.raygroupintl.fnds.ITokenFactory;
+import com.raygroupintl.fnds.ITokenFactorySupply;
 
 public class TFExpr extends TFSeqRO {
 	private MVersion version;
@@ -39,9 +39,8 @@ public class TFExpr extends TFSeqRO {
 				}
 				
 				@Override
-				public ITokenFactory get(IToken[] previousTokens) {
-					int n = previousTokens.length;
-					switch (n) {
+				public ITokenFactory get(int seqIndex, IToken[] previousTokens) {
+					switch (seqIndex) {
 						case 0: 
 							return TFOperator.getInstance();
 						case 1:

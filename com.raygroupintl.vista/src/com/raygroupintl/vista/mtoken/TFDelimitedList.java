@@ -6,8 +6,8 @@ import com.raygroupintl.bnf.TFEmpty;
 import com.raygroupintl.bnf.TFSeqRO;
 import com.raygroupintl.bnf.TFSeqRequired;
 import com.raygroupintl.bnf.TList;
-import com.raygroupintl.vista.fnds.IToken;
-import com.raygroupintl.vista.fnds.ITokenFactory;
+import com.raygroupintl.fnds.IToken;
+import com.raygroupintl.fnds.ITokenFactory;
 
 public abstract class TFDelimitedList extends TFSeqRO {
 	protected abstract ITokenFactory getElementFactory();

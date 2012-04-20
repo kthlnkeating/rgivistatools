@@ -10,9 +10,9 @@ import com.raygroupintl.bnf.TFSeqRRO;
 import com.raygroupintl.bnf.TFSeqRequired;
 import com.raygroupintl.bnf.TPair;
 import com.raygroupintl.bnf.TPrefixedCopy;
-import com.raygroupintl.vista.fnds.IToken;
-import com.raygroupintl.vista.fnds.ITokenArray;
-import com.raygroupintl.vista.fnds.ITokenFactory;
+import com.raygroupintl.fnds.IToken;
+import com.raygroupintl.fnds.ITokenArray;
+import com.raygroupintl.fnds.ITokenFactory;
 import com.raygroupintl.vista.struct.MError;
 
 public class TFExternal extends TFSeqRRO {

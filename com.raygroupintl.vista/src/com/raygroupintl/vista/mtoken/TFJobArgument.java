@@ -8,9 +8,9 @@ import com.raygroupintl.bnf.TFSeq;
 import com.raygroupintl.bnf.TFSeqOR;
 import com.raygroupintl.bnf.TFSeqRO;
 import com.raygroupintl.bnf.TFSeqRequired;
-import com.raygroupintl.vista.fnds.IToken;
-import com.raygroupintl.vista.fnds.ITokenFactory;
-import com.raygroupintl.vista.fnds.ITokenFactorySupply;
+import com.raygroupintl.fnds.IToken;
+import com.raygroupintl.fnds.ITokenFactory;
+import com.raygroupintl.fnds.ITokenFactorySupply;
 
 public class TFJobArgument extends TFSeq {
 	private MVersion version;
@@ -80,9 +80,8 @@ public class TFJobArgument extends TFSeq {
 			}
 			
 			@Override
-			public ITokenFactory get(IToken[] previousTokens) {
-				int n = previousTokens.length;
-				switch (n) {
+			public ITokenFactory get(int seqIndex, IToken[] previousTokens) {
+				switch (seqIndex) {
 					case 0: return TFJobArgument.getFactory0(previousTokens, TFJobArgument.this.version); 
 					case 1: return TFJobArgument.getFactory1(previousTokens, TFJobArgument.this.version); 
 					case 2: return TFJobArgument.getFactory2(previousTokens); 

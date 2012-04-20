@@ -6,7 +6,7 @@ import junit.framework.Assert;
 
 import org.junit.Test;
 
-import com.raygroupintl.vista.fnds.IToken;
+import com.raygroupintl.fnds.IToken;
 import com.raygroupintl.vista.mtoken.MVersion;
 import com.raygroupintl.vista.mtoken.TFLine;
 import com.raygroupintl.vista.struct.MError;

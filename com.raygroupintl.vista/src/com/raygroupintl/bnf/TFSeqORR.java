@@ -1,6 +1,6 @@
 package com.raygroupintl.bnf;
 
-import com.raygroupintl.vista.fnds.IToken;
+import com.raygroupintl.fnds.IToken;
 
 public abstract class TFSeqORR extends TFSeqStatic {
 	@Override

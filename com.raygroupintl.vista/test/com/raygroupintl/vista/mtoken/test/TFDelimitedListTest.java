@@ -2,7 +2,7 @@ package com.raygroupintl.vista.mtoken.test;
 
 import org.junit.Test;
 
-import com.raygroupintl.vista.fnds.ITokenFactory;
+import com.raygroupintl.fnds.ITokenFactory;
 import com.raygroupintl.vista.mtoken.MTFSupply;
 import com.raygroupintl.vista.mtoken.MVersion;
 import com.raygroupintl.vista.mtoken.TFDelimitedList;

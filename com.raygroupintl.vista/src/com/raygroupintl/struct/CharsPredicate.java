@@ -1,6 +1,6 @@
 package com.raygroupintl.struct;
 
-import com.raygroupintl.vista.fnds.ICharPredicate;
+import com.raygroupintl.fnds.ICharPredicate;
 
 public class CharsPredicate implements ICharPredicate {
 	private char[] chs;
