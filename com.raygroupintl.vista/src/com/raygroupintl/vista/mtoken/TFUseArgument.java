@@ -3,6 +3,7 @@ package com.raygroupintl.vista.mtoken;
 import com.raygroupintl.bnf.TFChoice;
 import com.raygroupintl.bnf.TFConstChar;
 import com.raygroupintl.bnf.TFEmpty;
+import com.raygroupintl.bnf.TFEmptyVerified;
 import com.raygroupintl.bnf.TFSeqROO;
 import com.raygroupintl.bnf.TFSeqRequired;
 import com.raygroupintl.fnds.ITokenFactory;
@@ -25,15 +26,11 @@ public class TFUseArgument extends TFChoice {
 			switch (ch) {
 				case ':':
 				case ')':
-					return TFEmpty.getInstance(ch);
+					return TFEmpty.getInstance();
 				default:
 					return TFExpr.getInstance(this.version);
 			}
 		}
-		
-		//public static TFUseDeviceParam getInstance(MVersion version) {
-		//	return new TFUseDeviceParam(version);
-		//}
 	}
 		
 	private static class TFUseDeviceParams extends TFChoice {			
@@ -49,7 +46,7 @@ public class TFUseArgument extends TFChoice {
 			if (ch == '(') {
 				return TFInParantheses.getInstance(TFDelimitedList.getInstance(f, ':'));
 			} else if (ch == ':') {
-				return TFEmpty.getInstance(':'); 
+				return TFEmpty.getInstance(); 
 			} else {
 				return f;
 			}

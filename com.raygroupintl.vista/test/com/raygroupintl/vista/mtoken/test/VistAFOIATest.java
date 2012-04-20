@@ -30,6 +30,14 @@ public class VistAFOIATest {
 			@Override
 			public void handle(Path path) {
 				try {
+					//if (! path.toString().endsWith("PRCAUDT.m")) return;
+					//byte[] b = Files.readAllBytes(path);
+					//String text = new String(b);
+					//String n = path.getFileName().toString().split(".m")[0];
+					//System.out.print(n + '\n');
+					//TRoutine r = tf.tokenize(n, text, 0);
+					//String tokenValue = r.getStringValue();					
+					//Assert.assertEquals("Different: " + n, text, tokenValue);					
 					MRoutineContent content = MRoutineContent.getInstance(path); 
 					TRoutine r = tf.tokenize(content);
 					List<String> lines = content.getLines();

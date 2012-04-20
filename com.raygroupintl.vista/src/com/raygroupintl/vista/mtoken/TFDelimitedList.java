@@ -3,6 +3,7 @@ package com.raygroupintl.vista.mtoken;
 import com.raygroupintl.bnf.ChoiceSupply;
 import com.raygroupintl.bnf.TFConstChar;
 import com.raygroupintl.bnf.TFEmpty;
+import com.raygroupintl.bnf.TFEmptyVerified;
 import com.raygroupintl.bnf.TFSeqRO;
 import com.raygroupintl.bnf.TFSeqRequired;
 import com.raygroupintl.bnf.TList;
@@ -62,7 +63,7 @@ public abstract class TFDelimitedList extends TFSeqRO {
 	public static ITokenFactory getInstance(final ITokenFactory f, final char ch, final boolean inParan, boolean optional) {
 		if (optional) {
 			char[] selectionChars = {ch, ')'};
-			ITokenFactory fOptional = ChoiceSupply.get(f, String.valueOf(selectionChars), TFEmpty.getInstance(ch), TFEmpty.getInstance(')'));
+			ITokenFactory fOptional = ChoiceSupply.get(f, String.valueOf(selectionChars), TFEmpty.getInstance(), TFEmpty.getInstance());
 			return getInstance(fOptional, ch, inParan);
 		} else {
 			return getInstance(f, ch, inParan);

@@ -67,7 +67,7 @@ public class TFJobArgument extends TFSeq {
 
 	private static ITokenFactory getFactory5(IToken[] previousTokens, final MVersion version) {
 		TFExpr e = TFExpr.getInstance(version);
-		ITokenFactory processParams = ChoiceSupply.get(e, ":(", TFEmpty.getInstance(':'), TFDelimitedList.getInstance(e, ':', true, true));
+		ITokenFactory processParams = ChoiceSupply.get(e, ":(", TFEmpty.getInstance(), TFDelimitedList.getInstance(e, ':', true, true));
 		ITokenFactory jobParams = TFSeqRequired.getInstance(TFConstChar.getInstance(':'), processParams); 
 		return TFSeqRO.getInstance(jobParams, TFTimeout.getInstance(version));
 	}

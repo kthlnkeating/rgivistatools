@@ -1,4 +1,4 @@
-package com.raygroupintl.vista.mtoken;
+package com.raygroupintl.bnf;
 
 import com.raygroupintl.bnf.TEmpty;
 import com.raygroupintl.fnds.IToken;

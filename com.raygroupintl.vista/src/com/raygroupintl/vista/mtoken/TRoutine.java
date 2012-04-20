@@ -44,7 +44,7 @@ public class TRoutine extends TBase {
 		StringBuilder sb = new StringBuilder();
 		for (TLine line : this.lines) {
 			sb.append(line.getStringValue());
-			sb.append('\n');
+			//sb.append('\n');
 		}
 		return sb.toString();
 	}

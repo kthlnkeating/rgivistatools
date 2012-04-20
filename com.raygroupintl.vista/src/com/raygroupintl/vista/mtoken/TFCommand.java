@@ -12,7 +12,7 @@ import com.raygroupintl.bnf.TFChar;
 import com.raygroupintl.bnf.TFChoice;
 import com.raygroupintl.bnf.TFConstChar;
 import com.raygroupintl.bnf.TFConstChars;
-import com.raygroupintl.bnf.TFEmpty;
+import com.raygroupintl.bnf.TFEmptyVerified;
 import com.raygroupintl.bnf.TFSeq;
 import com.raygroupintl.bnf.TFSeqORO;
 import com.raygroupintl.bnf.TFSeqRO;
@@ -127,6 +127,8 @@ public class TFCommand extends TFSeq {
 					inQuotes = ! inQuotes;
 				} else if (ch == ' ') {
 					if (! inQuotes) break;
+				} else if ((ch == '\r') || (ch == '\n')) {
+					break;
 				}
 				++index;
 			}
@@ -159,7 +161,7 @@ public class TFCommand extends TFSeq {
 		private static Map<String, ITokenFactory> ARGUMENT_FACTORIES;
 		private static void initialize(final MVersion version) {
 			ARGUMENT_FACTORIES = new HashMap<String, ITokenFactory>();
-			TFEmpty empty = TFEmpty.getInstance();
+			TFEmptyVerified empty = TFEmptyVerified.getInstance(' ');
 			ARGUMENT_FACTORIES.put("E", empty); 	
 			ARGUMENT_FACTORIES.put("TC", empty); 	
 			ARGUMENT_FACTORIES.put("TR", empty); 	
@@ -284,9 +286,9 @@ public class TFCommand extends TFSeq {
 		if (seqIndex == 0) {
 			return RETURN_NULL;
 		}
-		if (seqIndex == 2) {
-			return this.getErrorCode();
-		}
+		//if (seqIndex == 2) {
+		//	return this.getErrorCode();
+		//}
 		return CONTINUE;				
 	}
 

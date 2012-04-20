@@ -10,11 +10,21 @@ public class TSyntaxError implements IToken {
 	private int errorCode = MError.ERR_GENERAL_SYNTAX;
 	private String line;
 	private int fromIndex;
+	private int endIndex;
 	private int errorLocationIndex;
 	
 	public TSyntaxError(String line, int index) {
 		this.line = line;
+		int i = index;
+		while (i < line.length()) {
+			char ch = line.charAt(i);
+			if ((ch == '\r') || (ch == '\n')) {
+				break;
+			}
+			++i;
+		}		
 		this.fromIndex = index;
+		this.endIndex = i;
 		this.errorLocationIndex = index;
 	}
 	
@@ -39,12 +49,12 @@ public class TSyntaxError implements IToken {
 	
 	@Override
 	public String getStringValue() {
-		return this.line.substring(fromIndex);
+		return this.line.substring(fromIndex, this.endIndex);
 	}
 
 	@Override
 	public int getStringSize() {
-		return this.line.length() - this.fromIndex;
+		return this.endIndex - this.fromIndex;
 	}
 
 	@Override

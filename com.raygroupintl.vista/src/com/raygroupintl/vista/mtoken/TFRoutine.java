@@ -19,6 +19,19 @@ public class TFRoutine {
 		return result;
 	}
 	
+	public TRoutine tokenize(String name, String line, int fromIndex) {
+		int endIndex = line.length();
+		int index = fromIndex;
+		TRoutine result = new TRoutine(name);
+		while (index < endIndex) {
+			TLine tokens = (TLine) this.tfLine.tokenize(line, index);
+			index += tokens == null ? 0 : tokens.getStringSize();
+			result.add(tokens);						
+		}
+		
+		return result;
+	}
+
 	public static TFRoutine getInstance(MVersion version) {
 		TFOperator.addOperator(">=");
 		TFOperator.addOperator("<=");
