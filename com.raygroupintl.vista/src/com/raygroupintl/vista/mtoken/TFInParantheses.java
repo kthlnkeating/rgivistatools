@@ -45,7 +45,7 @@ public abstract class TFInParantheses extends TFSeqStatic {
 		protected final int validateNull(int seqIndex, IToken[] foundTokens) {
 			if (seqIndex == 0) {
 				return RETURN_NULL;
-			} else if (foundTokens.length == 1) {
+			} else if (seqIndex == 1) {
 				return CONTINUE;
 			} else {
 				return this.getErrorCode();

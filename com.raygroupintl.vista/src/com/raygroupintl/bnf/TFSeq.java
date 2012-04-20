@@ -1,7 +1,5 @@
 package com.raygroupintl.bnf;
 
-import java.util.Arrays;
-
 import com.raygroupintl.fnds.IToken;
 import com.raygroupintl.fnds.ITokenFactory;
 import com.raygroupintl.fnds.ITokenFactorySupply;
@@ -38,7 +36,7 @@ public abstract class TFSeq implements ITokenFactory {
 		}
 	}
 	
-	protected IToken getTokenWhenSyntaxError(IToken[] found, TSyntaxError error, int fromIndex) {
+	protected IToken getTokenWhenSyntaxError(int seqIndex, IToken[] found, TSyntaxError error, int fromIndex) {
 		error.setFromIndex(fromIndex);
 		return error;
 	}
@@ -50,14 +48,14 @@ public abstract class TFSeq implements ITokenFactory {
 			int index = fromIndex;
 			ITokenFactorySupply supply = this.getFactorySupply();
 			int factoryCount = supply.getCount();
-			IToken[] foundTokens = new IToken[0];
+			IToken[] foundTokens = new IToken[factoryCount];
 			for (int i=0; i<factoryCount; ++i) {
 				ITokenFactory factory = supply.get(i, foundTokens);
 				assert(factory != null);
 				IToken token = factory.tokenize(line, index);				
 				
 				if ((token != null) && (token instanceof TSyntaxError)) {
-					return this.getTokenWhenSyntaxError(foundTokens, (TSyntaxError) token, fromIndex);
+					return this.getTokenWhenSyntaxError(i, foundTokens, (TSyntaxError) token, fromIndex);
 				}
 
 				int code = this.validate(i, foundTokens, token);
@@ -71,8 +69,7 @@ public abstract class TFSeq implements ITokenFactory {
 					return TSyntaxError.getInstance(code, line, index, fromIndex);
 				}
 
-				foundTokens = Arrays.copyOf(foundTokens, foundTokens.length+1);
-				foundTokens[foundTokens.length-1] = token;
+				foundTokens[i] = token;
 				if (token == null) continue;				
 				index += token.getStringSize();					
 				
@@ -83,9 +80,6 @@ public abstract class TFSeq implements ITokenFactory {
 					}
 					break;
 				}
-			}
-			if (foundTokens.length < factoryCount) {
-				foundTokens = Arrays.copyOf(foundTokens, factoryCount);
 			}
 			return this.getToken(foundTokens);
 		}		

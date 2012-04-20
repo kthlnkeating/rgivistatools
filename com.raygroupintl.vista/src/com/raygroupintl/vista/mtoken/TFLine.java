@@ -1,7 +1,5 @@
 package com.raygroupintl.vista.mtoken;
 
-import java.util.Arrays;
-
 import com.raygroupintl.bnf.ChoiceSupply;
 import com.raygroupintl.bnf.TFBasic;
 import com.raygroupintl.bnf.TFConstChars;
@@ -21,8 +19,6 @@ public class TFLine extends TFSeqStatic {
 		this.version = version;
 	}
 	
-	private static final int NUM_LOGICAL_TOKENS = 5; // label, formals, space, level, commands
-	
 	private static ITokenFactory getTFFormal() {
 		TFName argument = TFName.getInstance();
 		TFDelimitedList arguments = TFDelimitedList.getInstance(argument, ',');
@@ -37,7 +33,7 @@ public class TFLine extends TFSeqStatic {
  	
 	
 	@Override
-	protected ITokenFactory[] getFactories() {
+	protected ITokenFactory[] getFactories() { // label, formals, space, level, commands
 		return new ITokenFactory[]{
 				TFLabel.getInstance(),
 				getTFFormal(),
@@ -63,11 +59,8 @@ public class TFLine extends TFSeqStatic {
 	}
 	
 	@Override
-	protected IToken getTokenWhenSyntaxError(IToken[] found, TSyntaxError error, int fromIndex) {
-		int n = found.length;
-		assert(n < NUM_LOGICAL_TOKENS);
-		found = Arrays.copyOf(found, NUM_LOGICAL_TOKENS);
-		found[n] = error;
+	protected IToken getTokenWhenSyntaxError(int seqIndex, IToken[] found, TSyntaxError error, int fromIndex) {
+		found[seqIndex] = error;
 		return new TLine(found);
 	}
 	
