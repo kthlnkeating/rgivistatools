@@ -1,10 +1,12 @@
 package com.raygroupintl.vista.struct;
 
+import com.raygroupintl.m.struct.LineLocation;
+
 public class MLocationedError {
 	private MError error;
-	private MLineLocation location;
+	private LineLocation location;
 	
-	public MLocationedError(MError error, MLineLocation location) {
+	public MLocationedError(MError error, LineLocation location) {
 		this.error = error;
 		this.location = location;
 	}
@@ -13,7 +15,7 @@ public class MLocationedError {
 		return this.error;
 	}
 	
-	public MLineLocation getLocation() {
+	public LineLocation getLocation() {
 		return this.location;
 	}
 }

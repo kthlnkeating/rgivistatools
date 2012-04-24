@@ -11,8 +11,9 @@ import java.util.Set;
 
 import com.raygroupintl.bnf.TBase;
 import com.raygroupintl.fnds.IToken;
+import com.raygroupintl.m.struct.LineLocation;
+import com.raygroupintl.m.struct.RoutineFanouts;
 import com.raygroupintl.vista.struct.MError;
-import com.raygroupintl.vista.struct.MLineLocation;
 import com.raygroupintl.vista.struct.MLocationedError;
 
 public class TRoutine extends TBase {
@@ -88,7 +89,7 @@ public class TRoutine extends TBase {
 		}		
 	}
 
-	public List<MLocationedError> getErrors(Set<MLineLocation> exemptions) throws IOException {
+	public List<MLocationedError> getErrors(Set<LineLocation> exemptions) throws IOException {
 		String lastTag = this.name;
 		int index = 0;
 		List<MLocationedError> result = new ArrayList<MLocationedError>();
@@ -98,7 +99,7 @@ public class TRoutine extends TBase {
 				lastTag = tag;
 				index = 0;
 			}
-			MLineLocation location = new MLineLocation(lastTag, index);
+			LineLocation location = new LineLocation(lastTag, index);
 			if ((exemptions == null) || (! exemptions.contains(location))) {
 				List<MError> errors = line.getErrors();
 				if ((errors != null) && (errors.size() > 0)) {
@@ -112,6 +113,10 @@ public class TRoutine extends TBase {
 		}		
 		return result;
 	}	
+	
+	public RoutineFanouts getFanouts() {
+		return null;
+	}
 	
 	public void write(Path path) throws IOException {
 		List<String> fileLines = new ArrayList<String>();

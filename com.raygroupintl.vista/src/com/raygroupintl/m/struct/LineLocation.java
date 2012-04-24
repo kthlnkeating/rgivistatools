@@ -1,10 +1,10 @@
-package com.raygroupintl.vista.struct;
+package com.raygroupintl.m.struct;
 
-public class MLineLocation {
+public class LineLocation {
 	private String tag;
 	private int offset;
 	
-	public MLineLocation(String tag, int offset) {
+	public LineLocation(String tag, int offset) {
 		this.tag = tag;
 		this.offset = offset;
 	}
@@ -19,8 +19,8 @@ public class MLineLocation {
 	
 	@Override
 	public boolean equals(Object rhs) {
-		if ((rhs != null) && (rhs instanceof MLineLocation)) {	
-			MLineLocation r = (MLineLocation) rhs;
+		if ((rhs != null) && (rhs instanceof LineLocation)) {	
+			LineLocation r = (LineLocation) rhs;
 			return this.tag.equals(r.tag) && (this.offset == r.offset); 
 		}
 		return false;
@@ -33,5 +33,10 @@ public class MLineLocation {
 		String hashString = hashOffset + "^" + hashOrigin;
 		int result = hashString.hashCode(); 
 		return result;
+	}
+	
+	@Override
+	public String toString() {
+		return this.tag + "+" + String.valueOf(this.offset);
 	}
 }

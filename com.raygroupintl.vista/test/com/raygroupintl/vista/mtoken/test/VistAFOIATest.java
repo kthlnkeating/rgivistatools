@@ -8,12 +8,12 @@ import java.util.Set;
 
 import org.junit.Test;
 
+import com.raygroupintl.m.struct.LineLocation;
 import com.raygroupintl.vista.mtoken.MVersion;
 import com.raygroupintl.vista.mtoken.TFRoutine;
 import com.raygroupintl.vista.mtoken.TLine;
 import com.raygroupintl.vista.mtoken.TRoutine;
 import com.raygroupintl.vista.repository.FileSupply;
-import com.raygroupintl.vista.struct.MLineLocation;
 import com.raygroupintl.vista.struct.MLocationedError;
 import com.raygroupintl.vista.struct.MRoutineContent;
 import com.raygroupintl.vista.tools.ErrorExemptions;
@@ -51,7 +51,7 @@ public class VistAFOIATest {
 				}
 				String name = r.getName();
 				if (! exemptions.containsRoutine(name)) {
-					Set<MLineLocation> locations = exemptions.getLines(name);
+					Set<LineLocation> locations = exemptions.getLines(name);
 					List<MLocationedError> errors = r.getErrors(locations);
 					Assert.assertEquals(errors.size(), 0);						
 				}				

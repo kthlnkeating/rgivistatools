@@ -1,5 +1,6 @@
 package com.raygroupintl.vista.repository;
 
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
@@ -42,18 +43,48 @@ public class PackageInfo {
 	
 	public void addFile(String number, String name) {
 		FileInfo file = new FileInfo(number, name);
+		if (this.files == null) {
+			this.files = new ArrayList<FileInfo>();
+		}
 		this.files.add(file);
 	}
 	
 	public void addPrefix(String prefix) {
+		if (this.prefixes == null) {
+			this.prefixes = new ArrayList<String>();
+		}
 		this.prefixes.add(prefix);
 	}
 	
 	public List<FileInfo> getFiles() {
-		return Collections.unmodifiableList(this.files);
+		if (this.prefixes == null) {
+			return Collections.emptyList();
+		} else {
+			return Collections.unmodifiableList(this.files);
+		}
 	}
 	
 	public List<String> getPrefixes() {
-		return Collections.unmodifiableList(this.prefixes);
+		if (this.prefixes == null) {
+			return Collections.emptyList();
+		} else {
+			return Collections.unmodifiableList(this.prefixes);
+		}
 	}
+	
+	@Override
+	public boolean equals(Object rhs) {
+		if ((rhs != null) && (rhs instanceof PackageInfo)) {	
+			PackageInfo p = (PackageInfo) rhs;
+			return this.packageName.equals(p.packageName) && (this.directoryName == p.directoryName); 
+		}
+		return false;
+	}
+	
+	@Override
+	public int hashCode() {
+		String hashString = this.packageName + "\n" + this.directoryName;
+		int result = hashString.hashCode(); 
+		return result;
+	}	
 }
