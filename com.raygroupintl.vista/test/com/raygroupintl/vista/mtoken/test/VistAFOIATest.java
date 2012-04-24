@@ -12,7 +12,7 @@ import com.raygroupintl.vista.mtoken.MVersion;
 import com.raygroupintl.vista.mtoken.TFRoutine;
 import com.raygroupintl.vista.mtoken.TLine;
 import com.raygroupintl.vista.mtoken.TRoutine;
-import com.raygroupintl.vista.repository.MFileVisitor;
+import com.raygroupintl.vista.repository.FileSupply;
 import com.raygroupintl.vista.struct.MLineLocation;
 import com.raygroupintl.vista.struct.MLocationedError;
 import com.raygroupintl.vista.struct.MRoutineContent;
@@ -26,9 +26,7 @@ public class VistAFOIATest {
 		final TFRoutine tf = TFRoutine.getInstance(MVersion.CACHE);
 		final ErrorExemptions exemptions = ErrorExemptions.getVistAFOIAInstance();
 		try {
-			MFileVisitor v = new MFileVisitor();
-			v.addVistAFOIA();
-			List<Path> paths = v.getFiles();
+			List<Path> paths = FileSupply.getAllMFiles();
 			for (Path path : paths) {
 				//if (! path.toString().endsWith("PRCAUDT.m")) return;
 				//byte[] b = Files.readAllBytes(path);

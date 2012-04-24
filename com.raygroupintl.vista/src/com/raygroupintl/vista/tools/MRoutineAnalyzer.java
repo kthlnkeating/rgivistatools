@@ -15,7 +15,7 @@ import com.raygroupintl.util.CLIParameter;
 import com.raygroupintl.vista.mtoken.MVersion;
 import com.raygroupintl.vista.mtoken.TFRoutine;
 import com.raygroupintl.vista.mtoken.TRoutine;
-import com.raygroupintl.vista.repository.MFileVisitor;
+import com.raygroupintl.vista.repository.FileSupply;
 import com.raygroupintl.vista.struct.MLineLocation;
 import com.raygroupintl.vista.struct.MLocationedError;
 
@@ -98,9 +98,7 @@ public class MRoutineAnalyzer {
 		final File file = new File(outputPath);
 		final FileOutputStream os = new FileOutputStream(file);
 		final String eol = TRoutine.getEOL();
-		MFileVisitor v = new MFileVisitor();
-		v.addVistAFOIA();
-		List<Path> paths = v.getFiles();
+		List<Path> paths = FileSupply.getAllMFiles();
 		for (Path path : paths) {
 			TRoutine r = tf.tokenize(path);
 			final String name = r.getName();
