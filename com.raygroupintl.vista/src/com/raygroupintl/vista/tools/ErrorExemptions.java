@@ -1,5 +1,6 @@
 package com.raygroupintl.vista.tools;
 
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
@@ -53,7 +54,11 @@ public class ErrorExemptions {
 	}
 	
 	public Set<MLineLocation> getLines(String routine) {
-		return this.lines.get(routine);
+		if (this.lines == null) {
+			return Collections.emptySet();
+		} else {
+			return this.lines.get(routine);
+		}
 	}
 	
 	public static ErrorExemptions getVistAFOIAInstance() {

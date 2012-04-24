@@ -1,5 +1,8 @@
 package com.raygroupintl.vista.mtoken;
 
+import java.io.IOException;
+import java.nio.file.Path;
+
 import com.raygroupintl.vista.struct.MRoutineContent;
 
 public class TFRoutine {
@@ -19,6 +22,12 @@ public class TFRoutine {
 		return result;
 	}
 	
+	public TRoutine tokenize(Path path) throws IOException {
+		MRoutineContent content = MRoutineContent.getInstance(path);					
+		TRoutine r = this.tokenize(content);
+		return r;
+	}
+		
 	public TRoutine tokenize(String name, String line, int fromIndex) {
 		int endIndex = line.length();
 		int index = fromIndex;

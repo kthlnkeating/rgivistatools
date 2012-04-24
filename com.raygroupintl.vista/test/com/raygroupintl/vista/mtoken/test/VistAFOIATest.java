@@ -8,7 +8,6 @@ import java.util.Set;
 
 import org.junit.Test;
 
-import com.raygroupintl.fnds.IFileAction;
 import com.raygroupintl.vista.mtoken.MVersion;
 import com.raygroupintl.vista.mtoken.TFRoutine;
 import com.raygroupintl.vista.mtoken.TLine;
@@ -26,46 +25,39 @@ public class VistAFOIATest {
 	public void testAll() {
 		final TFRoutine tf = TFRoutine.getInstance(MVersion.CACHE);
 		final ErrorExemptions exemptions = ErrorExemptions.getVistAFOIAInstance();
-		IFileAction action = new IFileAction() {			
-			@Override
-			public void handle(Path path) {
-				try {
-					//if (! path.toString().endsWith("PRCAUDT.m")) return;
-					//byte[] b = Files.readAllBytes(path);
-					//String text = new String(b);
-					//String n = path.getFileName().toString().split(".m")[0];
-					//System.out.print(n + '\n');
-					//TRoutine r = tf.tokenize(n, text, 0);
-					//String tokenValue = r.getStringValue();					
-					//Assert.assertEquals("Different: " + n, text, tokenValue);					
-					MRoutineContent content = MRoutineContent.getInstance(path); 
-					TRoutine r = tf.tokenize(content);
-					List<String> lines = content.getLines();
-					List<TLine> results = r.asList();
-					int count = results.size();
-					Assert.assertEquals(lines.size(), count);
-					for (int i=0; i<count; ++i) {
-						String line = lines.get(i);
-						TLine result = results.get(i);
-						String readLine = result.getStringValue();
-						String msg = path.getFileName().toString() + " Line " +  String.valueOf(i);
-						Assert.assertEquals("Different: " + msg, line, readLine);
-					}
-					String name = r.getName();
-					if (! exemptions.containsRoutine(name)) {
-						Set<MLineLocation> locations = exemptions.getLines(name);
-						List<MLocationedError> errors = r.getErrors(locations);
-						Assert.assertEquals(errors.size(), 0);						
-					}
-				} catch(Throwable t) {
-					fail("Exception: " + t.getMessage());
-				}
-			}
-		};
 		try {
-			MFileVisitor v = new MFileVisitor(action);
+			MFileVisitor v = new MFileVisitor();
 			v.addVistAFOIA();
-			v.run();
+			List<Path> paths = v.getFiles();
+			for (Path path : paths) {
+				//if (! path.toString().endsWith("PRCAUDT.m")) return;
+				//byte[] b = Files.readAllBytes(path);
+				//String text = new String(b);
+				//String n = path.getFileName().toString().split(".m")[0];
+				//System.out.print(n + '\n');
+				//TRoutine r = tf.tokenize(n, text, 0);
+				//String tokenValue = r.getStringValue();					
+				//Assert.assertEquals("Different: " + n, text, tokenValue);					
+				MRoutineContent content = MRoutineContent.getInstance(path); 
+				TRoutine r = tf.tokenize(content);
+				List<String> lines = content.getLines();
+				List<TLine> results = r.asList();
+				int count = results.size();
+				Assert.assertEquals(lines.size(), count);
+				for (int i=0; i<count; ++i) {
+					String line = lines.get(i);
+					TLine result = results.get(i);
+					String readLine = result.getStringValue();
+					String msg = path.getFileName().toString() + " Line " +  String.valueOf(i);
+					Assert.assertEquals("Different: " + msg, line, readLine);
+				}
+				String name = r.getName();
+				if (! exemptions.containsRoutine(name)) {
+					Set<MLineLocation> locations = exemptions.getLines(name);
+					List<MLocationedError> errors = r.getErrors(locations);
+					Assert.assertEquals(errors.size(), 0);						
+				}				
+			}
 		} catch (Throwable t) {
 			fail("Exception: " + t.getMessage());			
 		}
