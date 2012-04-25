@@ -90,8 +90,6 @@ public class TFCommand extends TFSeq {
 		return TFCommaDelimitedList.getInstance(e);
 	}
 
-
-	
 	public static void addCommand(String name) {
 		COMMAND_NAMES.update(name, name);
 	}
@@ -286,9 +284,6 @@ public class TFCommand extends TFSeq {
 		if (seqIndex == 0) {
 			return RETURN_NULL;
 		}
-		//if (seqIndex == 2) {
-		//	return this.getErrorCode();
-		//}
 		return CONTINUE;				
 	}
 

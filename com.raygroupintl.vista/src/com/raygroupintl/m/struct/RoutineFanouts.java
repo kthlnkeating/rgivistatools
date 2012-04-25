@@ -27,6 +27,12 @@ public class RoutineFanouts {
 		foutsAtLocation.add(fanout);
 	}
 	
+	public void add(LineLocation location, List<Fanout> fanouts) {
+		for (Fanout fout : fanouts) {
+			this.add(location, fout);
+		}
+	}
+	
 	public String getRoutineName() {
 		return this.routineName;
 	}

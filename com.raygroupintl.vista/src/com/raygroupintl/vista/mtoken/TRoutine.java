@@ -11,6 +11,7 @@ import java.util.Set;
 
 import com.raygroupintl.bnf.TBase;
 import com.raygroupintl.fnds.IToken;
+import com.raygroupintl.m.struct.Fanout;
 import com.raygroupintl.m.struct.LineLocation;
 import com.raygroupintl.m.struct.RoutineFanouts;
 import com.raygroupintl.vista.struct.MError;
@@ -19,17 +20,14 @@ import com.raygroupintl.vista.struct.MLocationedError;
 public class TRoutine extends TBase {
 	private String name;
 	private List<TLine> lines = new ArrayList<TLine>();
+	private List<LineLocation> locations;
 	
 	public TRoutine(String name) {
 		this.name = name;
 	}
 	
 	public String getName() {
-		if (this.name.endsWith(".m")) {
-			return this.name.substring(0, this.name.length()-2);
-		} else {
-			return this.name;
-		}
+		return this.name;
 	}
 	
 	public void add(TLine line) {
@@ -90,16 +88,11 @@ public class TRoutine extends TBase {
 	}
 
 	public List<MLocationedError> getErrors(Set<LineLocation> exemptions) throws IOException {
-		String lastTag = this.name;
-		int index = 0;
 		List<MLocationedError> result = new ArrayList<MLocationedError>();
-		for (TLine line : this.lines) {
-			String tag = line.getTag();
-			if (tag != null) {
-				lastTag = tag;
-				index = 0;
-			}
-			LineLocation location = new LineLocation(lastTag, index);
+		List<LineLocation> locations = this.getLineLocations();
+		for (int i=0; i<this.lines.size(); ++i) {
+			TLine line = this.lines.get(i);
+			LineLocation location = locations.get(i);
 			if ((exemptions == null) || (! exemptions.contains(location))) {
 				List<MError> errors = line.getErrors();
 				if ((errors != null) && (errors.size() > 0)) {
@@ -109,13 +102,20 @@ public class TRoutine extends TBase {
 					}
 				}
 			}
-			++index;
 		}		
 		return result;
 	}	
 	
 	public RoutineFanouts getFanouts() {
-		return null;
+		RoutineFanouts result = new RoutineFanouts(this.name);
+		List<LineLocation> locations = this.getLineLocations();
+		for (int i=0; i<this.lines.size(); ++i) {
+			TLine line = this.lines.get(i);
+			LineLocation location = locations.get(i);
+			List<Fanout> fanouts = line.getFanouts();
+			result.add(location, fanouts);
+		}		
+		return result;
 	}
 	
 	public void write(Path path) throws IOException {
@@ -129,5 +129,29 @@ public class TRoutine extends TBase {
 			}
 		}
 		Files.write(path, fileLines, StandardCharsets.UTF_8);
+	}
+	
+	private List<LineLocation> buildLocations() {
+		List<LineLocation> result = new ArrayList<LineLocation>();
+		String lastTag = this.name;
+		int index = 0;
+		for (TLine line : this.lines) {
+			String tag = line.getTag();
+			if (tag != null) {
+				lastTag = tag;
+				index = 0;
+			}
+			LineLocation location = new LineLocation(lastTag, index);
+			result.add(location);
+			++index;
+		}		
+		return result;
+	}
+	
+	private List<LineLocation> getLineLocations() {
+		if ((this.locations == null) || (this.locations.size() != this.lines.size())) {
+			this.locations = this.buildLocations();
+		}
+		return this.locations;
 	}
 }

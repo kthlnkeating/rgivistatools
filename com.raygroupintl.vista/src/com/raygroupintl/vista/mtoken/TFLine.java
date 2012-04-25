@@ -3,8 +3,6 @@ package com.raygroupintl.vista.mtoken;
 import com.raygroupintl.bnf.ChoiceSupply;
 import com.raygroupintl.bnf.TFBasic;
 import com.raygroupintl.bnf.TFConstChars;
-import com.raygroupintl.bnf.TFEol;
-import com.raygroupintl.bnf.TFNull;
 import com.raygroupintl.bnf.TFSeqStatic;
 import com.raygroupintl.bnf.TFSyntaxError;
 import com.raygroupintl.bnf.TSyntaxError;
@@ -12,7 +10,6 @@ import com.raygroupintl.fnds.ICharPredicate;
 import com.raygroupintl.fnds.IToken;
 import com.raygroupintl.fnds.ITokenFactory;
 import com.raygroupintl.struct.CharPredicate;
-import com.raygroupintl.struct.EOLPredicate;
 import com.raygroupintl.struct.LetterPredicate;
 
 public class TFLine extends TFSeqStatic {
@@ -29,8 +26,8 @@ public class TFLine extends TFSeqStatic {
 	}
 			
 	private static ITokenFactory getTFCommands(MVersion version) {
-		ICharPredicate[] preds = {new LetterPredicate(), new CharPredicate(';')}; //, new EOLPredicate()};
-		ITokenFactory f = ChoiceSupply.get(TFSyntaxError.getInstance(), preds, TFCommand.getInstance(version), new TFComment()); //, new TFNull());
+		ICharPredicate[] preds = {new LetterPredicate(), new CharPredicate(';')};
+		ITokenFactory f = ChoiceSupply.get(TFSyntaxError.getInstance(), preds, TFCommand.getInstance(version), new TFComment());
 		return TFList.getInstance(f);
 	}
  	
@@ -42,8 +39,7 @@ public class TFLine extends TFSeqStatic {
 				getTFFormal(),
 				TFConstChars.getInstance(" \t"),
 				TFBasic.getInstance('.', ' '),
-				getTFCommands(this.version)//,
-				//new TFEol()
+				getTFCommands(this.version)
 		};
 	}
 
