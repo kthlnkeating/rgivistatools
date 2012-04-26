@@ -105,7 +105,7 @@ public class TFDoArgument extends TFSeq {
 					case 2: return TFDoArgument.getFactory2(previousTokens); 
 					case 3: return TFDoArgument.getFactory3(previousTokens, TFDoArgument.this.version); 
 					case 4: return TFDoArgument.getFactory4(previousTokens, TFDoArgument.this.version); 
-					case 5: return TCommandName.getTFPostCondition(previousTokens, version);
+					case 5: return TFCommand.getTFPostCondition(previousTokens, version);
 					default:
 						assert(false);
 						return null;

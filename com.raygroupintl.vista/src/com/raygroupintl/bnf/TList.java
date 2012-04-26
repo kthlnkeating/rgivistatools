@@ -4,7 +4,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.raygroupintl.fnds.IToken;
-import com.raygroupintl.vista.mtoken.TCommandName;
 import com.raygroupintl.vista.struct.MError;
 
 public class TList implements IToken {
@@ -119,19 +118,6 @@ public class TList implements IToken {
 	
 	public int size() {
 		return this.tokens.size();
-	}
-	
-	public String getCommandView() {
-		StringBuilder sb = new StringBuilder();
-		for (IToken token : this.tokens) {
-			if (token instanceof TCommandName) {
-				TCommandName commandToken = (TCommandName) token;
-				String commandString = commandToken.getStringValue();
-				sb.append(commandString);
-				sb.append("  ");
-			}
-		}
-		return sb.toString();
 	}
 
 	public void add(int index, IToken token) {

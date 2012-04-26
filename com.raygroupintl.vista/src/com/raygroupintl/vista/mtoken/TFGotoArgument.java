@@ -65,7 +65,7 @@ public class TFGotoArgument extends TFSeq {
 					case 1: return TFGotoArgument.getFactory1(previousTokens, version); 
 					case 2: return TFGotoArgument.getFactory2(previousTokens); 
 					case 3: return TFGotoArgument.getFactory3(previousTokens, version); 
-					case 4: return TCommandName.getTFPostCondition(previousTokens, version);
+					case 4: return TFCommand.getTFPostCondition(previousTokens, version);
 					default:
 						assert(false);
 						return null;

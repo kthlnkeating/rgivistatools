@@ -31,7 +31,7 @@ public class MRoutineAnalyzer {
 		final String eol = TRoutine.getEOL();
 		List<Path> paths = FileSupply.getAllMFiles();
 		for (Path path : paths) {
-			TRoutine r = tf.tokenize(path);
+			TRoutine r = tf.tokenize(path);			
 			final String name = r.getName();
 			if (! exemptions.containsRoutine(name)) {
 				Set<LineLocation> locations = exemptions.getLines(name);

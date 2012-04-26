@@ -70,6 +70,7 @@ public class TFLineTest {
 		lineTest(version, " I $D(@G)#10 D WRITE(IO,G)");
 		lineTest(version, " .I $Y>(IOSL-9) D UP^DVBCRPR1,NEXT,HDR^DVBCRPR1 W:$O(^DVB(396.4,OLDA,\"RES\",LINE))]\"\"&('+$G(DVBGUI)) !!,\"Exam Results Continued\",!!");
 		lineTest(version, " S Y=$$FPS^RCAMFN01($S($G(LDT)>0:$E(LDT,1,5),1:$E(DT,1,5))_$TR($J($$PST^RCAMFN01(DEB),2),\" \",0),$S(+$E($G(LDT),6,7)>$$STD^RCCPCFN:2,1:1)) D DD^%D");
+		lineTest(version, " S A=1 H  ");
 	}
 	
 	@Test

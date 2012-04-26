@@ -7,6 +7,20 @@ import com.raygroupintl.vista.mtoken.MVersion;
 import com.raygroupintl.vista.mtoken.TFCommand;
 
 public class TFCommandTest {
+	private void testBreak(MVersion version) {
+		ITokenFactory f = TFCommand.getInstance(version);
+		TFCommonTest.validCheck(f, "B");
+		TFCommonTest.validCheck(f, "B   ");
+		TFCommonTest.validCheck(f, "B \"+13^TAG\"");
+		TFCommonTest.validCheck(f, "B \"+13^TAG\""     );
+	}
+
+	@Test
+	public void testBreak() {
+		testBreak(MVersion.CACHE);
+		testBreak(MVersion.ANSI_STD_95);
+	}
+
 	private void testDo(MVersion version) {
 		ITokenFactory f = TFCommand.getInstance(version);
 		TFCommonTest.validCheck(f, "D SENDMSG^XMXAPI(.5,RCSUBJ,XMBODY,.XMTO,,.XMZ)");
@@ -46,6 +60,18 @@ public class TFCommandTest {
 	public void testGoto() {
 		testGoto(MVersion.CACHE);
 		testGoto(MVersion.ANSI_STD_95);
+	}
+
+	private void testHaltHang(MVersion version) {
+		ITokenFactory f = TFCommand.getInstance(version);
+		TFCommonTest.validCheck(f, "H 3");
+		TFCommonTest.validCheck(f, "H");
+	}
+
+	@Test
+	public void testHaltHang() {
+		testHaltHang(MVersion.CACHE);
+		testHaltHang(MVersion.ANSI_STD_95);
 	}
 
 	private void testIf(MVersion version) {
@@ -132,15 +158,15 @@ public class TFCommandTest {
 		testUse(MVersion.ANSI_STD_95);
 	}
 
-	private void testXecute(MVersion version) {
+	private void testView(MVersion version) {
 		ITokenFactory f = TFCommand.getInstance(version);
-		TFCommonTest.validCheck(f, "X ^%ZOSF(\"TYPE-AHEAD\"),^%ZOSF(\"LABOFF\")");
+		TFCommonTest.validCheck(f, "V -1:1");
 	}
 	
 	@Test
-	public void testXecute() {
-		testXecute(MVersion.CACHE);
-		testXecute(MVersion.ANSI_STD_95);
+	public void testView() {
+		testView(MVersion.CACHE);
+		testView(MVersion.ANSI_STD_95);
 	}
 
 	private void testWrite(MVersion version) {
@@ -155,6 +181,17 @@ public class TFCommandTest {
 	public void testWrite() {
 		testWrite(MVersion.CACHE);
 		testWrite(MVersion.ANSI_STD_95);
+	}
+
+	private void testXecute(MVersion version) {
+		ITokenFactory f = TFCommand.getInstance(version);
+		TFCommonTest.validCheck(f, "X ^%ZOSF(\"TYPE-AHEAD\"),^%ZOSF(\"LABOFF\")");
+	}
+	
+	@Test
+	public void testXecute() {
+		testXecute(MVersion.CACHE);
+		testXecute(MVersion.ANSI_STD_95);
 	}
 
 	private void testZ(MVersion version) {
