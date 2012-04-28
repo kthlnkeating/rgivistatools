@@ -1,5 +1,5 @@
 package com.raygroupintl.m.cmdtree;
 
-public abstract class Node {
-	public abstract void accept(Visitor visitor);
+public interface Node {
+	void accept(Visitor visitor);
 }

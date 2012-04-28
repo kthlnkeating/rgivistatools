@@ -10,4 +10,9 @@ public class DoBlock extends Block<Line> {
 	public String getKey() {
 		return String.valueOf(this.index);
 	}
+
+	@Override
+	public void accept(Visitor visitor) {
+		visitor.visitDoBlock(this);
+	}
 }

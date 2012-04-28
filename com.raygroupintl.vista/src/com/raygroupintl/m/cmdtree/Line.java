@@ -14,4 +14,9 @@ public class Line extends Block<Node> {
 	public String getKey() {
 		return String.valueOf(this.index);
 	}
+
+	@Override
+	public void accept(Visitor visitor) {
+		visitor.visitLine(this);
+	}
 }

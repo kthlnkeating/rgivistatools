@@ -1,14 +1,14 @@
 package com.raygroupintl.m.cmdtree;
 
-public class Entry extends Block<Line> {
+public class EntryTag extends Block<Line> {
 	private String tagName;
 	private String[] parameters;
 	
-	public Entry(String tagName) {
+	public EntryTag(String tagName) {
 		this.tagName = tagName;
 	}
 	
-	public Entry(String tagName, String[] parameters) {
+	public EntryTag(String tagName, String[] parameters) {
 		this.parameters = parameters;
 	}
 		
@@ -22,5 +22,10 @@ public class Entry extends Block<Line> {
 	
 	public String getParameter(int index) {
 		return this.parameters[index];
+	}
+
+	@Override
+	public void accept(Visitor visitor) {
+		visitor.visitEntryTag(this);
 	}
 }

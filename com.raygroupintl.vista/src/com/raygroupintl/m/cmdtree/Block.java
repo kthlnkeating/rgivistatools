@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-public abstract class Block<T extends Node> extends Node {
+public abstract class Block<T extends Node> implements Node {
 	private List<T> nodes;
 
 	public void add(T node) {
@@ -20,10 +20,5 @@ public abstract class Block<T extends Node> extends Node {
 		} else {
 			return Collections.unmodifiableList(this.nodes);
 		}
-	}
-
-	@Override
-	public void accept(Visitor visitor) {
-		visitor.visit(this);
 	}
 }
