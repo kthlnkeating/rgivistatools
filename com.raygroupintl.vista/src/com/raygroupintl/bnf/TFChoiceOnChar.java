@@ -5,9 +5,9 @@ import com.raygroupintl.fnds.IToken;
 import com.raygroupintl.fnds.ITokenFactory;
 
 abstract class TFChoiceOnChar implements ITokenFactory {
-	private ITokenFactory defaultFactory;
-	private ICharPredicate[] predicates;
-	private ITokenFactory[] factories;
+	private ITokenFactory defaultFactory = null;
+	private ICharPredicate[] predicates = {};
+	private ITokenFactory[] factories = {};
 			
 	public TFChoiceOnChar(ITokenFactory defaultFactory,  ICharPredicate[] predicates, ITokenFactory[] factories) {
 		this.defaultFactory = defaultFactory;
@@ -15,6 +15,10 @@ abstract class TFChoiceOnChar implements ITokenFactory {
 		this.factories = factories;
 	}
 
+	public void setDefault(ITokenFactory defaultFactory) {
+		this.defaultFactory = defaultFactory;
+	}
+	
 	protected ITokenFactory getFactory(char ch) {
 		for (int i=0; i<this.predicates.length; ++i) {
 			ICharPredicate predicate = this.predicates[i];

@@ -17,7 +17,7 @@ public class TFGvn extends TFSeqRequired {
 	@Override
 	protected ITokenFactory[] getFactories() {
 		TFConstChar c = TFConstChar.getInstance('^');
-		TFEnvironment env = TFEnvironment.getInstance(this.version);
+		ITokenFactory env = MTFSupply.getInstance(this.version).getTFEnvironment();
 		TFName name = new TFName();
 		TFExprListInParantheses exprList = TFExprListInParantheses.getInstance(this.version);
 		ITokenFactory r = TFSeqORO.getInstance(env, name, exprList);

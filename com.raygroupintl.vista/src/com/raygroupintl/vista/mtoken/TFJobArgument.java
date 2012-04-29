@@ -49,7 +49,7 @@ public class TFJobArgument extends TFSeq {
 		if (previousTokens[2] == null) {
 			return new TFNull();
 		} else {
-			ITokenFactory tfEnv = TFEnvironment.getInstance(version);
+			ITokenFactory tfEnv = MTFSupply.getInstance(version).getTFEnvironment();
 			ITokenFactory tfName = TFName.getInstance();
 			ITokenFactory tfEnvName = TFSeqOR.getInstance(tfEnv, tfName);
 			ITokenFactory tfInd = TFIndirection.getInstance(version);

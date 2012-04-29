@@ -22,7 +22,7 @@ public class ChoiceSupply {
 		return new TFChoiceOnChar0th(defaultFactory, preds, factories);
 	}
 
-	public static ITokenFactory get(ITokenFactory defaultFactory, String keys, ITokenFactory... factories) {
+	public static ITokenFactory get(ITokenFactory defaultFactory, String keys, ITokenFactory... factories) {		
 		return new TFChoiceOnChar0th(defaultFactory, toPredicate(keys), factories);
 	}
 

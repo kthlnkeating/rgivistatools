@@ -5,16 +5,6 @@ import com.raygroupintl.fnds.ITokenFactory;
 
 public abstract class TFSeqOptional extends TFSeqStatic {
 	@Override
-	protected final int validateNull(int seqIndex, IToken[] foundTokens) {
-		return CONTINUE;
-	}
-	
-	@Override
-	protected final int validateEnd(int seqIndex, IToken[] foundTokens) {
-		return 0;
-	}
-	
-	@Override
 	protected final IToken getToken(IToken[] foundTokens) {
 		for (IToken token : foundTokens) {
 			if (token != null) return super.getToken(foundTokens);

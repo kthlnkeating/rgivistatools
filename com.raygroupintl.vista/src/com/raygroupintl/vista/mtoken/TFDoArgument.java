@@ -60,7 +60,7 @@ public class TFDoArgument extends TFSeq {
 	}
 
 	private static ITokenFactory getRoutineSpecification(MVersion version) {
-		ITokenFactory tfEnv = TFEnvironment.getInstance(version);
+		ITokenFactory tfEnv = MTFSupply.getInstance(version).getTFEnvironment();
 		if (version == MVersion.CACHE) {
 			ITokenFactory tfNameOrObj = TFName.getInstance();
 			ITokenFactory objMethod = TFSeqRequired.getInstance(TFConstChar.getInstance('.'), TFName.getInstance());			

@@ -3,11 +3,22 @@ package com.raygroupintl.bnf;
 import com.raygroupintl.fnds.IToken;
 import com.raygroupintl.fnds.ITokenFactory;
 
-class TFChoiceBasic implements ITokenFactory {
-	private ITokenFactory[] factories;
+public class TFChoiceBasic implements ITokenFactory {
+	private ITokenFactory[] factories = {};
+	
+	public TFChoiceBasic() {
+	}
 	
 	public TFChoiceBasic(ITokenFactory[] factories) {
 		this.factories = factories;
+	}
+	
+	public void setFactories(ITokenFactory[] factories) {
+		this.factories = factories;
+	}
+	
+	public int getNumChoices() {
+		return this.factories.length;
 	}
 	
 	@Override

@@ -3,6 +3,8 @@ package com.raygroupintl.vista.mtoken;
 import java.util.EnumMap;
 
 import com.raygroupintl.bnf.ChoiceSupply;
+import com.raygroupintl.bnf.TFChoice;
+import com.raygroupintl.bnf.TFChoiceBasic;
 import com.raygroupintl.bnf.TFConstChar;
 import com.raygroupintl.bnf.TFConstChars;
 import com.raygroupintl.bnf.TFConstString;
@@ -89,17 +91,50 @@ public class MTFSupply {
 		}		
 	}
 	
+	private static class TFEnvironment extends TFChoice {
+		private MVersion version;
+		
+		private TFEnvironment(MVersion version) {
+			this.version = version;
+		}
+			
+		@Override
+		protected ITokenFactory getFactory(char ch) {
+			if (ch == '|') {
+				ITokenFactory d = new TFConstChar('|');
+				return TFSeqRequired.getInstance(d, TFExpr.getInstance(this.version), d);
+			} else if (ch == '[') {
+				ITokenFactory l = new TFConstChar('[');
+				ITokenFactory f = TFCommaDelimitedList.getInstance(MTFSupply.getInstance(this.version).getTFExprAtom(), ',');
+				ITokenFactory r = new TFConstChar(']');			
+				return TFSeqRequired.getInstance(l, f, r);
+			} else {
+				return null;
+			}
+		}
+	}
+	
 	private MVersion version;
 	
 	private MTFSupply(MVersion version) {
 		this.version = version;
 	}
 	
+	private ITokenFactory numlit = TFNumLit.getInstance();
+	
+	private ITokenFactory environment;
 	private ITokenFactory exprAtom;
 	private ITokenFactory actual;
 	private ITokenFactory exprItem;
 	private ITokenFactory glvn;
 	private ITokenFactory gvnAll;
+	
+	public ITokenFactory getTFEnvironment() {
+		if (environment == null) {
+			environment = new TFEnvironment(version);
+		}			
+		return environment;
+	}
 	
 	public ITokenFactory getTFExprItem() {
 		if (exprItem == null) {
@@ -113,9 +148,8 @@ public class MTFSupply {
 					new DigitPredicate()};
 			exprItem = ChoiceSupply.get(null, preds, 
 							new TFStringLiteral(), fDollar, 
-							new TFUnaryOperatedExprItem(), TFNumLit.getInstance(),
-							TFInParantheses.getInstance(TFExpr.getInstance(this.version)),
-							TFNumLit.getInstance());
+							new TFUnaryOperatedExprItem(), this.numlit,
+							TFInParantheses.getInstance(TFExpr.getInstance(this.version)), this.numlit);
 		}			
 		return exprItem;
 	}
@@ -153,7 +187,7 @@ public class MTFSupply {
 		if (actual == null) {
 			ICharPredicate[] predsDot = {new DigitPredicate(), new IdentifierStartPredicate(), new CharPredicate('@')};
 			ITokenFactory[] fsDot = {
-					TFNumLit.getInstance(),
+					this.numlit,
 					TFSeqRequired.getInstance(TFConstChar.getInstance('.'), TFName.getInstance()),
 					TFSeqRequired.getInstance(TFConstChar.getInstance('.'), TFIndirection.getInstance(this.version))
 			};				
