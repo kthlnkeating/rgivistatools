@@ -33,5 +33,9 @@ public class TFChoiceBasic implements ITokenFactory {
 			}
 		}
 		return null;
-	}		
+	}
+	
+	public boolean isInitialize() {
+		return this.factories.length > 0;
+	}
 }

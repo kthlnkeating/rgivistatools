@@ -19,5 +19,8 @@ public abstract class TFChoice implements ITokenFactory {
 		}
 		return null;
 	}
-
+	
+	public boolean isInitialize() {
+		return false;
+	}
 }

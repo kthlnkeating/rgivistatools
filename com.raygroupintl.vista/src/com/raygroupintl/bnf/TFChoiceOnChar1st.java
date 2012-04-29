@@ -3,12 +3,16 @@ package com.raygroupintl.bnf;
 import com.raygroupintl.fnds.ICharPredicate;
 import com.raygroupintl.fnds.ITokenFactory;
 
-class TFChoiceOnChar1st extends TFChoiceOnChar {
+public class TFChoiceOnChar1st extends TFChoiceOnChar {
 	private char leadingChar;
 	
 	public TFChoiceOnChar1st(char leadingChar, ITokenFactory defaultFactory, ICharPredicate[] predicates, ITokenFactory[] factories) {
 		super(defaultFactory, predicates, factories);
 		this.leadingChar = leadingChar;
+	}
+	
+	public void setLeadingChar(char ch) {
+		this.leadingChar = ch;
 	}
 
 	@Override

@@ -197,12 +197,17 @@ public class MTFSupply {
 		return actual;
 	}
 
+	private void initialize() {
+		
+	}
+	
 	private static EnumMap<MVersion, MTFSupply> SUPPLIES = new EnumMap<MVersion, MTFSupply>(MVersion.class);
 
 	public static MTFSupply getInstance(MVersion version) {
 		MTFSupply r = SUPPLIES.get(version);
 		if (r == null) {
 			r = new MTFSupply(version);
+			r.initialize();
 			SUPPLIES.put(version, r);
 		}
 		return r;

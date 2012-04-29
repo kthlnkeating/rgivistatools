@@ -4,7 +4,7 @@ import com.raygroupintl.fnds.ICharPredicate;
 import com.raygroupintl.fnds.IToken;
 import com.raygroupintl.fnds.ITokenFactory;
 
-abstract class TFChoiceOnChar implements ITokenFactory {
+public abstract class TFChoiceOnChar implements ITokenFactory {
 	private ITokenFactory defaultFactory = null;
 	private ICharPredicate[] predicates = {};
 	private ITokenFactory[] factories = {};
@@ -17,6 +17,11 @@ abstract class TFChoiceOnChar implements ITokenFactory {
 
 	public void setDefault(ITokenFactory defaultFactory) {
 		this.defaultFactory = defaultFactory;
+	}
+	
+	public void setChoices(ICharPredicate[] predicates, ITokenFactory[] factories) {
+		this.predicates = predicates;
+		this.factories = factories;
 	}
 	
 	protected ITokenFactory getFactory(char ch) {
@@ -39,5 +44,9 @@ abstract class TFChoiceOnChar implements ITokenFactory {
 			return result;
 		}
 		return null;
-	}		
+	}	
+	
+	public boolean isInitialize() {
+		return this.factories.length > 0;
+	}
 }
