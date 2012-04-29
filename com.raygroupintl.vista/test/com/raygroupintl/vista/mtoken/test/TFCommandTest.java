@@ -101,6 +101,24 @@ public class TFCommandTest {
 		testJob(MVersion.ANSI_STD_95);
 	}
 
+	private void testKill(MVersion version) {
+		ITokenFactory f = TFCommand.getInstance(version);
+		TFCommonTest.validCheck(f, "K A");
+		TFCommonTest.validCheck(f, "K A,B,@C,D");
+		TFCommonTest.validCheck(f, "K @A");
+		TFCommonTest.validCheck(f, "K @A,@C");
+		TFCommonTest.validCheck(f, "K (A,B),D,(R,E)");
+		TFCommonTest.validCheck(f, "K A,B");
+		TFCommonTest.validCheck(f, "K CC,DD,EE");
+		TFCommonTest.validCheck(f, "K %ZIS");
+	}
+
+	@Test
+	public void testKill() {
+		testKill(MVersion.CACHE);
+		testKill(MVersion.ANSI_STD_95);
+	}
+
 	private void testLock(MVersion version) {
 		ITokenFactory f = TFCommand.getInstance(version);
 		TFCommonTest.validCheck(f, "L -^PRCA(430,+$G(PRCABN),0)");
@@ -119,6 +137,18 @@ public class TFCommandTest {
 		testLock(MVersion.ANSI_STD_95);
 	}
 
+	public void testRead(MVersion version) {
+		ITokenFactory f = TFCommand.getInstance(version);
+		TFCommonTest.validCheck(f, "R !,\"Select DEBTOR NAME or BILL NUMBER: \",X:DTIME");
+		TFCommonTest.validCheck(f, "R !,\"ANSWER= \",@YSR1:300");
+	}
+
+	@Test
+	public void testRead() {
+		testRead(MVersion.CACHE);
+		testRead(MVersion.ANSI_STD_95);
+	}
+
 	private void testQuit(MVersion version) {
 		ITokenFactory f = TFCommand.getInstance(version);
 		TFCommonTest.validCheck(f, "Q @SCLIST@(0)>0");
@@ -128,6 +158,31 @@ public class TFCommandTest {
 	public void testQuit() {
 		testQuit(MVersion.CACHE);
 		testQuit(MVersion.ANSI_STD_95);
+	}
+
+	private void testSet(MVersion version) {
+		ITokenFactory f = TFCommand.getInstance(version);
+		TFCommonTest.validCheck(f, "S X=$$MG^XMBGRP(\"RCCPC STATEMENTS\",0,.5,1,\"\",.DES,1)");
+		TFCommonTest.validCheck(f, "S @^%ZOSF(\"TRAP\")");
+		TFCommonTest.validCheck(f, "S X=\"ERROR^PRCAHV\",@^%ZOSF(\"TRAP\")");
+		TFCommonTest.validCheck(f, "S A=B");
+		TFCommonTest.validCheck(f, "S A=B,@C=D");
+		TFCommonTest.validCheck(f, "S @A,$E(V,\",\",2)=\"DE\"");
+		TFCommonTest.validCheck(f, "S @A=@C");
+		TFCommonTest.validCheck(f, "S $X=5,$Y=3,(B,C,D)=(A=B)");
+		TFCommonTest.validCheck(f, "S A=B,C=F,D=YSH");
+		TFCommonTest.validCheck(f, "S @A=\"S\"");
+		TFCommonTest.validCheck(f, "S @H@(0)=3");
+		TFCommonTest.validCheck(f, "S XT4=\"I 1\"   ");
+		TFCommonTest.validCheck(f, "S IOP=IOP_\";255\",%ZIS=\"\"");
+		TFCommonTest.validCheck(f, "S X=$I(^HLCS(870,DP,P),$S($G(Z):-1,1:1))");
+		TFCommonTest.validCheck(f, "S ^$W(\"ZISGTRM\",\"VISIBLE\")=1");
+	}
+
+	@Test
+	public void testSet() {
+		testSet(MVersion.CACHE);
+		testSet(MVersion.ANSI_STD_95);
 	}
 
 	private void testOpen(MVersion version) {
