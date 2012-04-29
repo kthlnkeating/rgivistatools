@@ -20,12 +20,11 @@ public class TFDeviceParams extends TFChoice {
 			this.version = version;
 		}
 		
-		protected ITokenFactory getRequired() {
-			return TFExpr.getInstance(this.version);	
-		}
-		
-		protected ITokenFactory getOptional() {
-			return TFSeqRequired.getInstance(TFConstChar.getInstance('='), TFExpr.getInstance(this.version));	
+		@Override
+		protected ITokenFactory[] getFactories() {
+			return new ITokenFactory[]{
+					TFExpr.getInstance(this.version),
+					TFSeqRequired.getInstance(TFConstChar.getInstance('='), TFExpr.getInstance(this.version))};
 		}
 	}
 		

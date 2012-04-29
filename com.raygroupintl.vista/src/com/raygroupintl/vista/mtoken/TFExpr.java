@@ -78,20 +78,18 @@ public class TFExpr extends TFSeqRO {
 	}
 	
 	@Override
-	protected ITokenFactory getRequired() {
+	protected ITokenFactory[] getFactories() {
+		TFExprTail et = TFExprTail.getInstance(this.version); 
+		ITokenFactory f1 = TFList.getInstance(et);
 		if (this.version == MVersion.CACHE) {
-			return ChoiceSupply.get(MTFSupply.getInstance(this.version).getTFExprAtom(), '#', TFCacheClassMethod.getInstance());
+			ITokenFactory f0 = ChoiceSupply.get(MTFSupply.getInstance(this.version).getTFExprAtom(), '#', TFCacheClassMethod.getInstance());
+			return new ITokenFactory[]{f0, f1};
 		} else {
-			return MTFSupply.getInstance(this.version).getTFExprAtom();
+			ITokenFactory f0 = MTFSupply.getInstance(this.version).getTFExprAtom();
+			return new ITokenFactory[]{f0, f1};
 		}
 	}
-	
-	@Override
-	protected ITokenFactory getOptional() {
-		TFExprTail et = TFExprTail.getInstance(this.version); 
-		return TFList.getInstance(et);
-	}
-	
+
 	@Override
 	protected TExpr getToken(IToken[] foundTokens) {
 		TExpr result = new TExpr();

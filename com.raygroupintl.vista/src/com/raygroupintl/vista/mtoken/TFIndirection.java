@@ -17,20 +17,12 @@ public class TFIndirection extends TFSeqRO {
 	}
 		
 	@Override
-	protected ITokenFactory getRequired() {
-		return TFSeqRequired.getInstance(TFConstChar.getInstance('@'), MTFSupply.getInstance(this.version).getTFExprAtom());
+	protected ITokenFactory[] getFactories() {
+		ITokenFactory f0 = TFSeqRequired.getInstance(TFConstChar.getInstance('@'), MTFSupply.getInstance(this.version).getTFExprAtom());
+		ITokenFactory f1 = TFSeqRequired.getInstance(new TFConstString("@("), TFExprList.getInstance(TFIndirection.this.version), new TFConstChar(')'));
+		return new ITokenFactory[]{f0, f1};
 	}
-	
-	@Override
-	protected ITokenFactory getOptional() {
-		return new TFSeqRequired() {			
-			@Override
-			protected ITokenFactory[] getFactories() {
-				return new ITokenFactory[]{new TFConstString("@("), TFExprList.getInstance(TFIndirection.this.version), new TFConstChar(')')};
-			}
-		};
-	}
-	
+
 	@Override
 	protected IToken getToken(IToken[] foundTokens) {
 		if (foundTokens[1] == null) {

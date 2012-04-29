@@ -17,13 +17,8 @@ public class TFLabelRef extends TFSeqXYY {
 	protected ITokenFactory[] getFactories() {
 		TFSeqOR envName = new TFSeqOR() {
 			@Override
-			protected ITokenFactory getRequired() {
-				return new TFName();
-			}
-			
-			@Override
-			protected ITokenFactory getOptional() {
-				return MTFSupply.getInstance(TFLabelRef.this.version).getTFEnvironment();			
+			protected ITokenFactory[] getFactories() {
+				return new ITokenFactory[]{MTFSupply.getInstance(TFLabelRef.this.version).getTFEnvironment(), new TFName()};
 			}
 		};
 		return new ITokenFactory[]{new TFLabel(), new TFConstChar('^'), envName};

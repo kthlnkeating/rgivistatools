@@ -15,14 +15,11 @@ public abstract class TFDelimitedList extends TFSeqRO {
 	protected abstract ITokenFactory getDelimitedFactory();
 	
 	@Override
-	protected ITokenFactory getRequired() {
-		return this.getElementFactory();
-	}
-
-	@Override
-	protected ITokenFactory getOptional() {
+	protected ITokenFactory[] getFactories() {
 		ITokenFactory r = TFSeqRequired.getInstance(this.getDelimitedFactory(), this.getElementFactory());
-		return TFList.getInstance(r);
+		return new ITokenFactory[]{
+				this.getElementFactory(),
+				TFList.getInstance(r)};
 	}
 
 	@Override

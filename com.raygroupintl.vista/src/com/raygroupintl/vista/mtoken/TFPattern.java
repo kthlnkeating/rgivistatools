@@ -69,14 +69,19 @@ public class TFPattern extends TFChoice {
 	
 	static class TFPatCode extends TFSeqOR {
 		@Override
-		protected ITokenFactory getRequired() {
-			return new TFPatOns();
+		protected ITokenFactory[] getFactories() {
+			return new ITokenFactory[]{new TFConstChar('\''), new TFPatOns()};
 		}
+
+		//@Override
+		//protected ITokenFactory getRequired() {
+		//	return new TFPatOns();
+		//}
 		
-		@Override
-		protected ITokenFactory getOptional() {
-			return new TFConstChar('\'');
-		}
+		//@Override
+		//protected ITokenFactory getOptional() {
+		//	return new TFConstChar('\'');
+		//}
 	}
 	
 	static class TFRepCount extends TFSeqStatic {

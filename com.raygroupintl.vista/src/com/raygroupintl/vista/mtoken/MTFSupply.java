@@ -4,7 +4,6 @@ import java.util.EnumMap;
 
 import com.raygroupintl.bnf.ChoiceSupply;
 import com.raygroupintl.bnf.TFChoice;
-import com.raygroupintl.bnf.TFChoiceBasic;
 import com.raygroupintl.bnf.TFConstChar;
 import com.raygroupintl.bnf.TFConstChars;
 import com.raygroupintl.bnf.TFConstString;

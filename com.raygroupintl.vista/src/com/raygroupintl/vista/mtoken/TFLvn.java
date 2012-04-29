@@ -14,32 +14,17 @@ public class TFLvn extends TFSeqRO {
 	}
 		
 	@Override
-	protected ITokenFactory getRequired() {
+	protected ITokenFactory[] getFactories() {
+		ITokenFactory f1 = TFActualList.getInstance(this.version);
 		if (this.version == MVersion.CACHE) {
 			ITokenFactory methodOrProperty = TFSeqRequired.getInstance(TFConstChar.getInstance('.'), TFName.getInstance());
 			ITokenFactory methodOrPropertyList = TFList.getInstance(methodOrProperty);
-			return TFSeqRO.getInstance(TFName.getInstance(), methodOrPropertyList);		
+			return new ITokenFactory[]{TFSeqRO.getInstance(TFName.getInstance(), methodOrPropertyList), f1};		
 		} else {		
-			return TFName.getInstance();
+			return new ITokenFactory[]{TFName.getInstance(), f1};
 		}
 	}
-	
-	@Override
-	protected ITokenFactory getOptional() {
-		return TFActualList.getInstance(this.version);
-		//return new TFInParantheses() {						
-		//	@Override
-		//	protected ITokenFactory getInnerfactory() {
-		//		return new TFCommaDelimitedList() {								
-		//			@Override
-		//			protected ITokenFactory getElementFactory() {
-		//				return TFExpr.getInstance(TFLvn.this.version);
-		//			}
-		//		};
-		//	}
-		//};
-	}
-	
+
 	protected IToken getToken(IToken requiredToken) {
 		if (this.version == MVersion.CACHE) {
 			return requiredToken;

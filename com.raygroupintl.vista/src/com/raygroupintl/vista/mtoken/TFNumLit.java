@@ -18,16 +18,13 @@ public class TFNumLit extends TFSeqRO {
 	}
 	
 	@Override
-	protected ITokenFactory getRequired() {
+	protected ITokenFactory[] getFactories() {
 		ITokenFactory f = TIntLit.getFactory();
 		ITokenFactory p = new TFConstChar('.');
 		TFSeqXYY number = TFSeqXYY.getInstance(f, p, f);
-		return TFSeqOR.getInstance(TFConstChars.getInstance("-+"), number);
-	}
-	
-	@Override
-	protected ITokenFactory getOptional() {
-		return new TFExp();
+		ITokenFactory f0 = TFSeqOR.getInstance(TFConstChars.getInstance("-+"), number);
+		ITokenFactory f1 = new TFExp();
+		return new ITokenFactory[]{f0, f1};
 	}
 	
 	@Override

@@ -25,13 +25,15 @@ public abstract class TFSeqStatic extends TFSeq {
 		this.firstRequired = Integer.MAX_VALUE;
 		this.lastRequired = Integer.MIN_VALUE;
 		int index = 0;
-		for (boolean b : flags) if (b) {
-			if (this.firstRequired == Integer.MAX_VALUE) {
-				this.firstRequired = index;
+		for (boolean b : flags) {
+			if (b) {
+				if (this.firstRequired == Integer.MAX_VALUE) {
+					this.firstRequired = index;
+				}
+				this.lastRequired = index;
 			}
-			this.lastRequired = index;
+			++index;
 		}
-		++index;
 	}
 	
 	public void setLookAhead(int index) {
@@ -74,7 +76,7 @@ public abstract class TFSeqStatic extends TFSeq {
 	
 	@Override
 	protected int validateEnd(int seqIndex, IToken[] foundTokens) {
-		if (seqIndex > this.lastRequired) {
+		if (seqIndex >= this.lastRequired) {
 			return CONTINUE;
 		} else {
 			return this.getErrorCode();

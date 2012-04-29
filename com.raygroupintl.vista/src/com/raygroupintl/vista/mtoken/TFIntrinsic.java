@@ -165,17 +165,8 @@ public class TFIntrinsic extends TFSeq {
 		addFunction(version, "J", "JUSTIFY", 2, 3); 	
 		addFunction(version, "L", "LENGTH", 1, 2); 		
 		FunctionInfo o = addFunction(version, "O", "ORDER", 1, 2); 	
-		o.setArgumentFactory(new TFSeqRO() {
-			@Override
-			protected ITokenFactory getRequired() {
-				return MTFSupply.getInstance(version).getTFGlvn();
-			}
-			
-			@Override
-			protected ITokenFactory getOptional() {
-				return TFSeqRequired.getInstance(TFConstChar.getInstance(','), TFExpr.getInstance(version));
-			}
-		});		
+		o.setArgumentFactory(TFSeqRO.getInstance(MTFSupply.getInstance(version).getTFGlvn(),
+				TFSeqRequired.getInstance(TFConstChar.getInstance(','), TFExpr.getInstance(version))));
 		addFunction(version, "P", "PIECE", 2, 4); 	
 		addFunction(version, "Q", "QUERY", 1, 1); 	
 		addFunction(version, "R", "RANDOM", 1, 1); 	

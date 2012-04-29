@@ -3,7 +3,6 @@ package com.raygroupintl.vista.mtoken;
 import com.raygroupintl.bnf.TFChoice;
 import com.raygroupintl.bnf.TFConstChar;
 import com.raygroupintl.bnf.TFEmpty;
-import com.raygroupintl.bnf.TFEmptyVerified;
 import com.raygroupintl.bnf.TFSeqROO;
 import com.raygroupintl.bnf.TFSeqRequired;
 import com.raygroupintl.fnds.ITokenFactory;
