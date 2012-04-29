@@ -9,6 +9,9 @@ public abstract class TFChoiceOnChar implements ITokenFactory {
 	private ICharPredicate[] predicates = {};
 	private ITokenFactory[] factories = {};
 			
+	public TFChoiceOnChar() {		
+	}
+			
 	public TFChoiceOnChar(ITokenFactory defaultFactory,  ICharPredicate[] predicates, ITokenFactory[] factories) {
 		this.defaultFactory = defaultFactory;
 		this.predicates = predicates;
@@ -19,7 +22,7 @@ public abstract class TFChoiceOnChar implements ITokenFactory {
 		this.defaultFactory = defaultFactory;
 	}
 	
-	public void setChoices(ICharPredicate[] predicates, ITokenFactory[] factories) {
+	public void setChoices(ICharPredicate[] predicates, ITokenFactory... factories) {
 		this.predicates = predicates;
 		this.factories = factories;
 	}

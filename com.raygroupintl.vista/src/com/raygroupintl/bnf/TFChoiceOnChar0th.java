@@ -4,6 +4,10 @@ import com.raygroupintl.fnds.ICharPredicate;
 import com.raygroupintl.fnds.ITokenFactory;
 
 public class TFChoiceOnChar0th extends TFChoiceOnChar {
+	public TFChoiceOnChar0th() {
+		super();
+	}
+
 	public TFChoiceOnChar0th(ITokenFactory defaultFactory, ICharPredicate[] predicates, ITokenFactory... factories) {
 		super(defaultFactory, predicates, factories);
 	}

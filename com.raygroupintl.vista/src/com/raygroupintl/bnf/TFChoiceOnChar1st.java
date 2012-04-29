@@ -6,6 +6,9 @@ import com.raygroupintl.fnds.ITokenFactory;
 public class TFChoiceOnChar1st extends TFChoiceOnChar {
 	private char leadingChar;
 	
+	public TFChoiceOnChar1st() {		
+	}
+			
 	public TFChoiceOnChar1st(char leadingChar, ITokenFactory defaultFactory, ICharPredicate[] predicates, ITokenFactory[] factories) {
 		super(defaultFactory, predicates, factories);
 		this.leadingChar = leadingChar;
