@@ -9,11 +9,11 @@ public class TFChoiceBasic implements ITokenFactory {
 	public TFChoiceBasic() {
 	}
 	
-	public TFChoiceBasic(ITokenFactory[] factories) {
+	public TFChoiceBasic(ITokenFactory... factories) {
 		this.factories = factories;
 	}
 	
-	public void setFactories(ITokenFactory[] factories) {
+	public void setFactories(ITokenFactory... factories) {
 		this.factories = factories;
 	}
 	
