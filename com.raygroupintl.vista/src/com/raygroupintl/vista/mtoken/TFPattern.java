@@ -5,8 +5,8 @@ import com.raygroupintl.bnf.TFChoice;
 import com.raygroupintl.bnf.TFConstChar;
 import com.raygroupintl.bnf.TFConstChars;
 import com.raygroupintl.bnf.TFSeqOR;
-import com.raygroupintl.bnf.TFSeqOptional;
 import com.raygroupintl.bnf.TFSeqRequired;
+import com.raygroupintl.bnf.TFSeqStatic;
 import com.raygroupintl.fnds.ITokenFactory;
 	
 public class TFPattern extends TFChoice {
@@ -79,7 +79,7 @@ public class TFPattern extends TFChoice {
 		}
 	}
 	
-	static class TFRepCount extends TFSeqOptional {
+	static class TFRepCount extends TFSeqStatic {
 		@Override
 		protected ITokenFactory[] getFactories() {
 			ITokenFactory f = new TIntLit.Factory();

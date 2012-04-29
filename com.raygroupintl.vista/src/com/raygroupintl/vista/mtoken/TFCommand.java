@@ -226,7 +226,7 @@ public class TFCommand extends TFSeq {
 		@Override
 		protected ITokenFactory buildArgumentFactory(final MVersion version) {
 			TFExpr tfExpr = TFExpr.getInstance(version);
-			TFSeqRequired tfFromTo = TFSeqRequired.getInstance(TFConstChar.getInstance(':'), tfExpr);
+			ITokenFactory tfFromTo = TFSeqRequired.getInstance(TFConstChar.getInstance(':'), tfExpr);
 			ITokenFactory RHS = TFSeqROO.getInstance(tfExpr, tfFromTo, tfFromTo);
 			ITokenFactory RHSs = TFCommaDelimitedList.getInstance(RHS);
 			return TFSeqRequired.getInstance(TFLvn.getInstance(version), TFConstChar.getInstance('='), RHSs); 

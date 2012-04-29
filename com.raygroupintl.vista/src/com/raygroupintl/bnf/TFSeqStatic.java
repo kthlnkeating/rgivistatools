@@ -13,7 +13,7 @@ public abstract class TFSeqStatic extends TFSeq {
 	public TFSeqStatic() {		
 	}
 	
-	public TFSeqStatic(ITokenFactory[] factories) {
+	public TFSeqStatic(ITokenFactory... factories) {
 		this.supply = new TFSStatic(factories);		
 	}
 		
@@ -32,6 +32,15 @@ public abstract class TFSeqStatic extends TFSeq {
 			this.lastRequired = index;
 		}
 		++index;
+	}
+	
+	public void setLookAhead(int index) {
+		this.lookAhead = index;
+	}
+	
+	protected void setRequiredAll() {
+		this.firstRequired = 0;
+		this.lastRequired = Integer.MAX_VALUE;
 	}
 	
 	protected ITokenFactory[] getFactories() {
@@ -70,5 +79,13 @@ public abstract class TFSeqStatic extends TFSeq {
 		} else {
 			return this.getErrorCode();
 		}
+	}
+	
+	@Override
+	protected IToken getToken(IToken[] foundTokens) {
+		for (IToken token : foundTokens) {
+			if (token != null) return super.getToken(foundTokens);
+		}
+		return null;
 	}
 }

@@ -3,7 +3,6 @@ package com.raygroupintl.vista.mtoken;
 import com.raygroupintl.bnf.ChoiceSupply;
 import com.raygroupintl.bnf.TFConstChar;
 import com.raygroupintl.bnf.TFEmpty;
-import com.raygroupintl.bnf.TFEmptyVerified;
 import com.raygroupintl.bnf.TFSeqRO;
 import com.raygroupintl.bnf.TFSeqRequired;
 import com.raygroupintl.bnf.TList;
@@ -22,7 +21,7 @@ public abstract class TFDelimitedList extends TFSeqRO {
 
 	@Override
 	protected ITokenFactory getOptional() {
-		TFSeqRequired r = TFSeqRequired.getInstance(this.getDelimitedFactory(), this.getElementFactory());
+		ITokenFactory r = TFSeqRequired.getInstance(this.getDelimitedFactory(), this.getElementFactory());
 		return TFList.getInstance(r);
 	}
 

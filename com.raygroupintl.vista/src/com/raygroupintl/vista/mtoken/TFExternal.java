@@ -64,8 +64,8 @@ public class TFExternal extends TFSeqRRO {
 		@Override
 		protected final ITokenFactory[] getFactories() {
 			TFName n = new TFName();
-			TFSeqRequired p = TFSeqRequired.getInstance(new TFConstChar('.'), n);
-			TFSeqRequired r = TFSeqRequired.getInstance(new TFConstChar('^'), n);
+			ITokenFactory p = TFSeqRequired.getInstance(new TFConstChar('.'), n);
+			ITokenFactory r = TFSeqRequired.getInstance(new TFConstChar('^'), n);
 			return new ITokenFactory[]{n, p, r};
 		}
 		

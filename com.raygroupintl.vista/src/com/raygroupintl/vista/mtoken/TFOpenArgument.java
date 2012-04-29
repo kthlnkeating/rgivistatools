@@ -3,9 +3,9 @@ package com.raygroupintl.vista.mtoken;
 import com.raygroupintl.bnf.ChoiceSupply;
 import com.raygroupintl.bnf.TFChoice;
 import com.raygroupintl.bnf.TFConstChar;
-import com.raygroupintl.bnf.TFSeqOptional;
 import com.raygroupintl.bnf.TFSeqRO;
 import com.raygroupintl.bnf.TFSeqRequired;
+import com.raygroupintl.bnf.TFSeqStatic;
 import com.raygroupintl.fnds.ITokenFactory;
 
 public class TFOpenArgument extends TFChoice {
@@ -15,7 +15,7 @@ public class TFOpenArgument extends TFChoice {
 		this.version = version;
 	}
 	
-	private static class TFOpenParameters extends TFSeqOptional {
+	private static class TFOpenParameters extends TFSeqStatic {
 		private MVersion version;
 		
 		private TFOpenParameters(MVersion version) {
