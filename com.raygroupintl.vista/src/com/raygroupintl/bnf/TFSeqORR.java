@@ -1,29 +1,16 @@
 package com.raygroupintl.bnf;
 
-import com.raygroupintl.fnds.IToken;
+import com.raygroupintl.fnds.ITokenFactory;
 
 public abstract class TFSeqORR extends TFSeqStatic {
-	@Override
-	protected final int validateNull(int seqIndex, IToken[] foundTokens) {
-		if (seqIndex == 1) {
-			if (foundTokens[0] == null) {
-				return RETURN_NULL;
-			} else {
-				return this.getErrorCode();
-			}
-		}
-		if (seqIndex == 2) {
-			return this.getErrorCode();
-		}
-		return CONTINUE;
+	public TFSeqORR() {
+		boolean[] flags = {false, true, true};
+		this.setRequiredFlags(flags);		
 	}
 	
-	@Override
-	protected final int validateEnd(int seqIndex, IToken[] foundTokens) {
-		if (seqIndex < 2) {
-			return this.getErrorCode();
-		} else {
-			return 0;
-		}
+	public TFSeqORR(ITokenFactory... factories) {
+		super(factories);
+		boolean[] flags = {false, true, true};
+		this.setRequiredFlags(flags);
 	}
 }
