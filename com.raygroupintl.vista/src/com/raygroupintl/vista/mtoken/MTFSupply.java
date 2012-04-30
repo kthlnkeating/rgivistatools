@@ -13,6 +13,8 @@ import com.raygroupintl.bnf.TFSeqRequired;
 import com.raygroupintl.bnf.TFSyntaxError;
 import com.raygroupintl.bnf.annotation.Parser;
 import com.raygroupintl.bnf.annotation.Sequence;
+import com.raygroupintl.bnf.annotation.Choice;
+import com.raygroupintl.bnf.annotation.List;
 import com.raygroupintl.fnds.ICharPredicate;
 import com.raygroupintl.fnds.IToken;
 import com.raygroupintl.fnds.ITokenFactory;
@@ -50,6 +52,12 @@ public abstract class MTFSupply {
 		
 		@Sequence(value={"pipe", "expr", "pipe"}, required="all")
 		public ITokenFactory env_0;
+		@List(value="expratom", delim="comma", left="lsqr", right="rsqr")
+		public ITokenFactory env_1;
+		@Choice({"env_0", "env_1"})
+		public ITokenFactory environment;
+		
+
 	}
 		
 	public static class Std95Supply extends CommonSupply {	
@@ -125,9 +133,7 @@ public abstract class MTFSupply {
 			}		
 		}
 				
-		public TFChoiceBasic environment = new TFChoiceBasic();
-		
-		public TFChoiceBasic exprAtom = new TFChoiceBasic();
+		public TFChoiceBasic expratom = new TFChoiceBasic();
 		public TFChoiceOnChar0th actual = new TFChoiceOnChar0th();
 		public TFChoiceOnChar0th exprItem = new TFChoiceOnChar0th();
 		public TFChoiceOnChar0th glvn = new TFChoiceOnChar0th();
@@ -151,7 +157,7 @@ public abstract class MTFSupply {
 		}
 	
 		public ITokenFactory getTFExprAtom() {
-			return this.exprAtom;
+			return this.expratom;
 		}
 		
 		public ITokenFactory getTFActual() {
@@ -161,9 +167,9 @@ public abstract class MTFSupply {
 		@Override
 		protected void initialize() {
 			if (version == MVersion.CACHE) {
-				this.exprAtom.setFactories(new ITokenFactory[]{getTFGlvn(), getTFExprItem(), TFCacheClassMethod.getInstance()});
+				this.expratom.setFactories(new ITokenFactory[]{getTFGlvn(), getTFExprItem(), TFCacheClassMethod.getInstance()});
 			} else {
-				this.exprAtom.setFactories(new ITokenFactory[]{getTFGlvn(), getTFExprItem()});
+				this.expratom.setFactories(new ITokenFactory[]{getTFGlvn(), getTFExprItem()});
 			}			
 			
 			{
@@ -207,15 +213,6 @@ public abstract class MTFSupply {
 				this.actual.setDefault(TFExpr.getInstance(this.version));
 				this.actual.setChoices(predsAll, fDot, f0, f1);
 			}
-			
-			{
-				//ITokenFactory f0 = TFSeqRequired.getInstance(pipe, expr, pipe);
-				
-				ITokenFactory f = TFCommaDelimitedList.getInstance(exprAtom, ',');
-				ITokenFactory f1 = TFSeqRequired.getInstance(lsqr, f, rsqr);
-				this.environment.setFactories(env_0, f1);
-			}			
-
 		}
 	}
 
@@ -292,8 +289,7 @@ public abstract class MTFSupply {
 			}		
 		}
 		
-		public TFChoiceBasic environment = new TFChoiceBasic();
-		public TFChoiceBasic exprAtom = new TFChoiceBasic();
+		public TFChoiceBasic expratom = new TFChoiceBasic();
 		public TFChoiceOnChar0th actual = new TFChoiceOnChar0th();
 		public TFChoiceOnChar0th exprItem = new TFChoiceOnChar0th();
 		public TFChoiceOnChar0th glvn = new TFChoiceOnChar0th();
@@ -317,7 +313,7 @@ public abstract class MTFSupply {
 		}
 	
 		public ITokenFactory getTFExprAtom() {
-			return this.exprAtom;
+			return this.expratom;
 		}
 		
 		public ITokenFactory getTFActual() {
@@ -327,9 +323,9 @@ public abstract class MTFSupply {
 		@Override
 		protected void initialize() {
 			if (version == MVersion.CACHE) {
-				this.exprAtom.setFactories(new ITokenFactory[]{getTFGlvn(), getTFExprItem(), TFCacheClassMethod.getInstance()});
+				this.expratom.setFactories(new ITokenFactory[]{getTFGlvn(), getTFExprItem(), TFCacheClassMethod.getInstance()});
 			} else {
-				this.exprAtom.setFactories(new ITokenFactory[]{getTFGlvn(), getTFExprItem()});
+				this.expratom.setFactories(new ITokenFactory[]{getTFGlvn(), getTFExprItem()});
 			}			
 			
 			{
@@ -372,12 +368,6 @@ public abstract class MTFSupply {
 				ICharPredicate[] predsAll = {new CharPredicate('.'), new CharPredicate(','), new CharPredicate(')')};
 				this.actual.setDefault(TFExpr.getInstance(this.version));
 				this.actual.setChoices(predsAll, fDot, f0, f1);
-			}
-			
-			{
-				ITokenFactory f = TFCommaDelimitedList.getInstance(exprAtom, ',');
-				ITokenFactory f1 = TFSeqRequired.getInstance(lsqr, f, rsqr);
-				this.environment.setFactories(env_0, f1);
 			}			
 		}
 	}
