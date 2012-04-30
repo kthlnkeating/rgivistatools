@@ -142,7 +142,7 @@ public class TFCommand extends TFSeq {
 				@Override
 				protected ITokenFactory getFactory(char ch) {
 					if (ch == '@') {
-						return TFIndirection.getInstance(version);
+						return MTFSupply.getInstance(version).getTFIndirection();
 					} else {
 						return TFSeqRO.getInstance(MTFSupply.getInstance(version).getTFExpr(), TFSeqRequired.getInstance(TFConstChar.getInstance(':'), new TFDeviceParams(version)));
 					}
@@ -390,7 +390,7 @@ public class TFCommand extends TFSeq {
 	
 		@Override
 		protected ITokenFactory buildArgumentFactory(final MVersion version) {
-			ITokenFactory tfNRef = ChoiceSupply.get(TFLvn.getInstance(version), "^@", TFGvn.getInstance(version), TFIndirection.getInstance(version));		
+			ITokenFactory tfNRef = ChoiceSupply.get(TFLvn.getInstance(version), "^@", TFGvn.getInstance(version), MTFSupply.getInstance(version).getTFIndirection());		
 			ITokenFactory tfNRefOrList = ChoiceSupply.get(tfNRef, '(', TFDelimitedList.getInstance(tfNRef, ',', true));
 			ITokenFactory e = TFSeqORO.getInstance(TFConstChars.getInstance("+-"), tfNRefOrList, TFTimeout.getInstance(version));
 			return TFCommaDelimitedList.getInstance(e);
@@ -452,7 +452,7 @@ public class TFCommand extends TFSeq {
 					case '(': 
 						return TFCommaDelimitedList.getInstance(TFLvn.getInstance(version));
 					case '@':
-						return TFIndirection.getInstance(version);
+						return MTFSupply.getInstance(version).getTFIndirection();
 					case '$':
 						return TFIntrinsic.getInstance(version);
 					default:
@@ -733,7 +733,7 @@ public class TFCommand extends TFSeq {
 						case '*':
 							return TFSeqRequired.getInstance(TFConstChar.getInstance('*'), MTFSupply.getInstance(version).getTFExpr());
 						case '@':
-							return TFIndirection.getInstance(version);
+							return MTFSupply.getInstance(version).getTFIndirection();
 						default:
 							return MTFSupply.getInstance(version).getTFExpr();
 					}
@@ -791,7 +791,7 @@ public class TFCommand extends TFSeq {
 	
 		@Override
 		protected ITokenFactory buildArgumentFactory(final MVersion version) {
-			ITokenFactory tf = ChoiceSupply.get(MTFSupply.getInstance(version).getTFExpr(), '@', TFIndirection.getInstance(version));
+			ITokenFactory tf = ChoiceSupply.get(MTFSupply.getInstance(version).getTFExpr(), '@', MTFSupply.getInstance(version).getTFIndirection());
 			ITokenFactory pc = getTFPostCondition(null, version);
 			return TFDelimitedList.getInstance(TFSeqRO.getInstance(tf, pc), ',');
 		}

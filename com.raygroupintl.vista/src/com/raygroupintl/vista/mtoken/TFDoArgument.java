@@ -30,7 +30,7 @@ public class TFDoArgument extends TFSeq {
 	
 	private static ITokenFactory getFactory0(IToken[] previousTokens, final MVersion version) {
 		TFLabel tfl = TFLabel.getInstance();
-		TFIndirection tfi = TFIndirection.getInstance(version);
+		ITokenFactory tfi = MTFSupply.getInstance(version).getTFIndirection();
 		if (version == MVersion.CACHE) {
 			ITokenFactory f = TFSeqRO.getInstance(tfl, TFSeqRequired.getInstance(TFChar.DOT, TFName.getInstance()));
 			return ChoiceSupply.get(f, "@#$", tfi, TFCacheClassMethod.getInstance(), getCacheSystemCall());
@@ -77,7 +77,7 @@ public class TFDoArgument extends TFSeq {
 			return new TFNull();
 		} else {
 			ITokenFactory tfEnvName = getRoutineSpecification(version); //TFSerialOR.getInstance(tfEnv, tfName);
-			ITokenFactory tfInd = TFIndirection.getInstance(version);
+			ITokenFactory tfInd = MTFSupply.getInstance(version).getTFIndirection();
 			return ChoiceSupply.get(tfEnvName, tfInd);
 		}
 	}

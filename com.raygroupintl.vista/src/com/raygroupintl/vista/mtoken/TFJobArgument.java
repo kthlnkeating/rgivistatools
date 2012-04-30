@@ -21,7 +21,7 @@ public class TFJobArgument extends TFSeq {
 	
 	private static ITokenFactory getFactory0(IToken[] previousTokens, MVersion version) {
 		TFLabel tfl = TFLabel.getInstance();
-		TFIndirection tfi = TFIndirection.getInstance(version);
+		ITokenFactory tfi = MTFSupply.getInstance(version).getTFIndirection();
 		ITokenFactory tf = ChoiceSupply.get(tfl, tfi);
 		return tf; 
 	}
@@ -52,7 +52,7 @@ public class TFJobArgument extends TFSeq {
 			ITokenFactory tfEnv = MTFSupply.getInstance(version).getTFEnvironment();
 			ITokenFactory tfName = TFName.getInstance();
 			ITokenFactory tfEnvName = TFSeqOR.getInstance(tfEnv, tfName);
-			ITokenFactory tfInd = TFIndirection.getInstance(version);
+			ITokenFactory tfInd = MTFSupply.getInstance(version).getTFIndirection();
 			return ChoiceSupply.get(tfEnvName, tfInd);
 		}
 	}

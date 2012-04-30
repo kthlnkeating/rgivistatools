@@ -27,7 +27,7 @@ public class TFSetArgument extends TFSeqStatic {
 			case '$':
 				return TFIntrinsic.getInstance(this.version);
 			case '@':
-				return TFIndirection.getInstance(this.version);
+				return MTFSupply.getInstance(version).getTFIndirection();
 			default:
 				return MTFSupply.getInstance(version).getTFGlvn();
 			}

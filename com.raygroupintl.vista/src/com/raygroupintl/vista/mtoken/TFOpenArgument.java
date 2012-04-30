@@ -35,7 +35,7 @@ public class TFOpenArgument extends TFChoice {
 	@Override
 	protected ITokenFactory getFactory(char ch) {
 		if (ch == '@') {
-			return TFIndirection.getInstance(this.version);
+			return MTFSupply.getInstance(version).getTFIndirection();
 		} else {
 			return TFSeqRO.getInstance(MTFSupply.getInstance(version).getTFExpr(), TFSeqRequired.getInstance(TFConstChar.getInstance(':'), new TFOpenParameters(this.version)));
 		}

@@ -20,7 +20,7 @@ public class TFKillArgument extends TFChoice {
 		@Override
 		protected ITokenFactory getFactory(char ch) {
 			if (ch == '@') {
-				return TFIndirection.getInstance(this.version);				
+				return MTFSupply.getInstance(version).getTFIndirection();				
 			} else {
 				return TFName.getInstance();
 			}
@@ -36,7 +36,7 @@ public class TFKillArgument extends TFChoice {
 			return TFInParantheses.getInstance(tfDL);
 		}
 		case '@':
-			return TFIndirection.getInstance(this.version);
+			return MTFSupply.getInstance(version).getTFIndirection();
 		default:
 			return MTFSupply.getInstance(version).getTFGlvn();
 		}

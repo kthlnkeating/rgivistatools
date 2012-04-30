@@ -89,7 +89,7 @@ public abstract class MTFSupply {
 		@List("exprtail_s")
 		public ITokenFactory exprtail;
 
-		@List("expr")
+		@List(value="expr", delim="comma")
 		public ITokenFactory exprlist;
 		
 		@Sequence(value={"at", "expratom"}, required="all")
@@ -269,7 +269,7 @@ public abstract class MTFSupply {
 			
 		    {
 				ICharPredicate[] preds = {new IdentifierStartPredicate(), new CharPredicate('^'), new CharPredicate('@')};
-				this.glvn.setChoices(preds, TFLvn.getInstance(this.version), getTFGvnAll(), TFIndirection.getInstance(this.version));
+				this.glvn.setChoices(preds, TFLvn.getInstance(this.version), getTFGvnAll(), indirection);
 			}
 	
 			{
@@ -277,7 +277,7 @@ public abstract class MTFSupply {
 				ITokenFactory[] fsDot = {
 						this.numlit,
 						TFSeqRequired.getInstance(dot, name),
-						TFSeqRequired.getInstance(dot, TFIndirection.getInstance(this.version))
+						TFSeqRequired.getInstance(dot, indirection)
 				};				
 				ITokenFactory fDot = ChoiceSupply.get('.', TFSyntaxError.getInstance(), predsDot, fsDot);
 				ITokenFactory f0 = TFEmptyVerified.getInstance(',');
@@ -451,7 +451,7 @@ public abstract class MTFSupply {
 			
 		    {
 				ICharPredicate[] preds = {new IdentifierStartPredicate(), new CharPredicate('^'), new CharPredicate('@')};
-				this.glvn.setChoices(preds, TFLvn.getInstance(this.version), getTFGvnAll(), TFIndirection.getInstance(this.version));
+				this.glvn.setChoices(preds, TFLvn.getInstance(this.version), getTFGvnAll(), indirection);
 			}
 	
 			{
@@ -459,7 +459,7 @@ public abstract class MTFSupply {
 				ITokenFactory[] fsDot = {
 						this.numlit,
 						TFSeqRequired.getInstance(dot, name),
-						TFSeqRequired.getInstance(dot, TFIndirection.getInstance(this.version))
+						TFSeqRequired.getInstance(dot, indirection)
 				};				
 				ITokenFactory fDot = ChoiceSupply.get('.', TFSyntaxError.getInstance(), predsDot, fsDot);
 				ITokenFactory f0 = TFEmptyVerified.getInstance(',');

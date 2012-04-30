@@ -59,7 +59,7 @@ public class TFUseArgument extends TFChoice {
 	@Override
 	protected ITokenFactory getFactory(char ch) {
 		if (ch == '@') {
-			return TFIndirection.getInstance(this.version);
+			return MTFSupply.getInstance(version).getTFIndirection();
 		} else {
 			return TFSeqROO.getInstance(MTFSupply.getInstance(version).getTFExpr(), 
 					TFSeqRequired.getInstance(TFConstChar.getInstance(':'), TFUseDeviceParams.getInstance(this.version)),

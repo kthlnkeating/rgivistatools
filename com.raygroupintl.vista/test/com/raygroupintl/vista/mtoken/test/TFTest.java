@@ -113,6 +113,24 @@ public class TFTest {
 		testTFActual(MVersion.ANSI_STD_95);		
 	}
 
+	private void testTFIndirection(MVersion version) {
+		ITokenFactory f = MTFSupply.getInstance(version).getTFIndirection();		
+		TFCommonTest.validCheck(f, "@(+$P(LST,\",\",FLD))");
+		TFCommonTest.validCheck(f, "@H@(0)");
+		TFCommonTest.validCheck(f, "@XARRAY@(FROMX1,TO1)");
+		TFCommonTest.validCheck(f, "@RCVAR@(Z,\"\")");
+		TFCommonTest.validCheck(f, "@RCVAR@(Z,\"*\")");
+		TFCommonTest.validCheck(f, "@CLIN@(0)");
+		TFCommonTest.validCheck(f, "@(\"PSBTAB\"_(FLD-1))");
+		TFCommonTest.validCheck(f, "@SCLIST@(0)");
+	}
+	
+	@Test
+	public void testTFIndirection() {
+		testTFIndirection(MVersion.CACHE);
+		testTFIndirection(MVersion.ANSI_STD_95);
+	}
+
 	public void TFDeviceParams(MVersion version) {
 		TFDeviceParams f = TFDeviceParams.getInstance(version);
 		TFCommonTest.validCheck(f, "(:XOBPORT:\"AT\")");
