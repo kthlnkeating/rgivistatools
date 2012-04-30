@@ -7,6 +7,7 @@ import com.raygroupintl.vista.mtoken.MTFSupply;
 import com.raygroupintl.vista.mtoken.MVersion;
 import com.raygroupintl.vista.mtoken.TFDelimitedList;
 import com.raygroupintl.vista.mtoken.TFExpr;
+import com.raygroupintl.vista.mtoken.TFNumLit;
 
 public class TFDelimitedListTest {
 	private void testExpr(MVersion version) {
@@ -34,4 +35,28 @@ public class TFDelimitedListTest {
 		testActual(MVersion.CACHE);
 		testActual(MVersion.ANSI_STD_95);
 	}
+
+	private void testTFDelimitedTest(MVersion version) {
+		MTFSupply m = MTFSupply.getInstance(version);
+		TFDelimitedList f = new TFDelimitedList();
+		f.setElementFactory(m.getTFActual());
+		f.setLeft("(");
+		f.setRight(")");
+		f.setDelimiter(",");
+		f.setAllowEmpty(true);
+		TFCommonTest.validCheck(f, "()");
+		TFCommonTest.validCheck(f, "(,A,)");
+		f.setDelimiter(":");
+		f.setElementFactory(TFNumLit.getInstance());
+		TFCommonTest.validCheck(f, "(1)");
+		TFCommonTest.validCheck(f, "(:1:1)");
+	}
+
+	@Test
+	public void testTFDelimitedTest() {
+		testTFDelimitedTest(MVersion.CACHE);
+		testTFDelimitedTest(MVersion.ANSI_STD_95);
+	}
+
+
 }

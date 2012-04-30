@@ -8,8 +8,23 @@ import com.raygroupintl.bnf.TSyntaxError;
 import com.raygroupintl.fnds.IToken;
 import com.raygroupintl.fnds.ITokenFactory;
 
-public abstract class TFList implements ITokenFactory {
-	protected abstract ITokenFactory getFactory();
+public class TFList implements ITokenFactory {
+	private ITokenFactory elementFactory;
+
+	public TFList() {
+	}
+	
+	public TFList(ITokenFactory elementFactory) {
+		this.elementFactory = elementFactory;
+	}
+	
+	public void setElementFactory(ITokenFactory elementFactory) {
+		this.elementFactory = elementFactory;
+	}
+		
+	protected ITokenFactory getFactory() {
+		return null;
+	}
 
 	protected IToken getToken(List<IToken> list) {
 		return new TList(list);
@@ -23,11 +38,13 @@ public abstract class TFList implements ITokenFactory {
 	public IToken tokenize(String line, int fromIndex) {
 		int endIndex = line.length();
 		if (fromIndex < endIndex) {
-			ITokenFactory f = this.getFactory();
+			if (this.elementFactory == null) {
+				this.elementFactory = this.getFactory();
+			}
 			int index = fromIndex;
 			List<IToken> list = null;
 			while (index < endIndex) {
-				IToken token = f.tokenize(line, index);
+				IToken token = this.elementFactory.tokenize(line, index);
 				if (token == null) {
 					if (list == null) {
 						return this.getNullToken();
@@ -51,38 +68,7 @@ public abstract class TFList implements ITokenFactory {
 		return null;
 	}
 	
-	private static class TFRequiredList extends TFList {
-		private ITokenFactory elementFactory;
-		
-		public TFRequiredList(ITokenFactory elementFactory) {
-			this.elementFactory = elementFactory;
-		}
-		
-		protected ITokenFactory getFactory() {
-			return this.elementFactory;
-		}
-	}
-	
-	private static class TFOptionalList extends TFRequiredList {
-		public TFOptionalList(ITokenFactory elementFactory) {
-			super(elementFactory);
-		}
-
-		@Override
-		protected IToken getNullToken() {
-			return new TList();
-		}
-	}
-	
-	public static TFList getInstance(ITokenFactory elementFactory, boolean optional) {
-		if (optional) {
-			return new TFOptionalList(elementFactory);
-		} else {
-			return new TFRequiredList(elementFactory);
-		}
-	}
-	
 	public static TFList getInstance(ITokenFactory elementFactory) {
-		return getInstance(elementFactory, false);
+		return new TFList(elementFactory);
 	}
 }

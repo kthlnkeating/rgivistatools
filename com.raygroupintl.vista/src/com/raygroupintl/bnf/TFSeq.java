@@ -10,6 +10,12 @@ public abstract class TFSeq implements ITokenFactory {
 	protected static final int RETURN_TOKEN = -1;
 	protected static final int CONTINUE = 0;
 	
+	private TokenAdapter adapter;
+	
+	public void setTokenAdapter(TokenAdapter adapter) {
+		this.adapter = adapter;
+	}
+	
 	protected int getErrorCode() {
 		return MError.ERR_GENERAL_SYNTAX;
 	}
@@ -25,7 +31,11 @@ public abstract class TFSeq implements ITokenFactory {
 	protected abstract int validateEnd(int seqIndex, IToken[] foundTokens);
 	
 	protected IToken getToken(IToken[] foundTokens) {
-		return new TArray(foundTokens);
+		if (this.adapter == null) {
+			return new TArray(foundTokens);
+		} else {
+			return this.adapter.convert(foundTokens);
+		}
 	}
 	
 	private int validate(int seqIndex, IToken[] foundTokens, IToken nextToken) {
