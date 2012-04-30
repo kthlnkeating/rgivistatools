@@ -9,8 +9,25 @@ import com.raygroupintl.vista.mtoken.TFDeviceParams;
 import com.raygroupintl.vista.mtoken.TFExternal;
 import com.raygroupintl.vista.mtoken.TFGvn;
 import com.raygroupintl.vista.mtoken.TFStringLiteral;
+import com.raygroupintl.vista.struct.MError;
 
 public class TFTest {
+	public void testTFEnvironment(MVersion version) {
+		MTFSupply m = MTFSupply.getInstance(version);
+		ITokenFactory f = m.getTFEnvironment();
+		TFCommonTest.validCheck(f, "|A|");
+		TFCommonTest.validCheck(f, "[A,B]");
+		TFCommonTest.validCheck(f, "||", MError.ERR_GENERAL_SYNTAX);
+		TFCommonTest.validCheck(f, "[A,B", MError.ERR_GENERAL_SYNTAX);
+		TFCommonTest.validCheck(f, "[]", MError.ERR_GENERAL_SYNTAX);
+	}
+
+	@Test
+	public void testTFEnvironment() {
+		testTFEnvironment(MVersion.CACHE);
+		testTFEnvironment(MVersion.ANSI_STD_95);		
+	}
+		
 	public void testTFExternal(MVersion version) {
 		TFExternal f = TFExternal.getInstance(version);
 		TFCommonTest.validCheck(f, "$&ZLIB.%GETDVI(%XX,\"DEVCLASS\")");

@@ -6,7 +6,7 @@ import com.raygroupintl.fnds.IToken;
 import com.raygroupintl.fnds.ITokenFactory;
 import com.raygroupintl.fnds.ITokenFactorySupply;
 
-public abstract class TFSeqStatic extends TFSeq {
+public class TFSeqStatic extends TFSeq {
 	private ITokenFactorySupply supply;
 	private boolean[] requiredFlags = {};
 	private int firstRequired = Integer.MAX_VALUE;

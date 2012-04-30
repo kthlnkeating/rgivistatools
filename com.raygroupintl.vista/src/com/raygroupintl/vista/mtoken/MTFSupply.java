@@ -11,6 +11,8 @@ import com.raygroupintl.bnf.TFConstString;
 import com.raygroupintl.bnf.TFEmptyVerified;
 import com.raygroupintl.bnf.TFSeqRequired;
 import com.raygroupintl.bnf.TFSyntaxError;
+import com.raygroupintl.bnf.annotation.Parser;
+import com.raygroupintl.bnf.annotation.Sequence;
 import com.raygroupintl.fnds.ICharPredicate;
 import com.raygroupintl.fnds.IToken;
 import com.raygroupintl.fnds.ITokenFactory;
@@ -37,13 +39,17 @@ public abstract class MTFSupply {
 
 	protected static abstract class CommonSupply extends MTFSupply {
 		public ITokenFactory dot = TFChar.DOT;
+		public ITokenFactory comma = TFChar.COMMA;
 		public ITokenFactory pipe = new TFConstChar('|');
 		public ITokenFactory lsqr = new TFConstChar('[');
 		public ITokenFactory rsqr = new TFConstChar(']');
 		
 		public ITokenFactory name = TFName.getInstance();
 		
-		public ITokenFactory numlit = TFNumLit.getInstance();		
+		public ITokenFactory numlit = TFNumLit.getInstance();
+		
+		@Sequence(value={"pipe", "expr", "pipe"}, required="all")
+		public ITokenFactory env_0;
 	}
 		
 	public static class Std95Supply extends CommonSupply {	
@@ -119,14 +125,14 @@ public abstract class MTFSupply {
 			}		
 		}
 				
-		private TFChoiceBasic environment = new TFChoiceBasic();
+		public TFChoiceBasic environment = new TFChoiceBasic();
 		
-		private TFChoiceBasic exprAtom = new TFChoiceBasic();
-		private TFChoiceOnChar0th actual = new TFChoiceOnChar0th();
-		private TFChoiceOnChar0th exprItem = new TFChoiceOnChar0th();
-		private TFChoiceOnChar0th glvn = new TFChoiceOnChar0th();
-		private TFChoiceOnChar1st gvnAll = new TFChoiceOnChar1st();
-		private ITokenFactory expr = TFExpr.getInstance(this.version);
+		public TFChoiceBasic exprAtom = new TFChoiceBasic();
+		public TFChoiceOnChar0th actual = new TFChoiceOnChar0th();
+		public TFChoiceOnChar0th exprItem = new TFChoiceOnChar0th();
+		public TFChoiceOnChar0th glvn = new TFChoiceOnChar0th();
+		public TFChoiceOnChar1st gvnAll = new TFChoiceOnChar1st();
+		public ITokenFactory expr = TFExpr.getInstance(this.version);
 		
 		public ITokenFactory getTFEnvironment() {
 			return environment;
@@ -203,11 +209,11 @@ public abstract class MTFSupply {
 			}
 			
 			{
-				ITokenFactory f0 = TFSeqRequired.getInstance(pipe, expr, pipe);
+				//ITokenFactory f0 = TFSeqRequired.getInstance(pipe, expr, pipe);
 				
 				ITokenFactory f = TFCommaDelimitedList.getInstance(exprAtom, ',');
 				ITokenFactory f1 = TFSeqRequired.getInstance(lsqr, f, rsqr);
-				this.environment.setFactories(f0, f1);
+				this.environment.setFactories(env_0, f1);
 			}			
 
 		}
@@ -286,13 +292,13 @@ public abstract class MTFSupply {
 			}		
 		}
 		
-		private TFChoiceBasic environment = new TFChoiceBasic();
-		private TFChoiceBasic exprAtom = new TFChoiceBasic();
-		private TFChoiceOnChar0th actual = new TFChoiceOnChar0th();
-		private TFChoiceOnChar0th exprItem = new TFChoiceOnChar0th();
-		private TFChoiceOnChar0th glvn = new TFChoiceOnChar0th();
-		private TFChoiceOnChar1st gvnAll = new TFChoiceOnChar1st();
-		private ITokenFactory expr = TFExpr.getInstance(this.version);
+		public TFChoiceBasic environment = new TFChoiceBasic();
+		public TFChoiceBasic exprAtom = new TFChoiceBasic();
+		public TFChoiceOnChar0th actual = new TFChoiceOnChar0th();
+		public TFChoiceOnChar0th exprItem = new TFChoiceOnChar0th();
+		public TFChoiceOnChar0th glvn = new TFChoiceOnChar0th();
+		public TFChoiceOnChar1st gvnAll = new TFChoiceOnChar1st();
+		public ITokenFactory expr = TFExpr.getInstance(this.version);
 		
 		public ITokenFactory getTFEnvironment() {
 			return environment;
@@ -369,11 +375,9 @@ public abstract class MTFSupply {
 			}
 			
 			{
-				ITokenFactory f0 = TFSeqRequired.getInstance(pipe, expr, pipe);
-				
 				ITokenFactory f = TFCommaDelimitedList.getInstance(exprAtom, ',');
 				ITokenFactory f1 = TFSeqRequired.getInstance(lsqr, f, rsqr);
-				this.environment.setFactories(f0, f1);
+				this.environment.setFactories(env_0, f1);
 			}			
 		}
 	}
@@ -384,23 +388,27 @@ public abstract class MTFSupply {
 	
 	
 	public static MTFSupply getInstance(MVersion version) {
-		switch (version) {
-			case CACHE: {
-				if (CACHE_SUPPLY == null) {
-					CACHE_SUPPLY = new CacheSupply();
-					CACHE_SUPPLY.initialize();
+		try {
+			switch (version) {
+				case CACHE: {
+					if (CACHE_SUPPLY == null) {
+						CACHE_SUPPLY = Parser.parse(CacheSupply.class);  //new CacheSupply();
+						CACHE_SUPPLY.initialize();
+					}
+					return CACHE_SUPPLY;
 				}
-				return CACHE_SUPPLY;
-			}
-			case ANSI_STD_95: {
-				if (STD_95_SUPPLY == null) {
-					STD_95_SUPPLY = new Std95Supply();
-					STD_95_SUPPLY.initialize();
+				case ANSI_STD_95: {
+					if (STD_95_SUPPLY == null) {
+						STD_95_SUPPLY = Parser.parse(Std95Supply.class);  //new Std95Supply();
+						STD_95_SUPPLY.initialize();
+					}
+					return STD_95_SUPPLY;
 				}
-				return STD_95_SUPPLY;
+				default:
+					return null;
 			}
-			default:
-				return null;
+		} catch (Throwable t) {
+			return null;
 		}
 	}	
 }

@@ -31,7 +31,7 @@ public class TFCommonTest {
 		if (! ((f instanceof TFCommand) || (f instanceof TFLine))) {
 			validCheck(f, v + " ", v);
 		}
-		}
+	}
 
 	static void validCheck(ITokenFactory f, String v, int errorCode) {
 		IToken t = f.tokenize(v, 0);
