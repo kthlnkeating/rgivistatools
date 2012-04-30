@@ -39,10 +39,11 @@ public class TFOperator implements ITokenFactory {
 		int endIndex = line.length();
 		int index = fromIndex;
 		while (index < endIndex) {
-			char ch = line.charAt(fromIndex);
+			char ch = line.charAt(index);			
 			if (Arrays.binarySearch(OPERATOR_CHARS, ch) < 0) break;
 			++index;
 		}
+		
 		for (int i=index; i>fromIndex; --i) {
 			String op = line.substring(fromIndex, i);
 			if (OPERATORS.contains(op)) {

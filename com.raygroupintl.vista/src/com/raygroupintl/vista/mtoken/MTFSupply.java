@@ -37,6 +37,10 @@ public abstract class MTFSupply {
 
 	public abstract ITokenFactory getTFExprAtom();	
 	
+	public abstract ITokenFactory getTFExprTail();	
+	
+	public abstract ITokenFactory getTFExpr();	
+	
 	public abstract ITokenFactory getTFActual();
 
 	protected static abstract class CommonSupply extends MTFSupply {
@@ -45,10 +49,12 @@ public abstract class MTFSupply {
 		public ITokenFactory pipe = new TFConstChar('|');
 		public ITokenFactory lsqr = new TFConstChar('[');
 		public ITokenFactory rsqr = new TFConstChar(']');
-		
+		public ITokenFactory qmark = new TFConstChar('?');
+		public ITokenFactory nqmark = new TFConstString("'?");
+				
 		public ITokenFactory name = TFName.getInstance();
-		
 		public ITokenFactory numlit = TFNumLit.getInstance();
+		public ITokenFactory operator = TFOperator.getInstance();
 		
 		@Sequence(value={"pipe", "expr", "pipe"}, required="all")
 		public ITokenFactory env_0;
@@ -57,7 +63,23 @@ public abstract class MTFSupply {
 		@Choice({"env_0", "env_1"})
 		public ITokenFactory environment;
 		
+		@Sequence(value={"qmark", "pattern"}, required="all")
+		public ITokenFactory exprtail_s0;
+		@Sequence(value={"nqmark", "pattern"}, required="all")
+		public ITokenFactory exprtail_s1;
+		@Sequence(value={"operator", "expratom"}, required="all")
+		public ITokenFactory exprtail_s2;
+		@Choice({"exprtail_s0", "exprtail_s1", "exprtail_s2"})
+		public ITokenFactory exprtail_s;
+		@List("exprtail_s")
+		public ITokenFactory exprtail;
 
+	
+		public ITokenFactory getTFExprTail() {
+			return this.exprtail;
+		}
+
+	
 	}
 		
 	public static class Std95Supply extends CommonSupply {	
@@ -138,7 +160,13 @@ public abstract class MTFSupply {
 		public TFChoiceOnChar0th exprItem = new TFChoiceOnChar0th();
 		public TFChoiceOnChar0th glvn = new TFChoiceOnChar0th();
 		public TFChoiceOnChar1st gvnAll = new TFChoiceOnChar1st();
-		public ITokenFactory expr = TFExpr.getInstance(this.version);
+		
+		
+		@Sequence(value={"expratom", "exprtail"}, required="ro")
+		public ITokenFactory expr;
+		
+		
+		public ITokenFactory pattern = TFPattern.getInstance(this.version);
 		
 		public ITokenFactory getTFEnvironment() {
 			return environment;
@@ -158,6 +186,10 @@ public abstract class MTFSupply {
 	
 		public ITokenFactory getTFExprAtom() {
 			return this.expratom;
+		}
+		
+		public ITokenFactory getTFExpr() {
+			return this.expr;
 		}
 		
 		public ITokenFactory getTFActual() {
@@ -294,7 +326,15 @@ public abstract class MTFSupply {
 		public TFChoiceOnChar0th exprItem = new TFChoiceOnChar0th();
 		public TFChoiceOnChar0th glvn = new TFChoiceOnChar0th();
 		public TFChoiceOnChar1st gvnAll = new TFChoiceOnChar1st();
-		public ITokenFactory expr = TFExpr.getInstance(this.version);
+		
+		
+		@Choice({"expratom", "classmethod"})
+		public ITokenFactory expr_0;
+		@Sequence(value={"expr_0", "exprtail"}, required="ro")
+		public ITokenFactory expr;
+		
+		public ITokenFactory pattern = TFPattern.getInstance(this.version);
+		public ITokenFactory classmethod = TFCacheClassMethod.getInstance();
 		
 		public ITokenFactory getTFEnvironment() {
 			return environment;
@@ -314,6 +354,10 @@ public abstract class MTFSupply {
 	
 		public ITokenFactory getTFExprAtom() {
 			return this.expratom;
+		}
+		
+		public ITokenFactory getTFExpr() {
+			return this.expr;
 		}
 		
 		public ITokenFactory getTFActual() {
