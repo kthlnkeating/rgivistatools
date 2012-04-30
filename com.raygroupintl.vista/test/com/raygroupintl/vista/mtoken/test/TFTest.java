@@ -7,7 +7,6 @@ import com.raygroupintl.vista.mtoken.MTFSupply;
 import com.raygroupintl.vista.mtoken.MVersion;
 import com.raygroupintl.vista.mtoken.TFDeviceParams;
 import com.raygroupintl.vista.mtoken.TFExternal;
-import com.raygroupintl.vista.mtoken.TFGvn;
 import com.raygroupintl.vista.mtoken.TFStringLiteral;
 import com.raygroupintl.vista.struct.MError;
 
@@ -40,7 +39,7 @@ public class TFTest {
 	}
 
 	public void testTFGvn(MVersion version) {
-		TFGvn f = TFGvn.getInstance(version);
+		ITokenFactory f = MTFSupply.getInstance(version).getTFGvn();
 		TFCommonTest.validCheck(f, "^PRCA(430,+$G(PRCABN),0)");
 	}
 

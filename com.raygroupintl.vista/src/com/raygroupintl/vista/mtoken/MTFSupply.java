@@ -15,6 +15,7 @@ import com.raygroupintl.bnf.TFEmptyVerified;
 import com.raygroupintl.bnf.TFSeqRequired;
 import com.raygroupintl.bnf.TFSyntaxError;
 import com.raygroupintl.bnf.TokenAdapter;
+import com.raygroupintl.bnf.annotation.ChoiceCh0;
 import com.raygroupintl.bnf.annotation.Parser;
 import com.raygroupintl.bnf.annotation.Sequence;
 import com.raygroupintl.bnf.annotation.Choice;
@@ -29,9 +30,6 @@ import com.raygroupintl.struct.CharsPredicate;
 import com.raygroupintl.struct.DigitPredicate;
 import com.raygroupintl.struct.LetterPredicate;
 
-
-
-
 public abstract class MTFSupply {
 	protected abstract void initialize();
 	
@@ -45,15 +43,39 @@ public abstract class MTFSupply {
 
 	public abstract ITokenFactory getTFExprAtom();	
 	
-	public abstract ITokenFactory getTFExprTail();	
-	
 	public abstract ITokenFactory getTFExpr();	
 	
 	public abstract ITokenFactory getTFActual();
 
 	public abstract ITokenFactory getTFIndirection();
 
+	public abstract ITokenFactory getTFGvn();
+	
 	protected static abstract class CommonSupply extends MTFSupply {
+		static final Map<String, TokenAdapter> ADAPTERS = new HashMap<String, TokenAdapter>();
+		static {
+			ADAPTERS.put("indirection", new TokenAdapter() {				
+				@Override
+				public IToken convert(IToken[] tokens) {
+					if (tokens[1] == null) {
+						TArray t = (TArray) tokens[0];
+						return new TIndirection(t.get(1));			
+					} else {		
+						TArray tReqArray = (TArray) tokens[0];
+						ITokenArray tOptArray = (ITokenArray) tokens[1];
+						IToken subscripts = tOptArray.get(1);
+						return new TIndirection(tReqArray.get(1), subscripts);
+					}
+				}
+			});
+			//ADAPTERS.put("gvn", new TokenAdapter() {
+			//	@Override
+			//	public IToken convert(IToken[] tokens) {
+			//		return new TGlobalNamed((TArray) tokens[1]);
+			//	}
+			//});
+		}
+
 		public ITokenFactory dot = TFChar.DOT;
 		public ITokenFactory comma = TFChar.COMMA;
 		public ITokenFactory pipe = new TFConstChar('|');
@@ -63,6 +85,7 @@ public abstract class MTFSupply {
 		public ITokenFactory rpar = new TFConstChar(')');
 		public ITokenFactory qmark = new TFConstChar('?');
 		public ITokenFactory at = new TFConstChar('@');
+		public ITokenFactory caret = new TFConstChar('^');
 
 		public ITokenFactory nqmark = new TFConstString("'?");
 		public ITokenFactory atlpar = new TFConstString("@(");
@@ -70,6 +93,7 @@ public abstract class MTFSupply {
 		public ITokenFactory name = TFName.getInstance();
 		public ITokenFactory numlit = TFNumLit.getInstance();
 		public ITokenFactory operator = TFOperator.getInstance();
+		public ITokenFactory error = TFSyntaxError.getInstance();
 		
 		@Sequence(value={"pipe", "expr", "pipe"}, required="all")
 		public ITokenFactory env_0;
@@ -92,6 +116,9 @@ public abstract class MTFSupply {
 		@List(value="expr", delim="comma")
 		public ITokenFactory exprlist;
 		
+		@List(value="expr", delim="comma", left="lpar", right="rpar")
+		public ITokenFactory exprlistinparan;
+
 		@Sequence(value={"at", "expratom"}, required="all")
 		public ITokenFactory indirection_0;
 		@Sequence(value={"atlpar", "exprlist", "rpar"}, required="all")
@@ -99,35 +126,24 @@ public abstract class MTFSupply {
 		@Sequence(value={"indirection_0", "indirection_1"}, required="ro")
 		public ITokenFactory indirection;
 		
-		public ITokenFactory getTFExprTail() {
-			return this.exprtail;
-		}
-
+		@ChoiceCh0(value={"lvn", "gvnAll", "indirection"}, preds={"idstart", "^", "@"})
+		public ITokenFactory glvn;
+		
+		@Sequence(value={"environment", "name", "exprlistinparan"}, required="oro")
+		public ITokenFactory gvn_0;
+		@Sequence(value={"caret", "gvn_0"}, required="all")
+		public ITokenFactory gvn;
+				
 		public ITokenFactory getTFIndirection() {
 			return this.indirection;
 		}
 	
+		public ITokenFactory getTFGvn() {
+			return this.gvn;
+		}
 	}
 		
 	public static class Std95Supply extends CommonSupply {	
-		static final Map<String, TokenAdapter> ADAPTERS = new HashMap<String, TokenAdapter>();
-		static {
-			ADAPTERS.put("indirection", new TokenAdapter() {				
-				@Override
-				public IToken convert(IToken[] tokens) {
-					if (tokens[1] == null) {
-						TArray t = (TArray) tokens[0];
-						return new TIndirection(t.get(1));			
-					} else {		
-						TArray tReqArray = (TArray) tokens[0];
-						ITokenArray tOptArray = (ITokenArray) tokens[1];
-						IToken subscripts = tOptArray.get(1);
-						return new TIndirection(tReqArray.get(1), subscripts);
-					}
-				}
-			});
-		}
-
 		private MVersion version = MVersion.ANSI_STD_95;
 
 		private static final class TFExtrinsic extends TFSeqRequired {
@@ -205,9 +221,8 @@ public abstract class MTFSupply {
 
 		public TFChoiceOnChar0th actual = new TFChoiceOnChar0th();
 		public TFChoiceOnChar0th exprItem = new TFChoiceOnChar0th();
-		public TFChoiceOnChar0th glvn = new TFChoiceOnChar0th();
 		public TFChoiceOnChar1st gvnAll = new TFChoiceOnChar1st();
-		
+		public ITokenFactory lvn = TFLvn.getInstance(this.version);
 		
 		@Sequence(value={"expratom", "exprtail"}, required="ro")
 		public ITokenFactory expr;
@@ -263,15 +278,9 @@ public abstract class MTFSupply {
 				ICharPredicate[] preds = {new CharPredicate('$'), new CharPredicate('('), new CharsPredicate('%', '|', '['), new LetterPredicate()};
 				this.gvnAll.setLeadingChar('^');
 				this.gvnAll.setDefault(TFSyntaxError.getInstance());
-				this.gvnAll.setChoices( preds, new TFGvnSsvn(this.version), new TFGvnNaked(this.version), 
-							TFGvn.getInstance(this.version), TFGvn.getInstance(this.version));
+				this.gvnAll.setChoices( preds, new TFGvnSsvn(this.version), new TFGvnNaked(this.version), gvn, gvn);
 			}
 			
-		    {
-				ICharPredicate[] preds = {new IdentifierStartPredicate(), new CharPredicate('^'), new CharPredicate('@')};
-				this.glvn.setChoices(preds, TFLvn.getInstance(this.version), getTFGvnAll(), indirection);
-			}
-	
 			{
 				ICharPredicate[] predsDot = {new DigitPredicate(), new IdentifierStartPredicate(), new CharPredicate('@')};
 				ITokenFactory[] fsDot = {
@@ -290,24 +299,6 @@ public abstract class MTFSupply {
 	}
 
 	public static class CacheSupply extends CommonSupply {
-		static final Map<String, TokenAdapter> ADAPTERS = new HashMap<String, TokenAdapter>();
-		static {
-			ADAPTERS.put("indirection", new TokenAdapter() {				
-				@Override
-				public IToken convert(IToken[] tokens) {
-					if (tokens[1] == null) {
-						TArray t = (TArray) tokens[0];
-						return new TIndirection(t.get(1));			
-					} else {		
-						TArray tReqArray = (TArray) tokens[0];
-						ITokenArray tOptArray = (ITokenArray) tokens[1];
-						IToken subscripts = tOptArray.get(1);
-						return new TIndirection(tReqArray.get(1), subscripts);
-					}
-				}
-			});
-		}
-		
 		private MVersion version = MVersion.CACHE;
 
 		private static final class TFExtrinsic extends TFSeqRequired {
@@ -385,8 +376,8 @@ public abstract class MTFSupply {
 		
 		public TFChoiceOnChar0th actual = new TFChoiceOnChar0th();
 		public TFChoiceOnChar0th exprItem = new TFChoiceOnChar0th();
-		public TFChoiceOnChar0th glvn = new TFChoiceOnChar0th();
 		public TFChoiceOnChar1st gvnAll = new TFChoiceOnChar1st();
+		public ITokenFactory lvn = TFLvn.getInstance(this.version);
 		
 		
 		@Choice({"expratom", "classmethod"})
@@ -445,15 +436,9 @@ public abstract class MTFSupply {
 				ICharPredicate[] preds = {new CharPredicate('$'), new CharPredicate('('), new CharsPredicate('%', '|', '['), new LetterPredicate()};
 				this.gvnAll.setLeadingChar('^');
 				this.gvnAll.setDefault(TFSyntaxError.getInstance());
-				this.gvnAll.setChoices( preds, new TFGvnSsvn(this.version), new TFGvnNaked(this.version), 
-							TFGvn.getInstance(this.version), TFGvn.getInstance(this.version));
+				this.gvnAll.setChoices( preds, new TFGvnSsvn(this.version), new TFGvnNaked(this.version), gvn, gvn);
 			}
 			
-		    {
-				ICharPredicate[] preds = {new IdentifierStartPredicate(), new CharPredicate('^'), new CharPredicate('@')};
-				this.glvn.setChoices(preds, TFLvn.getInstance(this.version), getTFGvnAll(), indirection);
-			}
-	
 			{
 				ICharPredicate[] predsDot = {new DigitPredicate(), new IdentifierStartPredicate(), new CharPredicate('@')};
 				ITokenFactory[] fsDot = {
@@ -461,7 +446,7 @@ public abstract class MTFSupply {
 						TFSeqRequired.getInstance(dot, name),
 						TFSeqRequired.getInstance(dot, indirection)
 				};				
-				ITokenFactory fDot = ChoiceSupply.get('.', TFSyntaxError.getInstance(), predsDot, fsDot);
+				ITokenFactory fDot = ChoiceSupply.get('.', error, predsDot, fsDot);
 				ITokenFactory f0 = TFEmptyVerified.getInstance(',');
 				ITokenFactory f1 = TFEmptyVerified.getInstance(')');
 				ICharPredicate[] predsAll = {new CharPredicate('.'), new CharPredicate(','), new CharPredicate(')')};

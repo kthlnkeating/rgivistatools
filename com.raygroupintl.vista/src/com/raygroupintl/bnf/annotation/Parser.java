@@ -8,12 +8,25 @@ import java.util.HashMap;
 import java.util.Map;
 
 import com.raygroupintl.bnf.TFChoiceBasic;
+import com.raygroupintl.bnf.TFChoiceOnChar0th;
 import com.raygroupintl.bnf.TFSeqStatic;
 import com.raygroupintl.bnf.TokenAdapter;
+import com.raygroupintl.fnds.ICharPredicate;
 import com.raygroupintl.fnds.ITokenFactory;
+import com.raygroupintl.m.struct.IdentifierStartPredicate;
+import com.raygroupintl.struct.CharPredicate;
+import com.raygroupintl.struct.DigitPredicate;
+import com.raygroupintl.struct.LetterPredicate;
 import com.raygroupintl.vista.mtoken.TFDelimitedList;
 
 public class Parser {
+	private static final Map<String, ICharPredicate> PREDICATES = new HashMap<String, ICharPredicate>();
+	static {
+		PREDICATES.put("letter", new LetterPredicate());
+		PREDICATES.put("digit", new DigitPredicate());
+		PREDICATES.put("idstart", new IdentifierStartPredicate());
+	}
+		
 	private static class Triple<T extends ITokenFactory, A extends Annotation> {
 		public String name;
 		public T factory;
@@ -31,6 +44,7 @@ public class Parser {
 		java.util.List<Triple<TFChoiceBasic, Choice>> choices  = new ArrayList<Triple<TFChoiceBasic, Choice>>();
 		java.util.List<Triple<TFSeqStatic, Sequence>> sequences  = new ArrayList<Triple<TFSeqStatic, Sequence>>();
 		java.util.List<Triple<TFDelimitedList, List>> lists  = new ArrayList<Triple<TFDelimitedList, List>>();
+		java.util.List<Triple<TFChoiceOnChar0th, ChoiceCh0>> choice0ths  = new ArrayList<Triple<TFChoiceOnChar0th, ChoiceCh0>>();
 	}
 	
 	private static ITokenFactory newTokenFactory(Field f, Store store) {
@@ -51,6 +65,12 @@ public class Parser {
 		if (list != null) {
 			TFDelimitedList value = new TFDelimitedList();
 			store.lists.add(new Triple<TFDelimitedList, List>(name, value, list));
+			return value;
+		}
+		ChoiceCh0 choice0th = f.getAnnotation(ChoiceCh0.class);
+		if (choice0th != null) {
+			TFChoiceOnChar0th value = new TFChoiceOnChar0th();
+			store.choice0ths.add(new Triple<TFChoiceOnChar0th, ChoiceCh0>(name, value, choice0th));
 			return value;
 		}
 		return null;
@@ -84,6 +104,20 @@ public class Parser {
 		return result;
 	}
 	
+	private static ICharPredicate[] getPredicates(String[] codes) {
+		int n = codes.length;
+		ICharPredicate[] result = new ICharPredicate[n];
+		for (int i=0; i<n; ++i) {
+			String code = codes[i];
+			if (code.length() == 1) {
+				result[i] = new CharPredicate(code.charAt(0));
+			} else {
+				result[i] = PREDICATES.get(code);
+			}
+		}
+		return result;
+	}
+	
 	private static <T> Store getStore(T target, Class<T> cls) throws IllegalAccessException, InstantiationException {
 		Class<?> loopCls = cls;
 		Store store = new Store();
@@ -110,6 +144,16 @@ public class Parser {
 		for (Triple<TFChoiceBasic, Choice> p : store.choices) {
 			ITokenFactory[] fs = getFactories(store.symbols, p.annotation.value());
 			p.factory.setFactories(fs);
+		}
+		for (Triple<TFChoiceOnChar0th, ChoiceCh0> p : store.choice0ths) {
+			ITokenFactory[] fs = getFactories(store.symbols, p.annotation.value());
+			ICharPredicate[] ps = getPredicates(p.annotation.preds());
+			p.factory.setChoices(ps, fs);
+			String dcode = p.annotation.def();
+			if (dcode.length() > 0) {
+				ITokenFactory df = store.symbols.get(dcode);
+				p.factory.setDefault(df);
+			}
 		}
 		for (Triple<TFSeqStatic, Sequence> p : store.sequences) {
 			ITokenFactory[] fs = getFactories(store.symbols, p.annotation.value());
