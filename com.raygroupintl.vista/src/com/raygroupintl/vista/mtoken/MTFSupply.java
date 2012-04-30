@@ -1,8 +1,11 @@
 package com.raygroupintl.vista.mtoken;
 
+import java.util.HashMap;
+import java.util.Map;
+
 import com.raygroupintl.bnf.ChoiceSupply;
+import com.raygroupintl.bnf.TArray;
 import com.raygroupintl.bnf.TFChar;
-import com.raygroupintl.bnf.TFChoiceBasic;
 import com.raygroupintl.bnf.TFChoiceOnChar0th;
 import com.raygroupintl.bnf.TFChoiceOnChar1st;
 import com.raygroupintl.bnf.TFConstChar;
@@ -11,18 +14,23 @@ import com.raygroupintl.bnf.TFConstString;
 import com.raygroupintl.bnf.TFEmptyVerified;
 import com.raygroupintl.bnf.TFSeqRequired;
 import com.raygroupintl.bnf.TFSyntaxError;
+import com.raygroupintl.bnf.TokenAdapter;
 import com.raygroupintl.bnf.annotation.Parser;
 import com.raygroupintl.bnf.annotation.Sequence;
 import com.raygroupintl.bnf.annotation.Choice;
 import com.raygroupintl.bnf.annotation.List;
 import com.raygroupintl.fnds.ICharPredicate;
 import com.raygroupintl.fnds.IToken;
+import com.raygroupintl.fnds.ITokenArray;
 import com.raygroupintl.fnds.ITokenFactory;
 import com.raygroupintl.m.struct.IdentifierStartPredicate;
 import com.raygroupintl.struct.CharPredicate;
 import com.raygroupintl.struct.CharsPredicate;
 import com.raygroupintl.struct.DigitPredicate;
 import com.raygroupintl.struct.LetterPredicate;
+
+
+
 
 public abstract class MTFSupply {
 	protected abstract void initialize();
@@ -43,15 +51,22 @@ public abstract class MTFSupply {
 	
 	public abstract ITokenFactory getTFActual();
 
+	public abstract ITokenFactory getTFIndirection();
+
 	protected static abstract class CommonSupply extends MTFSupply {
 		public ITokenFactory dot = TFChar.DOT;
 		public ITokenFactory comma = TFChar.COMMA;
 		public ITokenFactory pipe = new TFConstChar('|');
 		public ITokenFactory lsqr = new TFConstChar('[');
 		public ITokenFactory rsqr = new TFConstChar(']');
+		public ITokenFactory lpar = new TFConstChar('(');
+		public ITokenFactory rpar = new TFConstChar(')');
 		public ITokenFactory qmark = new TFConstChar('?');
+		public ITokenFactory at = new TFConstChar('@');
+
 		public ITokenFactory nqmark = new TFConstString("'?");
-				
+		public ITokenFactory atlpar = new TFConstString("@(");
+		
 		public ITokenFactory name = TFName.getInstance();
 		public ITokenFactory numlit = TFNumLit.getInstance();
 		public ITokenFactory operator = TFOperator.getInstance();
@@ -74,15 +89,45 @@ public abstract class MTFSupply {
 		@List("exprtail_s")
 		public ITokenFactory exprtail;
 
-	
+		@List("expr")
+		public ITokenFactory exprlist;
+		
+		@Sequence(value={"at", "expratom"}, required="all")
+		public ITokenFactory indirection_0;
+		@Sequence(value={"atlpar", "exprlist", "rpar"}, required="all")
+		public ITokenFactory indirection_1;
+		@Sequence(value={"indirection_0", "indirection_1"}, required="ro")
+		public ITokenFactory indirection;
+		
 		public ITokenFactory getTFExprTail() {
 			return this.exprtail;
 		}
 
+		public ITokenFactory getTFIndirection() {
+			return this.indirection;
+		}
 	
 	}
 		
 	public static class Std95Supply extends CommonSupply {	
+		static final Map<String, TokenAdapter> ADAPTERS = new HashMap<String, TokenAdapter>();
+		static {
+			ADAPTERS.put("indirection", new TokenAdapter() {				
+				@Override
+				public IToken convert(IToken[] tokens) {
+					if (tokens[1] == null) {
+						TArray t = (TArray) tokens[0];
+						return new TIndirection(t.get(1));			
+					} else {		
+						TArray tReqArray = (TArray) tokens[0];
+						ITokenArray tOptArray = (ITokenArray) tokens[1];
+						IToken subscripts = tOptArray.get(1);
+						return new TIndirection(tReqArray.get(1), subscripts);
+					}
+				}
+			});
+		}
+
 		private MVersion version = MVersion.ANSI_STD_95;
 
 		private static final class TFExtrinsic extends TFSeqRequired {
@@ -135,7 +180,7 @@ public abstract class MTFSupply {
 				ITokenFactory p = new TFInParantheses() {				
 					@Override
 					protected ITokenFactory getInnerfactory() {
-						return TFDelimitedList.getInstance(TFExpr.getInstance(version), ',');
+						return TFDelimitedList.getInstance(MTFSupply.getInstance(version).getTFExpr(), ',');
 					}
 				};
 				return new ITokenFactory[]{c, i, p};
@@ -155,7 +200,9 @@ public abstract class MTFSupply {
 			}		
 		}
 				
-		public TFChoiceBasic expratom = new TFChoiceBasic();
+		@Choice({"glvn", "exprItem"})
+		public ITokenFactory expratom;
+
 		public TFChoiceOnChar0th actual = new TFChoiceOnChar0th();
 		public TFChoiceOnChar0th exprItem = new TFChoiceOnChar0th();
 		public TFChoiceOnChar0th glvn = new TFChoiceOnChar0th();
@@ -198,12 +245,6 @@ public abstract class MTFSupply {
 	
 		@Override
 		protected void initialize() {
-			if (version == MVersion.CACHE) {
-				this.expratom.setFactories(new ITokenFactory[]{getTFGlvn(), getTFExprItem(), TFCacheClassMethod.getInstance()});
-			} else {
-				this.expratom.setFactories(new ITokenFactory[]{getTFGlvn(), getTFExprItem()});
-			}			
-			
 			{
 				ICharPredicate[] predsDollar = {new CharPredicate('$'), new CharPredicate('&'), new LetterPredicate()};
 				ITokenFactory fDollar = ChoiceSupply.get('$', null, predsDollar, 
@@ -215,7 +256,7 @@ public abstract class MTFSupply {
 					new DigitPredicate()};
 				this.exprItem.setChoices(preds, new TFStringLiteral(), fDollar, 
 							new TFUnaryOperatedExprItem(), this.numlit,
-							TFInParantheses.getInstance(TFExpr.getInstance(this.version)), this.numlit);
+							TFInParantheses.getInstance(this.expr), this.numlit);
 			}
 		
 			{
@@ -242,13 +283,31 @@ public abstract class MTFSupply {
 				ITokenFactory f0 = TFEmptyVerified.getInstance(',');
 				ITokenFactory f1 = TFEmptyVerified.getInstance(')');
 				ICharPredicate[] predsAll = {new CharPredicate('.'), new CharPredicate(','), new CharPredicate(')')};
-				this.actual.setDefault(TFExpr.getInstance(this.version));
+				this.actual.setDefault(this.expr);
 				this.actual.setChoices(predsAll, fDot, f0, f1);
 			}
 		}
 	}
 
-	public static class CacheSupply extends CommonSupply {	
+	public static class CacheSupply extends CommonSupply {
+		static final Map<String, TokenAdapter> ADAPTERS = new HashMap<String, TokenAdapter>();
+		static {
+			ADAPTERS.put("indirection", new TokenAdapter() {				
+				@Override
+				public IToken convert(IToken[] tokens) {
+					if (tokens[1] == null) {
+						TArray t = (TArray) tokens[0];
+						return new TIndirection(t.get(1));			
+					} else {		
+						TArray tReqArray = (TArray) tokens[0];
+						ITokenArray tOptArray = (ITokenArray) tokens[1];
+						IToken subscripts = tOptArray.get(1);
+						return new TIndirection(tReqArray.get(1), subscripts);
+					}
+				}
+			});
+		}
+		
 		private MVersion version = MVersion.CACHE;
 
 		private static final class TFExtrinsic extends TFSeqRequired {
@@ -301,7 +360,7 @@ public abstract class MTFSupply {
 				ITokenFactory p = new TFInParantheses() {				
 					@Override
 					protected ITokenFactory getInnerfactory() {
-						return TFDelimitedList.getInstance(TFExpr.getInstance(version), ',');
+						return TFDelimitedList.getInstance(MTFSupply.getInstance(version).getTFExpr(), ',');
 					}
 				};
 				return new ITokenFactory[]{c, i, p};
@@ -321,7 +380,9 @@ public abstract class MTFSupply {
 			}		
 		}
 		
-		public TFChoiceBasic expratom = new TFChoiceBasic();
+		@Choice({"glvn", "exprItem", "classmethod"})
+		public ITokenFactory expratom;
+		
 		public TFChoiceOnChar0th actual = new TFChoiceOnChar0th();
 		public TFChoiceOnChar0th exprItem = new TFChoiceOnChar0th();
 		public TFChoiceOnChar0th glvn = new TFChoiceOnChar0th();
@@ -366,12 +427,6 @@ public abstract class MTFSupply {
 	
 		@Override
 		protected void initialize() {
-			if (version == MVersion.CACHE) {
-				this.expratom.setFactories(new ITokenFactory[]{getTFGlvn(), getTFExprItem(), TFCacheClassMethod.getInstance()});
-			} else {
-				this.expratom.setFactories(new ITokenFactory[]{getTFGlvn(), getTFExprItem()});
-			}			
-			
 			{
 				ICharPredicate[] predsDollar = {new CharPredicate('$'), new CharPredicate('&'), new LetterPredicate()};
 				ITokenFactory fDollar = ChoiceSupply.get('$', null, predsDollar, 
@@ -383,7 +438,7 @@ public abstract class MTFSupply {
 					new DigitPredicate()};
 				this.exprItem.setChoices(preds, new TFStringLiteral(), fDollar, 
 							new TFUnaryOperatedExprItem(), this.numlit,
-							TFInParantheses.getInstance(TFExpr.getInstance(this.version)), this.numlit);
+							TFInParantheses.getInstance(this.expr), this.numlit);
 			}
 		
 			{
@@ -410,7 +465,7 @@ public abstract class MTFSupply {
 				ITokenFactory f0 = TFEmptyVerified.getInstance(',');
 				ITokenFactory f1 = TFEmptyVerified.getInstance(')');
 				ICharPredicate[] predsAll = {new CharPredicate('.'), new CharPredicate(','), new CharPredicate(')')};
-				this.actual.setDefault(TFExpr.getInstance(this.version));
+				this.actual.setDefault(this.expr);
 				this.actual.setChoices(predsAll, fDot, f0, f1);
 			}			
 		}
@@ -419,21 +474,20 @@ public abstract class MTFSupply {
 	
 	private static MTFSupply CACHE_SUPPLY;
 	private static MTFSupply STD_95_SUPPLY;
-	
-	
+		
 	public static MTFSupply getInstance(MVersion version) {
 		try {
 			switch (version) {
 				case CACHE: {
 					if (CACHE_SUPPLY == null) {
-						CACHE_SUPPLY = Parser.parse(CacheSupply.class);  //new CacheSupply();
+						CACHE_SUPPLY = Parser.parse(CacheSupply.class, CacheSupply.ADAPTERS);
 						CACHE_SUPPLY.initialize();
 					}
 					return CACHE_SUPPLY;
 				}
 				case ANSI_STD_95: {
 					if (STD_95_SUPPLY == null) {
-						STD_95_SUPPLY = Parser.parse(Std95Supply.class);  //new Std95Supply();
+						STD_95_SUPPLY = Parser.parse(Std95Supply.class, Std95Supply.ADAPTERS);
 						STD_95_SUPPLY.initialize();
 					}
 					return STD_95_SUPPLY;

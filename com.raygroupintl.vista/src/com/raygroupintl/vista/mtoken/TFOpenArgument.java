@@ -25,7 +25,7 @@ public class TFOpenArgument extends TFChoice {
 		@Override
 		protected ITokenFactory[] getFactories() {
 			TFDeviceParams p = new TFDeviceParams(this.version);
-			TFExpr e = TFExpr.getInstance(this.version);
+			ITokenFactory e = MTFSupply.getInstance(version).getTFExpr();
 			ITokenFactory f = ChoiceSupply.get(e, '(', TFCommaDelimitedList.getInstance(e));
 			ITokenFactory c = TFConstChar.getInstance(':');
 			return new ITokenFactory[]{p, c, e, c, f};
@@ -37,7 +37,7 @@ public class TFOpenArgument extends TFChoice {
 		if (ch == '@') {
 			return TFIndirection.getInstance(this.version);
 		} else {
-			return TFSeqRO.getInstance(TFExpr.getInstance(this.version), TFSeqRequired.getInstance(TFConstChar.getInstance(':'), new TFOpenParameters(this.version)));
+			return TFSeqRO.getInstance(MTFSupply.getInstance(version).getTFExpr(), TFSeqRequired.getInstance(TFConstChar.getInstance(':'), new TFOpenParameters(this.version)));
 		}
 	}
 	

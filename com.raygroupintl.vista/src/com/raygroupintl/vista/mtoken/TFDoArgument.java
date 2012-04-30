@@ -48,7 +48,7 @@ public class TFDoArgument extends TFSeq {
 				@Override
 				protected ITokenFactory[] getFactories() {
 					TFConstChar tfc = TFConstChar.getInstance('+');
-					TFExpr tfe = TFExpr.getInstance(version);
+					ITokenFactory tfe = MTFSupply.getInstance(version).getTFExpr();
 					return new ITokenFactory[]{tfc, tfe};
 				}
 			};

@@ -9,15 +9,18 @@ import java.util.Map;
 
 import com.raygroupintl.bnf.TFChoiceBasic;
 import com.raygroupintl.bnf.TFSeqStatic;
+import com.raygroupintl.bnf.TokenAdapter;
 import com.raygroupintl.fnds.ITokenFactory;
 import com.raygroupintl.vista.mtoken.TFDelimitedList;
 
 public class Parser {
-	private static class Pair<T extends ITokenFactory, A extends Annotation> {
+	private static class Triple<T extends ITokenFactory, A extends Annotation> {
+		public String name;
 		public T factory;
 		public A annotation;
 		
-		public Pair(T factory, A annotation) {
+		public Triple(String name, T factory, A annotation) {
+			this.name = name;
 			this.factory = factory;
 			this.annotation = annotation;
 		}
@@ -25,28 +28,29 @@ public class Parser {
 	
 	private static class Store {
 		Map<String, ITokenFactory> symbols = new HashMap<String, ITokenFactory>();
-		java.util.List<Pair<TFChoiceBasic, Choice>> choices  = new ArrayList<Pair<TFChoiceBasic, Choice>>();
-		java.util.List<Pair<TFSeqStatic, Sequence>> sequences  = new ArrayList<Pair<TFSeqStatic, Sequence>>();
-		java.util.List<Pair<TFDelimitedList, List>> lists  = new ArrayList<Pair<TFDelimitedList, List>>();
+		java.util.List<Triple<TFChoiceBasic, Choice>> choices  = new ArrayList<Triple<TFChoiceBasic, Choice>>();
+		java.util.List<Triple<TFSeqStatic, Sequence>> sequences  = new ArrayList<Triple<TFSeqStatic, Sequence>>();
+		java.util.List<Triple<TFDelimitedList, List>> lists  = new ArrayList<Triple<TFDelimitedList, List>>();
 	}
 	
 	private static ITokenFactory newTokenFactory(Field f, Store store) {
 		Choice choice = f.getAnnotation(Choice.class);
+		String name = f.getName();
 		if (choice != null) {
 			TFChoiceBasic value = new TFChoiceBasic();
-			store.choices.add(new Pair<TFChoiceBasic, Choice>(value, choice));
+			store.choices.add(new Triple<TFChoiceBasic, Choice>(name, value, choice));
 			return value;
 		}
 		Sequence sequence = f.getAnnotation(Sequence.class);
 		if (sequence != null) {
 			TFSeqStatic value = new TFSeqStatic();
-			store.sequences.add(new Pair<TFSeqStatic, Sequence>(value, sequence));
+			store.sequences.add(new Triple<TFSeqStatic, Sequence>(name, value, sequence));
 			return value;
 		}
 		List list = f.getAnnotation(List.class);
 		if (list != null) {
 			TFDelimitedList value = new TFDelimitedList();
-			store.lists.add(new Pair<TFDelimitedList, List>(value, list));
+			store.lists.add(new Triple<TFDelimitedList, List>(name, value, list));
 			return value;
 		}
 		return null;
@@ -87,11 +91,11 @@ public class Parser {
 			for (Field f : loopCls.getDeclaredFields()) {
 				if (ITokenFactory.class.isAssignableFrom(f.getType())) {
 					ITokenFactory value = (ITokenFactory) f.get(target);
+					String name = f.getName();
 					if (value == null) {
 						value = newTokenFactory(f, store);
 						f.set(target, value);
 					}
-					String name = f.getName();
 					store.symbols.put(name, value);
 				}
 			}
@@ -100,20 +104,24 @@ public class Parser {
 		return store;
 	}
 	
-	public static <T> T parse(Class<T> cls) throws IllegalAccessException, InstantiationException {
+	public static <T> T parse(Class<T> cls, Map<String, TokenAdapter> adapters) throws IllegalAccessException, InstantiationException {
 		T target = cls.newInstance();
 		Store store = getStore(target, cls);
-		for (Pair<TFChoiceBasic, Choice> p : store.choices) {
+		for (Triple<TFChoiceBasic, Choice> p : store.choices) {
 			ITokenFactory[] fs = getFactories(store.symbols, p.annotation.value());
 			p.factory.setFactories(fs);
 		}
-		for (Pair<TFSeqStatic, Sequence> p : store.sequences) {
+		for (Triple<TFSeqStatic, Sequence> p : store.sequences) {
 			ITokenFactory[] fs = getFactories(store.symbols, p.annotation.value());
 			p.factory.setFactories(fs);
 			boolean[] required = getRequiredFlags(p.annotation.required(), fs.length);
 			p.factory.setRequiredFlags(required);
+			TokenAdapter adapter = adapters.get(p.name);
+			if (adapter != null) {
+				p.factory.setTokenAdapter(adapter);
+			}
 		}
-		for (Pair<TFDelimitedList, List> p : store.lists) {
+		for (Triple<TFDelimitedList, List> p : store.lists) {
 			ITokenFactory f = store.symbols.get(p.annotation.value());
 			p.factory.setElementFactory(f);
 			String delim = p.annotation.delim();

@@ -11,7 +11,7 @@ public class TFExprList extends TFCommaDelimitedList {
 	
 	@Override
 	protected final ITokenFactory getElementFactory() {
-		return TFExpr.getInstance(this.version);
+		return MTFSupply.getInstance(version).getTFExpr();
 	}
 	
 	public static TFExprList getInstance(MVersion version) {

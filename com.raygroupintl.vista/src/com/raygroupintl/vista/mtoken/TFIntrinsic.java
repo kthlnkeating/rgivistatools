@@ -6,15 +6,11 @@ import java.util.Map;
 
 import com.raygroupintl.bnf.ChoiceSupply;
 import com.raygroupintl.bnf.TArray;
-import com.raygroupintl.bnf.TChar;
 import com.raygroupintl.bnf.TFChar;
-import com.raygroupintl.bnf.TFChoice;
 import com.raygroupintl.bnf.TFConstChar;
 import com.raygroupintl.bnf.TFEmpty;
-import com.raygroupintl.bnf.TFEmptyVerified;
 import com.raygroupintl.bnf.TFSeq;
 import com.raygroupintl.bnf.TFSeqRO;
-import com.raygroupintl.bnf.TFSeqROO;
 import com.raygroupintl.bnf.TFSeqRRO;
 import com.raygroupintl.bnf.TFSeqRequired;
 import com.raygroupintl.bnf.TFSyntaxError;
@@ -106,7 +102,7 @@ public class TFIntrinsic extends TFSeq {
 		
 		public ITokenFactory getArgumentFactory() {
 			if (this.argumentFactory == null) {
-				return TFDelimitedList.getInstance(TFExpr.getInstance(this.version), ',');
+				return TFDelimitedList.getInstance(MTFSupply.getInstance(version).getTFExpr(), ',');
 			} else {
 				return this.argumentFactory;
 			}
@@ -166,7 +162,7 @@ public class TFIntrinsic extends TFSeq {
 		addFunction(version, "L", "LENGTH", 1, 2); 		
 		FunctionInfo o = addFunction(version, "O", "ORDER", 1, 2); 	
 		o.setArgumentFactory(TFSeqRO.getInstance(MTFSupply.getInstance(version).getTFGlvn(),
-				TFSeqRequired.getInstance(TFConstChar.getInstance(','), TFExpr.getInstance(version))));
+				TFSeqRequired.getInstance(TFConstChar.getInstance(','), MTFSupply.getInstance(version).getTFExpr())));
 		addFunction(version, "P", "PIECE", 2, 4); 	
 		addFunction(version, "Q", "QUERY", 1, 1); 	
 		addFunction(version, "R", "RANDOM", 1, 1); 	
@@ -175,7 +171,7 @@ public class TFIntrinsic extends TFSeq {
 		s.setArgumentFactory(new TFCommaDelimitedList() {			
 			@Override
 			protected ITokenFactory getElementFactory() {
-				ITokenFactory expr = TFExpr.getInstance(version);
+				ITokenFactory expr = MTFSupply.getInstance(version).getTFExpr();
 				return TFSeqRequired.getInstance(expr, TFConstChar.getInstance(':'), expr);
 			}
 		});
@@ -196,7 +192,7 @@ public class TFIntrinsic extends TFSeq {
 
 		if (version == MVersion.CACHE) {
 			FunctionInfo c = addFunction(version, "CASE", 1, Integer.MAX_VALUE);
-			ITokenFactory expr = TFExpr.getInstance(version);
+			ITokenFactory expr = MTFSupply.getInstance(version).getTFExpr();
 			ITokenFactory ci = TFSeqRequired.getInstance(ChoiceSupply.get(expr, ':', TFEmpty.getInstance()), TFConstChar.getInstance(':'), expr);
 			ITokenFactory cases =  TFSeqRequired.getInstance(TFChar.COMMA, TFDelimitedList.getInstance(ci, ','));
 			//ITokenFactory d = TFAllRequired.getInstance(TFChar.COMMA, TFChar.COLON,  expr);

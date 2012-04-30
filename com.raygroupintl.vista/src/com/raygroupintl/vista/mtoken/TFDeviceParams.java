@@ -23,8 +23,8 @@ public class TFDeviceParams extends TFChoice {
 		@Override
 		protected ITokenFactory[] getFactories() {
 			return new ITokenFactory[]{
-					TFExpr.getInstance(this.version),
-					TFSeqRequired.getInstance(TFConstChar.getInstance('='), TFExpr.getInstance(this.version))};
+					MTFSupply.getInstance(version).getTFExpr(),
+					TFSeqRequired.getInstance(TFConstChar.getInstance('='), MTFSupply.getInstance(version).getTFExpr())};
 		}
 	}
 		

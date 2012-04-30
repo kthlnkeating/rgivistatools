@@ -34,7 +34,7 @@ public class TFJobArgument extends TFSeq {
 				@Override
 				protected ITokenFactory[] getFactories() {
 					TFConstChar tfc = TFConstChar.getInstance('+');
-					TFExpr tfe = TFExpr.getInstance(version);
+					ITokenFactory tfe = MTFSupply.getInstance(version).getTFExpr();
 					return new ITokenFactory[]{tfc, tfe};
 				}
 			};
@@ -66,7 +66,7 @@ public class TFJobArgument extends TFSeq {
 	}
 
 	private static ITokenFactory getFactory5(IToken[] previousTokens, final MVersion version) {
-		TFExpr e = TFExpr.getInstance(version);
+		ITokenFactory e = MTFSupply.getInstance(version).getTFExpr();
 		ITokenFactory processParams = ChoiceSupply.get(e, ":(", TFEmpty.getInstance(), TFDelimitedList.getInstance(e, ':', true, true));
 		ITokenFactory jobParams = TFSeqRequired.getInstance(TFConstChar.getInstance(':'), processParams); 
 		return TFSeqRO.getInstance(jobParams, TFTimeout.getInstance(version));

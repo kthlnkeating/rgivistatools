@@ -63,7 +63,7 @@ public class TFSetArgument extends TFSeqStatic {
 		
 	@Override
 	protected ITokenFactory[] getFactories() {
-		TFExpr expr = TFExpr.getInstance(this.version);
+		ITokenFactory expr = MTFSupply.getInstance(version).getTFExpr();
 		return new ITokenFactory[]{ 
 				TFSetDestination.getInstance(this.version), 
 				TFConstChar.getInstance('='), 

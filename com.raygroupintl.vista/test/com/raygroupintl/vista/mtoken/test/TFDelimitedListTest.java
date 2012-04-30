@@ -6,12 +6,11 @@ import com.raygroupintl.fnds.ITokenFactory;
 import com.raygroupintl.vista.mtoken.MTFSupply;
 import com.raygroupintl.vista.mtoken.MVersion;
 import com.raygroupintl.vista.mtoken.TFDelimitedList;
-import com.raygroupintl.vista.mtoken.TFExpr;
 import com.raygroupintl.vista.mtoken.TFNumLit;
 
 public class TFDelimitedListTest {
 	private void testExpr(MVersion version) {
-		TFDelimitedList f = TFDelimitedList.getInstance(TFExpr.getInstance(version), ',');
+		TFDelimitedList f = TFDelimitedList.getInstance(MTFSupply.getInstance(version).getTFExpr(), ',');
 		TFCommonTest.validCheck(f, "C'>3");
 		TFCommonTest.validCheck(f, "C'>3,B>1");
 		TFCommonTest.validCheck(f, "C'>3,A=3,B]]1");

@@ -112,7 +112,7 @@ public class TFCommand extends TFSeq {
 	
 		@Override
 		protected ITokenFactory buildArgumentFactory(final MVersion version) {
-			return TFExpr.getInstance(version);
+			return MTFSupply.getInstance(version).getTFExpr();
 		}
 		
 		public IToken getToken(IToken[] tokens) {
@@ -144,7 +144,7 @@ public class TFCommand extends TFSeq {
 					if (ch == '@') {
 						return TFIndirection.getInstance(version);
 					} else {
-						return TFSeqRO.getInstance(TFExpr.getInstance(version), TFSeqRequired.getInstance(TFConstChar.getInstance(':'), new TFDeviceParams(version)));
+						return TFSeqRO.getInstance(MTFSupply.getInstance(version).getTFExpr(), TFSeqRequired.getInstance(TFConstChar.getInstance(':'), new TFDeviceParams(version)));
 					}
 				}
 			});
@@ -225,7 +225,7 @@ public class TFCommand extends TFSeq {
 	
 		@Override
 		protected ITokenFactory buildArgumentFactory(final MVersion version) {
-			TFExpr tfExpr = TFExpr.getInstance(version);
+			ITokenFactory tfExpr = MTFSupply.getInstance(version).getTFExpr();
 			ITokenFactory tfFromTo = TFSeqRequired.getInstance(TFConstChar.getInstance(':'), tfExpr);
 			ITokenFactory RHS = TFSeqROO.getInstance(tfExpr, tfFromTo, tfFromTo);
 			ITokenFactory RHSs = TFCommaDelimitedList.getInstance(RHS);
@@ -286,7 +286,7 @@ public class TFCommand extends TFSeq {
 	
 		@Override
 		protected ITokenFactory buildArgumentFactory(final MVersion version) {
-			return TFExpr.getInstance(version);
+			return MTFSupply.getInstance(version).getTFExpr();
 		}
 		
 		public IToken getToken(IToken[] tokens) {
@@ -312,7 +312,7 @@ public class TFCommand extends TFSeq {
 	
 		@Override
 		protected ITokenFactory buildArgumentFactory(final MVersion version) {
-			return TFCommaDelimitedList.getInstance(TFExpr.getInstance(version)); 	
+			return TFCommaDelimitedList.getInstance(MTFSupply.getInstance(version).getTFExpr()); 	
 		}
 		
 		public IToken getToken(IToken[] tokens) {
@@ -512,7 +512,7 @@ public class TFCommand extends TFSeq {
 	
 		@Override
 		protected ITokenFactory buildArgumentFactory(final MVersion version) {
-			return TFExpr.getInstance(version); 	
+			return MTFSupply.getInstance(version).getTFExpr(); 	
 		}
 		
 		public IToken getToken(IToken[] tokens) {
@@ -731,11 +731,11 @@ public class TFCommand extends TFSeq {
 						case '/':
 							return TFSeqRequired.getInstance(TFChar.SLASH, TFName.getInstance(), TFActualList.getInstance(version));
 						case '*':
-							return TFSeqRequired.getInstance(TFConstChar.getInstance('*'), TFExpr.getInstance(version));
+							return TFSeqRequired.getInstance(TFConstChar.getInstance('*'), MTFSupply.getInstance(version).getTFExpr());
 						case '@':
 							return TFIndirection.getInstance(version);
 						default:
-							return TFExpr.getInstance(version);
+							return MTFSupply.getInstance(version).getTFExpr();
 					}
 				}
 			};	
@@ -791,7 +791,7 @@ public class TFCommand extends TFSeq {
 	
 		@Override
 		protected ITokenFactory buildArgumentFactory(final MVersion version) {
-			ITokenFactory tf = ChoiceSupply.get(TFExpr.getInstance(version), '@', TFIndirection.getInstance(version));
+			ITokenFactory tf = ChoiceSupply.get(MTFSupply.getInstance(version).getTFExpr(), '@', TFIndirection.getInstance(version));
 			ITokenFactory pc = getTFPostCondition(null, version);
 			return TFDelimitedList.getInstance(TFSeqRO.getInstance(tf, pc), ',');
 		}
@@ -1051,7 +1051,7 @@ public class TFCommand extends TFSeq {
 	
 	public static ITokenFactory getTFPostCondition(IToken[] previousTokens, MVersion version) {
 		ITokenFactory tfColon = TFConstChar.getInstance(':');
-		ITokenFactory tfExpr = TFExpr.getInstance(version);
+		ITokenFactory tfExpr = MTFSupply.getInstance(version).getTFExpr();
 		return TFSeqRequired.getInstance(tfColon, tfExpr);
 	}
 
@@ -1096,7 +1096,7 @@ public class TFCommand extends TFSeq {
 				case 0:
 					return TFCommandName.getInstance();
 				case 1:
-					return TFSeqRequired.getInstance(TFConstChar.getInstance(':'), TFExpr.getInstance(this.version));
+					return TFSeqRequired.getInstance(TFConstChar.getInstance(':'), MTFSupply.getInstance(version).getTFExpr());
 				case 2:
 					return TFConstChar.getInstance(' ');
 				case 3: {

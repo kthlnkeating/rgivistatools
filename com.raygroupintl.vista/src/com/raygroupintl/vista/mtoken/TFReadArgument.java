@@ -16,7 +16,7 @@ public class TFReadArgument extends TFChoice {
 	}
 	
 	private static ITokenFactory getTFReadcountInstance(MVersion version) {
-		return TFSeqRequired.getInstance(TFConstChar.getInstance('#'), TFExpr.getInstance(version));
+		return TFSeqRequired.getInstance(TFConstChar.getInstance('#'), MTFSupply.getInstance(version).getTFExpr());
 	}
 
 	@Override
