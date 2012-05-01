@@ -24,7 +24,7 @@ public class TFOpenArgument extends TFChoice {
 
 		@Override
 		protected ITokenFactory[] getFactories() {
-			TFDeviceParams p = new TFDeviceParams(this.version);
+			ITokenFactory p = MTFSupply.getInstance(version).deviceparams;
 			ITokenFactory e = MTFSupply.getInstance(version).expr;
 			ITokenFactory f = ChoiceSupply.get(e, '(', TFCommaDelimitedList.getInstance(e));
 			ITokenFactory c = TFConstChar.getInstance(':');

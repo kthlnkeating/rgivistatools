@@ -5,7 +5,6 @@ import org.junit.Test;
 import com.raygroupintl.fnds.ITokenFactory;
 import com.raygroupintl.vista.mtoken.MTFSupply;
 import com.raygroupintl.vista.mtoken.MVersion;
-import com.raygroupintl.vista.mtoken.TFDeviceParams;
 import com.raygroupintl.vista.mtoken.TFExternal;
 import com.raygroupintl.vista.mtoken.TFStringLiteral;
 import com.raygroupintl.vista.struct.MError;
@@ -131,7 +130,7 @@ public class TFTest {
 	}
 
 	public void TFDeviceParams(MVersion version) {
-		TFDeviceParams f = TFDeviceParams.getInstance(version);
+		ITokenFactory f = MTFSupply.getInstance(version).deviceparams;
 		TFCommonTest.validCheck(f, "(:XOBPORT:\"AT\")");
 	}
 	

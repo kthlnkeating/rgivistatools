@@ -79,6 +79,7 @@ public abstract class MTFSupply {
 	public ITokenFactory rpar = new TFConstChar(')');
 	public ITokenFactory qmark = new TFConstChar('?');
 	public ITokenFactory at = new TFConstChar('@');
+	public ITokenFactory eq = new TFConstChar('=');
 	public ITokenFactory caret = new TFConstChar('^');
 	public ITokenFactory colon = new TFConstChar(':');
 
@@ -197,6 +198,15 @@ public abstract class MTFSupply {
 	public ITokenFactory pattern;
 	
 	public ITokenFactory intrinsic;
+	
+	@Sequence(value={"eq", "expr"}, required="all")
+	public ITokenFactory deviceparam_1;
+	@Sequence(value={"expr", "deviceparam_1"}, required="ro")
+	public ITokenFactory deviceparam;
+	@List(value="deviceparam", delim="colon", left="lpar", right="rpar", empty=true)
+	public ITokenFactory deviceparams_i;
+	@CChoice(value={"deviceparams_i"}, def="deviceparam", preds={"("})
+	public ITokenFactory deviceparams;
 	
 	public static class Std95Supply extends MTFSupply {	
 		private MVersion version = MVersion.ANSI_STD_95;

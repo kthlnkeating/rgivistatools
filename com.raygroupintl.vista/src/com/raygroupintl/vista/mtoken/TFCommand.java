@@ -144,7 +144,7 @@ public class TFCommand extends TFSeq {
 					if (ch == '@') {
 						return MTFSupply.getInstance(version).indirection;
 					} else {
-						return TFSeqRO.getInstance(MTFSupply.getInstance(version).expr, TFSeqRequired.getInstance(TFConstChar.getInstance(':'), new TFDeviceParams(version)));
+						return TFSeqRO.getInstance(MTFSupply.getInstance(version).expr, TFSeqRequired.getInstance(TFConstChar.getInstance(':'), MTFSupply.getInstance(version).deviceparams));
 					}
 				}
 			});

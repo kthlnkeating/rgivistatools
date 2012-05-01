@@ -9,12 +9,13 @@ public abstract class TFCommaDelimitedList extends TFDelimitedList {
 		return new TFConstChar(',');
 	}
 	
-	public static TFCommaDelimitedList getInstance(final ITokenFactory tfElement) {
-		return new TFCommaDelimitedList() {			
+	public static ITokenFactory getInstance(final ITokenFactory tfElement) {
+		return new TFDelimitedList(tfElement, ",");
+/*		return new TFCommaDelimitedList() {			
 			@Override
 			protected ITokenFactory getElementFactory() {
 				return tfElement;
 			}
 		};
-	}		
+*/	}		
 }

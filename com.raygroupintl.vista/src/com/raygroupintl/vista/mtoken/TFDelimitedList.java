@@ -24,14 +24,21 @@ public class TFDelimitedList implements ITokenFactory {
 			}			
 		}
 	}
-	
-	
+		
 	private ITokenFactory elementFactory;
 	private ITokenFactory delimiter;
 	private ITokenFactory left;
 	private ITokenFactory right;
 	private boolean allowEmpty;
-		
+	
+	public TFDelimitedList() {		
+	}
+	
+	public TFDelimitedList(ITokenFactory elementFactory, String delimeter) {	
+		this.elementFactory = elementFactory;
+		this.delimiter = this.getStringFactory(",");
+	}
+
 	public void setElementFactory(ITokenFactory elementFactory) {
 		this.elementFactory = elementFactory;
 	}
