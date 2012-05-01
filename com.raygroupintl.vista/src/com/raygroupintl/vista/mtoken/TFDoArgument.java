@@ -76,7 +76,7 @@ public class TFDoArgument extends TFSeq {
 		if (previousTokens[2] == null) {
 			return new TFNull();
 		} else {
-			ITokenFactory tfEnvName = getRoutineSpecification(version); //TFSerialOR.getInstance(tfEnv, tfName);
+			ITokenFactory tfEnvName = getRoutineSpecification(version); 
 			ITokenFactory tfInd = MTFSupply.getInstance(version).getTFIndirection();
 			return ChoiceSupply.get(tfEnvName, tfInd);
 		}
