@@ -139,13 +139,18 @@ public class Parser {
 		while (! loopCls.equals(Object.class)) {
 			for (Field f : loopCls.getDeclaredFields()) {
 				if (ITokenFactory.class.isAssignableFrom(f.getType())) {
-					ITokenFactory value = (ITokenFactory) f.get(target);
 					String name = f.getName();
-					if (value == null) {
-						value = newTokenFactory(f, store);
-						f.set(target, value);
+					ITokenFactory already = store.symbols.get(name);
+					if (already == null) {					
+						ITokenFactory value = (ITokenFactory) f.get(target);
+						if (value == null) {
+							value = newTokenFactory(f, store);
+							f.set(target, value);
+						}
+						store.symbols.put(name, value);
+					} else {
+						f.set(target, already);						
 					}
-					store.symbols.put(name, value);
 				}
 			}
 			loopCls = loopCls.getSuperclass();

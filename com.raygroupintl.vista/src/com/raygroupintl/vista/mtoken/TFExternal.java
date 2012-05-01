@@ -101,7 +101,7 @@ public class TFExternal extends TFSeqRRO {
 		
 	@Override
 	protected final ITokenFactory[] getFactories() {
-		return new ITokenFactory[]{new TFConstString("$&"), new TFAmpersandTail(), TFActualList.getInstance(this.version)};
+		return new ITokenFactory[]{new TFConstString("$&"), new TFAmpersandTail(), MTFSupply.getInstance(version).actuallist};
 	}
 
 	@Override

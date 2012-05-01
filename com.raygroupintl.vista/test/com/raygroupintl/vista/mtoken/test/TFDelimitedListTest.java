@@ -10,7 +10,7 @@ import com.raygroupintl.vista.mtoken.TFNumLit;
 
 public class TFDelimitedListTest {
 	private void testExpr(MVersion version) {
-		TFDelimitedList f = TFDelimitedList.getInstance(MTFSupply.getInstance(version).getTFExpr(), ',');
+		TFDelimitedList f = TFDelimitedList.getInstance(MTFSupply.getInstance(version).expr, ',');
 		TFCommonTest.validCheck(f, "C'>3");
 		TFCommonTest.validCheck(f, "C'>3,B>1");
 		TFCommonTest.validCheck(f, "C'>3,A=3,B]]1");
@@ -24,7 +24,7 @@ public class TFDelimitedListTest {
 
 	private void testActual(MVersion version) {
 		MTFSupply m = MTFSupply.getInstance(version);
-		ITokenFactory fActual = m.getTFActual();
+		ITokenFactory fActual = m.actual;
 		TFDelimitedList f = TFDelimitedList.getInstance(fActual, ',');
 		TFCommonTest.validCheck(f, "LST,\",\",FLD");
 	}
@@ -38,7 +38,7 @@ public class TFDelimitedListTest {
 	private void testTFDelimitedTest(MVersion version) {
 		MTFSupply m = MTFSupply.getInstance(version);
 		TFDelimitedList f = new TFDelimitedList();
-		f.setElementFactory(m.getTFActual());
+		f.setElementFactory(m.actual);
 		f.setLeft("(");
 		f.setRight(")");
 		f.setDelimiter(",");

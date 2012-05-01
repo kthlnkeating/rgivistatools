@@ -14,7 +14,7 @@ public class TFMergeArgument extends TFSeqStatic {
 	
 	@Override
 	protected ITokenFactory[] getFactories() {
-		return new ITokenFactory[]{MTFSupply.getInstance(version).getTFGlvn(), TFConstChar.getInstance('='), MTFSupply.getInstance(version).getTFExpr()}; 
+		return new ITokenFactory[]{MTFSupply.getInstance(version).glvn, TFConstChar.getInstance('='), MTFSupply.getInstance(version).expr}; 
 	}
 
 	@Override

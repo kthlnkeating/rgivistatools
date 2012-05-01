@@ -130,7 +130,7 @@ public class TFPattern extends TFChoice {
 	@Override
 	protected ITokenFactory getFactory(char ch) {
 		if (ch == '@') {
-			return MTFSupply.getInstance(version).getTFIndirection();
+			return MTFSupply.getInstance(version).indirection;
 		} else {
 			return TFList.getInstance(new TFPatAtom());
 		}

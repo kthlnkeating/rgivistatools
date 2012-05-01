@@ -11,6 +11,7 @@ import com.raygroupintl.bnf.TFConstChars;
 import com.raygroupintl.bnf.TFConstString;
 import com.raygroupintl.bnf.TFEmptyVerified;
 import com.raygroupintl.bnf.TFSyntaxError;
+import com.raygroupintl.bnf.TList;
 import com.raygroupintl.bnf.TokenAdapter;
 import com.raygroupintl.bnf.annotation.CChoice;
 import com.raygroupintl.bnf.annotation.Parser;
@@ -22,40 +23,6 @@ import com.raygroupintl.fnds.ITokenArray;
 import com.raygroupintl.fnds.ITokenFactory;
 
 public abstract class MTFSupply {
-    public abstract ITokenFactory getTFEnvironment();
-	
-	public abstract ITokenFactory getTFExprItem();
-	
-	public abstract ITokenFactory getTFGvnAll();
-	
-	public abstract ITokenFactory getTFGlvn();
-
-	public abstract ITokenFactory getTFLvn();
-
-	public abstract ITokenFactory getTFExprAtom();	
-	
-	public abstract ITokenFactory getTFExpr();	
-	
-	public abstract ITokenFactory getTFActual();
-
-	public abstract ITokenFactory getTFIntrinsic();
-
-	public ITokenFactory getTFIndirection() {
-		return this.indirection;
-	}
-
-	public ITokenFactory getTFGvn() {
-		return this.gvn;
-	}
-
-	public ITokenFactory getTFExprList() {
-		return this.exprlist;
-	}		
-
-	public ITokenFactory getTFSelectArg() {
-		return this.dselectarg;
-	}
-
 	static final Map<String, TokenAdapter> ADAPTERS = new HashMap<String, TokenAdapter>();
 	static {
 		ADAPTERS.put("indirection", new TokenAdapter() {				
@@ -82,6 +49,13 @@ public abstract class MTFSupply {
 			@Override
 			public IToken convert(IToken[] tokens) {
 				return new TGlobalNaked(tokens[1]);
+			}
+		});			 
+		ADAPTERS.put("actuallist", new TokenAdapter() {
+			@Override
+			public IToken convert(IToken[] tokens) {
+				TList list = (tokens[1] == null) ? new TList() : (TList) tokens[1];
+				return new TActualList(list);
 			}
 		});			 
 		ADAPTERS.put("exprinpar", new TokenAdapter() {
@@ -159,7 +133,7 @@ public abstract class MTFSupply {
 	@Sequence(value={"indirection_0", "indirection_1"}, required="ro")
 	public ITokenFactory indirection;
 	
-	@CChoice(value={"lvn", "gvnAll", "indirection"}, preds={"idstart", "^", "@"})
+	@CChoice(value={"lvn", "gvnall", "indirection"}, preds={"idstart", "^", "@"})
 	public ITokenFactory glvn;
 	
 	@Sequence(value={"environment", "name", "exprlistinparan"}, required="oro")
@@ -185,13 +159,13 @@ public abstract class MTFSupply {
 	public ITokenFactory dselectarg;
 	
 	@CChoice(value={"gvnssvn", "gvnnaked", "gvn", "gvn"}, preds={"$", "(", "%|[", "letter"}, lead="^", def="error")
-	public ITokenFactory gvnAll;
+	public ITokenFactory gvnall;
 
 	@CChoice(value={"extrinsic", "external", "intrinsic"}, preds={"$", "&", "letter"}, lead="$")
 	public ITokenFactory expritem_d;
 	
 	@CChoice(value={"strlit", "expritem_d", "unaryexpritem", "numlit", "exprinpar", "numlit"}, preds={"\"", "$", "'+-", ".", "(", "digit"})
-	public ITokenFactory exprItem;
+	public ITokenFactory expritem;
 	
 	@Sequence(value={"dot", "name"}, required="all")
 	public ITokenFactory actual_d1;
@@ -203,69 +177,42 @@ public abstract class MTFSupply {
 	@CChoice(value={"actual_d", "ecomma", "erpar"}, preds={".", ",", ")"}, def="expr")
 	public ITokenFactory actual;
 	
+	@Choice({"glvn", "expritem"})
+	public ITokenFactory expratom;
 
+	@Sequence(value={"name", "actuallist"}, required="ro")
+	public ITokenFactory lvn;
+	
+	@Sequence(value={"expratom", "exprtail"}, required="ro")
+	public ITokenFactory expr;
+	
+	public ITokenFactory doargument;
+	public ITokenFactory external;
+	
+	@List(value="actual", delim="comma")
+	public ITokenFactory actuallist_i;	
+	@Sequence(value={"lpar", "actuallist_i", "rpar"}, required="ror")
+	public ITokenFactory actuallist;
+
+	public ITokenFactory pattern;
+	
+	public ITokenFactory intrinsic;
+	
 	public static class Std95Supply extends MTFSupply {	
 		private MVersion version = MVersion.ANSI_STD_95;
 
-		@Choice({"glvn", "exprItem"})
-		public ITokenFactory expratom;
-
-		@Sequence(value={"name", "actuallist"}, required="ro")
-		public ITokenFactory lvn;
-		
 		public ITokenFactory doargument = TFDoArgument.getInstance(this.version, true);
 		public ITokenFactory external = new TFExternal(this.version);
-		
-		@Sequence(value={"expratom", "exprtail"}, required="ro")
-		public ITokenFactory expr;
-		
-		public ITokenFactory actuallist = TFActualList.getInstance(this.version);
 		
 		public ITokenFactory pattern = TFPattern.getInstance(this.version);
 		
 		public ITokenFactory intrinsic = new TFIntrinsic(this.version);
-		
-		public ITokenFactory getTFEnvironment() {
-			return environment;
-		}
-		
-		public ITokenFactory getTFExprItem() {
-			return this.exprItem;
-		}
-		
-		public ITokenFactory getTFGvnAll() {
-			return this.gvnAll;
-		}
-		
-		public ITokenFactory getTFGlvn() {
-			return this.glvn;
-		}
-	
-		public ITokenFactory getTFLvn() {
-			return this.lvn;
-		}
-	
-		public ITokenFactory getTFExprAtom() {
-			return this.expratom;
-		}
-		
-		public ITokenFactory getTFExpr() {
-			return this.expr;
-		}
-		
-		public ITokenFactory getTFActual() {
-			return this.actual;
-		}
-	
-		public ITokenFactory getTFIntrinsic() {
-			return this.intrinsic;
-		}
 	}
 
 	public static class CacheSupply extends MTFSupply {
 		private MVersion version = MVersion.CACHE;
 
-		@Choice({"glvn", "exprItem", "classmethod"})
+		@Choice({"glvn", "expritem", "classmethod"})
 		public ITokenFactory expratom;
 		
 		@Sequence(value={"dot", "name"}, required="all")
@@ -287,45 +234,8 @@ public abstract class MTFSupply {
 		
 		public ITokenFactory pattern = TFPattern.getInstance(this.version);
 		public ITokenFactory classmethod = TFCacheClassMethod.getInstance();
-		public ITokenFactory actuallist = TFActualList.getInstance(this.version);
 		
 		public ITokenFactory intrinsic = new TFIntrinsic(this.version);
-
-		public ITokenFactory getTFEnvironment() {
-			return environment;
-		}
-		
-		public ITokenFactory getTFExprItem() {
-			return this.exprItem;
-		}
-		
-		public ITokenFactory getTFGvnAll() {
-			return this.gvnAll;
-		}
-		
-		public ITokenFactory getTFGlvn() {
-			return this.glvn;
-		}
-	
-		public ITokenFactory getTFLvn() {
-			return this.lvn;
-		}
-	
-		public ITokenFactory getTFExprAtom() {
-			return this.expratom;
-		}
-		
-		public ITokenFactory getTFExpr() {
-			return this.expr;
-		}
-		
-		public ITokenFactory getTFActual() {
-			return this.actual;
-		}
-	
-		public ITokenFactory getTFIntrinsic() {
-			return this.intrinsic;
-		}
 	}
 	
 	private static MTFSupply CACHE_SUPPLY;

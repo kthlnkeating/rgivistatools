@@ -21,7 +21,7 @@ public class TFJobArgument extends TFSeq {
 	
 	private static ITokenFactory getFactory0(IToken[] previousTokens, MVersion version) {
 		TFLabel tfl = TFLabel.getInstance();
-		ITokenFactory tfi = MTFSupply.getInstance(version).getTFIndirection();
+		ITokenFactory tfi = MTFSupply.getInstance(version).indirection;
 		ITokenFactory tf = ChoiceSupply.get(tfl, tfi);
 		return tf; 
 	}
@@ -34,7 +34,7 @@ public class TFJobArgument extends TFSeq {
 				@Override
 				protected ITokenFactory[] getFactories() {
 					TFConstChar tfc = TFConstChar.getInstance('+');
-					ITokenFactory tfe = MTFSupply.getInstance(version).getTFExpr();
+					ITokenFactory tfe = MTFSupply.getInstance(version).expr;
 					return new ITokenFactory[]{tfc, tfe};
 				}
 			};
@@ -49,10 +49,10 @@ public class TFJobArgument extends TFSeq {
 		if (previousTokens[2] == null) {
 			return new TFNull();
 		} else {
-			ITokenFactory tfEnv = MTFSupply.getInstance(version).getTFEnvironment();
+			ITokenFactory tfEnv = MTFSupply.getInstance(version).environment;
 			ITokenFactory tfName = TFName.getInstance();
 			ITokenFactory tfEnvName = TFSeqOR.getInstance(tfEnv, tfName);
-			ITokenFactory tfInd = MTFSupply.getInstance(version).getTFIndirection();
+			ITokenFactory tfInd = MTFSupply.getInstance(version).indirection;
 			return ChoiceSupply.get(tfEnvName, tfInd);
 		}
 	}
@@ -61,12 +61,12 @@ public class TFJobArgument extends TFSeq {
 		if ((previousTokens[1] != null) || (previousTokens[3] instanceof TIndirection)) {
 			return new TFNull();
 		} else {
-			return TFActualList.getInstance(version);
+			return MTFSupply.getInstance(version).actuallist;
 		}
 	}
 
 	private static ITokenFactory getFactory5(IToken[] previousTokens, final MVersion version) {
-		ITokenFactory e = MTFSupply.getInstance(version).getTFExpr();
+		ITokenFactory e = MTFSupply.getInstance(version).expr;
 		ITokenFactory processParams = ChoiceSupply.get(e, ":(", TFEmpty.getInstance(), TFDelimitedList.getInstance(e, ':', true, true));
 		ITokenFactory jobParams = TFSeqRequired.getInstance(TFConstChar.getInstance(':'), processParams); 
 		return TFSeqRO.getInstance(jobParams, TFTimeout.getInstance(version));

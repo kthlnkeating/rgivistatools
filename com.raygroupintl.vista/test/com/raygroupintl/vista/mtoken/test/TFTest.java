@@ -13,7 +13,7 @@ import com.raygroupintl.vista.struct.MError;
 public class TFTest {
 	public void testTFEnvironment(MVersion version) {
 		MTFSupply m = MTFSupply.getInstance(version);
-		ITokenFactory f = m.getTFEnvironment();
+		ITokenFactory f = m.environment;
 		TFCommonTest.validCheck(f, "|A|");
 		TFCommonTest.validCheck(f, "[A,B]");
 		TFCommonTest.validCheck(f, "||", MError.ERR_GENERAL_SYNTAX);
@@ -39,12 +39,12 @@ public class TFTest {
 	}
 
 	public void testTFGvn(MVersion version) {
-		ITokenFactory f = MTFSupply.getInstance(version).getTFGvn();
+		ITokenFactory f = MTFSupply.getInstance(version).gvn;
 		TFCommonTest.validCheck(f, "^PRCA(430,+$G(PRCABN),0)");
 	}
 
 	private void testTFExpr(MVersion version) {
-		ITokenFactory f = MTFSupply.getInstance(version).getTFExpr();
+		ITokenFactory f = MTFSupply.getInstance(version).expr;
 		TFCommonTest.validCheck(f, "@^%ZOSF(\"TRAP\")");
 		TFCommonTest.validCheck(f, "^A");
 		TFCommonTest.validCheck(f, "^A(1)");
@@ -78,7 +78,7 @@ public class TFTest {
 
 	public void testTFGvnAll(MVersion version) {
 		MTFSupply m = MTFSupply.getInstance(version);
-		ITokenFactory f = m.getTFGvnAll();
+		ITokenFactory f = m.gvnall;
 		TFCommonTest.validCheck(f, "^PRCA(430,+$G(PRCABN),0)");
 		TFCommonTest.validCheck(f, "^(430,+$G(PRCABN),0)");
 		TFCommonTest.validCheck(f, "^$ROUTINE(ROU)");
@@ -94,7 +94,7 @@ public class TFTest {
 
 	public void testTFActual(MVersion version) {
 		MTFSupply m = MTFSupply.getInstance(version);
-		ITokenFactory f = m.getTFActual();
+		ITokenFactory f = m.actual;
 		TFCommonTest.validCheck(f, ".57");
 		TFCommonTest.validCheck(f, ".57  ", ".57");
 		TFCommonTest.validCheck(f, ".INPUT");
@@ -113,7 +113,7 @@ public class TFTest {
 	}
 
 	private void testTFIndirection(MVersion version) {
-		ITokenFactory f = MTFSupply.getInstance(version).getTFIndirection();		
+		ITokenFactory f = MTFSupply.getInstance(version).indirection;		
 		TFCommonTest.validCheck(f, "@(+$P(LST,\",\",FLD))");
 		TFCommonTest.validCheck(f, "@H@(0)");
 		TFCommonTest.validCheck(f, "@XARRAY@(FROMX1,TO1)");
@@ -143,7 +143,7 @@ public class TFTest {
 
 	public void testTFExprItem(MVersion version) {
 		MTFSupply m = MTFSupply.getInstance(version);
-		ITokenFactory f = m.getTFExprItem();
+		ITokenFactory f = m.expritem;
 		TFCommonTest.validCheck(f, "$$TEST(A)");
 		TFCommonTest.validCheck(f, "$$TEST^DOHA");
 		TFCommonTest.validCheck(f, "$$TEST");

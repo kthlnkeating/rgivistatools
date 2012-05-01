@@ -24,13 +24,13 @@ public class TFDoArgument extends TFSeq {
 	private static TFSeqROR getCacheSystemCall() {
 		ITokenFactory system = new TFConstString("$SYSTEM", true);
 		ITokenFactory methods = TFList.getInstance(TFSeqRequired.getInstance(TFChar.DOT, TFName.getInstance()));
-		ITokenFactory arguments = TFActualList.getInstance(MVersion.CACHE);
+		ITokenFactory arguments = MTFSupply.getInstance(MVersion.CACHE).actuallist;
 		return TFSeqROR.getInstance(system, methods, arguments);
 	}
 	
 	private static ITokenFactory getFactory0(IToken[] previousTokens, final MVersion version) {
 		TFLabel tfl = TFLabel.getInstance();
-		ITokenFactory tfi = MTFSupply.getInstance(version).getTFIndirection();
+		ITokenFactory tfi = MTFSupply.getInstance(version).indirection;
 		if (version == MVersion.CACHE) {
 			ITokenFactory f = TFSeqRO.getInstance(tfl, TFSeqRequired.getInstance(TFChar.DOT, TFName.getInstance()));
 			return ChoiceSupply.get(f, "@#$", tfi, TFCacheClassMethod.getInstance(), getCacheSystemCall());
@@ -48,7 +48,7 @@ public class TFDoArgument extends TFSeq {
 				@Override
 				protected ITokenFactory[] getFactories() {
 					TFConstChar tfc = TFConstChar.getInstance('+');
-					ITokenFactory tfe = MTFSupply.getInstance(version).getTFExpr();
+					ITokenFactory tfe = MTFSupply.getInstance(version).expr;
 					return new ITokenFactory[]{tfc, tfe};
 				}
 			};
@@ -60,7 +60,7 @@ public class TFDoArgument extends TFSeq {
 	}
 
 	private static ITokenFactory getRoutineSpecification(MVersion version) {
-		ITokenFactory tfEnv = MTFSupply.getInstance(version).getTFEnvironment();
+		ITokenFactory tfEnv = MTFSupply.getInstance(version).environment;
 		if (version == MVersion.CACHE) {
 			ITokenFactory tfNameOrObj = TFName.getInstance();
 			ITokenFactory objMethod = TFSeqRequired.getInstance(TFConstChar.getInstance('.'), TFName.getInstance());			
@@ -77,7 +77,7 @@ public class TFDoArgument extends TFSeq {
 			return new TFNull();
 		} else {
 			ITokenFactory tfEnvName = getRoutineSpecification(version); 
-			ITokenFactory tfInd = MTFSupply.getInstance(version).getTFIndirection();
+			ITokenFactory tfInd = MTFSupply.getInstance(version).indirection;
 			return ChoiceSupply.get(tfEnvName, tfInd);
 		}
 	}
@@ -86,7 +86,7 @@ public class TFDoArgument extends TFSeq {
 		if ((previousTokens[1] != null) || (previousTokens[3] instanceof TIndirection)) {
 			return new TFNull();
 		} else {
-			return TFActualList.getInstance(version);
+			return MTFSupply.getInstance(version).actuallist;
 		}
 	}
 

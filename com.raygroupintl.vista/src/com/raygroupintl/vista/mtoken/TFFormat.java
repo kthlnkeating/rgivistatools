@@ -15,7 +15,7 @@ public class TFFormat extends TFChoice {
 	}
 	
 	private static ITokenFactory getTFTabFormat(MVersion version) {
-		return TFSeqRequired.getInstance(TFConstChar.getInstance('?'), MTFSupply.getInstance(version).getTFExpr());
+		return TFSeqRequired.getInstance(TFConstChar.getInstance('?'), MTFSupply.getInstance(version).expr);
 	}
 		
 	private static ITokenFactory getTFPositionXTabFormat(MVersion version) {

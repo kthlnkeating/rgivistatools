@@ -27,7 +27,7 @@ public class TFUseArgument extends TFChoice {
 				case ')':
 					return TFEmpty.getInstance();
 				default:
-					return MTFSupply.getInstance(version).getTFExpr();
+					return MTFSupply.getInstance(version).expr;
 			}
 		}
 	}
@@ -59,9 +59,9 @@ public class TFUseArgument extends TFChoice {
 	@Override
 	protected ITokenFactory getFactory(char ch) {
 		if (ch == '@') {
-			return MTFSupply.getInstance(version).getTFIndirection();
+			return MTFSupply.getInstance(version).indirection;
 		} else {
-			return TFSeqROO.getInstance(MTFSupply.getInstance(version).getTFExpr(), 
+			return TFSeqROO.getInstance(MTFSupply.getInstance(version).expr, 
 					TFSeqRequired.getInstance(TFConstChar.getInstance(':'), TFUseDeviceParams.getInstance(this.version)),
 					TFSeqRequired.getInstance(TFConstChar.getInstance(':'), TFUseDeviceParams.getInstance(this.version)));
 		}

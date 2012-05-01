@@ -23,7 +23,7 @@ public class TFCacheClassMethod extends TFSeqRequired {
 				TFChar.RIGHT_PAR,
 				TFChar.DOT,
 				TFName.getInstance(),
-				TFActualList.getInstance(MVersion.CACHE)					
+				MTFSupply.getInstance(MVersion.CACHE).actuallist				
 		};
 	}
 	

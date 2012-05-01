@@ -16,7 +16,7 @@ public class TFReadArgument extends TFChoice {
 	}
 	
 	private static ITokenFactory getTFReadcountInstance(MVersion version) {
-		return TFSeqRequired.getInstance(TFConstChar.getInstance('#'), MTFSupply.getInstance(version).getTFExpr());
+		return TFSeqRequired.getInstance(TFConstChar.getInstance('#'), MTFSupply.getInstance(version).expr);
 	}
 
 	@Override
@@ -30,11 +30,11 @@ public class TFReadArgument extends TFChoice {
 			case '"':
 				return TFStringLiteral.getInstance();
 			case '*':
-				return TFSeqRRO.getInstance(TFConstChar.getInstance('*'), MTFSupply.getInstance(version).getTFGlvn(), TFTimeout.getInstance(this.version));
+				return TFSeqRRO.getInstance(TFConstChar.getInstance('*'), MTFSupply.getInstance(version).glvn, TFTimeout.getInstance(this.version));
 			case '@':
-				return TFSeqRO.getInstance(MTFSupply.getInstance(version).getTFIndirection(), TFTimeout.getInstance(this.version));
+				return TFSeqRO.getInstance(MTFSupply.getInstance(version).indirection, TFTimeout.getInstance(this.version));
 			default: 
-				return TFSeqROO.getInstance(MTFSupply.getInstance(version).getTFGlvn(), getTFReadcountInstance(this.version), TFTimeout.getInstance(this.version));
+				return TFSeqROO.getInstance(MTFSupply.getInstance(version).glvn, getTFReadcountInstance(this.version), TFTimeout.getInstance(this.version));
 		}
 	}
 

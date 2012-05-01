@@ -9,7 +9,7 @@ import com.raygroupintl.vista.struct.MError;
 
 public class TFIntrinsicTest {
 	private void testTFIntrinsic(MVersion version) {
-		ITokenFactory f = MTFSupply.getInstance(version).getTFIntrinsic();
+		ITokenFactory f = MTFSupply.getInstance(version).intrinsic;
 		TFCommonTest.validCheck(f, "$P(LST,\",\",FLD)");		
 		TFCommonTest.validCheck(f, "$S(LST=\"A\":0,1:1)");		
 		TFCommonTest.validCheck(f, "$S(A>$$A^B:0,1:1)");		

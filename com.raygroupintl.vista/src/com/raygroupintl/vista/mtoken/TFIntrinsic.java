@@ -102,7 +102,7 @@ public class TFIntrinsic extends TFSeq {
 		
 		public ITokenFactory getArgumentFactory() {
 			if (this.argumentFactory == null) {
-				return MTFSupply.getInstance(version).getTFExprList(); 
+				return MTFSupply.getInstance(version).exprlist; 
 			} else {
 				return this.argumentFactory;
 			}
@@ -163,14 +163,14 @@ public class TFIntrinsic extends TFSeq {
 		addFunction(version, "J", "JUSTIFY", 2, 3); 	
 		addFunction(version, "L", "LENGTH", 1, 2); 		
 		FunctionInfo o = addFunction(version, "O", "ORDER", 1, 2); 	
-		o.setArgumentFactory(TFSeqRO.getInstance(MTFSupply.getInstance(version).getTFGlvn(),
-				TFSeqRequired.getInstance(TFConstChar.getInstance(','), MTFSupply.getInstance(version).getTFExpr())));
+		o.setArgumentFactory(TFSeqRO.getInstance(MTFSupply.getInstance(version).glvn,
+				TFSeqRequired.getInstance(TFConstChar.getInstance(','), MTFSupply.getInstance(version).expr)));
 		addFunction(version, "P", "PIECE", 2, 4); 	
 		addFunction(version, "Q", "QUERY", 1, 1); 	
 		addFunction(version, "R", "RANDOM", 1, 1); 	
 		addFunction(version, "RE", "REVERSE", 1, 1);		
 		FunctionInfo s = addFunction(version, "S", "SELECT", 1, 999);
-		s.setArgumentFactory(MTFSupply.getInstance(version).getTFSelectArg());
+		s.setArgumentFactory(MTFSupply.getInstance(version).dselectarg);
 		FunctionInfo t = addFunction(version, "T", "TEXT", 1, 1); 
 		t.setArgumentFactory(TFGotoArgument.getInstance(version, true));			
 		addFunction(version, "V", "VIEW", 1, 999); 	
@@ -188,7 +188,7 @@ public class TFIntrinsic extends TFSeq {
 
 		if (version == MVersion.CACHE) {
 			FunctionInfo c = addFunction(version, "CASE", 1, Integer.MAX_VALUE);
-			ITokenFactory expr = MTFSupply.getInstance(version).getTFExpr();
+			ITokenFactory expr = MTFSupply.getInstance(version).expr;
 			ITokenFactory ci = TFSeqRequired.getInstance(ChoiceSupply.get(expr, ':', TFEmpty.getInstance()), TFConstChar.getInstance(':'), expr);
 			ITokenFactory cases =  TFSeqRequired.getInstance(TFChar.COMMA, TFDelimitedList.getInstance(ci, ','));
 			ITokenFactory arg = TFSeqRequired.getInstance(expr,  cases);
@@ -307,7 +307,7 @@ public class TFIntrinsic extends TFSeq {
 						String name = getFoundIntrinsicName(previousTokens);
 						if (TFIntrinsic.this.version == MVersion.CACHE) {
 							if (name.equals("SYSTEM") || name.equals("SY")) {
-								return TFDelimitedList.getInstance(MTFSupply.getInstance(TFIntrinsic.this.version).getTFActual(), ',');
+								return TFDelimitedList.getInstance(MTFSupply.getInstance(TFIntrinsic.this.version).actual, ',');
 							}
 						}
 						MNameWithMnemonic mName = INTRINSIC_FUNCTIONS.get(name);

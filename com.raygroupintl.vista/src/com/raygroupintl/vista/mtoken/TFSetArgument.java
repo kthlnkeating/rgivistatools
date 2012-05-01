@@ -25,11 +25,11 @@ public class TFSetArgument extends TFSeqStatic {
 		protected ITokenFactory getFactory(char ch) {
 			switch(ch) {
 			case '$':
-				return MTFSupply.getInstance(version).getTFIntrinsic();
+				return MTFSupply.getInstance(version).intrinsic;
 			case '@':
-				return MTFSupply.getInstance(version).getTFIndirection();
+				return MTFSupply.getInstance(version).indirection;
 			default:
-				return MTFSupply.getInstance(version).getTFGlvn();
+				return MTFSupply.getInstance(version).glvn;
 			}
 		}
 		
@@ -63,7 +63,7 @@ public class TFSetArgument extends TFSeqStatic {
 		
 	@Override
 	protected ITokenFactory[] getFactories() {
-		ITokenFactory expr = MTFSupply.getInstance(version).getTFExpr();
+		ITokenFactory expr = MTFSupply.getInstance(version).expr;
 		return new ITokenFactory[]{ 
 				TFSetDestination.getInstance(this.version), 
 				TFConstChar.getInstance('='), 

@@ -19,7 +19,7 @@ public class TFGotoArgument extends TFSeq {
 	
 	private static ITokenFactory getFactory0(IToken[] previousTokens, final MVersion version) {
 		TFLabel tfl = TFLabel.getInstance();
-		ITokenFactory tfi = MTFSupply.getInstance(version).getTFIndirection();
+		ITokenFactory tfi = MTFSupply.getInstance(version).indirection;
 		ITokenFactory tf = ChoiceSupply.get(tfl, tfi);
 		return tf; 
 	}
@@ -29,7 +29,7 @@ public class TFGotoArgument extends TFSeq {
 			@Override
 			protected ITokenFactory[] getFactories() {
 				TFConstChar tfc = TFConstChar.getInstance('+');
-				ITokenFactory tfe = MTFSupply.getInstance(version).getTFExpr();
+				ITokenFactory tfe = MTFSupply.getInstance(version).expr;
 				return new ITokenFactory[]{tfc, tfe};
 			}
 		};
@@ -43,10 +43,10 @@ public class TFGotoArgument extends TFSeq {
 		if (previousTokens[2] == null) {
 			return new TFNull();
 		} else {
-			ITokenFactory tfEnv = MTFSupply.getInstance(version).getTFEnvironment();
+			ITokenFactory tfEnv = MTFSupply.getInstance(version).environment;
 			ITokenFactory tfName = TFName.getInstance();
 			ITokenFactory tfEnvName = TFSeqOR.getInstance(tfEnv, tfName);
-			ITokenFactory tfInd = MTFSupply.getInstance(version).getTFIndirection();
+			ITokenFactory tfInd = MTFSupply.getInstance(version).indirection;
 			return ChoiceSupply.get(tfEnvName, tfInd);
 		}
 	}

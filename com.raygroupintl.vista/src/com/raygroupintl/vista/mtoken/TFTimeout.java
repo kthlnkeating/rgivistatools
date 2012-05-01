@@ -13,7 +13,7 @@ public class TFTimeout extends TFSeqRequired {
 		
 	@Override
 	protected ITokenFactory[] getFactories() {
-		return new ITokenFactory[]{TFConstChar.getInstance(':'), MTFSupply.getInstance(version).getTFExpr()};
+		return new ITokenFactory[]{TFConstChar.getInstance(':'), MTFSupply.getInstance(version).expr};
 	}
 	
 	public static TFTimeout getInstance(MVersion version) {
