@@ -46,8 +46,8 @@ public class Parser {
 		java.util.List<Triple<TFChoiceBasic, Choice>> choices  = new ArrayList<Triple<TFChoiceBasic, Choice>>();
 		java.util.List<Triple<TFSeqStatic, Sequence>> sequences  = new ArrayList<Triple<TFSeqStatic, Sequence>>();
 		java.util.List<Triple<TFDelimitedList, List>> lists  = new ArrayList<Triple<TFDelimitedList, List>>();
-		java.util.List<Triple<TFChoiceOnChar0th, ChoiceCh0>> choice0ths  = new ArrayList<Triple<TFChoiceOnChar0th, ChoiceCh0>>();
-		java.util.List<Triple<TFChoiceOnChar1st, ChoiceCh0>> choice1sts  = new ArrayList<Triple<TFChoiceOnChar1st, ChoiceCh0>>();
+		java.util.List<Triple<TFChoiceOnChar0th, CChoice>> choice0ths  = new ArrayList<Triple<TFChoiceOnChar0th, CChoice>>();
+		java.util.List<Triple<TFChoiceOnChar1st, CChoice>> choice1sts  = new ArrayList<Triple<TFChoiceOnChar1st, CChoice>>();
 	}
 	
 	private static ITokenFactory newTokenFactory(Field f, Store store) {
@@ -70,16 +70,16 @@ public class Parser {
 			store.lists.add(new Triple<TFDelimitedList, List>(name, value, list));
 			return value;
 		}
-		ChoiceCh0 choice0th = f.getAnnotation(ChoiceCh0.class);
-		if (choice0th != null) {
-			String lead = choice0th.lead();
+		CChoice cchoice = f.getAnnotation(CChoice.class);
+		if (cchoice != null) {
+			String lead = cchoice.lead();
 			if (lead.length() == 0) {
 				TFChoiceOnChar0th value = new TFChoiceOnChar0th();
-				store.choice0ths.add(new Triple<TFChoiceOnChar0th, ChoiceCh0>(name, value, choice0th));
+				store.choice0ths.add(new Triple<TFChoiceOnChar0th, CChoice>(name, value, cchoice));
 				return value;
 			} else {
 				TFChoiceOnChar1st value = new TFChoiceOnChar1st();
-				store.choice1sts.add(new Triple<TFChoiceOnChar1st, ChoiceCh0>(name, value, choice0th));
+				store.choice1sts.add(new Triple<TFChoiceOnChar1st, CChoice>(name, value, cchoice));
 				return value;
 			}
 		}
@@ -160,7 +160,7 @@ public class Parser {
 			ITokenFactory[] fs = getFactories(store.symbols, p.annotation.value());
 			p.factory.setFactories(fs);
 		}
-		for (Triple<TFChoiceOnChar0th, ChoiceCh0> p : store.choice0ths) {
+		for (Triple<TFChoiceOnChar0th, CChoice> p : store.choice0ths) {
 			ITokenFactory[] fs = getFactories(store.symbols, p.annotation.value());
 			ICharPredicate[] ps = getPredicates(p.annotation.preds());
 			p.factory.setChoices(ps, fs);
@@ -170,7 +170,7 @@ public class Parser {
 				p.factory.setDefault(df);
 			}
 		}
-		for (Triple<TFChoiceOnChar1st, ChoiceCh0> p : store.choice1sts) {
+		for (Triple<TFChoiceOnChar1st, CChoice> p : store.choice1sts) {
 			ITokenFactory[] fs = getFactories(store.symbols, p.annotation.value());
 			ICharPredicate[] ps = getPredicates(p.annotation.preds());
 			p.factory.setLeadingChar(p.annotation.lead().charAt(0));
