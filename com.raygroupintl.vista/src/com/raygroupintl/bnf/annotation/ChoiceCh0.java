@@ -10,4 +10,5 @@ public @interface ChoiceCh0 {
 	public String[] value() default {};
 	public String[] preds() default {};
 	public String def() default "";
+	public String lead() default "";
 }

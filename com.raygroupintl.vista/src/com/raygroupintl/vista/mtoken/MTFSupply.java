@@ -3,16 +3,13 @@ package com.raygroupintl.vista.mtoken;
 import java.util.HashMap;
 import java.util.Map;
 
-import com.raygroupintl.bnf.ChoiceSupply;
 import com.raygroupintl.bnf.TArray;
+import com.raygroupintl.bnf.TEmpty;
 import com.raygroupintl.bnf.TFChar;
-import com.raygroupintl.bnf.TFChoiceOnChar0th;
-import com.raygroupintl.bnf.TFChoiceOnChar1st;
 import com.raygroupintl.bnf.TFConstChar;
 import com.raygroupintl.bnf.TFConstChars;
 import com.raygroupintl.bnf.TFConstString;
 import com.raygroupintl.bnf.TFEmptyVerified;
-import com.raygroupintl.bnf.TFSeqRequired;
 import com.raygroupintl.bnf.TFSyntaxError;
 import com.raygroupintl.bnf.TokenAdapter;
 import com.raygroupintl.bnf.annotation.ChoiceCh0;
@@ -20,20 +17,12 @@ import com.raygroupintl.bnf.annotation.Parser;
 import com.raygroupintl.bnf.annotation.Sequence;
 import com.raygroupintl.bnf.annotation.Choice;
 import com.raygroupintl.bnf.annotation.List;
-import com.raygroupintl.fnds.ICharPredicate;
 import com.raygroupintl.fnds.IToken;
 import com.raygroupintl.fnds.ITokenArray;
 import com.raygroupintl.fnds.ITokenFactory;
-import com.raygroupintl.m.struct.IdentifierStartPredicate;
-import com.raygroupintl.struct.CharPredicate;
-import com.raygroupintl.struct.CharsPredicate;
-import com.raygroupintl.struct.DigitPredicate;
-import com.raygroupintl.struct.LetterPredicate;
 
 public abstract class MTFSupply {
-	protected abstract void initialize();
-	
-	public abstract ITokenFactory getTFEnvironment();
+    public abstract ITokenFactory getTFEnvironment();
 	
 	public abstract ITokenFactory getTFExprItem();
 	
@@ -88,6 +77,16 @@ public abstract class MTFSupply {
 					return new TGlobalNaked(tokens[1]);
 				}
 			});			 
+			ADAPTERS.put("exprinpar", new TokenAdapter() {
+				@Override
+				public IToken convert(IToken[] tokens) {
+					if (tokens[1] == null) {
+						return new TInParantheses(new TEmpty());
+					} else {
+						return new TInParantheses(tokens[1]);
+					}
+				}
+			});			 
 		}
 
 		public ITokenFactory dot = TFChar.DOT;
@@ -106,6 +105,9 @@ public abstract class MTFSupply {
 		public ITokenFactory atlpar = new TFConstString("@(");
 		public ITokenFactory caretquest = new TFConstString("^$");
 		public ITokenFactory ddollar = new TFConstString("$$");
+
+		public ITokenFactory ecomma = TFEmptyVerified.getInstance(',');
+		public ITokenFactory erpar = TFEmptyVerified.getInstance(')');
 
 		public ITokenFactory name = TFName.getInstance();
 		public ITokenFactory ident = TFIdent.getInstance();
@@ -139,6 +141,10 @@ public abstract class MTFSupply {
 		@List(value="expr", delim="comma", left="lpar", right="rpar")
 		public ITokenFactory exprlistinparan;
 
+		
+		@Sequence(value={"lpar", "expr", "rpar"}, required="all")
+		public ITokenFactory exprinpar;
+				
 		@Sequence(value={"at", "expratom"}, required="all")
 		public ITokenFactory indirection_0;
 		@Sequence(value={"atlpar", "exprlist", "rpar"}, required="all")
@@ -171,6 +177,26 @@ public abstract class MTFSupply {
 		@List(value="dselectarg_e", delim="comma")
 		public ITokenFactory dselectarg;
 		
+		@ChoiceCh0(value={"gvnssvn", "gvnnaked", "gvn", "gvn"}, preds={"$", "(", "%|[", "letter"}, lead="^", def="error")
+		public ITokenFactory gvnAll;
+
+		@ChoiceCh0(value={"extrinsic", "external", "intrinsic"}, preds={"$", "&", "letter"}, lead="$")
+		public ITokenFactory expritem_d;
+		
+		@ChoiceCh0(value={"strlit", "expritem_d", "unaryexpritem", "numlit", "exprinpar", "numlit"}, preds={"\"", "$", "'+-", ".", "(", "digit"})
+		public ITokenFactory exprItem;
+		
+		@Sequence(value={"dot", "name"}, required="all")
+		public ITokenFactory actual_d1;
+		@Sequence(value={"dot", "indirection"}, required="all")
+		public ITokenFactory actual_d2;
+		@ChoiceCh0(value={"numlit", "actual_d1", "actual_d2"}, preds={"digit", "idstart", "@"}, lead=".", def="error")
+		public ITokenFactory actual_d;
+		
+		@ChoiceCh0(value={"actual_d", "ecomma", "erpar"}, preds={".", ",", ")"}, def="expr")
+		public ITokenFactory actual;
+		
+
 		public ITokenFactory getTFIndirection() {
 			return this.indirection;
 		}
@@ -195,10 +221,6 @@ public abstract class MTFSupply {
 		@Choice({"glvn", "exprItem"})
 		public ITokenFactory expratom;
 
-		public TFChoiceOnChar0th actual = new TFChoiceOnChar0th();
-		public TFChoiceOnChar0th exprItem = new TFChoiceOnChar0th();
-		public TFChoiceOnChar1st gvnAll = new TFChoiceOnChar1st();
-		
 		@Sequence(value={"name", "actuallist"}, required="ro")
 		public ITokenFactory lvn;
 		
@@ -249,45 +271,6 @@ public abstract class MTFSupply {
 		public ITokenFactory getTFIntrinsic() {
 			return this.intrinsic;
 		}
-
-		@Override
-		protected void initialize() {
-			{
-				ICharPredicate[] predsDollar = {new CharPredicate('$'), new CharPredicate('&'), new LetterPredicate()};
-				ITokenFactory fDollar = ChoiceSupply.get('$', null, predsDollar, 
-					extrinsic, external, intrinsic);
-	
-				ICharPredicate[] preds = {
-					new CharPredicate('"'), new CharPredicate('$'),
-					new CharsPredicate('\'', '+', '-'), new CharPredicate('.'), new CharPredicate('('),
-					new DigitPredicate()};
-				this.exprItem.setChoices(preds, strlit, fDollar, 
-						unaryexpritem, this.numlit,
-							TFInParantheses.getInstance(this.expr), this.numlit);
-			}
-		
-			{
-				ICharPredicate[] preds = {new CharPredicate('$'), new CharPredicate('('), new CharsPredicate('%', '|', '['), new LetterPredicate()};
-				this.gvnAll.setLeadingChar('^');
-				this.gvnAll.setDefault(error);
-				this.gvnAll.setChoices( preds, gvnssvn, gvnnaked, gvn, gvn);
-			}
-			
-			{
-				ICharPredicate[] predsDot = {new DigitPredicate(), new IdentifierStartPredicate(), new CharPredicate('@')};
-				ITokenFactory[] fsDot = {
-						this.numlit,
-						TFSeqRequired.getInstance(dot, name),
-						TFSeqRequired.getInstance(dot, indirection)
-				};				
-				ITokenFactory fDot = ChoiceSupply.get('.', error, predsDot, fsDot);
-				ITokenFactory f0 = TFEmptyVerified.getInstance(',');
-				ITokenFactory f1 = TFEmptyVerified.getInstance(')');
-				ICharPredicate[] predsAll = {new CharPredicate('.'), new CharPredicate(','), new CharPredicate(')')};
-				this.actual.setDefault(this.expr);
-				this.actual.setChoices(predsAll, fDot, f0, f1);
-			}
-		}
 	}
 
 	public static class CacheSupply extends CommonSupply {
@@ -295,10 +278,6 @@ public abstract class MTFSupply {
 
 		@Choice({"glvn", "exprItem", "classmethod"})
 		public ITokenFactory expratom;
-		
-		public TFChoiceOnChar0th actual = new TFChoiceOnChar0th();
-		public TFChoiceOnChar0th exprItem = new TFChoiceOnChar0th();
-		public TFChoiceOnChar1st gvnAll = new TFChoiceOnChar1st();
 		
 		@Sequence(value={"dot", "name"}, required="all")
 		public ITokenFactory lvn_a;
@@ -358,47 +337,7 @@ public abstract class MTFSupply {
 		public ITokenFactory getTFIntrinsic() {
 			return this.intrinsic;
 		}
-
-		@Override
-		protected void initialize() {
-			{
-				ICharPredicate[] predsDollar = {new CharPredicate('$'), new CharPredicate('&'), new LetterPredicate()};
-				ITokenFactory fDollar = ChoiceSupply.get('$', null, predsDollar, 
-					extrinsic, external, intrinsic);
-	
-				ICharPredicate[] preds = {
-					new CharPredicate('"'), new CharPredicate('$'),
-					new CharsPredicate('\'', '+', '-'), new CharPredicate('.'), new CharPredicate('('),
-					new DigitPredicate()};
-				this.exprItem.setChoices(preds, strlit, fDollar, 
-						unaryexpritem, this.numlit,
-							TFInParantheses.getInstance(this.expr), this.numlit);
-			}
-		
-			{
-				ICharPredicate[] preds = {new CharPredicate('$'), new CharPredicate('('), new CharsPredicate('%', '|', '['), new LetterPredicate()};
-				this.gvnAll.setLeadingChar('^');
-				this.gvnAll.setDefault(error);
-				this.gvnAll.setChoices( preds, gvnssvn, gvnnaked, gvn, gvn);
-			}
-			
-			{
-				ICharPredicate[] predsDot = {new DigitPredicate(), new IdentifierStartPredicate(), new CharPredicate('@')};
-				ITokenFactory[] fsDot = {
-						this.numlit,
-						TFSeqRequired.getInstance(dot, name),
-						TFSeqRequired.getInstance(dot, indirection)
-				};				
-				ITokenFactory fDot = ChoiceSupply.get('.', error, predsDot, fsDot);
-				ITokenFactory f0 = TFEmptyVerified.getInstance(',');
-				ITokenFactory f1 = TFEmptyVerified.getInstance(')');
-				ICharPredicate[] predsAll = {new CharPredicate('.'), new CharPredicate(','), new CharPredicate(')')};
-				this.actual.setDefault(this.expr);
-				this.actual.setChoices(predsAll, fDot, f0, f1);
-			}			
-		}
 	}
-	
 	
 	private static MTFSupply CACHE_SUPPLY;
 	private static MTFSupply STD_95_SUPPLY;
@@ -409,7 +348,6 @@ public abstract class MTFSupply {
 				case CACHE: {
 					if (CACHE_SUPPLY == null) {
 						CACHE_SUPPLY = Parser.parse(CacheSupply.class, CacheSupply.ADAPTERS);
-						CACHE_SUPPLY.initialize();
 						TFIntrinsic.initialize(version);
 					}
 					return CACHE_SUPPLY;
@@ -417,7 +355,6 @@ public abstract class MTFSupply {
 				case ANSI_STD_95: {
 					if (STD_95_SUPPLY == null) {
 						STD_95_SUPPLY = Parser.parse(Std95Supply.class, Std95Supply.ADAPTERS);
-						STD_95_SUPPLY.initialize();
 						TFIntrinsic.initialize(version);
 					}
 					return STD_95_SUPPLY;

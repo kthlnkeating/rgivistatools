@@ -9,12 +9,14 @@ import java.util.Map;
 
 import com.raygroupintl.bnf.TFChoiceBasic;
 import com.raygroupintl.bnf.TFChoiceOnChar0th;
+import com.raygroupintl.bnf.TFChoiceOnChar1st;
 import com.raygroupintl.bnf.TFSeqStatic;
 import com.raygroupintl.bnf.TokenAdapter;
 import com.raygroupintl.fnds.ICharPredicate;
 import com.raygroupintl.fnds.ITokenFactory;
 import com.raygroupintl.m.struct.IdentifierStartPredicate;
 import com.raygroupintl.struct.CharPredicate;
+import com.raygroupintl.struct.CharsPredicate;
 import com.raygroupintl.struct.DigitPredicate;
 import com.raygroupintl.struct.LetterPredicate;
 import com.raygroupintl.vista.mtoken.TFDelimitedList;
@@ -45,6 +47,7 @@ public class Parser {
 		java.util.List<Triple<TFSeqStatic, Sequence>> sequences  = new ArrayList<Triple<TFSeqStatic, Sequence>>();
 		java.util.List<Triple<TFDelimitedList, List>> lists  = new ArrayList<Triple<TFDelimitedList, List>>();
 		java.util.List<Triple<TFChoiceOnChar0th, ChoiceCh0>> choice0ths  = new ArrayList<Triple<TFChoiceOnChar0th, ChoiceCh0>>();
+		java.util.List<Triple<TFChoiceOnChar1st, ChoiceCh0>> choice1sts  = new ArrayList<Triple<TFChoiceOnChar1st, ChoiceCh0>>();
 	}
 	
 	private static ITokenFactory newTokenFactory(Field f, Store store) {
@@ -69,9 +72,16 @@ public class Parser {
 		}
 		ChoiceCh0 choice0th = f.getAnnotation(ChoiceCh0.class);
 		if (choice0th != null) {
-			TFChoiceOnChar0th value = new TFChoiceOnChar0th();
-			store.choice0ths.add(new Triple<TFChoiceOnChar0th, ChoiceCh0>(name, value, choice0th));
-			return value;
+			String lead = choice0th.lead();
+			if (lead.length() == 0) {
+				TFChoiceOnChar0th value = new TFChoiceOnChar0th();
+				store.choice0ths.add(new Triple<TFChoiceOnChar0th, ChoiceCh0>(name, value, choice0th));
+				return value;
+			} else {
+				TFChoiceOnChar1st value = new TFChoiceOnChar1st();
+				store.choice1sts.add(new Triple<TFChoiceOnChar1st, ChoiceCh0>(name, value, choice0th));
+				return value;
+			}
 		}
 		return null;
 	}
@@ -112,7 +122,12 @@ public class Parser {
 			if (code.length() == 1) {
 				result[i] = new CharPredicate(code.charAt(0));
 			} else {
-				result[i] = PREDICATES.get(code);
+				ICharPredicate named = PREDICATES.get(code);
+				if (named == null) {
+					result[i] = new CharsPredicate(code.toCharArray());	
+				} else {
+					result[i] = PREDICATES.get(code);
+				}
 			}
 		}
 		return result;
@@ -148,6 +163,17 @@ public class Parser {
 		for (Triple<TFChoiceOnChar0th, ChoiceCh0> p : store.choice0ths) {
 			ITokenFactory[] fs = getFactories(store.symbols, p.annotation.value());
 			ICharPredicate[] ps = getPredicates(p.annotation.preds());
+			p.factory.setChoices(ps, fs);
+			String dcode = p.annotation.def();
+			if (dcode.length() > 0) {
+				ITokenFactory df = store.symbols.get(dcode);
+				p.factory.setDefault(df);
+			}
+		}
+		for (Triple<TFChoiceOnChar1st, ChoiceCh0> p : store.choice1sts) {
+			ITokenFactory[] fs = getFactories(store.symbols, p.annotation.value());
+			ICharPredicate[] ps = getPredicates(p.annotation.preds());
+			p.factory.setLeadingChar(p.annotation.lead().charAt(0));
 			p.factory.setChoices(ps, fs);
 			String dcode = p.annotation.def();
 			if (dcode.length() > 0) {
