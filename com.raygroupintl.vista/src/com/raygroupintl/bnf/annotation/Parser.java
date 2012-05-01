@@ -15,11 +15,11 @@ import com.raygroupintl.bnf.TokenAdapter;
 import com.raygroupintl.fnds.ICharPredicate;
 import com.raygroupintl.fnds.ITokenFactory;
 import com.raygroupintl.m.struct.IdentifierStartPredicate;
+import com.raygroupintl.m.token.TFDelimitedList;
 import com.raygroupintl.struct.CharPredicate;
 import com.raygroupintl.struct.CharsPredicate;
 import com.raygroupintl.struct.DigitPredicate;
 import com.raygroupintl.struct.LetterPredicate;
-import com.raygroupintl.vista.mtoken.TFDelimitedList;
 
 public class Parser {
 	private static final Map<String, ICharPredicate> PREDICATES = new HashMap<String, ICharPredicate>();
