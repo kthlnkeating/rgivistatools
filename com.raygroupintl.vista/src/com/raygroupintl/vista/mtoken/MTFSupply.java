@@ -41,6 +41,8 @@ public abstract class MTFSupply {
 	
 	public abstract ITokenFactory getTFGlvn();
 
+	public abstract ITokenFactory getTFLvn();
+
 	public abstract ITokenFactory getTFExprAtom();	
 	
 	public abstract ITokenFactory getTFExpr();	
@@ -74,6 +76,12 @@ public abstract class MTFSupply {
 			//		return new TGlobalNamed((TArray) tokens[1]);
 			//	}
 			//});
+			ADAPTERS.put("gvnnaked", new TokenAdapter() {
+				@Override
+				public IToken convert(IToken[] tokens) {
+					return new TGlobalNaked(tokens[1]);
+				}
+			});			 
 		}
 
 		public ITokenFactory dot = TFChar.DOT;
@@ -89,11 +97,16 @@ public abstract class MTFSupply {
 
 		public ITokenFactory nqmark = new TFConstString("'?");
 		public ITokenFactory atlpar = new TFConstString("@(");
-		
+		public ITokenFactory caretquest = new TFConstString("^$");
+		public ITokenFactory ddollar = new TFConstString("$$");
+
 		public ITokenFactory name = TFName.getInstance();
+		public ITokenFactory ident = TFIdent.getInstance();
 		public ITokenFactory numlit = TFNumLit.getInstance();
 		public ITokenFactory operator = TFOperator.getInstance();
 		public ITokenFactory error = TFSyntaxError.getInstance();
+		public ITokenFactory unaryop = new TFConstChars("+-\'");
+		public ITokenFactory strlit = new TFStringLiteral();
 		
 		@Sequence(value={"pipe", "expr", "pipe"}, required="all")
 		public ITokenFactory env_0;
@@ -133,6 +146,18 @@ public abstract class MTFSupply {
 		public ITokenFactory gvn_0;
 		@Sequence(value={"caret", "gvn_0"}, required="all")
 		public ITokenFactory gvn;
+		
+		@Sequence(value={"caretquest", "ident", "exprlistinparan"}, required="all")
+		public ITokenFactory gvnssvn;
+
+		@Sequence(value={"ddollar", "doargument"}, required="all")
+		public ITokenFactory extrinsic;
+		
+		@Sequence(value={"unaryop", "expratom"}, required="all")
+		public ITokenFactory unaryexpritem;
+				
+		@Sequence(value={"caret", "exprlistinparan"}, required="all")
+		public ITokenFactory gvnnaked;
 				
 		public ITokenFactory getTFIndirection() {
 			return this.indirection;
@@ -146,87 +171,24 @@ public abstract class MTFSupply {
 	public static class Std95Supply extends CommonSupply {	
 		private MVersion version = MVersion.ANSI_STD_95;
 
-		private static final class TFExtrinsic extends TFSeqRequired {
-			private MVersion version; 
-			
-			private TFExtrinsic(MVersion version) {			
-				this.version = version;
-			}
-			
-			@Override
-			protected final ITokenFactory[] getFactories() {
-				return new ITokenFactory[]{new TFConstString("$$"), TFDoArgument.getInstance(this.version, true)};
-			}
-	
-			@Override
-			protected final IToken getToken(IToken[] foundTokens) {
-				return new TExtrinsic(foundTokens[1]);
-			}
-		}
-	
-		static class TFGvnNaked extends TFExprListInParantheses {
-			private TFGvnNaked(MVersion version) {
-				super(version);
-			}
-			
-			@Override
-			protected ITokenFactory[] getFactories() {
-				TFConstChar c = TFConstChar.getInstance('^');
-				TFExprListInParantheses r = TFExprListInParantheses.getInstance(this.version);
-				return new ITokenFactory[]{c, r};
-			}
-			
-			@Override
-			protected IToken getToken(IToken[] foundTokens) {
-				return new TGlobalNaked(foundTokens[1]);
-			}		
-		}
-		
-		static class TFGvnSsvn extends TFSeqRequired {
-			private MVersion version;
-			
-			private TFGvnSsvn(MVersion version) {
-				this.version = version;
-			}
-			
-			@Override
-			protected ITokenFactory[] getFactories() {
-				ITokenFactory c = new TFConstString("^$");
-				ITokenFactory i = new TFIdent();
-				ITokenFactory p = new TFInParantheses() {				
-					@Override
-					protected ITokenFactory getInnerfactory() {
-						return TFDelimitedList.getInstance(MTFSupply.getInstance(version).getTFExpr(), ',');
-					}
-				};
-				return new ITokenFactory[]{c, i, p};
-			}		
-			
-			@Override
-			protected IToken getToken(IToken[] foundTokens) {			
-				return TSsvn.getInstance((TIdent) foundTokens[1], foundTokens[2]);
-			}		
-		}
-		
-		class TFUnaryOperatedExprItem extends TFSeqRequired {
-			@Override
-			protected ITokenFactory[] getFactories() {
-				ITokenFactory[] result = {new TFConstChars("+-\'"), getTFExprAtom()};
-				return result;
-			}		
-		}
-				
 		@Choice({"glvn", "exprItem"})
 		public ITokenFactory expratom;
 
 		public TFChoiceOnChar0th actual = new TFChoiceOnChar0th();
 		public TFChoiceOnChar0th exprItem = new TFChoiceOnChar0th();
 		public TFChoiceOnChar1st gvnAll = new TFChoiceOnChar1st();
-		public ITokenFactory lvn = TFLvn.getInstance(this.version);
+		
+		@Sequence(value={"name", "actuallist"}, required="ro")
+		public ITokenFactory lvn;
+		
+		public ITokenFactory doargument = TFDoArgument.getInstance(this.version, true);
+		public ITokenFactory external = new TFExternal(this.version);
+		//public ITokenFactory intrinsic = new TFIntrinsic(this.version);
 		
 		@Sequence(value={"expratom", "exprtail"}, required="ro")
 		public ITokenFactory expr;
 		
+		public ITokenFactory actuallist = TFActualList.getInstance(this.version);
 		
 		public ITokenFactory pattern = TFPattern.getInstance(this.version);
 		
@@ -246,6 +208,10 @@ public abstract class MTFSupply {
 			return this.glvn;
 		}
 	
+		public ITokenFactory getTFLvn() {
+			return this.lvn;
+		}
+	
 		public ITokenFactory getTFExprAtom() {
 			return this.expratom;
 		}
@@ -263,22 +229,22 @@ public abstract class MTFSupply {
 			{
 				ICharPredicate[] predsDollar = {new CharPredicate('$'), new CharPredicate('&'), new LetterPredicate()};
 				ITokenFactory fDollar = ChoiceSupply.get('$', null, predsDollar, 
-					new TFExtrinsic(this.version), new TFExternal(this.version), TFIntrinsic.getInstance(this.version));
+					extrinsic, external, TFIntrinsic.getInstance(this.version));
 	
 				ICharPredicate[] preds = {
 					new CharPredicate('"'), new CharPredicate('$'),
 					new CharsPredicate('\'', '+', '-'), new CharPredicate('.'), new CharPredicate('('),
 					new DigitPredicate()};
-				this.exprItem.setChoices(preds, new TFStringLiteral(), fDollar, 
-							new TFUnaryOperatedExprItem(), this.numlit,
+				this.exprItem.setChoices(preds, strlit, fDollar, 
+						unaryexpritem, this.numlit,
 							TFInParantheses.getInstance(this.expr), this.numlit);
 			}
 		
 			{
 				ICharPredicate[] preds = {new CharPredicate('$'), new CharPredicate('('), new CharsPredicate('%', '|', '['), new LetterPredicate()};
 				this.gvnAll.setLeadingChar('^');
-				this.gvnAll.setDefault(TFSyntaxError.getInstance());
-				this.gvnAll.setChoices( preds, new TFGvnSsvn(this.version), new TFGvnNaked(this.version), gvn, gvn);
+				this.gvnAll.setDefault(error);
+				this.gvnAll.setChoices( preds, gvnssvn, gvnnaked, gvn, gvn);
 			}
 			
 			{
@@ -288,7 +254,7 @@ public abstract class MTFSupply {
 						TFSeqRequired.getInstance(dot, name),
 						TFSeqRequired.getInstance(dot, indirection)
 				};				
-				ITokenFactory fDot = ChoiceSupply.get('.', TFSyntaxError.getInstance(), predsDot, fsDot);
+				ITokenFactory fDot = ChoiceSupply.get('.', error, predsDot, fsDot);
 				ITokenFactory f0 = TFEmptyVerified.getInstance(',');
 				ITokenFactory f1 = TFEmptyVerified.getInstance(')');
 				ICharPredicate[] predsAll = {new CharPredicate('.'), new CharPredicate(','), new CharPredicate(')')};
@@ -301,85 +267,26 @@ public abstract class MTFSupply {
 	public static class CacheSupply extends CommonSupply {
 		private MVersion version = MVersion.CACHE;
 
-		private static final class TFExtrinsic extends TFSeqRequired {
-			private MVersion version; 
-			
-			private TFExtrinsic(MVersion version) {			
-				this.version = version;
-			}
-			
-			@Override
-			protected final ITokenFactory[] getFactories() {
-				return new ITokenFactory[]{new TFConstString("$$"), TFDoArgument.getInstance(this.version, true)};
-			}
-	
-			@Override
-			protected final IToken getToken(IToken[] foundTokens) {
-				return new TExtrinsic(foundTokens[1]);
-			}
-		}
-	
-		static class TFGvnNaked extends TFExprListInParantheses {
-			private TFGvnNaked(MVersion version) {
-				super(version);
-			}
-			
-			@Override
-			protected ITokenFactory[] getFactories() {
-				TFConstChar c = TFConstChar.getInstance('^');
-				TFExprListInParantheses r = TFExprListInParantheses.getInstance(this.version);
-				return new ITokenFactory[]{c, r};
-			}
-			
-			@Override
-			protected IToken getToken(IToken[] foundTokens) {
-				return new TGlobalNaked(foundTokens[1]);
-			}		
-		}
-		
-		static class TFGvnSsvn extends TFSeqRequired {
-			private MVersion version;
-			
-			private TFGvnSsvn(MVersion version) {
-				this.version = version;
-			}
-			
-			@Override
-			protected ITokenFactory[] getFactories() {
-				ITokenFactory c = new TFConstString("^$");
-				ITokenFactory i = new TFIdent();
-				ITokenFactory p = new TFInParantheses() {				
-					@Override
-					protected ITokenFactory getInnerfactory() {
-						return TFDelimitedList.getInstance(MTFSupply.getInstance(version).getTFExpr(), ',');
-					}
-				};
-				return new ITokenFactory[]{c, i, p};
-			}		
-			
-			@Override
-			protected IToken getToken(IToken[] foundTokens) {			
-				return TSsvn.getInstance((TIdent) foundTokens[1], foundTokens[2]);
-			}		
-		}
-		
-		class TFUnaryOperatedExprItem extends TFSeqRequired {
-			@Override
-			protected ITokenFactory[] getFactories() {
-				ITokenFactory[] result = {new TFConstChars("+-\'"), getTFExprAtom()};
-				return result;
-			}		
-		}
-		
 		@Choice({"glvn", "exprItem", "classmethod"})
 		public ITokenFactory expratom;
 		
 		public TFChoiceOnChar0th actual = new TFChoiceOnChar0th();
 		public TFChoiceOnChar0th exprItem = new TFChoiceOnChar0th();
 		public TFChoiceOnChar1st gvnAll = new TFChoiceOnChar1st();
-		public ITokenFactory lvn = TFLvn.getInstance(this.version);
 		
+		@Sequence(value={"dot", "name"}, required="all")
+		public ITokenFactory lvn_a;
+		@List("lvn_a")
+		public ITokenFactory lvn_l;
+		@Sequence(value={"name", "lvn_l"}, required="ro")
+		public ITokenFactory lvn_x;
+		@Sequence(value={"lvn_x", "actuallist"}, required="ro")
+		public ITokenFactory lvn;
 		
+		public ITokenFactory doargument = TFDoArgument.getInstance(this.version, true);
+		public ITokenFactory external = new TFExternal(this.version);
+		//public ITokenFactory intrinsic = TFIntrinsic.getInstance(this.version);
+			
 		@Choice({"expratom", "classmethod"})
 		public ITokenFactory expr_0;
 		@Sequence(value={"expr_0", "exprtail"}, required="ro")
@@ -387,6 +294,7 @@ public abstract class MTFSupply {
 		
 		public ITokenFactory pattern = TFPattern.getInstance(this.version);
 		public ITokenFactory classmethod = TFCacheClassMethod.getInstance();
+		public ITokenFactory actuallist = TFActualList.getInstance(this.version);
 		
 		public ITokenFactory getTFEnvironment() {
 			return environment;
@@ -402,6 +310,10 @@ public abstract class MTFSupply {
 		
 		public ITokenFactory getTFGlvn() {
 			return this.glvn;
+		}
+	
+		public ITokenFactory getTFLvn() {
+			return this.lvn;
 		}
 	
 		public ITokenFactory getTFExprAtom() {
@@ -421,22 +333,22 @@ public abstract class MTFSupply {
 			{
 				ICharPredicate[] predsDollar = {new CharPredicate('$'), new CharPredicate('&'), new LetterPredicate()};
 				ITokenFactory fDollar = ChoiceSupply.get('$', null, predsDollar, 
-					new TFExtrinsic(this.version), new TFExternal(this.version), TFIntrinsic.getInstance(this.version));
+					extrinsic, external, TFIntrinsic.getInstance(this.version));
 	
 				ICharPredicate[] preds = {
 					new CharPredicate('"'), new CharPredicate('$'),
 					new CharsPredicate('\'', '+', '-'), new CharPredicate('.'), new CharPredicate('('),
 					new DigitPredicate()};
-				this.exprItem.setChoices(preds, new TFStringLiteral(), fDollar, 
-							new TFUnaryOperatedExprItem(), this.numlit,
+				this.exprItem.setChoices(preds, strlit, fDollar, 
+						unaryexpritem, this.numlit,
 							TFInParantheses.getInstance(this.expr), this.numlit);
 			}
 		
 			{
 				ICharPredicate[] preds = {new CharPredicate('$'), new CharPredicate('('), new CharsPredicate('%', '|', '['), new LetterPredicate()};
 				this.gvnAll.setLeadingChar('^');
-				this.gvnAll.setDefault(TFSyntaxError.getInstance());
-				this.gvnAll.setChoices( preds, new TFGvnSsvn(this.version), new TFGvnNaked(this.version), gvn, gvn);
+				this.gvnAll.setDefault(error);
+				this.gvnAll.setChoices( preds, gvnssvn, gvnnaked, gvn, gvn);
 			}
 			
 			{
