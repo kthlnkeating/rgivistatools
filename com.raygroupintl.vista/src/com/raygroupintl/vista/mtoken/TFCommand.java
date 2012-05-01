@@ -454,7 +454,7 @@ public class TFCommand extends TFSeq {
 					case '@':
 						return MTFSupply.getInstance(version).getTFIndirection();
 					case '$':
-						return TFIntrinsic.getInstance(version);
+						return MTFSupply.getInstance(version).getTFIntrinsic();
 					default:
 						return TFName.getInstance();
 					}

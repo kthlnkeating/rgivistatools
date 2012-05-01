@@ -47,12 +47,18 @@ public abstract class MTFSupply {
 	
 	public abstract ITokenFactory getTFExpr();	
 	
+	public abstract ITokenFactory getTFExprList();	
+
 	public abstract ITokenFactory getTFActual();
 
 	public abstract ITokenFactory getTFIndirection();
 
 	public abstract ITokenFactory getTFGvn();
 	
+	public abstract ITokenFactory getTFSelectArg();
+
+	public abstract ITokenFactory getTFIntrinsic();
+
 	protected static abstract class CommonSupply extends MTFSupply {
 		static final Map<String, TokenAdapter> ADAPTERS = new HashMap<String, TokenAdapter>();
 		static {
@@ -94,6 +100,7 @@ public abstract class MTFSupply {
 		public ITokenFactory qmark = new TFConstChar('?');
 		public ITokenFactory at = new TFConstChar('@');
 		public ITokenFactory caret = new TFConstChar('^');
+		public ITokenFactory colon = new TFConstChar(':');
 
 		public ITokenFactory nqmark = new TFConstString("'?");
 		public ITokenFactory atlpar = new TFConstString("@(");
@@ -158,7 +165,12 @@ public abstract class MTFSupply {
 				
 		@Sequence(value={"caret", "exprlistinparan"}, required="all")
 		public ITokenFactory gvnnaked;
-				
+		
+		@Sequence(value={"expr", "colon", "expr"}, required="all")
+		public ITokenFactory dselectarg_e;
+		@List(value="dselectarg_e", delim="comma")
+		public ITokenFactory dselectarg;
+		
 		public ITokenFactory getTFIndirection() {
 			return this.indirection;
 		}
@@ -166,6 +178,15 @@ public abstract class MTFSupply {
 		public ITokenFactory getTFGvn() {
 			return this.gvn;
 		}
+
+		public ITokenFactory getTFExprList() {
+			return this.exprlist;
+		}		
+
+		public ITokenFactory getTFSelectArg() {
+			return this.dselectarg;
+		}
+
 	}
 		
 	public static class Std95Supply extends CommonSupply {	
@@ -183,7 +204,6 @@ public abstract class MTFSupply {
 		
 		public ITokenFactory doargument = TFDoArgument.getInstance(this.version, true);
 		public ITokenFactory external = new TFExternal(this.version);
-		//public ITokenFactory intrinsic = new TFIntrinsic(this.version);
 		
 		@Sequence(value={"expratom", "exprtail"}, required="ro")
 		public ITokenFactory expr;
@@ -191,6 +211,8 @@ public abstract class MTFSupply {
 		public ITokenFactory actuallist = TFActualList.getInstance(this.version);
 		
 		public ITokenFactory pattern = TFPattern.getInstance(this.version);
+		
+		public ITokenFactory intrinsic = new TFIntrinsic(this.version);
 		
 		public ITokenFactory getTFEnvironment() {
 			return environment;
@@ -224,12 +246,16 @@ public abstract class MTFSupply {
 			return this.actual;
 		}
 	
+		public ITokenFactory getTFIntrinsic() {
+			return this.intrinsic;
+		}
+
 		@Override
 		protected void initialize() {
 			{
 				ICharPredicate[] predsDollar = {new CharPredicate('$'), new CharPredicate('&'), new LetterPredicate()};
 				ITokenFactory fDollar = ChoiceSupply.get('$', null, predsDollar, 
-					extrinsic, external, TFIntrinsic.getInstance(this.version));
+					extrinsic, external, intrinsic);
 	
 				ICharPredicate[] preds = {
 					new CharPredicate('"'), new CharPredicate('$'),
@@ -285,7 +311,6 @@ public abstract class MTFSupply {
 		
 		public ITokenFactory doargument = TFDoArgument.getInstance(this.version, true);
 		public ITokenFactory external = new TFExternal(this.version);
-		//public ITokenFactory intrinsic = TFIntrinsic.getInstance(this.version);
 			
 		@Choice({"expratom", "classmethod"})
 		public ITokenFactory expr_0;
@@ -296,6 +321,8 @@ public abstract class MTFSupply {
 		public ITokenFactory classmethod = TFCacheClassMethod.getInstance();
 		public ITokenFactory actuallist = TFActualList.getInstance(this.version);
 		
+		public ITokenFactory intrinsic = new TFIntrinsic(this.version);
+
 		public ITokenFactory getTFEnvironment() {
 			return environment;
 		}
@@ -328,12 +355,16 @@ public abstract class MTFSupply {
 			return this.actual;
 		}
 	
+		public ITokenFactory getTFIntrinsic() {
+			return this.intrinsic;
+		}
+
 		@Override
 		protected void initialize() {
 			{
 				ICharPredicate[] predsDollar = {new CharPredicate('$'), new CharPredicate('&'), new LetterPredicate()};
 				ITokenFactory fDollar = ChoiceSupply.get('$', null, predsDollar, 
-					extrinsic, external, TFIntrinsic.getInstance(this.version));
+					extrinsic, external, intrinsic);
 	
 				ICharPredicate[] preds = {
 					new CharPredicate('"'), new CharPredicate('$'),
@@ -379,6 +410,7 @@ public abstract class MTFSupply {
 					if (CACHE_SUPPLY == null) {
 						CACHE_SUPPLY = Parser.parse(CacheSupply.class, CacheSupply.ADAPTERS);
 						CACHE_SUPPLY.initialize();
+						TFIntrinsic.initialize(version);
 					}
 					return CACHE_SUPPLY;
 				}
@@ -386,6 +418,7 @@ public abstract class MTFSupply {
 					if (STD_95_SUPPLY == null) {
 						STD_95_SUPPLY = Parser.parse(Std95Supply.class, Std95Supply.ADAPTERS);
 						STD_95_SUPPLY.initialize();
+						TFIntrinsic.initialize(version);
 					}
 					return STD_95_SUPPLY;
 				}

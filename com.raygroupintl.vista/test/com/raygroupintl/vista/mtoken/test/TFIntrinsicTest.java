@@ -2,13 +2,14 @@ package com.raygroupintl.vista.mtoken.test;
 
 import org.junit.Test;
 
+import com.raygroupintl.fnds.ITokenFactory;
+import com.raygroupintl.vista.mtoken.MTFSupply;
 import com.raygroupintl.vista.mtoken.MVersion;
-import com.raygroupintl.vista.mtoken.TFIntrinsic;
 import com.raygroupintl.vista.struct.MError;
 
 public class TFIntrinsicTest {
 	private void testTFIntrinsic(MVersion version) {
-		TFIntrinsic f = TFIntrinsic.getInstance(version);
+		ITokenFactory f = MTFSupply.getInstance(version).getTFIntrinsic();
 		TFCommonTest.validCheck(f, "$P(LST,\",\",FLD)");		
 		TFCommonTest.validCheck(f, "$S(LST=\"A\":0,1:1)");		
 		TFCommonTest.validCheck(f, "$S(A>$$A^B:0,1:1)");		

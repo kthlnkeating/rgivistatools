@@ -27,7 +27,7 @@ public class TFIntrinsic extends TFSeq {
 	private MVersion version;
 	private static boolean initialized;
 	
-	private TFIntrinsic(MVersion version) {
+	public TFIntrinsic(MVersion version) {
 		this.version = version;
 	}
 	
@@ -102,7 +102,7 @@ public class TFIntrinsic extends TFSeq {
 		
 		public ITokenFactory getArgumentFactory() {
 			if (this.argumentFactory == null) {
-				return TFDelimitedList.getInstance(MTFSupply.getInstance(version).getTFExpr(), ',');
+				return MTFSupply.getInstance(version).getTFExprList(); 
 			} else {
 				return this.argumentFactory;
 			}
@@ -132,7 +132,9 @@ public class TFIntrinsic extends TFSeq {
 		return addFunction(version, name, 1, Integer.MAX_VALUE);
 	}
 
-	private static void initialize(final MVersion version) {
+	public static void initialize(final MVersion version) {
+		if (initialized) return;
+
 		INTRINSIC_VARIABLES.update("D", "DEVICE"); 	
 		INTRINSIC_VARIABLES.update("EC", "ECODE"); 	
 		INTRINSIC_VARIABLES.update("ES", "ESTACK"); 	
@@ -168,13 +170,7 @@ public class TFIntrinsic extends TFSeq {
 		addFunction(version, "R", "RANDOM", 1, 1); 	
 		addFunction(version, "RE", "REVERSE", 1, 1);		
 		FunctionInfo s = addFunction(version, "S", "SELECT", 1, 999);
-		s.setArgumentFactory(new TFCommaDelimitedList() {			
-			@Override
-			protected ITokenFactory getElementFactory() {
-				ITokenFactory expr = MTFSupply.getInstance(version).getTFExpr();
-				return TFSeqRequired.getInstance(expr, TFConstChar.getInstance(':'), expr);
-			}
-		});
+		s.setArgumentFactory(MTFSupply.getInstance(version).getTFSelectArg());
 		FunctionInfo t = addFunction(version, "T", "TEXT", 1, 1); 
 		t.setArgumentFactory(TFGotoArgument.getInstance(version, true));			
 		addFunction(version, "V", "VIEW", 1, 999); 	
@@ -195,7 +191,6 @@ public class TFIntrinsic extends TFSeq {
 			ITokenFactory expr = MTFSupply.getInstance(version).getTFExpr();
 			ITokenFactory ci = TFSeqRequired.getInstance(ChoiceSupply.get(expr, ':', TFEmpty.getInstance()), TFConstChar.getInstance(':'), expr);
 			ITokenFactory cases =  TFSeqRequired.getInstance(TFChar.COMMA, TFDelimitedList.getInstance(ci, ','));
-			//ITokenFactory d = TFAllRequired.getInstance(TFChar.COMMA, TFChar.COLON,  expr);
 			ITokenFactory arg = TFSeqRequired.getInstance(expr,  cases);
 			c.setArgumentFactory(arg);
 		}
@@ -256,6 +251,7 @@ public class TFIntrinsic extends TFSeq {
 		TFIntrinsic.addFunction(version, "ZK");	
 		TFIntrinsic.addFunction(version, "ZWA");
 		TFIntrinsic.addFunction(version, "ZVERSION");
+		initialized = true;
 	}
 
 	private static class TIntrinsicFunctionName extends TIntrinsicName {
@@ -372,13 +368,5 @@ public class TFIntrinsic extends TFSeq {
 		} else {
 			return new TArray(foundTokens);
 		}
-	}
-	
-	public static TFIntrinsic getInstance(MVersion version) {
-		if (! initialized) {
-			initialize(version);
-			initialized = true;
-		}		
-		return new TFIntrinsic(version);
 	}
 }
