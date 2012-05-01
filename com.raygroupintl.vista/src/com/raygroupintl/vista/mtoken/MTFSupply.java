@@ -233,7 +233,16 @@ public abstract class MTFSupply {
 		public ITokenFactory expr;
 		
 		public ITokenFactory pattern = TFPattern.getInstance(this.version);
-		public ITokenFactory classmethod = TFCacheClassMethod.getInstance();
+		
+		public ITokenFactory ppclass = new TFConstString("##class");
+		@Sequence(value={"dot", "name"}, required="all")
+		public ITokenFactory classreftail;
+		@List("classreftail")
+		public ITokenFactory classreftaillst;
+		@Sequence(value={"name", "classreftaillst"}, required="ro")
+		public ITokenFactory classref;
+		@Sequence(value={"ppclass", "lpar", "classref", "rpar", "dot", "name", "actuallist"}, required="all")
+		public ITokenFactory classmethod;
 		
 		public ITokenFactory intrinsic = new TFIntrinsic(this.version);
 	}

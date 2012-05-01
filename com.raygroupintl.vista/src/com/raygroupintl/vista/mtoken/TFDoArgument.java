@@ -32,8 +32,9 @@ public class TFDoArgument extends TFSeq {
 		TFLabel tfl = TFLabel.getInstance();
 		ITokenFactory tfi = MTFSupply.getInstance(version).indirection;
 		if (version == MVersion.CACHE) {
+			MTFSupply.CacheSupply cs =  (MTFSupply.CacheSupply) MTFSupply.getInstance(MVersion.CACHE);
 			ITokenFactory f = TFSeqRO.getInstance(tfl, TFSeqRequired.getInstance(TFChar.DOT, TFName.getInstance()));
-			return ChoiceSupply.get(f, "@#$", tfi, TFCacheClassMethod.getInstance(), getCacheSystemCall());
+			return ChoiceSupply.get(f, "@#$", tfi, cs.classmethod, getCacheSystemCall());
 		} else {		
 			ITokenFactory tf = ChoiceSupply.get(tfl, tfi);
 			return tf;

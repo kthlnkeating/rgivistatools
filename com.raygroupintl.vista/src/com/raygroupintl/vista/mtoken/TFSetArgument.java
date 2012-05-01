@@ -67,7 +67,8 @@ public class TFSetArgument extends TFSeqStatic {
 		return new ITokenFactory[]{ 
 				TFSetDestination.getInstance(this.version), 
 				TFConstChar.getInstance('='), 
-				(this.version == MVersion.CACHE) ? ChoiceSupply.get(expr, '#', TFCacheClassMethod.getInstance()) : expr
+				(this.version == MVersion.CACHE) ? ChoiceSupply.get(expr, '#', 
+						((MTFSupply.CacheSupply) MTFSupply.getInstance(MVersion.CACHE)).classmethod) : expr
 		}; 
 	}
 
