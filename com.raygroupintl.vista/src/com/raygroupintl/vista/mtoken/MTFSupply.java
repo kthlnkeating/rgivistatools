@@ -208,6 +208,15 @@ public abstract class MTFSupply {
 	@CChoice(value={"deviceparams_i"}, def="deviceparam", preds={"("})
 	public ITokenFactory deviceparams;
 	
+	@Choice({"indirection", "name"})
+	public ITokenFactory cmdkexcarg;
+	@List(value="cmdkexcarg", delim="comma", left="lpar", right="rpar")
+	public ITokenFactory cmdkexcargs;
+	@CChoice(value={"cmdkexcargs", "indirection"}, preds={"(", "@"}, def="glvn")
+	public ITokenFactory cmdkarg;
+	@List(value="cmdkarg", delim="comma")
+	public ITokenFactory cmdkargs;
+	
 	public static class Std95Supply extends MTFSupply {	
 		private MVersion version = MVersion.ANSI_STD_95;
 
