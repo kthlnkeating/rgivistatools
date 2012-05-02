@@ -2,10 +2,10 @@ package com.raygroupintl.m.token.test;
 
 import org.junit.Test;
 
+import com.raygroupintl.bnf.TFDelimitedList;
 import com.raygroupintl.fnds.ITokenFactory;
 import com.raygroupintl.m.token.MTFSupply;
 import com.raygroupintl.m.token.MVersion;
-import com.raygroupintl.m.token.TFDelimitedList;
 import com.raygroupintl.m.token.TFNumLit;
 
 public class TFDelimitedListTest {

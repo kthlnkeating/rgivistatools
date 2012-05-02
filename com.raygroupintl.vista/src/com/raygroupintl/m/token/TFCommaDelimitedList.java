@@ -1,6 +1,7 @@
 package com.raygroupintl.m.token;
 
 import com.raygroupintl.bnf.TFConstChar;
+import com.raygroupintl.bnf.TFDelimitedList;
 import com.raygroupintl.fnds.ITokenFactory;
 
 public abstract class TFCommaDelimitedList extends TFDelimitedList {

@@ -1,15 +1,8 @@
-package com.raygroupintl.m.token;
+package com.raygroupintl.bnf;
 
-import com.raygroupintl.bnf.TFChoiceBasic;
-import com.raygroupintl.bnf.TFConstChar;
-import com.raygroupintl.bnf.TFConstString;
-import com.raygroupintl.bnf.TFEmpty;
-import com.raygroupintl.bnf.TFSeqRequired;
-import com.raygroupintl.bnf.TFSeqStatic;
-import com.raygroupintl.bnf.TList;
-import com.raygroupintl.bnf.TokenAdapter;
 import com.raygroupintl.fnds.IToken;
 import com.raygroupintl.fnds.ITokenFactory;
+import com.raygroupintl.m.token.TFList;
 
 public class TFDelimitedList implements ITokenFactory {
 	private static class DLAdapter implements TokenAdapter {
@@ -30,6 +23,7 @@ public class TFDelimitedList implements ITokenFactory {
 	private ITokenFactory left;
 	private ITokenFactory right;
 	private boolean allowEmpty;
+	private boolean allowNone;
 	
 	public TFDelimitedList() {		
 	}
@@ -81,6 +75,10 @@ public class TFDelimitedList implements ITokenFactory {
 	
 	public void setAllowEmpty(boolean b) {
 		this.allowEmpty = b;
+	}
+	
+	public void setAllowNone(boolean b) {
+		this.allowNone = b;
 	}
 	
 	private ITokenFactory getEffectiveListTailElementFactory() {
@@ -149,7 +147,7 @@ public class TFDelimitedList implements ITokenFactory {
 				return tf.tokenize(line, fromIndex);
 			} else {
 				TFSeqStatic tf = new TFSeqStatic(this.left, tfList, this.right);
-				tf.setRequiredFlags(new boolean[]{true, true, true});
+				tf.setRequiredFlags(new boolean[]{true, !this.allowNone, true});
 				return tf.tokenize(line, fromIndex);				
 			}			
 		}
