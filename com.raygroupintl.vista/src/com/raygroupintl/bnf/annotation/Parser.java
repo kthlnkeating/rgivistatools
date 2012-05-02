@@ -50,7 +50,7 @@ public class Parser {
 		java.util.List<Triple<TFChoiceOnChar1st, CChoice>> choice1sts  = new ArrayList<Triple<TFChoiceOnChar1st, CChoice>>();
 	}
 	
-	private static ITokenFactory newTokenFactory(Field f, Store store) {
+	private static ITokenFactory newTokenFactory(Field f, Store store) throws ClassNotFoundException, IllegalAccessException, InstantiationException {
 		Choice choice = f.getAnnotation(Choice.class);
 		String name = f.getName();
 		if (choice != null) {
@@ -62,6 +62,13 @@ public class Parser {
 		if (sequence != null) {
 			TFSeqStatic value = new TFSeqStatic();
 			store.sequences.add(new Triple<TFSeqStatic, Sequence>(name, value, sequence));
+			Adapter adapter = f.getAnnotation(Adapter.class);
+			if (adapter != null) {			
+				String adapterClsName = adapter.value();
+				Class<?> adapterCls = Class.forName(adapterClsName);
+				TokenAdapter ta = (TokenAdapter) adapterCls.newInstance();
+				value.setTokenAdapter(ta);
+			}			
 			return value;
 		}
 		List list = f.getAnnotation(List.class);
@@ -133,7 +140,7 @@ public class Parser {
 		return result;
 	}
 	
-	private static <T> Store getStore(T target, Class<T> cls) throws IllegalAccessException, InstantiationException {
+	private static <T> Store getStore(T target, Class<T> cls) throws IllegalAccessException, InstantiationException, ClassNotFoundException {
 		Class<?> loopCls = cls;
 		Store store = new Store();
 		while (! loopCls.equals(Object.class)) {
@@ -158,7 +165,7 @@ public class Parser {
 		return store;
 	}
 	
-	public static <T> T parse(Class<T> cls, Map<String, TokenAdapter> adapters) throws IllegalAccessException, InstantiationException {
+	public static <T> T parse(Class<T> cls, Map<String, TokenAdapter> adapters) throws IllegalAccessException, InstantiationException, ClassNotFoundException {
 		T target = cls.newInstance();
 		Store store = getStore(target, cls);
 		for (Triple<TFChoiceBasic, Choice> p : store.choices) {

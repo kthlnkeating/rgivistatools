@@ -3,8 +3,8 @@ package com.raygroupintl.m.token;
 import com.raygroupintl.bnf.TArray;
 import com.raygroupintl.fnds.IToken;
 
-public class TGlobalNaked extends TArray {
-	public TGlobalNaked(IToken[] tokens) {
+public class TObjectExpr extends TArray {
+	public TObjectExpr(IToken[] tokens) {
 		super(tokens);
 	}
 }

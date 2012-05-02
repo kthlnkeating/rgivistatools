@@ -1,20 +1,10 @@
 package com.raygroupintl.m.token;
 
 import com.raygroupintl.bnf.TArray;
+import com.raygroupintl.fnds.IToken;
 
 public class TGlobalNamed extends TArray {
-	public TGlobalNamed(TArray spec) {
-		super(spec);
-		assert(spec.getCount() == 3);
+	public TGlobalNamed(IToken[] tokens) {
+		super(tokens);
 	}
-	
-	@Override
-	public String getStringValue() {
-		return '^' + super.getStringValue();
-	}
-
-	@Override
-	public int getStringSize() {
-		return 1 + super.getStringSize();
-	}	
 }

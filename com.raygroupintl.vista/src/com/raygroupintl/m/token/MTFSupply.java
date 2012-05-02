@@ -3,7 +3,6 @@ package com.raygroupintl.m.token;
 import java.util.HashMap;
 import java.util.Map;
 
-import com.raygroupintl.bnf.TArray;
 import com.raygroupintl.bnf.TEmpty;
 import com.raygroupintl.bnf.TFChar;
 import com.raygroupintl.bnf.TFConstChar;
@@ -20,53 +19,36 @@ import com.raygroupintl.bnf.annotation.Sequence;
 import com.raygroupintl.bnf.annotation.Choice;
 import com.raygroupintl.bnf.annotation.List;
 import com.raygroupintl.fnds.IToken;
-import com.raygroupintl.fnds.ITokenArray;
 import com.raygroupintl.fnds.ITokenFactory;
 
 public abstract class MTFSupply {
 	public static class IndirectionAdapter implements TokenAdapter {
 		@Override
 		public IToken convert(IToken[] tokens) {
-			if (tokens[1] == null) {
-				TArray t = (TArray) tokens[0];
-				return new TIndirection(t.get(1));			
-			} else {		
-				TArray tReqArray = (TArray) tokens[0];
-				ITokenArray tOptArray = (ITokenArray) tokens[1];
-				IToken subscripts = tOptArray.get(1);
-				return new TIndirection(tReqArray.get(1), subscripts);
-			}
+			return new TIndirection(tokens);
 		}		
+	}
+	public static class LvnAdapter implements TokenAdapter {
+		@Override
+		public IToken convert(IToken[] tokens) {
+			return new TLocal(tokens);
+		}		
+	}
+	public static class GvnAdapter implements TokenAdapter {
+		@Override
+		public IToken convert(IToken[] tokens) {
+			return new TGlobalNamed(tokens);
+		}
+	}
+	public static class GvnNakedAdapter implements TokenAdapter {
+		@Override
+		public IToken convert(IToken[] tokens) {
+			return new TGlobalNaked(tokens);
+		}
 	}
 		
 	static final Map<String, TokenAdapter> ADAPTERS = new HashMap<String, TokenAdapter>();
 	static {
-		ADAPTERS.put("indirection", new TokenAdapter() {				
-			@Override
-			public IToken convert(IToken[] tokens) {
-				if (tokens[1] == null) {
-					TArray t = (TArray) tokens[0];
-					return new TIndirection(t.get(1));			
-				} else {		
-					TArray tReqArray = (TArray) tokens[0];
-					ITokenArray tOptArray = (ITokenArray) tokens[1];
-					IToken subscripts = tOptArray.get(1);
-					return new TIndirection(tReqArray.get(1), subscripts);
-				}
-			}
-		});
-		//ADAPTERS.put("gvn", new TokenAdapter() {
-		//	@Override
-		//	public IToken convert(IToken[] tokens) {
-		//		return new TGlobalNamed((TArray) tokens[1]);
-		//	}
-		//});
-		ADAPTERS.put("gvnnaked", new TokenAdapter() {
-			@Override
-			public IToken convert(IToken[] tokens) {
-				return new TGlobalNaked(tokens[1]);
-			}
-		});			 
 		ADAPTERS.put("actuallist", new TokenAdapter() {
 			@Override
 			public IToken convert(IToken[] tokens) {
@@ -147,7 +129,7 @@ public abstract class MTFSupply {
 	public ITokenFactory indirection_0;
 	@Sequence(value={"atlpar", "exprlist", "rpar"}, required="all")
 	public ITokenFactory indirection_1;
-	@Adapter("com.raygeoupintl.m.toke.MTFSupply.IndirectionAdapter")
+	@Adapter("com.raygroupintl.m.token.MTFSupply$IndirectionAdapter")
 	@Sequence(value={"indirection_0", "indirection_1"}, required="ro")
 	public ITokenFactory indirection;
 	
@@ -156,6 +138,7 @@ public abstract class MTFSupply {
 	
 	@Sequence(value={"environment", "name", "exprlistinparan"}, required="oro")
 	public ITokenFactory gvn_0;
+	@Adapter("com.raygroupintl.m.token.MTFSupply$GvnAdapter")	
 	@Sequence(value={"caret", "gvn_0"}, required="all")
 	public ITokenFactory gvn;
 	
@@ -168,6 +151,7 @@ public abstract class MTFSupply {
 	@Sequence(value={"unaryop", "expratom"}, required="all")
 	public ITokenFactory unaryexpritem;
 			
+	@Adapter("com.raygroupintl.m.token.MTFSupply$GvnNakedAdapter")	
 	@Sequence(value={"caret", "exprlistinparan"}, required="all")
 	public ITokenFactory gvnnaked;
 	
@@ -198,7 +182,8 @@ public abstract class MTFSupply {
 	@Choice({"glvn", "expritem"})
 	public ITokenFactory expratom;
 
-	@Sequence(value={"name", "actuallist"}, required="ro")
+	@Adapter("com.raygroupintl.m.token.MTFSupply$LvnAdapter")
+	@Sequence(value={"name", "exprlistinparan"}, required="ro")
 	public ITokenFactory lvn;
 	
 	@Sequence(value={"expratom", "exprtail"}, required="ro")
@@ -249,18 +234,39 @@ public abstract class MTFSupply {
 	}
 
 	public static class CacheSupply extends MTFSupply {
+		public static class ObjTailAdapter implements TokenAdapter {
+			@Override
+			public IToken convert(IToken[] tokens) {					
+				return new TObjectTail(tokens);
+			}
+		}
+		public static class LvnAdapter implements TokenAdapter {
+			@Override
+			public IToken convert(IToken[] tokens) {
+				if ((tokens[1] != null) && (tokens[1] instanceof TObjectTail)) {					
+					return new TObjectExpr(tokens);
+				} else {					
+					return new TLocal(tokens);
+				}
+			}		
+		}
+					
 		private MVersion version = MVersion.CACHE;
 
 		@Choice({"glvn", "expritem", "classmethod"})
 		public ITokenFactory expratom;
 		
 		@Sequence(value={"dot", "name"}, required="all")
-		public ITokenFactory lvn_a;
-		@List("lvn_a")
-		public ITokenFactory lvn_l;
-		@Sequence(value={"name", "lvn_l"}, required="ro")
-		public ITokenFactory lvn_x;
-		@Sequence(value={"lvn_x", "actuallist"}, required="ro")
+		public ITokenFactory lvn_objtail_ms;
+		@List("lvn_objtail_ms")
+		public ITokenFactory lvn_objtail_m;
+		@Adapter("com.raygroupintl.m.token.MTFSupply$CacheSupply$ObjTailAdapter")
+		@Sequence(value={"lvn_objtail_m", "actuallist"}, required="ro")
+		public ITokenFactory lvn_objtail;
+		@Choice(value={"exprlistinparan", "lvn_objtail"})
+		public ITokenFactory lvn_next;
+		@Adapter("com.raygroupintl.m.token.MTFSupply$CacheSupply$LvnAdapter")
+		@Sequence(value={"name", "lvn_next"}, required="ro")
 		public ITokenFactory lvn;
 		
 		public ITokenFactory doargument = TFDoArgument.getInstance(this.version, true);
