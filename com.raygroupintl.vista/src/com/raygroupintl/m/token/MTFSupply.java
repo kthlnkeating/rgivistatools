@@ -13,6 +13,7 @@ import com.raygroupintl.bnf.TFEmptyVerified;
 import com.raygroupintl.bnf.TFSyntaxError;
 import com.raygroupintl.bnf.TList;
 import com.raygroupintl.bnf.TokenAdapter;
+import com.raygroupintl.bnf.annotation.Adapter;
 import com.raygroupintl.bnf.annotation.CChoice;
 import com.raygroupintl.bnf.annotation.Parser;
 import com.raygroupintl.bnf.annotation.Sequence;
@@ -23,6 +24,21 @@ import com.raygroupintl.fnds.ITokenArray;
 import com.raygroupintl.fnds.ITokenFactory;
 
 public abstract class MTFSupply {
+	public static class IndirectionAdapter implements TokenAdapter {
+		@Override
+		public IToken convert(IToken[] tokens) {
+			if (tokens[1] == null) {
+				TArray t = (TArray) tokens[0];
+				return new TIndirection(t.get(1));			
+			} else {		
+				TArray tReqArray = (TArray) tokens[0];
+				ITokenArray tOptArray = (ITokenArray) tokens[1];
+				IToken subscripts = tOptArray.get(1);
+				return new TIndirection(tReqArray.get(1), subscripts);
+			}
+		}		
+	}
+		
 	static final Map<String, TokenAdapter> ADAPTERS = new HashMap<String, TokenAdapter>();
 	static {
 		ADAPTERS.put("indirection", new TokenAdapter() {				
@@ -131,6 +147,7 @@ public abstract class MTFSupply {
 	public ITokenFactory indirection_0;
 	@Sequence(value={"atlpar", "exprlist", "rpar"}, required="all")
 	public ITokenFactory indirection_1;
+	@Adapter("com.raygeoupintl.m.toke.MTFSupply.IndirectionAdapter")
 	@Sequence(value={"indirection_0", "indirection_1"}, required="ro")
 	public ITokenFactory indirection;
 	
