@@ -25,6 +25,16 @@ public class TFLineTest {
 		return t;
 	}
 
+	private void lineErrorTest(MVersion version, String line) {
+		TFLine f = TFLine.getInstance(version);
+		IToken t = f.tokenize(line, 0);
+		String r = t.getStringValue();
+		Assert.assertEquals(line, r);	
+		List<MError> error = t.getErrors();
+		int numErrors = error == null ? 0 : error.size();
+		Assert.assertTrue(numErrors > 0);	
+	}
+
 	private void noErrorTest(MVersion version, String lineUnderTest) {
 		TFLine f = TFLine.getInstance(version);
 		IToken line = f.tokenize(lineUnderTest, 0);
@@ -35,7 +45,7 @@ public class TFLineTest {
 	private IToken lineTest(MVersion version, String line) {
 		return lineTest(version, line, true);
 	}
-	
+
 	public void testBasic(MVersion version) {
 		lineTest(version, " S A=A+1  F  S B=$O(^F(B)) Q:B=\"\"   S ^F(B,A)=5");
 		lineTest(version, " S $E(A)=J+1 Q:B=\"\"\"YYY\"\"\"  Q:B=\"\"\"XXX\"\"\"");
@@ -71,6 +81,7 @@ public class TFLineTest {
 		lineTest(version, " .I $Y>(IOSL-9) D UP^DVBCRPR1,NEXT,HDR^DVBCRPR1 W:$O(^DVB(396.4,OLDA,\"RES\",LINE))]\"\"&('+$G(DVBGUI)) !!,\"Exam Results Continued\",!!");
 		lineTest(version, " S Y=$$FPS^RCAMFN01($S($G(LDT)>0:$E(LDT,1,5),1:$E(DT,1,5))_$TR($J($$PST^RCAMFN01(DEB),2),\" \",0),$S(+$E($G(LDT),6,7)>$$STD^RCCPCFN:2,1:1)) D DD^%D");
 		lineTest(version, " S A=1 H  ");
+		lineErrorTest(version, " S A=4  K ,CC,EE");
 	}
 	
 	@Test

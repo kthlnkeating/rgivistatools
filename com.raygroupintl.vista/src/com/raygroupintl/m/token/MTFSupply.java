@@ -10,7 +10,6 @@ import com.raygroupintl.bnf.TFConstChar;
 import com.raygroupintl.bnf.TFConstChars;
 import com.raygroupintl.bnf.TFConstString;
 import com.raygroupintl.bnf.TFEmptyVerified;
-import com.raygroupintl.bnf.TFSeqRequired;
 import com.raygroupintl.bnf.TFSyntaxError;
 import com.raygroupintl.bnf.TList;
 import com.raygroupintl.bnf.TokenAdapter;

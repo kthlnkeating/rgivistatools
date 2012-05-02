@@ -19,7 +19,12 @@ public class TFCommonTest {
 		validTokenCheck(t, v);
 	}
 			
-	static void validCheck(IToken t, String v, int errorCode) {
+	static void errorCheck(IToken t, String v) {
+		Assert.assertTrue(t.hasError());
+		validTokenCheck(t, v);
+	}
+			
+	static void errorCheck(IToken t, String v, int errorCode) {
 		Assert.assertTrue(t.hasError());
 		Assert.assertEquals(errorCode,  t.getErrors().get(0).getCode());
 		validTokenCheck(t, v);
@@ -33,13 +38,18 @@ public class TFCommonTest {
 		}
 	}
 
-	static void validCheck(ITokenFactory f, String v, int errorCode) {
+	static void errorCheck(ITokenFactory f, String v) {
 		IToken t = f.tokenize(v, 0);
-		validCheck(t, v, errorCode);
+		errorCheck(t, v);
+	}
+
+	static void errorCheck(ITokenFactory f, String v, int errorCode) {
+		IToken t = f.tokenize(v, 0);
+		errorCheck(t, v, errorCode);
 		if (t instanceof TSyntaxError) {
-			validCheck(f, v + " ", v + " ", errorCode);		
+			errorCheck(f, v + " ", v + " ", errorCode);		
 		} else if (! ((f instanceof TFCommand) || (f instanceof TFLine))) {
-			validCheck(f, v + " ", v, errorCode);
+			errorCheck(f, v + " ", v, errorCode);
 		}
 	}
 
@@ -48,8 +58,8 @@ public class TFCommonTest {
 		validCheck(t, compare);
 	}
 
-	static void validCheck(ITokenFactory f, String v, String compare, int errorCode) {
+	static void errorCheck(ITokenFactory f, String v, String compare, int errorCode) {
 		IToken t = f.tokenize(v, 0);
-		validCheck(t, compare, errorCode);
+		errorCheck(t, compare, errorCode);
 	}
 }

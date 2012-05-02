@@ -15,9 +15,9 @@ public class TFTest {
 		ITokenFactory f = m.environment;
 		TFCommonTest.validCheck(f, "|A|");
 		TFCommonTest.validCheck(f, "[A,B]");
-		TFCommonTest.validCheck(f, "||", MError.ERR_GENERAL_SYNTAX);
-		TFCommonTest.validCheck(f, "[A,B", MError.ERR_GENERAL_SYNTAX);
-		TFCommonTest.validCheck(f, "[]", MError.ERR_GENERAL_SYNTAX);
+		TFCommonTest.errorCheck(f, "||", MError.ERR_GENERAL_SYNTAX);
+		TFCommonTest.errorCheck(f, "[A,B", MError.ERR_GENERAL_SYNTAX);
+		TFCommonTest.errorCheck(f, "[]", MError.ERR_GENERAL_SYNTAX);
 	}
 
 	@Test

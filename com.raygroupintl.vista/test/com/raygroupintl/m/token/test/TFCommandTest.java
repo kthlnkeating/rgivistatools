@@ -110,7 +110,24 @@ public class TFCommandTest {
 		TFCommonTest.validCheck(f, "K (A,B),D,(R,E)");
 		TFCommonTest.validCheck(f, "K A,B");
 		TFCommonTest.validCheck(f, "K CC,DD,EE");
+		TFCommonTest.validCheck(f, "K");
+		TFCommonTest.validCheck(f, "K ^XY");
+		TFCommonTest.validCheck(f, "K ^XY,^Z(\"D\")");
+		TFCommonTest.validCheck(f, "K:A=1 ^XY,^Z(\"D\")");
+		TFCommonTest.validCheck(f, "K:A=1 ^XY,D");
+		TFCommonTest.validCheck(f, "K ^XY,D,ZZ(\"A\",\"FF\"),TRE");
+		TFCommonTest.validCheck(f, "K (A)");
+		TFCommonTest.validCheck(f, "K (A,B)");
 		TFCommonTest.validCheck(f, "K %ZIS");
+		TFCommonTest.errorCheck(f, "K (^A)");
+		TFCommonTest.errorCheck(f, "K (A,^A)");
+		TFCommonTest.errorCheck(f, "K (A(25))");
+		TFCommonTest.errorCheck(f, "K (B,A(3,2))");
+		TFCommonTest.errorCheck(f, "K ()");
+		TFCommonTest.errorCheck(f, "K (,A)");
+		TFCommonTest.errorCheck(f, "K (D,,Y)");
+		TFCommonTest.errorCheck(f, "K CC,DD,EE,");
+		TFCommonTest.errorCheck(f, "K CC,,EE");
 	}
 
 	@Test
