@@ -10,6 +10,7 @@ import com.raygroupintl.bnf.TFChar;
 import com.raygroupintl.bnf.TFConstChar;
 import com.raygroupintl.bnf.TFDelimitedList;
 import com.raygroupintl.bnf.TFEmpty;
+import com.raygroupintl.bnf.TFList;
 import com.raygroupintl.bnf.TFSeq;
 import com.raygroupintl.bnf.TFSeqRO;
 import com.raygroupintl.bnf.TFSeqRRO;

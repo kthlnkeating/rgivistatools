@@ -1,10 +1,8 @@
-package com.raygroupintl.m.token;
+package com.raygroupintl.bnf;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import com.raygroupintl.bnf.TList;
-import com.raygroupintl.bnf.TSyntaxError;
 import com.raygroupintl.fnds.IToken;
 import com.raygroupintl.fnds.ITokenFactory;
 

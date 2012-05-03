@@ -2,7 +2,6 @@ package com.raygroupintl.bnf;
 
 import com.raygroupintl.fnds.IToken;
 import com.raygroupintl.fnds.ITokenFactory;
-import com.raygroupintl.m.token.TFList;
 
 public class TFDelimitedList implements ITokenFactory {
 	private static class DLAdapter implements TokenAdapter {

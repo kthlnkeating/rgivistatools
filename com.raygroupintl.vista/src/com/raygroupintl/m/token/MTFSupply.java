@@ -146,6 +146,9 @@ public abstract class MTFSupply {
 
 	@Sequence(value={"lpar", "expr", "rpar"}, required="all")
 	public ITokenFactory exprinpar;
+	
+	@Sequence(value={"eq", "expr"}, required="all")
+	public ITokenFactory eqexpr;
 			
 	@Sequence(value={"at", "expratom"}, required="all")
 	public ITokenFactory indirection_0;
@@ -237,6 +240,26 @@ public abstract class MTFSupply {
 	@List(value="cmdkarg", delim="comma")
 	public ITokenFactory cmdkargs;
 
+	@Sequence(value={"glvn", "eqexpr"}, required="all")
+	public ITokenFactory cmdmarg_basic;
+	@Sequence(value={"indirection", "eqexpr"}, required="ro")
+	public ITokenFactory cmdmarg_indirect;
+	@Choice({"cmdmarg_indirect", "cmdmarg_basic"})
+	public ITokenFactory cmdmarg;
+	@List(value="cmdmarg", delim="comma")
+	public ITokenFactory cmdmargs;
+	
+	@Choice({"exprlistinparan", "expr"})
+	public ITokenFactory exprorinlist;
+	@Sequence(value={"colon", "deviceparams", "colon", "expr", "colon", "exprorinlist"}, required="rooooo")
+	public ITokenFactory cmdoarg_tail;
+	@Sequence(value={"expr", "cmdoarg_tail"}, required="ro")
+	public ITokenFactory cmdoarg_basic;
+	@Choice({"indirection", "cmdoarg_basic"})
+	public ITokenFactory cmdoarg;
+	@List(value="cmdoarg", delim="comma")
+	public ITokenFactory cmdoargs;
+	
 	@Sequence(value={"colon", "expr"}, required="all")
 	public ITokenFactory postcondition;
 	

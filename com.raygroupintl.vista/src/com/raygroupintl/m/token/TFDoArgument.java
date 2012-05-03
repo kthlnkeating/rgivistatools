@@ -4,6 +4,7 @@ import com.raygroupintl.bnf.ChoiceSupply;
 import com.raygroupintl.bnf.TFChar;
 import com.raygroupintl.bnf.TFConstChar;
 import com.raygroupintl.bnf.TFConstString;
+import com.raygroupintl.bnf.TFList;
 import com.raygroupintl.bnf.TFNull;
 import com.raygroupintl.bnf.TFSeq;
 import com.raygroupintl.bnf.TFSeqOR;

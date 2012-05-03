@@ -12,11 +12,5 @@ public abstract class TFCommaDelimitedList extends TFDelimitedList {
 	
 	public static ITokenFactory getInstance(final ITokenFactory tfElement) {
 		return new TFDelimitedList(tfElement, ",");
-/*		return new TFCommaDelimitedList() {			
-			@Override
-			protected ITokenFactory getElementFactory() {
-				return tfElement;
-			}
-		};
-*/	}		
+	}		
 }
