@@ -63,6 +63,13 @@ public abstract class MTFSupply {
 			return new TNumLit(value);
 		}
 	}
+	@Adapter("labelref")	
+	public static class LabelRefAdapter implements TokenAdapter {
+		@Override
+		public IToken convert(IToken[] tokens) {
+			return new TLabelRef(tokens);
+		}
+	}
 		
 	public ITokenFactory dot = TFChar.DOT;
 	public ITokenFactory comma = TFChar.COMMA;
@@ -92,6 +99,12 @@ public abstract class MTFSupply {
 	public ITokenFactory intlit = new TIntLit.Factory();
 	@Choice({"name", "intlit"})
 	public ITokenFactory label;
+	
+	@Sequence(value={"caret", "environment", "name"}, required="ror")
+	public ITokenFactory envroutine;
+	@Sequence(value={"name", "envroutine"})
+	public ITokenFactory labelref;
+	
 	
 	@Sequence(value={"e", "pm", "intlit"}, required="ror")
 	public ITokenFactory exp;
@@ -131,7 +144,6 @@ public abstract class MTFSupply {
 	@List(value="expr", delim="comma", left="lpar", right="rpar")
 	public ITokenFactory exprlistinparan;
 
-	
 	@Sequence(value={"lpar", "expr", "rpar"}, required="all")
 	public ITokenFactory exprinpar;
 			
