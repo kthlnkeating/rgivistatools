@@ -1,6 +1,7 @@
 package com.raygroupintl.m.token;
 
 import com.raygroupintl.bnf.TArray;
+import com.raygroupintl.bnf.TFBasic;
 import com.raygroupintl.bnf.TFChar;
 import com.raygroupintl.bnf.TFConstChar;
 import com.raygroupintl.bnf.TFConstChars;
@@ -280,7 +281,17 @@ public abstract class MTFSupply {
 	@List(value="cmdgarg", delim="comma")
 	public ITokenFactory cmdgargs;
 	
-	
+	@Sequence(value={"pound", "expr"}, required="all")
+	public ITokenFactory readcount;
+
+	@Sequence(value={"qmark", "expr"}, required="all")
+	public ITokenFactory tabformat;
+	public ITokenFactory excorpounds = TFBasic.getInstance('!','#');
+	@Sequence(value={"excorpounds", "tabformat"}, required="ro")
+	public ITokenFactory xtabformat;
+	@Choice({"tabformat", "xtabformat"})
+	public ITokenFactory format;
+		
 	@Sequence(value={"colon", "expr"}, required="all")
 	public ITokenFactory postcondition;
 	

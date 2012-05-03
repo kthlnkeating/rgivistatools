@@ -26,7 +26,7 @@ public class TFReadArgument extends TFChoice {
 			case '#':
 			case '?':
 			case '/':
-				return TFFormat.getInstance(this.version);
+				return MTFSupply.getInstance(version).format;
 			case '"':
 				return TFStringLiteral.getInstance();
 			case '*':

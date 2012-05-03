@@ -23,7 +23,6 @@ import com.raygroupintl.bnf.TSyntaxError;
 import com.raygroupintl.fnds.IToken;
 import com.raygroupintl.fnds.ITokenFactory;
 import com.raygroupintl.fnds.ITokenFactorySupply;
-import com.raygroupintl.m.cmdtree.Goto;
 import com.raygroupintl.vista.struct.MError;
 
 public class TFCommand extends TFSeq {
@@ -729,7 +728,7 @@ public class TFCommand extends TFSeq {
 						case '!':
 						case '#':
 						case '?':
-							return TFFormat.getInstance(version);
+							return MTFSupply.getInstance(version).format;
 						case '/':
 							return TFSeqRequired.getInstance(TFChar.SLASH, TFName.getInstance(), MTFSupply.getInstance(version).actuallist);
 						case '*':
