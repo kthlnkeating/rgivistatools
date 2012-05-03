@@ -48,6 +48,7 @@ public class TFDelimitedListTest {
 		f.setElementFactory(MTFSupply.getInstance(version).numlit);
 		TFCommonTest.validCheck(f, "(1)");
 		TFCommonTest.validCheck(f, "(:1:1)");
+		TFCommonTest.validCheck(f, "(0::::64)");
 	}
 
 	@Test

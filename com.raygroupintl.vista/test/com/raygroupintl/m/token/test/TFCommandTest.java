@@ -229,6 +229,8 @@ public class TFCommandTest {
 	private void testUse(MVersion version) {
 		ITokenFactory f = TFCommand.getInstance(version);
 		TFCommonTest.validCheck(f, "U IO");
+		TFCommonTest.validCheck(f, "U A:B");
+		TFCommonTest.validCheck(f, "U $I:(64)");
 		TFCommonTest.validCheck(f, "U $I:(0::::64)");
 		TFCommonTest.validCheck(f, "U $I:(VT=1:ESCAPE=1)");
 		TFCommonTest.validCheck(f, "U $I:(:\"CT\")");

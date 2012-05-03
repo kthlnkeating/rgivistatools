@@ -304,13 +304,25 @@ public abstract class MTFSupply {
 	public ITokenFactory cmdrarg;
 	@List(value="cmdrarg", delim="comma")
 	public ITokenFactory cmdrargs;
-	
+		
 	@Sequence(value={"colon", "expr"}, required="all")
 	public ITokenFactory postcondition;
 	
 	@Sequence(value={"colon", "expr"}, required="all")
 	public ITokenFactory timeout;
 	
+
+	@List(value="expr", delim="colon", left="lpar", right="rpar", empty=true)
+	public ITokenFactory usedeviceparam_list;
+	@Choice(value={"usedeviceparam_list", "expr"})
+	public ITokenFactory usedeviceparam;
+	@Sequence(value={"colon", "usedeviceparam"}, required="ro")
+	public ITokenFactory colonusedeviceparam;
+	@Sequence(value={"expr", "colonusedeviceparam", "colonusedeviceparam"}, required="roo")
+	public ITokenFactory cmduarg;
+	@List(value="cmduarg", delim="comma")
+	public ITokenFactory cmduargs;
+		
 	public static class Std95Supply extends MTFSupply {	
 		private MVersion version = MVersion.ANSI_STD_95;
 
