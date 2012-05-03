@@ -83,6 +83,7 @@ public abstract class MTFSupply {
 	public ITokenFactory eq = new TFConstChar('=');
 	public ITokenFactory caret = new TFConstChar('^');
 	public ITokenFactory colon = new TFConstChar(':');
+	public ITokenFactory plus = new TFConstChar('+');
 	public ITokenFactory e = new TFConstChar('E');
 
 	public ITokenFactory nqmark = new TFConstString("'?");
@@ -259,6 +260,26 @@ public abstract class MTFSupply {
 	public ITokenFactory cmdoarg;
 	@List(value="cmdoarg", delim="comma")
 	public ITokenFactory cmdoargs;
+		
+	@Choice({"indirection", "label"})
+	public ITokenFactory linetagname;
+	@Sequence(value={"plus", "expr"}, required="all")
+	public ITokenFactory lineoffset;
+	@Sequence(value={"linetagname", "lineoffset"})
+	public ITokenFactory tagspec;
+	@Sequence(value={"environment", "name"}, required="or")
+	public ITokenFactory envname;
+	@Choice(value={"indirection", "envname"})
+	public ITokenFactory routinespec_0;
+	@Sequence(value={"caret", "routinespec_0"}, required="all")
+	public ITokenFactory routinespec;
+	@Sequence({"tagspec", "routinespec"})
+	public ITokenFactory cmdgargmain;
+	@Sequence(value={"cmdgargmain", "postcondition"}, required="ro")
+	public ITokenFactory cmdgarg;
+	@List(value="cmdgarg", delim="comma")
+	public ITokenFactory cmdgargs;
+	
 	
 	@Sequence(value={"colon", "expr"}, required="all")
 	public ITokenFactory postcondition;

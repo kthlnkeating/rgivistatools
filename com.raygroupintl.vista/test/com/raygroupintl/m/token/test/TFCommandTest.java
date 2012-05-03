@@ -54,6 +54,18 @@ public class TFCommandTest {
 	private void testGoto(MVersion version) {
 		ITokenFactory f = TFCommand.getInstance(version);
 		TFCommonTest.validCheck(f, "G:POP H^XUS");
+		TFCommonTest.validCheck(f, "G:POP H^[ENV]XUS:POP");
+		TFCommonTest.validCheck(f, "G:POP H+3^[ENV]XUS:POP");
+		TFCommonTest.validCheck(f, "G H+3");
+		TFCommonTest.validCheck(f, "G ^XUS:POP");
+		TFCommonTest.validCheck(f, "G H+3,^XUS:POP");
+		TFCommonTest.validCheck(f, "G ^XUS");
+		TFCommonTest.validCheck(f, "G @A");
+		TFCommonTest.validCheck(f, "G @A^@B");
+		TFCommonTest.validCheck(f, "G @A:P");
+		TFCommonTest.validCheck(f, "G ^@B");
+		TFCommonTest.validCheck(f, "G ^@B:P");
+		TFCommonTest.errorCheck(f, "G ^");
 	}
 
 	@Test

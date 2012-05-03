@@ -23,6 +23,7 @@ import com.raygroupintl.bnf.TSyntaxError;
 import com.raygroupintl.fnds.IToken;
 import com.raygroupintl.fnds.ITokenFactory;
 import com.raygroupintl.fnds.ITokenFactorySupply;
+import com.raygroupintl.m.cmdtree.Goto;
 import com.raygroupintl.vista.struct.MError;
 
 public class TFCommand extends TFSeq {
@@ -256,7 +257,7 @@ public class TFCommand extends TFSeq {
 	
 		@Override
 		protected ITokenFactory buildArgumentFactory(final MVersion version) {
-			return TFCommaDelimitedList.getInstance(TFGotoArgument.getInstance(version)); 	
+			return MTFSupply.getInstance(version).cmdgargs;   //TFCommaDelimitedList.getInstance(TFGotoArgument.getInstance(version)); 	
 		}
 		
 		public IToken getToken(IToken[] tokens) {

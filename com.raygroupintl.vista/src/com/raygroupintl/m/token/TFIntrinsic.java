@@ -174,7 +174,7 @@ public class TFIntrinsic extends TFSeq {
 		FunctionInfo s = addFunction(version, "S", "SELECT", 1, 999);
 		s.setArgumentFactory(MTFSupply.getInstance(version).dselectarg);
 		FunctionInfo t = addFunction(version, "T", "TEXT", 1, 1); 
-		t.setArgumentFactory(TFGotoArgument.getInstance(version, true));			
+		t.setArgumentFactory(MTFSupply.getInstance(version).cmdgargmain);			
 		addFunction(version, "V", "VIEW", 1, 999); 	
 		addFunction(version, "FN", "FNUMBER", 2, 3); 	
 		addFunction(version, "N", "NEXT", 1, 2); 	
