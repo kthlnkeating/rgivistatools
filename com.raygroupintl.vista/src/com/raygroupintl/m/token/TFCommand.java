@@ -393,7 +393,7 @@ public class TFCommand extends TFSeq {
 		protected ITokenFactory buildArgumentFactory(final MVersion version) {
 			ITokenFactory tfNRef = ChoiceSupply.get(MTFSupply.getInstance(version).lvn, "^@", MTFSupply.getInstance(version).gvn, MTFSupply.getInstance(version).indirection);		
 			ITokenFactory tfNRefOrList = ChoiceSupply.get(tfNRef, '(', TFDelimitedList.getInstance(tfNRef, ',', true));
-			ITokenFactory e = TFSeqORO.getInstance(TFConstChars.getInstance("+-"), tfNRefOrList, TFTimeout.getInstance(version));
+			ITokenFactory e = TFSeqORO.getInstance(TFConstChars.getInstance("+-"), tfNRefOrList,  MTFSupply.getInstance(version).timeout);
 			return TFCommaDelimitedList.getInstance(e);
 		}
 		

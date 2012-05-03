@@ -30,11 +30,11 @@ public class TFReadArgument extends TFChoice {
 			case '"':
 				return TFStringLiteral.getInstance();
 			case '*':
-				return TFSeqRRO.getInstance(TFConstChar.getInstance('*'), MTFSupply.getInstance(version).glvn, TFTimeout.getInstance(this.version));
+				return TFSeqRRO.getInstance(TFConstChar.getInstance('*'), MTFSupply.getInstance(version).glvn,  MTFSupply.getInstance(version).timeout);
 			case '@':
-				return TFSeqRO.getInstance(MTFSupply.getInstance(version).indirection, TFTimeout.getInstance(this.version));
+				return TFSeqRO.getInstance(MTFSupply.getInstance(version).indirection,  MTFSupply.getInstance(version).timeout);
 			default: 
-				return TFSeqROO.getInstance(MTFSupply.getInstance(version).glvn, getTFReadcountInstance(this.version), TFTimeout.getInstance(this.version));
+				return TFSeqROO.getInstance(MTFSupply.getInstance(version).glvn, getTFReadcountInstance(this.version),  MTFSupply.getInstance(version).timeout);
 		}
 	}
 

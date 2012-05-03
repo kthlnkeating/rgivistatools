@@ -240,6 +240,9 @@ public abstract class MTFSupply {
 	@Sequence(value={"colon", "expr"}, required="all")
 	public ITokenFactory postcondition;
 	
+	@Sequence(value={"colon", "expr"}, required="all")
+	public ITokenFactory timeout;
+	
 	public static class Std95Supply extends MTFSupply {	
 		private MVersion version = MVersion.ANSI_STD_95;
 
