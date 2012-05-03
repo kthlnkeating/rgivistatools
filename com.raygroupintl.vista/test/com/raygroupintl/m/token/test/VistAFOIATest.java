@@ -23,12 +23,10 @@ import junit.framework.Assert;
 public class VistAFOIATest {
 	@Test
 	public void testAll() {
-		System.out.print("here" + '\n');
 		final TFRoutine tf = TFRoutine.getInstance(MVersion.CACHE);
 		final ErrorExemptions exemptions = ErrorExemptions.getVistAFOIAInstance();
 		try {
 			List<Path> paths = FileSupply.getAllMFiles();
-			System.out.print("here" + '\n');
 			for (Path path : paths) {
 				//if (! path.toString().endsWith("PRCAUDT.m")) return;
 				//byte[] b = Files.readAllBytes(path);

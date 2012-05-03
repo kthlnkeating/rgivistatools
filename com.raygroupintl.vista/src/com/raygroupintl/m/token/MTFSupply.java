@@ -85,6 +85,8 @@ public abstract class MTFSupply {
 	public ITokenFactory caret = new TFConstChar('^');
 	public ITokenFactory colon = new TFConstChar(':');
 	public ITokenFactory plus = new TFConstChar('+');
+	public ITokenFactory pound = new TFConstChar('#');
+	public ITokenFactory asterix = new TFConstChar('*');
 	public ITokenFactory e = new TFConstChar('E');
 
 	public ITokenFactory nqmark = new TFConstString("'?");
@@ -115,7 +117,7 @@ public abstract class MTFSupply {
 	@Sequence(value={"intlit", "mantista_1"})
 	public ITokenFactory mantista;
 	@Sequence(value={"pm", "mantista", "exp"}, required="oro")
-	public ITokenFactory numlit;  // = TFNumLit.getInstance();
+	public ITokenFactory numlit;
 		
 	public ITokenFactory operator = TFOperator.getInstance();
 	public ITokenFactory error = TFSyntaxError.getInstance();
@@ -291,7 +293,18 @@ public abstract class MTFSupply {
 	public ITokenFactory xtabformat;
 	@Choice({"tabformat", "xtabformat"})
 	public ITokenFactory format;
-		
+	
+	@Sequence(value={"glvn", "readcount", "timeout"}, required="roo")
+	public ITokenFactory cmdrarg_def;	
+	@Sequence(value={"asterix", "glvn", "timeout"}, required="rro")
+	public ITokenFactory cmdrarg_ast;	
+	@Sequence(value={"indirection", "timeout"}, required="ro")
+	public ITokenFactory cmdrarg_at;	
+	@CChoice(value={"format", "strlit", "cmdrarg_ast", "cmdrarg_at"}, preds={"!#?/", "\"", "*", "@"}, def="cmdrarg_def")
+	public ITokenFactory cmdrarg;
+	@List(value="cmdrarg", delim="comma")
+	public ITokenFactory cmdrargs;
+	
 	@Sequence(value={"colon", "expr"}, required="all")
 	public ITokenFactory postcondition;
 	

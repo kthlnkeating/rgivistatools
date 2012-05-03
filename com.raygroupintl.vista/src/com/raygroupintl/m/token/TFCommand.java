@@ -539,7 +539,7 @@ public class TFCommand extends TFSeq {
 	
 		@Override
 		protected ITokenFactory buildArgumentFactory(final MVersion version) {
-			return TFCommaDelimitedList.getInstance(TFReadArgument.getInstance(version)); 	
+			return MTFSupply.getInstance(version).cmdrargs;  //TFCommaDelimitedList.getInstance(TFReadArgument.getInstance(version)); 	
 		}
 		
 		public IToken getToken(IToken[] tokens) {
