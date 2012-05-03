@@ -7,8 +7,7 @@ import org.junit.runners.Suite.SuiteClasses;
 @RunWith(Suite.class)
 @SuiteClasses({
 		TFActualListTest.class, TFCommandTest.class, TFDelimitedListTest.class,
-		TFIntrinsicTest.class, TFNumLitTest.class,
-		TFPatternTest.class, TFTest.class, TFLineTest.class, TRoutineTest.class })
+		TFIntrinsicTest.class, TFPatternTest.class, TFTest.class, TFLineTest.class, TRoutineTest.class })
 public class LocalTests {
 
 }

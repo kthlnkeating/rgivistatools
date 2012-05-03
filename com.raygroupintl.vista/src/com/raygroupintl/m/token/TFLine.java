@@ -36,7 +36,7 @@ public class TFLine extends TFSeqStatic {
 	@Override
 	protected ITokenFactory[] getFactories() { // label, formals, space, level, commands
 		return new ITokenFactory[]{
-				TFLabel.getInstance(),
+				MTFSupply.getInstance(version).label,
 				getTFFormal(),
 				TFConstChars.getInstance(" \t"),
 				TFBasic.getInstance('.', ' '),

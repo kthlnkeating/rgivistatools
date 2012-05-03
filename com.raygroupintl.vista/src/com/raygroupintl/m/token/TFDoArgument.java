@@ -29,7 +29,7 @@ public class TFDoArgument extends TFSeq {
 	}
 	
 	private static ITokenFactory getFactory0(IToken[] previousTokens, final MVersion version) {
-		TFLabel tfl = TFLabel.getInstance();
+		ITokenFactory tfl = MTFSupply.getInstance(version).label;
 		ITokenFactory tfi = MTFSupply.getInstance(version).indirection;
 		if (version == MVersion.CACHE) {
 			MTFSupply.CacheSupply cs =  (MTFSupply.CacheSupply) MTFSupply.getInstance(MVersion.CACHE);

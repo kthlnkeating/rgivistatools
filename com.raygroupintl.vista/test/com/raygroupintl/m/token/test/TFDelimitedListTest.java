@@ -6,7 +6,6 @@ import com.raygroupintl.bnf.TFDelimitedList;
 import com.raygroupintl.fnds.ITokenFactory;
 import com.raygroupintl.m.token.MTFSupply;
 import com.raygroupintl.m.token.MVersion;
-import com.raygroupintl.m.token.TFNumLit;
 
 public class TFDelimitedListTest {
 	private void testExpr(MVersion version) {
@@ -46,7 +45,7 @@ public class TFDelimitedListTest {
 		TFCommonTest.validCheck(f, "()");
 		TFCommonTest.validCheck(f, "(,A,)");
 		f.setDelimiter(":");
-		f.setElementFactory(TFNumLit.getInstance());
+		f.setElementFactory(MTFSupply.getInstance(version).numlit);
 		TFCommonTest.validCheck(f, "(1)");
 		TFCommonTest.validCheck(f, "(:1:1)");
 	}

@@ -21,7 +21,7 @@ public class TFJobArgument extends TFSeq {
 	}
 	
 	private static ITokenFactory getFactory0(IToken[] previousTokens, MVersion version) {
-		TFLabel tfl = TFLabel.getInstance();
+		ITokenFactory tfl = MTFSupply.getInstance(version).label;
 		ITokenFactory tfi = MTFSupply.getInstance(version).indirection;
 		ITokenFactory tf = ChoiceSupply.get(tfl, tfi);
 		return tf; 

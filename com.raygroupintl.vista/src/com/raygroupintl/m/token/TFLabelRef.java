@@ -21,7 +21,7 @@ public class TFLabelRef extends TFSeqXYY {
 				return new ITokenFactory[]{MTFSupply.getInstance(TFLabelRef.this.version).environment, new TFName()};
 			}
 		};
-		return new ITokenFactory[]{new TFLabel(), new TFConstChar('^'), envName};
+		return new ITokenFactory[]{MTFSupply.getInstance(version).label, new TFConstChar('^'), envName};
 	}
 
 	@Override

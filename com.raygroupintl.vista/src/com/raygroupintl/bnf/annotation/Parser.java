@@ -62,13 +62,6 @@ public class Parser {
 		if (sequence != null) {
 			TFSeqStatic value = new TFSeqStatic();
 			store.sequences.add(new Triple<TFSeqStatic, Sequence>(name, value, sequence));
-			Adapter adapter = f.getAnnotation(Adapter.class);
-			if (adapter != null) {			
-				String adapterClsName = adapter.value();
-				Class<?> adapterCls = Class.forName(adapterClsName);
-				TokenAdapter ta = (TokenAdapter) adapterCls.newInstance();
-				value.setTokenAdapter(ta);
-			}			
 			return value;
 		}
 		List list = f.getAnnotation(List.class);
@@ -165,9 +158,29 @@ public class Parser {
 		return store;
 	}
 	
-	public static <T> T parse(Class<T> cls, Map<String, TokenAdapter> adapters) throws IllegalAccessException, InstantiationException, ClassNotFoundException {
+	private static <T> Map<String, TokenAdapter> getAdapters(Class<T> cls) throws IllegalAccessException, InstantiationException{
+		Map<String, TokenAdapter> result = new HashMap<String, TokenAdapter>();
+		Class<?> loopCls = cls;
+		while (! loopCls.equals(Object.class)) {
+			for (Class<?> c : loopCls.getDeclaredClasses()) {
+				Adapter adapter = c.getAnnotation(Adapter.class);
+				if (adapter != null) {			
+					String n = adapter.value();
+					if (! result.containsKey(n)) {
+						TokenAdapter ta = (TokenAdapter) c.newInstance();
+						result.put(n, ta);
+					}
+				}
+			}
+			loopCls = loopCls.getSuperclass();
+		}
+		return result;
+	}
+	
+	public static <T> T parse(Class<T> cls) throws IllegalAccessException, InstantiationException, ClassNotFoundException {
 		T target = cls.newInstance();
 		Store store = getStore(target, cls);
+		Map<String, TokenAdapter> tas = getAdapters(cls);
 		for (Triple<TFChoiceBasic, Choice> p : store.choices) {
 			ITokenFactory[] fs = getFactories(store.symbols, p.annotation.value());
 			p.factory.setFactories(fs);
@@ -197,10 +210,10 @@ public class Parser {
 			ITokenFactory[] fs = getFactories(store.symbols, p.annotation.value());
 			p.factory.setFactories(fs);
 			boolean[] required = getRequiredFlags(p.annotation.required(), fs.length);
-			p.factory.setRequiredFlags(required);
-			TokenAdapter adapter = adapters.get(p.name);
+			p.factory.setRequiredFlags(required);			
+			TokenAdapter adapter = tas.get(p.name);
 			if (adapter != null) {
-				p.factory.setTokenAdapter(adapter);
+				p.factory.setTokenAdapter(adapter);					
 			}
 		}
 		for (Triple<TFDelimitedList, List> p : store.lists) {

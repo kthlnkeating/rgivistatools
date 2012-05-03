@@ -167,6 +167,24 @@ public class TFTest {
 		testTFExprItem(MVersion.ANSI_STD_95);		
 	}
 
+	public void testTFNumLit(MVersion version) {
+		MTFSupply m = MTFSupply.getInstance(version);
+		ITokenFactory f = m.numlit;
+		TFCommonTest.validCheck(f, ".11");
+		TFCommonTest.validCheck(f, "1.11");
+		TFCommonTest.validCheck(f, "-3.11");
+		TFCommonTest.validCheck(f, ".11E12");
+		TFCommonTest.errorCheck(f, "1.E12");
+		TFCommonTest.errorCheck(f, "1.E-12");
+		TFCommonTest.errorCheck(f, "1.E+12");
+	}
+
+	@Test
+	public void testTFNumLit() {
+		testTFNumLit(MVersion.CACHE);
+		testTFNumLit(MVersion.ANSI_STD_95);		
+	}
+
 	@Test
 	public void testTFStringLiteral() {
 		TFStringLiteral f = TFStringLiteral.getInstance();

@@ -1,9 +1,6 @@
 package com.raygroupintl.m.token;
 
-import java.util.HashMap;
-import java.util.Map;
-
-import com.raygroupintl.bnf.TEmpty;
+import com.raygroupintl.bnf.TArray;
 import com.raygroupintl.bnf.TFChar;
 import com.raygroupintl.bnf.TFConstChar;
 import com.raygroupintl.bnf.TFConstChars;
@@ -22,52 +19,51 @@ import com.raygroupintl.fnds.IToken;
 import com.raygroupintl.fnds.ITokenFactory;
 
 public abstract class MTFSupply {
+	@Adapter("indirection")
 	public static class IndirectionAdapter implements TokenAdapter {
 		@Override
 		public IToken convert(IToken[] tokens) {
 			return new TIndirection(tokens);
 		}		
 	}
+	@Adapter("lvn")	
 	public static class LvnAdapter implements TokenAdapter {
 		@Override
 		public IToken convert(IToken[] tokens) {
 			return new TLocal(tokens);
 		}		
 	}
+	@Adapter("gvn")	
 	public static class GvnAdapter implements TokenAdapter {
 		@Override
 		public IToken convert(IToken[] tokens) {
 			return new TGlobalNamed(tokens);
 		}
 	}
+	@Adapter("gvnnaked")	
 	public static class GvnNakedAdapter implements TokenAdapter {
 		@Override
 		public IToken convert(IToken[] tokens) {
 			return new TGlobalNaked(tokens);
 		}
 	}
-		
-	static final Map<String, TokenAdapter> ADAPTERS = new HashMap<String, TokenAdapter>();
-	static {
-		ADAPTERS.put("actuallist", new TokenAdapter() {
-			@Override
-			public IToken convert(IToken[] tokens) {
-				TList list = (tokens[1] == null) ? new TList() : (TList) tokens[1];
-				return new TActualList(list);
-			}
-		});			 
-		ADAPTERS.put("exprinpar", new TokenAdapter() {
-			@Override
-			public IToken convert(IToken[] tokens) {
-				if (tokens[1] == null) {
-					return new TInParantheses(new TEmpty());
-				} else {
-					return new TInParantheses(tokens[1]);
-				}
-			}
-		});			 
+	@Adapter("actuallist")	
+	public static class ActualListAdapter implements TokenAdapter {
+		@Override
+		public IToken convert(IToken[] tokens) {
+			TList list = (tokens[1] == null) ? new TList() : (TList) tokens[1];
+			return new TActualList(list);
+		}
 	}
-
+	@Adapter("numlit")	
+	public static class NumLitAdapter implements TokenAdapter {
+		@Override
+		public IToken convert(IToken[] tokens) {
+			String value = (new TArray(tokens)).getStringValue();
+			return new TNumLit(value);
+		}
+	}
+		
 	public ITokenFactory dot = TFChar.DOT;
 	public ITokenFactory comma = TFChar.COMMA;
 	public ITokenFactory pipe = new TFConstChar('|');
@@ -80,18 +76,32 @@ public abstract class MTFSupply {
 	public ITokenFactory eq = new TFConstChar('=');
 	public ITokenFactory caret = new TFConstChar('^');
 	public ITokenFactory colon = new TFConstChar(':');
+	public ITokenFactory e = new TFConstChar('E');
 
 	public ITokenFactory nqmark = new TFConstString("'?");
 	public ITokenFactory atlpar = new TFConstString("@(");
 	public ITokenFactory caretquest = new TFConstString("^$");
 	public ITokenFactory ddollar = new TFConstString("$$");
-
+	public ITokenFactory pm = new TFConstChars("+-");
+	
 	public ITokenFactory ecomma = TFEmptyVerified.getInstance(',');
 	public ITokenFactory erpar = TFEmptyVerified.getInstance(')');
 
 	public ITokenFactory name = TFName.getInstance();
 	public ITokenFactory ident = TFIdent.getInstance();
-	public ITokenFactory numlit = TFNumLit.getInstance();
+	public ITokenFactory intlit = new TIntLit.Factory();
+	@Choice({"name", "intlit"})
+	public ITokenFactory label;
+	
+	@Sequence(value={"e", "pm", "intlit"}, required="ror")
+	public ITokenFactory exp;
+	@Sequence(value={"dot", "intlit"}, required="all")
+	public ITokenFactory mantista_1;
+	@Sequence(value={"intlit", "mantista_1"})
+	public ITokenFactory mantista;
+	@Sequence(value={"pm", "mantista", "exp"}, required="oro")
+	public ITokenFactory numlit;  // = TFNumLit.getInstance();
+		
 	public ITokenFactory operator = TFOperator.getInstance();
 	public ITokenFactory error = TFSyntaxError.getInstance();
 	public ITokenFactory unaryop = new TFConstChars("+-\'");
@@ -129,7 +139,6 @@ public abstract class MTFSupply {
 	public ITokenFactory indirection_0;
 	@Sequence(value={"atlpar", "exprlist", "rpar"}, required="all")
 	public ITokenFactory indirection_1;
-	@Adapter("com.raygroupintl.m.token.MTFSupply$IndirectionAdapter")
 	@Sequence(value={"indirection_0", "indirection_1"}, required="ro")
 	public ITokenFactory indirection;
 	
@@ -138,7 +147,6 @@ public abstract class MTFSupply {
 	
 	@Sequence(value={"environment", "name", "exprlistinparan"}, required="oro")
 	public ITokenFactory gvn_0;
-	@Adapter("com.raygroupintl.m.token.MTFSupply$GvnAdapter")	
 	@Sequence(value={"caret", "gvn_0"}, required="all")
 	public ITokenFactory gvn;
 	
@@ -151,7 +159,6 @@ public abstract class MTFSupply {
 	@Sequence(value={"unaryop", "expratom"}, required="all")
 	public ITokenFactory unaryexpritem;
 			
-	@Adapter("com.raygroupintl.m.token.MTFSupply$GvnNakedAdapter")	
 	@Sequence(value={"caret", "exprlistinparan"}, required="all")
 	public ITokenFactory gvnnaked;
 	
@@ -182,7 +189,6 @@ public abstract class MTFSupply {
 	@Choice({"glvn", "expritem"})
 	public ITokenFactory expratom;
 
-	@Adapter("com.raygroupintl.m.token.MTFSupply$LvnAdapter")
 	@Sequence(value={"name", "exprlistinparan"}, required="ro")
 	public ITokenFactory lvn;
 	
@@ -234,12 +240,14 @@ public abstract class MTFSupply {
 	}
 
 	public static class CacheSupply extends MTFSupply {
+		@Adapter("lvn_objtail")
 		public static class ObjTailAdapter implements TokenAdapter {
 			@Override
 			public IToken convert(IToken[] tokens) {					
 				return new TObjectTail(tokens);
 			}
 		}
+		@Adapter("lvn")
 		public static class LvnAdapter implements TokenAdapter {
 			@Override
 			public IToken convert(IToken[] tokens) {
@@ -260,12 +268,10 @@ public abstract class MTFSupply {
 		public ITokenFactory lvn_objtail_ms;
 		@List("lvn_objtail_ms")
 		public ITokenFactory lvn_objtail_m;
-		@Adapter("com.raygroupintl.m.token.MTFSupply$CacheSupply$ObjTailAdapter")
 		@Sequence(value={"lvn_objtail_m", "actuallist"}, required="ro")
 		public ITokenFactory lvn_objtail;
 		@Choice(value={"exprlistinparan", "lvn_objtail"})
 		public ITokenFactory lvn_next;
-		@Adapter("com.raygroupintl.m.token.MTFSupply$CacheSupply$LvnAdapter")
 		@Sequence(value={"name", "lvn_next"}, required="ro")
 		public ITokenFactory lvn;
 		
@@ -300,14 +306,17 @@ public abstract class MTFSupply {
 			switch (version) {
 				case CACHE: {
 					if (CACHE_SUPPLY == null) {
-						CACHE_SUPPLY = Parser.parse(CacheSupply.class, CacheSupply.ADAPTERS);
+						CACHE_SUPPLY = Parser.parse(CacheSupply.class);
 						TFIntrinsic.initialize(version);
 					}
 					return CACHE_SUPPLY;
 				}
 				case ANSI_STD_95: {
 					if (STD_95_SUPPLY == null) {
-						STD_95_SUPPLY = Parser.parse(Std95Supply.class, Std95Supply.ADAPTERS);
+						STD_95_SUPPLY = Parser.parse(Std95Supply.class);
+						
+						
+						
 						TFIntrinsic.initialize(version);
 					}
 					return STD_95_SUPPLY;
