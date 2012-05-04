@@ -3,13 +3,10 @@ package com.raygroupintl.m.token;
 import com.raygroupintl.bnf.ChoiceSupply;
 import com.raygroupintl.bnf.TFChar;
 import com.raygroupintl.bnf.TFConstChar;
-import com.raygroupintl.bnf.TFConstString;
-import com.raygroupintl.bnf.TFList;
 import com.raygroupintl.bnf.TFNull;
 import com.raygroupintl.bnf.TFSeq;
 import com.raygroupintl.bnf.TFSeqOR;
 import com.raygroupintl.bnf.TFSeqRO;
-import com.raygroupintl.bnf.TFSeqROR;
 import com.raygroupintl.bnf.TFSeqRequired;
 import com.raygroupintl.fnds.IToken;
 import com.raygroupintl.fnds.ITokenFactory;
@@ -22,65 +19,34 @@ public class TFDoArgument extends TFSeq {
 		this.version = version;
 	}
 	
-	private static TFSeqROR getCacheSystemCall() {
-		ITokenFactory system = new TFConstString("$SYSTEM", true);
-		ITokenFactory methods = TFList.getInstance(TFSeqRequired.getInstance(TFChar.DOT, TFName.getInstance()));
-		ITokenFactory arguments = MTFSupply.getInstance(MVersion.CACHE).actuallist;
-		return TFSeqROR.getInstance(system, methods, arguments);
-	}
-	
 	private static ITokenFactory getFactory0(IToken[] previousTokens, final MVersion version) {
+		//return MTFSupply.getInstance(version).dentryspec_0;
+		
 		ITokenFactory tfl = MTFSupply.getInstance(version).label;
 		ITokenFactory tfi = MTFSupply.getInstance(version).indirection;
 		if (version == MVersion.CACHE) {
 			MTFSupply.CacheSupply cs =  (MTFSupply.CacheSupply) MTFSupply.getInstance(MVersion.CACHE);
 			ITokenFactory f = TFSeqRO.getInstance(tfl, TFSeqRequired.getInstance(TFChar.DOT, TFName.getInstance()));
-			return ChoiceSupply.get(f, "@#$", tfi, cs.classmethod, getCacheSystemCall());
-		} else {		
+			return ChoiceSupply.get(f, "@#$", tfi, cs.classmethod, cs.systemcall);
+		} else {	
 			ITokenFactory tf = ChoiceSupply.get(tfl, tfi);
 			return tf;
 		}
 	}
 	
 	private static ITokenFactory getFactory1(IToken[] previousTokens, final MVersion version) {
-		if (previousTokens[0] == null) {
-			return new TFNull();
-		} else {
-			return new TFSeqRequired() {								
-				@Override
-				protected ITokenFactory[] getFactories() {
-					TFConstChar tfc = TFConstChar.getInstance('+');
-					ITokenFactory tfe = MTFSupply.getInstance(version).expr;
-					return new ITokenFactory[]{tfc, tfe};
-				}
-			};
-		}
+		return MTFSupply.getInstance(version).lineoffset;
 	}
 
 	private static ITokenFactory getFactory2(IToken[] previousTokens) {
 		return TFConstChar.getInstance('^');
 	}
 
-	private static ITokenFactory getRoutineSpecification(MVersion version) {
-		ITokenFactory tfEnv = MTFSupply.getInstance(version).environment;
-		if (version == MVersion.CACHE) {
-			ITokenFactory tfNameOrObj = TFName.getInstance();
-			ITokenFactory objMethod = TFSeqRequired.getInstance(TFConstChar.getInstance('.'), TFName.getInstance());			
-			ITokenFactory tfName = TFSeqRO.getInstance(tfNameOrObj, objMethod);
-			return TFSeqOR.getInstance(tfEnv, tfName);
-		} else {
-			ITokenFactory tfName = TFName.getInstance();
-			return TFSeqOR.getInstance(tfEnv, tfName);
-		}
-	}
-	
 	private static ITokenFactory getFactory3(IToken[] previousTokens, MVersion version) {
 		if (previousTokens[2] == null) {
 			return new TFNull();
 		} else {
-			ITokenFactory tfEnvName = getRoutineSpecification(version); 
-			ITokenFactory tfInd = MTFSupply.getInstance(version).indirection;
-			return ChoiceSupply.get(tfEnvName, tfInd);
+			return MTFSupply.getInstance(version).doroutineind;
 		}
 	}
 

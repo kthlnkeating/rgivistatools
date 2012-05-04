@@ -220,7 +220,7 @@ public class Parser {
 			ITokenFactory f = store.symbols.get(p.annotation.value());
 			p.factory.setElementFactory(f);
 			String delim = p.annotation.delim();
-			if (delim.length() > 0) {
+			if ((delim != null) && (delim.length() > 0)) {
 				ITokenFactory d = store.symbols.get(delim);
 				p.factory.setDelimiter(d);
 			}

@@ -338,10 +338,19 @@ public abstract class MTFSupply {
 	@List(value="cmdjarg", delim="comma")
 	public ITokenFactory cmdjargs;
 	
-	@Sequence(value={"entryspec_0", "routinespec", "actuallist", "postcondition"}, required="oooo")
+	@Sequence(value={"label", "lineoffset"}, required="ro")
+	public ITokenFactory dlabelwoffset;
+	@Choice({"rindirection", "dlabelwoffset"})
+	public ITokenFactory dentryspec_0;	
+	@Sequence(value={"dentryspec_0", "routinespec", "actuallist", "postcondition"}, required="oooo")
 	public ITokenFactory cmddarg;
 	@List(value="cmddarg", delim="comma")
 	public ITokenFactory cmddargs;
+
+	@Sequence(value={"environment", "name"}, required="or")
+	public ITokenFactory doroutine;
+	@Choice({"rindirection", "doroutine"})
+	public ITokenFactory doroutineind;
 	
 	public static class Std95Supply extends MTFSupply {	
 		private MVersion version = MVersion.ANSI_STD_95;
@@ -412,14 +421,23 @@ public abstract class MTFSupply {
 		
 		public ITokenFactory intrinsic = new TFIntrinsic(this.version);
 		
-
-		//ITokenFactory system = new TFConstString("$SYSTEM", true);
-		//@Sequence(value={"dot", "name"}, required="all")
-		//public ITokenFactory method;
-		//@List(value="method")
-		//public ITokenFactory methods;
-		//@Sequence(value={"system", "methods", "arguments"}, required="ror")
-		//public ITokenFactory systemcall;
+		public ITokenFactory system = new TFConstString("$SYSTEM", true);
+		@Sequence(value={"dot", "name"}, required="all")
+		public ITokenFactory method;
+		@List(value="method")
+		public ITokenFactory methods;
+		@Sequence(value={"system", "methods", "actuallist"}, required="ror")
+		public ITokenFactory systemcall;
+		
+		@Choice({"methods", "lineoffset"})
+		public ITokenFactory dlabelwoffset_1;
+		@Sequence(value={"label", "dlabelwoffset_1"}, required="ro")
+		public ITokenFactory dlabelwoffset;		
+		@Choice({"indirection", "systemcall", "classmethod", "dlabelwoffset"})
+		public ITokenFactory dentryspec_0;
+	
+		@Sequence(value={"environment", "name", "method"}, required="oro")
+		public ITokenFactory doroutine;
 	}
 	
 	private static MTFSupply CACHE_SUPPLY;
