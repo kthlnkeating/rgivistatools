@@ -172,7 +172,7 @@ public abstract class MTFSupply {
 	@Sequence(value={"caretquest", "ident", "exprlistinparan"}, required="all")
 	public ITokenFactory gvnssvn;
 
-	@Sequence(value={"ddollar", "doargument"}, required="all")
+	@Sequence(value={"ddollar", "extrinsicarg"}, required="all")
 	public ITokenFactory extrinsic;
 	
 	@Sequence(value={"unaryop", "expratom"}, required="all")
@@ -214,7 +214,6 @@ public abstract class MTFSupply {
 	@Sequence(value={"expratom", "exprtail"}, required="ro")
 	public ITokenFactory expr;
 	
-	public ITokenFactory doargument;
 	public ITokenFactory external;
 	
 	@List(value="actual", delim="comma")
@@ -342,7 +341,10 @@ public abstract class MTFSupply {
 	public ITokenFactory dlabelwoffset;
 	@Choice({"rindirection", "dlabelwoffset"})
 	public ITokenFactory dentryspec_0;	
-	@Sequence(value={"dentryspec_0", "routinespec", "actuallist", "postcondition"}, required="oooo")
+
+	@Sequence(value={"labelpiece", "lineoffset", "doroutinef", "actuallist"}, required="oooo")
+	public ITokenFactory extrinsicarg;
+	@Sequence(value={"labelpiece", "lineoffset", "doroutinef", "actuallist", "postcondition"}, required="ooooo")
 	public ITokenFactory cmddarg;
 	@List(value="cmddarg", delim="comma")
 	public ITokenFactory cmddargs;
@@ -351,11 +353,15 @@ public abstract class MTFSupply {
 	public ITokenFactory doroutine;
 	@Choice({"rindirection", "doroutine"})
 	public ITokenFactory doroutineind;
+	@Sequence(value={"caret", "doroutineind"}, required="ro")
+	public ITokenFactory doroutinef;
+	
+	@Choice(value={"indirection", "label"})
+	public ITokenFactory labelpiece;
 	
 	public static class Std95Supply extends MTFSupply {	
 		private MVersion version = MVersion.ANSI_STD_95;
 
-		public ITokenFactory doargument = TFDoArgument.getInstance(this.version, true);
 		public ITokenFactory external = new TFExternal(this.version);
 		
 		public ITokenFactory pattern = TFPattern.getInstance(this.version);
@@ -399,7 +405,6 @@ public abstract class MTFSupply {
 		@Sequence(value={"name", "lvn_next"}, required="ro")
 		public ITokenFactory lvn;
 		
-		public ITokenFactory doargument = TFDoArgument.getInstance(this.version, true);
 		public ITokenFactory external = new TFExternal(this.version);
 			
 		@Choice({"expratom", "classmethod"})
@@ -429,6 +434,11 @@ public abstract class MTFSupply {
 		@Sequence(value={"system", "methods", "actuallist"}, required="ror")
 		public ITokenFactory systemcall;
 		
+		@Sequence(value={"label", "method"}, required="ro")
+		public ITokenFactory labelpiece_0;
+		@CChoice(value={"indirection", "classmethod", "systemcall"}, preds={"@", "#", "$"}, def="labelpiece_0")
+		public ITokenFactory labelpiece;
+	
 		@Choice({"methods", "lineoffset"})
 		public ITokenFactory dlabelwoffset_1;
 		@Sequence(value={"label", "dlabelwoffset_1"}, required="ro")
