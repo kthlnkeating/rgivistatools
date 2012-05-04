@@ -23,35 +23,35 @@ public abstract class MTFSupply {
 	@Adapter("indirection")
 	public static class IndirectionAdapter implements TokenAdapter {
 		@Override
-		public IToken convert(IToken[] tokens) {
+		public IToken convert(String line, int fromIndex,IToken[] tokens) {
 			return new TIndirection(tokens);
 		}		
 	}
 	@Adapter("lvn")	
 	public static class LvnAdapter implements TokenAdapter {
 		@Override
-		public IToken convert(IToken[] tokens) {
+		public IToken convert(String line, int fromIndex,IToken[] tokens) {
 			return new TLocal(tokens);
 		}		
 	}
 	@Adapter("gvn")	
 	public static class GvnAdapter implements TokenAdapter {
 		@Override
-		public IToken convert(IToken[] tokens) {
+		public IToken convert(String line, int fromIndex,IToken[] tokens) {
 			return new TGlobalNamed(tokens);
 		}
 	}
 	@Adapter("gvnnaked")	
 	public static class GvnNakedAdapter implements TokenAdapter {
 		@Override
-		public IToken convert(IToken[] tokens) {
+		public IToken convert(String line, int fromIndex,IToken[] tokens) {
 			return new TGlobalNaked(tokens);
 		}
 	}
 	@Adapter("actuallist")	
 	public static class ActualListAdapter implements TokenAdapter {
 		@Override
-		public IToken convert(IToken[] tokens) {
+		public IToken convert(String line, int fromIndex,IToken[] tokens) {
 			TList list = (tokens[1] == null) ? new TList() : (TList) tokens[1];
 			return new TActualList(list);
 		}
@@ -59,7 +59,7 @@ public abstract class MTFSupply {
 	@Adapter("numlit")	
 	public static class NumLitAdapter implements TokenAdapter {
 		@Override
-		public IToken convert(IToken[] tokens) {
+		public IToken convert(String line, int fromIndex,IToken[] tokens) {
 			String value = (new TArray(tokens)).getStringValue();
 			return new TNumLit(value);
 		}
@@ -67,7 +67,7 @@ public abstract class MTFSupply {
 	@Adapter("labelref")	
 	public static class LabelRefAdapter implements TokenAdapter {
 		@Override
-		public IToken convert(IToken[] tokens) {
+		public IToken convert(String line, int fromIndex,IToken[] tokens) {
 			return new TLabelRef(tokens);
 		}
 	}
@@ -272,7 +272,7 @@ public abstract class MTFSupply {
 	public ITokenFactory tagspec;
 	@Sequence(value={"environment", "name"}, required="or")
 	public ITokenFactory envname;
-	@Choice(value={"indirection", "envname"})
+	@Choice(value={"rindirection", "envname"})
 	public ITokenFactory routinespec_0;
 	@Sequence(value={"caret", "routinespec_0"}, required="all")
 	public ITokenFactory routinespec;
@@ -282,6 +282,8 @@ public abstract class MTFSupply {
 	public ITokenFactory cmdgarg;
 	@List(value="cmdgarg", delim="comma")
 	public ITokenFactory cmdgargs;
+	
+	
 	
 	@Sequence(value={"pound", "expr"}, required="all")
 	public ITokenFactory readcount;
@@ -322,7 +324,25 @@ public abstract class MTFSupply {
 	public ITokenFactory cmduarg;
 	@List(value="cmduarg", delim="comma")
 	public ITokenFactory cmduargs;
-		
+	
+	@Sequence(value={"at", "expratom"}, required="all")
+	public ITokenFactory rindirection;
+	@Sequence(value={"label", "lineoffset"}, required="ro")
+	public ITokenFactory labelwoffset;
+	@Choice({"rindirection", "labelwoffset"})
+	public ITokenFactory entryspec_0;
+	@Sequence(value={"entryspec_0", "routinespec", "actuallist", "colonusedeviceparam", "timeout"}, required="ooooo")
+	public ITokenFactory cmdjarg;
+	@Sequence(value={"colon", "usedeviceparam"}, required="ro")
+	public ITokenFactory jobparams;
+	@List(value="cmdjarg", delim="comma")
+	public ITokenFactory cmdjargs;
+	
+	@Sequence(value={"entryspec_0", "routinespec", "actuallist", "postcondition"}, required="oooo")
+	public ITokenFactory cmddarg;
+	@List(value="cmddarg", delim="comma")
+	public ITokenFactory cmddargs;
+	
 	public static class Std95Supply extends MTFSupply {	
 		private MVersion version = MVersion.ANSI_STD_95;
 
@@ -338,14 +358,14 @@ public abstract class MTFSupply {
 		@Adapter("lvn_objtail")
 		public static class ObjTailAdapter implements TokenAdapter {
 			@Override
-			public IToken convert(IToken[] tokens) {					
+			public IToken convert(String line, int fromIndex,IToken[] tokens) {					
 				return new TObjectTail(tokens);
 			}
 		}
 		@Adapter("lvn")
 		public static class LvnAdapter implements TokenAdapter {
 			@Override
-			public IToken convert(IToken[] tokens) {
+			public IToken convert(String line, int fromIndex,IToken[] tokens) {
 				if ((tokens[1] != null) && (tokens[1] instanceof TObjectTail)) {					
 					return new TObjectExpr(tokens);
 				} else {					
@@ -391,6 +411,15 @@ public abstract class MTFSupply {
 		public ITokenFactory classmethod;
 		
 		public ITokenFactory intrinsic = new TFIntrinsic(this.version);
+		
+
+		//ITokenFactory system = new TFConstString("$SYSTEM", true);
+		//@Sequence(value={"dot", "name"}, required="all")
+		//public ITokenFactory method;
+		//@List(value="method")
+		//public ITokenFactory methods;
+		//@Sequence(value={"system", "methods", "arguments"}, required="ror")
+		//public ITokenFactory systemcall;
 	}
 	
 	private static MTFSupply CACHE_SUPPLY;

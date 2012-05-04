@@ -19,5 +19,5 @@ package com.raygroupintl.bnf;
 import com.raygroupintl.fnds.IToken;
 
 public interface TokenAdapter {
-	IToken convert(IToken[] tokens);
+	IToken convert(String line, int fromIndex, IToken[] tokens);
 }

@@ -358,7 +358,7 @@ public class TFIntrinsic extends TFSeq {
 	}
 	
 	@Override
-	protected IToken getToken(IToken[] foundTokens) {
+	protected IToken getToken(String line, int fromIndex, IToken[] foundTokens) {
 		TArray token0 = (TArray) foundTokens[0];
 		if (token0.get(2) == null) {		
 			TIdent name = (TIdent) token0.get(1);		

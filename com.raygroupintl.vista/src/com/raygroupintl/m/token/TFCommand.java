@@ -174,6 +174,7 @@ public class TFCommand extends TFSeq {
 	
 		@Override
 		protected ITokenFactory buildArgumentFactory(final MVersion version) {
+			//return  MTFSupply.getInstance(version).cmddargs;
 			return TFCommaDelimitedList.getInstance(TFDoArgument.getInstance(version));		
 		}
 		
@@ -256,7 +257,7 @@ public class TFCommand extends TFSeq {
 	
 		@Override
 		protected ITokenFactory buildArgumentFactory(final MVersion version) {
-			return MTFSupply.getInstance(version).cmdgargs;   //TFCommaDelimitedList.getInstance(TFGotoArgument.getInstance(version)); 	
+			return MTFSupply.getInstance(version).cmdgargs;	
 		}
 		
 		public IToken getToken(IToken[] tokens) {
@@ -339,7 +340,7 @@ public class TFCommand extends TFSeq {
 	
 		@Override
 		protected ITokenFactory buildArgumentFactory(final MVersion version) {
-			return TFCommaDelimitedList.getInstance(TFJobArgument.getInstance(version)); 	
+			return MTFSupply.getInstance(version).cmdjargs;
 		}
 		
 		public IToken getToken(IToken[] tokens) {
@@ -1131,7 +1132,7 @@ public class TFCommand extends TFSeq {
 	}
 
 	@Override
-	public IToken getToken(IToken[] tokens) {
+	public IToken getToken(String line, int fromIndex, IToken[] tokens) {
 		TCommandSpec spec = (TCommandSpec) tokens[0];
 		return spec.getToken(tokens);
 	}

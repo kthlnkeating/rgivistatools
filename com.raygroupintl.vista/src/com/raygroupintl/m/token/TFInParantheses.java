@@ -23,7 +23,7 @@ public abstract class TFInParantheses extends TFSeqStatic {
 	}		
 	
 	@Override
-	protected IToken getToken(IToken[] foundTokens) {
+	protected IToken getToken(String line, int fromIndex, IToken[] foundTokens) {
 		if (foundTokens[1] == null) {
 			return new TInParantheses(new TEmpty());
 		} else {

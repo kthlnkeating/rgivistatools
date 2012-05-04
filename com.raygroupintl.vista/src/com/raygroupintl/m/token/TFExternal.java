@@ -105,7 +105,7 @@ public class TFExternal extends TFSeqRRO {
 	}
 
 	@Override
-	protected final IToken getToken(IToken[] foundTokens) {
+	protected final IToken getToken(String line, int fromIndex, IToken[] foundTokens) {
 		if (foundTokens[2] == null) {
 			return new TPrefixedCopy(foundTokens[1], "$&");
 		} else {

@@ -30,11 +30,11 @@ public abstract class TFSeq implements ITokenFactory {
 	
 	protected abstract int validateEnd(int seqIndex, IToken[] foundTokens);
 	
-	protected IToken getToken(IToken[] foundTokens) {
+	protected IToken getToken(String line, int fromIndex, IToken[] foundTokens) {
 		if (this.adapter == null) {
 			return new TArray(foundTokens);
 		} else {
-			return this.adapter.convert(foundTokens);
+			return this.adapter.convert(line, fromIndex, foundTokens);
 		}
 	}
 	
@@ -91,7 +91,7 @@ public abstract class TFSeq implements ITokenFactory {
 					break;
 				}
 			}
-			return this.getToken(foundTokens);
+			return this.getToken(line, fromIndex, foundTokens);
 		}		
 		return null;
 	}	

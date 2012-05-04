@@ -56,7 +56,7 @@ public class TFLine extends TFSeqStatic {
 	}
 
 	@Override
-	protected IToken getToken(IToken[] foundTokens) {
+	protected IToken getToken(String line, int fromIndex, IToken[] foundTokens) {
 		return new TLine(foundTokens);
 	}
 	

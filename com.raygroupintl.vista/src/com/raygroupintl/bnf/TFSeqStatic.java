@@ -108,9 +108,9 @@ public class TFSeqStatic extends TFSeq {
 	}
 	
 	@Override
-	protected IToken getToken(IToken[] foundTokens) {
+	protected IToken getToken(String line, int fromIndex, IToken[] foundTokens) {
 		for (IToken token : foundTokens) {
-			if (token != null) return super.getToken(foundTokens);
+			if (token != null) return super.getToken(line, fromIndex, foundTokens);
 		}
 		return null;
 	}

@@ -25,12 +25,15 @@ public class VistAFOIATest {
 	public void testAll() {
 		final TFRoutine tf = TFRoutine.getInstance(MVersion.CACHE);
 		final ErrorExemptions exemptions = ErrorExemptions.getVistAFOIAInstance();
+		//String rrr = null;
+		//int index = 0;
 		try {
 			List<Path> paths = FileSupply.getAllMFiles();
 			for (Path path : paths) {
-				//if (! path.toString().endsWith("PRCAUDT.m")) return;
+				//if (! path.toString().endsWith("NVSSTB.m")) return;
 				//byte[] b = Files.readAllBytes(path);
 				//String text = new String(b);
+				//rrr = path.getFileName().toString();
 				//String n = path.getFileName().toString().split(".m")[0];
 				//System.out.print(n + '\n');
 				//TRoutine r = tf.tokenize(n, text, 0);
@@ -44,6 +47,8 @@ public class VistAFOIATest {
 				Assert.assertEquals(lines.size(), count);
 				for (int i=0; i<count; ++i) {
 					String line = lines.get(i);
+					//System.out.print("   " + String.valueOf(i) + '\n');
+					//System.out.print(line + '\n');
 					TLine result = results.get(i);
 					String readLine = result.getStringValue();
 					String msg = path.getFileName().toString() + " Line " +  String.valueOf(i);
@@ -54,7 +59,8 @@ public class VistAFOIATest {
 					Set<LineLocation> locations = exemptions.getLines(name);
 					List<MLocationedError> errors = r.getErrors(locations);
 					Assert.assertEquals(errors.size(), 0);						
-				}				
+				}	
+				//++index;
 			}
 		} catch (Throwable t) {
 			fail("Exception: " + t.getMessage());			

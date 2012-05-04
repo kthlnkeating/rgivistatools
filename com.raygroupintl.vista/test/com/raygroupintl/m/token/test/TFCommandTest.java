@@ -105,6 +105,15 @@ public class TFCommandTest {
 		ITokenFactory f = TFCommand.getInstance(version);
 		TFCommonTest.validCheck(f, "JOB CHILDNT^XOBVTCPL():(:4:XOBIO:XOBIO):10");
 		TFCommonTest.validCheck(f, "J LISTENER^XOBVTCPL(XOBPORT,$GET(XOBCFG))::5");
+		TFCommonTest.validCheck(f, "JOB CHILDNT^XOBVTCPL(A,.B):(:4:XOBIO:XOBIO):10");
+		TFCommonTest.validCheck(f, "JOB CHILDNT+3^XOBVTCPL:(:4:XOBIO:XOBIO):10");
+		TFCommonTest.validCheck(f, "JOB CHILDNT+3^XOBVTCPL:5");
+		TFCommonTest.validCheck(f, "JOB CHILDNT:5");
+		TFCommonTest.validCheck(f, "JOB CHILDNT:(A:B:C):5");
+		TFCommonTest.validCheck(f, "JOB CHILDNT:(::B:C):5");
+		TFCommonTest.validCheck(f, "JOB @A^@A:(::B:C):5");
+		TFCommonTest.validCheck(f, "J ^XMRONT");
+		TFCommonTest.validCheck(f, "J ^XMRONT::5");
 	}
 	
 	@Test

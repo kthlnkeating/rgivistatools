@@ -6,7 +6,7 @@ import com.raygroupintl.fnds.ITokenFactory;
 public class TFDelimitedList implements ITokenFactory {
 	private static class DLAdapter implements TokenAdapter {
 		@Override
-		public IToken convert(IToken[] tokens) {
+		public IToken convert(String line, int fromIndex, IToken[] tokens) {
 			if (tokens[1] == null) {
 				return new TList(tokens[0]);	
 			} else {		

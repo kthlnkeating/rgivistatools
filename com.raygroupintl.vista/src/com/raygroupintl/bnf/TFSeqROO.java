@@ -24,7 +24,7 @@ public class TFSeqROO extends TFSeqStatic {
 	}
 	
 	@Override
-	protected final IToken getToken(IToken[] foundTokens) {
+	protected final IToken getToken(String line, int fromIndex, IToken[] foundTokens) {
 		if ((foundTokens[1] == null) && (foundTokens[2] == null)) {
 			return this.getTokenWhenNoOptional(foundTokens[0]);
 		} else {
