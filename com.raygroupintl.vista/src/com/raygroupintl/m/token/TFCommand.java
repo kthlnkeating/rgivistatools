@@ -11,13 +11,10 @@ import com.raygroupintl.bnf.TFBasic;
 import com.raygroupintl.bnf.TFChar;
 import com.raygroupintl.bnf.TFChoice;
 import com.raygroupintl.bnf.TFConstChar;
-import com.raygroupintl.bnf.TFConstChars;
 import com.raygroupintl.bnf.TFDelimitedList;
 import com.raygroupintl.bnf.TFEmptyVerified;
 import com.raygroupintl.bnf.TFSeq;
-import com.raygroupintl.bnf.TFSeqORO;
 import com.raygroupintl.bnf.TFSeqRO;
-import com.raygroupintl.bnf.TFSeqROO;
 import com.raygroupintl.bnf.TFSeqRequired;
 import com.raygroupintl.bnf.TSyntaxError;
 import com.raygroupintl.fnds.IToken;
@@ -139,16 +136,7 @@ public class TFCommand extends TFSeq {
 	
 		@Override
 		protected ITokenFactory buildArgumentFactory(final MVersion version) {
-		return TFCommaDelimitedList.getInstance(new TFChoice() {			
-				@Override
-				protected ITokenFactory getFactory(char ch) {
-					if (ch == '@') {
-						return MTFSupply.getInstance(version).indirection;
-					} else {
-						return TFSeqRO.getInstance(MTFSupply.getInstance(version).expr, TFSeqRequired.getInstance(TFConstChar.getInstance(':'), MTFSupply.getInstance(version).deviceparams));
-					}
-				}
-			});
+			return MTFSupply.getInstance(version).closeargs;		
 		}
 		
 		public IToken getToken(IToken[] tokens) {
@@ -226,11 +214,7 @@ public class TFCommand extends TFSeq {
 	
 		@Override
 		protected ITokenFactory buildArgumentFactory(final MVersion version) {
-			ITokenFactory tfExpr = MTFSupply.getInstance(version).expr;
-			ITokenFactory tfFromTo = TFSeqRequired.getInstance(TFConstChar.getInstance(':'), tfExpr);
-			ITokenFactory RHS = TFSeqROO.getInstance(tfExpr, tfFromTo, tfFromTo);
-			ITokenFactory RHSs = TFCommaDelimitedList.getInstance(RHS);
-			return TFSeqRequired.getInstance(MTFSupply.getInstance(version).lvn, TFConstChar.getInstance('='), RHSs); 
+			return MTFSupply.getInstance(version).forarg;
 		}
 		
 		public IToken getToken(IToken[] tokens) {
@@ -313,7 +297,7 @@ public class TFCommand extends TFSeq {
 	
 		@Override
 		protected ITokenFactory buildArgumentFactory(final MVersion version) {
-			return TFCommaDelimitedList.getInstance(MTFSupply.getInstance(version).expr); 	
+			return MTFSupply.getInstance(version).exprlist;	
 		}
 		
 		public IToken getToken(IToken[] tokens) {
@@ -391,10 +375,7 @@ public class TFCommand extends TFSeq {
 	
 		@Override
 		protected ITokenFactory buildArgumentFactory(final MVersion version) {
-			ITokenFactory tfNRef = ChoiceSupply.get(MTFSupply.getInstance(version).lvn, "^@", MTFSupply.getInstance(version).gvn, MTFSupply.getInstance(version).indirection);		
-			ITokenFactory tfNRefOrList = ChoiceSupply.get(tfNRef, '(', TFDelimitedList.getInstance(tfNRef, ',', true));
-			ITokenFactory e = TFSeqORO.getInstance(TFConstChars.getInstance("+-"), tfNRefOrList,  MTFSupply.getInstance(version).timeout);
-			return TFCommaDelimitedList.getInstance(e);
+			return MTFSupply.getInstance(version).lockargs;
 		}
 		
 		public IToken getToken(IToken[] tokens) {
@@ -446,7 +427,8 @@ public class TFCommand extends TFSeq {
 	
 		@Override
 		protected ITokenFactory buildArgumentFactory(final MVersion version) {
-			ITokenFactory f = new TFChoice() {
+			return MTFSupply.getInstance(version).newargs;
+/*			ITokenFactory f = new TFChoice() {
 				@Override
 				protected ITokenFactory getFactory(char ch) {
 					switch(ch) {
@@ -462,7 +444,7 @@ public class TFCommand extends TFSeq {
 				}
 			};		
 			return TFDelimitedList.getInstance(f, ',');
-		}
+*/		}
 		
 		public IToken getToken(IToken[] tokens) {
 			return new TCommandN(tokens);

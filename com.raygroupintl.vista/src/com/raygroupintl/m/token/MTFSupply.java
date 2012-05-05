@@ -377,6 +377,42 @@ public abstract class MTFSupply {
 	@List(value="setarg", delim="comma")
 	public ITokenFactory setargs;
 	
+	@Sequence(value={"colon", "deviceparams"}, required="all")
+	public ITokenFactory closearg_dp;
+	@Sequence(value={"expr", "closearg_dp"}, required="ro")
+	public ITokenFactory closearg_direct;
+	@Choice(value={"indirection", "closearg_direct"})
+	public ITokenFactory closearg;
+	@List(value="closearg", delim="comma")
+	public ITokenFactory closeargs;
+	
+	@Sequence(value={"colon", "expr"}, required="all")
+	public ITokenFactory cexpr;
+	@Sequence(value={"expr", "cexpr", "cexpr"}, required="roo")
+	public ITokenFactory forrhs;
+	@List(value="forrhs", delim="comma")
+	public ITokenFactory forrhss;
+	@Sequence(value={"lvn", "eq", "forrhss"}, required="all")
+	public ITokenFactory forarg;
+	
+	@CChoice(value={"gvn", "indirection"}, preds={"^", "@"}, def="lvn")
+	public ITokenFactory lockee_single;
+	@List(value="lockee", delim="comma", left="lpar", right="rpar")
+	public ITokenFactory lockee_list;
+	@Choice({"lockee_single", "lockee_list"})
+	public ITokenFactory lockee;
+	@Sequence(value={"pm", "lockee", "timeout"}, required="oro")
+	public ITokenFactory lockarg;
+	@List(value="lockarg", delim="comma")
+	public ITokenFactory lockargs;
+	
+	@List(value="lvn", delim="comma", left="lpar", right="rpar")
+	public ITokenFactory lvns;
+	@CChoice(value={"lvns", "indirection", "intrinsic"}, preds={"(", "@", "$"}, def="name")
+	public ITokenFactory newarg;
+	@List(value="newarg", delim="comma")
+	public ITokenFactory newargs;
+		
 	public static class Std95Supply extends MTFSupply {	
 		private MVersion version = MVersion.ANSI_STD_95;
 
