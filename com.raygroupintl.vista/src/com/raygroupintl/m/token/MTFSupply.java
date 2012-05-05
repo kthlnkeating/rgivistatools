@@ -12,6 +12,7 @@ import com.raygroupintl.bnf.TList;
 import com.raygroupintl.bnf.TokenAdapter;
 import com.raygroupintl.bnf.annotation.Adapter;
 import com.raygroupintl.bnf.annotation.CChoice;
+import com.raygroupintl.bnf.annotation.Equivalent;
 import com.raygroupintl.bnf.annotation.Parser;
 import com.raygroupintl.bnf.annotation.Sequence;
 import com.raygroupintl.bnf.annotation.Choice;
@@ -359,6 +360,23 @@ public abstract class MTFSupply {
 	@Choice(value={"indirection", "label"})
 	public ITokenFactory labelpiece;
 	
+	@Choice(value={"indirection", "intrinsic", "glvn"})
+	public ITokenFactory setlhsbasic;
+	@List(value="setlhsbasic", delim="comma", left="lpar", right="rpar")
+	public ITokenFactory setlhsbasics;
+	@Choice(value={"setlhsbasics", "setlhsbasic"})
+	public ITokenFactory setlhs;
+	@Equivalent("expr")
+	public ITokenFactory setrhs;
+	@Sequence(value={"setlhs", "eq", "setrhs"}, required="all")
+	public ITokenFactory setarg_direct;
+	@Sequence(value={"indirection", "eq", "setrhs"}, required="roo")
+	public ITokenFactory setarg_indirect;
+	@Choice(value={"setarg_indirect", "setarg_direct"})
+	public ITokenFactory setarg;
+	@List(value="setarg", delim="comma")
+	public ITokenFactory setargs;
+	
 	public static class Std95Supply extends MTFSupply {	
 		private MVersion version = MVersion.ANSI_STD_95;
 
@@ -448,6 +466,10 @@ public abstract class MTFSupply {
 	
 		@Sequence(value={"environment", "name", "method"}, required="oro")
 		public ITokenFactory doroutine;
+
+		@Choice({"classmethod", "expr"})
+		public ITokenFactory setrhs;
+
 	}
 	
 	private static MTFSupply CACHE_SUPPLY;

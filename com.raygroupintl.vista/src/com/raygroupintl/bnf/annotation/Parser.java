@@ -133,8 +133,23 @@ public class Parser {
 		return result;
 	}
 	
+	private static <T> void assignEquivalents(T target, Map<String, Field> lazySymbols, Store store) throws IllegalAccessException {
+		for (String name : lazySymbols.keySet()) {			
+			Field f = lazySymbols.get(name);
+			Equivalent annot = f.getAnnotation(Equivalent.class);
+			if (annot != null) {
+				String source = annot.value();
+				ITokenFactory sourceFactory = store.symbols.get(source);
+				f.set(target, sourceFactory);
+				store.symbols.put(name, sourceFactory);
+			}
+			
+		}
+	}
+	
 	private static <T> Store getStore(T target, Class<T> cls) throws IllegalAccessException, InstantiationException, ClassNotFoundException {
 		Class<?> loopCls = cls;
+		Map<String, Field> lazySymbols = new HashMap<String, Field>();
 		Store store = new Store();
 		while (! loopCls.equals(Object.class)) {
 			for (Field f : loopCls.getDeclaredFields()) {
@@ -145,9 +160,15 @@ public class Parser {
 						ITokenFactory value = (ITokenFactory) f.get(target);
 						if (value == null) {
 							value = newTokenFactory(f, store);
-							f.set(target, value);
+							if (value != null) {
+								f.set(target, value);
+							} else {
+								lazySymbols.put(name, f);
+							}
 						}
-						store.symbols.put(name, value);
+						if (value != null) {
+							store.symbols.put(name, value);
+						}
 					} else {
 						f.set(target, already);						
 					}
@@ -155,6 +176,7 @@ public class Parser {
 			}
 			loopCls = loopCls.getSuperclass();
 		}
+		assignEquivalents(target, lazySymbols, store);
 		return store;
 	}
 	
