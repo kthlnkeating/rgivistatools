@@ -5,7 +5,6 @@ import org.junit.Test;
 import com.raygroupintl.fnds.ITokenFactory;
 import com.raygroupintl.m.token.MTFSupply;
 import com.raygroupintl.m.token.MVersion;
-import com.raygroupintl.m.token.TFExternal;
 import com.raygroupintl.m.token.TFStringLiteral;
 import com.raygroupintl.vista.struct.MError;
 
@@ -27,7 +26,8 @@ public class TFTest {
 	}
 		
 	public void testTFExternal(MVersion version) {
-		TFExternal f = TFExternal.getInstance(version);
+		MTFSupply m = MTFSupply.getInstance(version);
+		ITokenFactory f = m.external;
 		TFCommonTest.validCheck(f, "$&ZLIB.%GETDVI(%XX,\"DEVCLASS\")");
 	}
 

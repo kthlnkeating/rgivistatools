@@ -248,7 +248,7 @@ public abstract class MTFSupply {
 	@Sequence(value={"expratom", "exprtail"}, required="ro")
 	public ITokenFactory expr;
 	
-	public ITokenFactory external;
+	//public ITokenFactory external;
 	
 	@List(value="actual", delim="comma")
 	public ITokenFactory actuallist_i;	
@@ -444,10 +444,20 @@ public abstract class MTFSupply {
 	@List(value="newarg", delim="comma")
 	public ITokenFactory newargs;
 		
+	@Sequence(value={"dot", "name"}, required="all")
+	public ITokenFactory dname;
+	@Sequence(value={"caret", "name"}, required="all")
+	public ITokenFactory cname;
+	@Sequence(value={"name", "dname", "cname"}, required="roo")
+	public ITokenFactory ampersandtail;
+	public ITokenFactory dolamp = new TFConstString("$&");
+	@Sequence(value={"dolamp", "ampersandtail", "actuallist"}, required="roo")
+	public ITokenFactory external;
+	
 	public static class Std95Supply extends MTFSupply {	
 		private MVersion version = MVersion.ANSI_STD_95;
 
-		public ITokenFactory external = new TFExternal(this.version);
+		//public ITokenFactory external = new TFExternal(this.version);
 		
 		public ITokenFactory intrinsic = new TFIntrinsic(this.version);
 	}
@@ -488,7 +498,7 @@ public abstract class MTFSupply {
 		@Sequence(value={"name", "lvn_next"}, required="ro")
 		public ITokenFactory lvn;
 		
-		public ITokenFactory external = new TFExternal(this.version);
+		//public ITokenFactory external = new TFExternal(this.version);
 			
 		@Choice({"expratom", "classmethod"})
 		public ITokenFactory expr_0;
