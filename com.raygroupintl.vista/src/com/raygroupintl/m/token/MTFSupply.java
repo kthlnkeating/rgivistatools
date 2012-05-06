@@ -12,6 +12,7 @@ import com.raygroupintl.bnf.TList;
 import com.raygroupintl.bnf.TokenAdapter;
 import com.raygroupintl.bnf.annotation.Adapter;
 import com.raygroupintl.bnf.annotation.CChoice;
+import com.raygroupintl.bnf.annotation.Characters;
 import com.raygroupintl.bnf.annotation.Equivalent;
 import com.raygroupintl.bnf.annotation.Parser;
 import com.raygroupintl.bnf.annotation.Sequence;
@@ -75,6 +76,7 @@ public abstract class MTFSupply {
 		
 	public ITokenFactory dot = TFChar.DOT;
 	public ITokenFactory comma = TFChar.COMMA;
+	public ITokenFactory squote = new TFConstChar('\'');
 	public ITokenFactory pipe = new TFConstChar('|');
 	public ITokenFactory lsqr = new TFConstChar('[');
 	public ITokenFactory rsqr = new TFConstChar(']');
@@ -99,6 +101,37 @@ public abstract class MTFSupply {
 	public ITokenFactory ecomma = TFEmptyVerified.getInstance(',');
 	public ITokenFactory erpar = TFEmptyVerified.getInstance(')');
 
+	@Characters(ranges={'a', 'z', 'A', 'Z'}, excludechars={'y', 'Y'})
+	public ITokenFactory identxy;
+	@Characters(ranges={'a', 'y', 'A', 'Y'})
+	public ITokenFactory identxz;
+	public ITokenFactory yy = new TFConstChars("zZ");
+	public ITokenFactory zz = new TFConstChars("zZ");
+	@Characters(ranges={'a', 'x', 'A', 'X'})
+	public ITokenFactory paton;
+	@Sequence(value={"yy", "identxy", "yy"}, required="all")
+	public ITokenFactory patony;
+	@Sequence(value={"zz", "identxz", "zz"}, required="all")
+	public ITokenFactory patonz;
+	@Choice({"paton", "patony", "patonz"})
+	public ITokenFactory patons;
+	@Sequence(value={"squote", "patons"}, required="or")
+	public ITokenFactory patcode;	
+	@Sequence(value={"intlit", "dot", "intlit"})
+	public ITokenFactory repcount;
+	@CChoice(value={"alternation", "patcode", "strlit"}, preds={"(", "letter", "\""})
+	public ITokenFactory patatom_re;
+	@Sequence(value={"repcount", "patatom_re"}, required="all")
+	public ITokenFactory patatom;	
+	@List(value="patatoms", delim="comma", left="lpar", right="rpar")	
+	public ITokenFactory alternation;	
+	@List(value="patatom")	
+	public ITokenFactory patatoms;
+	@Choice({"indirection", "patatoms"})
+	public ITokenFactory pattern;
+	
+
+	
 	public ITokenFactory name = TFName.getInstance();
 	public ITokenFactory ident = TFIdent.getInstance();
 	public ITokenFactory intlit = new TIntLit.Factory();
@@ -222,8 +255,6 @@ public abstract class MTFSupply {
 	@Sequence(value={"lpar", "actuallist_i", "rpar"}, required="ror")
 	public ITokenFactory actuallist;
 
-	public ITokenFactory pattern;
-	
 	public ITokenFactory intrinsic;
 	
 	@Sequence(value={"eq", "expr"}, required="all")
@@ -418,8 +449,6 @@ public abstract class MTFSupply {
 
 		public ITokenFactory external = new TFExternal(this.version);
 		
-		public ITokenFactory pattern = TFPattern.getInstance(this.version);
-		
 		public ITokenFactory intrinsic = new TFIntrinsic(this.version);
 	}
 
@@ -465,8 +494,6 @@ public abstract class MTFSupply {
 		public ITokenFactory expr_0;
 		@Sequence(value={"expr_0", "exprtail"}, required="ro")
 		public ITokenFactory expr;
-		
-		public ITokenFactory pattern = TFPattern.getInstance(this.version);
 		
 		public ITokenFactory ppclass = new TFConstString("##class");
 		@Sequence(value={"dot", "name"}, required="all")

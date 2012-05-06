@@ -7,6 +7,7 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
 
+import com.raygroupintl.bnf.TFCharacters;
 import com.raygroupintl.bnf.TFChoiceBasic;
 import com.raygroupintl.bnf.TFChoiceOnChar0th;
 import com.raygroupintl.bnf.TFChoiceOnChar1st;
@@ -16,10 +17,14 @@ import com.raygroupintl.bnf.TokenAdapter;
 import com.raygroupintl.fnds.ICharPredicate;
 import com.raygroupintl.fnds.ITokenFactory;
 import com.raygroupintl.m.struct.IdentifierStartPredicate;
+import com.raygroupintl.struct.AndPredicate;
 import com.raygroupintl.struct.CharPredicate;
+import com.raygroupintl.struct.CharRangePredicate;
 import com.raygroupintl.struct.CharsPredicate;
 import com.raygroupintl.struct.DigitPredicate;
+import com.raygroupintl.struct.ExcludePredicate;
 import com.raygroupintl.struct.LetterPredicate;
+import com.raygroupintl.struct.OrPredicate;
 
 public class Parser {
 	private static final Map<String, ICharPredicate> PREDICATES = new HashMap<String, ICharPredicate>();
@@ -83,8 +88,60 @@ public class Parser {
 				return value;
 			}
 		}
+		Characters characters = f.getAnnotation(Characters.class);
+		if (characters != null) {
+			ICharPredicate p0 = getCharPredicate(characters.chars());
+			ICharPredicate p1 = getCharRanges(characters.ranges());
+			ICharPredicate p2 = getCharPredicate(characters.excludechars());
+			if (p2 != null) {
+				p2 = new ExcludePredicate(p2);
+			}			
+			ICharPredicate p3 = getCharRanges(characters.excluderanges());
+			if (p3 != null) {
+				p3 = new ExcludePredicate(p3);
+			}			
+			ICharPredicate[] ps = {p0, p1, p2, p3};
+			ICharPredicate result = null;
+			for (ICharPredicate p : ps) {
+				if (p != null) {
+					if (result == null) {
+						result = p;
+					} else {
+						result = new AndPredicate(result, p);
+					}
+				}
+			}
+			ITokenFactory tf = new TFCharacters(result);
+			return tf;			
+		}
 		return null;
 	}
+	
+	private static ICharPredicate getCharPredicate(char[] chs) {
+		if (chs.length == 1) {
+			return new CharPredicate(chs[0]);
+		} else if (chs.length > 1) {
+			return new CharsPredicate(chs);
+		} else {
+			return null;
+		}		
+	}
+	
+	private static ICharPredicate getCharRanges(char[] chs) {
+		ICharPredicate result = null;
+		for (int i=1; i<chs.length; i=i+2) {
+			char ch0 = chs[i];
+			char ch1 = chs[i-1];
+			ICharPredicate p =  new CharRangePredicate(ch0, ch1);
+			if (result == null) {
+				result = p;
+			} else {
+				result = new OrPredicate(result, p);
+			}
+		}
+		return result;
+	}
+	
 	
 	private static ITokenFactory[] getFactories(Map<String, ITokenFactory> map, String[] names) {
 		int n = names.length;
