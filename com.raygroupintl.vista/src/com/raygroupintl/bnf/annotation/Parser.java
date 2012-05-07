@@ -314,6 +314,7 @@ public class Parser {
 				p.factory.setRight(r);
 			}
 			p.factory.setAllowEmpty(p.annotation.empty());
+			p.factory.setAllowNone(p.annotation.none());
 		}
 		return target;
 	}

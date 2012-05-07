@@ -92,6 +92,7 @@ public class MTFSupply {
 	public ITokenFactory pound = new TFConstChar('#');
 	public ITokenFactory asterix = new TFConstChar('*');
 	public ITokenFactory e = new TFConstChar('E');
+	public ITokenFactory slash = TFChar.SLASH;
 
 	public ITokenFactory nqmark = new TFConstString("'?");
 	public ITokenFactory atlpar = new TFConstString("@(");
@@ -340,6 +341,8 @@ public class MTFSupply {
 		
 	@Sequence(value={"colon", "expr"}, required="all")
 	public ITokenFactory postcondition;
+	@Sequence(value={"asterix", "expr"}, required="all")
+	public ITokenFactory asterixexpr;
 	
 	@Sequence(value={"colon", "expr"}, required="all")
 	public ITokenFactory timeout;
@@ -458,6 +461,24 @@ public class MTFSupply {
 	public ITokenFactory dorderarg_1;
 	@Sequence(value={"glvn", "dorderarg_1"}, required="ro")
 	public ITokenFactory dorderarg;
+	
+	@Choice({"indirection", "expr"})
+	public ITokenFactory xecutearg_main;
+	@Sequence(value={"xecutearg_main", "postcondition"}, required="ro")
+	public ITokenFactory xecutearg;
+	@List(value="xecutearg", delim="comma")
+	public ITokenFactory xecuteargs;
+
+	@Sequence(value={"slash", "name", "actuallist"}, required="all")
+	public ITokenFactory writearg_slash;
+	@CChoice(value={"format", "writearg_slash", "asterixexpr", "indirection"}, preds={"!#?", "/", "*", "@"}, def="expr")
+	public ITokenFactory writearg;
+	@List(value="writearg", delim="comma")
+	public ITokenFactory writeargs;
+	
+	@List(value="name", delim="comma", left="lpar", right="rpar", none=true)
+	public ITokenFactory lineformal;
+	
 	
 	@Sequence(value={"dollar", "ident"}, required="all")
 	public ITokenFactory intrinsicname;

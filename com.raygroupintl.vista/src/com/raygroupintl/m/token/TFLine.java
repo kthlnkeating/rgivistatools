@@ -3,7 +3,6 @@ package com.raygroupintl.m.token;
 import com.raygroupintl.bnf.ChoiceSupply;
 import com.raygroupintl.bnf.TFBasic;
 import com.raygroupintl.bnf.TFConstChars;
-import com.raygroupintl.bnf.TFDelimitedList;
 import com.raygroupintl.bnf.TFList;
 import com.raygroupintl.bnf.TFSeqStatic;
 import com.raygroupintl.bnf.TFSyntaxError;
@@ -21,12 +20,6 @@ public class TFLine extends TFSeqStatic {
 		this.version = version;
 	}
 	
-	private static ITokenFactory getTFFormal() {
-		TFName argument = TFName.getInstance();
-		TFDelimitedList arguments = TFDelimitedList.getInstance(argument, ',');
-		return TFInParantheses.getInstance(arguments, false);		
-	}
-			
 	private static ITokenFactory getTFCommands(MVersion version) {
 		ICharPredicate[] preds = {new LetterPredicate(), new CharPredicate(';')};
 		ITokenFactory f = ChoiceSupply.get(TFSyntaxError.getInstance(), preds, TFCommand.getInstance(version), new TFComment());
@@ -38,7 +31,7 @@ public class TFLine extends TFSeqStatic {
 	protected ITokenFactory[] getFactories() { // label, formals, space, level, commands
 		return new ITokenFactory[]{
 				MTFSupply.getInstance(version).label,
-				getTFFormal(),
+				MTFSupply.getInstance(version).lineformal,
 				TFConstChars.getInstance(" \t"),
 				TFBasic.getInstance('.', ' '),
 				getTFCommands(this.version)
