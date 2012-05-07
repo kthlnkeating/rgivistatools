@@ -1,10 +1,10 @@
 package com.raygroupintl.m.token;
 
+import com.raygroupintl.bnf.Token;
 import com.raygroupintl.bnf.TCopy;
-import com.raygroupintl.fnds.IToken;
 
 public class TEnvironment extends TCopy {	
-	public TEnvironment(IToken source) {
+	public TEnvironment(Token source) {
 		super(source);
 	}
 	

@@ -3,25 +3,24 @@ package com.raygroupintl.bnf;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.raygroupintl.fnds.IToken;
 import com.raygroupintl.vista.struct.MError;
 
-public class TList implements IToken {
-	private ArrayList<IToken> tokens = new ArrayList<IToken>();
+public class TList implements Token {
+	private ArrayList<Token> tokens = new ArrayList<Token>();
 		
 	public TList() {
 	}
 	
-	public TList(IToken token) {
+	public TList(Token token) {
 		this.tokens.add(token);
 	}
 
-	public TList(IToken token0, IToken token1) {
+	public TList(Token token0, Token token1) {
 		this.tokens.add(token0);
 		this.tokens.add(token1);
 	}
 
-	public TList(List<IToken> tokens) {
+	public TList(List<Token> tokens) {
 		this.tokens.addAll(tokens);
 	}
 
@@ -38,7 +37,7 @@ public class TList implements IToken {
 		StringBuilder sb = new StringBuilder();
 		boolean first = true;
 		String delimiter = this.getDelimiter();
-		for (IToken token : this.tokens) {
+		for (Token token : this.tokens) {
 			if ((delimiter != null) && (! first)) {
 				sb.append(delimiter);
 			}			
@@ -51,7 +50,7 @@ public class TList implements IToken {
 	@Override
 	public int getStringSize() {
 		int result = 0;
-		for (IToken token : this.tokens) {
+		for (Token token : this.tokens) {
 			result += token.getStringSize();
 		}
 		String delimiter = this.getDelimiter();
@@ -64,7 +63,7 @@ public class TList implements IToken {
 	@Override
 	public List<MError> getErrors() {
 		List<MError> result = null;
-		for (IToken token : this.tokens) {
+		for (Token token : this.tokens) {
 			if (token.hasError()) {
 				List<MError> errors = token.getErrors();
 				if (result == null) {
@@ -79,7 +78,7 @@ public class TList implements IToken {
 
 	@Override
 	public boolean hasError() {
-		for (IToken token : this.tokens) {
+		for (Token token : this.tokens) {
 			if (token.hasError()) return true;
 		}
 		return false;
@@ -87,7 +86,7 @@ public class TList implements IToken {
 
 	@Override
 	public boolean hasFatalError() {
-		for (IToken token : this.tokens) {
+		for (Token token : this.tokens) {
 			if (token.hasFatalError()) return true;
 		}
 		return false;
@@ -95,16 +94,16 @@ public class TList implements IToken {
 	
 	@Override
 	public void beautify() {
-		for (IToken token : this.tokens) {
+		for (Token token : this.tokens) {
 			token.beautify();
 		}
 	}
 	
-	public void add(IToken token) {
+	public void add(Token token) {
 		this.tokens.add(token);
 	}
 	
-	public void addAll(List<IToken> tokens) {
+	public void addAll(List<Token> tokens) {
 		this.tokens.addAll(tokens);
 	}
 	
@@ -112,7 +111,7 @@ public class TList implements IToken {
 		this.tokens.addAll(tokens.tokens);
 	}
 	
-	public IToken get(int index) {
+	public Token get(int index) {
 		return this.tokens.get(index);
 	}
 	
@@ -120,7 +119,7 @@ public class TList implements IToken {
 		return this.tokens.size();
 	}
 
-	public void add(int index, IToken token) {
+	public void add(int index, Token token) {
 		this.tokens.add(index, token);
 	}
 }

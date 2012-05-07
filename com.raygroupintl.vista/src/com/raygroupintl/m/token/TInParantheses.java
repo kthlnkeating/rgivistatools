@@ -1,10 +1,10 @@
 package com.raygroupintl.m.token;
 
+import com.raygroupintl.bnf.Token;
 import com.raygroupintl.bnf.TCopy;
-import com.raygroupintl.fnds.IToken;
 
 public class TInParantheses extends TCopy {
-	public TInParantheses(IToken source) {
+	public TInParantheses(Token source) {
 		super(source);
 	}
 	

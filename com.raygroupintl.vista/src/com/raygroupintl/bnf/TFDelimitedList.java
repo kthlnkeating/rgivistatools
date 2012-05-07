@@ -1,12 +1,10 @@
 package com.raygroupintl.bnf;
 
-import com.raygroupintl.fnds.IToken;
-import com.raygroupintl.fnds.ITokenFactory;
 
-public final class TFDelimitedList implements ITokenFactory {
+public final class TFDelimitedList implements TokenFactory {
 	private static class DLAdapter implements TokenAdapter {
 		@Override
-		public IToken convert(String line, int fromIndex, IToken[] tokens) {
+		public Token convert(String line, int fromIndex, Token[] tokens) {
 			if (tokens[1] == null) {
 				return new TList(tokens[0]);	
 			} else {		
@@ -17,30 +15,30 @@ public final class TFDelimitedList implements ITokenFactory {
 		}
 	}
 		
-	private ITokenFactory elementFactory;
-	private ITokenFactory delimiter;
-	private ITokenFactory left;
-	private ITokenFactory right;
+	private TokenFactory elementFactory;
+	private TokenFactory delimiter;
+	private TokenFactory left;
+	private TokenFactory right;
 	private boolean allowEmpty;
 	private boolean allowNone;
 	
 	public TFDelimitedList() {		
 	}
 	
-	public TFDelimitedList(ITokenFactory elementFactory) {	
+	public TFDelimitedList(TokenFactory elementFactory) {	
 		this.elementFactory = elementFactory;
 	}
 
-	public TFDelimitedList(ITokenFactory elementFactory, char ch) {	
+	public TFDelimitedList(TokenFactory elementFactory, char ch) {	
 		this.elementFactory = elementFactory;
 		this.delimiter = new TFConstChar(ch);
 	}
 
-	public void setElementFactory(ITokenFactory elementFactory) {
+	public void setElementFactory(TokenFactory elementFactory) {
 		this.elementFactory = elementFactory;
 	}
 	
-	private ITokenFactory getStringFactory(String value) {
+	private TokenFactory getStringFactory(String value) {
 		if (value.length() == 1) {
 			char ch = value.charAt(0);
 			return new TFConstChar(ch);
@@ -49,30 +47,30 @@ public final class TFDelimitedList implements ITokenFactory {
 		}
 	}
 	
-	public void setDelimiter(ITokenFactory delimeter) {
+	public void setDelimiter(TokenFactory delimeter) {
 		this.delimiter = delimeter;
 	}
 
 	public void setDelimiter(String delimeter) {
-		ITokenFactory tf = this.getStringFactory(delimeter);
+		TokenFactory tf = this.getStringFactory(delimeter);
 		this.setDelimiter(tf);
 	}
 	
-	public void setLeft(ITokenFactory left) {
+	public void setLeft(TokenFactory left) {
 		this.left = left;
 	}
 
 	public void setLeft(String left) {
-		ITokenFactory tf = this.getStringFactory(left);
+		TokenFactory tf = this.getStringFactory(left);
 		this.setLeft(tf);
 	}
 	
-	public void setRight(ITokenFactory right) {
+	public void setRight(TokenFactory right) {
 		this.right = right;
 	}
 
 	public void setRight(String right) {
-		ITokenFactory tf = this.getStringFactory(right);
+		TokenFactory tf = this.getStringFactory(right);
 		this.setRight(tf);
 	}
 	
@@ -84,13 +82,13 @@ public final class TFDelimitedList implements ITokenFactory {
 		this.allowNone = b;
 	}
 	
-	private ITokenFactory getEffectiveListTailElementFactory() {
+	private TokenFactory getEffectiveListTailElementFactory() {
 		if (this.allowEmpty) {
-			ITokenFactory eDelimiter = new TFEmpty(this.delimiter);
+			TokenFactory eDelimiter = new TFEmpty(this.delimiter);
 			if (this.right == null) {
 				return new TFChoiceBasic(this.elementFactory, eDelimiter);
 			} else {
-				ITokenFactory eRight = new TFEmpty(this.right);
+				TokenFactory eRight = new TFEmpty(this.right);
 				return new TFChoiceBasic(this.elementFactory, eDelimiter, eRight);
 			}
 		} else {
@@ -98,9 +96,9 @@ public final class TFDelimitedList implements ITokenFactory {
 		}
 	}
 	
-	private ITokenFactory getLeadingElement() {
+	private TokenFactory getLeadingElement() {
 		if (this.allowEmpty) {
-			ITokenFactory eDelimiter = new TFEmpty(this.delimiter);
+			TokenFactory eDelimiter = new TFEmpty(this.delimiter);
 			return new TFChoiceBasic(this.elementFactory, eDelimiter);
 		} else {
 			return this.elementFactory;
@@ -108,15 +106,15 @@ public final class TFDelimitedList implements ITokenFactory {
 		
 	}
 	
-	private ITokenFactory getEffectiveListFactory() {
+	private TokenFactory getEffectiveListFactory() {
 		if (this.delimiter == null) {
 			return new TFList(this.elementFactory);
 		} else {
-			ITokenFactory tailElement = this.getEffectiveListTailElementFactory();
+			TokenFactory tailElement = this.getEffectiveListTailElementFactory();
 			TFSeqStatic tailSingle = new TFSeqStatic(this.delimiter, tailElement);
 			tailSingle.setRequiredFlags(new boolean[]{true, true});
-			ITokenFactory tail = new TFList(tailSingle);
-			ITokenFactory leadingElement = this.getLeadingElement();
+			TokenFactory tail = new TFList(tailSingle);
+			TokenFactory leadingElement = this.getLeadingElement();
 			TFSeqStatic result = new TFSeqStatic(leadingElement, tail);
 			result.setRequiredFlags(new boolean[]{true, false});
 			result.setTokenAdapter(new DLAdapter());				
@@ -125,9 +123,9 @@ public final class TFDelimitedList implements ITokenFactory {
 	}
 	
 	@Override
-	public IToken tokenize(String line, int fromIndex) {
+	public Token tokenize(String line, int fromIndex) {
 		if (line.length() > fromIndex) {
-			ITokenFactory tfList = this.getEffectiveListFactory();
+			TokenFactory tfList = this.getEffectiveListFactory();
 			if ((this.left == null) && (this.right == null)) {
 				return tfList.tokenize(line, fromIndex);
 			}

@@ -1,9 +1,7 @@
 package com.raygroupintl.bnf;
 
-import com.raygroupintl.fnds.IToken;
-import com.raygroupintl.fnds.ITokenFactory;
 
-public class TFConstString implements ITokenFactory {
+public class TFConstString implements TokenFactory {
 	private String value;
 	private boolean ignoreCase;
 	
@@ -32,7 +30,7 @@ public class TFConstString implements ITokenFactory {
 	}
 	
 	@Override
-	public IToken tokenize(String line, int fromIndex) {
+	public Token tokenize(String line, int fromIndex) {
 		String result = this.getMatched(line, fromIndex);
 		if (result != null) {
 			return new TBasic(result);

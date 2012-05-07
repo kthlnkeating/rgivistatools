@@ -1,25 +1,23 @@
 package com.raygroupintl.bnf;
 
-import com.raygroupintl.fnds.IToken;
-import com.raygroupintl.fnds.ITokenFactory;
 
-public class TFEmpty implements ITokenFactory {
-	private ITokenFactory expected;
+public class TFEmpty implements TokenFactory {
+	private TokenFactory expected;
 	
 	public TFEmpty() {		
 	}
 	
-	public TFEmpty(ITokenFactory expected) {
+	public TFEmpty(TokenFactory expected) {
 		this.expected = expected;
 	}
 	
 	@Override
-	public IToken tokenize(String line, int fromIndex) {
+	public Token tokenize(String line, int fromIndex) {
 		if (fromIndex < line.length()) {
 			if (this.expected == null) {
 				return new TEmpty();
 			} else {
-				IToken t = this.expected.tokenize(line, fromIndex);
+				Token t = this.expected.tokenize(line, fromIndex);
 				if ((t != null) && ! (t instanceof TSyntaxError)) {
 					return new TEmpty();
 				}

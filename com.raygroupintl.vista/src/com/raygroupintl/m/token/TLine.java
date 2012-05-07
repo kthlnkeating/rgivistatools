@@ -2,17 +2,17 @@ package com.raygroupintl.m.token;
 
 import java.util.List;
 
+import com.raygroupintl.bnf.Token;
 import com.raygroupintl.bnf.TArray;
-import com.raygroupintl.fnds.IToken;
 import com.raygroupintl.m.struct.Fanout;
 
 public class TLine extends TArray {	
-	public TLine(IToken[] tokens) {
+	public TLine(Token[] tokens) {
 		super(tokens);
 	}
 
 	public String getTag() {
-		IToken tag = this.get(0);
+		Token tag = this.get(0);
 		if (tag == null) {
 			return null;
 		} else {

@@ -1,10 +1,10 @@
 package com.raygroupintl.m.token;
 
+import com.raygroupintl.bnf.Token;
 import com.raygroupintl.bnf.TCopy;
-import com.raygroupintl.fnds.IToken;
 
 public class TExtrinsic extends TCopy {
-	public TExtrinsic(IToken source) {
+	public TExtrinsic(Token source) {
 		super(source);
 	}
 	

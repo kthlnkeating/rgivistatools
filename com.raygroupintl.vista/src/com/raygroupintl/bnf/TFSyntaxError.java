@@ -1,16 +1,14 @@
 package com.raygroupintl.bnf;
 
-import com.raygroupintl.fnds.IToken;
-import com.raygroupintl.fnds.ITokenFactory;
 import com.raygroupintl.vista.struct.MError;
 
-public class TFSyntaxError implements ITokenFactory {	
+public class TFSyntaxError implements TokenFactory {	
 	protected int getErrorCode() {
 		return MError.ERR_GENERAL_SYNTAX;
 	}
 	
 	@Override
-	public IToken tokenize(String line, int fromIndex) {
+	public Token tokenize(String line, int fromIndex) {
 		int errorCode = this.getErrorCode();
 		return new TSyntaxError(errorCode, line, fromIndex);
 	}

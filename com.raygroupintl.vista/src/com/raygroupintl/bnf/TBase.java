@@ -2,11 +2,10 @@ package com.raygroupintl.bnf;
 
 import java.util.List;
 
-import com.raygroupintl.fnds.IToken;
 import com.raygroupintl.vista.struct.MError;
 
 
-public abstract class TBase implements IToken {
+public abstract class TBase implements Token {
 	public TBase() {
 		super();
 	}

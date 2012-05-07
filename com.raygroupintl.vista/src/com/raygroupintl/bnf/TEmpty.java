@@ -2,10 +2,9 @@ package com.raygroupintl.bnf;
 
 import java.util.List;
 
-import com.raygroupintl.fnds.IToken;
 import com.raygroupintl.vista.struct.MError;
 
-public class TEmpty implements IToken {
+public class TEmpty implements Token {
 	@Override
 	public String getStringValue() {
 		return "";

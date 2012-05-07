@@ -1,5 +1,7 @@
 package com.raygroupintl.m.token;
 
+import com.raygroupintl.bnf.Token;
+import com.raygroupintl.bnf.TokenFactory;
 import com.raygroupintl.bnf.TArray;
 import com.raygroupintl.bnf.TFBasic;
 import com.raygroupintl.bnf.TFChar;
@@ -19,42 +21,40 @@ import com.raygroupintl.bnf.annotation.Parser;
 import com.raygroupintl.bnf.annotation.Sequence;
 import com.raygroupintl.bnf.annotation.Choice;
 import com.raygroupintl.bnf.annotation.List;
-import com.raygroupintl.fnds.IToken;
-import com.raygroupintl.fnds.ITokenFactory;
 
 public class MTFSupply {
 	@Adapter("indirection")
 	public static class IndirectionAdapter implements TokenAdapter {
 		@Override
-		public IToken convert(String line, int fromIndex,IToken[] tokens) {
+		public Token convert(String line, int fromIndex,Token[] tokens) {
 			return new TIndirection(tokens);
 		}		
 	}
 	@Adapter("lvn")	
 	public static class LvnAdapter implements TokenAdapter {
 		@Override
-		public IToken convert(String line, int fromIndex,IToken[] tokens) {
+		public Token convert(String line, int fromIndex,Token[] tokens) {
 			return new TLocal(tokens);
 		}		
 	}
 	@Adapter("gvn")	
 	public static class GvnAdapter implements TokenAdapter {
 		@Override
-		public IToken convert(String line, int fromIndex,IToken[] tokens) {
+		public Token convert(String line, int fromIndex,Token[] tokens) {
 			return new TGlobalNamed(tokens);
 		}
 	}
 	@Adapter("gvnnaked")	
 	public static class GvnNakedAdapter implements TokenAdapter {
 		@Override
-		public IToken convert(String line, int fromIndex,IToken[] tokens) {
+		public Token convert(String line, int fromIndex,Token[] tokens) {
 			return new TGlobalNaked(tokens);
 		}
 	}
 	@Adapter("actuallist")	
 	public static class ActualListAdapter implements TokenAdapter {
 		@Override
-		public IToken convert(String line, int fromIndex,IToken[] tokens) {
+		public Token convert(String line, int fromIndex,Token[] tokens) {
 			TList list = (tokens[1] == null) ? new TList() : (TList) tokens[1];
 			return new TActualList(list);
 		}
@@ -62,7 +62,7 @@ public class MTFSupply {
 	@Adapter("numlit")	
 	public static class NumLitAdapter implements TokenAdapter {
 		@Override
-		public IToken convert(String line, int fromIndex,IToken[] tokens) {
+		public Token convert(String line, int fromIndex,Token[] tokens) {
 			String value = (new TArray(tokens)).getStringValue();
 			return new TNumLit(value);
 		}
@@ -70,418 +70,418 @@ public class MTFSupply {
 	@Adapter("labelref")	
 	public static class LabelRefAdapter implements TokenAdapter {
 		@Override
-		public IToken convert(String line, int fromIndex,IToken[] tokens) {
+		public Token convert(String line, int fromIndex,Token[] tokens) {
 			return new TLabelRef(tokens);
 		}
 	}
 		
-	public ITokenFactory dot = TFChar.DOT;
-	public ITokenFactory comma = TFChar.COMMA;
-	public ITokenFactory squote = new TFConstChar('\'');
-	public ITokenFactory pipe = new TFConstChar('|');
-	public ITokenFactory lsqr = new TFConstChar('[');
-	public ITokenFactory rsqr = new TFConstChar(']');
-	public ITokenFactory lpar = new TFConstChar('(');
-	public ITokenFactory rpar = new TFConstChar(')');
-	public ITokenFactory qmark = new TFConstChar('?');
-	public ITokenFactory at = new TFConstChar('@');
-	public ITokenFactory eq = new TFConstChar('=');
-	public ITokenFactory caret = new TFConstChar('^');
-	public ITokenFactory colon = new TFConstChar(':');
-	public ITokenFactory plus = new TFConstChar('+');
-	public ITokenFactory pound = new TFConstChar('#');
-	public ITokenFactory asterix = new TFConstChar('*');
-	public ITokenFactory e = new TFConstChar('E');
-	public ITokenFactory slash = TFChar.SLASH;
+	public TokenFactory dot = TFChar.DOT;
+	public TokenFactory comma = TFChar.COMMA;
+	public TokenFactory squote = new TFConstChar('\'');
+	public TokenFactory pipe = new TFConstChar('|');
+	public TokenFactory lsqr = new TFConstChar('[');
+	public TokenFactory rsqr = new TFConstChar(']');
+	public TokenFactory lpar = new TFConstChar('(');
+	public TokenFactory rpar = new TFConstChar(')');
+	public TokenFactory qmark = new TFConstChar('?');
+	public TokenFactory at = new TFConstChar('@');
+	public TokenFactory eq = new TFConstChar('=');
+	public TokenFactory caret = new TFConstChar('^');
+	public TokenFactory colon = new TFConstChar(':');
+	public TokenFactory plus = new TFConstChar('+');
+	public TokenFactory pound = new TFConstChar('#');
+	public TokenFactory asterix = new TFConstChar('*');
+	public TokenFactory e = new TFConstChar('E');
+	public TokenFactory slash = TFChar.SLASH;
 
-	public ITokenFactory nqmark = new TFConstString("'?");
-	public ITokenFactory atlpar = new TFConstString("@(");
-	public ITokenFactory caretquest = new TFConstString("^$");
-	public ITokenFactory ddollar = new TFConstString("$$");
-	public ITokenFactory dollar = new TFConstChar('$');
-	public ITokenFactory pm = new TFConstChars("+-");
+	public TokenFactory nqmark = new TFConstString("'?");
+	public TokenFactory atlpar = new TFConstString("@(");
+	public TokenFactory caretquest = new TFConstString("^$");
+	public TokenFactory ddollar = new TFConstString("$$");
+	public TokenFactory dollar = new TFConstChar('$');
+	public TokenFactory pm = new TFConstChars("+-");
 	
-	public ITokenFactory ecomma = TFEmptyVerified.getInstance(',');
-	public ITokenFactory erpar = TFEmptyVerified.getInstance(')');
+	public TokenFactory ecomma = TFEmptyVerified.getInstance(',');
+	public TokenFactory erpar = TFEmptyVerified.getInstance(')');
 
 	@Characters(ranges={'a', 'z', 'A', 'Z'}, excludechars={'y', 'Y'})
-	public ITokenFactory identxy;
+	public TokenFactory identxy;
 	@Characters(ranges={'a', 'y', 'A', 'Y'})
-	public ITokenFactory identxz;
-	public ITokenFactory yy = new TFConstChars("zZ");
-	public ITokenFactory zz = new TFConstChars("zZ");
+	public TokenFactory identxz;
+	public TokenFactory yy = new TFConstChars("zZ");
+	public TokenFactory zz = new TFConstChars("zZ");
 	@Characters(ranges={'a', 'x', 'A', 'X'})
-	public ITokenFactory paton;
+	public TokenFactory paton;
 	@Sequence(value={"yy", "identxy", "yy"}, required="all")
-	public ITokenFactory patony;
+	public TokenFactory patony;
 	@Sequence(value={"zz", "identxz", "zz"}, required="all")
-	public ITokenFactory patonz;
+	public TokenFactory patonz;
 	@Choice({"paton", "patony", "patonz"})
-	public ITokenFactory patons;
+	public TokenFactory patons;
 	@Sequence(value={"squote", "patons"}, required="or")
-	public ITokenFactory patcode;	
+	public TokenFactory patcode;	
 	@Sequence(value={"intlit", "dot", "intlit"})
-	public ITokenFactory repcount;
+	public TokenFactory repcount;
 	@CChoice(value={"alternation", "patcode", "strlit"}, preds={"(", "letter", "\""})
-	public ITokenFactory patatom_re;
+	public TokenFactory patatom_re;
 	@Sequence(value={"repcount", "patatom_re"}, required="all")
-	public ITokenFactory patatom;	
+	public TokenFactory patatom;	
 	@List(value="patatoms", delim="comma", left="lpar", right="rpar")	
-	public ITokenFactory alternation;	
+	public TokenFactory alternation;	
 	@List(value="patatom")	
-	public ITokenFactory patatoms;
+	public TokenFactory patatoms;
 	@Choice({"indirection", "patatoms"})
-	public ITokenFactory pattern;
+	public TokenFactory pattern;
 	
 
 	
-	public ITokenFactory name = TFName.getInstance();
-	public ITokenFactory ident = TFIdent.getInstance();
-	public ITokenFactory intlit = new TIntLit.Factory();
+	public TokenFactory name = TFName.getInstance();
+	public TokenFactory ident = TFIdent.getInstance();
+	public TokenFactory intlit = new TIntLit.Factory();
 	@Choice({"name", "intlit"})
-	public ITokenFactory label;
+	public TokenFactory label;
 	
 	@Sequence(value={"caret", "environment", "name"}, required="ror")
-	public ITokenFactory envroutine;
+	public TokenFactory envroutine;
 	@Sequence(value={"name", "envroutine"})
-	public ITokenFactory labelref;
+	public TokenFactory labelref;
 	
 	
 	@Sequence(value={"e", "pm", "intlit"}, required="ror")
-	public ITokenFactory exp;
+	public TokenFactory exp;
 	@Sequence(value={"dot", "intlit"}, required="all")
-	public ITokenFactory mantista_1;
+	public TokenFactory mantista_1;
 	@Sequence(value={"intlit", "mantista_1"})
-	public ITokenFactory mantista;
+	public TokenFactory mantista;
 	@Sequence(value={"pm", "mantista", "exp"}, required="oro")
-	public ITokenFactory numlit;
+	public TokenFactory numlit;
 		
-	public ITokenFactory operator = TFOperator.getInstance();
-	public ITokenFactory error = TFSyntaxError.getInstance();
-	public ITokenFactory unaryop = new TFConstChars("+-\'");
-	public ITokenFactory strlit = new TFStringLiteral();
+	public TokenFactory operator = TFOperator.getInstance();
+	public TokenFactory error = TFSyntaxError.getInstance();
+	public TokenFactory unaryop = new TFConstChars("+-\'");
+	public TokenFactory strlit = new TFStringLiteral();
 	
 	@Sequence(value={"pipe", "expr", "pipe"}, required="all")
-	public ITokenFactory env_0;
+	public TokenFactory env_0;
 	@List(value="expratom", delim="comma", left="lsqr", right="rsqr")
-	public ITokenFactory env_1;
+	public TokenFactory env_1;
 	@Choice({"env_0", "env_1"})
-	public ITokenFactory environment;
+	public TokenFactory environment;
 	
 	@Sequence(value={"qmark", "pattern"}, required="all")
-	public ITokenFactory exprtail_s0;
+	public TokenFactory exprtail_s0;
 	@Sequence(value={"nqmark", "pattern"}, required="all")
-	public ITokenFactory exprtail_s1;
+	public TokenFactory exprtail_s1;
 	@Sequence(value={"operator", "expratom"}, required="all")
-	public ITokenFactory exprtail_s2;
+	public TokenFactory exprtail_s2;
 	@Choice({"exprtail_s0", "exprtail_s1", "exprtail_s2"})
-	public ITokenFactory exprtail_s;
+	public TokenFactory exprtail_s;
 	@List("exprtail_s")
-	public ITokenFactory exprtail;
+	public TokenFactory exprtail;
 
 	@List(value="expr", delim="comma")
-	public ITokenFactory exprlist;
+	public TokenFactory exprlist;
 	
 	@List(value="expr", delim="comma", left="lpar", right="rpar")
-	public ITokenFactory exprlistinparan;
+	public TokenFactory exprlistinparan;
 
 	@Sequence(value={"lpar", "expr", "rpar"}, required="all")
-	public ITokenFactory exprinpar;
+	public TokenFactory exprinpar;
 	
 	@Sequence(value={"eq", "expr"}, required="all")
-	public ITokenFactory eqexpr;
+	public TokenFactory eqexpr;
 			
 	@Sequence(value={"at", "expratom"}, required="all")
-	public ITokenFactory indirection_0;
+	public TokenFactory indirection_0;
 	@Sequence(value={"atlpar", "exprlist", "rpar"}, required="all")
-	public ITokenFactory indirection_1;
+	public TokenFactory indirection_1;
 	@Sequence(value={"indirection_0", "indirection_1"}, required="ro")
-	public ITokenFactory indirection;
+	public TokenFactory indirection;
 	
 	@CChoice(value={"lvn", "gvnall", "indirection"}, preds={"idstart", "^", "@"})
-	public ITokenFactory glvn;
+	public TokenFactory glvn;
 	
 	@Sequence(value={"environment", "name", "exprlistinparan"}, required="oro")
-	public ITokenFactory gvn_0;
+	public TokenFactory gvn_0;
 	@Sequence(value={"caret", "gvn_0"}, required="all")
-	public ITokenFactory gvn;
+	public TokenFactory gvn;
 	
 	@Sequence(value={"caretquest", "ident", "exprlistinparan"}, required="all")
-	public ITokenFactory gvnssvn;
+	public TokenFactory gvnssvn;
 
 	@Sequence(value={"ddollar", "extrinsicarg"}, required="all")
-	public ITokenFactory extrinsic;
+	public TokenFactory extrinsic;
 	
 	@Sequence(value={"unaryop", "expratom"}, required="all")
-	public ITokenFactory unaryexpritem;
+	public TokenFactory unaryexpritem;
 			
 	@Sequence(value={"caret", "exprlistinparan"}, required="all")
-	public ITokenFactory gvnnaked;
+	public TokenFactory gvnnaked;
 	
 	@Sequence(value={"expr", "colon", "expr"}, required="all")
-	public ITokenFactory dselectarg_e;
+	public TokenFactory dselectarg_e;
 	@List(value="dselectarg_e", delim="comma")
-	public ITokenFactory dselectarg;
+	public TokenFactory dselectarg;
 	
 	@CChoice(value={"gvnssvn", "gvnnaked", "gvn", "gvn"}, preds={"$", "(", "%|[", "letter"}, lead="^", def="error")
-	public ITokenFactory gvnall;
+	public TokenFactory gvnall;
 
 	@CChoice(value={"extrinsic", "external", "intrinsic"}, preds={"$", "&", "letter"}, lead="$")
-	public ITokenFactory expritem_d;
+	public TokenFactory expritem_d;
 	
 	@CChoice(value={"strlit", "expritem_d", "unaryexpritem", "numlit", "exprinpar", "numlit"}, preds={"\"", "$", "'+-", ".", "(", "digit"})
-	public ITokenFactory expritem;
+	public TokenFactory expritem;
 	
 	@Sequence(value={"dot", "name"}, required="all")
-	public ITokenFactory actual_d1;
+	public TokenFactory actual_d1;
 	@Sequence(value={"dot", "indirection"}, required="all")
-	public ITokenFactory actual_d2;
+	public TokenFactory actual_d2;
 	@CChoice(value={"numlit", "actual_d1", "actual_d2"}, preds={"digit", "idstart", "@"}, lead=".", def="error")
-	public ITokenFactory actual_d;
+	public TokenFactory actual_d;
 	
 	@CChoice(value={"actual_d", "ecomma", "erpar"}, preds={".", ",", ")"}, def="expr")
-	public ITokenFactory actual;
+	public TokenFactory actual;
 	
 	@Choice({"glvn", "expritem"})
-	public ITokenFactory expratom;
+	public TokenFactory expratom;
 
 	@Sequence(value={"name", "exprlistinparan"}, required="ro")
-	public ITokenFactory lvn;
+	public TokenFactory lvn;
 	
 	@Sequence(value={"expratom", "exprtail"}, required="ro")
-	public ITokenFactory expr;
+	public TokenFactory expr;
 	
 	//public ITokenFactory external;
 	
 	@List(value="actual", delim="comma")
-	public ITokenFactory actuallist_i;	
+	public TokenFactory actuallist_i;	
 	@Sequence(value={"lpar", "actuallist_i", "rpar"}, required="ror")
-	public ITokenFactory actuallist;
+	public TokenFactory actuallist;
 
 	@Sequence(value={"eq", "expr"}, required="all")
-	public ITokenFactory deviceparam_1;
+	public TokenFactory deviceparam_1;
 	@Sequence(value={"expr", "deviceparam_1"}, required="ro")
-	public ITokenFactory deviceparam;
+	public TokenFactory deviceparam;
 	@List(value="deviceparam", delim="colon", left="lpar", right="rpar", empty=true)
-	public ITokenFactory deviceparams_i;
+	public TokenFactory deviceparams_i;
 	@CChoice(value={"deviceparams_i"}, def="deviceparam", preds={"("})
-	public ITokenFactory deviceparams;
+	public TokenFactory deviceparams;
 	
 	@Choice({"indirection", "name"})
-	public ITokenFactory cmdkexcarg;
+	public TokenFactory cmdkexcarg;
 	@List(value="cmdkexcarg", delim="comma", left="lpar", right="rpar")
-	public ITokenFactory cmdkexcargs;
+	public TokenFactory cmdkexcargs;
 	@CChoice(value={"cmdkexcargs", "indirection"}, preds={"(", "@"}, def="glvn")
-	public ITokenFactory cmdkarg;
+	public TokenFactory cmdkarg;
 	@List(value="cmdkarg", delim="comma")
-	public ITokenFactory cmdkargs;
+	public TokenFactory cmdkargs;
 
 	@Sequence(value={"glvn", "eqexpr"}, required="all")
-	public ITokenFactory cmdmarg_basic;
+	public TokenFactory cmdmarg_basic;
 	@Sequence(value={"indirection", "eqexpr"}, required="ro")
-	public ITokenFactory cmdmarg_indirect;
+	public TokenFactory cmdmarg_indirect;
 	@Choice({"cmdmarg_indirect", "cmdmarg_basic"})
-	public ITokenFactory cmdmarg;
+	public TokenFactory cmdmarg;
 	@List(value="cmdmarg", delim="comma")
-	public ITokenFactory cmdmargs;
+	public TokenFactory cmdmargs;
 	
 	@Choice({"exprlistinparan", "expr"})
-	public ITokenFactory exprorinlist;
+	public TokenFactory exprorinlist;
 	@Sequence(value={"colon", "deviceparams", "colon", "expr", "colon", "exprorinlist"}, required="rooooo")
-	public ITokenFactory cmdoarg_tail;
+	public TokenFactory cmdoarg_tail;
 	@Sequence(value={"expr", "cmdoarg_tail"}, required="ro")
-	public ITokenFactory cmdoarg_basic;
+	public TokenFactory cmdoarg_basic;
 	@Choice({"indirection", "cmdoarg_basic"})
-	public ITokenFactory cmdoarg;
+	public TokenFactory cmdoarg;
 	@List(value="cmdoarg", delim="comma")
-	public ITokenFactory cmdoargs;
+	public TokenFactory cmdoargs;
 		
 	@Choice({"indirection", "label"})
-	public ITokenFactory linetagname;
+	public TokenFactory linetagname;
 	@Sequence(value={"plus", "expr"}, required="all")
-	public ITokenFactory lineoffset;
+	public TokenFactory lineoffset;
 	@Sequence(value={"linetagname", "lineoffset"})
-	public ITokenFactory tagspec;
+	public TokenFactory tagspec;
 	@Sequence(value={"environment", "name"}, required="or")
-	public ITokenFactory envname;
+	public TokenFactory envname;
 	@Choice(value={"rindirection", "envname"})
-	public ITokenFactory routinespec_0;
+	public TokenFactory routinespec_0;
 	@Sequence(value={"caret", "routinespec_0"}, required="all")
-	public ITokenFactory routinespec;
+	public TokenFactory routinespec;
 	@Sequence({"tagspec", "routinespec"})
-	public ITokenFactory cmdgargmain;
+	public TokenFactory cmdgargmain;
 	@Sequence(value={"cmdgargmain", "postcondition"}, required="ro")
-	public ITokenFactory cmdgarg;
+	public TokenFactory cmdgarg;
 	@List(value="cmdgarg", delim="comma")
-	public ITokenFactory cmdgargs;
+	public TokenFactory cmdgargs;
 	
 	
 	
 	@Sequence(value={"pound", "expr"}, required="all")
-	public ITokenFactory readcount;
+	public TokenFactory readcount;
 
 	@Sequence(value={"qmark", "expr"}, required="all")
-	public ITokenFactory tabformat;
-	public ITokenFactory excorpounds = TFBasic.getInstance('!','#');
+	public TokenFactory tabformat;
+	public TokenFactory excorpounds = TFBasic.getInstance('!','#');
 	@Sequence(value={"excorpounds", "tabformat"}, required="ro")
-	public ITokenFactory xtabformat;
+	public TokenFactory xtabformat;
 	@Choice({"tabformat", "xtabformat"})
-	public ITokenFactory format;
+	public TokenFactory format;
 	
 	@Sequence(value={"glvn", "readcount", "timeout"}, required="roo")
-	public ITokenFactory cmdrarg_def;	
+	public TokenFactory cmdrarg_def;	
 	@Sequence(value={"asterix", "glvn", "timeout"}, required="rro")
-	public ITokenFactory cmdrarg_ast;	
+	public TokenFactory cmdrarg_ast;	
 	@Sequence(value={"indirection", "timeout"}, required="ro")
-	public ITokenFactory cmdrarg_at;	
+	public TokenFactory cmdrarg_at;	
 	@CChoice(value={"format", "strlit", "cmdrarg_ast", "cmdrarg_at"}, preds={"!#?/", "\"", "*", "@"}, def="cmdrarg_def")
-	public ITokenFactory cmdrarg;
+	public TokenFactory cmdrarg;
 	@List(value="cmdrarg", delim="comma")
-	public ITokenFactory cmdrargs;
+	public TokenFactory cmdrargs;
 		
 	@Sequence(value={"colon", "expr"}, required="all")
-	public ITokenFactory postcondition;
+	public TokenFactory postcondition;
 	@Sequence(value={"asterix", "expr"}, required="all")
-	public ITokenFactory asterixexpr;
+	public TokenFactory asterixexpr;
 	
 	@Sequence(value={"colon", "expr"}, required="all")
-	public ITokenFactory timeout;
+	public TokenFactory timeout;
 	
 
 	@List(value="expr", delim="colon", left="lpar", right="rpar", empty=true)
-	public ITokenFactory usedeviceparam_list;
+	public TokenFactory usedeviceparam_list;
 	@Choice(value={"usedeviceparam_list", "expr"})
-	public ITokenFactory usedeviceparam;
+	public TokenFactory usedeviceparam;
 	@Sequence(value={"colon", "usedeviceparam"}, required="ro")
-	public ITokenFactory colonusedeviceparam;
+	public TokenFactory colonusedeviceparam;
 	@Sequence(value={"expr", "colonusedeviceparam", "colonusedeviceparam"}, required="roo")
-	public ITokenFactory cmduarg;
+	public TokenFactory cmduarg;
 	@List(value="cmduarg", delim="comma")
-	public ITokenFactory cmduargs;
+	public TokenFactory cmduargs;
 	
 	@Sequence(value={"at", "expratom"}, required="all")
-	public ITokenFactory rindirection;
+	public TokenFactory rindirection;
 	@Sequence(value={"label", "lineoffset"}, required="ro")
-	public ITokenFactory labelwoffset;
+	public TokenFactory labelwoffset;
 	@Choice({"rindirection", "labelwoffset"})
-	public ITokenFactory entryspec_0;
+	public TokenFactory entryspec_0;
 	@Sequence(value={"entryspec_0", "routinespec", "actuallist", "colonusedeviceparam", "timeout"}, required="ooooo")
-	public ITokenFactory cmdjarg;
+	public TokenFactory cmdjarg;
 	@Sequence(value={"colon", "usedeviceparam"}, required="ro")
-	public ITokenFactory jobparams;
+	public TokenFactory jobparams;
 	@List(value="cmdjarg", delim="comma")
-	public ITokenFactory cmdjargs;
+	public TokenFactory cmdjargs;
 	
 	@Sequence(value={"label", "lineoffset"}, required="ro")
-	public ITokenFactory dlabelwoffset;
+	public TokenFactory dlabelwoffset;
 	@Choice({"rindirection", "dlabelwoffset"})
-	public ITokenFactory dentryspec_0;	
+	public TokenFactory dentryspec_0;	
 
 	@Sequence(value={"labelpiece", "lineoffset", "doroutinef", "actuallist"}, required="oooo")
-	public ITokenFactory extrinsicarg;
+	public TokenFactory extrinsicarg;
 	@Sequence(value={"labelpiece", "lineoffset", "doroutinef", "actuallist", "postcondition"}, required="ooooo")
-	public ITokenFactory cmddarg;
+	public TokenFactory cmddarg;
 	@List(value="cmddarg", delim="comma")
-	public ITokenFactory cmddargs;
+	public TokenFactory cmddargs;
 
 	@Sequence(value={"environment", "name"}, required="or")
-	public ITokenFactory doroutine;
+	public TokenFactory doroutine;
 	@Choice({"rindirection", "doroutine"})
-	public ITokenFactory doroutineind;
+	public TokenFactory doroutineind;
 	@Sequence(value={"caret", "doroutineind"}, required="ro")
-	public ITokenFactory doroutinef;
+	public TokenFactory doroutinef;
 	
 	@Choice(value={"indirection", "label"})
-	public ITokenFactory labelpiece;
+	public TokenFactory labelpiece;
 	
 	@Choice(value={"indirection", "intrinsic", "glvn"})
-	public ITokenFactory setlhsbasic;
+	public TokenFactory setlhsbasic;
 	@List(value="setlhsbasic", delim="comma", left="lpar", right="rpar")
-	public ITokenFactory setlhsbasics;
+	public TokenFactory setlhsbasics;
 	@Choice(value={"setlhsbasics", "setlhsbasic"})
-	public ITokenFactory setlhs;
+	public TokenFactory setlhs;
 	@Equivalent("expr")
-	public ITokenFactory setrhs;
+	public TokenFactory setrhs;
 	@Sequence(value={"setlhs", "eq", "setrhs"}, required="all")
-	public ITokenFactory setarg_direct;
+	public TokenFactory setarg_direct;
 	@Sequence(value={"indirection", "eq", "setrhs"}, required="roo")
-	public ITokenFactory setarg_indirect;
+	public TokenFactory setarg_indirect;
 	@Choice(value={"setarg_indirect", "setarg_direct"})
-	public ITokenFactory setarg;
+	public TokenFactory setarg;
 	@List(value="setarg", delim="comma")
-	public ITokenFactory setargs;
+	public TokenFactory setargs;
 	
 	@Sequence(value={"colon", "deviceparams"}, required="all")
-	public ITokenFactory closearg_dp;
+	public TokenFactory closearg_dp;
 	@Sequence(value={"expr", "closearg_dp"}, required="ro")
-	public ITokenFactory closearg_direct;
+	public TokenFactory closearg_direct;
 	@Choice(value={"indirection", "closearg_direct"})
-	public ITokenFactory closearg;
+	public TokenFactory closearg;
 	@List(value="closearg", delim="comma")
-	public ITokenFactory closeargs;
+	public TokenFactory closeargs;
 	
 	@Sequence(value={"colon", "expr"}, required="all")
-	public ITokenFactory cexpr;
+	public TokenFactory cexpr;
 	@Sequence(value={"expr", "cexpr", "cexpr"}, required="roo")
-	public ITokenFactory forrhs;
+	public TokenFactory forrhs;
 	@List(value="forrhs", delim="comma")
-	public ITokenFactory forrhss;
+	public TokenFactory forrhss;
 	@Sequence(value={"lvn", "eq", "forrhss"}, required="all")
-	public ITokenFactory forarg;
+	public TokenFactory forarg;
 	
 	@CChoice(value={"gvn", "indirection"}, preds={"^", "@"}, def="lvn")
-	public ITokenFactory lockee_single;
+	public TokenFactory lockee_single;
 	@List(value="lockee", delim="comma", left="lpar", right="rpar")
-	public ITokenFactory lockee_list;
+	public TokenFactory lockee_list;
 	@Choice({"lockee_single", "lockee_list"})
-	public ITokenFactory lockee;
+	public TokenFactory lockee;
 	@Sequence(value={"pm", "lockee", "timeout"}, required="oro")
-	public ITokenFactory lockarg;
+	public TokenFactory lockarg;
 	@List(value="lockarg", delim="comma")
-	public ITokenFactory lockargs;
+	public TokenFactory lockargs;
 	
 	@List(value="lvn", delim="comma", left="lpar", right="rpar")
-	public ITokenFactory lvns;
+	public TokenFactory lvns;
 	@CChoice(value={"lvns", "indirection", "intrinsic"}, preds={"(", "@", "$"}, def="name")
-	public ITokenFactory newarg;
+	public TokenFactory newarg;
 	@List(value="newarg", delim="comma")
-	public ITokenFactory newargs;
+	public TokenFactory newargs;
 		
 	@Sequence(value={"dot", "name"}, required="all")
-	public ITokenFactory dname;
+	public TokenFactory dname;
 	@Sequence(value={"caret", "name"}, required="all")
-	public ITokenFactory cname;
+	public TokenFactory cname;
 	@Sequence(value={"name", "dname", "cname"}, required="roo")
-	public ITokenFactory ampersandtail;
-	public ITokenFactory dolamp = new TFConstString("$&");
+	public TokenFactory ampersandtail;
+	public TokenFactory dolamp = new TFConstString("$&");
 	@Sequence(value={"dolamp", "ampersandtail", "actuallist"}, required="roo")
-	public ITokenFactory external;
+	public TokenFactory external;
 
 	@Sequence(value={"comma", "expr"}, required="all")
-	public ITokenFactory dorderarg_1;
+	public TokenFactory dorderarg_1;
 	@Sequence(value={"glvn", "dorderarg_1"}, required="ro")
-	public ITokenFactory dorderarg;
+	public TokenFactory dorderarg;
 	
 	@Choice({"indirection", "expr"})
-	public ITokenFactory xecutearg_main;
+	public TokenFactory xecutearg_main;
 	@Sequence(value={"xecutearg_main", "postcondition"}, required="ro")
-	public ITokenFactory xecutearg;
+	public TokenFactory xecutearg;
 	@List(value="xecutearg", delim="comma")
-	public ITokenFactory xecuteargs;
+	public TokenFactory xecuteargs;
 
 	@Sequence(value={"slash", "name", "actuallist"}, required="all")
-	public ITokenFactory writearg_slash;
+	public TokenFactory writearg_slash;
 	@CChoice(value={"format", "writearg_slash", "asterixexpr", "indirection"}, preds={"!#?", "/", "*", "@"}, def="expr")
-	public ITokenFactory writearg;
+	public TokenFactory writearg;
 	@List(value="writearg", delim="comma")
-	public ITokenFactory writeargs;
+	public TokenFactory writeargs;
 	
 	@List(value="name", delim="comma", left="lpar", right="rpar", none=true)
-	public ITokenFactory lineformal;
+	public TokenFactory lineformal;
 	
 	
 	@Sequence(value={"dollar", "ident"}, required="all")
-	public ITokenFactory intrinsicname;
+	public TokenFactory intrinsicname;
 
 
 	public TFIntrinsic intrinsic = new TFIntrinsic(this);
@@ -597,14 +597,14 @@ public class MTFSupply {
 		@Adapter("lvn_objtail")
 		public static class ObjTailAdapter implements TokenAdapter {
 			@Override
-			public IToken convert(String line, int fromIndex,IToken[] tokens) {					
+			public Token convert(String line, int fromIndex,Token[] tokens) {					
 				return new TObjectTail(tokens);
 			}
 		}
 		@Adapter("lvn")
 		public static class LvnAdapter implements TokenAdapter {
 			@Override
-			public IToken convert(String line, int fromIndex,IToken[] tokens) {
+			public Token convert(String line, int fromIndex,Token[] tokens) {
 				if ((tokens[1] != null) && (tokens[1] instanceof TObjectTail)) {					
 					return new TObjectExpr(tokens);
 				} else {					
@@ -614,77 +614,77 @@ public class MTFSupply {
 		}
 					
 		@Choice({"glvn", "expritem", "classmethod"})
-		public ITokenFactory expratom;
+		public TokenFactory expratom;
 		
 		@Sequence(value={"dot", "name"}, required="all")
-		public ITokenFactory lvn_objtail_ms;
+		public TokenFactory lvn_objtail_ms;
 		@List("lvn_objtail_ms")
-		public ITokenFactory lvn_objtail_m;
+		public TokenFactory lvn_objtail_m;
 		@Sequence(value={"lvn_objtail_m", "actuallist"}, required="ro")
-		public ITokenFactory lvn_objtail;
+		public TokenFactory lvn_objtail;
 		@Choice(value={"exprlistinparan", "lvn_objtail"})
-		public ITokenFactory lvn_next;
+		public TokenFactory lvn_next;
 		@Sequence(value={"name", "lvn_next"}, required="ro")
-		public ITokenFactory lvn;
+		public TokenFactory lvn;
 		
 		@Choice({"expratom", "classmethod"})
-		public ITokenFactory expr_0;
+		public TokenFactory expr_0;
 		@Sequence(value={"expr_0", "exprtail"}, required="ro")
-		public ITokenFactory expr;
+		public TokenFactory expr;
 		
-		public ITokenFactory ppclass = new TFConstString("##class");
+		public TokenFactory ppclass = new TFConstString("##class");
 		@Sequence(value={"dot", "name"}, required="all")
-		public ITokenFactory classreftail;
+		public TokenFactory classreftail;
 		@List("classreftail")
-		public ITokenFactory classreftaillst;
+		public TokenFactory classreftaillst;
 		@Sequence(value={"name", "classreftaillst"}, required="ro")
-		public ITokenFactory classref;
+		public TokenFactory classref;
 		@Sequence(value={"ppclass", "lpar", "classref", "rpar", "dot", "name", "actuallist"}, required="all")
-		public ITokenFactory classmethod;
+		public TokenFactory classmethod;
 		
-		public ITokenFactory system = new TFConstString("$SYSTEM", true);
+		public TokenFactory system = new TFConstString("$SYSTEM", true);
 		@Sequence(value={"dot", "name"}, required="all")
-		public ITokenFactory method;
+		public TokenFactory method;
 		@List(value="method")
-		public ITokenFactory methods;
+		public TokenFactory methods;
 		@Sequence(value={"system", "methods", "actuallist"}, required="ror")
-		public ITokenFactory systemcall;
+		public TokenFactory systemcall;
 		
 		@Sequence(value={"label", "method"}, required="ro")
-		public ITokenFactory labelpiece_0;
+		public TokenFactory labelpiece_0;
 		@CChoice(value={"indirection", "classmethod", "systemcall"}, preds={"@", "#", "$"}, def="labelpiece_0")
-		public ITokenFactory labelpiece;
+		public TokenFactory labelpiece;
 	
 		@Choice({"methods", "lineoffset"})
-		public ITokenFactory dlabelwoffset_1;
+		public TokenFactory dlabelwoffset_1;
 		@Sequence(value={"label", "dlabelwoffset_1"}, required="ro")
-		public ITokenFactory dlabelwoffset;		
+		public TokenFactory dlabelwoffset;		
 		@Choice({"indirection", "systemcall", "classmethod", "dlabelwoffset"})
-		public ITokenFactory dentryspec_0;
+		public TokenFactory dentryspec_0;
 	
 		@Sequence(value={"environment", "name", "method"}, required="oro")
-		public ITokenFactory doroutine;
+		public TokenFactory doroutine;
 
 		@Choice({"classmethod", "expr"})
-		public ITokenFactory setrhs;
+		public TokenFactory setrhs;
 		
-		public ITokenFactory empty = TFEmpty.getInstance();
+		public TokenFactory empty = TFEmpty.getInstance();
 		@CChoice(value={"empty"}, preds={":"}, def="expr")
-		public ITokenFactory casearg_0;
+		public TokenFactory casearg_0;
 		@Sequence(value={"casearg_0", "colon", "expr"}, required="all")
-		public ITokenFactory casearg_1;		
+		public TokenFactory casearg_1;		
 		@List(value="casearg_1", delim="comma")
-		public ITokenFactory casearg_list;			
+		public TokenFactory casearg_list;			
 		@Sequence(value={"comma", "casearg_list"}, required="all")
-		public ITokenFactory cases;
+		public TokenFactory cases;
 		@Sequence(value={"expr", "cases"}, required="all")
-		public ITokenFactory dcasearg;
+		public TokenFactory dcasearg;
 	
 		@List(value="actual", delim="comma")
-		public ITokenFactory dsystemarg;
+		public TokenFactory dsystemarg;
 		
 		@Sequence(value={"dollar", "ident", "methods"}, required="rro")
-		public ITokenFactory intrinsicname;
+		public TokenFactory intrinsicname;
 
 		@Override
 		protected void initialize() {		

@@ -2,19 +2,17 @@ package com.raygroupintl.bnf;
 
 import java.util.List;
 
-import com.raygroupintl.fnds.IToken;
-import com.raygroupintl.fnds.ITokenArray;
 import com.raygroupintl.vista.struct.MError;
 
-public class TPair implements IToken, ITokenArray {
-	private IToken t0;
-	private IToken t1;
+public class TPair implements Token, TokenArray {
+	private Token t0;
+	private Token t1;
 	
-	public TPair(IToken t0) {
+	public TPair(Token t0) {
 		this.t0 = t0;
 	}
 
-	public TPair(IToken t0, IToken t1) {
+	public TPair(Token t0, Token t1) {
 		this.t0 = t0;
 		this.t1 = t1;
 	}
@@ -86,7 +84,7 @@ public class TPair implements IToken, ITokenArray {
 	}
 	
 	@Override
-	public IToken get(int i) {
+	public Token get(int i) {
 		if (i == 0) return this.t0;
 		if (i == 1) return this.t1;
 		return null;

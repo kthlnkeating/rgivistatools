@@ -1,10 +1,10 @@
 package com.raygroupintl.m.token;
 
+import com.raygroupintl.bnf.Token;
 import com.raygroupintl.bnf.TArray;
-import com.raygroupintl.fnds.IToken;
 
 public class TGlobalNaked extends TArray {
-	public TGlobalNaked(IToken[] tokens) {
+	public TGlobalNaked(Token[] tokens) {
 		super(tokens);
 	}
 }

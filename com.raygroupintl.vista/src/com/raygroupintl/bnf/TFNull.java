@@ -1,11 +1,9 @@
 package com.raygroupintl.bnf;
 
-import com.raygroupintl.fnds.IToken;
-import com.raygroupintl.fnds.ITokenFactory;
 
-public class TFNull implements ITokenFactory {
+public class TFNull implements TokenFactory {
 	@Override
-	public IToken tokenize(String line, int fromIndex) {
+	public Token tokenize(String line, int fromIndex) {
 		return null;
 	}
 }

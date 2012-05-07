@@ -1,6 +1,8 @@
 package com.raygroupintl.m.token;
 
 import com.raygroupintl.bnf.ChoiceSupply;
+import com.raygroupintl.bnf.Token;
+import com.raygroupintl.bnf.TokenFactory;
 import com.raygroupintl.bnf.TFBasic;
 import com.raygroupintl.bnf.TFConstChars;
 import com.raygroupintl.bnf.TFList;
@@ -8,8 +10,6 @@ import com.raygroupintl.bnf.TFSeqStatic;
 import com.raygroupintl.bnf.TFSyntaxError;
 import com.raygroupintl.bnf.TSyntaxError;
 import com.raygroupintl.fnds.ICharPredicate;
-import com.raygroupintl.fnds.IToken;
-import com.raygroupintl.fnds.ITokenFactory;
 import com.raygroupintl.struct.CharPredicate;
 import com.raygroupintl.struct.LetterPredicate;
 
@@ -20,16 +20,16 @@ public class TFLine extends TFSeqStatic {
 		this.version = version;
 	}
 	
-	private static ITokenFactory getTFCommands(MVersion version) {
+	private static TokenFactory getTFCommands(MVersion version) {
 		ICharPredicate[] preds = {new LetterPredicate(), new CharPredicate(';')};
-		ITokenFactory f = ChoiceSupply.get(TFSyntaxError.getInstance(), preds, TFCommand.getInstance(version), new TFComment());
+		TokenFactory f = ChoiceSupply.get(TFSyntaxError.getInstance(), preds, TFCommand.getInstance(version), new TFComment());
 		return TFList.getInstance(f);
 	}
  	
 	
 	@Override
-	protected ITokenFactory[] getFactories() { // label, formals, space, level, commands
-		return new ITokenFactory[]{
+	protected TokenFactory[] getFactories() { // label, formals, space, level, commands
+		return new TokenFactory[]{
 				MTFSupply.getInstance(version).label,
 				MTFSupply.getInstance(version).lineformal,
 				TFConstChars.getInstance(" \t"),
@@ -39,22 +39,22 @@ public class TFLine extends TFSeqStatic {
 	}
 
 	@Override
-	protected int validateNull(int seqIndex, IToken[] foundTokens) {
+	protected int validateNull(int seqIndex, Token[] foundTokens) {
 		return 0;
 	}
 
 	@Override
-	protected int validateEnd(int seqIndex, IToken[] foundTokens) {
+	protected int validateEnd(int seqIndex, Token[] foundTokens) {
 		return 0;
 	}
 
 	@Override
-	protected IToken getToken(String line, int fromIndex, IToken[] foundTokens) {
+	protected Token getToken(String line, int fromIndex, Token[] foundTokens) {
 		return new TLine(foundTokens);
 	}
 	
 	@Override
-	protected IToken getTokenWhenSyntaxError(int seqIndex, IToken[] found, TSyntaxError error, int fromIndex) {
+	protected Token getTokenWhenSyntaxError(int seqIndex, Token[] found, TSyntaxError error, int fromIndex) {
 		found[seqIndex] = error;
 		return new TLine(found);
 	}

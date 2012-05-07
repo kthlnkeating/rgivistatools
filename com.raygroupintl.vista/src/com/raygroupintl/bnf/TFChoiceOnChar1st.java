@@ -1,7 +1,6 @@
 package com.raygroupintl.bnf;
 
 import com.raygroupintl.fnds.ICharPredicate;
-import com.raygroupintl.fnds.ITokenFactory;
 
 public class TFChoiceOnChar1st extends TFChoiceOnChar {
 	private char leadingChar;
@@ -9,7 +8,7 @@ public class TFChoiceOnChar1st extends TFChoiceOnChar {
 	public TFChoiceOnChar1st() {		
 	}
 			
-	public TFChoiceOnChar1st(char leadingChar, ITokenFactory defaultFactory, ICharPredicate[] predicates, ITokenFactory[] factories) {
+	public TFChoiceOnChar1st(char leadingChar, TokenFactory defaultFactory, ICharPredicate[] predicates, TokenFactory[] factories) {
 		super(defaultFactory, predicates, factories);
 		this.leadingChar = leadingChar;
 	}
@@ -19,7 +18,7 @@ public class TFChoiceOnChar1st extends TFChoiceOnChar {
 	}
 
 	@Override
-	protected ITokenFactory getFactory(String line, int index) {
+	protected TokenFactory getFactory(String line, int index) {
 		if (index+1 < line.length()) {			
 			char ch0th = line.charAt(index);
 			if (ch0th == this.leadingChar) {

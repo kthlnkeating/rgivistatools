@@ -2,13 +2,12 @@ package com.raygroupintl.bnf;
 
 import java.util.List;
 
-import com.raygroupintl.fnds.IToken;
 import com.raygroupintl.vista.struct.MError;
 
-public abstract class TCopy implements IToken {
-	private IToken source;
+public abstract class TCopy implements Token {
+	private Token source;
 	
-	public TCopy(IToken source) {
+	public TCopy(Token source) {
 		this.source = source;
 	}
 	

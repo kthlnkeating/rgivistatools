@@ -1,11 +1,9 @@
 package com.raygroupintl.bnf;
 
-import com.raygroupintl.fnds.IToken;
-import com.raygroupintl.fnds.ITokenFactory;
 
-public class TFEol implements ITokenFactory {
+public class TFEol implements TokenFactory {
 	@Override
-	public IToken tokenize(String line, int fromIndex) {
+	public Token tokenize(String line, int fromIndex) {
 		int endIndex = line.length();
 		if (fromIndex < endIndex) {
 			char ch0th = line.charAt(fromIndex);

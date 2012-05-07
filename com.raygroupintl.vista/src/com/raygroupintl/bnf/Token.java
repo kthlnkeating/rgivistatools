@@ -1,10 +1,10 @@
-package com.raygroupintl.fnds;
+package com.raygroupintl.bnf;
 
 import java.util.List;
 
 import com.raygroupintl.vista.struct.MError;
 
-public interface IToken {
+public interface Token {
 	String getStringValue();
 	int getStringSize();
 	

@@ -6,15 +6,15 @@ import junit.framework.Assert;
 
 import org.junit.Test;
 
-import com.raygroupintl.fnds.IToken;
+import com.raygroupintl.bnf.Token;
 import com.raygroupintl.m.token.MVersion;
 import com.raygroupintl.m.token.TFLine;
 import com.raygroupintl.vista.struct.MError;
 
 public class TFLineTest {
-	private IToken lineTest(MVersion version, String line, boolean errorAsWell) {
+	private Token lineTest(MVersion version, String line, boolean errorAsWell) {
 		TFLine f = TFLine.getInstance(version);
-		IToken t = f.tokenize(line, 0);
+		Token t = f.tokenize(line, 0);
 		String r = t.getStringValue();
 		Assert.assertEquals(line, r);	
 		if (errorAsWell) {
@@ -27,7 +27,7 @@ public class TFLineTest {
 
 	private void lineErrorTest(MVersion version, String line) {
 		TFLine f = TFLine.getInstance(version);
-		IToken t = f.tokenize(line, 0);
+		Token t = f.tokenize(line, 0);
 		String r = t.getStringValue();
 		Assert.assertEquals(line, r);	
 		List<MError> error = t.getErrors();
@@ -37,12 +37,12 @@ public class TFLineTest {
 
 	private void noErrorTest(MVersion version, String lineUnderTest) {
 		TFLine f = TFLine.getInstance(version);
-		IToken line = f.tokenize(lineUnderTest, 0);
+		Token line = f.tokenize(lineUnderTest, 0);
 		Assert.assertFalse("Unexpected error", line.hasError());
 		Assert.assertFalse("Unexpected fatal error", line.hasFatalError());				
 	}
 	
-	private IToken lineTest(MVersion version, String line) {
+	private Token lineTest(MVersion version, String line) {
 		return lineTest(version, line, true);
 	}
 
@@ -105,7 +105,7 @@ public class TFLineTest {
 	}
 	
 	public void testBeautify(MVersion version) {
-		IToken l = lineTest(version, " S @A=\"S\"  S @H@(0)=3");
+		Token l = lineTest(version, " S @A=\"S\"  S @H@(0)=3");
 		l.beautify();
 		String expected = " SET @A=\"S\"  SET @H@(0)=3";
 		String actual = l.getStringValue();

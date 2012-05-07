@@ -4,10 +4,10 @@ import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Set;
 
-import com.raygroupintl.fnds.IToken;
-import com.raygroupintl.fnds.ITokenFactory;
+import com.raygroupintl.bnf.Token;
+import com.raygroupintl.bnf.TokenFactory;
 
-public class TFOperator implements ITokenFactory {
+public class TFOperator implements TokenFactory {
 	private static final char[] OPERATOR_CHARS = {
 		'!', '#', '&', '\'', '*', '+', '-', '/', '<', '=', '>', '?', '[', '\\', ']', '_', '|'
 	};
@@ -35,7 +35,7 @@ public class TFOperator implements ITokenFactory {
 	}
 	
 	@Override
-	public IToken tokenize(String line, int fromIndex) {
+	public Token tokenize(String line, int fromIndex) {
 		int endIndex = line.length();
 		int index = fromIndex;
 		while (index < endIndex) {

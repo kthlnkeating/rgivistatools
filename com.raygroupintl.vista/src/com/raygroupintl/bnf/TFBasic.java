@@ -1,17 +1,15 @@
 package com.raygroupintl.bnf;
 
-import com.raygroupintl.fnds.IToken;
-import com.raygroupintl.fnds.ITokenFactory;
 
-public abstract class TFBasic implements ITokenFactory {
+public abstract class TFBasic implements TokenFactory {
 	protected abstract boolean stopOn(char ch);
 	
-	protected IToken getToken(String line) {
+	protected Token getToken(String line) {
 		return new TBasic(line);
 	}
 	
 	@Override
-	public IToken tokenize(String line, int fromIndex) {
+	public Token tokenize(String line, int fromIndex) {
 		int endIndex = line.length();
 		if (fromIndex < endIndex) {
 			int index = fromIndex;

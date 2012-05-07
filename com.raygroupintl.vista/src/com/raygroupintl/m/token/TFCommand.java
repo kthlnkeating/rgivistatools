@@ -3,6 +3,9 @@ package com.raygroupintl.m.token;
 import java.util.HashMap;
 import java.util.Map;
 
+import com.raygroupintl.bnf.TokenFactorySupply;
+import com.raygroupintl.bnf.Token;
+import com.raygroupintl.bnf.TokenFactory;
 import com.raygroupintl.bnf.TArray;
 import com.raygroupintl.bnf.TBasic;
 import com.raygroupintl.bnf.TEmpty;
@@ -11,9 +14,6 @@ import com.raygroupintl.bnf.TFConstChar;
 import com.raygroupintl.bnf.TFEmptyVerified;
 import com.raygroupintl.bnf.TFSeq;
 import com.raygroupintl.bnf.TSyntaxError;
-import com.raygroupintl.fnds.IToken;
-import com.raygroupintl.fnds.ITokenFactory;
-import com.raygroupintl.fnds.ITokenFactorySupply;
 import com.raygroupintl.vista.struct.MError;
 
 public class TFCommand extends TFSeq {
@@ -24,7 +24,7 @@ public class TFCommand extends TFSeq {
 	}
 	
 	private static abstract class TCommand extends TArray {
-		public TCommand(IToken[] tokens) {
+		public TCommand(Token[] tokens) {
 			super(tokens);
 		}
 		
@@ -39,9 +39,9 @@ public class TFCommand extends TFSeq {
 		}			
 	}
 	
-	private static class TFGenericArgument implements ITokenFactory {
+	private static class TFGenericArgument implements TokenFactory {
 		@Override
-		public IToken tokenize(String line, int fromIndex) {
+		public Token tokenize(String line, int fromIndex) {
 			int endIndex = line.length();
 			int index = fromIndex;
 			boolean inQuotes = false;
@@ -68,26 +68,26 @@ public class TFCommand extends TFSeq {
 	private static final TFEmptyVerified TF_EMPTY = TFEmptyVerified.getInstance(' ');
 	
 	private static abstract class TCommandSpec extends TBasic {
-		private ITokenFactory argumentFactory;
+		private TokenFactory argumentFactory;
 		
 		public TCommandSpec(String value) {
 			super(value);
 		}
 
-		public ITokenFactory getArgumentFactory(final MVersion version) {
+		public TokenFactory getArgumentFactory(final MVersion version) {
 			if (this.argumentFactory == null) {
 				this.argumentFactory = this.buildArgumentFactory(version);
 			}
 			return this.argumentFactory;
 		}
 
-		protected abstract ITokenFactory buildArgumentFactory(final MVersion version);	
+		protected abstract TokenFactory buildArgumentFactory(final MVersion version);	
 		
-		public abstract IToken getToken(IToken[] tokens);
+		public abstract Token getToken(Token[] tokens);
 	}
 		
 	private static class TCommandB extends TCommand {
-		public TCommandB(IToken[] tokens) {
+		public TCommandB(Token[] tokens) {
 			super(tokens);
 		}		
 		
@@ -103,17 +103,17 @@ public class TFCommand extends TFSeq {
 		}
 	
 		@Override
-		protected ITokenFactory buildArgumentFactory(final MVersion version) {
+		protected TokenFactory buildArgumentFactory(final MVersion version) {
 			return MTFSupply.getInstance(version).expr;
 		}
 		
-		public IToken getToken(IToken[] tokens) {
+		public Token getToken(Token[] tokens) {
 			return new TCommandB(tokens);
 		}
 	}
 	
 	private static class TCommandC extends TCommand {
-		public TCommandC(IToken[] tokens) {
+		public TCommandC(Token[] tokens) {
 			super(tokens);
 		}		
 		
@@ -129,17 +129,17 @@ public class TFCommand extends TFSeq {
 		}
 	
 		@Override
-		protected ITokenFactory buildArgumentFactory(final MVersion version) {
+		protected TokenFactory buildArgumentFactory(final MVersion version) {
 			return MTFSupply.getInstance(version).closeargs;		
 		}
 		
-		public IToken getToken(IToken[] tokens) {
+		public Token getToken(Token[] tokens) {
 			return new TCommandC(tokens);
 		}
 	}
 	
 	private static class TCommandD extends TCommand {
-		public TCommandD(IToken[] tokens) {
+		public TCommandD(Token[] tokens) {
 			super(tokens);
 		}		
 		
@@ -155,17 +155,17 @@ public class TFCommand extends TFSeq {
 		}
 	
 		@Override
-		protected ITokenFactory buildArgumentFactory(final MVersion version) {
+		protected TokenFactory buildArgumentFactory(final MVersion version) {
 			return MTFSupply.getInstance(version).cmddargs;
 		}
 		
-		public IToken getToken(IToken[] tokens) {
+		public Token getToken(Token[] tokens) {
 			return new TCommandD(tokens);
 		}
 	}
 	
 	private static class TCommandE extends TCommand {
-		public TCommandE(IToken[] tokens) {
+		public TCommandE(Token[] tokens) {
 			super(tokens);
 		}		
 		
@@ -181,17 +181,17 @@ public class TFCommand extends TFSeq {
 		}
 	
 		@Override
-		protected ITokenFactory buildArgumentFactory(final MVersion version) {
+		protected TokenFactory buildArgumentFactory(final MVersion version) {
 			return TF_EMPTY;
 		}
 		
-		public IToken getToken(IToken[] tokens) {
+		public Token getToken(Token[] tokens) {
 			return new TCommandE(tokens);
 		}
 	}
 
 	private static class TCommandF extends TCommand {
-		public TCommandF(IToken[] tokens) {
+		public TCommandF(Token[] tokens) {
 			super(tokens);
 		}		
 		
@@ -207,17 +207,17 @@ public class TFCommand extends TFSeq {
 		}
 	
 		@Override
-		protected ITokenFactory buildArgumentFactory(final MVersion version) {
+		protected TokenFactory buildArgumentFactory(final MVersion version) {
 			return MTFSupply.getInstance(version).forarg;
 		}
 		
-		public IToken getToken(IToken[] tokens) {
+		public Token getToken(Token[] tokens) {
 			return new TCommandF(tokens);
 		}
 	}
 
 	private static class TCommandG extends TCommand {
-		public TCommandG(IToken[] tokens) {
+		public TCommandG(Token[] tokens) {
 			super(tokens);
 		}		
 		
@@ -233,23 +233,23 @@ public class TFCommand extends TFSeq {
 		}
 	
 		@Override
-		protected ITokenFactory buildArgumentFactory(final MVersion version) {
+		protected TokenFactory buildArgumentFactory(final MVersion version) {
 			return MTFSupply.getInstance(version).cmdgargs;	
 		}
 		
-		public IToken getToken(IToken[] tokens) {
+		public Token getToken(Token[] tokens) {
 			return new TCommandG(tokens);
 		}
 	}
 
 	private static class TCommandH extends TCommand {
-		public TCommandH(IToken[] tokens) {
+		public TCommandH(Token[] tokens) {
 			super(tokens);
 		}		
 		
 		@Override
 		protected String getFullName() {
-			IToken argument = this.get(3);
+			Token argument = this.get(3);
 			if (argument == null) {
 				return "HALT";
 			} else {
@@ -264,17 +264,17 @@ public class TFCommand extends TFSeq {
 		}
 	
 		@Override
-		protected ITokenFactory buildArgumentFactory(final MVersion version) {
+		protected TokenFactory buildArgumentFactory(final MVersion version) {
 			return MTFSupply.getInstance(version).expr;
 		}
 		
-		public IToken getToken(IToken[] tokens) {
+		public Token getToken(Token[] tokens) {
 			return new TCommandH(tokens);
 		}
 	}
 
 	private static class TCommandI extends TCommand {
-		public TCommandI(IToken[] tokens) {
+		public TCommandI(Token[] tokens) {
 			super(tokens);
 		}		
 		
@@ -290,17 +290,17 @@ public class TFCommand extends TFSeq {
 		}
 	
 		@Override
-		protected ITokenFactory buildArgumentFactory(final MVersion version) {
+		protected TokenFactory buildArgumentFactory(final MVersion version) {
 			return MTFSupply.getInstance(version).exprlist;	
 		}
 		
-		public IToken getToken(IToken[] tokens) {
+		public Token getToken(Token[] tokens) {
 			return new TCommandI(tokens);
 		}
 	}
 
 	private static class TCommandJ extends TCommand {
-		public TCommandJ(IToken[] tokens) {
+		public TCommandJ(Token[] tokens) {
 			super(tokens);
 		}		
 		
@@ -316,17 +316,17 @@ public class TFCommand extends TFSeq {
 		}
 	
 		@Override
-		protected ITokenFactory buildArgumentFactory(final MVersion version) {
+		protected TokenFactory buildArgumentFactory(final MVersion version) {
 			return MTFSupply.getInstance(version).cmdjargs;
 		}
 		
-		public IToken getToken(IToken[] tokens) {
+		public Token getToken(Token[] tokens) {
 			return new TCommandJ(tokens);
 		}
 	}
 
 	private static class TCommandK extends TCommand {
-		public TCommandK(IToken[] tokens) {
+		public TCommandK(Token[] tokens) {
 			super(tokens);
 		}		
 		
@@ -342,17 +342,17 @@ public class TFCommand extends TFSeq {
 		}
 	
 		@Override
-		protected ITokenFactory buildArgumentFactory(final MVersion version) {
+		protected TokenFactory buildArgumentFactory(final MVersion version) {
 			return MTFSupply.getInstance(version).cmdkargs;			
 		}
 		
-		public IToken getToken(IToken[] tokens) {
+		public Token getToken(Token[] tokens) {
 			return new TCommandK(tokens);
 		}
 	}
 
 	private static class TCommandL extends TCommand {
-		public TCommandL(IToken[] tokens) {
+		public TCommandL(Token[] tokens) {
 			super(tokens);
 		}		
 		
@@ -368,17 +368,17 @@ public class TFCommand extends TFSeq {
 		}
 	
 		@Override
-		protected ITokenFactory buildArgumentFactory(final MVersion version) {
+		protected TokenFactory buildArgumentFactory(final MVersion version) {
 			return MTFSupply.getInstance(version).lockargs;
 		}
 		
-		public IToken getToken(IToken[] tokens) {
+		public Token getToken(Token[] tokens) {
 			return new TCommandL(tokens);
 		}
 	}
 
 	private static class TCommandM extends TCommand {
-		public TCommandM(IToken[] tokens) {
+		public TCommandM(Token[] tokens) {
 			super(tokens);
 		}		
 		
@@ -394,17 +394,17 @@ public class TFCommand extends TFSeq {
 		}
 	
 		@Override
-		protected ITokenFactory buildArgumentFactory(final MVersion version) {
+		protected TokenFactory buildArgumentFactory(final MVersion version) {
 			return MTFSupply.getInstance(version).cmdmargs; 	
 		}
 		
-		public IToken getToken(IToken[] tokens) {
+		public Token getToken(Token[] tokens) {
 			return new TCommandM(tokens);
 		}
 	}
 
 	private static class TCommandN extends TCommand {
-		public TCommandN(IToken[] tokens) {
+		public TCommandN(Token[] tokens) {
 			super(tokens);
 		}		
 		
@@ -420,17 +420,17 @@ public class TFCommand extends TFSeq {
 		}
 	
 		@Override
-		protected ITokenFactory buildArgumentFactory(final MVersion version) {
+		protected TokenFactory buildArgumentFactory(final MVersion version) {
 			return MTFSupply.getInstance(version).newargs;
 		}
 		
-		public IToken getToken(IToken[] tokens) {
+		public Token getToken(Token[] tokens) {
 			return new TCommandN(tokens);
 		}
 	}
 
 	private static class TCommandO extends TCommand {
-		public TCommandO(IToken[] tokens) {
+		public TCommandO(Token[] tokens) {
 			super(tokens);
 		}		
 		
@@ -446,17 +446,17 @@ public class TFCommand extends TFSeq {
 		}
 	
 		@Override
-		protected ITokenFactory buildArgumentFactory(final MVersion version) {
+		protected TokenFactory buildArgumentFactory(final MVersion version) {
 			return MTFSupply.getInstance(version).cmdoargs;	
 		}
 		
-		public IToken getToken(IToken[] tokens) {
+		public Token getToken(Token[] tokens) {
 			return new TCommandO(tokens);
 		}
 	}
 
 	private static class TCommandQ extends TCommand {
-		public TCommandQ(IToken[] tokens) {
+		public TCommandQ(Token[] tokens) {
 			super(tokens);
 		}		
 		
@@ -472,17 +472,17 @@ public class TFCommand extends TFSeq {
 		}
 	
 		@Override
-		protected ITokenFactory buildArgumentFactory(final MVersion version) {
+		protected TokenFactory buildArgumentFactory(final MVersion version) {
 			return MTFSupply.getInstance(version).expr; 	
 		}
 		
-		public IToken getToken(IToken[] tokens) {
+		public Token getToken(Token[] tokens) {
 			return new TCommandQ(tokens);
 		}
 	}
 
 	private static class TCommandR extends TCommand {
-		public TCommandR(IToken[] tokens) {
+		public TCommandR(Token[] tokens) {
 			super(tokens);
 		}		
 		
@@ -498,17 +498,17 @@ public class TFCommand extends TFSeq {
 		}
 	
 		@Override
-		protected ITokenFactory buildArgumentFactory(final MVersion version) {
+		protected TokenFactory buildArgumentFactory(final MVersion version) {
 			return MTFSupply.getInstance(version).cmdrargs;
 		}
 		
-		public IToken getToken(IToken[] tokens) {
+		public Token getToken(Token[] tokens) {
 			return new TCommandR(tokens);
 		}
 	}
 
 	private static class TCommandS extends TCommand {
-		public TCommandS(IToken[] tokens) {
+		public TCommandS(Token[] tokens) {
 			super(tokens);
 		}		
 		
@@ -524,17 +524,17 @@ public class TFCommand extends TFSeq {
 		}
 	
 		@Override
-		protected ITokenFactory buildArgumentFactory(final MVersion version) {
+		protected TokenFactory buildArgumentFactory(final MVersion version) {
 			return MTFSupply.getInstance(version).setargs;
 		}
 		
-		public IToken getToken(IToken[] tokens) {
+		public Token getToken(Token[] tokens) {
 			return new TCommandS(tokens);
 		}
 	}
 
 	private static class TCommandTC extends TCommand {
-		public TCommandTC(IToken[] tokens) {
+		public TCommandTC(Token[] tokens) {
 			super(tokens);
 		}		
 		
@@ -550,17 +550,17 @@ public class TFCommand extends TFSeq {
 		}
 	
 		@Override
-		protected ITokenFactory buildArgumentFactory(final MVersion version) {
+		protected TokenFactory buildArgumentFactory(final MVersion version) {
 			return TF_EMPTY;
 		}
 		
-		public IToken getToken(IToken[] tokens) {
+		public Token getToken(Token[] tokens) {
 			return new TCommandTC(tokens);
 		}
 	}
 
 	private static class TCommandTR extends TCommand {
-		public TCommandTR(IToken[] tokens) {
+		public TCommandTR(Token[] tokens) {
 			super(tokens);
 		}		
 		
@@ -576,17 +576,17 @@ public class TFCommand extends TFSeq {
 		}
 	
 		@Override
-		protected ITokenFactory buildArgumentFactory(final MVersion version) {
+		protected TokenFactory buildArgumentFactory(final MVersion version) {
 			return TF_EMPTY;
 		}
 		
-		public IToken getToken(IToken[] tokens) {
+		public Token getToken(Token[] tokens) {
 			return new TCommandTR(tokens);
 		}
 	}
 
 	private static class TCommandTRO extends TCommand {
-		public TCommandTRO(IToken[] tokens) {
+		public TCommandTRO(Token[] tokens) {
 			super(tokens);
 		}		
 		
@@ -602,17 +602,17 @@ public class TFCommand extends TFSeq {
 		}
 	
 		@Override
-		protected ITokenFactory buildArgumentFactory(final MVersion version) {
+		protected TokenFactory buildArgumentFactory(final MVersion version) {
 			return TF_EMPTY;
 		}
 		
-		public IToken getToken(IToken[] tokens) {
+		public Token getToken(Token[] tokens) {
 			return new TCommandTRO(tokens);
 		}
 	}
 
 	private static class TCommandTS extends TCommand {
-		public TCommandTS(IToken[] tokens) {
+		public TCommandTS(Token[] tokens) {
 			super(tokens);
 		}		
 		
@@ -628,17 +628,17 @@ public class TFCommand extends TFSeq {
 		}
 	
 		@Override
-		protected ITokenFactory buildArgumentFactory(final MVersion version) {
+		protected TokenFactory buildArgumentFactory(final MVersion version) {
 			return TF_EMPTY;
 		}
 		
-		public IToken getToken(IToken[] tokens) {
+		public Token getToken(Token[] tokens) {
 			return new TCommandTS(tokens);
 		}
 	}
 
 	private static class TCommandU extends TCommand {
-		public TCommandU(IToken[] tokens) {
+		public TCommandU(Token[] tokens) {
 			super(tokens);
 		}		
 		
@@ -654,17 +654,17 @@ public class TFCommand extends TFSeq {
 		}
 	
 		@Override
-		protected ITokenFactory buildArgumentFactory(final MVersion version) {
+		protected TokenFactory buildArgumentFactory(final MVersion version) {
 			return MTFSupply.getInstance(version).cmduargs;
 		}
 		
-		public IToken getToken(IToken[] tokens) {
+		public Token getToken(Token[] tokens) {
 			return new TCommandU(tokens);
 		}
 	}
 
 	private static class TCommandW extends TCommand {
-		public TCommandW(IToken[] tokens) {
+		public TCommandW(Token[] tokens) {
 			super(tokens);
 		}		
 		
@@ -680,17 +680,17 @@ public class TFCommand extends TFSeq {
 		}
 	
 		@Override
-		protected ITokenFactory buildArgumentFactory(final MVersion version) {
+		protected TokenFactory buildArgumentFactory(final MVersion version) {
 			return MTFSupply.getInstance(version).writeargs;			
 		}
 		
-		public IToken getToken(IToken[] tokens) {
+		public Token getToken(Token[] tokens) {
 			return new TCommandW(tokens);
 		}
 	}
 
 	private static class TCommandV extends TCommand {
-		public TCommandV(IToken[] tokens) {
+		public TCommandV(Token[] tokens) {
 			super(tokens);
 		}		
 		
@@ -706,17 +706,17 @@ public class TFCommand extends TFSeq {
 		}
 	
 		@Override
-		protected ITokenFactory buildArgumentFactory(final MVersion version) {
+		protected TokenFactory buildArgumentFactory(final MVersion version) {
 			return new TFGenericArgument();
 		}
 		
-		public IToken getToken(IToken[] tokens) {
+		public Token getToken(Token[] tokens) {
 			return new TCommandV(tokens);
 		}
 	}
 
 	private static class TCommandX extends TCommand {
-		public TCommandX(IToken[] tokens) {
+		public TCommandX(Token[] tokens) {
 			super(tokens);
 		}		
 		
@@ -732,11 +732,11 @@ public class TFCommand extends TFSeq {
 		}
 	
 		@Override
-		protected ITokenFactory buildArgumentFactory(final MVersion version) {
+		protected TokenFactory buildArgumentFactory(final MVersion version) {
 			return MTFSupply.getInstance(version).xecuteargs;
 		}
 		
-		public IToken getToken(IToken[] tokens) {
+		public Token getToken(Token[] tokens) {
 			return new TCommandX(tokens);
 		}
 	}
@@ -747,11 +747,11 @@ public class TFCommand extends TFSeq {
 		}
 	
 		@Override
-		protected ITokenFactory buildArgumentFactory(final MVersion version) {
+		protected TokenFactory buildArgumentFactory(final MVersion version) {
 			return new TFGenericArgument();
 		}
 		
-		public IToken getToken(IToken[] tokens) {
+		public Token getToken(Token[] tokens) {
 			return new TArray(tokens);
 		}
 	}
@@ -1002,8 +1002,8 @@ public class TFCommand extends TFSeq {
 			
 	private static class TFCommandName extends TFIdent {
 		@Override
-		public IToken tokenize(String line, int fromIndex) {
-			IToken result = super.tokenize(line, fromIndex);
+		public Token tokenize(String line, int fromIndex) {
+			Token result = super.tokenize(line, fromIndex);
 			String cmdName = result.getStringValue();
 			TCSFactory tcs = COMMAND_SPECS.get(cmdName.toUpperCase());
 			if (tcs != null) {
@@ -1018,14 +1018,14 @@ public class TFCommand extends TFSeq {
 		}
 	}
 		
-	private static class TFSCommand implements ITokenFactorySupply {
+	private static class TFSCommand implements TokenFactorySupply {
 		private MVersion version;
 		
 		private TFSCommand(MVersion version) {
 			this.version = version;
 		}
 			
-		public ITokenFactory get(int seqIndex, IToken[] previousTokens) {
+		public TokenFactory get(int seqIndex, Token[] previousTokens) {
 			switch (seqIndex) {
 				case 0:
 					return TFCommandName.getInstance();
@@ -1035,7 +1035,7 @@ public class TFCommand extends TFSeq {
 					return TFConstChar.getInstance(' ');
 				case 3: {
 					TCommandSpec cmd = (TCommandSpec) previousTokens[0];
-					ITokenFactory f = cmd.getArgumentFactory(this.version);
+					TokenFactory f = cmd.getArgumentFactory(this.version);
 					return f;
 				}					
 				case 4:
@@ -1052,12 +1052,17 @@ public class TFCommand extends TFSeq {
 	}
 	
 	@Override
-	protected ITokenFactorySupply getFactorySupply() {
+	public Token tokenize(String line, int fromIndex) {
+		return super.tokenize(line, fromIndex);
+	}
+	
+	@Override
+	protected TokenFactorySupply getFactorySupply() {
 		return new TFSCommand(this.version);
 	}
 
 	@Override
-	protected int validateNull(int seqIndex, IToken[] foundTokens) {
+	protected int validateNull(int seqIndex, Token[] foundTokens) {
 		if (seqIndex == 0) {
 			return RETURN_NULL;
 		}
@@ -1065,12 +1070,12 @@ public class TFCommand extends TFSeq {
 	}
 
 	@Override
-	protected int validateEnd(int seqIndex, IToken[] foundTokens) {
+	protected int validateEnd(int seqIndex, Token[] foundTokens) {
 		return 0;
 	}
 
 	@Override
-	public IToken getToken(String line, int fromIndex, IToken[] tokens) {
+	public Token getToken(String line, int fromIndex, Token[] tokens) {
 		TCommandSpec spec = (TCommandSpec) tokens[0];
 		return spec.getToken(tokens);
 	}

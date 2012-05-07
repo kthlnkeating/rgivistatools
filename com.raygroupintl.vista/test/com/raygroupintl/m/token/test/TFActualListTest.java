@@ -2,13 +2,13 @@ package com.raygroupintl.m.token.test;
 
 import org.junit.Test;
 
-import com.raygroupintl.fnds.ITokenFactory;
+import com.raygroupintl.bnf.TokenFactory;
 import com.raygroupintl.m.token.MTFSupply;
 import com.raygroupintl.m.token.MVersion;
 
 public class TFActualListTest {
 	private void test(MVersion version) {
-		ITokenFactory f = MTFSupply.getInstance(version).actuallist;
+		TokenFactory f = MTFSupply.getInstance(version).actuallist;
 		TFCommonTest.validCheck(f, "(LST,\",\",FLD)");		
 		TFCommonTest.validCheck(f, "(.LST,.5,FLD)");		
 		TFCommonTest.validCheck(f, "(.5,RCSUBJ,XMBODY,.XMTO,,.XMZ)");

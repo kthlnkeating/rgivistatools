@@ -2,14 +2,14 @@ package com.raygroupintl.m.token.test;
 
 import org.junit.Test;
 
-import com.raygroupintl.fnds.ITokenFactory;
+import com.raygroupintl.bnf.TokenFactory;
 import com.raygroupintl.m.token.MTFSupply;
 import com.raygroupintl.m.token.MVersion;
 
 public class TFPatternTest {
 	private void test(MVersion version) {
 		MTFSupply m = MTFSupply.getInstance(version);
-		ITokenFactory f = m.pattern;
+		TokenFactory f = m.pattern;
 		TFCommonTest.validCheck(f, "1\"C-\".E");
 		TFCommonTest.validCheck(f, "1\"C-\".E ","1\"C-\".E");
 		TFCommonTest.validCheck(f, ".P1N.NP");

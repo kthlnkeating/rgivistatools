@@ -2,8 +2,8 @@ package com.raygroupintl.m.token.test;
 
 import org.junit.Test;
 
+import com.raygroupintl.bnf.TokenFactory;
 import com.raygroupintl.bnf.TFDelimitedList;
-import com.raygroupintl.fnds.ITokenFactory;
 import com.raygroupintl.m.token.MTFSupply;
 import com.raygroupintl.m.token.MVersion;
 
@@ -23,7 +23,7 @@ public class TFDelimitedListTest {
 
 	private void testActual(MVersion version) {
 		MTFSupply m = MTFSupply.getInstance(version);
-		ITokenFactory fActual = m.actual;
+		TokenFactory fActual = m.actual;
 		TFDelimitedList f = new TFDelimitedList(fActual, ',');
 		TFCommonTest.validCheck(f, "LST,\",\",FLD");
 	}

@@ -1,11 +1,11 @@
 package com.raygroupintl.m.token;
 
-import com.raygroupintl.fnds.IToken;
-import com.raygroupintl.fnds.ITokenFactory;
+import com.raygroupintl.bnf.Token;
+import com.raygroupintl.bnf.TokenFactory;
 
-public class TFComment implements ITokenFactory {
+public class TFComment implements TokenFactory {
 	@Override
-	public IToken tokenize(String line, int fromIndex) {
+	public Token tokenize(String line, int fromIndex) {
 		int endIndex = line.length();
 		if (fromIndex < endIndex) {
 			char ch = line.charAt(fromIndex);

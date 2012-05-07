@@ -9,8 +9,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 
+import com.raygroupintl.bnf.Token;
 import com.raygroupintl.bnf.TBase;
-import com.raygroupintl.fnds.IToken;
 import com.raygroupintl.m.struct.Fanout;
 import com.raygroupintl.m.struct.LineLocation;
 import com.raygroupintl.m.struct.RoutineFanouts;
@@ -120,7 +120,7 @@ public class TRoutine extends TBase {
 	
 	public void write(Path path) throws IOException {
 		List<String> fileLines = new ArrayList<String>();
-		for (IToken line : this.lines) {
+		for (Token line : this.lines) {
 			if (line == null) {
 				fileLines.add("");
 			} else {

@@ -1,22 +1,20 @@
 package com.raygroupintl.bnf;
 
 import com.raygroupintl.fnds.ICharPredicate;
-import com.raygroupintl.fnds.IToken;
-import com.raygroupintl.fnds.ITokenFactory;
 
-public class TFCharacters implements ITokenFactory {
+public class TFCharacters implements TokenFactory {
 	private ICharPredicate predicate;
 	
 	public TFCharacters(ICharPredicate predicate) {
 		this.predicate = predicate;
 	}
 		
-	protected IToken getToken(String line) {
+	protected Token getToken(String line) {
 		return new TBasic(line);
 	}
 	
 	@Override
-	public IToken tokenize(String line, int fromIndex) {
+	public Token tokenize(String line, int fromIndex) {
 		int endIndex = line.length();
 		int index = fromIndex;
 		while (index < endIndex) {

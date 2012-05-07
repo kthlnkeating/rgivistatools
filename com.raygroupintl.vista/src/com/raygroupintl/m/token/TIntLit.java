@@ -1,9 +1,9 @@
 package com.raygroupintl.m.token;
 
+import com.raygroupintl.bnf.Token;
+import com.raygroupintl.bnf.TokenFactory;
 import com.raygroupintl.bnf.TBasic;
 import com.raygroupintl.bnf.TFBasic;
-import com.raygroupintl.fnds.IToken;
-import com.raygroupintl.fnds.ITokenFactory;
 
 public class TIntLit extends TBasic {
 	private TIntLit(String value) {
@@ -17,12 +17,12 @@ public class TIntLit extends TBasic {
 		}
 		
 		@Override
-		protected IToken getToken(String value) {
+		protected Token getToken(String value) {
 			return new TIntLit(value);
 		}
 	}
 
-	public static ITokenFactory getFactory() {
+	public static TokenFactory getFactory() {
 		return new Factory();
 	}
 }

@@ -2,12 +2,9 @@ package com.raygroupintl.bnf;
 
 import java.util.Arrays;
 
-import com.raygroupintl.fnds.IToken;
-import com.raygroupintl.fnds.ITokenFactory;
-import com.raygroupintl.fnds.ITokenFactorySupply;
 
 public class TFSeqStatic extends TFSeq {
-	private ITokenFactorySupply supply;
+	private TokenFactorySupply supply;
 	private boolean[] requiredFlags = {};
 	private int firstRequired = Integer.MAX_VALUE;
 	private int lastRequired = Integer.MIN_VALUE;
@@ -16,14 +13,14 @@ public class TFSeqStatic extends TFSeq {
 	public TFSeqStatic() {		
 	}
 	
-	public TFSeqStatic(ITokenFactory... factories) {
+	public TFSeqStatic(TokenFactory... factories) {
 		this.supply = new TFSStatic(factories);
 		if (factories.length > this.requiredFlags.length) {
 			this.requiredFlags = Arrays.copyOf(this.requiredFlags, factories.length);
 		}
 	}
 		
-	public void setFactories(ITokenFactory[] factories) {
+	public void setFactories(TokenFactory[] factories) {
 		this.supply = new TFSStatic(factories);		
 		if (factories.length > this.requiredFlags.length) {
 			this.requiredFlags = Arrays.copyOf(this.requiredFlags, factories.length);
@@ -65,21 +62,21 @@ public class TFSeqStatic extends TFSeq {
 		Arrays.fill(this.requiredFlags, true);
 	}
 	
-	protected ITokenFactory[] getFactories() {
+	protected TokenFactory[] getFactories() {
 		return null;
 	}
 	
 	@Override
-	protected final ITokenFactorySupply getFactorySupply() {
+	protected final TokenFactorySupply getFactorySupply() {
 		if (this.supply == null) {
-			final ITokenFactory[] factories = this.getFactories();
+			final TokenFactory[] factories = this.getFactories();
 			this.supply = new TFSStatic(factories);
 		}
 		return this.supply;
 	}
 
 	@Override
-	protected int validateNull(int seqIndex, IToken[] foundTokens) {
+	protected int validateNull(int seqIndex, Token[] foundTokens) {
 		if ((seqIndex < this.firstRequired) || (seqIndex > this.lastRequired)) {
 			return CONTINUE;
 		}		
@@ -99,7 +96,7 @@ public class TFSeqStatic extends TFSeq {
 	}
 	
 	@Override
-	protected int validateEnd(int seqIndex, IToken[] foundTokens) {
+	protected int validateEnd(int seqIndex, Token[] foundTokens) {
 		if (seqIndex >= this.lastRequired) {
 			return CONTINUE;
 		} else {
@@ -108,8 +105,8 @@ public class TFSeqStatic extends TFSeq {
 	}
 	
 	@Override
-	protected IToken getToken(String line, int fromIndex, IToken[] foundTokens) {
-		for (IToken token : foundTokens) {
+	protected Token getToken(String line, int fromIndex, Token[] foundTokens) {
+		for (Token token : foundTokens) {
 			if (token != null) return super.getToken(line, fromIndex, foundTokens);
 		}
 		return null;

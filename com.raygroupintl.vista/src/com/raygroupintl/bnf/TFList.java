@@ -3,46 +3,44 @@ package com.raygroupintl.bnf;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.raygroupintl.fnds.IToken;
-import com.raygroupintl.fnds.ITokenFactory;
 
-public class TFList implements ITokenFactory {
-	private ITokenFactory elementFactory;
+public class TFList implements TokenFactory {
+	private TokenFactory elementFactory;
 
 	public TFList() {
 	}
 	
-	public TFList(ITokenFactory elementFactory) {
+	public TFList(TokenFactory elementFactory) {
 		this.elementFactory = elementFactory;
 	}
 	
-	public void setElementFactory(ITokenFactory elementFactory) {
+	public void setElementFactory(TokenFactory elementFactory) {
 		this.elementFactory = elementFactory;
 	}
 		
-	protected ITokenFactory getFactory() {
+	protected TokenFactory getFactory() {
 		return null;
 	}
 
-	protected IToken getToken(List<IToken> list) {
+	protected Token getToken(List<Token> list) {
 		return new TList(list);
 	}
 
-	protected IToken getNullToken() {
+	protected Token getNullToken() {
 		return null;
 	}
 	
 	@Override
-	public IToken tokenize(String line, int fromIndex) {
+	public Token tokenize(String line, int fromIndex) {
 		int endIndex = line.length();
 		if (fromIndex < endIndex) {
 			if (this.elementFactory == null) {
 				this.elementFactory = this.getFactory();
 			}
 			int index = fromIndex;
-			List<IToken> list = null;
+			List<Token> list = null;
 			while (index < endIndex) {
-				IToken token = this.elementFactory.tokenize(line, index);
+				Token token = this.elementFactory.tokenize(line, index);
 				if (token == null) {
 					if (list == null) {
 						return this.getNullToken();
@@ -55,7 +53,7 @@ public class TFList implements ITokenFactory {
 					return token;
 				}
 				if (list == null) {
-					list = new ArrayList<IToken>();
+					list = new ArrayList<Token>();
 				}
 				list.add(token);	
 				index += token.getStringSize();
@@ -66,7 +64,7 @@ public class TFList implements ITokenFactory {
 		return null;
 	}
 	
-	public static TFList getInstance(ITokenFactory elementFactory) {
+	public static TFList getInstance(TokenFactory elementFactory) {
 		return new TFList(elementFactory);
 	}
 }

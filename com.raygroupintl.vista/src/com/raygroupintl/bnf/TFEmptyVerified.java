@@ -1,13 +1,11 @@
 package com.raygroupintl.bnf;
 
-import com.raygroupintl.fnds.IToken;
-import com.raygroupintl.fnds.ITokenFactory;
 
-public abstract class TFEmptyVerified implements ITokenFactory {
+public abstract class TFEmptyVerified implements TokenFactory {
 	protected abstract boolean isExpected(char ch);
 		
 	@Override
-	public IToken tokenize(String line, int fromIndex) {
+	public Token tokenize(String line, int fromIndex) {
 		if (fromIndex < line.length()) {
 			char ch = line.charAt(fromIndex);
 			if (this.isExpected(ch)) {

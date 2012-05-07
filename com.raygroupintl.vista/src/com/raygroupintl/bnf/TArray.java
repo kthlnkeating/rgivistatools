@@ -3,14 +3,12 @@ package com.raygroupintl.bnf;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.raygroupintl.fnds.IToken;
-import com.raygroupintl.fnds.ITokenArray;
 import com.raygroupintl.vista.struct.MError;
 
-public class TArray implements IToken, ITokenArray {
-	private IToken[] tokens;
+public class TArray implements Token, TokenArray {
+	private Token[] tokens;
 	
-	public TArray(IToken[] tokens) {
+	public TArray(Token[] tokens) {
 		this.tokens = tokens;
 	}
 
@@ -21,7 +19,7 @@ public class TArray implements IToken, ITokenArray {
 	@Override
 	public String getStringValue() {	
 		String result = "";
-		for (IToken t : this.tokens) if (t != null) {
+		for (Token t : this.tokens) if (t != null) {
 			result += t.getStringValue();
 		}		
 		return result;
@@ -30,7 +28,7 @@ public class TArray implements IToken, ITokenArray {
 	@Override
 	public int getStringSize() {
 		int result = 0;
-		for (IToken t : this.tokens) if (t != null) {
+		for (Token t : this.tokens) if (t != null) {
 			result +=  t.getStringSize();
 		}
 		return result;
@@ -39,7 +37,7 @@ public class TArray implements IToken, ITokenArray {
 	@Override
 	public List<MError> getErrors() {
 		List<MError> result = null;
-		for (IToken t : this.tokens) if (t != null) {
+		for (Token t : this.tokens) if (t != null) {
 			List<MError> errors = t.getErrors();
 			if (errors != null) {
 				if (result == null) {
@@ -54,7 +52,7 @@ public class TArray implements IToken, ITokenArray {
 	
 	@Override
 	public boolean hasError() {
-		for (IToken t : this.tokens) if (t != null) {
+		for (Token t : this.tokens) if (t != null) {
 			if (t.hasError()) return true;
 		}
 		return false;
@@ -62,7 +60,7 @@ public class TArray implements IToken, ITokenArray {
 
 	@Override
 	public boolean hasFatalError() {
-		for (IToken t : this.tokens) if (t != null) {
+		for (Token t : this.tokens) if (t != null) {
 			if (t.hasFatalError()) return true;
 		}
 		return false;
@@ -70,7 +68,7 @@ public class TArray implements IToken, ITokenArray {
 
 	@Override
 	public void beautify() {
-		for (IToken t : this.tokens) if (t != null) {
+		for (Token t : this.tokens) if (t != null) {
 			t.beautify();
 		}
 	}
@@ -81,7 +79,7 @@ public class TArray implements IToken, ITokenArray {
 	}
 	
 	@Override
-	public IToken get(int i) {
+	public Token get(int i) {
 		if (this.tokens.length > i) {
 			return this.tokens[i];
 		} else {

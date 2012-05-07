@@ -3,8 +3,8 @@ package com.raygroupintl.m.token;
 import java.util.Arrays;
 import java.util.List;
 
+import com.raygroupintl.bnf.Token;
 import com.raygroupintl.bnf.TArray;
-import com.raygroupintl.fnds.IToken;
 import com.raygroupintl.vista.struct.MError;
 import com.raygroupintl.vista.struct.MNameWithMnemonic;
 
@@ -55,11 +55,11 @@ public class TSsvn extends TArray {
 		}		
 	}
 
-	private TSsvn(TSsvnName name, IToken param) {
-		super(new IToken[]{name, param});
+	private TSsvn(TSsvnName name, Token param) {
+		super(new Token[]{name, param});
 	}
 	
-	public static TSsvn getInstance(TIdent name, IToken param) {
+	public static TSsvn getInstance(TIdent name, Token param) {
 		String v = name.getStringValue();
 		return new TSsvn(new TSsvnName(v), param);
 	}

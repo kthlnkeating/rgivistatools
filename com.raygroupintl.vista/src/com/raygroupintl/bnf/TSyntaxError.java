@@ -3,10 +3,9 @@ package com.raygroupintl.bnf;
 import java.util.Arrays;
 import java.util.List;
 
-import com.raygroupintl.fnds.IToken;
 import com.raygroupintl.vista.struct.MError;
 
-public class TSyntaxError implements IToken {	
+public class TSyntaxError implements Token {	
 	private int errorCode = MError.ERR_GENERAL_SYNTAX;
 	private String line;
 	private int fromIndex;

@@ -1,33 +1,31 @@
 package com.raygroupintl.bnf;
 
 import com.raygroupintl.fnds.ICharPredicate;
-import com.raygroupintl.fnds.IToken;
-import com.raygroupintl.fnds.ITokenFactory;
 
-public abstract class TFChoiceOnChar implements ITokenFactory {
-	private ITokenFactory defaultFactory = null;
+public abstract class TFChoiceOnChar implements TokenFactory {
+	private TokenFactory defaultFactory = null;
 	private ICharPredicate[] predicates = {};
-	private ITokenFactory[] factories = {};
+	private TokenFactory[] factories = {};
 			
 	public TFChoiceOnChar() {		
 	}
 			
-	public TFChoiceOnChar(ITokenFactory defaultFactory,  ICharPredicate[] predicates, ITokenFactory[] factories) {
+	public TFChoiceOnChar(TokenFactory defaultFactory,  ICharPredicate[] predicates, TokenFactory[] factories) {
 		this.defaultFactory = defaultFactory;
 		this.predicates = predicates;
 		this.factories = factories;
 	}
 
-	public void setDefault(ITokenFactory defaultFactory) {
+	public void setDefault(TokenFactory defaultFactory) {
 		this.defaultFactory = defaultFactory;
 	}
 	
-	public void setChoices(ICharPredicate[] predicates, ITokenFactory... factories) {
+	public void setChoices(ICharPredicate[] predicates, TokenFactory... factories) {
 		this.predicates = predicates;
 		this.factories = factories;
 	}
 	
-	protected ITokenFactory getFactory(char ch) {
+	protected TokenFactory getFactory(char ch) {
 		for (int i=0; i<this.predicates.length; ++i) {
 			ICharPredicate predicate = this.predicates[i];
 			if (predicate.check(ch)) {
@@ -37,13 +35,13 @@ public abstract class TFChoiceOnChar implements ITokenFactory {
 		return this.defaultFactory;
 	}
 	
-	protected abstract ITokenFactory getFactory(String line, int index);
+	protected abstract TokenFactory getFactory(String line, int index);
 	
 	@Override
-	public IToken tokenize(String line, int fromIndex) {
-		ITokenFactory f = this.getFactory(line, fromIndex);
+	public Token tokenize(String line, int fromIndex) {
+		TokenFactory f = this.getFactory(line, fromIndex);
 		if (f != null) {
-			IToken result = f.tokenize(line, fromIndex);
+			Token result = f.tokenize(line, fromIndex);
 			return result;
 		}
 		return null;

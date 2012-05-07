@@ -6,7 +6,7 @@ import junit.framework.Assert;
 
 import org.junit.Test;
 
-import com.raygroupintl.fnds.IToken;
+import com.raygroupintl.bnf.Token;
 import com.raygroupintl.m.token.MVersion;
 import com.raygroupintl.m.token.TFLine;
 import com.raygroupintl.m.token.TFRoutine;
@@ -55,7 +55,7 @@ public class TRoutineTest {
 				" QUIT",
 				" ;"};
 		int index = 0;
-		for (IToken line : r.asList()) {
+		for (Token line : r.asList()) {
 			String expected = result[index];
 			String actual = line.getStringValue();
 			Assert.assertEquals(expected, actual);

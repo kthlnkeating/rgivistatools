@@ -1,19 +1,17 @@
 package com.raygroupintl.bnf;
 
-import com.raygroupintl.fnds.IToken;
-import com.raygroupintl.fnds.ITokenFactory;
 
-public class TFChoiceBasic implements ITokenFactory {
-	private ITokenFactory[] factories = {};
+public class TFChoiceBasic implements TokenFactory {
+	private TokenFactory[] factories = {};
 	
 	public TFChoiceBasic() {
 	}
 	
-	public TFChoiceBasic(ITokenFactory... factories) {
+	public TFChoiceBasic(TokenFactory... factories) {
 		this.factories = factories;
 	}
 	
-	public void setFactories(ITokenFactory... factories) {
+	public void setFactories(TokenFactory... factories) {
 		this.factories = factories;
 	}
 	
@@ -22,11 +20,11 @@ public class TFChoiceBasic implements ITokenFactory {
 	}
 	
 	@Override
-	public IToken tokenize(String line, int fromIndex) {
+	public Token tokenize(String line, int fromIndex) {
 		int endIndex = line.length();
 		if (fromIndex < endIndex) {
-			for (ITokenFactory f : this.factories) {
-				IToken result = f.tokenize(line, fromIndex);
+			for (TokenFactory f : this.factories) {
+				Token result = f.tokenize(line, fromIndex);
 				if (result != null) {
 					return result;
 				}

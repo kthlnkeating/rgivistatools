@@ -1,25 +1,22 @@
 package com.raygroupintl.bnf;
 
-import com.raygroupintl.fnds.IToken;
-import com.raygroupintl.fnds.ITokenFactory;
-import com.raygroupintl.fnds.ITokenFactorySupply;
 
-public class TFSStatic implements ITokenFactorySupply {
-	private ITokenFactory[] factories = {};
+public class TFSStatic implements TokenFactorySupply {
+	private TokenFactory[] factories = {};
 	
 	public TFSStatic() {
 	}
 		
-	public TFSStatic(ITokenFactory[] factories) {
+	public TFSStatic(TokenFactory[] factories) {
 		this.factories = factories;
 	}
 	
-	public void setFactories(ITokenFactory[] factories) {
+	public void setFactories(TokenFactory[] factories) {
 		this.factories = factories;
 	}
 	
 	@Override
-	public ITokenFactory get(int seqIndex, IToken[] previousTokens) {
+	public TokenFactory get(int seqIndex, Token[] previousTokens) {
 		if (seqIndex < factories.length) {				
 			return factories[seqIndex];
 		} else {

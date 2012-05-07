@@ -1,11 +1,8 @@
 package com.raygroupintl.bnf;
 
-import com.raygroupintl.fnds.IToken;
-import com.raygroupintl.fnds.ITokenFactory;
-import com.raygroupintl.fnds.ITokenFactorySupply;
 import com.raygroupintl.vista.struct.MError;
 
-public abstract class TFSeq implements ITokenFactory {
+public abstract class TFSeq implements TokenFactory {
 	protected static final int RETURN_NULL = -2;
 	protected static final int RETURN_TOKEN = -1;
 	protected static final int CONTINUE = 0;
@@ -20,17 +17,17 @@ public abstract class TFSeq implements ITokenFactory {
 		return MError.ERR_GENERAL_SYNTAX;
 	}
 	
-	protected abstract ITokenFactorySupply getFactorySupply();
+	protected abstract TokenFactorySupply getFactorySupply();
 
-	protected abstract int validateNull(int seqIndex, IToken[] foundTokens);
+	protected abstract int validateNull(int seqIndex, Token[] foundTokens);
 	
-	protected int validateNext(int seqIndex, IToken[] foundTokens, IToken nextToken) {
+	protected int validateNext(int seqIndex, Token[] foundTokens, Token nextToken) {
 		return CONTINUE;
 	}
 	
-	protected abstract int validateEnd(int seqIndex, IToken[] foundTokens);
+	protected abstract int validateEnd(int seqIndex, Token[] foundTokens);
 	
-	protected IToken getToken(String line, int fromIndex, IToken[] foundTokens) {
+	protected Token getToken(String line, int fromIndex, Token[] foundTokens) {
 		if (this.adapter == null) {
 			return new TArray(foundTokens);
 		} else {
@@ -38,7 +35,7 @@ public abstract class TFSeq implements ITokenFactory {
 		}
 	}
 	
-	private int validate(int seqIndex, IToken[] foundTokens, IToken nextToken) {
+	private int validate(int seqIndex, Token[] foundTokens, Token nextToken) {
 		if (nextToken == null) {
 			return this.validateNull(seqIndex, foundTokens);
 		} else {
@@ -46,23 +43,23 @@ public abstract class TFSeq implements ITokenFactory {
 		}
 	}
 	
-	protected IToken getTokenWhenSyntaxError(int seqIndex, IToken[] found, TSyntaxError error, int fromIndex) {
+	protected Token getTokenWhenSyntaxError(int seqIndex, Token[] found, TSyntaxError error, int fromIndex) {
 		error.setFromIndex(fromIndex);
 		return error;
 	}
 	
 	@Override
-	public IToken tokenize(String line, int fromIndex) {
+	public Token tokenize(String line, int fromIndex) {
 		int endIndex = line.length();
 		if (fromIndex < endIndex) {
 			int index = fromIndex;
-			ITokenFactorySupply supply = this.getFactorySupply();
+			TokenFactorySupply supply = this.getFactorySupply();
 			int factoryCount = supply.getCount();
-			IToken[] foundTokens = new IToken[factoryCount];
+			Token[] foundTokens = new Token[factoryCount];
 			for (int i=0; i<factoryCount; ++i) {
-				ITokenFactory factory = supply.get(i, foundTokens);
+				TokenFactory factory = supply.get(i, foundTokens);
 				assert(factory != null);
-				IToken token = factory.tokenize(line, index);				
+				Token token = factory.tokenize(line, index);				
 				
 				if ((token != null) && (token instanceof TSyntaxError)) {
 					return this.getTokenWhenSyntaxError(i, foundTokens, (TSyntaxError) token, fromIndex);

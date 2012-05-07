@@ -4,13 +4,13 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import com.raygroupintl.bnf.TokenFactorySupply;
+import com.raygroupintl.bnf.Token;
+import com.raygroupintl.bnf.TokenFactory;
 import com.raygroupintl.bnf.TArray;
 import com.raygroupintl.bnf.TFSeq;
 import com.raygroupintl.bnf.TFSyntaxError;
 import com.raygroupintl.bnf.TPair;
-import com.raygroupintl.fnds.IToken;
-import com.raygroupintl.fnds.ITokenFactory;
-import com.raygroupintl.fnds.ITokenFactorySupply;
 import com.raygroupintl.vista.struct.MError;
 import com.raygroupintl.vista.struct.MNameWithMnemonic;
 
@@ -55,11 +55,11 @@ public class TFIntrinsic extends TFSeq {
 	}
 
 	private static class FunctionInfo {
-		private ITokenFactory argumentFactory;
+		private TokenFactory argumentFactory;
 		private int minNumArguments;
 		private int maxNumArguments;
 		
-		public FunctionInfo(ITokenFactory argumentFactory, int minNumArguments, int maxNumArguments) {
+		public FunctionInfo(TokenFactory argumentFactory, int minNumArguments, int maxNumArguments) {
 			this.argumentFactory = argumentFactory;
 			this.minNumArguments = minNumArguments;
 			this.maxNumArguments = maxNumArguments;
@@ -73,7 +73,7 @@ public class TFIntrinsic extends TFSeq {
 			return this.maxNumArguments;
 		}
 		
-		public ITokenFactory getArgumentFactory() {
+		public TokenFactory getArgumentFactory() {
 			return this.argumentFactory;
 		}
 	}
@@ -96,7 +96,7 @@ public class TFIntrinsic extends TFSeq {
 		this.variables.update(mnemonic, name); 	
 	}
 	
-	public FunctionInfo addFunction(ITokenFactory argumentFactory, String mnemonic, String name, int minNumArguments, int maxNumArguments) {
+	public FunctionInfo addFunction(TokenFactory argumentFactory, String mnemonic, String name, int minNumArguments, int maxNumArguments) {
 		FunctionInfo fi = new FunctionInfo(argumentFactory, minNumArguments, maxNumArguments);
 		if (this.functions == null) {
 			this.functions = new MNameWithMnemonic.Map();	
@@ -109,11 +109,11 @@ public class TFIntrinsic extends TFSeq {
 		return fi;
 	}
 		
-	public FunctionInfo addFunction(ITokenFactory argumentFactory, String name, int minNumArguments, int maxNumArguments) {
+	public FunctionInfo addFunction(TokenFactory argumentFactory, String name, int minNumArguments, int maxNumArguments) {
 		return this.addFunction(argumentFactory, name, name, minNumArguments, maxNumArguments);
 	}
 		
-	public FunctionInfo addFunction(ITokenFactory argumentFactory, String name) {
+	public FunctionInfo addFunction(TokenFactory argumentFactory, String name) {
 		return this.addFunction(argumentFactory, name, 1, Integer.MAX_VALUE);
 	}
 
@@ -142,21 +142,21 @@ public class TFIntrinsic extends TFSeq {
 		}
 	}
 	
-	private static String getFoundIntrinsicName(IToken[] tokens) {
+	private static String getFoundIntrinsicName(Token[] tokens) {
 		String name = ((tokens[0] instanceof TArray) ? (TArray) tokens[0] : (TPair) tokens[0]).get(1).getStringValue().toUpperCase();
 		return name;
 	}
 	
 	@Override
-	protected ITokenFactorySupply getFactorySupply() {
-		return new ITokenFactorySupply() {			
+	protected TokenFactorySupply getFactorySupply() {
+		return new TokenFactorySupply() {			
 			@Override
 			public int getCount() {
 				return 4;
 			}
 			
 			@Override
-			public ITokenFactory get(int seqIndex, IToken[] previousTokens) {
+			public TokenFactory get(int seqIndex, Token[] previousTokens) {
 				switch (seqIndex) {
 					case 0: {
 						return TFIntrinsic.this.supply.intrinsicname;
@@ -171,7 +171,7 @@ public class TFIntrinsic extends TFSeq {
 						}
 						String mnemonic = mName.getMnemonic();
 						FunctionInfo info = TFIntrinsic.this.function_infos.get(mnemonic);
-						ITokenFactory argumentFactory = info.getArgumentFactory();
+						TokenFactory argumentFactory = info.getArgumentFactory();
 						return argumentFactory;
 					}
 					case 3:
@@ -184,7 +184,7 @@ public class TFIntrinsic extends TFSeq {
 	}
 
 	@Override
-	protected int validateNull(int seqIndex, IToken[] foundTokens) {
+	protected int validateNull(int seqIndex, Token[] foundTokens) {
 		if (seqIndex == 0) {
 			return RETURN_NULL;
 		} else if (seqIndex == 1) {
@@ -202,7 +202,7 @@ public class TFIntrinsic extends TFSeq {
 	}
 	
 	@Override
-	protected int validateEnd(int seqIndex, IToken[] foundTokens) {
+	protected int validateEnd(int seqIndex, Token[] foundTokens) {
 		if (seqIndex == 0) {
 			return 0;
 		} else {
@@ -211,7 +211,7 @@ public class TFIntrinsic extends TFSeq {
 	}
 	
 	@Override
-	protected IToken getToken(String line, int fromIndex, IToken[] foundTokens) {
+	protected Token getToken(String line, int fromIndex, Token[] foundTokens) {
 		TArray token0 = (TArray) foundTokens[0];
 		if (token0.get(2) == null) {		
 			TIdent name = (TIdent) token0.get(1);		

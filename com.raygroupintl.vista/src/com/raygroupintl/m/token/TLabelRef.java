@@ -1,10 +1,10 @@
 package com.raygroupintl.m.token;
 
+import com.raygroupintl.bnf.Token;
 import com.raygroupintl.bnf.TArray;
-import com.raygroupintl.fnds.IToken;
 
 public class TLabelRef extends TArray {
-	public TLabelRef(IToken[] tokens) {
+	public TLabelRef(Token[] tokens) {
 		super(tokens);
 	}
 }

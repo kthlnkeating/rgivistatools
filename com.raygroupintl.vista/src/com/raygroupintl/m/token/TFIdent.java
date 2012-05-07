@@ -1,7 +1,7 @@
 package com.raygroupintl.m.token;
 
+import com.raygroupintl.bnf.Token;
 import com.raygroupintl.bnf.TFBasic;
-import com.raygroupintl.fnds.IToken;
 
 public class TFIdent extends TFBasic {
 	@Override
@@ -10,7 +10,7 @@ public class TFIdent extends TFBasic {
 	}
 	
 	@Override
-	protected IToken getToken(String value) {
+	protected Token getToken(String value) {
 		return new TIdent(value);
 	}
 	

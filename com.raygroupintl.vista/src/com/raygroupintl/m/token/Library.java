@@ -2,17 +2,17 @@ package com.raygroupintl.m.token;
 
 import java.util.List;
 
-import com.raygroupintl.fnds.IToken;
+import com.raygroupintl.bnf.Token;
 
 public class Library {
-	public static void append(StringBuilder sb, IToken token) {
+	public static void append(StringBuilder sb, Token token) {
 		if (token !=  null) {
 			String value = token.getStringValue();
 			sb.append(value);
 		}
 	}
 
-	public static void append(StringBuilder sb, char ch, IToken token) {
+	public static void append(StringBuilder sb, char ch, Token token) {
 		if (token !=  null) {
 			sb.append(ch);
 			String value = token.getStringValue();
@@ -20,7 +20,7 @@ public class Library {
 		}
 	}
 
-	public static void append(StringBuilder sb, IToken token, char ch) {
+	public static void append(StringBuilder sb, Token token, char ch) {
 		if (token !=  null) {
 			String value = token.getStringValue();
 			sb.append(value);
@@ -36,30 +36,30 @@ public class Library {
 		return (ch >= '0') && (ch <= '9');
 	}
 	
-	public static String getStringValue(IToken[] list) {
+	public static String getStringValue(Token[] list) {
 		String result = "";
 		if (list != null) {
-			for (IToken t : list) {
+			for (Token t : list) {
 				if (t != null) result += t.getStringValue();
 			}			
 		}
 		return result;
 	}
 
-	public static int getStringSize(IToken[] list) {
+	public static int getStringSize(Token[] list) {
 		int result = 0;
 		if (list != null) {
-			for (IToken t : list) {
+			for (Token t : list) {
 				if (t != null) result += t.getStringSize();
 			}			
 		}
 		return result;
 	}
 
-	public static int getStringSize(List<IToken> list) {
+	public static int getStringSize(List<Token> list) {
 		int result = 0;
 		if (list != null) {
-			for (IToken t : list) {
+			for (Token t : list) {
 				result += t.getStringSize();
 			}			
 		}

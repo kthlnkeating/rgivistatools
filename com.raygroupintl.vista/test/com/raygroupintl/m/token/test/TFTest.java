@@ -2,7 +2,7 @@ package com.raygroupintl.m.token.test;
 
 import org.junit.Test;
 
-import com.raygroupintl.fnds.ITokenFactory;
+import com.raygroupintl.bnf.TokenFactory;
 import com.raygroupintl.m.token.MTFSupply;
 import com.raygroupintl.m.token.MVersion;
 import com.raygroupintl.m.token.TFStringLiteral;
@@ -11,7 +11,7 @@ import com.raygroupintl.vista.struct.MError;
 public class TFTest {
 	public void testTFEnvironment(MVersion version) {
 		MTFSupply m = MTFSupply.getInstance(version);
-		ITokenFactory f = m.environment;
+		TokenFactory f = m.environment;
 		TFCommonTest.validCheck(f, "|A|");
 		TFCommonTest.validCheck(f, "[A,B]");
 		TFCommonTest.errorCheck(f, "||", MError.ERR_GENERAL_SYNTAX);
@@ -27,7 +27,7 @@ public class TFTest {
 		
 	public void testTFExternal(MVersion version) {
 		MTFSupply m = MTFSupply.getInstance(version);
-		ITokenFactory f = m.external;
+		TokenFactory f = m.external;
 		TFCommonTest.validCheck(f, "$&ZLIB.%GETDVI(%XX,\"DEVCLASS\")");
 	}
 
@@ -38,12 +38,12 @@ public class TFTest {
 	}
 
 	public void testTFGvn(MVersion version) {
-		ITokenFactory f = MTFSupply.getInstance(version).gvn;
+		TokenFactory f = MTFSupply.getInstance(version).gvn;
 		TFCommonTest.validCheck(f, "^PRCA(430,+$G(PRCABN),0)");
 	}
 
 	private void testTFExpr(MVersion version) {
-		ITokenFactory f = MTFSupply.getInstance(version).expr;
+		TokenFactory f = MTFSupply.getInstance(version).expr;
 		TFCommonTest.validCheck(f, "@^%ZOSF(\"TRAP\")");
 		TFCommonTest.validCheck(f, "^A");
 		TFCommonTest.validCheck(f, "^A(1)");
@@ -77,7 +77,7 @@ public class TFTest {
 
 	public void testTFGvnAll(MVersion version) {
 		MTFSupply m = MTFSupply.getInstance(version);
-		ITokenFactory f = m.gvnall;
+		TokenFactory f = m.gvnall;
 		TFCommonTest.validCheck(f, "^PRCA(430,+$G(PRCABN),0)");
 		TFCommonTest.validCheck(f, "^(430,+$G(PRCABN),0)");
 		TFCommonTest.validCheck(f, "^$ROUTINE(ROU)");
@@ -93,7 +93,7 @@ public class TFTest {
 
 	public void testTFActual(MVersion version) {
 		MTFSupply m = MTFSupply.getInstance(version);
-		ITokenFactory f = m.actual;
+		TokenFactory f = m.actual;
 		TFCommonTest.validCheck(f, ".57");
 		TFCommonTest.validCheck(f, ".57  ", ".57");
 		TFCommonTest.validCheck(f, ".INPUT");
@@ -112,7 +112,7 @@ public class TFTest {
 	}
 
 	private void testTFIndirection(MVersion version) {
-		ITokenFactory f = MTFSupply.getInstance(version).indirection;		
+		TokenFactory f = MTFSupply.getInstance(version).indirection;		
 		TFCommonTest.validCheck(f, "@(+$P(LST,\",\",FLD))");
 		TFCommonTest.validCheck(f, "@H@(0)");
 		TFCommonTest.validCheck(f, "@XARRAY@(FROMX1,TO1)");
@@ -130,7 +130,7 @@ public class TFTest {
 	}
 
 	public void TFDeviceParams(MVersion version) {
-		ITokenFactory f = MTFSupply.getInstance(version).deviceparams;
+		TokenFactory f = MTFSupply.getInstance(version).deviceparams;
 		TFCommonTest.validCheck(f, "(:XOBPORT:\"AT\")");
 	}
 	
@@ -142,7 +142,7 @@ public class TFTest {
 
 	public void testTFExprItem(MVersion version) {
 		MTFSupply m = MTFSupply.getInstance(version);
-		ITokenFactory f = m.expritem;
+		TokenFactory f = m.expritem;
 		TFCommonTest.validCheck(f, "$$TEST(A)");
 		TFCommonTest.validCheck(f, "$$TEST^DOHA");
 		TFCommonTest.validCheck(f, "$$TEST");
@@ -169,7 +169,7 @@ public class TFTest {
 
 	public void testTFNumLit(MVersion version) {
 		MTFSupply m = MTFSupply.getInstance(version);
-		ITokenFactory f = m.numlit;
+		TokenFactory f = m.numlit;
 		TFCommonTest.validCheck(f, ".11");
 		TFCommonTest.validCheck(f, "1.11");
 		TFCommonTest.validCheck(f, "-3.11");
