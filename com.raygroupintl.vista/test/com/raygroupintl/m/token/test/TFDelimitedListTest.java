@@ -9,7 +9,7 @@ import com.raygroupintl.m.token.MVersion;
 
 public class TFDelimitedListTest {
 	private void testExpr(MVersion version) {
-		TFDelimitedList f = TFDelimitedList.getInstance(MTFSupply.getInstance(version).expr, ',');
+		TFDelimitedList f = new TFDelimitedList(MTFSupply.getInstance(version).expr, ',');
 		TFCommonTest.validCheck(f, "C'>3");
 		TFCommonTest.validCheck(f, "C'>3,B>1");
 		TFCommonTest.validCheck(f, "C'>3,A=3,B]]1");
@@ -24,7 +24,7 @@ public class TFDelimitedListTest {
 	private void testActual(MVersion version) {
 		MTFSupply m = MTFSupply.getInstance(version);
 		ITokenFactory fActual = m.actual;
-		TFDelimitedList f = TFDelimitedList.getInstance(fActual, ',');
+		TFDelimitedList f = new TFDelimitedList(fActual, ',');
 		TFCommonTest.validCheck(f, "LST,\",\",FLD");
 	}
 

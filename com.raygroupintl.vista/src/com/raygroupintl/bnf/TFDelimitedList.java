@@ -3,7 +3,7 @@ package com.raygroupintl.bnf;
 import com.raygroupintl.fnds.IToken;
 import com.raygroupintl.fnds.ITokenFactory;
 
-public class TFDelimitedList implements ITokenFactory {
+public final class TFDelimitedList implements ITokenFactory {
 	private static class DLAdapter implements TokenAdapter {
 		@Override
 		public IToken convert(String line, int fromIndex, IToken[] tokens) {
@@ -27,9 +27,13 @@ public class TFDelimitedList implements ITokenFactory {
 	public TFDelimitedList() {		
 	}
 	
-	public TFDelimitedList(ITokenFactory elementFactory, String delimeter) {	
+	public TFDelimitedList(ITokenFactory elementFactory) {	
 		this.elementFactory = elementFactory;
-		this.delimiter = this.getStringFactory(",");
+	}
+
+	public TFDelimitedList(ITokenFactory elementFactory, char ch) {	
+		this.elementFactory = elementFactory;
+		this.delimiter = new TFConstChar(ch);
 	}
 
 	public void setElementFactory(ITokenFactory elementFactory) {
@@ -122,14 +126,6 @@ public class TFDelimitedList implements ITokenFactory {
 	
 	@Override
 	public IToken tokenize(String line, int fromIndex) {
-		if (this.elementFactory == null) {
-			ITokenFactory[] factories = this.getFactories();
-			TFSeqStatic f = new TFSeqStatic(factories);
-			f.setRequiredFlags(new boolean[]{true, false});
-			f.setTokenAdapter(new DLAdapter());
-			return f.tokenize(line, fromIndex);
-		}
-		
 		if (line.length() > fromIndex) {
 			ITokenFactory tfList = this.getEffectiveListFactory();
 			if ((this.left == null) && (this.right == null)) {
@@ -152,46 +148,4 @@ public class TFDelimitedList implements ITokenFactory {
 		}
 		return null;
 	}
-		
-	protected ITokenFactory getElementFactory() {
-		return null;
-	}
-	
-	protected ITokenFactory getDelimitedFactory() {
-		return null;
-	}
-	
-	protected ITokenFactory[] getFactories() {
-		ITokenFactory r = TFSeqRequired.getInstance(this.getDelimitedFactory(), this.getElementFactory());
-		return new ITokenFactory[]{
-				this.getElementFactory(),
-				TFList.getInstance(r)};
-	}
-
-	public static TFDelimitedList getInstance(final ITokenFactory tfElement, final char ch) {
-		TFDelimitedList list = new TFDelimitedList();
-		list.setElementFactory(tfElement);
-		list.setDelimiter(new TFConstChar(ch));
-		return list;
-	}
-
-	public static TFDelimitedList getInstance(final ITokenFactory f, final char ch, final boolean inParan) {
-		final TFDelimitedList fList = getInstance(f, ch);		
-		if (inParan) {
-			fList.setLeft(new TFConstChar('('));
-			fList.setRight(new TFConstChar(')'));
-			return fList;
-		} else {
-			return fList;
-		}
-	}
-
-	public static ITokenFactory getInstance(final ITokenFactory f, final char ch, final boolean inParan, boolean optional) {
-		TFDelimitedList fList = getInstance(f, ch, inParan);
-		if (optional) {
-			fList.setAllowEmpty(true);
-		}
-		return fList;
-	}
-
 }
