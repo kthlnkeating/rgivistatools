@@ -6,6 +6,7 @@ import com.raygroupintl.bnf.TFChar;
 import com.raygroupintl.bnf.TFConstChar;
 import com.raygroupintl.bnf.TFConstChars;
 import com.raygroupintl.bnf.TFConstString;
+import com.raygroupintl.bnf.TFEmpty;
 import com.raygroupintl.bnf.TFEmptyVerified;
 import com.raygroupintl.bnf.TFSyntaxError;
 import com.raygroupintl.bnf.TList;
@@ -96,6 +97,7 @@ public abstract class MTFSupply {
 	public ITokenFactory atlpar = new TFConstString("@(");
 	public ITokenFactory caretquest = new TFConstString("^$");
 	public ITokenFactory ddollar = new TFConstString("$$");
+	public ITokenFactory dollar = new TFConstChar('$');
 	public ITokenFactory pm = new TFConstChars("+-");
 	
 	public ITokenFactory ecomma = TFEmptyVerified.getInstance(',');
@@ -453,16 +455,26 @@ public abstract class MTFSupply {
 	public ITokenFactory dolamp = new TFConstString("$&");
 	@Sequence(value={"dolamp", "ampersandtail", "actuallist"}, required="roo")
 	public ITokenFactory external;
+
+	@Sequence(value={"comma", "expr"}, required="all")
+	public ITokenFactory dorderarg_1;
+	@Sequence(value={"glvn", "dorderarg_1"}, required="ro")
+	public ITokenFactory dorderarg;
 	
+	@Sequence(value={"dollar", "ident"}, required="all")
+	public ITokenFactory intrinsicname;
+
 	public static class Std95Supply extends MTFSupply {	
 		private MVersion version = MVersion.ANSI_STD_95;
 
-		//public ITokenFactory external = new TFExternal(this.version);
-		
 		public ITokenFactory intrinsic = new TFIntrinsic(this.version);
+		
+		public Std95Supply() {
+			
+		}
 	}
 
-	public static class CacheSupply extends MTFSupply {
+	public static class CacheSupply extends Std95Supply {
 		@Adapter("lvn_objtail")
 		public static class ObjTailAdapter implements TokenAdapter {
 			@Override
@@ -498,8 +510,6 @@ public abstract class MTFSupply {
 		@Sequence(value={"name", "lvn_next"}, required="ro")
 		public ITokenFactory lvn;
 		
-		//public ITokenFactory external = new TFExternal(this.version);
-			
 		@Choice({"expratom", "classmethod"})
 		public ITokenFactory expr_0;
 		@Sequence(value={"expr_0", "exprtail"}, required="ro")
@@ -542,7 +552,28 @@ public abstract class MTFSupply {
 
 		@Choice({"classmethod", "expr"})
 		public ITokenFactory setrhs;
+		
+		public ITokenFactory empty = TFEmpty.getInstance();
+		@CChoice(value={"empty"}, preds={":"}, def="expr")
+		public ITokenFactory casearg_0;
+		@Sequence(value={"casearg_0", "colon", "expr"}, required="all")
+		public ITokenFactory casearg_1;		
+		@List(value="casearg_1", delim="comma")
+		public ITokenFactory casearg_list;			
+		@Sequence(value={"comma", "casearg_list"}, required="all")
+		public ITokenFactory cases;
+		@Sequence(value={"expr", "cases"}, required="all")
+		public ITokenFactory dcasearg;
+	
+		@List(value="actual", delim="comma")
+		public ITokenFactory dsystemarg;
+		
+		@Sequence(value={"dollar", "ident", "methods"}, required="rro")
+		public ITokenFactory intrinsicname;
 
+		
+		public CacheSupply() {			
+		}
 	}
 	
 	private static MTFSupply CACHE_SUPPLY;

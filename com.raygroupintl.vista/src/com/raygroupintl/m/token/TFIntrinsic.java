@@ -4,22 +4,14 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import com.raygroupintl.bnf.ChoiceSupply;
 import com.raygroupintl.bnf.TArray;
-import com.raygroupintl.bnf.TFChar;
-import com.raygroupintl.bnf.TFConstChar;
-import com.raygroupintl.bnf.TFDelimitedList;
-import com.raygroupintl.bnf.TFEmpty;
-import com.raygroupintl.bnf.TFList;
 import com.raygroupintl.bnf.TFSeq;
-import com.raygroupintl.bnf.TFSeqRO;
-import com.raygroupintl.bnf.TFSeqRRO;
-import com.raygroupintl.bnf.TFSeqRequired;
 import com.raygroupintl.bnf.TFSyntaxError;
 import com.raygroupintl.bnf.TPair;
 import com.raygroupintl.fnds.IToken;
 import com.raygroupintl.fnds.ITokenFactory;
 import com.raygroupintl.fnds.ITokenFactorySupply;
+import com.raygroupintl.m.token.MTFSupply.CacheSupply;
 import com.raygroupintl.vista.struct.MError;
 import com.raygroupintl.vista.struct.MNameWithMnemonic;
 
@@ -165,8 +157,7 @@ public class TFIntrinsic extends TFSeq {
 		addFunction(version, "J", "JUSTIFY", 2, 3); 	
 		addFunction(version, "L", "LENGTH", 1, 2); 		
 		FunctionInfo o = addFunction(version, "O", "ORDER", 1, 2); 	
-		o.setArgumentFactory(TFSeqRO.getInstance(MTFSupply.getInstance(version).glvn,
-				TFSeqRequired.getInstance(TFConstChar.getInstance(','), MTFSupply.getInstance(version).expr)));
+		o.setArgumentFactory(MTFSupply.getInstance(version).dorderarg);
 		addFunction(version, "P", "PIECE", 2, 4); 	
 		addFunction(version, "Q", "QUERY", 1, 1); 	
 		addFunction(version, "R", "RANDOM", 1, 1); 	
@@ -190,11 +181,10 @@ public class TFIntrinsic extends TFSeq {
 
 		if (version == MVersion.CACHE) {
 			FunctionInfo c = addFunction(version, "CASE", 1, Integer.MAX_VALUE);
-			ITokenFactory expr = MTFSupply.getInstance(version).expr;
-			ITokenFactory ci = TFSeqRequired.getInstance(ChoiceSupply.get(expr, ':', TFEmpty.getInstance()), TFConstChar.getInstance(':'), expr);
-			ITokenFactory cases =  TFSeqRequired.getInstance(TFChar.COMMA, TFDelimitedList.getInstance(ci, ','));
-			ITokenFactory arg = TFSeqRequired.getInstance(expr,  cases);
-			c.setArgumentFactory(arg);
+			c.setArgumentFactory(((CacheSupply) MTFSupply.getInstance(MVersion.CACHE)).dcasearg);
+			
+			FunctionInfo d = addFunction(version, "SYS", "SYSTEM", 1, Integer.MAX_VALUE);
+			d.setArgumentFactory(((CacheSupply) MTFSupply.getInstance(MVersion.CACHE)).dsystemarg);	
 		}
 		
 		TFIntrinsic.addVariable("ZA");
@@ -297,21 +287,12 @@ public class TFIntrinsic extends TFSeq {
 			public ITokenFactory get(int seqIndex, IToken[] previousTokens) {
 				switch (seqIndex) {
 					case 0: {
-						if (TFIntrinsic.this.version == MVersion.CACHE) {
-							return TFSeqRRO.getInstance(TFConstChar.getInstance('$'), TFIdent.getInstance(), TFList.getInstance(TFSeqRequired.getInstance(TFChar.DOT, TFName.getInstance())));
-						} else {
-							return TFSeqRequired.getInstance(TFConstChar.getInstance('$'), TFIdent.getInstance());
-						}
+						return MTFSupply.getInstance(TFIntrinsic.this.version).intrinsicname;
 					}
 					case 1:
-						return TFConstChar.getInstance('(');
+						return MTFSupply.getInstance(TFIntrinsic.this.version).lpar;
 					case 2: {
 						String name = getFoundIntrinsicName(previousTokens);
-						if (TFIntrinsic.this.version == MVersion.CACHE) {
-							if (name.equals("SYSTEM") || name.equals("SY")) {
-								return TFDelimitedList.getInstance(MTFSupply.getInstance(TFIntrinsic.this.version).actual, ',');
-							}
-						}
 						MNameWithMnemonic mName = INTRINSIC_FUNCTIONS.get(name);
 						if (mName == null) {
 							return TFSyntaxError.getInstance(MError.ERR_UNKNOWN_INTRINSIC_FUNCTION);
@@ -322,7 +303,7 @@ public class TFIntrinsic extends TFSeq {
 						return argumentFactory;
 					}
 					case 3:
-						return TFConstChar.getInstance(')');
+						return MTFSupply.getInstance(TFIntrinsic.this.version).rpar;
 					default:
 						return null;						
 				}
