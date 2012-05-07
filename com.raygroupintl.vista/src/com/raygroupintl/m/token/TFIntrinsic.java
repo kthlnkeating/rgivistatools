@@ -4,6 +4,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import com.raygroupintl.bnf.SyntaxErrorException;
 import com.raygroupintl.bnf.TokenFactorySupply;
 import com.raygroupintl.bnf.Token;
 import com.raygroupintl.bnf.TokenFactory;
@@ -184,7 +185,7 @@ public class TFIntrinsic extends TFSeq {
 	}
 
 	@Override
-	protected int validateNull(int seqIndex, Token[] foundTokens) {
+	protected int validateNull(int seqIndex, int lineIndex, Token[] foundTokens) throws SyntaxErrorException{
 		if (seqIndex == 0) {
 			return RETURN_NULL;
 		} else if (seqIndex == 1) {
@@ -192,21 +193,19 @@ public class TFIntrinsic extends TFSeq {
 			if (this.variables.containsKey(name)) {
 				return RETURN_TOKEN;
 			} else {
-				return MError.ERR_UNKNOWN_INTRINSIC_VARIABLE;	
+				throw new SyntaxErrorException(MError.ERR_UNKNOWN_INTRINSIC_VARIABLE, lineIndex);
 			}
 		} else if (seqIndex == 2) {
-			return MError.ERR_GENERAL_SYNTAX;
+			throw new SyntaxErrorException(MError.ERR_GENERAL_SYNTAX, lineIndex);
 		} else {
-			return MError.ERR_UNMATCHED_PARANTHESIS;
+			throw new SyntaxErrorException(MError.ERR_UNMATCHED_PARANTHESIS, lineIndex);
 		}
 	}
 	
 	@Override
-	protected int validateEnd(int seqIndex, Token[] foundTokens) {
-		if (seqIndex == 0) {
-			return 0;
-		} else {
-			return MError.ERR_UNMATCHED_PARANTHESIS;	
+	protected void validateEnd(int seqIndex, int lineIndex, Token[] foundTokens) throws SyntaxErrorException {
+		if (seqIndex > 0) {
+			throw new SyntaxErrorException( MError.ERR_UNMATCHED_PARANTHESIS, lineIndex);
 		}
 	}
 	

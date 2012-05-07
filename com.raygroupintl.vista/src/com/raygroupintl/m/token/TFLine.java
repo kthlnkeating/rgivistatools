@@ -8,7 +8,6 @@ import com.raygroupintl.bnf.TFConstChars;
 import com.raygroupintl.bnf.TFList;
 import com.raygroupintl.bnf.TFSeqStatic;
 import com.raygroupintl.bnf.TFSyntaxError;
-import com.raygroupintl.bnf.TSyntaxError;
 import com.raygroupintl.fnds.ICharPredicate;
 import com.raygroupintl.struct.CharPredicate;
 import com.raygroupintl.struct.LetterPredicate;
@@ -42,24 +41,8 @@ public class TFLine extends TFSeqStatic {
 	}
 	
 	@Override
-	protected int validateNull(int seqIndex, Token[] foundTokens) {
-		return 0;
-	}
-
-	@Override
-	protected int validateEnd(int seqIndex, Token[] foundTokens) {
-		return 0;
-	}
-
-	@Override
 	protected Token getToken(String line, int fromIndex, Token[] foundTokens) {
 		return new TLine(foundTokens);
-	}
-	
-	@Override
-	protected Token getTokenWhenSyntaxError(int seqIndex, Token[] found, TSyntaxError error, int fromIndex) {
-		found[seqIndex] = error;
-		return new TLine(found);
 	}
 	
 	public static TFLine getInstance(MVersion version) {

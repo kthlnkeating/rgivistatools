@@ -2,6 +2,7 @@ package com.raygroupintl.bnf;
 
 import java.util.Arrays;
 
+import com.raygroupintl.vista.struct.MError;
 
 public class TFSeqStatic extends TFSeq {
 	private TokenFactorySupply supply;
@@ -76,31 +77,29 @@ public class TFSeqStatic extends TFSeq {
 	}
 
 	@Override
-	protected int validateNull(int seqIndex, Token[] foundTokens) {
+	protected int validateNull(int seqIndex, int lineIndex, Token[] foundTokens) throws SyntaxErrorException {
 		if ((seqIndex < this.firstRequired) || (seqIndex > this.lastRequired)) {
 			return CONTINUE;
 		}		
 		if (seqIndex == this.firstRequired) {
 			for (int i=this.lookAhead; i<seqIndex; ++i) {
 				if (foundTokens[i] != null) {
-					return this.getErrorCode();
+					throw new SyntaxErrorException(MError.ERR_GENERAL_SYNTAX, lineIndex);
 				}
 			}
 			return RETURN_NULL;
 		}
 		if (this.requiredFlags[seqIndex]) {
-			return this.getErrorCode();
+			throw new SyntaxErrorException(MError.ERR_GENERAL_SYNTAX, lineIndex);
 		} else {
 			return CONTINUE;
 		}
 	}
 	
 	@Override
-	protected int validateEnd(int seqIndex, Token[] foundTokens) {
-		if (seqIndex >= this.lastRequired) {
-			return CONTINUE;
-		} else {
-			return this.getErrorCode();
+	protected void validateEnd(int seqIndex, int lineIndex, Token[] foundTokens) throws SyntaxErrorException {
+		if (seqIndex < this.lastRequired) {
+			throw new SyntaxErrorException(MError.ERR_GENERAL_SYNTAX, lineIndex);
 		}
 	}
 	

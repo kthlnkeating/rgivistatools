@@ -1057,16 +1057,12 @@ public class TFCommand extends TFSeq {
 	}
 
 	@Override
-	protected int validateNull(int seqIndex, Token[] foundTokens) {
+	protected int validateNull(int seqIndex, int lineIndex, Token[] foundTokens) {
 		if (seqIndex == 0) {
 			return RETURN_NULL;
+		} else {
+			return CONTINUE;				
 		}
-		return CONTINUE;				
-	}
-
-	@Override
-	protected int validateEnd(int seqIndex, Token[] foundTokens) {
-		return 0;
 	}
 
 	@Override

@@ -1,7 +1,5 @@
 package com.raygroupintl.bnf;
 
-import com.raygroupintl.vista.struct.MError;
-
 public abstract class TFSeq implements TokenFactory {
 	protected static final int RETURN_NULL = -2;
 	protected static final int RETURN_TOKEN = -1;
@@ -13,19 +11,16 @@ public abstract class TFSeq implements TokenFactory {
 		this.adapter = adapter;
 	}
 	
-	protected int getErrorCode() {
-		return MError.ERR_GENERAL_SYNTAX;
-	}
-	
 	protected abstract TokenFactorySupply getFactorySupply();
 
-	protected abstract int validateNull(int seqIndex, Token[] foundTokens);
+	protected abstract int validateNull(int seqIndex, int lineIndex, Token[] foundTokens)  throws SyntaxErrorException;
 	
-	protected int validateNext(int seqIndex, Token[] foundTokens, Token nextToken) {
+	protected int validateNext(int seqIndex, int lineIndex, Token[] foundTokens, Token nextToken) throws SyntaxErrorException {
 		return CONTINUE;
 	}
 	
-	protected abstract int validateEnd(int seqIndex, Token[] foundTokens);
+	protected void validateEnd(int seqIndex, int lineIndex, Token[] foundTokens) throws SyntaxErrorException {		
+	}
 	
 	protected Token getToken(String line, int fromIndex, Token[] foundTokens) {
 		if (this.adapter == null) {
@@ -35,17 +30,12 @@ public abstract class TFSeq implements TokenFactory {
 		}
 	}
 	
-	private int validate(int seqIndex, Token[] foundTokens, Token nextToken) {
+	private int validate(int seqIndex, int lineIndex, Token[] foundTokens, Token nextToken) throws SyntaxErrorException {
 		if (nextToken == null) {
-			return this.validateNull(seqIndex, foundTokens);
+			return this.validateNull(seqIndex, lineIndex, foundTokens);
 		} else {
-			return this.validateNext(seqIndex, foundTokens, nextToken);			
+			return this.validateNext(seqIndex, lineIndex, foundTokens, nextToken);			
 		}
-	}
-	
-	protected Token getTokenWhenSyntaxError(int seqIndex, Token[] found, TSyntaxError error, int fromIndex) {
-		error.setFromIndex(fromIndex);
-		return error;
 	}
 	
 	@Override
@@ -58,33 +48,22 @@ public abstract class TFSeq implements TokenFactory {
 			Token[] foundTokens = new Token[factoryCount];
 			for (int i=0; i<factoryCount; ++i) {
 				TokenFactory factory = supply.get(i, foundTokens);
-				assert(factory != null);
 				Token token = factory.tokenize(line, index);				
 				
-				//if ((token != null) && (token instanceof TSyntaxError)) {
-				//	return this.getTokenWhenSyntaxError(i, foundTokens, (TSyntaxError) token, fromIndex);
-				//}
-
-				int code = this.validate(i, foundTokens, token);
+				int code = this.validate(i, index, foundTokens, token);
 				if (code == RETURN_TOKEN) {
 					break;
 				}
 				if (code == RETURN_NULL) {
 					return null;
 				}					
-				if (code > 0) {
-					throw new SyntaxErrorException(code, index);
-				}
 
 				foundTokens[i] = token;
 				if (token == null) continue;				
 				index += token.getStringSize();					
 				
 				if ((index >= endIndex) && (i < factoryCount-1)) {
-					int endCode = this.validateEnd(i, foundTokens);
-					if (endCode > 0) {
-						throw new SyntaxErrorException(endCode, index);
-					}
+					this.validateEnd(i, index, foundTokens);
 					break;
 				}
 			}
