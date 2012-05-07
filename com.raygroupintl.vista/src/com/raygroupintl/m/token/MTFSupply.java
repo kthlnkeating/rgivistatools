@@ -22,7 +22,7 @@ import com.raygroupintl.bnf.annotation.List;
 import com.raygroupintl.fnds.IToken;
 import com.raygroupintl.fnds.ITokenFactory;
 
-public abstract class MTFSupply {
+public class MTFSupply {
 	@Adapter("indirection")
 	public static class IndirectionAdapter implements TokenAdapter {
 		@Override
@@ -257,8 +257,6 @@ public abstract class MTFSupply {
 	@Sequence(value={"lpar", "actuallist_i", "rpar"}, required="ror")
 	public ITokenFactory actuallist;
 
-	public ITokenFactory intrinsic;
-	
 	@Sequence(value={"eq", "expr"}, required="all")
 	public ITokenFactory deviceparam_1;
 	@Sequence(value={"expr", "deviceparam_1"}, required="ro")
@@ -464,17 +462,117 @@ public abstract class MTFSupply {
 	@Sequence(value={"dollar", "ident"}, required="all")
 	public ITokenFactory intrinsicname;
 
-	public static class Std95Supply extends MTFSupply {	
-		private MVersion version = MVersion.ANSI_STD_95;
 
-		public ITokenFactory intrinsic = new TFIntrinsic(this.version);
-		
-		public Std95Supply() {
-			
-		}
+	public TFIntrinsic intrinsic = new TFIntrinsic(this);
+	
+	protected void initialize() {
+		this.intrinsic.addVariable("D", "DEVICE"); 	
+		this.intrinsic.addVariable("EC", "ECODE"); 	
+		this.intrinsic.addVariable("ES", "ESTACK"); 	
+		this.intrinsic.addVariable("ET", "ETRAP"); 	
+		this.intrinsic.addVariable("H", "HOROLOG"); 	
+		this.intrinsic.addVariable("I", "IO"); 	
+		this.intrinsic.addVariable("J", "JOB"); 	
+		this.intrinsic.addVariable("K", "KEY"); 	
+		this.intrinsic.addVariable("PD", "PDISPLAY"); 	
+		this.intrinsic.addVariable("P", "PRINCIPAL"); 	
+		this.intrinsic.addVariable("Q", "QUIT"); 	
+		this.intrinsic.addVariable("S", "STORAGE"); 	
+		this.intrinsic.addVariable("ST", "STACK"); 	
+		this.intrinsic.addVariable("SY", "SYSTEM"); 	
+		this.intrinsic.addVariable("T", "TEST"); 	
+		this.intrinsic.addVariable("X", "X"); 	
+		this.intrinsic.addVariable("Y", "Y"); 	
+
+		this.intrinsic.addFunction(this.exprlist, "A", "ASCII", 1, 2); 	
+		this.intrinsic.addFunction(this.exprlist, "C", "CHAR", 1, 999); 	
+		this.intrinsic.addFunction(this.exprlist, "D", "DATA", 1, 1); 	
+		this.intrinsic.addFunction(this.exprlist, "E", "EXTRACT", 1, 3); 	
+		this.intrinsic.addFunction(this.exprlist, "F", "FIND", 2, 3); 	
+		this.intrinsic.addFunction(this.exprlist, "G", "GET", 1, 2); 	
+		this.intrinsic.addFunction(this.exprlist, "I", "INCREMENT", 1, 2); 	
+		this.intrinsic.addFunction(this.exprlist, "J", "JUSTIFY", 2, 3); 	
+		this.intrinsic.addFunction(this.exprlist, "L", "LENGTH", 1, 2); 		
+		this.intrinsic.addFunction(this.dorderarg, "O", "ORDER", 1, 2); 	
+		this.intrinsic.addFunction(this.exprlist, "P", "PIECE", 2, 4); 	
+		this.intrinsic.addFunction(this.exprlist, "Q", "QUERY", 1, 1); 	
+		this.intrinsic.addFunction(this.exprlist, "R", "RANDOM", 1, 1); 	
+		this.intrinsic.addFunction(this.exprlist, "RE", "REVERSE", 1, 1);		
+		this.intrinsic.addFunction(this.dselectarg, "S", "SELECT", 1, 999);
+		this.intrinsic.addFunction(this.cmdgargmain, "T", "TEXT", 1, 1); 
+		this.intrinsic.addFunction(this.exprlist, "V", "VIEW", 1, 999); 	
+		this.intrinsic.addFunction(this.exprlist, "FN", "FNUMBER", 2, 3); 	
+		this.intrinsic.addFunction(this.exprlist, "N", "NEXT", 1, 2); 	
+		this.intrinsic.addFunction(this.exprlist, "NA", "NAME", 1, 2); 	
+		this.intrinsic.addFunction(this.exprlist, "Q", "QUERY", 1, 2); 	
+		this.intrinsic.addFunction(this.exprlist, "QL", "QLENGTH", 1, 2); 	
+		this.intrinsic.addFunction(this.exprlist, "QS", "QSUBSCRIPT", 1, 3);
+		this.intrinsic.addFunction(this.exprlist, "ST", "STACK", 1, 2);
+		this.intrinsic.addFunction(this.exprlist, "TR", "TRANSLATE", 1, 3);
+		this.intrinsic.addFunction(this.exprlist, "WFONT", 4, 4);
+		this.intrinsic.addFunction(this.exprlist, "WTFIT", 6, 6);
+		this.intrinsic.addFunction(this.exprlist, "WTWIDTH", 5, 5);
+
+		this.intrinsic.addVariable("ZA");
+		this.intrinsic.addVariable("ZB");
+		this.intrinsic.addVariable("ZC");
+		this.intrinsic.addVariable("ZE");
+		this.intrinsic.addVariable("ZH");
+		this.intrinsic.addVariable("ZJ");
+		this.intrinsic.addVariable("ZJOB");	
+		this.intrinsic.addVariable("ZR");
+		this.intrinsic.addVariable("ZT");
+		this.intrinsic.addVariable("ZV");
+		this.intrinsic.addVariable("ZIO");	
+		this.intrinsic.addVariable("ZIOS");	
+		this.intrinsic.addVariable("ZVER");
+		this.intrinsic.addVariable("ZEOF");
+		this.intrinsic.addVariable("ZNSPACE");
+		this.intrinsic.addVariable("ZINTERRUPT");
+		this.intrinsic.addVariable("ZRO");
+		this.intrinsic.addVariable("R");
+		this.intrinsic.addVariable("ZS");
+		this.intrinsic.addVariable("ZROUTINES");
+		this.intrinsic.addVariable("ETRAP");
+		this.intrinsic.addVariable("ZTIMESTAMP");
+		this.intrinsic.addVariable("ZERROR");
+		this.intrinsic.addVariable("ZCMDLINE");
+		this.intrinsic.addVariable("ZPOSITION");
+		this.intrinsic.addFunction(this.exprlist, "ZBITGET");
+		this.intrinsic.addFunction(this.exprlist, "ZBN");
+		this.intrinsic.addFunction(this.exprlist, "ZC");
+		this.intrinsic.addFunction(this.exprlist, "ZF");
+		this.intrinsic.addFunction(this.exprlist, "ZJ");
+		this.intrinsic.addFunction(this.exprlist, "ZU");
+		this.intrinsic.addFunction(this.exprlist, "ZUTIL");
+		this.intrinsic.addFunction(this.exprlist, "ZTRNLNM");	
+		this.intrinsic.addFunction(this.exprlist, "ZBOOLEAN");	
+		this.intrinsic.addFunction(this.exprlist, "ZDEV");	
+		this.intrinsic.addFunction(this.exprlist, "ZGETDV");
+		this.intrinsic.addFunction(this.exprlist, "ZSORT");
+		this.intrinsic.addFunction(this.exprlist, "ZESCAPE");
+		this.intrinsic.addFunction(this.exprlist, "ZSEARCH");
+		this.intrinsic.addFunction(this.exprlist, "ZPARSE");
+		this.intrinsic.addFunction(this.exprlist, "ZCONVERT");
+		this.intrinsic.addFunction(this.exprlist, "ZDVI");
+		this.intrinsic.addFunction(this.exprlist, "ZGETDVI");
+		this.intrinsic.addFunction(this.exprlist, "ZOS");
+		this.intrinsic.addFunction(this.exprlist, "ZINTERRUPT");
+		this.intrinsic.addFunction(this.exprlist, "ZJOB");
+		this.intrinsic.addFunction(this.exprlist, "ZBITSTR");
+		this.intrinsic.addFunction(this.exprlist, "ZBITXOR");
+		this.intrinsic.addFunction(this.exprlist, "LISTGET");
+		this.intrinsic.addFunction(this.exprlist, "ZDEVSPEED");
+		this.intrinsic.addFunction(this.exprlist, "ZGETJPI");
+		this.intrinsic.addFunction(this.exprlist, "ZGETSYI");
+		this.intrinsic.addFunction(this.exprlist, "ZUTIL");	
+		this.intrinsic.addFunction(this.exprlist, "ZK");	
+		this.intrinsic.addFunction(this.exprlist, "ZWA");
+		this.intrinsic.addFunction(this.exprlist, "ZVERSION");		
 	}
-
-	public static class CacheSupply extends Std95Supply {
+	
+	
+	public static class CacheSupply extends MTFSupply {
 		@Adapter("lvn_objtail")
 		public static class ObjTailAdapter implements TokenAdapter {
 			@Override
@@ -494,8 +592,6 @@ public abstract class MTFSupply {
 			}		
 		}
 					
-		private MVersion version = MVersion.CACHE;
-
 		@Choice({"glvn", "expritem", "classmethod"})
 		public ITokenFactory expratom;
 		
@@ -524,8 +620,6 @@ public abstract class MTFSupply {
 		public ITokenFactory classref;
 		@Sequence(value={"ppclass", "lpar", "classref", "rpar", "dot", "name", "actuallist"}, required="all")
 		public ITokenFactory classmethod;
-		
-		public ITokenFactory intrinsic = new TFIntrinsic(this.version);
 		
 		public ITokenFactory system = new TFConstString("$SYSTEM", true);
 		@Sequence(value={"dot", "name"}, required="all")
@@ -571,8 +665,11 @@ public abstract class MTFSupply {
 		@Sequence(value={"dollar", "ident", "methods"}, required="rro")
 		public ITokenFactory intrinsicname;
 
-		
-		public CacheSupply() {			
+		@Override
+		protected void initialize() {		
+			super.initialize();
+			this.intrinsic.addFunction(this.dcasearg, "CASE", 1, Integer.MAX_VALUE);			
+			this.intrinsic.addFunction(this.dsystemarg, "SYS", "SYSTEM", 1, Integer.MAX_VALUE);
 		}
 	}
 	
@@ -585,17 +682,14 @@ public abstract class MTFSupply {
 				case CACHE: {
 					if (CACHE_SUPPLY == null) {
 						CACHE_SUPPLY = Parser.parse(CacheSupply.class);
-						TFIntrinsic.initialize(version);
+						CACHE_SUPPLY.initialize();
 					}
 					return CACHE_SUPPLY;
 				}
 				case ANSI_STD_95: {
 					if (STD_95_SUPPLY == null) {
-						STD_95_SUPPLY = Parser.parse(Std95Supply.class);
-						
-						
-						
-						TFIntrinsic.initialize(version);
+						STD_95_SUPPLY = Parser.parse(MTFSupply.class);
+						STD_95_SUPPLY.initialize();
 					}
 					return STD_95_SUPPLY;
 				}
