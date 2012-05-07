@@ -1,11 +1,14 @@
 package com.raygroupintl.m.token.test;
 
+import static org.junit.Assert.fail;
+
 import java.io.InputStream;
 
 import junit.framework.Assert;
 
 import org.junit.Test;
 
+import com.raygroupintl.bnf.SyntaxErrorException;
 import com.raygroupintl.bnf.Token;
 import com.raygroupintl.m.token.MVersion;
 import com.raygroupintl.m.token.TFLine;
@@ -35,8 +38,12 @@ public class TRoutineTest {
 		for (int i=0; i<lines.length; ++i) {
 			String line = lines[i];
 			TFLine f = TFLine.getInstance(version);
-			TLine l = (TLine) f.tokenize(line, 0);
-			r.add(l);
+			try {
+				TLine l = (TLine) f.tokenize(line, 0);
+				r.add(l);
+			} catch(SyntaxErrorException e) {
+				fail("Exception: " + e.getMessage());
+			}
 		}
 		r.beautify();		
 		String[] result = new String[]{
@@ -74,9 +81,13 @@ public class TRoutineTest {
 		InputStream is = this.getClass().getResourceAsStream(fileName);
 		TFRoutine tf = TFRoutine.getInstance(version);
 		MRoutineContent content = MRoutineContent.getInstance(fileName.split(".m")[0], is);
-		TRoutine r = tf.tokenize(content);
-		Assert.assertFalse("Unexpected error: " + fileName, r.hasError() || r.hasFatalError());	
-	}	
+		try {
+			TRoutine r = tf.tokenize(content);
+			Assert.assertFalse("Unexpected error: " + fileName, r.hasError() || r.hasFatalError());	
+		} catch(SyntaxErrorException e) {
+			fail("Exception: " + e.getMessage());
+		}
+	}
 
 	@Test
 	public void testNonErrorFiles() {

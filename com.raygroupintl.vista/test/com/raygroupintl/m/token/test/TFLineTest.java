@@ -1,11 +1,14 @@
 package com.raygroupintl.m.token.test;
 
+import static org.junit.Assert.fail;
+
 import java.util.List;
 
 import junit.framework.Assert;
 
 import org.junit.Test;
 
+import com.raygroupintl.bnf.SyntaxErrorException;
 import com.raygroupintl.bnf.Token;
 import com.raygroupintl.m.token.MVersion;
 import com.raygroupintl.m.token.TFLine;
@@ -13,33 +16,52 @@ import com.raygroupintl.vista.struct.MError;
 
 public class TFLineTest {
 	private Token lineTest(MVersion version, String line, boolean errorAsWell) {
-		TFLine f = TFLine.getInstance(version);
-		Token t = f.tokenize(line, 0);
-		String r = t.getStringValue();
-		Assert.assertEquals(line, r);	
-		if (errorAsWell) {
-			List<MError> error = t.getErrors();
-			int numErrors = error == null ? 0 : error.size();
-			Assert.assertEquals(0, numErrors);	
-		}
-		return t;
+		try {
+			TFLine f = TFLine.getInstance(version);
+			Token t = f.tokenize(line, 0);
+			String r = t.getStringValue();
+			Assert.assertEquals(line, r);	
+			if (errorAsWell) {
+				List<MError> error = t.getErrors();
+				int numErrors = error == null ? 0 : error.size();
+				Assert.assertEquals(0, numErrors);	
+			}
+			return t;
+		} catch(SyntaxErrorException e) {
+			fail("Exception: " + e.getMessage());
+			return null;
+		}			
 	}
 
 	private void lineErrorTest(MVersion version, String line) {
-		TFLine f = TFLine.getInstance(version);
-		Token t = f.tokenize(line, 0);
-		String r = t.getStringValue();
-		Assert.assertEquals(line, r);	
-		List<MError> error = t.getErrors();
-		int numErrors = error == null ? 0 : error.size();
-		Assert.assertTrue(numErrors > 0);	
+		try {
+			TFLine f = TFLine.getInstance(version);
+			Token t = f.tokenize(line, 0);
+			String r = t.getStringValue();
+			Assert.assertEquals(line, r);	
+			List<MError> error = t.getErrors();
+			int numErrors = error == null ? 0 : error.size();
+			Assert.assertTrue(numErrors > 0);	
+		} catch(SyntaxErrorException e) {
+			Token t = e.getAsToken(line, 0);
+			String r = t.getStringValue();
+			Assert.assertEquals(line, r);	
+			List<MError> error = t.getErrors();
+			int numErrors = error == null ? 0 : error.size();
+			Assert.assertTrue(numErrors > 0);	
+			
+		}
 	}
 
 	private void noErrorTest(MVersion version, String lineUnderTest) {
-		TFLine f = TFLine.getInstance(version);
-		Token line = f.tokenize(lineUnderTest, 0);
-		Assert.assertFalse("Unexpected error", line.hasError());
-		Assert.assertFalse("Unexpected fatal error", line.hasFatalError());				
+		try {
+			TFLine f = TFLine.getInstance(version);
+			Token line = f.tokenize(lineUnderTest, 0);
+			Assert.assertFalse("Unexpected error", line.hasError());
+			Assert.assertFalse("Unexpected fatal error", line.hasFatalError());				
+		} catch(SyntaxErrorException e) {
+			fail("Exception: " + e.getMessage());
+		}	
 	}
 	
 	private Token lineTest(MVersion version, String line) {

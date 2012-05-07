@@ -20,7 +20,7 @@ public class TFChoiceBasic implements TokenFactory {
 	}
 	
 	@Override
-	public Token tokenize(String line, int fromIndex) {
+	public Token tokenize(String line, int fromIndex) throws SyntaxErrorException {
 		int endIndex = line.length();
 		if (fromIndex < endIndex) {
 			for (TokenFactory f : this.factories) {

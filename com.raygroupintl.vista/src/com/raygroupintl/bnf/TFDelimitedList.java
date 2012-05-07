@@ -123,7 +123,7 @@ public final class TFDelimitedList implements TokenFactory {
 	}
 	
 	@Override
-	public Token tokenize(String line, int fromIndex) {
+	public Token tokenize(String line, int fromIndex) throws SyntaxErrorException {
 		if (line.length() > fromIndex) {
 			TokenFactory tfList = this.getEffectiveListFactory();
 			if ((this.left == null) && (this.right == null)) {

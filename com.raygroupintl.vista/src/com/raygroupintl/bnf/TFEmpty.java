@@ -12,7 +12,7 @@ public class TFEmpty implements TokenFactory {
 	}
 	
 	@Override
-	public Token tokenize(String line, int fromIndex) {
+	public Token tokenize(String line, int fromIndex) throws SyntaxErrorException {
 		if (fromIndex < line.length()) {
 			if (this.expected == null) {
 				return new TEmpty();

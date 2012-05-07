@@ -10,6 +10,7 @@ import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import com.raygroupintl.bnf.SyntaxErrorException;
 import com.raygroupintl.m.struct.Fanout;
 import com.raygroupintl.m.struct.LineLocation;
 import com.raygroupintl.m.struct.RoutineFanouts;
@@ -24,7 +25,7 @@ import com.raygroupintl.vista.struct.MLocationedError;
 public class MRoutineAnalyzer {
 	private final static Logger LOGGER = Logger.getLogger(MRoutineAnalyzer.class.getName());
 
-	public void writeErrors(final TFRoutine tf, final ErrorExemptions exemptions, String outputPath) throws IOException {
+	public void writeErrors(final TFRoutine tf, final ErrorExemptions exemptions, String outputPath) throws IOException, SyntaxErrorException {
 		int errorCount = 0;
 		final File file = new File(outputPath);
 		final FileOutputStream os = new FileOutputStream(file);
@@ -56,7 +57,7 @@ public class MRoutineAnalyzer {
 		os.close();
 	}
 	
-	public void writeErrors(CLIParams options) throws IOException {		
+	public void writeErrors(CLIParams options) throws IOException, SyntaxErrorException {		
 		String outputFile = options.outputFile; 
 		TFRoutine tf = TFRoutine.getInstance(MVersion.CACHE);
 		ErrorExemptions exemptions = ErrorExemptions.getVistAFOIAInstance();
@@ -64,7 +65,7 @@ public class MRoutineAnalyzer {
 	}
 
 	
-	public void writeFanout(CLIParams options) throws IOException {
+	public void writeFanout(CLIParams options) throws IOException, SyntaxErrorException {
 		RepositoryInfo ri = RepositoryInfo.getInstance();
 		
 		FileSupply fs = new FileSupply();

@@ -5,7 +5,7 @@ public abstract class TFChoice implements TokenFactory {
 	protected abstract TokenFactory getFactory(char ch);
 	
 	@Override
-	public Token tokenize(String line, int fromIndex) {
+	public Token tokenize(String line, int fromIndex) throws SyntaxErrorException {
 		int endIndex = line.length();
 		if (fromIndex < endIndex) {
 			char ch = line.charAt(fromIndex);			
