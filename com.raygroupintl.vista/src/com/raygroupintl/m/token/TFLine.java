@@ -12,6 +12,7 @@ import com.raygroupintl.bnf.TSyntaxError;
 import com.raygroupintl.fnds.ICharPredicate;
 import com.raygroupintl.struct.CharPredicate;
 import com.raygroupintl.struct.LetterPredicate;
+import com.raygroupintl.vista.struct.MError;
 
 public class TFLine extends TFSeqStatic {
 	private MVersion version;
@@ -22,8 +23,10 @@ public class TFLine extends TFSeqStatic {
 	
 	private static TokenFactory getTFCommands(MVersion version) {
 		ICharPredicate[] preds = {new LetterPredicate(), new CharPredicate(';')};
-		TokenFactory f = ChoiceSupply.get(TFSyntaxError.getInstance(), preds, TFCommand.getInstance(version), new TFComment());
-		return TFList.getInstance(f);
+		TokenFactory f = ChoiceSupply.get(new TFSyntaxError(MError.ERR_GENERAL_SYNTAX), preds, TFCommand.getInstance(version), new TFComment());
+		TFList result = TFList.getInstance(f);
+		result.setAddErrorToList(true);
+		return result;
 	}
  	
 	
@@ -37,7 +40,7 @@ public class TFLine extends TFSeqStatic {
 				getTFCommands(this.version)
 		};
 	}
-
+	
 	@Override
 	protected int validateNull(int seqIndex, Token[] foundTokens) {
 		return 0;

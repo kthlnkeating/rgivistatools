@@ -6,7 +6,8 @@ import java.util.List;
 
 public class TFList implements TokenFactory {
 	private TokenFactory elementFactory;
-
+	private boolean addErrorToList;
+	
 	public TFList() {
 	}
 	
@@ -30,8 +31,12 @@ public class TFList implements TokenFactory {
 		return null;
 	}
 	
+	public void setAddErrorToList(boolean b) {
+		this.addErrorToList = b;
+	}
+	
 	@Override
-	public Token tokenize(String line, int fromIndex) throws SyntaxErrorException {
+	public Token tokenize(String line, int fromIndex) throws SyntaxErrorInListException {
 		int endIndex = line.length();
 		if (fromIndex < endIndex) {
 			if (this.elementFactory == null) {
@@ -40,23 +45,32 @@ public class TFList implements TokenFactory {
 			int index = fromIndex;
 			List<Token> list = null;
 			while (index < endIndex) {
-				Token token = this.elementFactory.tokenize(line, index);
-				if (token == null) {
+				try {
+					Token token = this.elementFactory.tokenize(line, index);
+					if (token == null) {
+						if (list == null) {
+							return this.getNullToken();
+						} else {
+							return this.getToken(list);
+						}
+					}
 					if (list == null) {
-						return this.getNullToken();
+						list = new ArrayList<Token>();
+					}
+					list.add(token);	
+					index += token.getStringSize();
+				} catch (SyntaxErrorException se) {
+					if (this.addErrorToList) {
+						Token et = se.getAsToken(line, index);
+						if (list == null) {
+							list = new ArrayList<Token>();
+						}
+						list.add(et);
+						return new TList(list);
 					} else {
-						return this.getToken(list);
+						throw new SyntaxErrorInListException(se, list);
 					}
 				}
-				if (token instanceof TSyntaxError) {
-					((TSyntaxError) token).setFromIndex(fromIndex);
-					return token;
-				}
-				if (list == null) {
-					list = new ArrayList<Token>();
-				}
-				list.add(token);	
-				index += token.getStringSize();
 			}
 			assert(index == endIndex);	
 			return this.getToken(list);

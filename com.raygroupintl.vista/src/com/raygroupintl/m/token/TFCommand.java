@@ -3,7 +3,6 @@ package com.raygroupintl.m.token;
 import java.util.HashMap;
 import java.util.Map;
 
-import com.raygroupintl.bnf.SyntaxErrorException;
 import com.raygroupintl.bnf.TokenFactorySupply;
 import com.raygroupintl.bnf.Token;
 import com.raygroupintl.bnf.TokenFactory;
@@ -1053,11 +1052,6 @@ public class TFCommand extends TFSeq {
 	}
 	
 	@Override
-	public Token tokenize(String line, int fromIndex) throws SyntaxErrorException {
-		return super.tokenize(line, fromIndex);
-	}
-	
-	@Override
 	protected TokenFactorySupply getFactorySupply() {
 		return new TFSCommand(this.version);
 	}
@@ -1077,8 +1071,12 @@ public class TFCommand extends TFSeq {
 
 	@Override
 	public Token getToken(String line, int fromIndex, Token[] tokens) {
-		TCommandSpec spec = (TCommandSpec) tokens[0];
-		return spec.getToken(tokens);
+		if (tokens[0] instanceof TCommandSpec) {
+			TCommandSpec spec = (TCommandSpec) tokens[0];
+			return spec.getToken(tokens);
+		} else {
+			return tokens[0];
+		}
 	}
 			
 	public static TFCommand getInstance(MVersion version) {

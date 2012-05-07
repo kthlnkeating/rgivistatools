@@ -111,8 +111,4 @@ public class TFSeqStatic extends TFSeq {
 		}
 		return null;
 	}
-	
-	public boolean isInitialize() {
-		return this.supply != null;
-	}
 }

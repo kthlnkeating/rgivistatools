@@ -61,9 +61,9 @@ public abstract class TFSeq implements TokenFactory {
 				assert(factory != null);
 				Token token = factory.tokenize(line, index);				
 				
-				if ((token != null) && (token instanceof TSyntaxError)) {
-					return this.getTokenWhenSyntaxError(i, foundTokens, (TSyntaxError) token, fromIndex);
-				}
+				//if ((token != null) && (token instanceof TSyntaxError)) {
+				//	return this.getTokenWhenSyntaxError(i, foundTokens, (TSyntaxError) token, fromIndex);
+				//}
 
 				int code = this.validate(i, foundTokens, token);
 				if (code == RETURN_TOKEN) {
@@ -73,7 +73,7 @@ public abstract class TFSeq implements TokenFactory {
 					return null;
 				}					
 				if (code > 0) {
-					return TSyntaxError.getInstance(code, line, index, fromIndex);
+					throw new SyntaxErrorException(code, index);
 				}
 
 				foundTokens[i] = token;
@@ -83,7 +83,7 @@ public abstract class TFSeq implements TokenFactory {
 				if ((index >= endIndex) && (i < factoryCount-1)) {
 					int endCode = this.validateEnd(i, foundTokens);
 					if (endCode > 0) {
-						return TSyntaxError.getInstance(endCode, line, index, fromIndex);
+						throw new SyntaxErrorException(endCode, index);
 					}
 					break;
 				}

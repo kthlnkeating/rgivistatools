@@ -167,7 +167,7 @@ public class TFIntrinsic extends TFSeq {
 						String name = getFoundIntrinsicName(previousTokens);
 						MNameWithMnemonic mName = TFIntrinsic.this.functions.get(name);
 						if (mName == null) {
-							return TFSyntaxError.getInstance(MError.ERR_UNKNOWN_INTRINSIC_FUNCTION);
+							return new TFSyntaxError(MError.ERR_UNKNOWN_INTRINSIC_FUNCTION);
 						}
 						String mnemonic = mName.getMnemonic();
 						FunctionInfo info = TFIntrinsic.this.function_infos.get(mnemonic);

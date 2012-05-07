@@ -21,6 +21,7 @@ import com.raygroupintl.bnf.annotation.Parser;
 import com.raygroupintl.bnf.annotation.Sequence;
 import com.raygroupintl.bnf.annotation.Choice;
 import com.raygroupintl.bnf.annotation.List;
+import com.raygroupintl.vista.struct.MError;
 
 public class MTFSupply {
 	@Adapter("indirection")
@@ -157,7 +158,7 @@ public class MTFSupply {
 	public TokenFactory numlit;
 		
 	public TokenFactory operator = TFOperator.getInstance();
-	public TokenFactory error = TFSyntaxError.getInstance();
+	public TokenFactory error = new TFSyntaxError( MError.ERR_GENERAL_SYNTAX);
 	public TokenFactory unaryop = new TFConstChars("+-\'");
 	public TokenFactory strlit = new TFStringLiteral();
 	
