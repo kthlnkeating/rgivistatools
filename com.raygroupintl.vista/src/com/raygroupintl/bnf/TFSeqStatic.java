@@ -4,7 +4,7 @@ import java.util.Arrays;
 
 import com.raygroupintl.vista.struct.MError;
 
-public class TFSeqStatic extends TFSeq {
+public final class TFSeqStatic extends TFSeq {
 	private TokenFactorySupply supply;
 	private boolean[] requiredFlags = {};
 	private int firstRequired = Integer.MAX_VALUE;
@@ -63,16 +63,8 @@ public class TFSeqStatic extends TFSeq {
 		Arrays.fill(this.requiredFlags, true);
 	}
 	
-	protected TokenFactory[] getFactories() {
-		return null;
-	}
-	
 	@Override
 	protected final TokenFactorySupply getFactorySupply() {
-		if (this.supply == null) {
-			final TokenFactory[] factories = this.getFactories();
-			this.supply = new TFSStatic(factories);
-		}
 		return this.supply;
 	}
 
