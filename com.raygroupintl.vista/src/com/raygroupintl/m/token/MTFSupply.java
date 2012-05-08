@@ -164,7 +164,7 @@ public class MTFSupply {
 	@Sequence(value={"pm", "mantista", "exp"}, required="oro")
 	public TokenFactory numlit;
 		
-	public TokenFactory operator = TFOperator.getInstance();
+	public TFOperator operator = new TFOperator();
 	public TokenFactory error = new TFSyntaxError( MError.ERR_GENERAL_SYNTAX);
 	public TokenFactory unaryop = new TFConstChars("+-\'");
 	public TokenFactory strlit = new TFStringLiteral();
@@ -633,6 +633,14 @@ public class MTFSupply {
 		this.command.addCommand("ZESCAPE", this);
 		this.command.addCommand("ZITRAP", this);
 		this.command.addCommand("ZGETPAGE", this);
+		
+		String[] ops = {
+				"-", "+", "_", "*", "/", "#", "\\", "**", 
+				"&", "!", "=", "<", ">", "[", "]", "?", "]]",
+				"'&", "'!", "'=", "'<", "'>", "'[", "']", "'?", "']]"};
+		for (String op : ops) {
+			this.operator.addOperator(op);
+		}
 	}
 	
 	
@@ -734,6 +742,11 @@ public class MTFSupply {
 			super.initialize();
 			this.intrinsic.addFunction(this.dcasearg, "CASE", 1, Integer.MAX_VALUE);			
 			this.intrinsic.addFunction(this.dsystemarg, "SYS", "SYSTEM", 1, Integer.MAX_VALUE);
+			
+			this.operator.addOperator(">=");
+			this.operator.addOperator("<=");
+			this.operator.addOperator("&&");
+			this.operator.addOperator("||");
 		}
 	}
 	

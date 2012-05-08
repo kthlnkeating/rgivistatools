@@ -111,6 +111,20 @@ public class TFTest {
 		testTFActual(MVersion.ANSI_STD_95);		
 	}
 
+	private void testActualList(MVersion version) {
+		TokenFactory f = MTFSupply.getInstance(version).actuallist;
+		TFCommonTest.validCheck(f, "(LST,\",\",FLD)");		
+		TFCommonTest.validCheck(f, "(.LST,.5,FLD)");		
+		TFCommonTest.validCheck(f, "(.5,RCSUBJ,XMBODY,.XMTO,,.XMZ)");
+		TFCommonTest.validCheck(f, "(@(\"PSBTAB\"_(FLD-1))+1,((@(\"PSBTAB\"_(FLD))-(@(\"PSBTAB\"_(FLD-1))+1))),PSBVAL)");
+	}
+
+	@Test
+	public void testActualList() {
+		testActualList(MVersion.CACHE);
+		testActualList(MVersion.ANSI_STD_95);
+	}
+
 	private void testTFIndirection(MVersion version) {
 		TokenFactory f = MTFSupply.getInstance(version).indirection;		
 		TFCommonTest.validCheck(f, "@(+$P(LST,\",\",FLD))");
@@ -189,5 +203,30 @@ public class TFTest {
 	public void testTFStringLiteral() {
 		TFStringLiteral f = TFStringLiteral.getInstance();
 		TFCommonTest.validCheck(f, "\"\"\"\"\"\"");
+	}
+	
+	private void testPattern(MVersion version) {
+		MTFSupply m = MTFSupply.getInstance(version);
+		TokenFactory f = m.pattern;
+		TFCommonTest.validCheck(f, "1\"C-\".E");
+		TFCommonTest.validCheck(f, "1\"C-\".E ","1\"C-\".E");
+		TFCommonTest.validCheck(f, ".P1N.NP");
+		TFCommonTest.validCheck(f, ".P1N.NP ", ".P1N.NP");		
+		TFCommonTest.validCheck(f, "1.N");		
+		TFCommonTest.validCheck(f, "1(1N)");
+		TFCommonTest.validCheck(f, "1N.E");		
+		TFCommonTest.validCheck(f, "1(1N,1E)");		
+		TFCommonTest.validCheck(f, "1\".\".E");		
+		TFCommonTest.validCheck(f, "1(1\".\")");		
+		TFCommonTest.validCheck(f, "1(1N,1\".\")");		
+		TFCommonTest.validCheck(f, "1(1N.E,1A)");		
+		TFCommonTest.validCheck(f, "1(1N.E,1\".\")");		
+		TFCommonTest.validCheck(f, "1(1N.E,1\".\".E)");		
+	}
+
+	@Test
+	public void testPattern() {
+		testPattern(MVersion.CACHE);
+		testPattern(MVersion.ANSI_STD_95);
 	}
 }

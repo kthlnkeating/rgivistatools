@@ -44,11 +44,6 @@ public class TFRoutine {
 	}
 
 	public static TFRoutine getInstance(MVersion version) {
-		TFOperator.addOperator(">=");
-		TFOperator.addOperator("<=");
-		TFOperator.addOperator("&&");
-		TFOperator.addOperator("||");
-				
 		return new TFRoutine(version);
 	}	
 }

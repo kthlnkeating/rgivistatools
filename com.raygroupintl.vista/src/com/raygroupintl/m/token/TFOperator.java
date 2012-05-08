@@ -1,56 +1,59 @@
 package com.raygroupintl.m.token;
 
-import java.util.Arrays;
-import java.util.HashSet;
-import java.util.Set;
+import java.util.HashMap;
+import java.util.Map;
 
 import com.raygroupintl.bnf.Token;
 import com.raygroupintl.bnf.TokenFactory;
 
 public class TFOperator implements TokenFactory {
-	private static final char[] OPERATOR_CHARS = {
-		'!', '#', '&', '\'', '*', '+', '-', '/', '<', '=', '>', '?', '[', '\\', ']', '_', '|'
-	};
-
-	private static Set<String> OPERATORS = new HashSet<String>();
-	static {
-		String[] ops = {
-				"-", "+", "_", "*", "/", "#", "\\", "**", 
-				"&", "!", "=", "<", ">", "[", "]", "?", "]]",
-				"'&", "'!", "'=", "'<", "'>", "'[", "']", "'?", "']]"
-		};
-		for (String op : ops) {
-			OPERATORS.add(op);
-		}; 
+	private static class OperatorBranch {
+		public Map<Character, OperatorBranch> nextBranch = new HashMap<Character, OperatorBranch>();
+		public boolean validEnd;
 	}
 	
-	public static void addOperator(String op) {
-		for (int i=0; i<op.length(); ++i) {
-			char ch = op.charAt(i);
-			if (Arrays.binarySearch(OPERATOR_CHARS, ch) < 0) {
-				throw new IllegalArgumentException();
-			}
+	private Map<Character, OperatorBranch> operators = new HashMap<Character, OperatorBranch>();
+	
+	public void addOperator(String operator) {
+		Character ch = operator.charAt(0);
+		OperatorBranch branch = this.operators.get(ch);
+		if (branch == null) {
+			branch = new OperatorBranch();
+			this.operators.put(ch, branch);
 		}
-		OPERATORS.add(op);
+		for (int i=1; i<operator.length(); ++i) {
+			Character nextCharacter = operator.charAt(i);
+			OperatorBranch nextBranch = branch.nextBranch.get(nextCharacter);
+			if (nextBranch == null) {
+				nextBranch = new OperatorBranch();
+				 branch.nextBranch.put(nextCharacter, nextBranch);
+			}
+			branch = nextBranch;
+		}
+		branch.validEnd = true;
 	}
-	
+		
 	@Override
 	public Token tokenize(String line, int fromIndex) {
 		int endIndex = line.length();
-		int index = fromIndex;
-		while (index < endIndex) {
-			char ch = line.charAt(index);	
-			if (Arrays.binarySearch(OPERATOR_CHARS, ch) < 0) break;
-			++index;
-		}
-		
-		for (int i=index; i>fromIndex; --i) {
-			String op = line.substring(fromIndex, i);
-			if (OPERATORS.contains(op)) {
-				return new TOperator(op);
+		if (fromIndex < endIndex) {
+			char ch = line.charAt(fromIndex);	
+			OperatorBranch branch = this.operators.get(ch);
+			if (branch != null) {
+				int index = fromIndex + 1;
+				while (index < endIndex) {
+					ch = line.charAt(index);
+					OperatorBranch nextBranch = branch.nextBranch.get(ch);
+					if (nextBranch == null) break;
+					branch = nextBranch;
+					++index;
+				}
+				if (branch.validEnd) {
+					return new TOperator(line.substring(fromIndex, index));
+				}				
 			}
 		}
-		return null;	
+		return null;
 	}
 	
 	public static TFOperator getInstance() {
