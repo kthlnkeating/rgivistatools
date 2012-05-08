@@ -7,8 +7,6 @@ import com.raygroupintl.bnf.SyntaxErrorException;
 import com.raygroupintl.bnf.Token;
 import com.raygroupintl.bnf.TokenFactory;
 import com.raygroupintl.bnf.TSyntaxError;
-import com.raygroupintl.m.token.TFCommand;
-import com.raygroupintl.m.token.TFLine;
 
 public class TFCommonTest {
 	private static void validTokenCheck(Token t, String v) {
@@ -32,16 +30,24 @@ public class TFCommonTest {
 		validTokenCheck(t, v);
 	}
 			
-	static void validCheck(TokenFactory f, String v) {
+	static void validCheck(TokenFactory f, String v, boolean checkWithSpace) {
 		try {
 			Token t = f.tokenize(v, 0);
 			validCheck(t, v);
-			if (! ((f instanceof TFCommand) || (f instanceof TFLine))) {
+			if (checkWithSpace) {
 				validCheck(f, v + " ", v);
 			}
 		} catch(SyntaxErrorException e) {
 			fail("Exception: " + e.getMessage());			
 		}
+	}
+
+	static void validCheck(TokenFactory f, String v) {
+		validCheck(f, v, true);
+	}
+
+	static void validCheckNS(TokenFactory f, String v) {
+		validCheck(f, v, false);
 	}
 
 	static void errorCheck(TokenFactory f, String v) {
@@ -54,13 +60,13 @@ public class TFCommonTest {
 		}
 	}
 
-	static void errorCheck(TokenFactory f, String v, int errorCode) {
+	static void errorCheck(TokenFactory f, String v, int errorCode, boolean checkWithSpace) {
 		try {
 			Token t = f.tokenize(v, 0);
 			errorCheck(t, v, errorCode);
 			if (t instanceof TSyntaxError) {
 				errorCheck(f, v + " ", v + " ", errorCode);		
-			} else if (! ((f instanceof TFCommand) || (f instanceof TFLine))) {
+			} else if (checkWithSpace) {
 				errorCheck(f, v + " ", v, errorCode);
 			}
 		} catch(SyntaxErrorException e) {
@@ -68,10 +74,18 @@ public class TFCommonTest {
 			errorCheck(t, v, errorCode);
 			if (t instanceof TSyntaxError) {
 				errorCheck(f, v + " ", v + " ", errorCode);		
-			} else if (! ((f instanceof TFCommand) || (f instanceof TFLine))) {
+			} else if (checkWithSpace) {
 				errorCheck(f, v + " ", v, errorCode);
 			}
 		}
+	}
+
+	static void errorCheck(TokenFactory f, String v, int errorCode) {
+		errorCheck(f, v, errorCode, true);
+	}
+
+	static void errorCheckNS(TokenFactory f, String v, int errorCode) {
+		errorCheck(f, v, errorCode, false);
 	}
 
 	static void validCheck(TokenFactory f, String v, String compare) {

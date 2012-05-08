@@ -4,13 +4,14 @@ import java.io.IOException;
 import java.nio.file.Path;
 
 import com.raygroupintl.bnf.SyntaxErrorException;
+import com.raygroupintl.bnf.TokenFactory;
 import com.raygroupintl.vista.struct.MRoutineContent;
 
 public class TFRoutine {
-	private TFLine tfLine;
+	private TokenFactory tfLine;
 	
 	private TFRoutine(MVersion version) {
-		this.tfLine = TFLine.getInstance(MTFSupply.getInstance(version));
+		this.tfLine = MTFSupply.getInstance(version).line;
 	}
 	
 	public TRoutine tokenize(MRoutineContent content) throws SyntaxErrorException {

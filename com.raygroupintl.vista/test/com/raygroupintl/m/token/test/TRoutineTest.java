@@ -11,28 +11,28 @@ import org.junit.Test;
 
 import com.raygroupintl.bnf.SyntaxErrorException;
 import com.raygroupintl.bnf.Token;
+import com.raygroupintl.bnf.TokenFactory;
 import com.raygroupintl.m.token.MTFSupply;
 import com.raygroupintl.m.token.MVersion;
-import com.raygroupintl.m.token.TFLine;
 import com.raygroupintl.m.token.TFRoutine;
 import com.raygroupintl.m.token.TLine;
 import com.raygroupintl.m.token.TRoutine;
 import com.raygroupintl.vista.struct.MRoutineContent;
 
 public class TRoutineTest {
-	private static TFLine fStd95;
-	private static TFLine fCache;
+	private static TokenFactory fStd95;
+	private static TokenFactory fCache;
 	
 	@BeforeClass
 	public static void setUpBeforeClass() throws Exception {
 		MTFSupply tfsStd95 = MTFSupply.getInstance(MVersion.ANSI_STD_95);
-		fStd95 = TFLine.getInstance(tfsStd95);
+		fStd95 = tfsStd95.line;
 		
 		MTFSupply tfsCache = MTFSupply.getInstance(MVersion.CACHE);
-		fCache = TFLine.getInstance(tfsCache);
+		fCache = tfsCache.line;
 	}
 
-	public void testBeautify(TFLine f) {
+	public void testBeautify(TokenFactory f) {
 		String[] lines = new String[]{
 				"IBDF14 ;ALB/CJM - AICS LIST CLINIC SETUP ; JUL 20,1993",
 				" ;;3.0;AUTOMATED INFO COLLECTION SYS;;APR 24, 1997",

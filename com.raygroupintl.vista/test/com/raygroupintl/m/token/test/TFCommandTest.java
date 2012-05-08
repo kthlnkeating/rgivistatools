@@ -28,10 +28,10 @@ public class TFCommandTest {
 	}
 		
 	private void testBreak(TFCommand f) {
-		TFCommonTest.validCheck(f, "B");
-		TFCommonTest.validCheck(f, "B   ");
-		TFCommonTest.validCheck(f, "B \"+13^TAG\"");
-		TFCommonTest.validCheck(f, "B \"+13^TAG\""     );
+		TFCommonTest.validCheckNS(f, "B");
+		TFCommonTest.validCheckNS(f, "B   ");
+		TFCommonTest.validCheckNS(f, "B \"+13^TAG\"");
+		TFCommonTest.validCheckNS(f, "B \"+13^TAG\""     );
 	}
 
 	@Test
@@ -41,23 +41,23 @@ public class TFCommandTest {
 	}
 
 	private void testDo(TFCommand f) {
-		TFCommonTest.validCheck(f, "D SENDMSG^XMXAPI(.5,RCSUBJ,XMBODY,.XMTO,,.XMZ)");
-		TFCommonTest.validCheck(f, "D SET^IBCSC5A(BILLDA,.ARRXS,)");
-		TFCommonTest.validCheck(f, "D ^%ZIS");
-		TFCommonTest.validCheck(f, "D WRITE(IO,G)");
-		TFCommonTest.validCheck(f, "D WRAPPER(@(\"PSBTAB\"_(FLD-1))+1,((@(\"PSBTAB\"_(FLD))-(@(\"PSBTAB\"_(FLD-1))+1))),PSBVAL)");
+		TFCommonTest.validCheckNS(f, "D SENDMSG^XMXAPI(.5,RCSUBJ,XMBODY,.XMTO,,.XMZ)");
+		TFCommonTest.validCheckNS(f, "D SET^IBCSC5A(BILLDA,.ARRXS,)");
+		TFCommonTest.validCheckNS(f, "D ^%ZIS");
+		TFCommonTest.validCheckNS(f, "D WRITE(IO,G)");
+		TFCommonTest.validCheckNS(f, "D WRAPPER(@(\"PSBTAB\"_(FLD-1))+1,((@(\"PSBTAB\"_(FLD))-(@(\"PSBTAB\"_(FLD-1))+1))),PSBVAL)");
 	}
 
 	@Test
 	public void testDo() {
 		testDo(fCache);
 		testDo(fStd95);
-		TFCommonTest.validCheck(fCache, "DO $system.Status.DecomposeStatus(%objlasterror,.XOBLERR)");
+		TFCommonTest.validCheckNS(fCache, "DO $system.Status.DecomposeStatus(%objlasterror,.XOBLERR)");
 	}
 
 	private void testFor(TFCommand f) {
-		TFCommonTest.validCheck(f, "F FLD=1:1:$L(LST,\",\")");
-		TFCommonTest.validCheck(f, "F STAT=42,16");
+		TFCommonTest.validCheckNS(f, "F FLD=1:1:$L(LST,\",\")");
+		TFCommonTest.validCheckNS(f, "F STAT=42,16");
 	}
 
 	@Test
@@ -67,20 +67,20 @@ public class TFCommandTest {
 	}
 
 	private void testGoto(TFCommand f) {
-		TFCommonTest.validCheck(f, "G:POP H^XUS");
-		TFCommonTest.validCheck(f, "G:POP H^[ENV]XUS:POP");
-		TFCommonTest.validCheck(f, "G:POP H+3^[ENV]XUS:POP");
-		TFCommonTest.validCheck(f, "G H+3");
-		TFCommonTest.validCheck(f, "G ^XUS:POP");
-		TFCommonTest.validCheck(f, "G H+3,^XUS:POP");
-		TFCommonTest.validCheck(f, "G ^XUS");
-		TFCommonTest.validCheck(f, "G @A");
-		TFCommonTest.validCheck(f, "G @A^@B");
-		TFCommonTest.validCheck(f, "G @A:P");
-		TFCommonTest.validCheck(f, "G ^@B");
-		TFCommonTest.validCheck(f, "G ^@B:P");
+		TFCommonTest.validCheckNS(f, "G:POP H^XUS");
+		TFCommonTest.validCheckNS(f, "G:POP H^[ENV]XUS:POP");
+		TFCommonTest.validCheckNS(f, "G:POP H+3^[ENV]XUS:POP");
+		TFCommonTest.validCheckNS(f, "G H+3");
+		TFCommonTest.validCheckNS(f, "G ^XUS:POP");
+		TFCommonTest.validCheckNS(f, "G H+3,^XUS:POP");
+		TFCommonTest.validCheckNS(f, "G ^XUS");
+		TFCommonTest.validCheckNS(f, "G @A");
+		TFCommonTest.validCheckNS(f, "G @A^@B");
+		TFCommonTest.validCheckNS(f, "G @A:P");
+		TFCommonTest.validCheckNS(f, "G ^@B");
+		TFCommonTest.validCheckNS(f, "G ^@B:P");
 		TFCommonTest.errorCheck(f, "G ^");
-		TFCommonTest.validCheck(f, "G 0^DIE17");
+		TFCommonTest.validCheckNS(f, "G 0^DIE17");
 	}
 
 	@Test
@@ -90,8 +90,8 @@ public class TFCommandTest {
 	}
 
 	private void testHaltHang(TFCommand f) {
-		TFCommonTest.validCheck(f, "H 3");
-		TFCommonTest.validCheck(f, "H");
+		TFCommonTest.validCheckNS(f, "H 3");
+		TFCommonTest.validCheckNS(f, "H");
 	}
 
 	@Test
@@ -101,11 +101,11 @@ public class TFCommandTest {
 	}
 
 	private void testIf(TFCommand f) {
-		TFCommonTest.validCheck(f, "I $L($T(NTRTMSG^HDISVAP))");
-		TFCommonTest.validCheck(f, "I @CLIN@(0)=0");
-		TFCommonTest.validCheck(f, "I @CLIN@(0)");
-		TFCommonTest.validCheck(f, "I $P(LA7XFORM,\"^\")?1.N,LA7VAL?1(1N.E,1\".\".E)");
-		TFCommonTest.validCheck(f, "I $D(@G)#10");
+		TFCommonTest.validCheckNS(f, "I $L($T(NTRTMSG^HDISVAP))");
+		TFCommonTest.validCheckNS(f, "I @CLIN@(0)=0");
+		TFCommonTest.validCheckNS(f, "I @CLIN@(0)");
+		TFCommonTest.validCheckNS(f, "I $P(LA7XFORM,\"^\")?1.N,LA7VAL?1(1N.E,1\".\".E)");
+		TFCommonTest.validCheckNS(f, "I $D(@G)#10");
 	}
 	
 	@Test
@@ -115,17 +115,17 @@ public class TFCommandTest {
 	}
 
 	private void testJob(TFCommand f) {
-		TFCommonTest.validCheck(f, "JOB CHILDNT^XOBVTCPL():(:4:XOBIO:XOBIO):10");
-		TFCommonTest.validCheck(f, "J LISTENER^XOBVTCPL(XOBPORT,$GET(XOBCFG))::5");
-		TFCommonTest.validCheck(f, "JOB CHILDNT^XOBVTCPL(A,.B):(:4:XOBIO:XOBIO):10");
-		TFCommonTest.validCheck(f, "JOB CHILDNT+3^XOBVTCPL:(:4:XOBIO:XOBIO):10");
-		TFCommonTest.validCheck(f, "JOB CHILDNT+3^XOBVTCPL:5");
-		TFCommonTest.validCheck(f, "JOB CHILDNT:5");
-		TFCommonTest.validCheck(f, "JOB CHILDNT:(A:B:C):5");
-		TFCommonTest.validCheck(f, "JOB CHILDNT:(::B:C):5");
-		TFCommonTest.validCheck(f, "JOB @A^@A:(::B:C):5");
-		TFCommonTest.validCheck(f, "J ^XMRONT");
-		TFCommonTest.validCheck(f, "J ^XMRONT::5");
+		TFCommonTest.validCheckNS(f, "JOB CHILDNT^XOBVTCPL():(:4:XOBIO:XOBIO):10");
+		TFCommonTest.validCheckNS(f, "J LISTENER^XOBVTCPL(XOBPORT,$GET(XOBCFG))::5");
+		TFCommonTest.validCheckNS(f, "JOB CHILDNT^XOBVTCPL(A,.B):(:4:XOBIO:XOBIO):10");
+		TFCommonTest.validCheckNS(f, "JOB CHILDNT+3^XOBVTCPL:(:4:XOBIO:XOBIO):10");
+		TFCommonTest.validCheckNS(f, "JOB CHILDNT+3^XOBVTCPL:5");
+		TFCommonTest.validCheckNS(f, "JOB CHILDNT:5");
+		TFCommonTest.validCheckNS(f, "JOB CHILDNT:(A:B:C):5");
+		TFCommonTest.validCheckNS(f, "JOB CHILDNT:(::B:C):5");
+		TFCommonTest.validCheckNS(f, "JOB @A^@A:(::B:C):5");
+		TFCommonTest.validCheckNS(f, "J ^XMRONT");
+		TFCommonTest.validCheckNS(f, "J ^XMRONT::5");
 	}
 	
 	@Test
@@ -135,22 +135,22 @@ public class TFCommandTest {
 	}
 
 	private void testKill(TFCommand f) {
-		TFCommonTest.validCheck(f, "K A");
-		TFCommonTest.validCheck(f, "K A,B,@C,D");
-		TFCommonTest.validCheck(f, "K @A");
-		TFCommonTest.validCheck(f, "K @A,@C");
-		TFCommonTest.validCheck(f, "K (A,B),D,(R,E)");
-		TFCommonTest.validCheck(f, "K A,B");
-		TFCommonTest.validCheck(f, "K CC,DD,EE");
-		TFCommonTest.validCheck(f, "K");
-		TFCommonTest.validCheck(f, "K ^XY");
-		TFCommonTest.validCheck(f, "K ^XY,^Z(\"D\")");
-		TFCommonTest.validCheck(f, "K:A=1 ^XY,^Z(\"D\")");
-		TFCommonTest.validCheck(f, "K:A=1 ^XY,D");
-		TFCommonTest.validCheck(f, "K ^XY,D,ZZ(\"A\",\"FF\"),TRE");
-		TFCommonTest.validCheck(f, "K (A)");
-		TFCommonTest.validCheck(f, "K (A,B)");
-		TFCommonTest.validCheck(f, "K %ZIS");
+		TFCommonTest.validCheckNS(f, "K A");
+		TFCommonTest.validCheckNS(f, "K A,B,@C,D");
+		TFCommonTest.validCheckNS(f, "K @A");
+		TFCommonTest.validCheckNS(f, "K @A,@C");
+		TFCommonTest.validCheckNS(f, "K (A,B),D,(R,E)");
+		TFCommonTest.validCheckNS(f, "K A,B");
+		TFCommonTest.validCheckNS(f, "K CC,DD,EE");
+		TFCommonTest.validCheckNS(f, "K");
+		TFCommonTest.validCheckNS(f, "K ^XY");
+		TFCommonTest.validCheckNS(f, "K ^XY,^Z(\"D\")");
+		TFCommonTest.validCheckNS(f, "K:A=1 ^XY,^Z(\"D\")");
+		TFCommonTest.validCheckNS(f, "K:A=1 ^XY,D");
+		TFCommonTest.validCheckNS(f, "K ^XY,D,ZZ(\"A\",\"FF\"),TRE");
+		TFCommonTest.validCheckNS(f, "K (A)");
+		TFCommonTest.validCheckNS(f, "K (A,B)");
+		TFCommonTest.validCheckNS(f, "K %ZIS");
 		TFCommonTest.errorCheck(f, "K (^A)");
 		TFCommonTest.errorCheck(f, "K (A,^A)");
 		TFCommonTest.errorCheck(f, "K (A(25))");
@@ -169,14 +169,14 @@ public class TFCommandTest {
 	}
 
 	private void testLock(TFCommand f) {
-		TFCommonTest.validCheck(f, "L -^PRCA(430,+$G(PRCABN),0)");
-		TFCommonTest.validCheck(f, "L +^PRCA(430,DA,0):0");		
-		TFCommonTest.validCheck(f, "L -^PRCA(430,+$G(PRCABN),0),+^PRCA:0");
-		TFCommonTest.validCheck(f, "L +(^LR(LRDFN,\"MI\",LRIDT)):0");
-		TFCommonTest.validCheck(f, "L +(^LRO(68,LRAA,1,LRAD,1,LRAN))");
-		TFCommonTest.validCheck(f, "L +(^LR(LRDFN,\"MI\",LRIDT),^LRO(68,LRAA,1,LRAD,1,LRAN)):0");
-		TFCommonTest.validCheck(f, "L -(^LR(LRDFN,\"MI\",LRIDT),^LRO(68,LRAA,1,LRAD,1,LRAN))");
-		TFCommonTest.validCheck(f, "L +PSX(550.1):3");	
+		TFCommonTest.validCheckNS(f, "L -^PRCA(430,+$G(PRCABN),0)");
+		TFCommonTest.validCheckNS(f, "L +^PRCA(430,DA,0):0");		
+		TFCommonTest.validCheckNS(f, "L -^PRCA(430,+$G(PRCABN),0),+^PRCA:0");
+		TFCommonTest.validCheckNS(f, "L +(^LR(LRDFN,\"MI\",LRIDT)):0");
+		TFCommonTest.validCheckNS(f, "L +(^LRO(68,LRAA,1,LRAD,1,LRAN))");
+		TFCommonTest.validCheckNS(f, "L +(^LR(LRDFN,\"MI\",LRIDT),^LRO(68,LRAA,1,LRAD,1,LRAN)):0");
+		TFCommonTest.validCheckNS(f, "L -(^LR(LRDFN,\"MI\",LRIDT),^LRO(68,LRAA,1,LRAD,1,LRAN))");
+		TFCommonTest.validCheckNS(f, "L +PSX(550.1):3");	
 	}
 
 	@Test
@@ -186,8 +186,8 @@ public class TFCommandTest {
 	}
 
 	public void testRead(TFCommand f) {
-		TFCommonTest.validCheck(f, "R !,\"Select DEBTOR NAME or BILL NUMBER: \",X:DTIME");
-		TFCommonTest.validCheck(f, "R !,\"ANSWER= \",@YSR1:300");
+		TFCommonTest.validCheckNS(f, "R !,\"Select DEBTOR NAME or BILL NUMBER: \",X:DTIME");
+		TFCommonTest.validCheckNS(f, "R !,\"ANSWER= \",@YSR1:300");
 	}
 
 	@Test
@@ -197,7 +197,7 @@ public class TFCommandTest {
 	}
 
 	private void testQuit(TFCommand f) {
-		TFCommonTest.validCheck(f, "Q @SCLIST@(0)>0");
+		TFCommonTest.validCheckNS(f, "Q @SCLIST@(0)>0");
 	}
 
 	@Test
@@ -207,21 +207,21 @@ public class TFCommandTest {
 	}
 
 	private void testSet(TFCommand f) {
-		TFCommonTest.validCheck(f, "S A=B");
-		TFCommonTest.validCheck(f, "S X=$$MG^XMBGRP(\"RCCPC STATEMENTS\",0,.5,1,\"\",.DES,1)");
-		TFCommonTest.validCheck(f, "S @^%ZOSF(\"TRAP\")");
-		TFCommonTest.validCheck(f, "S X=\"ERROR^PRCAHV\",@^%ZOSF(\"TRAP\")");
-		TFCommonTest.validCheck(f, "S A=B,@C=D");
-		TFCommonTest.validCheck(f, "S @A,$E(V,\",\",2)=\"DE\"");
-		TFCommonTest.validCheck(f, "S @A=@C");
-		TFCommonTest.validCheck(f, "S $X=5,$Y=3,(B,C,D)=(A=B)");
-		TFCommonTest.validCheck(f, "S A=B,C=F,D=YSH");
-		TFCommonTest.validCheck(f, "S @A=\"S\"");
-		TFCommonTest.validCheck(f, "S @H@(0)=3");
-		TFCommonTest.validCheck(f, "S XT4=\"I 1\"   ");
-		TFCommonTest.validCheck(f, "S IOP=IOP_\";255\",%ZIS=\"\"");
-		TFCommonTest.validCheck(f, "S X=$I(^HLCS(870,DP,P),$S($G(Z):-1,1:1))");
-		TFCommonTest.validCheck(f, "S ^$W(\"ZISGTRM\",\"VISIBLE\")=1");
+		TFCommonTest.validCheckNS(f, "S A=B");
+		TFCommonTest.validCheckNS(f, "S X=$$MG^XMBGRP(\"RCCPC STATEMENTS\",0,.5,1,\"\",.DES,1)");
+		TFCommonTest.validCheckNS(f, "S @^%ZOSF(\"TRAP\")");
+		TFCommonTest.validCheckNS(f, "S X=\"ERROR^PRCAHV\",@^%ZOSF(\"TRAP\")");
+		TFCommonTest.validCheckNS(f, "S A=B,@C=D");
+		TFCommonTest.validCheckNS(f, "S @A,$E(V,\",\",2)=\"DE\"");
+		TFCommonTest.validCheckNS(f, "S @A=@C");
+		TFCommonTest.validCheckNS(f, "S $X=5,$Y=3,(B,C,D)=(A=B)");
+		TFCommonTest.validCheckNS(f, "S A=B,C=F,D=YSH");
+		TFCommonTest.validCheckNS(f, "S @A=\"S\"");
+		TFCommonTest.validCheckNS(f, "S @H@(0)=3");
+		TFCommonTest.validCheckNS(f, "S XT4=\"I 1\"   ");
+		TFCommonTest.validCheckNS(f, "S IOP=IOP_\";255\",%ZIS=\"\"");
+		TFCommonTest.validCheckNS(f, "S X=$I(^HLCS(870,DP,P),$S($G(Z):-1,1:1))");
+		TFCommonTest.validCheckNS(f, "S ^$W(\"ZISGTRM\",\"VISIBLE\")=1");
 	}
 
 	@Test
@@ -231,8 +231,8 @@ public class TFCommandTest {
 	}
 
 	private void testOpen(TFCommand f) {
-		TFCommonTest.validCheck(f, "O:$G(LOGICAL)]\"\" HLCSTATE(\"DEVICE\"):(TCPDEV:BLOCKSIZE=512):HLCSTATE(\"OPEN TIMEOUT\")");
-		TFCommonTest.validCheck(f, "OPEN XOBIO:(:XOBPORT:\"AT\"):30");
+		TFCommonTest.validCheckNS(f, "O:$G(LOGICAL)]\"\" HLCSTATE(\"DEVICE\"):(TCPDEV:BLOCKSIZE=512):HLCSTATE(\"OPEN TIMEOUT\")");
+		TFCommonTest.validCheckNS(f, "OPEN XOBIO:(:XOBPORT:\"AT\"):30");
 	}	
 	
 	@Test
@@ -242,14 +242,14 @@ public class TFCommandTest {
 	}
 
 	private void testUse(TFCommand f) {
-		TFCommonTest.validCheck(f, "U IO");
-		TFCommonTest.validCheck(f, "U A:B");
-		TFCommonTest.validCheck(f, "U $I:(64)");
-		TFCommonTest.validCheck(f, "U $I:(0::::64)");
-		TFCommonTest.validCheck(f, "U $I:(VT=1:ESCAPE=1)");
-		TFCommonTest.validCheck(f, "U $I:(:\"CT\")");
-		TFCommonTest.validCheck(f, "U $I:(ESCAPE)");
-		TFCommonTest.validCheck(f, "U 56::\"TCP\"");
+		TFCommonTest.validCheckNS(f, "U IO");
+		TFCommonTest.validCheckNS(f, "U A:B");
+		TFCommonTest.validCheckNS(f, "U $I:(64)");
+		TFCommonTest.validCheckNS(f, "U $I:(0::::64)");
+		TFCommonTest.validCheckNS(f, "U $I:(VT=1:ESCAPE=1)");
+		TFCommonTest.validCheckNS(f, "U $I:(:\"CT\")");
+		TFCommonTest.validCheckNS(f, "U $I:(ESCAPE)");
+		TFCommonTest.validCheckNS(f, "U 56::\"TCP\"");
 	}
 
 	@Test
@@ -259,7 +259,7 @@ public class TFCommandTest {
 	}
 
 	private void testView(TFCommand f) {
-		TFCommonTest.validCheck(f, "V -1:1");
+		TFCommonTest.validCheckNS(f, "V -1:1");
 	}
 	
 	@Test
@@ -269,10 +269,10 @@ public class TFCommandTest {
 	}
 
 	private void testWrite(TFCommand f) {
-		TFCommonTest.validCheck(f, "W !!,^YTT(601,YSTEST,\"G\",L,1,1,0)");
-		TFCommonTest.validCheck(f, "W !,$S($D(ZTSK):\"REQUEST QUEUED TASK=\"_ZTSK,1:\"REQUEST CANCELLED\")");
-		TFCommonTest.validCheck(f, "W:$O(^DVB(396.4,OLDA,\"RES\",LINE))]\"\"&('+$G(DVBGUI)) !!,\"Exam Results Continued\",!!");
-		TFCommonTest.validCheck(f, "W /LISTEN(1)");
+		TFCommonTest.validCheckNS(f, "W !!,^YTT(601,YSTEST,\"G\",L,1,1,0)");
+		TFCommonTest.validCheckNS(f, "W !,$S($D(ZTSK):\"REQUEST QUEUED TASK=\"_ZTSK,1:\"REQUEST CANCELLED\")");
+		TFCommonTest.validCheckNS(f, "W:$O(^DVB(396.4,OLDA,\"RES\",LINE))]\"\"&('+$G(DVBGUI)) !!,\"Exam Results Continued\",!!");
+		TFCommonTest.validCheckNS(f, "W /LISTEN(1)");
 	}
 	
 	@Test
@@ -282,7 +282,7 @@ public class TFCommandTest {
 	}
 
 	private void testXecute(TFCommand f) {
-		TFCommonTest.validCheck(f, "X ^%ZOSF(\"TYPE-AHEAD\"),^%ZOSF(\"LABOFF\")");
+		TFCommonTest.validCheckNS(f, "X ^%ZOSF(\"TYPE-AHEAD\"),^%ZOSF(\"LABOFF\")");
 	}
 	
 	@Test
@@ -292,7 +292,7 @@ public class TFCommandTest {
 	}
 
 	private void testZ(TFCommand f) {
-		TFCommonTest.validCheck(f, "ZB ZB0^HLOQUE:\"N\":1:\"S RET=0\"");
+		TFCommonTest.validCheckNS(f, "ZB ZB0^HLOQUE:\"N\":1:\"S RET=0\"");
 	}
 
 	@Test

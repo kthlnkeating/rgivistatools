@@ -75,6 +75,13 @@ public class MTFSupply {
 			return new TLabelRef(tokens);
 		}
 	}
+	@Adapter("line")	
+	public static class LineAdapter implements TokenAdapter {
+		@Override
+		public Token convert(String line, int fromIndex,Token[] tokens) {
+			return new TLine(tokens);
+		}
+	}
 		
 	public TokenFactory dot = TFChar.DOT;
 	public TokenFactory comma = TFChar.COMMA;
@@ -486,34 +493,15 @@ public class MTFSupply {
 
 	public TFCommand command = new TFCommand(this);
 	public TokenFactory comment = new TFComment();
-	//@CChoice(value={}, preds={"letter", ";"}, def="error")
+	@CChoice(value={"command", "comment"}, preds={"letter", ";"}, def="error")
+	public TokenFactory commandorcomment;
+	@List(value="commandorcomment", adderror=true)
+	public TokenFactory commandorcommentlist;
+	public TokenFactory ls = TFConstChars.getInstance(" \t");
+	public TokenFactory level = TFBasic.getInstance('.', ' ');
+	@Sequence({"label", "lineformal", "ls", "level", "commandorcommentlist"})
+	public TokenFactory line;
 	
-	
-/*	private static TokenFactory getTFCommands(MVersion version) {
-		ICharPredicate[] preds = {new LetterPredicate(), new CharPredicate(';')};
-		TokenFactory f = ChoiceSupply.get(new TFSyntaxError(MError.ERR_GENERAL_SYNTAX), preds, TFCommand.getInstance(version), new TFComment());
-		TFList result = TFList.getInstance(f);
-		result.setAddErrorToList(true);
-		return result;
-	}
- 	
-	
-	@Override
-	protected TokenFactory[] getFactories() { // label, formals, space, level, commands
-		return new TokenFactory[]{
-				MTFSupply.getInstance(version).label,
-				MTFSupply.getInstance(version).lineformal,
-				TFConstChars.getInstance(" \t"),
-				TFBasic.getInstance('.', ' '),
-				getTFCommands(this.version)
-		};
-	}
-	
-	@Override
-	protected Token getToken(String line, int fromIndex, Token[] foundTokens) {
-		return new TLine(foundTokens);
-	}	
-*/	
 	
 	
 	public TFIntrinsic intrinsic = new TFIntrinsic(this);

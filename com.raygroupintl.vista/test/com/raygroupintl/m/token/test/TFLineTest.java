@@ -12,22 +12,22 @@ import org.junit.Test;
 
 import com.raygroupintl.bnf.SyntaxErrorException;
 import com.raygroupintl.bnf.Token;
+import com.raygroupintl.bnf.TokenFactory;
 import com.raygroupintl.m.token.MTFSupply;
 import com.raygroupintl.m.token.MVersion;
-import com.raygroupintl.m.token.TFLine;
 import com.raygroupintl.vista.struct.MError;
 
 public class TFLineTest {
-	private static TFLine fStd95;
-	private static TFLine fCache;
+	private static TokenFactory fStd95;
+	private static TokenFactory fCache;
 	
 	@BeforeClass
 	public static void setUpBeforeClass() throws Exception {
 		MTFSupply tfsStd95 = MTFSupply.getInstance(MVersion.ANSI_STD_95);
-		fStd95 = TFLine.getInstance(tfsStd95);
+		fStd95 = tfsStd95.line;
 		
 		MTFSupply tfsCache = MTFSupply.getInstance(MVersion.CACHE);
-		fCache = TFLine.getInstance(tfsCache);
+		fCache = tfsCache.line;
 	}
 
 	@AfterClass
@@ -36,7 +36,7 @@ public class TFLineTest {
 		fCache = null;
 	}
 		
-	private Token lineTest(TFLine f, String line, boolean errorAsWell) {
+	private Token lineTest(TokenFactory f, String line, boolean errorAsWell) {
 		try {
 			Token t = f.tokenize(line, 0);
 			String r = t.getStringValue();
@@ -53,7 +53,7 @@ public class TFLineTest {
 		}			
 	}
 
-	private void lineErrorTest(TFLine f, String line) {
+	private void lineErrorTest(TokenFactory f, String line) {
 		try {
 			Token t = f.tokenize(line, 0);
 			String r = t.getStringValue();
@@ -72,7 +72,7 @@ public class TFLineTest {
 		}
 	}
 
-	private void noErrorTest(TFLine f, String lineUnderTest) {
+	private void noErrorTest(TokenFactory f, String lineUnderTest) {
 		try {
 			Token line = f.tokenize(lineUnderTest, 0);
 			Assert.assertFalse("Unexpected error", line.hasError());
@@ -82,11 +82,11 @@ public class TFLineTest {
 		}	
 	}
 	
-	private Token lineTest(TFLine f, String line) {
+	private Token lineTest(TokenFactory f, String line) {
 		return lineTest(f, line, true);
 	}
 
-	public void testBasic(TFLine f) {
+	public void testBasic(TokenFactory f) {
 		lineTest(f, " S A=A+1  F  S B=$O(^F(B)) Q:B=\"\"   S ^F(B,A)=5");
 		lineTest(f, " S $E(A)=J+1 Q:B=\"\"\"YYY\"\"\"  Q:B=\"\"\"XXX\"\"\"");
 		lineTest(f, " I '$D(USERPRT),(STATUS'=\"c\") Q ;not individual & not complete");
@@ -130,7 +130,7 @@ public class TFLineTest {
 		testBasic(fStd95);
 	}
 	
-	public void testNoErrors(TFLine f) {
+	public void testNoErrors(TokenFactory f) {
 		noErrorTest(f, " G @(\"TAG\"_B):C'>3");
 		noErrorTest(f, " G @A^@B");
 		noErrorTest(f, " G TAG3:A=3,@(\"TAG\"_B):C'>3,@A^@B");
@@ -144,7 +144,7 @@ public class TFLineTest {
 		testNoErrors(fStd95);
 	}
 	
-	public void testBeautify(TFLine f) {
+	public void testBeautify(TokenFactory f) {
 		Token l = lineTest(f, " S @A=\"S\"  S @H@(0)=3");
 		l.beautify();
 		String expected = " SET @A=\"S\"  SET @H@(0)=3";
