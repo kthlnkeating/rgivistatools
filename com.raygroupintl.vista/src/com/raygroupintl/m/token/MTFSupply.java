@@ -141,8 +141,6 @@ public class MTFSupply {
 	@Choice({"indirection", "patatoms"})
 	public TokenFactory pattern;
 	
-
-	
 	public TokenFactory name = TFName.getInstance();
 	public TokenFactory ident = TFIdent.getInstance();
 	public TokenFactory intlit = new TIntLit.Factory();
@@ -259,8 +257,6 @@ public class MTFSupply {
 	@Sequence(value={"expratom", "exprtail"}, required="ro")
 	public TokenFactory expr;
 	
-	//public ITokenFactory external;
-	
 	@List(value="actual", delim="comma")
 	public TokenFactory actuallist_i;	
 	@Sequence(value={"lpar", "actuallist_i", "rpar"}, required="ror")
@@ -322,8 +318,6 @@ public class MTFSupply {
 	public TokenFactory cmdgarg;
 	@List(value="cmdgarg", delim="comma")
 	public TokenFactory cmdgargs;
-	
-	
 	
 	@Sequence(value={"pound", "expr"}, required="all")
 	public TokenFactory readcount;
