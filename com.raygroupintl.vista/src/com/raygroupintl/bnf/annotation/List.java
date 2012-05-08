@@ -13,4 +13,5 @@ public @interface List {
 	public String right() default "";
 	public boolean empty() default false;
 	public boolean none() default false;
+	public boolean adderror() default false;
 }

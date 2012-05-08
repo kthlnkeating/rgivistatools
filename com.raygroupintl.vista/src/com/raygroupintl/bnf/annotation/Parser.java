@@ -315,6 +315,7 @@ public class Parser {
 			}
 			p.factory.setAllowEmpty(p.annotation.empty());
 			p.factory.setAllowNone(p.annotation.none());
+			p.factory.setAddError(p.annotation.adderror());
 		}
 		return target;
 	}

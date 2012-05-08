@@ -21,6 +21,7 @@ public final class TFDelimitedList implements TokenFactory {
 	private TokenFactory right;
 	private boolean allowEmpty;
 	private boolean allowNone;
+	private boolean addError;
 	
 	public TFDelimitedList() {		
 	}
@@ -82,6 +83,10 @@ public final class TFDelimitedList implements TokenFactory {
 		this.allowNone = b;
 	}
 	
+	public void setAddError(boolean b) {
+		this.addError = b;
+	}
+	
 	private TokenFactory getEffectiveListTailElementFactory() {
 		if (this.allowEmpty) {
 			TokenFactory eDelimiter = new TFEmpty(this.delimiter);
@@ -108,12 +113,15 @@ public final class TFDelimitedList implements TokenFactory {
 	
 	private TokenFactory getEffectiveListFactory() {
 		if (this.delimiter == null) {
-			return new TFList(this.elementFactory);
+			TFList list = new TFList(this.elementFactory);
+			list.setAddErrorToList(this.addError);
+			return list;
 		} else {
 			TokenFactory tailElement = this.getEffectiveListTailElementFactory();
 			TFSeqStatic tailSingle = new TFSeqStatic(this.delimiter, tailElement);
 			tailSingle.setRequiredFlags(new boolean[]{true, true});
-			TokenFactory tail = new TFList(tailSingle);
+			TFList tail = new TFList(tailSingle);
+			tail.setAddErrorToList(this.addError);
 			TokenFactory leadingElement = this.getLeadingElement();
 			TFSeqStatic result = new TFSeqStatic(leadingElement, tail);
 			result.setRequiredFlags(new boolean[]{true, false});

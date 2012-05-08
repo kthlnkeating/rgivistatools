@@ -59,12 +59,13 @@ public abstract class TFSeq implements TokenFactory {
 				}					
 
 				foundTokens[i] = token;
-				if (token == null) continue;				
-				index += token.getStringSize();					
+				if (token != null) {				
+					index += token.getStringSize();					
 				
-				if ((index >= endIndex) && (i < factoryCount-1)) {
-					this.validateEnd(i, index, foundTokens);
-					break;
+					if ((index >= endIndex) && (i < factoryCount-1)) {
+						this.validateEnd(i, index, foundTokens);
+						break;
+					}
 				}
 			}
 			return this.getToken(line, fromIndex, foundTokens);
