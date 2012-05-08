@@ -13,7 +13,7 @@ import com.raygroupintl.bnf.TFChoiceBasic;
 import com.raygroupintl.bnf.TFChoiceOnChar0th;
 import com.raygroupintl.bnf.TFChoiceOnChar1st;
 import com.raygroupintl.bnf.TFDelimitedList;
-import com.raygroupintl.bnf.TFSeqStatic;
+import com.raygroupintl.bnf.TFSequenceStatic;
 import com.raygroupintl.bnf.TokenAdapter;
 import com.raygroupintl.fnds.ICharPredicate;
 import com.raygroupintl.m.struct.IdentifierStartPredicate;
@@ -49,7 +49,7 @@ public class Parser {
 	private static class Store {
 		Map<String, TokenFactory> symbols = new HashMap<String, TokenFactory>();
 		java.util.List<Triple<TFChoiceBasic, Choice>> choices  = new ArrayList<Triple<TFChoiceBasic, Choice>>();
-		java.util.List<Triple<TFSeqStatic, Sequence>> sequences  = new ArrayList<Triple<TFSeqStatic, Sequence>>();
+		java.util.List<Triple<TFSequenceStatic, Sequence>> sequences  = new ArrayList<Triple<TFSequenceStatic, Sequence>>();
 		java.util.List<Triple<TFDelimitedList, List>> lists  = new ArrayList<Triple<TFDelimitedList, List>>();
 		java.util.List<Triple<TFChoiceOnChar0th, CChoice>> choice0ths  = new ArrayList<Triple<TFChoiceOnChar0th, CChoice>>();
 		java.util.List<Triple<TFChoiceOnChar1st, CChoice>> choice1sts  = new ArrayList<Triple<TFChoiceOnChar1st, CChoice>>();
@@ -65,8 +65,8 @@ public class Parser {
 		}
 		Sequence sequence = f.getAnnotation(Sequence.class);
 		if (sequence != null) {
-			TFSeqStatic value = new TFSeqStatic();
-			store.sequences.add(new Triple<TFSeqStatic, Sequence>(name, value, sequence));
+			TFSequenceStatic value = new TFSequenceStatic();
+			store.sequences.add(new Triple<TFSequenceStatic, Sequence>(name, value, sequence));
 			return value;
 		}
 		List list = f.getAnnotation(List.class);
@@ -285,7 +285,7 @@ public class Parser {
 				p.factory.setDefault(df);
 			}
 		}
-		for (Triple<TFSeqStatic, Sequence> p : store.sequences) {
+		for (Triple<TFSequenceStatic, Sequence> p : store.sequences) {
 			TokenFactory[] fs = getFactories(store.symbols, p.annotation.value());
 			p.factory.setFactories(fs);
 			boolean[] required = getRequiredFlags(p.annotation.required(), fs.length);

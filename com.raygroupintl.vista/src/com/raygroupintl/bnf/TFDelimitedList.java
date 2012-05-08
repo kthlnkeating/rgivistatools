@@ -118,12 +118,12 @@ public final class TFDelimitedList implements TokenFactory {
 			return list;
 		} else {
 			TokenFactory tailElement = this.getEffectiveListTailElementFactory();
-			TFSeqStatic tailSingle = new TFSeqStatic(this.delimiter, tailElement);
+			TFSequenceStatic tailSingle = new TFSequenceStatic(this.delimiter, tailElement);
 			tailSingle.setRequiredFlags(new boolean[]{true, true});
 			TFList tail = new TFList(tailSingle);
 			tail.setAddErrorToList(this.addError);
 			TokenFactory leadingElement = this.getLeadingElement();
-			TFSeqStatic result = new TFSeqStatic(leadingElement, tail);
+			TFSequenceStatic result = new TFSequenceStatic(leadingElement, tail);
 			result.setRequiredFlags(new boolean[]{true, false});
 			result.setTokenAdapter(new DLAdapter());				
 			return result;
@@ -138,16 +138,16 @@ public final class TFDelimitedList implements TokenFactory {
 				return tfList.tokenize(line, fromIndex);
 			}
 			else if (this.right == null) {
-				TFSeqStatic tf = new TFSeqStatic(this.left, tfList);
+				TFSequenceStatic tf = new TFSequenceStatic(this.left, tfList);
 				tf.setRequiredFlags(new boolean[]{true, true});
 				return tf.tokenize(line, fromIndex);
 			}
 			else if (this.left == null) {
-				TFSeqStatic tf = new TFSeqStatic(tfList, this.right);
+				TFSequenceStatic tf = new TFSequenceStatic(tfList, this.right);
 				tf.setRequiredFlags(new boolean[]{true, true});
 				return tf.tokenize(line, fromIndex);
 			} else {
-				TFSeqStatic tf = new TFSeqStatic(this.left, tfList, this.right);
+				TFSequenceStatic tf = new TFSequenceStatic(this.left, tfList, this.right);
 				tf.setRequiredFlags(new boolean[]{true, !this.allowNone, true});
 				return tf.tokenize(line, fromIndex);				
 			}			

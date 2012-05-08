@@ -3,7 +3,7 @@ package com.raygroupintl.m.token;
 import java.util.HashMap;
 import java.util.Map;
 
-import com.raygroupintl.bnf.TokenFactorySupply;
+import com.raygroupintl.bnf.TFSequence;
 import com.raygroupintl.bnf.Token;
 import com.raygroupintl.bnf.TokenFactory;
 import com.raygroupintl.bnf.TArray;
@@ -12,11 +12,10 @@ import com.raygroupintl.bnf.TEmpty;
 import com.raygroupintl.bnf.TFBasic;
 import com.raygroupintl.bnf.TFConstChar;
 import com.raygroupintl.bnf.TFEmptyVerified;
-import com.raygroupintl.bnf.TFSeq;
 import com.raygroupintl.bnf.TSyntaxError;
 import com.raygroupintl.vista.struct.MError;
 
-public class TFCommand extends TFSeq {
+public class TFCommand extends TFSequence {
 	private Map<String, TCSFactory> commandSpecs = new HashMap<String, TCSFactory>();
 	private MTFSupply supply;
 	
@@ -879,44 +878,39 @@ public class TFCommand extends TFSeq {
 		}
 	}
 		
-	private class TFSCommand implements TokenFactorySupply {
-		public TokenFactory get(int seqIndex, Token[] previousTokens) {
-			switch (seqIndex) {
-				case 0:
-					return TFCommand.this.new TFCommandName();
-				case 1:
-					return TFCommand.this.supply.postcondition;
-				case 2:
-					return TFConstChar.getInstance(' ');
-				case 3: {
-					TCommandSpec cmd = (TCommandSpec) previousTokens[0];
-					TokenFactory f = cmd.getArgumentFactory();
-					return f;
-				}					
-				case 4:
-					return TFBasic.getInstance(' ');
-				default:
-					assert(seqIndex == 5);
-					return null;
-			}
-		}
-		
-		public int getCount() {
-			return 5;
-		}
+	@Override
+	protected int getExpectedTokenCount() {
+		return 5;
 	}
 	
 	@Override
-	protected TokenFactorySupply getFactorySupply() {
-		return new TFSCommand();
-	}
+	protected TokenFactory getTokenFactory(int i, Token[] foundTokens) {
+		switch (i) {
+			case 0:
+				return TFCommand.this.new TFCommandName();
+			case 1:
+				return TFCommand.this.supply.postcondition;
+			case 2:
+				return TFConstChar.getInstance(' ');
+			case 3: {
+				TCommandSpec cmd = (TCommandSpec) foundTokens[0];
+				TokenFactory f = cmd.getArgumentFactory();
+				return f;
+			}					
+			case 4:
+				return TFBasic.getInstance(' ');
+			default:
+				assert(i == 5);
+				return null;
+		}
+	}	
 
 	@Override
-	protected int validateNull(int seqIndex, int lineIndex, Token[] foundTokens) {
+	protected ValidateResult validateNull(int seqIndex, int lineIndex, Token[] foundTokens) {
 		if (seqIndex == 0) {
-			return RETURN_NULL;
+			return ValidateResult.NULL_RESULT;
 		} else {
-			return CONTINUE;				
+			return ValidateResult.CONTINUE;				
 		}
 	}
 
@@ -929,7 +923,7 @@ public class TFCommand extends TFSeq {
 			return tokens[0];
 		}
 	}
-			
+
 	public static TFCommand getInstance(MTFSupply supply) {
 		return new TFCommand(supply);
 	}

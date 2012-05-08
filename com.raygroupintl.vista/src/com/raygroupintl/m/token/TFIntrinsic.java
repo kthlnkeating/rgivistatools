@@ -5,17 +5,16 @@ import java.util.List;
 import java.util.Map;
 
 import com.raygroupintl.bnf.SyntaxErrorException;
-import com.raygroupintl.bnf.TokenFactorySupply;
+import com.raygroupintl.bnf.TFSequence;
 import com.raygroupintl.bnf.Token;
 import com.raygroupintl.bnf.TokenFactory;
 import com.raygroupintl.bnf.TArray;
-import com.raygroupintl.bnf.TFSeq;
 import com.raygroupintl.bnf.TFSyntaxError;
 import com.raygroupintl.bnf.TPair;
 import com.raygroupintl.vista.struct.MError;
 import com.raygroupintl.vista.struct.MNameWithMnemonic;
 
-public class TFIntrinsic extends TFSeq {		
+public class TFIntrinsic extends TFSequence {		
 	private static abstract class TIntrinsicName extends TKeyword {
 		public TIntrinsicName(String value) {
 			super(value);
@@ -149,49 +148,44 @@ public class TFIntrinsic extends TFSeq {
 	}
 	
 	@Override
-	protected TokenFactorySupply getFactorySupply() {
-		return new TokenFactorySupply() {			
-			@Override
-			public int getCount() {
-				return 4;
-			}
-			
-			@Override
-			public TokenFactory get(int seqIndex, Token[] previousTokens) {
-				switch (seqIndex) {
-					case 0: {
-						return TFIntrinsic.this.supply.intrinsicname;
-					}
-					case 1:
-						return TFIntrinsic.this.supply.lpar;
-					case 2: {
-						String name = getFoundIntrinsicName(previousTokens);
-						MNameWithMnemonic mName = TFIntrinsic.this.functions.get(name);
-						if (mName == null) {
-							return new TFSyntaxError(MError.ERR_UNKNOWN_INTRINSIC_FUNCTION);
-						}
-						String mnemonic = mName.getMnemonic();
-						FunctionInfo info = TFIntrinsic.this.function_infos.get(mnemonic);
-						TokenFactory argumentFactory = info.getArgumentFactory();
-						return argumentFactory;
-					}
-					case 3:
-						return TFIntrinsic.this.supply.rpar;
-					default:
-						return null;						
-				}
-			}
-		};
+	protected int getExpectedTokenCount() {
+		return 4;
 	}
+	
+	@Override
+	protected TokenFactory getTokenFactory(int i, Token[] foundTokens) {
+		switch (i) {
+			case 0: {
+				return TFIntrinsic.this.supply.intrinsicname;
+			}
+			case 1:
+				return TFIntrinsic.this.supply.lpar;
+			case 2: {
+				String name = getFoundIntrinsicName(foundTokens);
+				MNameWithMnemonic mName = TFIntrinsic.this.functions.get(name);
+				if (mName == null) {
+					return new TFSyntaxError(MError.ERR_UNKNOWN_INTRINSIC_FUNCTION);
+				}
+				String mnemonic = mName.getMnemonic();
+				FunctionInfo info = TFIntrinsic.this.function_infos.get(mnemonic);
+				TokenFactory argumentFactory = info.getArgumentFactory();
+				return argumentFactory;
+			}
+			case 3:
+				return TFIntrinsic.this.supply.rpar;
+			default:
+				return null;						
+		}
+	}	
 
 	@Override
-	protected int validateNull(int seqIndex, int lineIndex, Token[] foundTokens) throws SyntaxErrorException{
+	protected ValidateResult validateNull(int seqIndex, int lineIndex, Token[] foundTokens) throws SyntaxErrorException{
 		if (seqIndex == 0) {
-			return RETURN_NULL;
+			return ValidateResult.NULL_RESULT;
 		} else if (seqIndex == 1) {
 			String name = getFoundIntrinsicName(foundTokens);
 			if (this.variables.containsKey(name)) {
-				return RETURN_TOKEN;
+				return ValidateResult.BREAK;
 			} else {
 				throw new SyntaxErrorException(MError.ERR_UNKNOWN_INTRINSIC_VARIABLE, lineIndex);
 			}

@@ -44,8 +44,8 @@ public class TFTest {
 
 	private void testTFExpr(MVersion version) {
 		TokenFactory f = MTFSupply.getInstance(version).expr;
-		TFCommonTest.validCheck(f, "@^%ZOSF(\"TRAP\")");
 		TFCommonTest.validCheck(f, "^A");
+		TFCommonTest.validCheck(f, "@^%ZOSF(\"TRAP\")");
 		TFCommonTest.validCheck(f, "^A(1)");
 		TFCommonTest.validCheck(f, "C'>3");
 		TFCommonTest.validCheck(f, "^YTT(601,YSTEST,\"G\",L,1,1,0)");
