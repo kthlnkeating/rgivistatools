@@ -4,6 +4,9 @@ import com.raygroupintl.bnf.Token;
 import com.raygroupintl.bnf.TFBasic;
 
 public class TFIdent extends TFBasic {
+	public TFIdent() {		
+	}
+	
 	@Override
 	protected boolean stopOn(char ch) {
 		return ! Library.isIdent(ch);	

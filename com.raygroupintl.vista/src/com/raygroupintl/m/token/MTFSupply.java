@@ -484,7 +484,38 @@ public class MTFSupply {
 	@Sequence(value={"dollar", "ident"}, required="all")
 	public TokenFactory intrinsicname;
 
-
+	public TFCommand command = new TFCommand(this);
+	public TokenFactory comment = new TFComment();
+	//@CChoice(value={}, preds={"letter", ";"}, def="error")
+	
+	
+/*	private static TokenFactory getTFCommands(MVersion version) {
+		ICharPredicate[] preds = {new LetterPredicate(), new CharPredicate(';')};
+		TokenFactory f = ChoiceSupply.get(new TFSyntaxError(MError.ERR_GENERAL_SYNTAX), preds, TFCommand.getInstance(version), new TFComment());
+		TFList result = TFList.getInstance(f);
+		result.setAddErrorToList(true);
+		return result;
+	}
+ 	
+	
+	@Override
+	protected TokenFactory[] getFactories() { // label, formals, space, level, commands
+		return new TokenFactory[]{
+				MTFSupply.getInstance(version).label,
+				MTFSupply.getInstance(version).lineformal,
+				TFConstChars.getInstance(" \t"),
+				TFBasic.getInstance('.', ' '),
+				getTFCommands(this.version)
+		};
+	}
+	
+	@Override
+	protected Token getToken(String line, int fromIndex, Token[] foundTokens) {
+		return new TLine(foundTokens);
+	}	
+*/	
+	
+	
 	public TFIntrinsic intrinsic = new TFIntrinsic(this);
 	
 	protected void initialize() {
@@ -590,7 +621,30 @@ public class MTFSupply {
 		this.intrinsic.addFunction(this.exprlist, "ZUTIL");	
 		this.intrinsic.addFunction(this.exprlist, "ZK");	
 		this.intrinsic.addFunction(this.exprlist, "ZWA");
-		this.intrinsic.addFunction(this.exprlist, "ZVERSION");		
+		this.intrinsic.addFunction(this.exprlist, "ZVERSION");
+
+		this.command.addCommands(this);
+
+		this.command.addCommand("ZB", this);
+		this.command.addCommand("ZS", this);
+		this.command.addCommand("ZC", this);
+		this.command.addCommand("ZR", this);
+		this.command.addCommand("ZI", this);
+		this.command.addCommand("ZQ", this);
+		this.command.addCommand("ZT", this);
+		this.command.addCommand("ZU", this);
+		this.command.addCommand("ZSHOW", this);
+		this.command.addCommand("ZNSPACE", this);
+		this.command.addCommand("ZETRAP", this);
+		this.command.addCommand("ESTART", this);
+		this.command.addCommand("ESTOP", this);
+		this.command.addCommand("ABORT", this);
+		this.command.addCommand("ZRELPAGE", this);
+		this.command.addCommand("ZSYSTEM", this);
+		this.command.addCommand("ZLINK", this);		
+		this.command.addCommand("ZESCAPE", this);
+		this.command.addCommand("ZITRAP", this);
+		this.command.addCommand("ZGETPAGE", this);
 	}
 	
 	

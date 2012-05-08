@@ -14,15 +14,15 @@ import com.raygroupintl.struct.LetterPredicate;
 import com.raygroupintl.vista.struct.MError;
 
 public class TFLine extends TFSeqStatic {
-	private MVersion version;
+	private MTFSupply supply;
 	
-	private TFLine(MVersion version) {
-		this.version = version;
+	private TFLine(MTFSupply supply) {
+		this.supply = supply;
 	}
 	
-	private static TokenFactory getTFCommands(MVersion version) {
+	private TokenFactory getTFCommands(MTFSupply supply) {
 		ICharPredicate[] preds = {new LetterPredicate(), new CharPredicate(';')};
-		TokenFactory f = ChoiceSupply.get(new TFSyntaxError(MError.ERR_GENERAL_SYNTAX), preds, TFCommand.getInstance(version), new TFComment());
+		TokenFactory f = ChoiceSupply.get(new TFSyntaxError(MError.ERR_GENERAL_SYNTAX), preds, this.supply.command, new TFComment());
 		TFList result = TFList.getInstance(f);
 		result.setAddErrorToList(true);
 		return result;
@@ -32,11 +32,11 @@ public class TFLine extends TFSeqStatic {
 	@Override
 	protected TokenFactory[] getFactories() { // label, formals, space, level, commands
 		return new TokenFactory[]{
-				MTFSupply.getInstance(version).label,
-				MTFSupply.getInstance(version).lineformal,
+				this.supply.label,
+				this.supply.lineformal,
 				TFConstChars.getInstance(" \t"),
 				TFBasic.getInstance('.', ' '),
-				getTFCommands(this.version)
+				getTFCommands(this.supply)
 		};
 	}
 	
@@ -45,7 +45,7 @@ public class TFLine extends TFSeqStatic {
 		return new TLine(foundTokens);
 	}
 	
-	public static TFLine getInstance(MVersion version) {
-		return new TFLine(version);
+	public static TFLine getInstance(MTFSupply supply) {
+		return new TFLine(supply);
 	}
 }

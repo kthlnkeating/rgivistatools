@@ -1,14 +1,33 @@
 package com.raygroupintl.m.token.test;
 
+import org.junit.AfterClass;
+import org.junit.BeforeClass;
 import org.junit.Test;
 
-import com.raygroupintl.bnf.TokenFactory;
+import com.raygroupintl.m.token.MTFSupply;
 import com.raygroupintl.m.token.MVersion;
 import com.raygroupintl.m.token.TFCommand;
 
-public class TFCommandTest {
-	private void testBreak(MVersion version) {
-		TokenFactory f = TFCommand.getInstance(version);
+public class TFCommandTest {	
+	private static TFCommand fStd95;
+	private static TFCommand fCache;
+	
+	@BeforeClass
+	public static void setUpBeforeClass() throws Exception {
+		MTFSupply tfsStd95 = MTFSupply.getInstance(MVersion.ANSI_STD_95);
+		fStd95 = tfsStd95.command;
+		
+		MTFSupply tfsCache = MTFSupply.getInstance(MVersion.CACHE);
+		fCache =  tfsCache.command;
+	}
+
+	@AfterClass
+	public static void tearDownAfterClass() throws Exception {
+		fStd95 = null;
+		fCache = null;
+	}
+		
+	private void testBreak(TFCommand f) {
 		TFCommonTest.validCheck(f, "B");
 		TFCommonTest.validCheck(f, "B   ");
 		TFCommonTest.validCheck(f, "B \"+13^TAG\"");
@@ -17,42 +36,37 @@ public class TFCommandTest {
 
 	@Test
 	public void testBreak() {
-		testBreak(MVersion.CACHE);
-		testBreak(MVersion.ANSI_STD_95);
+		testBreak(fCache);
+		testBreak(fStd95);
 	}
 
-	private void testDo(MVersion version) {
-		TokenFactory f = TFCommand.getInstance(version);
+	private void testDo(TFCommand f) {
 		TFCommonTest.validCheck(f, "D SENDMSG^XMXAPI(.5,RCSUBJ,XMBODY,.XMTO,,.XMZ)");
 		TFCommonTest.validCheck(f, "D SET^IBCSC5A(BILLDA,.ARRXS,)");
 		TFCommonTest.validCheck(f, "D ^%ZIS");
 		TFCommonTest.validCheck(f, "D WRITE(IO,G)");
 		TFCommonTest.validCheck(f, "D WRAPPER(@(\"PSBTAB\"_(FLD-1))+1,((@(\"PSBTAB\"_(FLD))-(@(\"PSBTAB\"_(FLD-1))+1))),PSBVAL)");
-		if (version == MVersion.CACHE) {
-			TFCommonTest.validCheck(f, "DO $system.Status.DecomposeStatus(%objlasterror,.XOBLERR)");
-		}
 	}
 
 	@Test
 	public void testDo() {
-		testDo(MVersion.CACHE);
-		testDo(MVersion.ANSI_STD_95);
+		testDo(fCache);
+		testDo(fStd95);
+		TFCommonTest.validCheck(fCache, "DO $system.Status.DecomposeStatus(%objlasterror,.XOBLERR)");
 	}
 
-	private void testFor(MVersion version) {
-		TokenFactory f = TFCommand.getInstance(version);
+	private void testFor(TFCommand f) {
 		TFCommonTest.validCheck(f, "F FLD=1:1:$L(LST,\",\")");
 		TFCommonTest.validCheck(f, "F STAT=42,16");
 	}
 
 	@Test
 	public void testFor() {
-		testFor(MVersion.CACHE);
-		testFor(MVersion.ANSI_STD_95);
+		testFor(fCache);
+		testFor(fStd95);
 	}
 
-	private void testGoto(MVersion version) {
-		TokenFactory f = TFCommand.getInstance(version);
+	private void testGoto(TFCommand f) {
 		TFCommonTest.validCheck(f, "G:POP H^XUS");
 		TFCommonTest.validCheck(f, "G:POP H^[ENV]XUS:POP");
 		TFCommonTest.validCheck(f, "G:POP H+3^[ENV]XUS:POP");
@@ -66,28 +80,27 @@ public class TFCommandTest {
 		TFCommonTest.validCheck(f, "G ^@B");
 		TFCommonTest.validCheck(f, "G ^@B:P");
 		TFCommonTest.errorCheck(f, "G ^");
+		TFCommonTest.validCheck(f, "G 0^DIE17");
 	}
 
 	@Test
 	public void testGoto() {
-		testGoto(MVersion.CACHE);
-		testGoto(MVersion.ANSI_STD_95);
+		testGoto(fCache);
+		testGoto(fStd95);
 	}
 
-	private void testHaltHang(MVersion version) {
-		TokenFactory f = TFCommand.getInstance(version);
+	private void testHaltHang(TFCommand f) {
 		TFCommonTest.validCheck(f, "H 3");
 		TFCommonTest.validCheck(f, "H");
 	}
 
 	@Test
 	public void testHaltHang() {
-		testHaltHang(MVersion.CACHE);
-		testHaltHang(MVersion.ANSI_STD_95);
+		testHaltHang(fCache);
+		testHaltHang(fStd95);
 	}
 
-	private void testIf(MVersion version) {
-		TokenFactory f = TFCommand.getInstance(version);
+	private void testIf(TFCommand f) {
 		TFCommonTest.validCheck(f, "I $L($T(NTRTMSG^HDISVAP))");
 		TFCommonTest.validCheck(f, "I @CLIN@(0)=0");
 		TFCommonTest.validCheck(f, "I @CLIN@(0)");
@@ -97,12 +110,11 @@ public class TFCommandTest {
 	
 	@Test
 	public void testIf() {
-		testIf(MVersion.CACHE);
-		testIf(MVersion.ANSI_STD_95);
+		testIf(fCache);
+		testIf(fStd95);
 	}
 
-	private void testJob(MVersion version) {
-		TokenFactory f = TFCommand.getInstance(version);
+	private void testJob(TFCommand f) {
 		TFCommonTest.validCheck(f, "JOB CHILDNT^XOBVTCPL():(:4:XOBIO:XOBIO):10");
 		TFCommonTest.validCheck(f, "J LISTENER^XOBVTCPL(XOBPORT,$GET(XOBCFG))::5");
 		TFCommonTest.validCheck(f, "JOB CHILDNT^XOBVTCPL(A,.B):(:4:XOBIO:XOBIO):10");
@@ -118,12 +130,11 @@ public class TFCommandTest {
 	
 	@Test
 	public void testJob() {
-		testJob(MVersion.CACHE);
-		testJob(MVersion.ANSI_STD_95);
+		testJob(fCache);
+		testJob(fStd95);
 	}
 
-	private void testKill(MVersion version) {
-		TokenFactory f = TFCommand.getInstance(version);
+	private void testKill(TFCommand f) {
 		TFCommonTest.validCheck(f, "K A");
 		TFCommonTest.validCheck(f, "K A,B,@C,D");
 		TFCommonTest.validCheck(f, "K @A");
@@ -153,12 +164,11 @@ public class TFCommandTest {
 
 	@Test
 	public void testKill() {
-		testKill(MVersion.CACHE);
-		testKill(MVersion.ANSI_STD_95);
+		testKill(fCache);
+		testKill(fStd95);
 	}
 
-	private void testLock(MVersion version) {
-		TokenFactory f = TFCommand.getInstance(version);
+	private void testLock(TFCommand f) {
 		TFCommonTest.validCheck(f, "L -^PRCA(430,+$G(PRCABN),0)");
 		TFCommonTest.validCheck(f, "L +^PRCA(430,DA,0):0");		
 		TFCommonTest.validCheck(f, "L -^PRCA(430,+$G(PRCABN),0),+^PRCA:0");
@@ -171,35 +181,32 @@ public class TFCommandTest {
 
 	@Test
 	public void testLock() {
-		testLock(MVersion.CACHE);
-		testLock(MVersion.ANSI_STD_95);
+		testLock(fCache);
+		testLock(fStd95);
 	}
 
-	public void testRead(MVersion version) {
-		TokenFactory f = TFCommand.getInstance(version);
+	public void testRead(TFCommand f) {
 		TFCommonTest.validCheck(f, "R !,\"Select DEBTOR NAME or BILL NUMBER: \",X:DTIME");
 		TFCommonTest.validCheck(f, "R !,\"ANSWER= \",@YSR1:300");
 	}
 
 	@Test
 	public void testRead() {
-		testRead(MVersion.CACHE);
-		testRead(MVersion.ANSI_STD_95);
+		testRead(fCache);
+		testRead(fStd95);
 	}
 
-	private void testQuit(MVersion version) {
-		TokenFactory f = TFCommand.getInstance(version);
+	private void testQuit(TFCommand f) {
 		TFCommonTest.validCheck(f, "Q @SCLIST@(0)>0");
 	}
 
 	@Test
 	public void testQuit() {
-		testQuit(MVersion.CACHE);
-		testQuit(MVersion.ANSI_STD_95);
+		testQuit(fCache);
+		testQuit(fStd95);
 	}
 
-	private void testSet(MVersion version) {
-		TokenFactory f = TFCommand.getInstance(version);
+	private void testSet(TFCommand f) {
 		TFCommonTest.validCheck(f, "S A=B");
 		TFCommonTest.validCheck(f, "S X=$$MG^XMBGRP(\"RCCPC STATEMENTS\",0,.5,1,\"\",.DES,1)");
 		TFCommonTest.validCheck(f, "S @^%ZOSF(\"TRAP\")");
@@ -219,24 +226,22 @@ public class TFCommandTest {
 
 	@Test
 	public void testSet() {
-		testSet(MVersion.CACHE);
-		testSet(MVersion.ANSI_STD_95);
+		testSet(fCache);
+		testSet(fStd95);
 	}
 
-	private void testOpen(MVersion version) {
-		TokenFactory f = TFCommand.getInstance(version);
+	private void testOpen(TFCommand f) {
 		TFCommonTest.validCheck(f, "O:$G(LOGICAL)]\"\" HLCSTATE(\"DEVICE\"):(TCPDEV:BLOCKSIZE=512):HLCSTATE(\"OPEN TIMEOUT\")");
 		TFCommonTest.validCheck(f, "OPEN XOBIO:(:XOBPORT:\"AT\"):30");
 	}	
 	
 	@Test
 	public void testOpen() {
-		testOpen(MVersion.CACHE);
-		testOpen(MVersion.ANSI_STD_95);
+		testOpen(fCache);
+		testOpen(fStd95);
 	}
 
-	private void testUse(MVersion version) {
-		TokenFactory f = TFCommand.getInstance(version);
+	private void testUse(TFCommand f) {
 		TFCommonTest.validCheck(f, "U IO");
 		TFCommonTest.validCheck(f, "U A:B");
 		TFCommonTest.validCheck(f, "U $I:(64)");
@@ -249,23 +254,21 @@ public class TFCommandTest {
 
 	@Test
 	public void testUse() {
-		testUse(MVersion.CACHE);
-		testUse(MVersion.ANSI_STD_95);
+		testUse(fCache);
+		testUse(fStd95);
 	}
 
-	private void testView(MVersion version) {
-		TokenFactory f = TFCommand.getInstance(version);
+	private void testView(TFCommand f) {
 		TFCommonTest.validCheck(f, "V -1:1");
 	}
 	
 	@Test
 	public void testView() {
-		testView(MVersion.CACHE);
-		testView(MVersion.ANSI_STD_95);
+		testView(fCache);
+		testView(fStd95);
 	}
 
-	private void testWrite(MVersion version) {
-		TokenFactory f = TFCommand.getInstance(version);
+	private void testWrite(TFCommand f) {
 		TFCommonTest.validCheck(f, "W !!,^YTT(601,YSTEST,\"G\",L,1,1,0)");
 		TFCommonTest.validCheck(f, "W !,$S($D(ZTSK):\"REQUEST QUEUED TASK=\"_ZTSK,1:\"REQUEST CANCELLED\")");
 		TFCommonTest.validCheck(f, "W:$O(^DVB(396.4,OLDA,\"RES\",LINE))]\"\"&('+$G(DVBGUI)) !!,\"Exam Results Continued\",!!");
@@ -274,31 +277,28 @@ public class TFCommandTest {
 	
 	@Test
 	public void testWrite() {
-		testWrite(MVersion.CACHE);
-		testWrite(MVersion.ANSI_STD_95);
+		testWrite(fCache);
+		testWrite(fStd95);
 	}
 
-	private void testXecute(MVersion version) {
-		TokenFactory f = TFCommand.getInstance(version);
+	private void testXecute(TFCommand f) {
 		TFCommonTest.validCheck(f, "X ^%ZOSF(\"TYPE-AHEAD\"),^%ZOSF(\"LABOFF\")");
 	}
 	
 	@Test
 	public void testXecute() {
-		testXecute(MVersion.CACHE);
-		testXecute(MVersion.ANSI_STD_95);
+		testXecute(fCache);
+		testXecute(fStd95);
 	}
 
-	private void testZ(MVersion version) {
-		TFCommand.addCommand("ZB");
-		TokenFactory f = TFCommand.getInstance(version);
+	private void testZ(TFCommand f) {
 		TFCommonTest.validCheck(f, "ZB ZB0^HLOQUE:\"N\":1:\"S RET=0\"");
 	}
 
 	@Test
 	public void testZ() {
-		testZ(MVersion.CACHE);
-		testZ(MVersion.ANSI_STD_95);
+		testZ(fCache);
+		testZ(fStd95);
 	}
 }
 

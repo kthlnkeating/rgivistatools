@@ -30,7 +30,7 @@ public class VistAFOIATest {
 		try {
 			List<Path> paths = FileSupply.getAllMFiles();
 			for (Path path : paths) {
-				//if (! path.toString().endsWith("NVSSTB.m")) return;
+				//if (path.toString().indexOf("PRCATA") >= 0) return;
 				//byte[] b = Files.readAllBytes(path);
 				//String text = new String(b);
 				//rrr = path.getFileName().toString();

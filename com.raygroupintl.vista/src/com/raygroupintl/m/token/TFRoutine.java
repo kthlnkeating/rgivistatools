@@ -10,7 +10,7 @@ public class TFRoutine {
 	private TFLine tfLine;
 	
 	private TFRoutine(MVersion version) {
-		this.tfLine = TFLine.getInstance(version);
+		this.tfLine = TFLine.getInstance(MTFSupply.getInstance(version));
 	}
 	
 	public TRoutine tokenize(MRoutineContent content) throws SyntaxErrorException {
@@ -48,27 +48,6 @@ public class TFRoutine {
 		TFOperator.addOperator("&&");
 		TFOperator.addOperator("||");
 				
-		TFCommand.addCommand("ZB");
-		TFCommand.addCommand("ZS");
-		TFCommand.addCommand("ZC");
-		TFCommand.addCommand("ZR");
-		TFCommand.addCommand("ZI");
-		TFCommand.addCommand("ZQ");
-		TFCommand.addCommand("ZT");
-		TFCommand.addCommand("ZU");
-		TFCommand.addCommand("ZSHOW");
-		TFCommand.addCommand("ZNSPACE");
-		TFCommand.addCommand("ZETRAP");
-		TFCommand.addCommand("ESTART");
-		TFCommand.addCommand("ESTOP");
-		TFCommand.addCommand("ABORT");
-		TFCommand.addCommand("ZRELPAGE");
-		TFCommand.addCommand("ZSYSTEM");
-		TFCommand.addCommand("ZLINK");		
-		TFCommand.addCommand("ZESCAPE");
-		TFCommand.addCommand("ZITRAP");
-		TFCommand.addCommand("ZGETPAGE");
-
 		return new TFRoutine(version);
 	}	
 }

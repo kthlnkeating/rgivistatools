@@ -6,10 +6,12 @@ import java.io.InputStream;
 
 import junit.framework.Assert;
 
+import org.junit.BeforeClass;
 import org.junit.Test;
 
 import com.raygroupintl.bnf.SyntaxErrorException;
 import com.raygroupintl.bnf.Token;
+import com.raygroupintl.m.token.MTFSupply;
 import com.raygroupintl.m.token.MVersion;
 import com.raygroupintl.m.token.TFLine;
 import com.raygroupintl.m.token.TFRoutine;
@@ -18,7 +20,19 @@ import com.raygroupintl.m.token.TRoutine;
 import com.raygroupintl.vista.struct.MRoutineContent;
 
 public class TRoutineTest {
-	public void testBeautify(MVersion version) {
+	private static TFLine fStd95;
+	private static TFLine fCache;
+	
+	@BeforeClass
+	public static void setUpBeforeClass() throws Exception {
+		MTFSupply tfsStd95 = MTFSupply.getInstance(MVersion.ANSI_STD_95);
+		fStd95 = TFLine.getInstance(tfsStd95);
+		
+		MTFSupply tfsCache = MTFSupply.getInstance(MVersion.CACHE);
+		fCache = TFLine.getInstance(tfsCache);
+	}
+
+	public void testBeautify(TFLine f) {
 		String[] lines = new String[]{
 				"IBDF14 ;ALB/CJM - AICS LIST CLINIC SETUP ; JUL 20,1993",
 				" ;;3.0;AUTOMATED INFO COLLECTION SYS;;APR 24, 1997",
@@ -37,7 +51,6 @@ public class TRoutineTest {
 		TRoutine r = new TRoutine("XRGITST0.m");
 		for (int i=0; i<lines.length; ++i) {
 			String line = lines[i];
-			TFLine f = TFLine.getInstance(version);
 			try {
 				TLine l = (TLine) f.tokenize(line, 0);
 				r.add(l);
@@ -72,8 +85,8 @@ public class TRoutineTest {
 	
 	@Test
 	public void testBeautify() {
-		testBeautify(MVersion.CACHE);
-		testBeautify(MVersion.ANSI_STD_95);
+		testBeautify(fCache);
+		testBeautify(fStd95);
 	}
 		
 	public void testNonErrorFiles(MVersion version) {

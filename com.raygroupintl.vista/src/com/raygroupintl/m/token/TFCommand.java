@@ -17,10 +17,11 @@ import com.raygroupintl.bnf.TSyntaxError;
 import com.raygroupintl.vista.struct.MError;
 
 public class TFCommand extends TFSeq {
-	private MVersion version;
+	private Map<String, TCSFactory> commandSpecs = new HashMap<String, TCSFactory>();
+	private MTFSupply supply;
 	
-	private TFCommand(MVersion version) {
-		this.version = version;
+	public TFCommand( MTFSupply supply) {
+		this.supply = supply;
 	}
 	
 	private static abstract class TCommand extends TArray {
@@ -70,19 +71,15 @@ public class TFCommand extends TFSeq {
 	private static abstract class TCommandSpec extends TBasic {
 		private TokenFactory argumentFactory;
 		
-		public TCommandSpec(String value) {
+		public TCommandSpec(String value, TokenFactory argumentFactory) {
 			super(value);
+			this.argumentFactory = argumentFactory;
 		}
 
-		public TokenFactory getArgumentFactory(final MVersion version) {
-			if (this.argumentFactory == null) {
-				this.argumentFactory = this.buildArgumentFactory(version);
-			}
+		public TokenFactory getArgumentFactory() {
 			return this.argumentFactory;
 		}
 
-		protected abstract TokenFactory buildArgumentFactory(final MVersion version);	
-		
 		public abstract Token getToken(Token[] tokens);
 	}
 		
@@ -98,15 +95,10 @@ public class TFCommand extends TFSeq {
 	}
 		
 	private static class TBCommandSpec extends TCommandSpec {
-		private TBCommandSpec(String value) {
-			super(value);
+		private TBCommandSpec(String value, MTFSupply supply) {
+			super(value, supply.expr);
 		}
 	
-		@Override
-		protected TokenFactory buildArgumentFactory(final MVersion version) {
-			return MTFSupply.getInstance(version).expr;
-		}
-		
 		public Token getToken(Token[] tokens) {
 			return new TCommandB(tokens);
 		}
@@ -124,15 +116,10 @@ public class TFCommand extends TFSeq {
 	}
 		
 	private static class TCCommandSpec extends TCommandSpec {
-		private TCCommandSpec(String value) {
-			super(value);
+		private TCCommandSpec(String value, MTFSupply supply) {
+			super(value, supply.closearg);
 		}
 	
-		@Override
-		protected TokenFactory buildArgumentFactory(final MVersion version) {
-			return MTFSupply.getInstance(version).closeargs;		
-		}
-		
 		public Token getToken(Token[] tokens) {
 			return new TCommandC(tokens);
 		}
@@ -150,15 +137,10 @@ public class TFCommand extends TFSeq {
 	}
 
 	private static class TDCommandSpec extends TCommandSpec {
-		private TDCommandSpec(String value) {
-			super(value);
+		private TDCommandSpec(String value, MTFSupply supply) {
+			super(value, supply.cmddargs);
 		}
 	
-		@Override
-		protected TokenFactory buildArgumentFactory(final MVersion version) {
-			return MTFSupply.getInstance(version).cmddargs;
-		}
-		
 		public Token getToken(Token[] tokens) {
 			return new TCommandD(tokens);
 		}
@@ -176,15 +158,10 @@ public class TFCommand extends TFSeq {
 	}
 
 	private static class TECommandSpec extends TCommandSpec {
-		private TECommandSpec(String value) {
-			super(value);
+		private TECommandSpec(String value, MTFSupply supply) {
+			super(value, TF_EMPTY);
 		}
 	
-		@Override
-		protected TokenFactory buildArgumentFactory(final MVersion version) {
-			return TF_EMPTY;
-		}
-		
 		public Token getToken(Token[] tokens) {
 			return new TCommandE(tokens);
 		}
@@ -202,15 +179,10 @@ public class TFCommand extends TFSeq {
 	}
 
 	private static class TFCommandSpec extends TCommandSpec {
-		private TFCommandSpec(String value) {
-			super(value);
+		private TFCommandSpec(String value, MTFSupply supply) {
+			super(value, supply.forarg);
 		}
 	
-		@Override
-		protected TokenFactory buildArgumentFactory(final MVersion version) {
-			return MTFSupply.getInstance(version).forarg;
-		}
-		
 		public Token getToken(Token[] tokens) {
 			return new TCommandF(tokens);
 		}
@@ -228,15 +200,10 @@ public class TFCommand extends TFSeq {
 	}
 
 	private static class TGCommandSpec extends TCommandSpec {
-		private TGCommandSpec(String value) {
-			super(value);
+		private TGCommandSpec(String value, MTFSupply supply) {
+			super(value, supply.cmdgargs);
 		}
 	
-		@Override
-		protected TokenFactory buildArgumentFactory(final MVersion version) {
-			return MTFSupply.getInstance(version).cmdgargs;	
-		}
-		
 		public Token getToken(Token[] tokens) {
 			return new TCommandG(tokens);
 		}
@@ -259,15 +226,10 @@ public class TFCommand extends TFSeq {
 	}
 
 	private static class THCommandSpec extends TCommandSpec {
-		private THCommandSpec(String value) {
-			super(value);
+		private THCommandSpec(String value, MTFSupply supply) {
+			super(value, supply.expr);
 		}
 	
-		@Override
-		protected TokenFactory buildArgumentFactory(final MVersion version) {
-			return MTFSupply.getInstance(version).expr;
-		}
-		
 		public Token getToken(Token[] tokens) {
 			return new TCommandH(tokens);
 		}
@@ -285,15 +247,10 @@ public class TFCommand extends TFSeq {
 	}
 
 	private static class TICommandSpec extends TCommandSpec {
-		private TICommandSpec(String value) {
-			super(value);
+		private TICommandSpec(String value, MTFSupply supply) {
+			super(value, supply.exprlist);
 		}
 	
-		@Override
-		protected TokenFactory buildArgumentFactory(final MVersion version) {
-			return MTFSupply.getInstance(version).exprlist;	
-		}
-		
 		public Token getToken(Token[] tokens) {
 			return new TCommandI(tokens);
 		}
@@ -311,15 +268,10 @@ public class TFCommand extends TFSeq {
 	}
 
 	private static class TJCommandSpec extends TCommandSpec {
-		private TJCommandSpec(String value) {
-			super(value);
+		private TJCommandSpec(String value, MTFSupply supply) {
+			super(value, supply.cmdjargs);
 		}
 	
-		@Override
-		protected TokenFactory buildArgumentFactory(final MVersion version) {
-			return MTFSupply.getInstance(version).cmdjargs;
-		}
-		
 		public Token getToken(Token[] tokens) {
 			return new TCommandJ(tokens);
 		}
@@ -337,15 +289,10 @@ public class TFCommand extends TFSeq {
 	}
 
 	private static class TKCommandSpec extends TCommandSpec {
-		private TKCommandSpec(String value) {
-			super(value);
+		private TKCommandSpec(String value, MTFSupply supply) {
+			super(value, supply.cmdkargs);
 		}
 	
-		@Override
-		protected TokenFactory buildArgumentFactory(final MVersion version) {
-			return MTFSupply.getInstance(version).cmdkargs;			
-		}
-		
 		public Token getToken(Token[] tokens) {
 			return new TCommandK(tokens);
 		}
@@ -363,15 +310,10 @@ public class TFCommand extends TFSeq {
 	}
 
 	private static class TLCommandSpec extends TCommandSpec {
-		private TLCommandSpec(String value) {
-			super(value);
+		private TLCommandSpec(String value, MTFSupply supply) {
+			super(value, supply.lockargs);
 		}
 	
-		@Override
-		protected TokenFactory buildArgumentFactory(final MVersion version) {
-			return MTFSupply.getInstance(version).lockargs;
-		}
-		
 		public Token getToken(Token[] tokens) {
 			return new TCommandL(tokens);
 		}
@@ -389,15 +331,10 @@ public class TFCommand extends TFSeq {
 	}
 
 	private static class TMCommandSpec extends TCommandSpec {
-		private TMCommandSpec(String value) {
-			super(value);
+		private TMCommandSpec(String value, MTFSupply supply) {
+			super(value, supply.cmdmargs);
 		}
 	
-		@Override
-		protected TokenFactory buildArgumentFactory(final MVersion version) {
-			return MTFSupply.getInstance(version).cmdmargs; 	
-		}
-		
 		public Token getToken(Token[] tokens) {
 			return new TCommandM(tokens);
 		}
@@ -415,15 +352,10 @@ public class TFCommand extends TFSeq {
 	}
 
 	private static class TNCommandSpec extends TCommandSpec {
-		private TNCommandSpec(String value) {
-			super(value);
+		private TNCommandSpec(String value, MTFSupply supply) {
+			super(value, supply.newargs);
 		}
 	
-		@Override
-		protected TokenFactory buildArgumentFactory(final MVersion version) {
-			return MTFSupply.getInstance(version).newargs;
-		}
-		
 		public Token getToken(Token[] tokens) {
 			return new TCommandN(tokens);
 		}
@@ -441,15 +373,10 @@ public class TFCommand extends TFSeq {
 	}
 
 	private static class TOCommandSpec extends TCommandSpec {
-		private TOCommandSpec(String value) {
-			super(value);
+		private TOCommandSpec(String value, MTFSupply supply) {
+			super(value, supply.cmdoargs);
 		}
 	
-		@Override
-		protected TokenFactory buildArgumentFactory(final MVersion version) {
-			return MTFSupply.getInstance(version).cmdoargs;	
-		}
-		
 		public Token getToken(Token[] tokens) {
 			return new TCommandO(tokens);
 		}
@@ -467,15 +394,10 @@ public class TFCommand extends TFSeq {
 	}
 
 	private static class TQCommandSpec extends TCommandSpec {
-		private TQCommandSpec(String value) {
-			super(value);
+		private TQCommandSpec(String value, MTFSupply supply) {
+			super(value, supply.expr);
 		}
 	
-		@Override
-		protected TokenFactory buildArgumentFactory(final MVersion version) {
-			return MTFSupply.getInstance(version).expr; 	
-		}
-		
 		public Token getToken(Token[] tokens) {
 			return new TCommandQ(tokens);
 		}
@@ -493,15 +415,10 @@ public class TFCommand extends TFSeq {
 	}
 
 	private static class TRCommandSpec extends TCommandSpec {
-		private TRCommandSpec(String value) {
-			super(value);
+		private TRCommandSpec(String value, MTFSupply supply) {
+			super(value, supply.cmdrargs);
 		}
 	
-		@Override
-		protected TokenFactory buildArgumentFactory(final MVersion version) {
-			return MTFSupply.getInstance(version).cmdrargs;
-		}
-		
 		public Token getToken(Token[] tokens) {
 			return new TCommandR(tokens);
 		}
@@ -519,15 +436,10 @@ public class TFCommand extends TFSeq {
 	}
 
 	private static class TSCommandSpec extends TCommandSpec {
-		private TSCommandSpec(String value) {
-			super(value);
+		private TSCommandSpec(String value, MTFSupply supply) {
+			super(value, supply.setargs);
 		}
 	
-		@Override
-		protected TokenFactory buildArgumentFactory(final MVersion version) {
-			return MTFSupply.getInstance(version).setargs;
-		}
-		
 		public Token getToken(Token[] tokens) {
 			return new TCommandS(tokens);
 		}
@@ -545,15 +457,10 @@ public class TFCommand extends TFSeq {
 	}
 
 	private static class TTCCommandSpec extends TCommandSpec {
-		private TTCCommandSpec(String value) {
-			super(value);
+		private TTCCommandSpec(String value, MTFSupply supply) {
+			super(value, TF_EMPTY);
 		}
 	
-		@Override
-		protected TokenFactory buildArgumentFactory(final MVersion version) {
-			return TF_EMPTY;
-		}
-		
 		public Token getToken(Token[] tokens) {
 			return new TCommandTC(tokens);
 		}
@@ -571,15 +478,10 @@ public class TFCommand extends TFSeq {
 	}
 
 	private static class TTRCommandSpec extends TCommandSpec {
-		private TTRCommandSpec(String value) {
-			super(value);
+		private TTRCommandSpec(String value, MTFSupply supply) {
+			super(value, TF_EMPTY);
 		}
 	
-		@Override
-		protected TokenFactory buildArgumentFactory(final MVersion version) {
-			return TF_EMPTY;
-		}
-		
 		public Token getToken(Token[] tokens) {
 			return new TCommandTR(tokens);
 		}
@@ -597,15 +499,10 @@ public class TFCommand extends TFSeq {
 	}
 
 	private static class TTROCommandSpec extends TCommandSpec {
-		private TTROCommandSpec(String value) {
-			super(value);
+		private TTROCommandSpec(String value, MTFSupply supply) {
+			super(value, TF_EMPTY);
 		}
 	
-		@Override
-		protected TokenFactory buildArgumentFactory(final MVersion version) {
-			return TF_EMPTY;
-		}
-		
 		public Token getToken(Token[] tokens) {
 			return new TCommandTRO(tokens);
 		}
@@ -623,15 +520,10 @@ public class TFCommand extends TFSeq {
 	}
 
 	private static class TTSCommandSpec extends TCommandSpec {
-		private TTSCommandSpec(String value) {
-			super(value);
+		private TTSCommandSpec(String value, MTFSupply supply) {
+			super(value, TF_EMPTY);
 		}
 	
-		@Override
-		protected TokenFactory buildArgumentFactory(final MVersion version) {
-			return TF_EMPTY;
-		}
-		
 		public Token getToken(Token[] tokens) {
 			return new TCommandTS(tokens);
 		}
@@ -649,15 +541,10 @@ public class TFCommand extends TFSeq {
 	}
 
 	private static class TUCommandSpec extends TCommandSpec {
-		private TUCommandSpec(String value) {
-			super(value);
+		private TUCommandSpec(String value, MTFSupply supply) {
+			super(value, supply.cmduargs);
 		}
 	
-		@Override
-		protected TokenFactory buildArgumentFactory(final MVersion version) {
-			return MTFSupply.getInstance(version).cmduargs;
-		}
-		
 		public Token getToken(Token[] tokens) {
 			return new TCommandU(tokens);
 		}
@@ -675,15 +562,10 @@ public class TFCommand extends TFSeq {
 	}
 
 	private static class TWCommandSpec extends TCommandSpec {
-		private TWCommandSpec(String value) {
-			super(value);
+		private TWCommandSpec(String value, MTFSupply supply) {
+			super(value, supply.writeargs);
 		}
 	
-		@Override
-		protected TokenFactory buildArgumentFactory(final MVersion version) {
-			return MTFSupply.getInstance(version).writeargs;			
-		}
-		
 		public Token getToken(Token[] tokens) {
 			return new TCommandW(tokens);
 		}
@@ -701,13 +583,8 @@ public class TFCommand extends TFSeq {
 	}
 
 	private static class TVCommandSpec extends TCommandSpec {
-		private TVCommandSpec(String value) {
-			super(value);
-		}
-	
-		@Override
-		protected TokenFactory buildArgumentFactory(final MVersion version) {
-			return new TFGenericArgument();
+		private TVCommandSpec(String value, MTFSupply supply) {
+			super(value, new TFGenericArgument());
 		}
 		
 		public Token getToken(Token[] tokens) {
@@ -727,30 +604,20 @@ public class TFCommand extends TFSeq {
 	}
 
 	private static class TXCommandSpec extends TCommandSpec {
-		private TXCommandSpec(String value) {
-			super(value);
+		private TXCommandSpec(String value, MTFSupply supply) {
+			super(value, supply.xecuteargs);
 		}
 	
-		@Override
-		protected TokenFactory buildArgumentFactory(final MVersion version) {
-			return MTFSupply.getInstance(version).xecuteargs;
-		}
-		
 		public Token getToken(Token[] tokens) {
 			return new TCommandX(tokens);
 		}
 	}
 
 	private static class TGenericCommandSpec extends TCommandSpec {
-		private TGenericCommandSpec(String value) {
-			super(value);
+		private TGenericCommandSpec(String value, MTFSupply supply) {
+			super(value, new TFGenericArgument());
 		}
 	
-		@Override
-		protected TokenFactory buildArgumentFactory(final MVersion version) {
-			return new TFGenericArgument();
-		}
-		
 		public Token getToken(Token[] tokens) {
 			return new TArray(tokens);
 		}
@@ -760,282 +627,270 @@ public class TFCommand extends TFSeq {
 		public abstract TCommandSpec get(String name);
 	}
 	
-	private static Map<String, TCSFactory> COMMAND_SPECS = new HashMap<String, TCSFactory>();
-	static {
+	public void addCommands(final MTFSupply supply) {
 		TCSFactory b = new TCSFactory() {			
 			@Override
 			public TCommandSpec get(String name) {
-				return new TBCommandSpec(name);
+				return new TBCommandSpec(name, supply);
 			}
 		};
-		COMMAND_SPECS.put("B", b);
-		COMMAND_SPECS.put("BREAK", b); 	
+		this.commandSpecs.put("B", b);
+		this.commandSpecs.put("BREAK", b); 	
 		
 		TCSFactory c = new TCSFactory() {			
 			@Override
 			public TCommandSpec get(String name) {
-				return new TCCommandSpec(name);
+				return new TCCommandSpec(name, supply);
 			}
 		};
-		COMMAND_SPECS.put("C", c);
-		COMMAND_SPECS.put("CLOSE", c); 	
+		this.commandSpecs.put("C", c);
+		this.commandSpecs.put("CLOSE", c); 	
 		
 		TCSFactory d = new TCSFactory() {			
 			@Override
 			public TCommandSpec get(String name) {
-				return new TDCommandSpec(name);
+				return new TDCommandSpec(name, supply);
 			}
 		};
-		COMMAND_SPECS.put("D", d);
-		COMMAND_SPECS.put("DO", d); 	
+		this.commandSpecs.put("D", d);
+		this.commandSpecs.put("DO", d); 	
 		
 		TCSFactory e = new TCSFactory() {			
 			@Override
 			public TCommandSpec get(String name) {
-				return new TECommandSpec(name);
+				return new TECommandSpec(name, supply);
 			}
 		};
-		COMMAND_SPECS.put("E", e);
-		COMMAND_SPECS.put("ELSE", e); 	
+		this.commandSpecs.put("E", e);
+		this.commandSpecs.put("ELSE", e); 	
 
 		TCSFactory f = new TCSFactory() {			
 			@Override
 			public TCommandSpec get(String name) {
-				return new TFCommandSpec(name);
+				return new TFCommandSpec(name, supply);
 			}
 		};
-		COMMAND_SPECS.put("F", f);
-		COMMAND_SPECS.put("FOR", f); 	
+		this.commandSpecs.put("F", f);
+		this.commandSpecs.put("FOR", f); 	
 		
 		TCSFactory g = new TCSFactory() {			
 			@Override
 			public TCommandSpec get(String name) {
-				return new TGCommandSpec(name);
+				return new TGCommandSpec(name, supply);
 			}
 		};
-		COMMAND_SPECS.put("G", g);
-		COMMAND_SPECS.put("GOTO", g); 	
+		this.commandSpecs.put("G", g);
+		this.commandSpecs.put("GOTO", g); 	
 		
 		TCSFactory h = new TCSFactory() {			
 			@Override
 			public TCommandSpec get(String name) {
-				return new THCommandSpec(name);
+				return new THCommandSpec(name, supply);
 			}
 		};
-		COMMAND_SPECS.put("H", h);
-		COMMAND_SPECS.put("HALT", h); 	
-		COMMAND_SPECS.put("HANG", h); 
+		this.commandSpecs.put("H", h);
+		this.commandSpecs.put("HALT", h); 	
+		this.commandSpecs.put("HANG", h); 
 		
 		TCSFactory i = new TCSFactory() {			
 			@Override
 			public TCommandSpec get(String name) {
-				return new TICommandSpec(name);
+				return new TICommandSpec(name, supply);
 			}
 		};
-		COMMAND_SPECS.put("I", i);
-		COMMAND_SPECS.put("IF", i); 	
+		this.commandSpecs.put("I", i);
+		this.commandSpecs.put("IF", i); 	
 		
 		TCSFactory j = new TCSFactory() {			
 			@Override
 			public TCommandSpec get(String name) {
-				return new TJCommandSpec(name);
+				return new TJCommandSpec(name, supply);
 			}
 		};
-		COMMAND_SPECS.put("J", j);
-		COMMAND_SPECS.put("JOB", j); 	
+		this.commandSpecs.put("J", j);
+		this.commandSpecs.put("JOB", j); 	
 		
 		TCSFactory k = new TCSFactory() {			
 			@Override
 			public TCommandSpec get(String name) {
-				return new TKCommandSpec(name);
+				return new TKCommandSpec(name, supply);
 			}
 		};
-		COMMAND_SPECS.put("K", k);
-		COMMAND_SPECS.put("KILL", k); 	
+		this.commandSpecs.put("K", k);
+		this.commandSpecs.put("KILL", k); 	
 		
 		TCSFactory l = new TCSFactory() {			
 			@Override
 			public TCommandSpec get(String name) {
-				return new TLCommandSpec(name);
+				return new TLCommandSpec(name, supply);
 			}
 		};
-		COMMAND_SPECS.put("L", l);
-		COMMAND_SPECS.put("LOCK", l); 	
+		this.commandSpecs.put("L", l);
+		this.commandSpecs.put("LOCK", l); 	
 		
 		TCSFactory m = new TCSFactory() {			
 			@Override
 			public TCommandSpec get(String name) {
-				return new TMCommandSpec(name);
+				return new TMCommandSpec(name, supply);
 			}
 		};
-		COMMAND_SPECS.put("M", m);
-		COMMAND_SPECS.put("MERGE", m); 
+		this.commandSpecs.put("M", m);
+		this.commandSpecs.put("MERGE", m); 
 		
 		TCSFactory n = new TCSFactory() {			
 			@Override
 			public TCommandSpec get(String name) {
-				return new TNCommandSpec(name);
+				return new TNCommandSpec(name, supply);
 			}
 		};
-		COMMAND_SPECS.put("N", n);
-		COMMAND_SPECS.put("NEW", n);		
+		this.commandSpecs.put("N", n);
+		this.commandSpecs.put("NEW", n);		
 		
 		TCSFactory o = new TCSFactory() {			
 			@Override
 			public TCommandSpec get(String name) {
-				return new TOCommandSpec(name);
+				return new TOCommandSpec(name, supply);
 			}
 		};
-		COMMAND_SPECS.put("O", o);
-		COMMAND_SPECS.put("OPEN", o); 	
+		this.commandSpecs.put("O", o);
+		this.commandSpecs.put("OPEN", o); 	
 		
 		TCSFactory q = new TCSFactory() {			
 			@Override
 			public TCommandSpec get(String name) {
-				return new TQCommandSpec(name);
+				return new TQCommandSpec(name, supply);
 			}
 		};
-		COMMAND_SPECS.put("Q", q);
-		COMMAND_SPECS.put("QUIT", q); 	
+		this.commandSpecs.put("Q", q);
+		this.commandSpecs.put("QUIT", q); 	
 		
 		TCSFactory r = new TCSFactory() {			
 			@Override
 			public TCommandSpec get(String name) {
-				return new TRCommandSpec(name);
+				return new TRCommandSpec(name, supply);
 			}
 		};
-		COMMAND_SPECS.put("R", r);
-		COMMAND_SPECS.put("READ", r); 	
+		this.commandSpecs.put("R", r);
+		this.commandSpecs.put("READ", r); 	
 		
 		TCSFactory s = new TCSFactory() {			
 			@Override
 			public TCommandSpec get(String name) {
-				return new TSCommandSpec(name);
+				return new TSCommandSpec(name, supply);
 			}
 		};
-		COMMAND_SPECS.put("S", s);
-		COMMAND_SPECS.put("SET", s); 	
+		this.commandSpecs.put("S", s);
+		this.commandSpecs.put("SET", s); 	
 		
 		TCSFactory tc = new TCSFactory() {			
 			@Override
 			public TCommandSpec get(String name) {
-				return new TTCCommandSpec(name);
+				return new TTCCommandSpec(name, supply);
 			}
 		};
-		COMMAND_SPECS.put("TC", tc);
-		COMMAND_SPECS.put("TCOMMIT", tc); 	
+		this.commandSpecs.put("TC", tc);
+		this.commandSpecs.put("TCOMMIT", tc); 	
 		
 		TCSFactory tr = new TCSFactory() {			
 			@Override
 			public TCommandSpec get(String name) {
-				return new TTRCommandSpec(name);
+				return new TTRCommandSpec(name, supply);
 			}
 		};
-		COMMAND_SPECS.put("TR", tr);
-		COMMAND_SPECS.put("TRESTART", tr); 	
+		this.commandSpecs.put("TR", tr);
+		this.commandSpecs.put("TRESTART", tr); 	
 		
 		TCSFactory tro = new TCSFactory() {			
 			@Override
 			public TCommandSpec get(String name) {
-				return new TTROCommandSpec(name);
+				return new TTROCommandSpec(name, supply);
 			}
 		};
-		COMMAND_SPECS.put("TRO", tro);
-		COMMAND_SPECS.put("TROLLBACK", tro); 	
+		this.commandSpecs.put("TRO", tro);
+		this.commandSpecs.put("TROLLBACK", tro); 	
 		
 		TCSFactory ts = new TCSFactory() {			
 			@Override
 			public TCommandSpec get(String name) {
-				return new TTSCommandSpec(name);
+				return new TTSCommandSpec(name, supply);
 			}
 		};
-		COMMAND_SPECS.put("TS", ts);
-		COMMAND_SPECS.put("TSTART", ts); 	
+		this.commandSpecs.put("TS", ts);
+		this.commandSpecs.put("TSTART", ts); 	
 		
 		TCSFactory u = new TCSFactory() {			
 			@Override
 			public TCommandSpec get(String name) {
-				return new TUCommandSpec(name);
+				return new TUCommandSpec(name, supply);
 			}
 		};
-		COMMAND_SPECS.put("U", u);
-		COMMAND_SPECS.put("USE", u);
+		this.commandSpecs.put("U", u);
+		this.commandSpecs.put("USE", u);
 		
 		TCSFactory v = new TCSFactory() {			
 			@Override
 			public TCommandSpec get(String name) {
-				return new TVCommandSpec(name);
+				return new TVCommandSpec(name, supply);
 			}
 		};
-		COMMAND_SPECS.put("V", v);
-		COMMAND_SPECS.put("VIEW", v); 	
+		this.commandSpecs.put("V", v);
+		this.commandSpecs.put("VIEW", v); 	
 		
 		TCSFactory w = new TCSFactory() {			
 			@Override
 			public TCommandSpec get(String name) {
-				return new TWCommandSpec(name);
+				return new TWCommandSpec(name, supply);
 			}
 		};
-		COMMAND_SPECS.put("W", w);
-		COMMAND_SPECS.put("WRITE", w);	
+		this.commandSpecs.put("W", w);
+		this.commandSpecs.put("WRITE", w);	
 		
 		TCSFactory x = new TCSFactory() {			
 			@Override
 			public TCommandSpec get(String name) {
-				return new TXCommandSpec(name);
+				return new TXCommandSpec(name, supply);
 			}
 		};
-		COMMAND_SPECS.put("X", x);
-		COMMAND_SPECS.put("XECUTE", x);		
+		this.commandSpecs.put("X", x);
+		this.commandSpecs.put("XECUTE", x);		
 	}
 	
-	private static final TCSFactory GENERIC_TCS_FACTORY = new TCSFactory() {		
-		@Override
-		public TCommandSpec get(String name) {
-			return new TGenericCommandSpec(name);
-		}
-	};
-	
-	public static void addCommand(String name) {
-		COMMAND_SPECS.put(name, GENERIC_TCS_FACTORY);
+	public void addCommand(String name, final MTFSupply supply) {
+		TCSFactory generic = new TCSFactory() {		
+			@Override
+			public TCommandSpec get(String name) {
+				return new TGenericCommandSpec(name, supply);
+			}
+		};
+		this.commandSpecs.put(name, generic);
 	}
 			
-	private static class TFCommandName extends TFIdent {
+	private class TFCommandName extends TFIdent {
 		@Override
 		public Token tokenize(String line, int fromIndex) {
 			Token result = super.tokenize(line, fromIndex);
 			String cmdName = result.getStringValue();
-			TCSFactory tcs = COMMAND_SPECS.get(cmdName.toUpperCase());
+			TCSFactory tcs = TFCommand.this.commandSpecs.get(cmdName.toUpperCase());
 			if (tcs != null) {
 				return tcs.get(cmdName);
 			} else {
 				return new TSyntaxError(MError.ERR_UNDEFINED_COMMAND , line, fromIndex);
 			}			
 		}
-		
-		public static TFCommandName getInstance() {
-			return new TFCommandName();
-		}
 	}
 		
-	private static class TFSCommand implements TokenFactorySupply {
-		private MVersion version;
-		
-		private TFSCommand(MVersion version) {
-			this.version = version;
-		}
-			
+	private class TFSCommand implements TokenFactorySupply {
 		public TokenFactory get(int seqIndex, Token[] previousTokens) {
 			switch (seqIndex) {
 				case 0:
-					return TFCommandName.getInstance();
+					return TFCommand.this.new TFCommandName();
 				case 1:
-					return MTFSupply.getInstance(version).postcondition;
+					return TFCommand.this.supply.postcondition;
 				case 2:
 					return TFConstChar.getInstance(' ');
 				case 3: {
 					TCommandSpec cmd = (TCommandSpec) previousTokens[0];
-					TokenFactory f = cmd.getArgumentFactory(this.version);
+					TokenFactory f = cmd.getArgumentFactory();
 					return f;
 				}					
 				case 4:
@@ -1053,7 +908,7 @@ public class TFCommand extends TFSeq {
 	
 	@Override
 	protected TokenFactorySupply getFactorySupply() {
-		return new TFSCommand(this.version);
+		return new TFSCommand();
 	}
 
 	@Override
@@ -1075,7 +930,7 @@ public class TFCommand extends TFSeq {
 		}
 	}
 			
-	public static TFCommand getInstance(MVersion version) {
-		return new TFCommand(version);
+	public static TFCommand getInstance(MTFSupply supply) {
+		return new TFCommand(supply);
 	}
 }
