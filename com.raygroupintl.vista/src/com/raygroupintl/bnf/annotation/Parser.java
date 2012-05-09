@@ -9,14 +9,15 @@ import java.util.HashMap;
 import java.util.Map;
 
 import com.raygroupintl.bnf.CharactersAdapter;
+import com.raygroupintl.bnf.TFEmpty;
 import com.raygroupintl.bnf.TFList;
+import com.raygroupintl.bnf.TList;
 import com.raygroupintl.bnf.Token;
 import com.raygroupintl.bnf.TokenFactory;
 import com.raygroupintl.bnf.TFCharacters;
 import com.raygroupintl.bnf.TFChoiceBasic;
 import com.raygroupintl.bnf.TFChoiceOnChar0th;
 import com.raygroupintl.bnf.TFChoiceOnChar1st;
-import com.raygroupintl.bnf.TFDelimitedList;
 import com.raygroupintl.bnf.TFSequenceStatic;
 import com.raygroupintl.bnf.SequenceAdapter;
 import com.raygroupintl.charlib.AndPredicate;
@@ -84,6 +85,19 @@ public class Parser {
 		}
 	};
 	
+	private static class DLAdapter implements SequenceAdapter {
+		@Override
+		public Token convert(Token[] tokens) {
+			if (tokens[1] == null) {
+				return new TList(tokens[0]);	
+			} else {		
+				TList result = (TList) tokens[1];
+				result.add(0, tokens[0]);
+				return result;
+			}			
+		}
+	}
+
 	private static class Store {
 		private static DescriptionSpec descriptionSpec;
 		
@@ -93,7 +107,9 @@ public class Parser {
 		private java.util.List<Triple<TFSequenceStatic, Sequence>> sequences  = new ArrayList<Triple<TFSequenceStatic, Sequence>>();
 		private java.util.List<Triple<TFSequenceStatic, Description>> descriptions  = new ArrayList<Triple<TFSequenceStatic, Description>>();
 		private java.util.List<Triple<TFList, List>> lists  = new ArrayList<Triple<TFList, List>>();
-		private java.util.List<Triple<TFDelimitedList, List>> delimitedLists  = new ArrayList<Triple<TFDelimitedList, List>>();
+		private java.util.List<Triple<TFSequenceStatic, List>> enclosedLists  = new ArrayList<Triple<TFSequenceStatic, List>>();
+		private java.util.List<Triple<TFSequenceStatic, List>> delimitedLists  = new ArrayList<Triple<TFSequenceStatic, List>>();
+		private java.util.List<Triple<TFSequenceStatic, List>> enclosedDelimitedLists  = new ArrayList<Triple<TFSequenceStatic, List>>();
 		private java.util.List<Triple<TFChoiceOnChar0th, CChoice>> choice0ths  = new ArrayList<Triple<TFChoiceOnChar0th, CChoice>>();
 		private java.util.List<Triple<TFChoiceOnChar1st, CChoice>> choice1sts  = new ArrayList<Triple<TFChoiceOnChar1st, CChoice>>();
 		private Map<String, Field> otherSymbols = new HashMap<String, Field>();
@@ -163,11 +179,22 @@ public class Parser {
 					TFList value = new TFList();
 					this.lists.add(new Triple<TFList, List>(name, value, list));
 					return value;
-				}				
-			}			
-			TFDelimitedList value = new TFDelimitedList();
-			this.delimitedLists.add(new Triple<TFDelimitedList, List>(name, value, list));
-			return value;			
+				} else {
+					TFSequenceStatic value = new TFSequenceStatic();
+					this.enclosedLists.add(new Triple<TFSequenceStatic, List>(name, value, list));
+					return value;
+				}
+			} else {			
+				if ((left.length() == 0) || (right.length() == 0)) {
+					TFSequenceStatic value = new TFSequenceStatic();
+					this.delimitedLists.add(new Triple<TFSequenceStatic, List>(name, value, list));
+					return value;
+				} else {
+					TFSequenceStatic value = new TFSequenceStatic();
+					this.enclosedDelimitedLists.add(new Triple<TFSequenceStatic, List>(name, value, list));
+					return value;					
+				}
+			}
 		}
 		
 		private TokenFactory addCChoice(String name, CChoice cchoice) {
@@ -346,28 +373,70 @@ public class Parser {
 			}	
 		}
 		
+		private void updateEnclosedLists() {
+			for (Triple<TFSequenceStatic, List> p : this.enclosedLists) {
+				TokenFactory e = this.symbols.get(p.annotation.value());
+				TokenFactory l = this.symbols.get(p.annotation.left());
+				TokenFactory r = this.symbols.get(p.annotation.right());
+				TFList f = new TFList(e);
+				f.setAddErrorToList(p.annotation.adderror());
+				p.factory.setFactories(new TokenFactory[]{l, f, r});
+				p.factory.setRequiredFlags(new boolean[]{true, ! p.annotation.none(), true});
+			}	
+		}
+		
+		private void updateEnclosedDelimitedLists() {
+			for (Triple<TFSequenceStatic, List> p : this.enclosedDelimitedLists) {
+				TokenFactory e = this.symbols.get(p.annotation.value());
+				TokenFactory d = this.symbols.get(p.annotation.delim());
+				TokenFactory l = this.symbols.get(p.annotation.left());
+				TokenFactory r = this.symbols.get(p.annotation.right());
+				TokenFactory t = e;
+				if (p.annotation.empty()) {
+					TokenFactory eDelimiter = new TFEmpty(d);
+					TokenFactory eRight = new TFEmpty(r);
+					t = new TFChoiceBasic(e, eDelimiter, eRight);
+				}
+				TFSequenceStatic ts = new TFSequenceStatic(d, t);
+				ts.setRequiredFlags(new boolean[]{true, true});
+				TFList tail = new TFList(ts);
+				tail.setAddErrorToList(p.annotation.adderror());
+				
+				TokenFactory leadingElement = e;
+				if (p.annotation.empty()) {
+					TokenFactory eDelimiter = new TFEmpty(d);
+					leadingElement = new TFChoiceBasic(e, eDelimiter);
+				}				
+				TFSequenceStatic m = new TFSequenceStatic(leadingElement, tail);
+				m.setRequiredFlags(new boolean[]{true, false});
+				m.setAdapter(new DLAdapter());				
+				p.factory.setFactories(new TokenFactory[]{l, m, r});
+				p.factory.setRequiredFlags(new boolean[]{true, ! p.annotation.none(), true});
+			}	
+		}
+		
 		private void updateDelimitedLists() {
-			for (Triple<TFDelimitedList, List> p : this.delimitedLists) {
-				TokenFactory f = this.symbols.get(p.annotation.value());
-				p.factory.setElementFactory(f);
-				String delim = p.annotation.delim();
-				if (delim.length() > 0) {
-					TokenFactory d = this.symbols.get(delim);
-					p.factory.setDelimiter(d);
+			for (Triple<TFSequenceStatic, List> p : this.delimitedLists) {
+				TokenFactory e = this.symbols.get(p.annotation.value());
+				TokenFactory d = this.symbols.get(p.annotation.delim());
+				TokenFactory t = e;
+				if (p.annotation.empty()) {
+					TokenFactory eDelimiter = new TFEmpty(d);
+					t = new TFChoiceBasic(e, eDelimiter);
 				}
-				String left = p.annotation.left();
-				if (left.length() > 0) {
-					TokenFactory l = this.symbols.get(left);
-					p.factory.setLeft(l);
-				}
-				String right = p.annotation.right();
-				if (right.length() > 0) {
-					TokenFactory r = this.symbols.get(right);
-					p.factory.setRight(r);
-				}
-				p.factory.setAllowEmpty(p.annotation.empty());
-				p.factory.setAllowNone(p.annotation.none());
-				p.factory.setAddError(p.annotation.adderror());
+				TFSequenceStatic ts = new TFSequenceStatic(d, t);
+				ts.setRequiredFlags(new boolean[]{true, true});
+				TFList tail = new TFList(ts);
+				tail.setAddErrorToList(p.annotation.adderror());
+				
+				TokenFactory leadingElement = e;
+				if (p.annotation.empty()) {
+					TokenFactory eDelimiter = new TFEmpty(d);
+					leadingElement = new TFChoiceBasic(e, eDelimiter);
+				}				
+				p.factory.setFactories(new TokenFactory[]{leadingElement, tail});
+				p.factory.setRequiredFlags(new boolean[]{true, false});
+				p.factory.setAdapter(new DLAdapter());				
 			}	
 		}
 		
@@ -377,6 +446,8 @@ public class Parser {
 			this.updateChoicesOnChar1st();
 			this.updateSequences();
 			this.updateLists();
+			this.updateEnclosedLists();
+			this.updateEnclosedDelimitedLists();
 			this.updateDelimitedLists();
 		}		
 	}
