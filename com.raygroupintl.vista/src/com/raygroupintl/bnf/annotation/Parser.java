@@ -49,39 +49,39 @@ public class Parser {
 	private static class Store {
 		public Map<String, TokenFactory> symbols = new HashMap<String, TokenFactory>();
 		
-		public java.util.List<Triple<TFChoiceBasic, Choice>> choices  = new ArrayList<Triple<TFChoiceBasic, Choice>>();
-		public java.util.List<Triple<TFSequenceStatic, Sequence>> sequences  = new ArrayList<Triple<TFSequenceStatic, Sequence>>();
-		public java.util.List<Triple<TFSequenceStatic, Description>> descriptions  = new ArrayList<Triple<TFSequenceStatic, Description>>();
-		public java.util.List<Triple<TFDelimitedList, List>> lists  = new ArrayList<Triple<TFDelimitedList, List>>();
-		public java.util.List<Triple<TFChoiceOnChar0th, CChoice>> choice0ths  = new ArrayList<Triple<TFChoiceOnChar0th, CChoice>>();
-		public java.util.List<Triple<TFChoiceOnChar1st, CChoice>> choice1sts  = new ArrayList<Triple<TFChoiceOnChar1st, CChoice>>();
-		public Map<String, Field> otherSymbols = new HashMap<String, Field>();
+		private java.util.List<Triple<TFChoiceBasic, Choice>> choices  = new ArrayList<Triple<TFChoiceBasic, Choice>>();
+		private java.util.List<Triple<TFSequenceStatic, Sequence>> sequences  = new ArrayList<Triple<TFSequenceStatic, Sequence>>();
+		private java.util.List<Triple<TFSequenceStatic, Description>> descriptions  = new ArrayList<Triple<TFSequenceStatic, Description>>();
+		private java.util.List<Triple<TFDelimitedList, List>> lists  = new ArrayList<Triple<TFDelimitedList, List>>();
+		private java.util.List<Triple<TFChoiceOnChar0th, CChoice>> choice0ths  = new ArrayList<Triple<TFChoiceOnChar0th, CChoice>>();
+		private java.util.List<Triple<TFChoiceOnChar1st, CChoice>> choice1sts  = new ArrayList<Triple<TFChoiceOnChar1st, CChoice>>();
+		private Map<String, Field> otherSymbols = new HashMap<String, Field>();
 		
-		public TokenFactory addChoice(String name, Choice choice) {
+		private TokenFactory addChoice(String name, Choice choice) {
 			TFChoiceBasic value = new TFChoiceBasic();
 			this.choices.add(new Triple<TFChoiceBasic, Choice>(name, value, choice));
 			return value;			
 		}
 		
-		public TokenFactory addSequence(String name, Sequence sequence) {
+		private TokenFactory addSequence(String name, Sequence sequence) {
 			TFSequenceStatic value = new TFSequenceStatic();
 			this.sequences.add(new Triple<TFSequenceStatic, Sequence>(name, value, sequence));
 			return value;			
 		}
 		
-		public TokenFactory addDescription(String name, Description description) {
+		private TokenFactory addDescription(String name, Description description) {
 			TFSequenceStatic value = new TFSequenceStatic();
 			this.descriptions.add(new Triple<TFSequenceStatic, Description>(name, value, description));
 			return value;		
 		}
 		
-		public TokenFactory addList(String name, List list) {
+		private TokenFactory addList(String name, List list) {
 			TFDelimitedList value = new TFDelimitedList();
 			this.lists.add(new Triple<TFDelimitedList, List>(name, value, list));
 			return value;			
 		}
 		
-		public TokenFactory addCChoice(String name, CChoice cchoice) {
+		private TokenFactory addCChoice(String name, CChoice cchoice) {
 			String lead = cchoice.lead();
 			if (lead.length() == 0) {
 				TFChoiceOnChar0th value = new TFChoiceOnChar0th();
@@ -94,7 +94,7 @@ public class Parser {
 			}
 		}
 		
-		public TokenFactory addCharacters(String name, Characters characters) {
+		private TokenFactory addCharacters(String name, Characters characters) {
 			ICharPredicate p0 = getCharPredicate(characters.chars());
 			ICharPredicate p1 = getCharRanges(characters.ranges());
 			ICharPredicate p2 = getCharPredicate(characters.excludechars());
@@ -120,7 +120,7 @@ public class Parser {
 			return tf;						
 		}
 		
-		public TokenFactory add(Field f) throws ClassNotFoundException, IllegalAccessException, InstantiationException {
+		private TokenFactory add(Field f) throws ClassNotFoundException, IllegalAccessException, InstantiationException {
 			String name = f.getName();
 
 			Choice choice = f.getAnnotation(Choice.class);
@@ -192,14 +192,14 @@ public class Parser {
 			}
 		}
 
-		public void updateChoices() {		
+		private void updateChoices() {		
 			for (Triple<TFChoiceBasic, Choice> p : this.choices) {
 				TokenFactory[] fs = getFactories(this.symbols, p.annotation.value());
 				p.factory.setFactories(fs);
 			}
 		}
 		
-		public void updateChoicesOnChar0th() {
+		private void updateChoicesOnChar0th() {
 			for (Triple<TFChoiceOnChar0th, CChoice> p : this.choice0ths) {
 				TokenFactory[] fs = getFactories(this.symbols, p.annotation.value());
 				ICharPredicate[] ps = getPredicates(p.annotation.preds());
@@ -212,7 +212,7 @@ public class Parser {
 			}
 		}
 		
-		public void updateChoicesOnChar1st() {
+		private void updateChoicesOnChar1st() {
 			for (Triple<TFChoiceOnChar1st, CChoice> p : this.choice1sts) {
 				TokenFactory[] fs = getFactories(this.symbols, p.annotation.value());
 				ICharPredicate[] ps = getPredicates(p.annotation.preds());
@@ -226,7 +226,7 @@ public class Parser {
 			}
 		}
 		
-		public void updateSequences(Map<String, TokenAdapter> tas) {
+		private void updateSequences(Map<String, TokenAdapter> tas) {
 			for (Triple<TFSequenceStatic, Sequence> p : this.sequences) {
 				TokenFactory[] fs = getFactories(this.symbols, p.annotation.value());
 				p.factory.setFactories(fs);
@@ -239,7 +239,7 @@ public class Parser {
 			}
 		}
 	
-		public void updateLists() {
+		private void updateLists() {
 			for (Triple<TFDelimitedList, List> p : this.lists) {
 				TokenFactory f = this.symbols.get(p.annotation.value());
 				p.factory.setElementFactory(f);
@@ -264,7 +264,27 @@ public class Parser {
 			}	
 		}
 		
-		public void update(Map<String, TokenAdapter> tas) {
+		private static <T> Map<String, TokenAdapter> getAdapters(Class<T> cls) throws IllegalAccessException, InstantiationException {
+			Map<String, TokenAdapter> result = new HashMap<String, TokenAdapter>();
+			Class<?> loopCls = cls;
+			while (! loopCls.equals(Object.class)) {
+				for (Class<?> c : loopCls.getDeclaredClasses()) {
+					Adapter adapter = c.getAnnotation(Adapter.class);
+					if (adapter != null) {			
+						String n = adapter.value();
+						if (! result.containsKey(n)) {
+							TokenAdapter ta = (TokenAdapter) c.newInstance();
+							result.put(n, ta);
+						}
+					}
+				}
+				loopCls = loopCls.getSuperclass();
+			}
+			return result;
+		}
+		
+		public void update(Class<?> cls)  throws IllegalAccessException, InstantiationException {
+			Map<String, TokenAdapter> tas = getAdapters(cls);
 			this.updateChoices();
 			this.updateChoicesOnChar0th();
 			this.updateChoicesOnChar1st();
@@ -344,40 +364,14 @@ public class Parser {
 		}
 		return result;
 	}
-	
-	
-	private static <T> Store getStore(T target, Class<T> cls) throws IllegalAccessException, InstantiationException, ClassNotFoundException {
-		Store store = new Store();
-		store.add(target);
-		store.updateEquivalents(target);
-		return store;
-	}
-	
-	private static <T> Map<String, TokenAdapter> getAdapters(Class<T> cls) throws IllegalAccessException, InstantiationException{
-		Map<String, TokenAdapter> result = new HashMap<String, TokenAdapter>();
-		Class<?> loopCls = cls;
-		while (! loopCls.equals(Object.class)) {
-			for (Class<?> c : loopCls.getDeclaredClasses()) {
-				Adapter adapter = c.getAnnotation(Adapter.class);
-				if (adapter != null) {			
-					String n = adapter.value();
-					if (! result.containsKey(n)) {
-						TokenAdapter ta = (TokenAdapter) c.newInstance();
-						result.put(n, ta);
-					}
-				}
-			}
-			loopCls = loopCls.getSuperclass();
-		}
-		return result;
-	}
-	
+		
 	public <T> T parse(Class<T> cls) throws ParseException {
 		try {
 			T target = cls.newInstance();
-			Store store = getStore(target, cls);
-			Map<String, TokenAdapter> tas = getAdapters(cls);
-			store.update(tas);
+			Store store = new Store();
+			store.add(target);
+			store.updateEquivalents(target);
+			store.update(cls);
 			return target;
 		} catch (IllegalAccessException iae) {
 			throw new ParseException(iae);
