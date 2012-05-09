@@ -47,49 +47,54 @@ public class Parser {
 	}
 	
 	private static class Store {
-		Map<String, TokenFactory> symbols = new HashMap<String, TokenFactory>();
-		java.util.List<Triple<TFChoiceBasic, Choice>> choices  = new ArrayList<Triple<TFChoiceBasic, Choice>>();
-		java.util.List<Triple<TFSequenceStatic, Sequence>> sequences  = new ArrayList<Triple<TFSequenceStatic, Sequence>>();
-		java.util.List<Triple<TFDelimitedList, List>> lists  = new ArrayList<Triple<TFDelimitedList, List>>();
-		java.util.List<Triple<TFChoiceOnChar0th, CChoice>> choice0ths  = new ArrayList<Triple<TFChoiceOnChar0th, CChoice>>();
-		java.util.List<Triple<TFChoiceOnChar1st, CChoice>> choice1sts  = new ArrayList<Triple<TFChoiceOnChar1st, CChoice>>();
-	}
-	
-	private static TokenFactory newTokenFactory(Field f, Store store) throws ClassNotFoundException, IllegalAccessException, InstantiationException {
-		Choice choice = f.getAnnotation(Choice.class);
-		String name = f.getName();
-		if (choice != null) {
+		public Map<String, TokenFactory> symbols = new HashMap<String, TokenFactory>();
+		
+		public java.util.List<Triple<TFChoiceBasic, Choice>> choices  = new ArrayList<Triple<TFChoiceBasic, Choice>>();
+		public java.util.List<Triple<TFSequenceStatic, Sequence>> sequences  = new ArrayList<Triple<TFSequenceStatic, Sequence>>();
+		public java.util.List<Triple<TFSequenceStatic, Description>> descriptions  = new ArrayList<Triple<TFSequenceStatic, Description>>();
+		public java.util.List<Triple<TFDelimitedList, List>> lists  = new ArrayList<Triple<TFDelimitedList, List>>();
+		public java.util.List<Triple<TFChoiceOnChar0th, CChoice>> choice0ths  = new ArrayList<Triple<TFChoiceOnChar0th, CChoice>>();
+		public java.util.List<Triple<TFChoiceOnChar1st, CChoice>> choice1sts  = new ArrayList<Triple<TFChoiceOnChar1st, CChoice>>();
+		public Map<String, Field> otherSymbols = new HashMap<String, Field>();
+		
+		public TokenFactory addChoice(String name, Choice choice) {
 			TFChoiceBasic value = new TFChoiceBasic();
-			store.choices.add(new Triple<TFChoiceBasic, Choice>(name, value, choice));
-			return value;
+			this.choices.add(new Triple<TFChoiceBasic, Choice>(name, value, choice));
+			return value;			
 		}
-		Sequence sequence = f.getAnnotation(Sequence.class);
-		if (sequence != null) {
+		
+		public TokenFactory addSequence(String name, Sequence sequence) {
 			TFSequenceStatic value = new TFSequenceStatic();
-			store.sequences.add(new Triple<TFSequenceStatic, Sequence>(name, value, sequence));
-			return value;
+			this.sequences.add(new Triple<TFSequenceStatic, Sequence>(name, value, sequence));
+			return value;			
 		}
-		List list = f.getAnnotation(List.class);
-		if (list != null) {
+		
+		public TokenFactory addDescription(String name, Description description) {
+			TFSequenceStatic value = new TFSequenceStatic();
+			this.descriptions.add(new Triple<TFSequenceStatic, Description>(name, value, description));
+			return value;		
+		}
+		
+		public TokenFactory addList(String name, List list) {
 			TFDelimitedList value = new TFDelimitedList();
-			store.lists.add(new Triple<TFDelimitedList, List>(name, value, list));
-			return value;
+			this.lists.add(new Triple<TFDelimitedList, List>(name, value, list));
+			return value;			
 		}
-		CChoice cchoice = f.getAnnotation(CChoice.class);
-		if (cchoice != null) {
+		
+		public TokenFactory addCChoice(String name, CChoice cchoice) {
 			String lead = cchoice.lead();
 			if (lead.length() == 0) {
 				TFChoiceOnChar0th value = new TFChoiceOnChar0th();
-				store.choice0ths.add(new Triple<TFChoiceOnChar0th, CChoice>(name, value, cchoice));
+				this.choice0ths.add(new Triple<TFChoiceOnChar0th, CChoice>(name, value, cchoice));
 				return value;
 			} else {
 				TFChoiceOnChar1st value = new TFChoiceOnChar1st();
-				store.choice1sts.add(new Triple<TFChoiceOnChar1st, CChoice>(name, value, cchoice));
+				this.choice1sts.add(new Triple<TFChoiceOnChar1st, CChoice>(name, value, cchoice));
 				return value;
 			}
 		}
-		Characters characters = f.getAnnotation(Characters.class);
-		if (characters != null) {
+		
+		public TokenFactory addCharacters(String name, Characters characters) {
 			ICharPredicate p0 = getCharPredicate(characters.chars());
 			ICharPredicate p1 = getCharRanges(characters.ranges());
 			ICharPredicate p2 = getCharPredicate(characters.excludechars());
@@ -112,9 +117,160 @@ public class Parser {
 				}
 			}
 			TokenFactory tf = new TFCharacters(result);
-			return tf;			
+			return tf;						
 		}
-		return null;
+		
+		public TokenFactory add(Field f) throws ClassNotFoundException, IllegalAccessException, InstantiationException {
+			String name = f.getName();
+
+			Choice choice = f.getAnnotation(Choice.class);
+			if (choice != null) {
+				return this.addChoice(name, choice);
+			}			
+			Sequence sequence = f.getAnnotation(Sequence.class);
+			if (sequence != null) {
+				return this.addSequence(name, sequence);
+			}			
+			Description description = f.getAnnotation(Description.class);
+			if (description != null) {
+				return this.addDescription(name, description);
+			}			
+			List list = f.getAnnotation(List.class);
+			if (list != null) {
+				return this.addList(name, list);
+			}			
+			CChoice cchoice = f.getAnnotation(CChoice.class);
+			if (cchoice != null) {
+				return this.addCChoice(name, cchoice);
+			}		
+			Characters characters = f.getAnnotation(Characters.class);
+			if (characters != null) {
+				return this.addCharacters(name, characters);
+			}
+			return null;
+		}
+		
+		public <T> void add(T target) throws ClassNotFoundException, IllegalAccessException, InstantiationException {
+			Class<?> cls = target.getClass();
+			while (! cls.equals(Object.class)) {
+				for (Field f : cls.getDeclaredFields()) {
+					if (TokenFactory.class.isAssignableFrom(f.getType())) {
+						String name = f.getName();
+						TokenFactory already = this.symbols.get(name);
+						if (already == null) {					
+							TokenFactory value = (TokenFactory) f.get(target);
+							if (value == null) {
+								value = this.add(f);
+								if (value != null) {
+									f.set(target, value);
+								} else {
+									this.otherSymbols.put(name, f);
+								}
+							}
+							if (value != null) {
+								this.symbols.put(name, value);
+							}
+						} else {
+							f.set(target, already);						
+						}
+					}
+				}
+				cls = cls.getSuperclass();
+			}			
+		}
+		
+		public <T> void updateEquivalents(T target) throws IllegalAccessException {
+			for (String name : this.otherSymbols.keySet()) {			
+				Field f = this.otherSymbols.get(name);
+				Equivalent annot = f.getAnnotation(Equivalent.class);
+				if (annot != null) {
+					String source = annot.value();
+					TokenFactory sourceFactory = this.symbols.get(source);
+					f.set(target, sourceFactory);
+					this.symbols.put(name, sourceFactory);
+				}			
+			}
+		}
+
+		public void updateChoices() {		
+			for (Triple<TFChoiceBasic, Choice> p : this.choices) {
+				TokenFactory[] fs = getFactories(this.symbols, p.annotation.value());
+				p.factory.setFactories(fs);
+			}
+		}
+		
+		public void updateChoicesOnChar0th() {
+			for (Triple<TFChoiceOnChar0th, CChoice> p : this.choice0ths) {
+				TokenFactory[] fs = getFactories(this.symbols, p.annotation.value());
+				ICharPredicate[] ps = getPredicates(p.annotation.preds());
+				p.factory.setChoices(ps, fs);
+				String dcode = p.annotation.def();
+				if (dcode.length() > 0) {
+					TokenFactory df = this.symbols.get(dcode);
+					p.factory.setDefault(df);
+				}
+			}
+		}
+		
+		public void updateChoicesOnChar1st() {
+			for (Triple<TFChoiceOnChar1st, CChoice> p : this.choice1sts) {
+				TokenFactory[] fs = getFactories(this.symbols, p.annotation.value());
+				ICharPredicate[] ps = getPredicates(p.annotation.preds());
+				p.factory.setLeadingChar(p.annotation.lead().charAt(0));
+				p.factory.setChoices(ps, fs);
+				String dcode = p.annotation.def();
+				if (dcode.length() > 0) {
+					TokenFactory df = this.symbols.get(dcode);
+					p.factory.setDefault(df);
+				}
+			}
+		}
+		
+		public void updateSequences(Map<String, TokenAdapter> tas) {
+			for (Triple<TFSequenceStatic, Sequence> p : this.sequences) {
+				TokenFactory[] fs = getFactories(this.symbols, p.annotation.value());
+				p.factory.setFactories(fs);
+				boolean[] required = getRequiredFlags(p.annotation.required(), fs.length);
+				p.factory.setRequiredFlags(required);			
+				TokenAdapter adapter = tas.get(p.name);
+				if (adapter != null) {
+					p.factory.setTokenAdapter(adapter);					
+				}
+			}
+		}
+	
+		public void updateLists() {
+			for (Triple<TFDelimitedList, List> p : this.lists) {
+				TokenFactory f = this.symbols.get(p.annotation.value());
+				p.factory.setElementFactory(f);
+				String delim = p.annotation.delim();
+				if ((delim != null) && (delim.length() > 0)) {
+					TokenFactory d = this.symbols.get(delim);
+					p.factory.setDelimiter(d);
+				}
+				String left = p.annotation.left();
+				if (left.length() > 0) {
+					TokenFactory l = this.symbols.get(left);
+					p.factory.setLeft(l);
+				}
+				String right = p.annotation.right();
+				if (right.length() > 0) {
+					TokenFactory r = this.symbols.get(right);
+					p.factory.setRight(r);
+				}
+				p.factory.setAllowEmpty(p.annotation.empty());
+				p.factory.setAllowNone(p.annotation.none());
+				p.factory.setAddError(p.annotation.adderror());
+			}	
+		}
+		
+		public void update(Map<String, TokenAdapter> tas) {
+			this.updateChoices();
+			this.updateChoicesOnChar0th();
+			this.updateChoicesOnChar1st();
+			this.updateSequences(tas);
+			this.updateLists();
+		}		
 	}
 	
 	private static ICharPredicate getCharPredicate(char[] chs) {
@@ -141,7 +297,6 @@ public class Parser {
 		}
 		return result;
 	}
-	
 	
 	private static TokenFactory[] getFactories(Map<String, TokenFactory> map, String[] names) {
 		int n = names.length;
@@ -190,50 +345,11 @@ public class Parser {
 		return result;
 	}
 	
-	private static <T> void assignEquivalents(T target, Map<String, Field> lazySymbols, Store store) throws IllegalAccessException {
-		for (String name : lazySymbols.keySet()) {			
-			Field f = lazySymbols.get(name);
-			Equivalent annot = f.getAnnotation(Equivalent.class);
-			if (annot != null) {
-				String source = annot.value();
-				TokenFactory sourceFactory = store.symbols.get(source);
-				f.set(target, sourceFactory);
-				store.symbols.put(name, sourceFactory);
-			}
-			
-		}
-	}
 	
 	private static <T> Store getStore(T target, Class<T> cls) throws IllegalAccessException, InstantiationException, ClassNotFoundException {
-		Class<?> loopCls = cls;
-		Map<String, Field> lazySymbols = new HashMap<String, Field>();
 		Store store = new Store();
-		while (! loopCls.equals(Object.class)) {
-			for (Field f : loopCls.getDeclaredFields()) {
-				if (TokenFactory.class.isAssignableFrom(f.getType())) {
-					String name = f.getName();
-					TokenFactory already = store.symbols.get(name);
-					if (already == null) {					
-						TokenFactory value = (TokenFactory) f.get(target);
-						if (value == null) {
-							value = newTokenFactory(f, store);
-							if (value != null) {
-								f.set(target, value);
-							} else {
-								lazySymbols.put(name, f);
-							}
-						}
-						if (value != null) {
-							store.symbols.put(name, value);
-						}
-					} else {
-						f.set(target, already);						
-					}
-				}
-			}
-			loopCls = loopCls.getSuperclass();
-		}
-		assignEquivalents(target, lazySymbols, store);
+		store.add(target);
+		store.updateEquivalents(target);
 		return store;
 	}
 	
@@ -256,67 +372,19 @@ public class Parser {
 		return result;
 	}
 	
-	public static <T> T parse(Class<T> cls) throws IllegalAccessException, InstantiationException, ClassNotFoundException {
-		T target = cls.newInstance();
-		Store store = getStore(target, cls);
-		Map<String, TokenAdapter> tas = getAdapters(cls);
-		for (Triple<TFChoiceBasic, Choice> p : store.choices) {
-			TokenFactory[] fs = getFactories(store.symbols, p.annotation.value());
-			p.factory.setFactories(fs);
+	public <T> T parse(Class<T> cls) throws ParseException {
+		try {
+			T target = cls.newInstance();
+			Store store = getStore(target, cls);
+			Map<String, TokenAdapter> tas = getAdapters(cls);
+			store.update(tas);
+			return target;
+		} catch (IllegalAccessException iae) {
+			throw new ParseException(iae);
+		} catch (InstantiationException ine) {
+			throw new ParseException(ine);
+		} catch (ClassNotFoundException cnf) {
+			throw new ParseException(cnf);
 		}
-		for (Triple<TFChoiceOnChar0th, CChoice> p : store.choice0ths) {
-			TokenFactory[] fs = getFactories(store.symbols, p.annotation.value());
-			ICharPredicate[] ps = getPredicates(p.annotation.preds());
-			p.factory.setChoices(ps, fs);
-			String dcode = p.annotation.def();
-			if (dcode.length() > 0) {
-				TokenFactory df = store.symbols.get(dcode);
-				p.factory.setDefault(df);
-			}
-		}
-		for (Triple<TFChoiceOnChar1st, CChoice> p : store.choice1sts) {
-			TokenFactory[] fs = getFactories(store.symbols, p.annotation.value());
-			ICharPredicate[] ps = getPredicates(p.annotation.preds());
-			p.factory.setLeadingChar(p.annotation.lead().charAt(0));
-			p.factory.setChoices(ps, fs);
-			String dcode = p.annotation.def();
-			if (dcode.length() > 0) {
-				TokenFactory df = store.symbols.get(dcode);
-				p.factory.setDefault(df);
-			}
-		}
-		for (Triple<TFSequenceStatic, Sequence> p : store.sequences) {
-			TokenFactory[] fs = getFactories(store.symbols, p.annotation.value());
-			p.factory.setFactories(fs);
-			boolean[] required = getRequiredFlags(p.annotation.required(), fs.length);
-			p.factory.setRequiredFlags(required);			
-			TokenAdapter adapter = tas.get(p.name);
-			if (adapter != null) {
-				p.factory.setTokenAdapter(adapter);					
-			}
-		}
-		for (Triple<TFDelimitedList, List> p : store.lists) {
-			TokenFactory f = store.symbols.get(p.annotation.value());
-			p.factory.setElementFactory(f);
-			String delim = p.annotation.delim();
-			if ((delim != null) && (delim.length() > 0)) {
-				TokenFactory d = store.symbols.get(delim);
-				p.factory.setDelimiter(d);
-			}
-			String left = p.annotation.left();
-			if (left.length() > 0) {
-				TokenFactory l = store.symbols.get(left);
-				p.factory.setLeft(l);
-			}
-			String right = p.annotation.right();
-			if (right.length() > 0) {
-				TokenFactory r = store.symbols.get(right);
-				p.factory.setRight(r);
-			}
-			p.factory.setAllowEmpty(p.annotation.empty());
-			p.factory.setAllowNone(p.annotation.none());
-			p.factory.setAddError(p.annotation.adderror());
-		}
-		return target;
 	}
 }

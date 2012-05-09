@@ -749,17 +749,18 @@ public class MTFSupply {
 		
 	public static MTFSupply getInstance(MVersion version) {
 		try {
+			Parser parser = new Parser();
 			switch (version) {
 				case CACHE: {
 					if (CACHE_SUPPLY == null) {
-						CACHE_SUPPLY = Parser.parse(CacheSupply.class);
+						CACHE_SUPPLY = parser.parse(CacheSupply.class);
 						CACHE_SUPPLY.initialize();
 					}
 					return CACHE_SUPPLY;
 				}
 				case ANSI_STD_95: {
 					if (STD_95_SUPPLY == null) {
-						STD_95_SUPPLY = Parser.parse(MTFSupply.class);
+						STD_95_SUPPLY = parser.parse(MTFSupply.class);
 						STD_95_SUPPLY.initialize();
 					}
 					return STD_95_SUPPLY;
