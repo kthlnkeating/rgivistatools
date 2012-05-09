@@ -1,9 +1,9 @@
 package com.raygroupintl.m.token;
 
-import com.raygroupintl.bnf.TBasic;
+import com.raygroupintl.bnf.TCharacters;
 
 
-public class TComment extends TBasic {
+public class TComment extends TCharacters {
 	public TComment(String value) {
 		super(value);
 	}

@@ -2,7 +2,7 @@ package com.raygroupintl.bnf;
 
 
 public final class TFDelimitedList implements TokenFactory {
-	private static class DLAdapter implements TokenAdapter {
+	private static class DLAdapter implements SequenceAdapter {
 		@Override
 		public Token convert(String line, int fromIndex, Token[] tokens) {
 			if (tokens[1] == null) {

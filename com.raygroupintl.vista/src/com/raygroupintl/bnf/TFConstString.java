@@ -33,7 +33,7 @@ public class TFConstString implements TokenFactory {
 	public Token tokenize(String line, int fromIndex) {
 		String result = this.getMatched(line, fromIndex);
 		if (result != null) {
-			return new TBasic(result);
+			return new TCharacters(result);
 		} else {
 			return null;
 		}

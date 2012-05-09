@@ -1,8 +1,8 @@
 package com.raygroupintl.m.token;
 
-import com.raygroupintl.bnf.TBasic;
+import com.raygroupintl.bnf.TCharacters;
 
-public class TStringLiteral extends TBasic {
+public class TStringLiteral extends TCharacters {
 	public TStringLiteral(String value) {
 		super(value);
 	}

@@ -1,4 +1,4 @@
-package com.raygroupintl.bnf.test;
+package com.raygroupintl.bnf;
 
 import com.raygroupintl.bnf.TArray;
 import com.raygroupintl.bnf.Token;

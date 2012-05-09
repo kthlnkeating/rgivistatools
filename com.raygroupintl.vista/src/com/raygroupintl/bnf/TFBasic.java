@@ -5,7 +5,7 @@ public abstract class TFBasic implements TokenFactory {
 	protected abstract boolean stopOn(char ch);
 	
 	protected Token getToken(String line) {
-		return new TBasic(line);
+		return new TCharacters(line);
 	}
 	
 	@Override

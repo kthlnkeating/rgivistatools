@@ -1,12 +1,14 @@
 package com.raygroupintl.bnf.annotation;
 
 import java.lang.annotation.Annotation;
+import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
 
+import com.raygroupintl.bnf.Token;
 import com.raygroupintl.bnf.TokenFactory;
 import com.raygroupintl.bnf.TFCharacters;
 import com.raygroupintl.bnf.TFChoiceBasic;
@@ -14,7 +16,7 @@ import com.raygroupintl.bnf.TFChoiceOnChar0th;
 import com.raygroupintl.bnf.TFChoiceOnChar1st;
 import com.raygroupintl.bnf.TFDelimitedList;
 import com.raygroupintl.bnf.TFSequenceStatic;
-import com.raygroupintl.bnf.TokenAdapter;
+import com.raygroupintl.bnf.SequenceAdapter;
 import com.raygroupintl.fnds.ICharPredicate;
 import com.raygroupintl.m.struct.IdentifierStartPredicate;
 import com.raygroupintl.struct.AndPredicate;
@@ -47,6 +49,8 @@ public class Parser {
 	}
 	
 	private static class Store {
+		private static DescriptionSpec descriptionSpec;
+		
 		public Map<String, TokenFactory> symbols = new HashMap<String, TokenFactory>();
 		
 		private java.util.List<Triple<TFChoiceBasic, Choice>> choices  = new ArrayList<Triple<TFChoiceBasic, Choice>>();
@@ -63,24 +67,43 @@ public class Parser {
 			return value;			
 		}
 		
-		private TokenFactory addSequence(String name, Sequence sequence, Adapter adapter)  throws IllegalAccessException, InstantiationException {
-			TFSequenceStatic value = new TFSequenceStatic();
+		private void updateAdapter(TFSequenceStatic token, Field f)  throws IllegalAccessException, InstantiationException, NoSuchMethodException {
+			Adapter adapter = f.getAnnotation(Adapter.class);
 			if (adapter != null) {
 				Class<?> cls = adapter.value();			
-				TokenAdapter ta = (TokenAdapter) cls.newInstance();
-				value.setTokenAdapter(ta);
+				SequenceAdapter ta = (SequenceAdapter) cls.newInstance();
+				token.setTokenAdapter(ta);
+				return;
+			}
+			TokenType tokenType = f.getAnnotation(TokenType.class);
+			if (tokenType != null) {
+				Class<? extends Token> tokenCls = tokenType.value();
+				final Constructor<? extends Token> constructor = tokenCls.getConstructor(Token[].class);
+				SequenceAdapter ta = new SequenceAdapter() {					
+					@Override
+					public Token convert(String line, int fromIndex, Token[] tokens) {
+						try {
+							return (Token) constructor.newInstance((Object) tokens);
+						} catch (Exception e) {
+							return null;
+						}
+					}
+				};
+				token.setTokenAdapter(ta);
+				return;
 			}			
+		}
+		
+		private TokenFactory addSequence(String name, Sequence sequence, Field f) throws IllegalAccessException, InstantiationException, NoSuchMethodException {
+			TFSequenceStatic value = new TFSequenceStatic();
+			this.updateAdapter(value, f);
 			this.sequences.add(new Triple<TFSequenceStatic, Sequence>(name, value, sequence));
 			return value;			
 		}
 		
-		private TokenFactory addDescription(String name, Description description, Adapter adapter)  throws IllegalAccessException, InstantiationException {
+		private TokenFactory addDescription(String name, Description description, Field f)  throws IllegalAccessException, InstantiationException, NoSuchMethodException {
 			TFSequenceStatic value = new TFSequenceStatic();
-			if (adapter != null) {
-				Class<?> cls = adapter.value();			
-				TokenAdapter ta = (TokenAdapter) cls.newInstance();
-				value.setTokenAdapter(ta);
-			}			
+			this.updateAdapter(value, f);
 			this.descriptions.add(new Triple<TFSequenceStatic, Description>(name, value, description));
 			return value;		
 		}
@@ -130,10 +153,8 @@ public class Parser {
 			return tf;						
 		}
 		
-		private TokenFactory add(Field f) throws ClassNotFoundException, IllegalAccessException, InstantiationException {
+		private TokenFactory add(Field f) throws ClassNotFoundException, IllegalAccessException, InstantiationException, NoSuchMethodException {
 			String name = f.getName();
-			
-			Adapter adapter = f.getAnnotation(Adapter.class);
 			
 			Choice choice = f.getAnnotation(Choice.class);
 			if (choice != null) {
@@ -141,11 +162,11 @@ public class Parser {
 			}			
 			Sequence sequence = f.getAnnotation(Sequence.class);
 			if (sequence != null) {
-				return this.addSequence(name, sequence, adapter);
+				return this.addSequence(name, sequence, f);
 			}			
 			Description description = f.getAnnotation(Description.class);
 			if (description != null) {
-				return this.addDescription(name, description, adapter);
+				return this.addDescription(name, description, f);
 			}			
 			List list = f.getAnnotation(List.class);
 			if (list != null) {
@@ -162,7 +183,7 @@ public class Parser {
 			return null;
 		}
 		
-		public <T> void add(T target) throws ClassNotFoundException, IllegalAccessException, InstantiationException {
+		public <T> void add(T target) throws ClassNotFoundException, IllegalAccessException, InstantiationException, NoSuchMethodException {
 			Class<?> cls = target.getClass();
 			while (! cls.equals(Object.class)) {
 				for (Field f : cls.getDeclaredFields()) {
@@ -247,6 +268,19 @@ public class Parser {
 			}
 		}
 	
+		private void updateDescription() throws ParseException {
+			if (descriptionSpec == null) {
+				Parser parser = new Parser();
+				descriptionSpec = parser.parse(DescriptionSpec.class);
+			}
+			for (Triple<TFSequenceStatic, Description> p : this.descriptions) {
+				//TokenFactory[] fs = getFactories(this.symbols, p.annotation.value());
+				//p.factory.setFactories(fs);
+				//boolean[] required = getRequiredFlags(p.annotation.required(), fs.length);
+				//p.factory.setRequiredFlags(required);			
+			}
+		}
+
 		private void updateLists() {
 			for (Triple<TFDelimitedList, List> p : this.lists) {
 				TokenFactory f = this.symbols.get(p.annotation.value());
@@ -367,6 +401,8 @@ public class Parser {
 			throw new ParseException(ine);
 		} catch (ClassNotFoundException cnf) {
 			throw new ParseException(cnf);
+		} catch (NoSuchMethodException nsm) {
+			throw new ParseException(nsm);			
 		}
 	}
 }

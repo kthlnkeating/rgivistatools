@@ -1,4 +1,4 @@
-package com.raygroupintl.bnf.test;
+package com.raygroupintl.bnf;
 
 import com.raygroupintl.bnf.TokenFactory;
 import com.raygroupintl.bnf.annotation.Characters;

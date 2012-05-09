@@ -3,7 +3,7 @@ package com.raygroupintl.bnf.annotation;
 import com.raygroupintl.bnf.TFConstChar;
 import com.raygroupintl.bnf.TokenFactory;
 
-public class DescriptionSpecification {
+public class DescriptionSpec {
 	public TokenFactory comma = new TFConstChar(',');
 	
 	public TokenFactory lpar = new TFConstChar('(');
@@ -12,6 +12,7 @@ public class DescriptionSpecification {
 	public TokenFactory lsqr = new TFConstChar('[');
 	public TokenFactory rsqr = new TFConstChar(']');
 	
+	@TokenType(TSymbol.class)
 	@Characters(ranges={'a', 'z'})
 	public TokenFactory symbol; 
 
@@ -31,14 +32,17 @@ public class DescriptionSpecification {
 	@Sequence(value={"sp", "comma", "sp"}, required="oro")
 	public TokenFactory delimiter;
 	
+	@TokenType(TOptionalSymbols.class)
 	@List(value="anysymbols", delim="delimiter", left="openoptional", right="closeoptional")
 	public TokenFactory optionalsymbols; 
+	@TokenType(TRequiredSymbols.class)
 	@List(value="anysymbols", delim="delimiter", left="openrequired", right="closerequired")
 	public TokenFactory requiredsymbols; 
 	
 	@Choice({"symbol", "optionalsymbols", "requiredsymbols"})
 	public TokenFactory anysymbols;
 	
+	@TokenType(TDescription.class)
 	@List(value="anysymbols", delim="delimiter")
 	public TokenFactory description;
 }

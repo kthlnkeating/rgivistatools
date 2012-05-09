@@ -1,4 +1,4 @@
-package com.raygroupintl.bnf.test;
+package com.raygroupintl.bnf;
 
 import static org.junit.Assert.*;
 import junit.framework.Assert;

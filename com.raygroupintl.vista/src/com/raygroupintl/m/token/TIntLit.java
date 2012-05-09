@@ -2,10 +2,10 @@ package com.raygroupintl.m.token;
 
 import com.raygroupintl.bnf.Token;
 import com.raygroupintl.bnf.TokenFactory;
-import com.raygroupintl.bnf.TBasic;
+import com.raygroupintl.bnf.TCharacters;
 import com.raygroupintl.bnf.TFBasic;
 
-public class TIntLit extends TBasic {
+public class TIntLit extends TCharacters {
 	private TIntLit(String value) {
 		super(value);
 	}

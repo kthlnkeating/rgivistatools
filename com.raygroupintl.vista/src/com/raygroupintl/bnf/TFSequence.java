@@ -5,7 +5,7 @@ public abstract class TFSequence implements TokenFactory {
 		CONTINUE, BREAK, NULL_RESULT
 	}
 
-	private TokenAdapter adapter;
+	private SequenceAdapter adapter;
 
 	public TFSequence() {
 		super();
@@ -15,7 +15,7 @@ public abstract class TFSequence implements TokenFactory {
 
 	protected abstract int getExpectedTokenCount();
 
-	public void setTokenAdapter(TokenAdapter adapter) {
+	public void setTokenAdapter(SequenceAdapter adapter) {
 		this.adapter = adapter;
 	}
 

@@ -12,7 +12,7 @@ import com.raygroupintl.bnf.TFEmpty;
 import com.raygroupintl.bnf.TFEmptyVerified;
 import com.raygroupintl.bnf.TFSyntaxError;
 import com.raygroupintl.bnf.TList;
-import com.raygroupintl.bnf.TokenAdapter;
+import com.raygroupintl.bnf.SequenceAdapter;
 import com.raygroupintl.bnf.annotation.Adapter;
 import com.raygroupintl.bnf.annotation.CChoice;
 import com.raygroupintl.bnf.annotation.Characters;
@@ -24,51 +24,51 @@ import com.raygroupintl.bnf.annotation.List;
 import com.raygroupintl.vista.struct.MError;
 
 public class MTFSupply {
-	public static class IndirectionAdapter implements TokenAdapter {
+	public static class IndirectionAdapter implements SequenceAdapter {
 		@Override
 		public Token convert(String line, int fromIndex,Token[] tokens) {
 			return new TIndirection(tokens);
 		}		
 	}
-	public static class LvnAdapter implements TokenAdapter {
+	public static class LvnAdapter implements SequenceAdapter {
 		@Override
 		public Token convert(String line, int fromIndex,Token[] tokens) {
 			return new TLocal(tokens);
 		}		
 	}
-	public static class GvnAdapter implements TokenAdapter {
+	public static class GvnAdapter implements SequenceAdapter {
 		@Override
 		public Token convert(String line, int fromIndex,Token[] tokens) {
 			return new TGlobalNamed(tokens);
 		}
 	}
-	public static class GvnNakedAdapter implements TokenAdapter {
+	public static class GvnNakedAdapter implements SequenceAdapter {
 		@Override
 		public Token convert(String line, int fromIndex,Token[] tokens) {
 			return new TGlobalNaked(tokens);
 		}
 	}
-	public static class ActualListAdapter implements TokenAdapter {
+	public static class ActualListAdapter implements SequenceAdapter {
 		@Override
 		public Token convert(String line, int fromIndex,Token[] tokens) {
 			TList list = (tokens[1] == null) ? new TList() : (TList) tokens[1];
 			return new TActualList(list);
 		}
 	}
-	public static class NumLitAdapter implements TokenAdapter {
+	public static class NumLitAdapter implements SequenceAdapter {
 		@Override
 		public Token convert(String line, int fromIndex,Token[] tokens) {
 			String value = (new TArray(tokens)).getStringValue();
 			return new TNumLit(value);
 		}
 	}
-	public static class LabelRefAdapter implements TokenAdapter {
+	public static class LabelRefAdapter implements SequenceAdapter {
 		@Override
 		public Token convert(String line, int fromIndex,Token[] tokens) {
 			return new TLabelRef(tokens);
 		}
 	}
-	public static class LineAdapter implements TokenAdapter {
+	public static class LineAdapter implements SequenceAdapter {
 		@Override
 		public Token convert(String line, int fromIndex,Token[] tokens) {
 			return new TLine(tokens);
@@ -645,13 +645,13 @@ public class MTFSupply {
 	
 	
 	public static class CacheSupply extends MTFSupply {
-		public static class ObjTailAdapter implements TokenAdapter {
+		public static class ObjTailAdapter implements SequenceAdapter {
 			@Override
 			public Token convert(String line, int fromIndex,Token[] tokens) {					
 				return new TObjectTail(tokens);
 			}
 		}
-		public static class LvnAdapter implements TokenAdapter {
+		public static class LvnAdapter implements SequenceAdapter {
 			@Override
 			public Token convert(String line, int fromIndex,Token[] tokens) {
 				if ((tokens[1] != null) && (tokens[1] instanceof TObjectTail)) {					

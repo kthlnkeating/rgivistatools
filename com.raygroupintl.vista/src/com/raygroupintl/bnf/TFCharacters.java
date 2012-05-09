@@ -10,7 +10,7 @@ public class TFCharacters implements TokenFactory {
 	}
 		
 	protected Token getToken(String line) {
-		return new TBasic(line);
+		return new TCharacters(line);
 	}
 	
 	@Override

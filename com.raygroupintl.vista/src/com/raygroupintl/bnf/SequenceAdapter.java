@@ -16,7 +16,6 @@
 
 package com.raygroupintl.bnf;
 
-
-public interface TokenAdapter {
+public interface SequenceAdapter {
 	Token convert(String line, int fromIndex, Token[] tokens);
 }

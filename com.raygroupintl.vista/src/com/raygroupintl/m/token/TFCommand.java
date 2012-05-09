@@ -7,7 +7,7 @@ import com.raygroupintl.bnf.TFSequence;
 import com.raygroupintl.bnf.Token;
 import com.raygroupintl.bnf.TokenFactory;
 import com.raygroupintl.bnf.TArray;
-import com.raygroupintl.bnf.TBasic;
+import com.raygroupintl.bnf.TCharacters;
 import com.raygroupintl.bnf.TEmpty;
 import com.raygroupintl.bnf.TFBasic;
 import com.raygroupintl.bnf.TFConstChar;
@@ -32,7 +32,7 @@ public class TFCommand extends TFSequence {
 		
 		@Override
 		public void beautify() {
-			TBasic n = (TBasic) this.get(0);
+			TCharacters n = (TCharacters) this.get(0);
 			String newName = this.getFullName();
 			n.setValue(newName);
 			super.beautify();
@@ -58,7 +58,7 @@ public class TFCommand extends TFSequence {
 				++index;
 			}
 			if (index > fromIndex) {
-				return new TBasic(line.substring(fromIndex, index));
+				return new TCharacters(line.substring(fromIndex, index));
 			} else {
 				return new TEmpty();
 			}
@@ -67,7 +67,7 @@ public class TFCommand extends TFSequence {
 
 	private static final TFEmptyVerified TF_EMPTY = TFEmptyVerified.getInstance(' ');
 	
-	private static abstract class TCommandSpec extends TBasic {
+	private static abstract class TCommandSpec extends TCharacters {
 		private TokenFactory argumentFactory;
 		
 		public TCommandSpec(String value, TokenFactory argumentFactory) {
