@@ -6,7 +6,7 @@ import java.util.Map;
 import com.raygroupintl.bnf.Token;
 import com.raygroupintl.bnf.TokenFactory;
 
-public class TFOperator implements TokenFactory {
+public class TFOperator extends TokenFactory {
 	private static class OperatorBranch {
 		public Map<Character, OperatorBranch> nextBranch = new HashMap<Character, OperatorBranch>();
 		public boolean validEnd;

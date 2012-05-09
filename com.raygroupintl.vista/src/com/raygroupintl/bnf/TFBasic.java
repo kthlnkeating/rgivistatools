@@ -1,7 +1,7 @@
 package com.raygroupintl.bnf;
 
 
-public abstract class TFBasic implements TokenFactory {
+public abstract class TFBasic extends TokenFactory {
 	protected abstract boolean stopOn(char ch);
 	
 	protected Token getToken(String line) {

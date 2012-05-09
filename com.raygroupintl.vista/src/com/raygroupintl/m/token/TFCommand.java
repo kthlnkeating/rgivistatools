@@ -13,6 +13,7 @@ import com.raygroupintl.bnf.TFBasic;
 import com.raygroupintl.bnf.TFConstChar;
 import com.raygroupintl.bnf.TFEmptyVerified;
 import com.raygroupintl.bnf.TSyntaxError;
+import com.raygroupintl.bnf.TokenStore;
 import com.raygroupintl.vista.struct.MError;
 
 public class TFCommand extends TFSequence {
@@ -39,7 +40,7 @@ public class TFCommand extends TFSequence {
 		}			
 	}
 	
-	private static class TFGenericArgument implements TokenFactory {
+	private static class TFGenericArgument extends TokenFactory {
 		@Override
 		public Token tokenize(String line, int fromIndex) {
 			int endIndex = line.length();
@@ -884,7 +885,7 @@ public class TFCommand extends TFSequence {
 	}
 	
 	@Override
-	protected TokenFactory getTokenFactory(int i, Token[] foundTokens) {
+	protected TokenFactory getTokenFactory(int i, TokenStore foundTokens) {
 		switch (i) {
 			case 0:
 				return TFCommand.this.new TFCommandName();
@@ -893,7 +894,7 @@ public class TFCommand extends TFSequence {
 			case 2:
 				return TFConstChar.getInstance(' ');
 			case 3: {
-				TCommandSpec cmd = (TCommandSpec) foundTokens[0];
+				TCommandSpec cmd = (TCommandSpec) foundTokens.get(0);
 				TokenFactory f = cmd.getArgumentFactory();
 				return f;
 			}					
@@ -906,7 +907,7 @@ public class TFCommand extends TFSequence {
 	}	
 
 	@Override
-	protected ValidateResult validateNull(int seqIndex, int lineIndex, Token[] foundTokens) {
+	protected ValidateResult validateNull(int seqIndex, int lineIndex, TokenStore foundTokens) {
 		if (seqIndex == 0) {
 			return ValidateResult.NULL_RESULT;
 		} else {
@@ -915,12 +916,13 @@ public class TFCommand extends TFSequence {
 	}
 
 	@Override
-	public Token getToken(String line, int fromIndex, Token[] tokens) {
-		if (tokens[0] instanceof TCommandSpec) {
-			TCommandSpec spec = (TCommandSpec) tokens[0];
-			return spec.getToken(tokens);
+	public Token getToken(String line, int fromIndex, TokenStore tokens) {
+		Token token0 = tokens.get(0);
+		if (token0 instanceof TCommandSpec) {
+			TCommandSpec spec = (TCommandSpec) token0;
+			return spec.getToken(tokens.toArray());
 		} else {
-			return tokens[0];
+			return token0;
 		}
 	}
 

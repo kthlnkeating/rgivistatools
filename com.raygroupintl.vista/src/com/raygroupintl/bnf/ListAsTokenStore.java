@@ -16,11 +16,38 @@
 
 package com.raygroupintl.bnf;
 
-public abstract class TokenFactory {
-	public abstract Token tokenize(String line, int fromIndex) throws SyntaxErrorException;
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.List;
+
+public class ListAsTokenStore implements TokenStore {
+	private List<Token> list;
 	
-	public void extractTo(String line, int fromIndex, TokenStore store) throws SyntaxErrorException {
-		Token token = this.tokenize(line, fromIndex);
-		store.addToken(token);
+	@Override
+	public void addToken(Token token) {
+		if (this.list == null) {
+			this.list = new ArrayList<Token>();
+		}
+		this.list.add(token);
+	}
+
+	@Override
+	public Token[] toArray() {
+		return this.list.toArray(new Token[0]);
+	}
+	
+	@Override
+	public List<Token> toList() {
+		return this.list;
+	}
+	
+	@Override
+	public Iterator<Token> iterator() {
+		return this.list.iterator();
+	}
+	
+	@Override
+	public Token get(int index) {
+		return this.list.get(index);
 	}
 }

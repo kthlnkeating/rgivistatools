@@ -1,7 +1,7 @@
 package com.raygroupintl.bnf;
 
 
-public final class TFDelimitedList implements TokenFactory {
+public final class TFDelimitedList extends TokenFactory {
 	private static class DLAdapter implements SequenceAdapter {
 		@Override
 		public Token convert(Token[] tokens) {

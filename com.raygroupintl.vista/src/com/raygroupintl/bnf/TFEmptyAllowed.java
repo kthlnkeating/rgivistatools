@@ -2,7 +2,7 @@ package com.raygroupintl.bnf;
 
 import com.raygroupintl.bnf.TEmpty;
 
-public abstract class TFEmptyAllowed implements TokenFactory {
+public abstract class TFEmptyAllowed extends TokenFactory {
 	protected abstract TokenFactory getFactory();
 	
 	@Override

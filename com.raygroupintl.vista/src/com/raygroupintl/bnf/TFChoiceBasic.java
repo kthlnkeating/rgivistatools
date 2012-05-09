@@ -1,7 +1,7 @@
 package com.raygroupintl.bnf;
 
 
-public class TFChoiceBasic implements TokenFactory {
+public class TFChoiceBasic extends TokenFactory {
 	private TokenFactory[] factories = {};
 	
 	public TFChoiceBasic() {

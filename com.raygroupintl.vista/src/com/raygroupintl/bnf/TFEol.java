@@ -1,7 +1,7 @@
 package com.raygroupintl.bnf;
 
 
-public class TFEol implements TokenFactory {
+public class TFEol extends TokenFactory {
 	@Override
 	public Token tokenize(String line, int fromIndex) {
 		int endIndex = line.length();

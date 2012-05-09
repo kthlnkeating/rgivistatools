@@ -1,7 +1,7 @@
 package com.raygroupintl.bnf;
 
 
-public abstract class TFChar implements TokenFactory {
+public abstract class TFChar extends TokenFactory {
 	protected abstract boolean isValid(char ch);
 	
 	@Override

@@ -11,6 +11,7 @@ import com.raygroupintl.bnf.TokenFactory;
 import com.raygroupintl.bnf.TArray;
 import com.raygroupintl.bnf.TFSyntaxError;
 import com.raygroupintl.bnf.TPair;
+import com.raygroupintl.bnf.TokenStore;
 import com.raygroupintl.vista.struct.MError;
 import com.raygroupintl.vista.struct.MNameWithMnemonic;
 
@@ -142,8 +143,9 @@ public class TFIntrinsic extends TFSequence {
 		}
 	}
 	
-	private static String getFoundIntrinsicName(Token[] tokens) {
-		String name = ((tokens[0] instanceof TArray) ? (TArray) tokens[0] : (TPair) tokens[0]).get(1).getStringValue().toUpperCase();
+	private static String getFoundIntrinsicName(TokenStore tokens) {
+		Token token0 = tokens.get(0);
+		String name = ((token0 instanceof TArray) ? (TArray) token0 : (TPair)token0).get(1).getStringValue().toUpperCase();
 		return name;
 	}
 	
@@ -153,7 +155,7 @@ public class TFIntrinsic extends TFSequence {
 	}
 	
 	@Override
-	protected TokenFactory getTokenFactory(int i, Token[] foundTokens) {
+	protected TokenFactory getTokenFactory(int i, TokenStore foundTokens) {
 		switch (i) {
 			case 0: {
 				return TFIntrinsic.this.supply.intrinsicname;
@@ -179,7 +181,7 @@ public class TFIntrinsic extends TFSequence {
 	}	
 
 	@Override
-	protected ValidateResult validateNull(int seqIndex, int lineIndex, Token[] foundTokens) throws SyntaxErrorException{
+	protected ValidateResult validateNull(int seqIndex, int lineIndex, TokenStore foundTokens) throws SyntaxErrorException{
 		if (seqIndex == 0) {
 			return ValidateResult.NULL_RESULT;
 		} else if (seqIndex == 1) {
@@ -197,24 +199,24 @@ public class TFIntrinsic extends TFSequence {
 	}
 	
 	@Override
-	protected void validateEnd(int seqIndex, int lineIndex, Token[] foundTokens) throws SyntaxErrorException {
+	protected void validateEnd(int seqIndex, int lineIndex, TokenStore foundTokens) throws SyntaxErrorException {
 		if (seqIndex > 0) {
 			throw new SyntaxErrorException( MError.ERR_UNMATCHED_PARANTHESIS, lineIndex);
 		}
 	}
 	
 	@Override
-	protected Token getToken(String line, int fromIndex, Token[] foundTokens) {
-		TArray token0 = (TArray) foundTokens[0];
+	protected Token getToken(String line, int fromIndex, TokenStore foundTokens) {
+		TArray token0 = (TArray) foundTokens.get(0);
 		if (token0.get(2) == null) {		
 			TIdent name = (TIdent) token0.get(1);		
-			if (foundTokens[1] == null) {
+			if (foundTokens.get(1) == null) {
 				return TIntrinsicVariable.getInstance(name, this.variables.get(name.getStringValue().toUpperCase()));			
 			} else {
-				return TIntrinsicFunction.getInstance(name, new TInParantheses(foundTokens[2]), this.functions.get(name.getStringValue().toUpperCase()));
+				return TIntrinsicFunction.getInstance(name, new TInParantheses(foundTokens.get(2)), this.functions.get(name.getStringValue().toUpperCase()));
 			}
 		} else {
-			return new TArray(foundTokens);
+			return new TArray(foundTokens.toArray());
 		}
 	}
 }

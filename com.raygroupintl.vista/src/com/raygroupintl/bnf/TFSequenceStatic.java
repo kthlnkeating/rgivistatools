@@ -64,13 +64,13 @@ public final class TFSequenceStatic extends TFSequence {
 	}
 	
 	@Override
-	protected ValidateResult validateNull(int seqIndex, int lineIndex, Token[] foundTokens) throws SyntaxErrorException {
+	protected ValidateResult validateNull(int seqIndex, int lineIndex, TokenStore foundTokens) throws SyntaxErrorException {
 		if ((seqIndex < this.firstRequired) || (seqIndex > this.lastRequired)) {
 			return ValidateResult.CONTINUE;
 		}		
 		if (seqIndex == this.firstRequired) {
 			for (int i=this.lookAhead; i<seqIndex; ++i) {
-				if (foundTokens[i] != null) {
+				if (foundTokens.get(i) != null) {
 					throw new SyntaxErrorException(MError.ERR_GENERAL_SYNTAX, lineIndex);
 				}
 			}
@@ -84,14 +84,14 @@ public final class TFSequenceStatic extends TFSequence {
 	}
 	
 	@Override
-	protected void validateEnd(int seqIndex, int lineIndex, Token[] foundTokens) throws SyntaxErrorException {
+	protected void validateEnd(int seqIndex, int lineIndex, TokenStore foundTokens) throws SyntaxErrorException {
 		if (seqIndex < this.lastRequired) {
 			throw new SyntaxErrorException(MError.ERR_GENERAL_SYNTAX, lineIndex);
 		}
 	}
 	
 	@Override
-	protected Token getToken(String line, int fromIndex, Token[] foundTokens) {
+	protected Token getToken(String line, int fromIndex, TokenStore foundTokens) {
 		for (Token token : foundTokens) {
 			if (token != null) return super.getToken(line, fromIndex, foundTokens);
 		}
@@ -99,7 +99,7 @@ public final class TFSequenceStatic extends TFSequence {
 	}
 
 	@Override
-	protected TokenFactory getTokenFactory(int i, Token[] foundTokens) {
+	protected TokenFactory getTokenFactory(int i, TokenStore foundTokens) {
 		return this.factories[i];
 	}
 

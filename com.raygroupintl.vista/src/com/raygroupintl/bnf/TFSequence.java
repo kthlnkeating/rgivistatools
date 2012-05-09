@@ -1,6 +1,6 @@
 package com.raygroupintl.bnf;
 
-public abstract class TFSequence implements TokenFactory {
+public abstract class TFSequence extends TokenFactory {
 	public enum ValidateResult {
 		CONTINUE, BREAK, NULL_RESULT
 	}
@@ -11,7 +11,7 @@ public abstract class TFSequence implements TokenFactory {
 		super();
 	}
 
-	protected abstract TokenFactory getTokenFactory(int i, Token[] foundTokens);
+	protected abstract TokenFactory getTokenFactory(int i, TokenStore foundTokens);
 
 	protected abstract int getExpectedTokenCount();
 
@@ -19,24 +19,24 @@ public abstract class TFSequence implements TokenFactory {
 		this.adapter = adapter;
 	}
 
-	protected abstract ValidateResult validateNull(int seqIndex, int lineIndex, Token[] foundTokens) throws SyntaxErrorException;
+	protected abstract ValidateResult validateNull(int seqIndex, int lineIndex, TokenStore foundTokens) throws SyntaxErrorException;
 
-	protected ValidateResult validateNext(int seqIndex, int lineIndex, Token[] foundTokens, Token nextToken) throws SyntaxErrorException {
+	protected ValidateResult validateNext(int seqIndex, int lineIndex, TokenStore foundTokens, Token nextToken) throws SyntaxErrorException {
 		return ValidateResult.CONTINUE;
 	}
 
-	protected void validateEnd(int seqIndex, int lineIndex, Token[] foundTokens) throws SyntaxErrorException {		
+	protected void validateEnd(int seqIndex, int lineIndex, TokenStore foundTokens) throws SyntaxErrorException {		
 	}
 
-	protected Token getToken(String line, int fromIndex, Token[] foundTokens) {
+	protected Token getToken(String line, int fromIndex, TokenStore foundTokens) {
 		if (this.adapter == null) {
-			return new TArray(foundTokens);
+			return new TArray(foundTokens.toArray());
 		} else {
-			return this.adapter.convert(foundTokens);
+			return this.adapter.convert(foundTokens.toArray());
 		}
 	}
 
-	private ValidateResult validate(int seqIndex, int lineIndex, Token[] foundTokens, Token nextToken) throws SyntaxErrorException {
+	private ValidateResult validate(int seqIndex, int lineIndex, TokenStore foundTokens, Token nextToken) throws SyntaxErrorException {
 		if (nextToken == null) {
 			return this.validateNull(seqIndex, lineIndex, foundTokens);
 		} else {
@@ -50,7 +50,7 @@ public abstract class TFSequence implements TokenFactory {
 		if (fromIndex < endIndex) {
 			int index = fromIndex;
 			int factoryCount = this.getExpectedTokenCount();
-			Token[] foundTokens = new Token[factoryCount];
+			TokenStore foundTokens = new ArrayAsTokenStore(factoryCount);
 			for (int i=0; i<factoryCount; ++i) {
 				TokenFactory factory = this.getTokenFactory(i, foundTokens);
 				Token token = factory.tokenize(line, index);				
@@ -59,7 +59,7 @@ public abstract class TFSequence implements TokenFactory {
 				if (vr == ValidateResult.BREAK) break;
 				if (vr == ValidateResult.NULL_RESULT) return null;
 	
-				foundTokens[i] = token;
+				foundTokens.addToken(token);
 				if (token != null) {				
 					index += token.getStringSize();					
 					if ((index >= endIndex) && (i < factoryCount-1)) {
@@ -71,5 +71,9 @@ public abstract class TFSequence implements TokenFactory {
 			return this.getToken(line, fromIndex, foundTokens);
 		}		
 		return null;
+	}
+	
+	@Override
+	public void extractTo(String line, int fromIndex, TokenStore store) throws SyntaxErrorException {
 	}
 }

@@ -1,7 +1,7 @@
 package com.raygroupintl.bnf;
 
 
-public abstract class TFEmptyVerified implements TokenFactory {
+public abstract class TFEmptyVerified extends TokenFactory {
 	protected abstract boolean isExpected(char ch);
 		
 	@Override

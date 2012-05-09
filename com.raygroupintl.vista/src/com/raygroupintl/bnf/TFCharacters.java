@@ -18,7 +18,7 @@ package com.raygroupintl.bnf;
 
 import com.raygroupintl.charlib.Predicate;
 
-public class TFCharacters implements TokenFactory {
+public class TFCharacters extends TokenFactory {
 	private Predicate predicate;
 	private CharactersAdapter adapter;
 	

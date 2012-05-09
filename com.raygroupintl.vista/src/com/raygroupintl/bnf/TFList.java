@@ -3,8 +3,7 @@ package com.raygroupintl.bnf;
 import java.util.ArrayList;
 import java.util.List;
 
-
-public class TFList implements TokenFactory {
+public final class TFList extends TokenFactory {
 	private TokenFactory elementFactory;
 	private boolean addErrorToList;
 	
@@ -19,29 +18,18 @@ public class TFList implements TokenFactory {
 		this.elementFactory = elementFactory;
 	}
 		
-	protected TokenFactory getFactory() {
-		return null;
-	}
-
-	protected Token getToken(List<Token> list) {
-		return new TList(list);
-	}
-
-	protected Token getNullToken() {
-		return null;
-	}
-	
 	public void setAddErrorToList(boolean b) {
 		this.addErrorToList = b;
 	}
 	
+	protected Token getToken(List<Token> list) {
+		return new TList(list);
+	}
+
 	@Override
 	public Token tokenize(String line, int fromIndex) throws SyntaxErrorInListException {
 		int endIndex = line.length();
 		if (fromIndex < endIndex) {
-			if (this.elementFactory == null) {
-				this.elementFactory = this.getFactory();
-			}
 			int index = fromIndex;
 			List<Token> list = null;
 			while (index < endIndex) {
@@ -49,7 +37,7 @@ public class TFList implements TokenFactory {
 					Token token = this.elementFactory.tokenize(line, index);
 					if (token == null) {
 						if (list == null) {
-							return this.getNullToken();
+							return null;
 						} else {
 							return this.getToken(list);
 						}
@@ -78,7 +66,7 @@ public class TFList implements TokenFactory {
 		return null;
 	}
 	
-	public static TFList getInstance(TokenFactory elementFactory) {
-		return new TFList(elementFactory);
+	@Override
+	public void extractTo(String line, int fromIndex, TokenStore store) throws SyntaxErrorException {
 	}
 }

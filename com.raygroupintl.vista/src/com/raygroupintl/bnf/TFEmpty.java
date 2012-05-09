@@ -1,7 +1,7 @@
 package com.raygroupintl.bnf;
 
 
-public class TFEmpty implements TokenFactory {
+public class TFEmpty extends TokenFactory {
 	private TokenFactory expected;
 	
 	public TFEmpty() {		

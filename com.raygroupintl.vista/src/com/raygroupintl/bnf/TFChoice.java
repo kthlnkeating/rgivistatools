@@ -1,7 +1,7 @@
 package com.raygroupintl.bnf;
 
 
-public abstract class TFChoice implements TokenFactory {
+public abstract class TFChoice extends TokenFactory {
 	protected abstract TokenFactory getFactory(char ch);
 	
 	@Override

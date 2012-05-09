@@ -16,11 +16,6 @@
 
 package com.raygroupintl.bnf;
 
-public abstract class TokenFactory {
-	public abstract Token tokenize(String line, int fromIndex) throws SyntaxErrorException;
-	
-	public void extractTo(String line, int fromIndex, TokenStore store) throws SyntaxErrorException {
-		Token token = this.tokenize(line, fromIndex);
-		store.addToken(token);
-	}
+public interface CharactersAdapter {
+	Token convert(String value);
 }

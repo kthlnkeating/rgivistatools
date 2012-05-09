@@ -1,6 +1,6 @@
 package com.raygroupintl.bnf;
 
-public final class TFSyntaxError implements TokenFactory {
+public final class TFSyntaxError extends TokenFactory {
 	private int code;
 	
 	public TFSyntaxError(int code) {

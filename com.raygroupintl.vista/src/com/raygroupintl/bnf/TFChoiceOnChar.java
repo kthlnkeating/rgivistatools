@@ -2,7 +2,7 @@ package com.raygroupintl.bnf;
 
 import com.raygroupintl.charlib.Predicate;
 
-public abstract class TFChoiceOnChar implements TokenFactory {
+public abstract class TFChoiceOnChar extends TokenFactory {
 	private TokenFactory defaultFactory = null;
 	private Predicate[] predicates = {};
 	private TokenFactory[] factories = {};

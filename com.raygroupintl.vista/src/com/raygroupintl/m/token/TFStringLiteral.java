@@ -5,7 +5,7 @@ import com.raygroupintl.bnf.TokenFactory;
 import com.raygroupintl.bnf.TSyntaxError;
 import com.raygroupintl.vista.struct.MError;
 
-public class TFStringLiteral implements TokenFactory {
+public class TFStringLiteral extends TokenFactory {
 	@Override
 	public Token tokenize(String line, int fromIndex) {
 		int endIndex = line.length();

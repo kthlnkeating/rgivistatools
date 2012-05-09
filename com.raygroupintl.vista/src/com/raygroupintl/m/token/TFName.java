@@ -3,7 +3,7 @@ package com.raygroupintl.m.token;
 import com.raygroupintl.bnf.Token;
 import com.raygroupintl.bnf.TokenFactory;
 
-public class TFName implements TokenFactory {
+public class TFName extends TokenFactory {
 	@Override
 	public Token tokenize(String line, int fromIndex) {
 		int endIndex = line.length();

@@ -1,7 +1,7 @@
 package com.raygroupintl.bnf;
 
 
-public class TFConstString implements TokenFactory {
+public class TFConstString extends TokenFactory {
 	private String value;
 	private boolean ignoreCase;
 	
