@@ -63,14 +63,24 @@ public class Parser {
 			return value;			
 		}
 		
-		private TokenFactory addSequence(String name, Sequence sequence) {
+		private TokenFactory addSequence(String name, Sequence sequence, Adapter adapter)  throws IllegalAccessException, InstantiationException {
 			TFSequenceStatic value = new TFSequenceStatic();
+			if (adapter != null) {
+				Class<?> cls = adapter.value();			
+				TokenAdapter ta = (TokenAdapter) cls.newInstance();
+				value.setTokenAdapter(ta);
+			}			
 			this.sequences.add(new Triple<TFSequenceStatic, Sequence>(name, value, sequence));
 			return value;			
 		}
 		
-		private TokenFactory addDescription(String name, Description description) {
+		private TokenFactory addDescription(String name, Description description, Adapter adapter)  throws IllegalAccessException, InstantiationException {
 			TFSequenceStatic value = new TFSequenceStatic();
+			if (adapter != null) {
+				Class<?> cls = adapter.value();			
+				TokenAdapter ta = (TokenAdapter) cls.newInstance();
+				value.setTokenAdapter(ta);
+			}			
 			this.descriptions.add(new Triple<TFSequenceStatic, Description>(name, value, description));
 			return value;		
 		}
@@ -122,18 +132,20 @@ public class Parser {
 		
 		private TokenFactory add(Field f) throws ClassNotFoundException, IllegalAccessException, InstantiationException {
 			String name = f.getName();
-
+			
+			Adapter adapter = f.getAnnotation(Adapter.class);
+			
 			Choice choice = f.getAnnotation(Choice.class);
 			if (choice != null) {
 				return this.addChoice(name, choice);
 			}			
 			Sequence sequence = f.getAnnotation(Sequence.class);
 			if (sequence != null) {
-				return this.addSequence(name, sequence);
+				return this.addSequence(name, sequence, adapter);
 			}			
 			Description description = f.getAnnotation(Description.class);
 			if (description != null) {
-				return this.addDescription(name, description);
+				return this.addDescription(name, description, adapter);
 			}			
 			List list = f.getAnnotation(List.class);
 			if (list != null) {
@@ -226,16 +238,12 @@ public class Parser {
 			}
 		}
 		
-		private void updateSequences(Map<String, TokenAdapter> tas) {
+		private void updateSequences() {
 			for (Triple<TFSequenceStatic, Sequence> p : this.sequences) {
 				TokenFactory[] fs = getFactories(this.symbols, p.annotation.value());
 				p.factory.setFactories(fs);
 				boolean[] required = getRequiredFlags(p.annotation.required(), fs.length);
 				p.factory.setRequiredFlags(required);			
-				TokenAdapter adapter = tas.get(p.name);
-				if (adapter != null) {
-					p.factory.setTokenAdapter(adapter);					
-				}
 			}
 		}
 	
@@ -264,31 +272,11 @@ public class Parser {
 			}	
 		}
 		
-		private static <T> Map<String, TokenAdapter> getAdapters(Class<T> cls) throws IllegalAccessException, InstantiationException {
-			Map<String, TokenAdapter> result = new HashMap<String, TokenAdapter>();
-			Class<?> loopCls = cls;
-			while (! loopCls.equals(Object.class)) {
-				for (Class<?> c : loopCls.getDeclaredClasses()) {
-					Adapter adapter = c.getAnnotation(Adapter.class);
-					if (adapter != null) {			
-						String n = adapter.value();
-						if (! result.containsKey(n)) {
-							TokenAdapter ta = (TokenAdapter) c.newInstance();
-							result.put(n, ta);
-						}
-					}
-				}
-				loopCls = loopCls.getSuperclass();
-			}
-			return result;
-		}
-		
 		public void update(Class<?> cls)  throws IllegalAccessException, InstantiationException {
-			Map<String, TokenAdapter> tas = getAdapters(cls);
 			this.updateChoices();
 			this.updateChoicesOnChar0th();
 			this.updateChoicesOnChar1st();
-			this.updateSequences(tas);
+			this.updateSequences();
 			this.updateLists();
 		}		
 	}

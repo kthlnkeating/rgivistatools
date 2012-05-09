@@ -5,7 +5,7 @@ import java.lang.annotation.Retention;
 import java.lang.annotation.Target;
 
 @Retention(java.lang.annotation.RetentionPolicy.RUNTIME)
-@Target({ElementType.TYPE})
+@Target({ElementType.FIELD})
 public @interface Adapter {
-	public String value() default "";
+	public Class<?> value();
 }

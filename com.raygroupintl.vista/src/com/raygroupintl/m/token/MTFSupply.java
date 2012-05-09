@@ -24,35 +24,30 @@ import com.raygroupintl.bnf.annotation.List;
 import com.raygroupintl.vista.struct.MError;
 
 public class MTFSupply {
-	@Adapter("indirection")
 	public static class IndirectionAdapter implements TokenAdapter {
 		@Override
 		public Token convert(String line, int fromIndex,Token[] tokens) {
 			return new TIndirection(tokens);
 		}		
 	}
-	@Adapter("lvn")	
 	public static class LvnAdapter implements TokenAdapter {
 		@Override
 		public Token convert(String line, int fromIndex,Token[] tokens) {
 			return new TLocal(tokens);
 		}		
 	}
-	@Adapter("gvn")	
 	public static class GvnAdapter implements TokenAdapter {
 		@Override
 		public Token convert(String line, int fromIndex,Token[] tokens) {
 			return new TGlobalNamed(tokens);
 		}
 	}
-	@Adapter("gvnnaked")	
 	public static class GvnNakedAdapter implements TokenAdapter {
 		@Override
 		public Token convert(String line, int fromIndex,Token[] tokens) {
 			return new TGlobalNaked(tokens);
 		}
 	}
-	@Adapter("actuallist")	
 	public static class ActualListAdapter implements TokenAdapter {
 		@Override
 		public Token convert(String line, int fromIndex,Token[] tokens) {
@@ -60,7 +55,6 @@ public class MTFSupply {
 			return new TActualList(list);
 		}
 	}
-	@Adapter("numlit")	
 	public static class NumLitAdapter implements TokenAdapter {
 		@Override
 		public Token convert(String line, int fromIndex,Token[] tokens) {
@@ -68,14 +62,12 @@ public class MTFSupply {
 			return new TNumLit(value);
 		}
 	}
-	@Adapter("labelref")	
 	public static class LabelRefAdapter implements TokenAdapter {
 		@Override
 		public Token convert(String line, int fromIndex,Token[] tokens) {
 			return new TLabelRef(tokens);
 		}
 	}
-	@Adapter("line")	
 	public static class LineAdapter implements TokenAdapter {
 		@Override
 		public Token convert(String line, int fromIndex,Token[] tokens) {
@@ -149,6 +141,8 @@ public class MTFSupply {
 	
 	@Sequence(value={"caret", "environment", "name"}, required="ror")
 	public TokenFactory envroutine;
+	
+	@Adapter(LabelRefAdapter.class)
 	@Sequence(value={"name", "envroutine"})
 	public TokenFactory labelref;
 	
@@ -159,6 +153,8 @@ public class MTFSupply {
 	public TokenFactory mantista_1;
 	@Sequence(value={"intlit", "mantista_1"})
 	public TokenFactory mantista;
+	
+	@Adapter(NumLitAdapter.class)
 	@Sequence(value={"pm", "mantista", "exp"}, required="oro")
 	public TokenFactory numlit;
 		
@@ -201,6 +197,8 @@ public class MTFSupply {
 	public TokenFactory indirection_0;
 	@Sequence(value={"atlpar", "exprlist", "rpar"}, required="all")
 	public TokenFactory indirection_1;
+	
+	@Adapter(IndirectionAdapter.class)
 	@Sequence(value={"indirection_0", "indirection_1"}, required="ro")
 	public TokenFactory indirection;
 	
@@ -209,6 +207,8 @@ public class MTFSupply {
 	
 	@Sequence(value={"environment", "name", "exprlistinparan"}, required="oro")
 	public TokenFactory gvn_0;
+	
+	@Adapter(GvnAdapter.class)
 	@Sequence(value={"caret", "gvn_0"}, required="all")
 	public TokenFactory gvn;
 	
@@ -220,7 +220,8 @@ public class MTFSupply {
 	
 	@Sequence(value={"unaryop", "expratom"}, required="all")
 	public TokenFactory unaryexpritem;
-			
+	
+	@Adapter(GvnNakedAdapter.class)
 	@Sequence(value={"caret", "exprlistinparan"}, required="all")
 	public TokenFactory gvnnaked;
 	
@@ -251,6 +252,7 @@ public class MTFSupply {
 	@Choice({"glvn", "expritem"})
 	public TokenFactory expratom;
 
+	@Adapter(LvnAdapter.class)
 	@Sequence(value={"name", "exprlistinparan"}, required="ro")
 	public TokenFactory lvn;
 	
@@ -259,6 +261,8 @@ public class MTFSupply {
 	
 	@List(value="actual", delim="comma")
 	public TokenFactory actuallist_i;	
+
+	@Adapter(ActualListAdapter.class)
 	@Sequence(value={"lpar", "actuallist_i", "rpar"}, required="ror")
 	public TokenFactory actuallist;
 
@@ -493,6 +497,8 @@ public class MTFSupply {
 	public TokenFactory commandorcommentlist;
 	public TokenFactory ls = TFConstChars.getInstance(" \t");
 	public TokenFactory level = TFBasic.getInstance('.', ' ');
+	
+	@Adapter(LineAdapter.class)
 	@Sequence({"label", "lineformal", "ls", "level", "commandorcommentlist"})
 	public TokenFactory line;
 	
@@ -639,14 +645,12 @@ public class MTFSupply {
 	
 	
 	public static class CacheSupply extends MTFSupply {
-		@Adapter("lvn_objtail")
 		public static class ObjTailAdapter implements TokenAdapter {
 			@Override
 			public Token convert(String line, int fromIndex,Token[] tokens) {					
 				return new TObjectTail(tokens);
 			}
 		}
-		@Adapter("lvn")
 		public static class LvnAdapter implements TokenAdapter {
 			@Override
 			public Token convert(String line, int fromIndex,Token[] tokens) {
@@ -665,10 +669,15 @@ public class MTFSupply {
 		public TokenFactory lvn_objtail_ms;
 		@List("lvn_objtail_ms")
 		public TokenFactory lvn_objtail_m;
+		
+		@Adapter(ObjTailAdapter.class)
 		@Sequence(value={"lvn_objtail_m", "actuallist"}, required="ro")
 		public TokenFactory lvn_objtail;
+		
 		@Choice(value={"exprlistinparan", "lvn_objtail"})
 		public TokenFactory lvn_next;
+		
+		@Adapter(LvnAdapter.class)
 		@Sequence(value={"name", "lvn_next"}, required="ro")
 		public TokenFactory lvn;
 		
