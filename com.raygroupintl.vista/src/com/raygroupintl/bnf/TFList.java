@@ -1,6 +1,5 @@
 package com.raygroupintl.bnf;
 
-import java.util.ArrayList;
 import java.util.List;
 
 public final class TFList extends TokenFactory {
@@ -28,45 +27,42 @@ public final class TFList extends TokenFactory {
 
 	@Override
 	public Token tokenize(String line, int fromIndex) throws SyntaxErrorInListException {
+		ListAsTokenStore store = new ListAsTokenStore();		
+		this.extractTo(line, fromIndex, store);
+		if (store.get(0) == null) {
+			return null;
+		} else {
+			return this.getToken(store.toList());			
+		}
+	}
+	
+	public void extractTo(String line, int fromIndex, TokenStore store) throws SyntaxErrorInListException {
 		int endIndex = line.length();
 		if (fromIndex < endIndex) {
+			boolean added = false;
 			int index = fromIndex;
-			List<Token> list = null;
 			while (index < endIndex) {
 				try {
 					Token token = this.elementFactory.tokenize(line, index);
 					if (token == null) {
-						if (list == null) {
-							return null;
-						} else {
-							return this.getToken(list);
-						}
+						if (! added) store.addToken(null);
+						return;					
 					}
-					if (list == null) {
-						list = new ArrayList<Token>();
-					}
-					list.add(token);	
 					index += token.getStringSize();
+					store.addToken(token);	
+					added = true;
 				} catch (SyntaxErrorException se) {
 					if (this.addErrorToList) {
 						Token et = se.getAsToken(line, index);
-						if (list == null) {
-							list = new ArrayList<Token>();
-						}
-						list.add(et);
-						return new TList(list);
+						store.addToken(et);
+						return;
 					} else {
-						throw new SyntaxErrorInListException(se, list);
+						throw new SyntaxErrorInListException(se, store);
 					}
 				}
 			}
-			assert(index == endIndex);	
-			return this.getToken(list);
+			return;
 		}
-		return null;
-	}
-	
-	@Override
-	public void extractTo(String line, int fromIndex, TokenStore store) throws SyntaxErrorException {
+		store.addToken(null);
 	}
 }

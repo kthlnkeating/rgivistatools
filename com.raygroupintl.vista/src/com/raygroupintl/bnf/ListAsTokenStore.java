@@ -50,4 +50,9 @@ public class ListAsTokenStore implements TokenStore {
 	public Token get(int index) {
 		return this.list.get(index);
 	}
+
+	@Override
+	public boolean hasToken() {
+		return this.list != null;
+	}
 }

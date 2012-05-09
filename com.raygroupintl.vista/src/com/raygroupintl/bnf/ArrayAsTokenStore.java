@@ -56,4 +56,9 @@ public class ArrayAsTokenStore implements TokenStore {
 	public Token get(int index) {
 		return this.tokens[index];
 	}
+
+	@Override
+	public boolean hasToken() {
+		return this.index > 0;
+	}
 }

@@ -26,4 +26,6 @@ public interface TokenStore extends Iterable<Token> {
 	List<Token> toList();
 	
 	Token get(int index);
+	
+	boolean hasToken();
 }

@@ -72,8 +72,4 @@ public abstract class TFSequence extends TokenFactory {
 		}		
 		return null;
 	}
-	
-	@Override
-	public void extractTo(String line, int fromIndex, TokenStore store) throws SyntaxErrorException {
-	}
 }
