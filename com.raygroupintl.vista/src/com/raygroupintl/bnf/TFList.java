@@ -27,42 +27,35 @@ public final class TFList extends TokenFactory {
 
 	@Override
 	public Token tokenize(String line, int fromIndex) throws SyntaxErrorInListException {
-		ListAsTokenStore store = new ListAsTokenStore();		
-		this.extractTo(line, fromIndex, store);
-		if (store.get(0) == null) {
-			return null;
-		} else {
-			return this.getToken(store.toList());			
-		}
-	}
-	
-	public void extractTo(String line, int fromIndex, TokenStore store) throws SyntaxErrorInListException {
 		int endIndex = line.length();
 		if (fromIndex < endIndex) {
-			boolean added = false;
 			int index = fromIndex;
+			ListAsTokenStore list = new ListAsTokenStore();
 			while (index < endIndex) {
 				try {
 					Token token = this.elementFactory.tokenize(line, index);
 					if (token == null) {
-						if (! added) store.addToken(null);
-						return;					
+						if (list.hasToken()) {
+							return this.getToken(list.toList());
+						} else {
+							return null;
+						}
 					}
+					list.addToken(token);	
 					index += token.getStringSize();
-					store.addToken(token);	
-					added = true;
 				} catch (SyntaxErrorException se) {
 					if (this.addErrorToList) {
 						Token et = se.getAsToken(line, index);
-						store.addToken(et);
-						return;
+						list.addToken(et);
+						return this.getToken(list.toList());
 					} else {
-						throw new SyntaxErrorInListException(se, store);
+						throw new SyntaxErrorInListException(se, list);
 					}
 				}
 			}
-			return;
+			assert(index == endIndex);	
+			return this.getToken(list.toList());
 		}
-		store.addToken(null);
+		return null;
 	}
 }

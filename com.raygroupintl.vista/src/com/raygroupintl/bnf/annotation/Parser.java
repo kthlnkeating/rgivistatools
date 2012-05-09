@@ -9,6 +9,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import com.raygroupintl.bnf.CharactersAdapter;
+import com.raygroupintl.bnf.TFList;
 import com.raygroupintl.bnf.Token;
 import com.raygroupintl.bnf.TokenFactory;
 import com.raygroupintl.bnf.TFCharacters;
@@ -91,7 +92,8 @@ public class Parser {
 		private java.util.List<Triple<TFChoiceBasic, Choice>> choices  = new ArrayList<Triple<TFChoiceBasic, Choice>>();
 		private java.util.List<Triple<TFSequenceStatic, Sequence>> sequences  = new ArrayList<Triple<TFSequenceStatic, Sequence>>();
 		private java.util.List<Triple<TFSequenceStatic, Description>> descriptions  = new ArrayList<Triple<TFSequenceStatic, Description>>();
-		private java.util.List<Triple<TFDelimitedList, List>> lists  = new ArrayList<Triple<TFDelimitedList, List>>();
+		private java.util.List<Triple<TFList, List>> lists  = new ArrayList<Triple<TFList, List>>();
+		private java.util.List<Triple<TFDelimitedList, List>> delimitedLists  = new ArrayList<Triple<TFDelimitedList, List>>();
 		private java.util.List<Triple<TFChoiceOnChar0th, CChoice>> choice0ths  = new ArrayList<Triple<TFChoiceOnChar0th, CChoice>>();
 		private java.util.List<Triple<TFChoiceOnChar1st, CChoice>> choice1sts  = new ArrayList<Triple<TFChoiceOnChar1st, CChoice>>();
 		private Map<String, Field> otherSymbols = new HashMap<String, Field>();
@@ -153,8 +155,18 @@ public class Parser {
 		}
 		
 		private TokenFactory addList(String name, List list) {
+			String delimiter = list.delim();
+			String left = list.left();
+			String right = list.right();
+			if (delimiter.length() == 0) {
+				if ((left.length() == 0) || (right.length() == 0)) {
+					TFList value = new TFList();
+					this.lists.add(new Triple<TFList, List>(name, value, list));
+					return value;
+				}				
+			}			
 			TFDelimitedList value = new TFDelimitedList();
-			this.lists.add(new Triple<TFDelimitedList, List>(name, value, list));
+			this.delimitedLists.add(new Triple<TFDelimitedList, List>(name, value, list));
 			return value;			
 		}
 		
@@ -327,11 +339,19 @@ public class Parser {
 		}
 
 		private void updateLists() {
-			for (Triple<TFDelimitedList, List> p : this.lists) {
+			for (Triple<TFList, List> p : this.lists) {
+				TokenFactory f = this.symbols.get(p.annotation.value());
+				p.factory.setElementFactory(f);
+				p.factory.setAddErrorToList(p.annotation.adderror());
+			}	
+		}
+		
+		private void updateDelimitedLists() {
+			for (Triple<TFDelimitedList, List> p : this.delimitedLists) {
 				TokenFactory f = this.symbols.get(p.annotation.value());
 				p.factory.setElementFactory(f);
 				String delim = p.annotation.delim();
-				if ((delim != null) && (delim.length() > 0)) {
+				if (delim.length() > 0) {
 					TokenFactory d = this.symbols.get(delim);
 					p.factory.setDelimiter(d);
 				}
@@ -357,6 +377,7 @@ public class Parser {
 			this.updateChoicesOnChar1st();
 			this.updateSequences();
 			this.updateLists();
+			this.updateDelimitedLists();
 		}		
 	}
 	

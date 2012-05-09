@@ -14,7 +14,7 @@ public final class TFDelimitedList extends TokenFactory {
 			}			
 		}
 	}
-		
+			
 	private TokenFactory elementFactory;
 	private TokenFactory delimiter;
 	private TokenFactory left;
