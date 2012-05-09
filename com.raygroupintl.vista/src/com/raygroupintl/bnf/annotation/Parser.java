@@ -8,6 +8,7 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
 
+import com.raygroupintl.bnf.CharactersAdapter;
 import com.raygroupintl.bnf.Token;
 import com.raygroupintl.bnf.TokenFactory;
 import com.raygroupintl.bnf.TFCharacters;
@@ -17,19 +18,19 @@ import com.raygroupintl.bnf.TFChoiceOnChar1st;
 import com.raygroupintl.bnf.TFDelimitedList;
 import com.raygroupintl.bnf.TFSequenceStatic;
 import com.raygroupintl.bnf.SequenceAdapter;
-import com.raygroupintl.fnds.ICharPredicate;
+import com.raygroupintl.charlib.AndPredicate;
+import com.raygroupintl.charlib.CharPredicate;
+import com.raygroupintl.charlib.CharRangePredicate;
+import com.raygroupintl.charlib.CharsPredicate;
+import com.raygroupintl.charlib.DigitPredicate;
+import com.raygroupintl.charlib.ExcludePredicate;
+import com.raygroupintl.charlib.LetterPredicate;
+import com.raygroupintl.charlib.OrPredicate;
+import com.raygroupintl.charlib.Predicate;
 import com.raygroupintl.m.struct.IdentifierStartPredicate;
-import com.raygroupintl.struct.AndPredicate;
-import com.raygroupintl.struct.CharPredicate;
-import com.raygroupintl.struct.CharRangePredicate;
-import com.raygroupintl.struct.CharsPredicate;
-import com.raygroupintl.struct.DigitPredicate;
-import com.raygroupintl.struct.ExcludePredicate;
-import com.raygroupintl.struct.LetterPredicate;
-import com.raygroupintl.struct.OrPredicate;
 
 public class Parser {
-	private static final Map<String, ICharPredicate> PREDICATES = new HashMap<String, ICharPredicate>();
+	private static final Map<String, Predicate> PREDICATES = new HashMap<String, Predicate>();
 	static {
 		PREDICATES.put("letter", new LetterPredicate());
 		PREDICATES.put("digit", new DigitPredicate());
@@ -47,6 +48,40 @@ public class Parser {
 			this.annotation = annotation;
 		}
 	}
+	
+	private static class ConstructorAsSequenceAdapter implements SequenceAdapter {					
+		private Constructor<? extends Token> constructor;
+		
+		public ConstructorAsSequenceAdapter(Constructor<? extends Token> constructor) {
+			this.constructor = constructor;
+		}
+		
+		@Override
+		public Token convert(Token[] tokens) {
+			try {
+				return (Token) this.constructor.newInstance((Object) tokens);
+			} catch (Exception e) {
+				return null;
+			}
+		}
+	};
+	
+	private static class ConstructorAsCharactersAdapter implements CharactersAdapter {					
+		private Constructor<? extends Token> constructor;
+		
+		public ConstructorAsCharactersAdapter(Constructor<? extends Token> constructor) {
+			this.constructor = constructor;
+		}
+		
+		@Override
+		public Token convert(String value) {
+			try {
+				return (Token) this.constructor.newInstance((Object) value);
+			} catch (Exception e) {
+				return null;
+			}
+		}
+	};
 	
 	private static class Store {
 		private static DescriptionSpec descriptionSpec;
@@ -67,29 +102,38 @@ public class Parser {
 			return value;			
 		}
 		
-		private void updateAdapter(TFSequenceStatic token, Field f)  throws IllegalAccessException, InstantiationException, NoSuchMethodException {
+		private void updateAdapter(TFCharacters token, Field f) throws IllegalAccessException, InstantiationException, NoSuchMethodException {
 			Adapter adapter = f.getAnnotation(Adapter.class);
 			if (adapter != null) {
 				Class<?> cls = adapter.value();			
-				SequenceAdapter ta = (SequenceAdapter) cls.newInstance();
-				token.setTokenAdapter(ta);
+				CharactersAdapter ta = (CharactersAdapter) cls.newInstance();
+				token.setAdapter(ta);
 				return;
 			}
 			TokenType tokenType = f.getAnnotation(TokenType.class);
 			if (tokenType != null) {
 				Class<? extends Token> tokenCls = tokenType.value();
-				final Constructor<? extends Token> constructor = tokenCls.getConstructor(Token[].class);
-				SequenceAdapter ta = new SequenceAdapter() {					
-					@Override
-					public Token convert(String line, int fromIndex, Token[] tokens) {
-						try {
-							return (Token) constructor.newInstance((Object) tokens);
-						} catch (Exception e) {
-							return null;
-						}
-					}
-				};
-				token.setTokenAdapter(ta);
+				Constructor<? extends Token> constructor = tokenCls.getConstructor(String.class);
+				CharactersAdapter ta = new ConstructorAsCharactersAdapter(constructor);
+				token.setAdapter(ta);
+				return;
+			}			
+		}
+
+		private void updateAdapter(TFSequenceStatic token, Field f) throws IllegalAccessException, InstantiationException, NoSuchMethodException {
+			Adapter adapter = f.getAnnotation(Adapter.class);
+			if (adapter != null) {
+				Class<?> cls = adapter.value();			
+				SequenceAdapter ta = (SequenceAdapter) cls.newInstance();
+				token.setAdapter(ta);
+				return;
+			}
+			TokenType tokenType = f.getAnnotation(TokenType.class);
+			if (tokenType != null) {
+				Class<? extends Token> tokenCls = tokenType.value();
+				Constructor<? extends Token> constructor = tokenCls.getConstructor(Token[].class);
+				SequenceAdapter ta = new ConstructorAsSequenceAdapter(constructor);
+				token.setAdapter(ta);
 				return;
 			}			
 		}
@@ -127,20 +171,20 @@ public class Parser {
 			}
 		}
 		
-		private TokenFactory addCharacters(String name, Characters characters) {
-			ICharPredicate p0 = getCharPredicate(characters.chars());
-			ICharPredicate p1 = getCharRanges(characters.ranges());
-			ICharPredicate p2 = getCharPredicate(characters.excludechars());
+		private TokenFactory addCharacters(String name, Characters characters, Field f)  throws IllegalAccessException, InstantiationException, NoSuchMethodException {
+			Predicate p0 = getCharPredicate(characters.chars());
+			Predicate p1 = getCharRanges(characters.ranges());
+			Predicate p2 = getCharPredicate(characters.excludechars());
 			if (p2 != null) {
 				p2 = new ExcludePredicate(p2);
 			}			
-			ICharPredicate p3 = getCharRanges(characters.excluderanges());
+			Predicate p3 = getCharRanges(characters.excluderanges());
 			if (p3 != null) {
 				p3 = new ExcludePredicate(p3);
 			}			
-			ICharPredicate[] ps = {p0, p1, p2, p3};
-			ICharPredicate result = null;
-			for (ICharPredicate p : ps) {
+			Predicate[] ps = {p0, p1, p2, p3};
+			Predicate result = null;
+			for (Predicate p : ps) {
 				if (p != null) {
 					if (result == null) {
 						result = p;
@@ -149,7 +193,8 @@ public class Parser {
 					}
 				}
 			}
-			TokenFactory tf = new TFCharacters(result);
+			TFCharacters tf = new TFCharacters(result);
+			this.updateAdapter(tf, f);
 			return tf;						
 		}
 		
@@ -178,7 +223,7 @@ public class Parser {
 			}		
 			Characters characters = f.getAnnotation(Characters.class);
 			if (characters != null) {
-				return this.addCharacters(name, characters);
+				return this.addCharacters(name, characters, f);
 			}
 			return null;
 		}
@@ -235,7 +280,7 @@ public class Parser {
 		private void updateChoicesOnChar0th() {
 			for (Triple<TFChoiceOnChar0th, CChoice> p : this.choice0ths) {
 				TokenFactory[] fs = getFactories(this.symbols, p.annotation.value());
-				ICharPredicate[] ps = getPredicates(p.annotation.preds());
+				Predicate[] ps = getPredicates(p.annotation.preds());
 				p.factory.setChoices(ps, fs);
 				String dcode = p.annotation.def();
 				if (dcode.length() > 0) {
@@ -248,7 +293,7 @@ public class Parser {
 		private void updateChoicesOnChar1st() {
 			for (Triple<TFChoiceOnChar1st, CChoice> p : this.choice1sts) {
 				TokenFactory[] fs = getFactories(this.symbols, p.annotation.value());
-				ICharPredicate[] ps = getPredicates(p.annotation.preds());
+				Predicate[] ps = getPredicates(p.annotation.preds());
 				p.factory.setLeadingChar(p.annotation.lead().charAt(0));
 				p.factory.setChoices(ps, fs);
 				String dcode = p.annotation.def();
@@ -315,7 +360,7 @@ public class Parser {
 		}		
 	}
 	
-	private static ICharPredicate getCharPredicate(char[] chs) {
+	private static Predicate getCharPredicate(char[] chs) {
 		if (chs.length == 1) {
 			return new CharPredicate(chs[0]);
 		} else if (chs.length > 1) {
@@ -325,12 +370,12 @@ public class Parser {
 		}		
 	}
 	
-	private static ICharPredicate getCharRanges(char[] chs) {
-		ICharPredicate result = null;
+	private static Predicate getCharRanges(char[] chs) {
+		Predicate result = null;
 		for (int i=1; i<chs.length; i=i+2) {
 			char ch0 = chs[i];
 			char ch1 = chs[i-1];
-			ICharPredicate p =  new CharRangePredicate(ch0, ch1);
+			Predicate p =  new CharRangePredicate(ch0, ch1);
 			if (result == null) {
 				result = p;
 			} else {
@@ -368,15 +413,15 @@ public class Parser {
 		return result;
 	}
 	
-	private static ICharPredicate[] getPredicates(String[] codes) {
+	private static Predicate[] getPredicates(String[] codes) {
 		int n = codes.length;
-		ICharPredicate[] result = new ICharPredicate[n];
+		Predicate[] result = new Predicate[n];
 		for (int i=0; i<n; ++i) {
 			String code = codes[i];
 			if (code.length() == 1) {
 				result[i] = new CharPredicate(code.charAt(0));
 			} else {
-				ICharPredicate named = PREDICATES.get(code);
+				Predicate named = PREDICATES.get(code);
 				if (named == null) {
 					result[i] = new CharsPredicate(code.toCharArray());	
 				} else {

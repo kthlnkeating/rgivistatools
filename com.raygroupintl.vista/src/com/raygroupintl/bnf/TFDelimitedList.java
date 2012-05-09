@@ -4,7 +4,7 @@ package com.raygroupintl.bnf;
 public final class TFDelimitedList implements TokenFactory {
 	private static class DLAdapter implements SequenceAdapter {
 		@Override
-		public Token convert(String line, int fromIndex, Token[] tokens) {
+		public Token convert(Token[] tokens) {
 			if (tokens[1] == null) {
 				return new TList(tokens[0]);	
 			} else {		
@@ -125,7 +125,7 @@ public final class TFDelimitedList implements TokenFactory {
 			TokenFactory leadingElement = this.getLeadingElement();
 			TFSequenceStatic result = new TFSequenceStatic(leadingElement, tail);
 			result.setRequiredFlags(new boolean[]{true, false});
-			result.setTokenAdapter(new DLAdapter());				
+			result.setAdapter(new DLAdapter());				
 			return result;
 		}
 	}

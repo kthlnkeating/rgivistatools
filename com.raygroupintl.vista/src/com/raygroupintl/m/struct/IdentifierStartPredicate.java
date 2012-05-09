@@ -1,9 +1,9 @@
 package com.raygroupintl.m.struct;
 
-import com.raygroupintl.fnds.ICharPredicate;
-import com.raygroupintl.struct.LetterPredicate;
+import com.raygroupintl.charlib.LetterPredicate;
+import com.raygroupintl.charlib.Predicate;
 
-public class IdentifierStartPredicate implements ICharPredicate {
+public class IdentifierStartPredicate implements Predicate {
 	private LetterPredicate letterPred = new LetterPredicate();
 	
 	@Override

@@ -15,7 +15,7 @@ public abstract class TFSequence implements TokenFactory {
 
 	protected abstract int getExpectedTokenCount();
 
-	public void setTokenAdapter(SequenceAdapter adapter) {
+	public void setAdapter(SequenceAdapter adapter) {
 		this.adapter = adapter;
 	}
 
@@ -32,7 +32,7 @@ public abstract class TFSequence implements TokenFactory {
 		if (this.adapter == null) {
 			return new TArray(foundTokens);
 		} else {
-			return this.adapter.convert(line, fromIndex, foundTokens);
+			return this.adapter.convert(foundTokens);
 		}
 	}
 

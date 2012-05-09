@@ -1,6 +1,6 @@
 package com.raygroupintl.bnf;
 
-import com.raygroupintl.fnds.ICharPredicate;
+import com.raygroupintl.charlib.Predicate;
 
 public class TFChoiceOnChar1st extends TFChoiceOnChar {
 	private char leadingChar;
@@ -8,7 +8,7 @@ public class TFChoiceOnChar1st extends TFChoiceOnChar {
 	public TFChoiceOnChar1st() {		
 	}
 			
-	public TFChoiceOnChar1st(char leadingChar, TokenFactory defaultFactory, ICharPredicate[] predicates, TokenFactory[] factories) {
+	public TFChoiceOnChar1st(char leadingChar, TokenFactory defaultFactory, Predicate[] predicates, TokenFactory[] factories) {
 		super(defaultFactory, predicates, factories);
 		this.leadingChar = leadingChar;
 	}

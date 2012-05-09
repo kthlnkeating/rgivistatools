@@ -1,8 +1,7 @@
-package com.raygroupintl.struct;
+package com.raygroupintl.charlib;
 
-import com.raygroupintl.fnds.ICharPredicate;
 
-public class CharPredicate implements ICharPredicate {
+public class CharPredicate implements Predicate {
 	private char ch;
 	
 	public CharPredicate(char ch) {

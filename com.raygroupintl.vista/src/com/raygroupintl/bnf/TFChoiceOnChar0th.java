@@ -1,13 +1,13 @@
 package com.raygroupintl.bnf;
 
-import com.raygroupintl.fnds.ICharPredicate;
+import com.raygroupintl.charlib.Predicate;
 
 public class TFChoiceOnChar0th extends TFChoiceOnChar {
 	public TFChoiceOnChar0th() {
 		super();
 	}
 
-	public TFChoiceOnChar0th(TokenFactory defaultFactory, ICharPredicate[] predicates, TokenFactory... factories) {
+	public TFChoiceOnChar0th(TokenFactory defaultFactory, Predicate[] predicates, TokenFactory... factories) {
 		super(defaultFactory, predicates, factories);
 	}
 
