@@ -138,13 +138,13 @@ public class Parser {
 			}			
 		}
 
-		private void updateAdapter(TFSequenceStatic token, Field f) throws IllegalAccessException, InstantiationException, NoSuchMethodException {
+		private boolean updateAdapter(TFSequenceStatic token, Field f) throws IllegalAccessException, InstantiationException, NoSuchMethodException {
 			Adapter adapter = f.getAnnotation(Adapter.class);
 			if (adapter != null) {
 				Class<?> cls = adapter.value();			
 				SequenceAdapter ta = (SequenceAdapter) cls.newInstance();
 				token.setAdapter(ta);
-				return;
+				return true;
 			}
 			TokenType tokenType = f.getAnnotation(TokenType.class);
 			if (tokenType != null) {
@@ -152,8 +152,9 @@ public class Parser {
 				Constructor<? extends Token> constructor = tokenCls.getConstructor(Token[].class);
 				SequenceAdapter ta = new ConstructorAsSequenceAdapter(constructor);
 				token.setAdapter(ta);
-				return;
-			}			
+				return true;
+			}		
+			return false;
 		}
 		
 		private TokenFactory addSequence(String name, Sequence sequence, Field f) throws IllegalAccessException, InstantiationException, NoSuchMethodException {
@@ -170,7 +171,7 @@ public class Parser {
 			return value;		
 		}
 		
-		private TokenFactory addList(String name, List list) {
+		private TokenFactory addList(String name, List list, Field f)  throws IllegalAccessException, InstantiationException, NoSuchMethodException {
 			String delimiter = list.delim();
 			String left = list.left();
 			String right = list.right();
@@ -181,16 +182,21 @@ public class Parser {
 					return value;
 				} else {
 					TFSequenceStatic value = new TFSequenceStatic();
+					this.updateAdapter(value, f);
 					this.enclosedLists.add(new Triple<TFSequenceStatic, List>(name, value, list));
 					return value;
 				}
 			} else {			
 				if ((left.length() == 0) || (right.length() == 0)) {
 					TFSequenceStatic value = new TFSequenceStatic();
+					if (! this.updateAdapter(value, f)) {
+						value.setAdapter(new DLAdapter());				
+					}
 					this.delimitedLists.add(new Triple<TFSequenceStatic, List>(name, value, list));
 					return value;
 				} else {
 					TFSequenceStatic value = new TFSequenceStatic();
+					this.updateAdapter(value, f);
 					this.enclosedDelimitedLists.add(new Triple<TFSequenceStatic, List>(name, value, list));
 					return value;					
 				}
@@ -254,7 +260,7 @@ public class Parser {
 			}			
 			List list = f.getAnnotation(List.class);
 			if (list != null) {
-				return this.addList(name, list);
+				return this.addList(name, list, f);
 			}			
 			CChoice cchoice = f.getAnnotation(CChoice.class);
 			if (cchoice != null) {
@@ -436,7 +442,6 @@ public class Parser {
 				}				
 				p.factory.setFactories(new TokenFactory[]{leadingElement, tail});
 				p.factory.setRequiredFlags(new boolean[]{true, false});
-				p.factory.setAdapter(new DLAdapter());				
 			}	
 		}
 		
