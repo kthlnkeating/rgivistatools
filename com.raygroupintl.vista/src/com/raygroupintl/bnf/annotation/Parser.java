@@ -12,6 +12,7 @@ import com.raygroupintl.bnf.CharacterAdapter;
 import com.raygroupintl.bnf.CharactersAdapter;
 import com.raygroupintl.bnf.SyntaxErrorException;
 import com.raygroupintl.bnf.TFCharacter;
+import com.raygroupintl.bnf.TFConstString;
 import com.raygroupintl.bnf.TFEmpty;
 import com.raygroupintl.bnf.TFList;
 import com.raygroupintl.bnf.TList;
@@ -158,6 +159,24 @@ public class Parser {
 			}			
 		}
 
+		private void updateAdapter(TFConstString token, Field f) throws IllegalAccessException, InstantiationException, NoSuchMethodException {
+			Adapter adapter = f.getAnnotation(Adapter.class);
+			if (adapter != null) {
+				Class<?> cls = adapter.value();			
+				CharactersAdapter ta = (CharactersAdapter) cls.newInstance();
+				token.setAdapter(ta);
+				return;
+			}
+			TokenType tokenType = f.getAnnotation(TokenType.class);
+			if (tokenType != null) {
+				Class<? extends Token> tokenCls = tokenType.value();
+				Constructor<? extends Token> constructor = tokenCls.getConstructor(String.class);
+				CharactersAdapter ta = new ConstructorAsCharactersAdapter(constructor);
+				token.setAdapter(ta);
+				return;
+			}			
+		}
+
 		private void updateAdapter(TFCharacter token, Field f) throws IllegalAccessException, InstantiationException, NoSuchMethodException {
 			Adapter adapter = f.getAnnotation(Adapter.class);
 			if (adapter != null) {
@@ -254,7 +273,7 @@ public class Parser {
 			}
 		}
 		
-		private TokenFactory addCharacters(String name, Characters characters, Field f)  throws IllegalAccessException, InstantiationException, NoSuchMethodException {
+		private TokenFactory addCharacters(String name, CharSpecified characters, Field f)  throws IllegalAccessException, InstantiationException, NoSuchMethodException {
 			Predicate p0 = getCharPredicate(characters.chars());
 			Predicate p1 = getCharRanges(characters.ranges());
 			Predicate p2 = getCharPredicate(characters.excludechars());
@@ -287,6 +306,13 @@ public class Parser {
 			}
 		}
 		
+		private TokenFactory addWords(String name, WordSpecified wordSpecied, Field f)  throws IllegalAccessException, InstantiationException, NoSuchMethodException {
+			String word = wordSpecied.value();
+			TFConstString tf = new TFConstString(word, wordSpecied.ignorecase());
+			this.updateAdapter(tf, f);
+			return tf;
+		}
+		
 		private TokenFactory add(Field f) throws ClassNotFoundException, IllegalAccessException, InstantiationException, NoSuchMethodException {
 			String name = f.getName();
 			
@@ -310,9 +336,13 @@ public class Parser {
 			if (cchoice != null) {
 				return this.addCChoice(name, cchoice);
 			}		
-			Characters characters = f.getAnnotation(Characters.class);
+			CharSpecified characters = f.getAnnotation(CharSpecified.class);
 			if (characters != null) {
 				return this.addCharacters(name, characters, f);
+			}
+			WordSpecified words = f.getAnnotation(WordSpecified.class);
+			if (words != null) {
+				return this.addWords(name, words, f);
 			}
 			return null;
 		}

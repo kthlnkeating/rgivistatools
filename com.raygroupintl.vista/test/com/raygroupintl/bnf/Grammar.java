@@ -1,35 +1,35 @@
 package com.raygroupintl.bnf;
 
 import com.raygroupintl.bnf.TokenFactory;
-import com.raygroupintl.bnf.annotation.Characters;
+import com.raygroupintl.bnf.annotation.CharSpecified;
 import com.raygroupintl.bnf.annotation.Choice;
 import com.raygroupintl.bnf.annotation.Description;
 import com.raygroupintl.bnf.annotation.TokenType;
 
 public class Grammar {
 	@TokenType(TIntLit.class)
-	@Characters(ranges={'0', '9'})
+	@CharSpecified(ranges={'0', '9'})
 	public TokenFactory intlit;
 
-	@Characters(chars={'+', '-'})
+	@CharSpecified(chars={'+', '-'})
 	public TokenFactory pm;
 	
-	@Characters(chars={'E'})
+	@CharSpecified(chars={'E'})
 	public TokenFactory e;
 	
-	@Characters(chars={'.'})
+	@CharSpecified(chars={'.'})
 	public TokenFactory dot;
 	
-	@Characters(chars={'+'})
+	@CharSpecified(chars={'+'})
 	public TokenFactory plus;
 	
-	@Characters(chars={'m'})
+	@CharSpecified(chars={'m'})
 	public TokenFactory minus;
 	
-	@Characters(chars={'^'})
+	@CharSpecified(chars={'^'})
 	public TokenFactory caret;
 
-	@Characters(ranges={'a', 'z'})
+	@CharSpecified(ranges={'a', 'z'})
 	public TokenFactory local;
 
 	@TokenType(TNumber.class)

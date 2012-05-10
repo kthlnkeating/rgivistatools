@@ -4,6 +4,7 @@ package com.raygroupintl.bnf;
 public class TFConstString extends TokenFactory {
 	private String value;
 	private boolean ignoreCase;
+	private CharactersAdapter adapter;
 	
 	public TFConstString(String value) {
 		this.value = value;
@@ -15,6 +16,10 @@ public class TFConstString extends TokenFactory {
 		this.ignoreCase = ignoreCase;
 	}
 
+	public void setAdapter(CharactersAdapter adapter) {
+		this.adapter = adapter;
+	}
+	
 	private String getMatched(String line, int fromIndex) {
 		if (this.ignoreCase) {
 			String piece = line.substring(fromIndex, fromIndex+this.value.length());
@@ -33,7 +38,11 @@ public class TFConstString extends TokenFactory {
 	public Token tokenize(String line, int fromIndex) {
 		String result = this.getMatched(line, fromIndex);
 		if (result != null) {
-			return new TCharacters(result);
+			if (this.adapter == null) {
+				return new TCharacters(result);
+			} else {
+				return this.adapter.convert(result);
+			}
 		} else {
 			return null;
 		}

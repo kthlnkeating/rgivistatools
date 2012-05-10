@@ -3,20 +3,20 @@ package com.raygroupintl.m.token;
 import com.raygroupintl.bnf.Token;
 import com.raygroupintl.bnf.TokenFactory;
 import com.raygroupintl.bnf.TArray;
-import com.raygroupintl.bnf.TFConstString;
 import com.raygroupintl.bnf.TFEmpty;
 import com.raygroupintl.bnf.TFSyntaxError;
 import com.raygroupintl.bnf.TList;
 import com.raygroupintl.bnf.SequenceAdapter;
 import com.raygroupintl.bnf.annotation.Adapter;
 import com.raygroupintl.bnf.annotation.CChoice;
-import com.raygroupintl.bnf.annotation.Characters;
+import com.raygroupintl.bnf.annotation.CharSpecified;
 import com.raygroupintl.bnf.annotation.Equivalent;
 import com.raygroupintl.bnf.annotation.Parser;
 import com.raygroupintl.bnf.annotation.Sequence;
 import com.raygroupintl.bnf.annotation.Choice;
 import com.raygroupintl.bnf.annotation.List;
 import com.raygroupintl.bnf.annotation.TokenType;
+import com.raygroupintl.bnf.annotation.WordSpecified;
 import com.raygroupintl.vista.struct.MError;
 
 public class MTFSupply {
@@ -71,65 +71,69 @@ public class MTFSupply {
 		}
 	}
 	
-	@Characters(chars={'.'}, single=true)
+	@CharSpecified(chars={'.'}, single=true)
 	public TokenFactory dot;
-	@Characters(chars={','}, single=true)
+	@CharSpecified(chars={','}, single=true)
 	public TokenFactory comma;
-	@Characters(chars={'\''}, single=true)
+	@CharSpecified(chars={'\''}, single=true)
 	public TokenFactory squote;
-	@Characters(chars={'|'}, single=true)
+	@CharSpecified(chars={'|'}, single=true)
 	public TokenFactory pipe;
-	@Characters(chars={'['}, single=true)
+	@CharSpecified(chars={'['}, single=true)
 	public TokenFactory lsqr;
-	@Characters(chars={']'}, single=true)
+	@CharSpecified(chars={']'}, single=true)
 	public TokenFactory rsqr;
-	@Characters(chars={'('}, single=true)
+	@CharSpecified(chars={'('}, single=true)
 	public TokenFactory lpar;
-	@Characters(chars={')'}, single=true)
+	@CharSpecified(chars={')'}, single=true)
 	public TokenFactory rpar;
-	@Characters(chars={'?'}, single=true)
+	@CharSpecified(chars={'?'}, single=true)
 	public TokenFactory qmark;
-	@Characters(chars={'@'}, single=true)
+	@CharSpecified(chars={'@'}, single=true)
 	public TokenFactory at;
-	@Characters(chars={'='}, single=true)
+	@CharSpecified(chars={'='}, single=true)
 	public TokenFactory eq;
-	@Characters(chars={'^'}, single=true)
+	@CharSpecified(chars={'^'}, single=true)
 	public TokenFactory caret;
-	@Characters(chars={':'}, single=true)
+	@CharSpecified(chars={':'}, single=true)
 	public TokenFactory colon;
-	@Characters(chars={'+'}, single=true)
+	@CharSpecified(chars={'+'}, single=true)
 	public TokenFactory plus;
-	@Characters(chars={'#'}, single=true)
+	@CharSpecified(chars={'#'}, single=true)
 	public TokenFactory pound;
-	@Characters(chars={'*'}, single=true)
+	@CharSpecified(chars={'*'}, single=true)
 	public TokenFactory asterix;
-	@Characters(chars={'E'}, single=true)
+	@CharSpecified(chars={'E'}, single=true)
 	public TokenFactory e;
-	@Characters(chars={'/'}, single=true)
+	@CharSpecified(chars={'/'}, single=true)
 	public TokenFactory slash;
-	@Characters(chars={' '}, single=true)
+	@CharSpecified(chars={' '}, single=true)
 	public TokenFactory space;
-	@Characters(chars={' '})
+	@CharSpecified(chars={' '})
 	public TokenFactory spaces;
-	@Characters(chars={'$'})
+	@CharSpecified(chars={'$'})
 	public TokenFactory dollar;
 	
-	public TokenFactory nqmark = new TFConstString("'?");
-	public TokenFactory atlpar = new TFConstString("@(");
-	public TokenFactory caretquest = new TFConstString("^$");
-	public TokenFactory ddollar = new TFConstString("$$");
-	@Characters(chars={'+', '-'})
+	@WordSpecified("'?")
+	public TokenFactory nqmark;
+	@WordSpecified("@(")
+	public TokenFactory atlpar;
+	@WordSpecified("^$")
+	public TokenFactory caretquest;
+	@WordSpecified("$$")
+	public TokenFactory ddollar;
+	@CharSpecified(chars={'+', '-'})
 	public TokenFactory pm;
 	
-	@Characters(ranges={'a', 'z', 'A', 'Z'}, excludechars={'y', 'Y'})
+	@CharSpecified(ranges={'a', 'z', 'A', 'Z'}, excludechars={'y', 'Y'})
 	public TokenFactory identxy;
-	@Characters(ranges={'a', 'y', 'A', 'Y'})
+	@CharSpecified(ranges={'a', 'y', 'A', 'Y'})
 	public TokenFactory identxz;
-	@Characters(chars={'z', 'Z'})
+	@CharSpecified(chars={'z', 'Z'})
 	public TokenFactory yy;
-	@Characters(chars={'z', 'Z'})
+	@CharSpecified(chars={'z', 'Z'})
 	public TokenFactory zz;
-	@Characters(ranges={'a', 'x', 'A', 'X'})
+	@CharSpecified(ranges={'a', 'x', 'A', 'X'})
 	public TokenFactory paton;
 	@Sequence(value={"yy", "identxy", "yy"}, required="all")
 	public TokenFactory patony;
@@ -155,11 +159,11 @@ public class MTFSupply {
 	public TokenFactory name = TFName.getInstance();
 	
 	@TokenType(TIdent.class)
-	@Characters(ranges={'a', 'z', 'A', 'Z'})
+	@CharSpecified(ranges={'a', 'z', 'A', 'Z'})
 	public TokenFactory ident;
 	
 	@TokenType(TIntLit.class)
-	@Characters(ranges={'0', '9'})
+	@CharSpecified(ranges={'0', '9'})
 	public TokenFactory intlit;
 		
 	@Choice({"name", "intlit"})
@@ -186,7 +190,7 @@ public class MTFSupply {
 		
 	public TFOperator operator = new TFOperator();
 	public TokenFactory error = new TFSyntaxError( MError.ERR_GENERAL_SYNTAX);
-	@Characters(chars={'+', '-', '\''})
+	@CharSpecified(chars={'+', '-', '\''})
 	public TokenFactory unaryop;
 	public TokenFactory strlit = new TFStringLiteral();
 	
@@ -351,7 +355,7 @@ public class MTFSupply {
 
 	@Sequence(value={"qmark", "expr"}, required="all")
 	public TokenFactory tabformat;
-	@Characters(chars={'!', '#'})
+	@CharSpecified(chars={'!', '#'})
 	public TokenFactory excorpounds;
 	@Sequence(value={"excorpounds", "tabformat"}, required="ro")
 	public TokenFactory xtabformat;
@@ -483,7 +487,8 @@ public class MTFSupply {
 	public TokenFactory cname;
 	@Sequence(value={"name", "dname", "cname"}, required="roo")
 	public TokenFactory ampersandtail;
-	public TokenFactory dolamp = new TFConstString("$&");
+	@WordSpecified("$&")
+	public TokenFactory dolamp;
 	@Sequence(value={"dolamp", "ampersandtail", "actuallist"}, required="roo")
 	public TokenFactory external;
 
@@ -519,10 +524,10 @@ public class MTFSupply {
 	public TokenFactory commandorcomment;
 	@List(value="commandorcomment", adderror=true)
 	public TokenFactory commandorcommentlist;
-	@Characters(chars={' ', '\t'})
+	@CharSpecified(chars={' ', '\t'})
 	public TokenFactory ls;  // = TFConstChars.getInstance(" \t");
 	
-	@Characters(chars={' ', '.'})
+	@CharSpecified(chars={' ', '.'})
 	public TokenFactory level;
 	
 	@Adapter(LineAdapter.class)
@@ -711,7 +716,8 @@ public class MTFSupply {
 		@Sequence(value={"expr_0", "exprtail"}, required="ro")
 		public TokenFactory expr;
 		
-		public TokenFactory ppclass = new TFConstString("##class");
+		@WordSpecified("##class")
+		public TokenFactory ppclass;
 		@Sequence(value={"dot", "name"}, required="all")
 		public TokenFactory classreftail;
 		@List("classreftail")
@@ -721,7 +727,8 @@ public class MTFSupply {
 		@Sequence(value={"ppclass", "lpar", "classref", "rpar", "dot", "name", "actuallist"}, required="all")
 		public TokenFactory classmethod;
 		
-		public TokenFactory system = new TFConstString("$SYSTEM", true);
+		@WordSpecified(value="$SYSTEM", ignorecase=true)
+		public TokenFactory system;
 		@Sequence(value={"dot", "name"}, required="all")
 		public TokenFactory method;
 		@List(value="method")

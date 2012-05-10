@@ -6,7 +6,7 @@ import java.lang.annotation.Target;
 
 @Retention(java.lang.annotation.RetentionPolicy.RUNTIME)
 @Target({ElementType.FIELD})
-public @interface Characters {
+public @interface CharSpecified {
 	public char[] chars() default {};
 	public char[] ranges() default {};
 	public char[] excludechars() default {};

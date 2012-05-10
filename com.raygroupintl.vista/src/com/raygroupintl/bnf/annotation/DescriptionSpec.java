@@ -13,10 +13,10 @@ public class DescriptionSpec {
 	public TokenFactory rsqr = new TFConstChar(']');
 	
 	@TokenType(TSymbol.class)
-	@Characters(ranges={'a', 'z'})
+	@CharSpecified(ranges={'a', 'z'})
 	public TokenFactory symbol; 
 
-	@Characters(chars={' '})
+	@CharSpecified(chars={' '})
 	public TokenFactory sp;
 
 	@Sequence(value={"sp", "lpar", "sp"}, required="oro")
