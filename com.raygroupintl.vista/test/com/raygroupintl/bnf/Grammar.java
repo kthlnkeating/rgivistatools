@@ -7,6 +7,7 @@ import com.raygroupintl.bnf.annotation.Description;
 import com.raygroupintl.bnf.annotation.TokenType;
 
 public class Grammar {
+	@TokenType(TIntLit.class)
 	@Characters(ranges={'0', '9'})
 	public TokenFactory intlit;
 

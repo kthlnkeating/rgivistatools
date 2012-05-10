@@ -11,4 +11,5 @@ public @interface Characters {
 	public char[] ranges() default {};
 	public char[] excludechars() default {};
 	public char[] excluderanges() default{};
+	public boolean single() default false;
 }

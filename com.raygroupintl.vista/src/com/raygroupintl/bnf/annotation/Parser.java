@@ -8,8 +8,10 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
 
+import com.raygroupintl.bnf.CharacterAdapter;
 import com.raygroupintl.bnf.CharactersAdapter;
 import com.raygroupintl.bnf.SyntaxErrorException;
+import com.raygroupintl.bnf.TFCharacter;
 import com.raygroupintl.bnf.TFEmpty;
 import com.raygroupintl.bnf.TFList;
 import com.raygroupintl.bnf.TList;
@@ -86,6 +88,23 @@ public class Parser {
 		}
 	};
 	
+	private static class ConstructorAsCharacterAdapter implements CharacterAdapter {					
+		private Constructor<? extends Token> constructor;
+		
+		public ConstructorAsCharacterAdapter(Constructor<? extends Token> constructor) {
+			this.constructor = constructor;
+		}
+		
+		@Override
+		public Token convert(char value) {
+			try {
+				return (Token) this.constructor.newInstance((Object) value);
+			} catch (Exception e) {
+				return null;
+			}
+		}
+	};
+	
 	private static class DLAdapter implements SequenceAdapter {
 		@Override
 		public Token convert(Token[] tokens) {
@@ -134,6 +153,24 @@ public class Parser {
 				Class<? extends Token> tokenCls = tokenType.value();
 				Constructor<? extends Token> constructor = tokenCls.getConstructor(String.class);
 				CharactersAdapter ta = new ConstructorAsCharactersAdapter(constructor);
+				token.setAdapter(ta);
+				return;
+			}			
+		}
+
+		private void updateAdapter(TFCharacter token, Field f) throws IllegalAccessException, InstantiationException, NoSuchMethodException {
+			Adapter adapter = f.getAnnotation(Adapter.class);
+			if (adapter != null) {
+				Class<?> cls = adapter.value();			
+				CharacterAdapter ta = (CharacterAdapter) cls.newInstance();
+				token.setAdapter(ta);
+				return;
+			}
+			TokenType tokenType = f.getAnnotation(TokenType.class);
+			if (tokenType != null) {
+				Class<? extends Token> tokenCls = tokenType.value();
+				Constructor<? extends Token> constructor = tokenCls.getConstructor(char.class);
+				CharacterAdapter ta = new ConstructorAsCharacterAdapter(constructor);
 				token.setAdapter(ta);
 				return;
 			}			
@@ -239,9 +276,15 @@ public class Parser {
 					}
 				}
 			}
-			TFCharacters tf = new TFCharacters(result);
-			this.updateAdapter(tf, f);
-			return tf;						
+			if (characters.single()) {
+				TFCharacter tf = new TFCharacter(result);
+				this.updateAdapter(tf, f);
+				return tf;
+			} else {			
+				TFCharacters tf = new TFCharacters(result);
+				this.updateAdapter(tf, f);
+				return tf;
+			}
 		}
 		
 		private TokenFactory add(Field f) throws ClassNotFoundException, IllegalAccessException, InstantiationException, NoSuchMethodException {

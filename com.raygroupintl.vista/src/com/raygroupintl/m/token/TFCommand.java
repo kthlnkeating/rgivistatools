@@ -3,14 +3,13 @@ package com.raygroupintl.m.token;
 import java.util.HashMap;
 import java.util.Map;
 
+import com.raygroupintl.bnf.SyntaxErrorException;
 import com.raygroupintl.bnf.TFSequence;
 import com.raygroupintl.bnf.Token;
 import com.raygroupintl.bnf.TokenFactory;
 import com.raygroupintl.bnf.TArray;
 import com.raygroupintl.bnf.TCharacters;
 import com.raygroupintl.bnf.TEmpty;
-import com.raygroupintl.bnf.TFBasic;
-import com.raygroupintl.bnf.TFConstChar;
 import com.raygroupintl.bnf.TFEmptyVerified;
 import com.raygroupintl.bnf.TSyntaxError;
 import com.raygroupintl.bnf.TokenStore;
@@ -865,10 +864,10 @@ public class TFCommand extends TFSequence {
 		this.commandSpecs.put(name, generic);
 	}
 			
-	private class TFCommandName extends TFIdent {
+	private class TFCommandName extends TokenFactory {
 		@Override
-		public Token tokenize(String line, int fromIndex) {
-			Token result = super.tokenize(line, fromIndex);
+		public Token tokenize(String line, int fromIndex) throws SyntaxErrorException {
+			Token result = TFCommand.this.supply.ident.tokenize(line, fromIndex);			
 			String cmdName = result.getStringValue();
 			TCSFactory tcs = TFCommand.this.commandSpecs.get(cmdName.toUpperCase());
 			if (tcs != null) {
@@ -892,14 +891,14 @@ public class TFCommand extends TFSequence {
 			case 1:
 				return TFCommand.this.supply.postcondition;
 			case 2:
-				return TFConstChar.getInstance(' ');
+				return TFCommand.this.supply.space;
 			case 3: {
 				TCommandSpec cmd = (TCommandSpec) foundTokens.get(0);
 				TokenFactory f = cmd.getArgumentFactory();
 				return f;
 			}					
 			case 4:
-				return TFBasic.getInstance(' ');
+				return TFCommand.this.supply.spaces;
 			default:
 				assert(i == 5);
 				return null;

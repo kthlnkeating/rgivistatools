@@ -6,6 +6,7 @@ import java.util.Map;
 
 import com.raygroupintl.bnf.SyntaxErrorException;
 import com.raygroupintl.bnf.TFSequence;
+import com.raygroupintl.bnf.TList;
 import com.raygroupintl.bnf.Token;
 import com.raygroupintl.bnf.TokenFactory;
 import com.raygroupintl.bnf.TArray;
@@ -192,7 +193,15 @@ public class TFIntrinsic extends TFSequence {
 				throw new SyntaxErrorException(MError.ERR_UNKNOWN_INTRINSIC_VARIABLE, lineIndex);
 			}
 		} else if (seqIndex == 2) {
-			throw new SyntaxErrorException(MError.ERR_GENERAL_SYNTAX, lineIndex);
+			String name = getFoundIntrinsicName(foundTokens);
+			MNameWithMnemonic mName = TFIntrinsic.this.functions.get(name);
+			String mnemonic = mName.getMnemonic();
+			FunctionInfo info = TFIntrinsic.this.function_infos.get(mnemonic);
+			if (info.getMinNumArguments() > 0) {
+				throw new SyntaxErrorException(MError.ERR_GENERAL_SYNTAX, lineIndex);				
+			} else {
+				return ValidateResult.CONTINUE;
+			}
 		} else {
 			throw new SyntaxErrorException(MError.ERR_UNMATCHED_PARANTHESIS, lineIndex);
 		}
@@ -213,7 +222,11 @@ public class TFIntrinsic extends TFSequence {
 			if (foundTokens.get(1) == null) {
 				return TIntrinsicVariable.getInstance(name, this.variables.get(name.getStringValue().toUpperCase()));			
 			} else {
-				return TIntrinsicFunction.getInstance(name, new TInParantheses(foundTokens.get(2)), this.functions.get(name.getStringValue().toUpperCase()));
+				Token t = foundTokens.get(2);
+				if (t == null) {
+					t = new TList();
+				}
+				return TIntrinsicFunction.getInstance(name, new TInParantheses(t), this.functions.get(name.getStringValue().toUpperCase()));
 			}
 		} else {
 			return new TArray(foundTokens.toArray());

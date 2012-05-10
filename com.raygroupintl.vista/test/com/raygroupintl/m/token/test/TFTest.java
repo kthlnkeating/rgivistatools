@@ -113,6 +113,7 @@ public class TFTest {
 
 	private void testActualList(MVersion version) {
 		TokenFactory f = MTFSupply.getInstance(version).actuallist;
+		TFCommonTest.validCheck(f, "()");		
 		TFCommonTest.validCheck(f, "(LST,\",\",FLD)");		
 		TFCommonTest.validCheck(f, "(.LST,.5,FLD)");		
 		TFCommonTest.validCheck(f, "(.5,RCSUBJ,XMBODY,.XMTO,,.XMZ)");

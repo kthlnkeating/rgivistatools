@@ -1,6 +1,4 @@
-package com.raygroupintl.m.token;
-
-import com.raygroupintl.bnf.TCharacters;
+package com.raygroupintl.bnf;
 
 public class TIntLit extends TCharacters {
 	public TIntLit(String value) {
