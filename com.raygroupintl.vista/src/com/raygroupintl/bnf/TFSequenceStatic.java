@@ -52,6 +52,11 @@ public final class TFSequenceStatic extends TFSequence {
 		this.update();
 	}
 	
+	public void copyFrom(TFSequenceStatic source) {
+		this.setFactories(source.factories);
+		this.setRequiredFlags(source.requiredFlags);
+	}
+	
 	public void setLookAhead(int index) {
 		this.lookAhead = index;
 	}

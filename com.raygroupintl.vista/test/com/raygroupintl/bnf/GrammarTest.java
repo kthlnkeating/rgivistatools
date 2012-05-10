@@ -25,16 +25,34 @@ public class GrammarTest {
 		grammar = null;
 	}
 
-	@Test
-	public void testGrammar() {
+	private void testCommon(String v) {
 		try {
-			Token number = grammar.number.tokenize("5.5", 0);
+			Token number = grammar.number.tokenize(v, 0);
 			Assert.assertNotNull(number);
 			Assert.assertTrue(number instanceof TNumber);
-			Assert.assertEquals("5.5", number.getStringValue());
+			Assert.assertEquals(v, number.getStringValue());
 		} catch (SyntaxErrorException se) {
 			fail("Unexpected exception: " + se.getMessage());			
-		}		
+		}				
+	}
+	
+	private void testErrorCommon(String v) {
+		try {
+			Token number = grammar.number.tokenize(v, 0);
+			Assert.assertNotNull(number);
+			Assert.assertTrue(number instanceof TNumber);
+			Assert.assertFalse(v.equals(number.getStringValue()));
+		} catch (SyntaxErrorException se) {
+			fail("Unexpected exception: " + se.getMessage());			
+		}				
+	}
+
+	@Test
+	public void testGrammar() {
+		testCommon("5.5");
+		testCommon("1.0E-7");
+		testCommon(".5E+7");
+		testErrorCommon(".5X+7");
 	}
 
 }

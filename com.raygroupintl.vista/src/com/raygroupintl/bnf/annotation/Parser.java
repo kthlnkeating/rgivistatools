@@ -9,6 +9,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import com.raygroupintl.bnf.CharactersAdapter;
+import com.raygroupintl.bnf.SyntaxErrorException;
 import com.raygroupintl.bnf.TFEmpty;
 import com.raygroupintl.bnf.TFList;
 import com.raygroupintl.bnf.TList;
@@ -359,15 +360,19 @@ public class Parser {
 		}
 	
 		private void updateDescription() throws ParseException {
-			if (descriptionSpec == null) {
-				Parser parser = new Parser();
-				descriptionSpec = parser.parse(DescriptionSpec.class);
-			}
-			for (Triple<TFSequenceStatic, Description> p : this.descriptions) {
-				//TokenFactory[] fs = getFactories(this.symbols, p.annotation.value());
-				//p.factory.setFactories(fs);
-				//boolean[] required = getRequiredFlags(p.annotation.required(), fs.length);
-				//p.factory.setRequiredFlags(required);			
+			try {
+				if (descriptionSpec == null) {
+					Parser parser = new Parser();
+					descriptionSpec = parser.parse(DescriptionSpec.class, true);
+				}
+				for (Triple<TFSequenceStatic, Description> p : this.descriptions) {
+					String description = p.annotation.value();
+					TDescription token = (TDescription) descriptionSpec.description.tokenize(description, 0);
+					TFSequenceStatic f = (TFSequenceStatic) token.getFactory(this.symbols);
+					p.factory.copyFrom(f);
+				}
+			} catch (SyntaxErrorException se) {
+				throw new ParseException(se);
 			}
 		}
 
@@ -445,7 +450,7 @@ public class Parser {
 			}	
 		}
 		
-		public void update(Class<?> cls)  throws IllegalAccessException, InstantiationException {
+		public void update(Class<?> cls, boolean ignore)  throws IllegalAccessException, InstantiationException, ParseException {
 			this.updateChoices();
 			this.updateChoicesOnChar0th();
 			this.updateChoicesOnChar1st();
@@ -454,6 +459,9 @@ public class Parser {
 			this.updateEnclosedLists();
 			this.updateEnclosedDelimitedLists();
 			this.updateDelimitedLists();
+			if (! ignore) {
+				this.updateDescription();
+			}
 		}		
 	}
 	
@@ -529,13 +537,13 @@ public class Parser {
 		return result;
 	}
 		
-	public <T> T parse(Class<T> cls) throws ParseException {
+	private <T> T parse(Class<T> cls, boolean ignore) throws ParseException {
 		try {
 			T target = cls.newInstance();
 			Store store = new Store();
 			store.add(target);
 			store.updateEquivalents(target);
-			store.update(cls);
+			store.update(cls, ignore);
 			return target;
 		} catch (IllegalAccessException iae) {
 			throw new ParseException(iae);
@@ -546,5 +554,9 @@ public class Parser {
 		} catch (NoSuchMethodException nsm) {
 			throw new ParseException(nsm);			
 		}
+	}
+
+	public <T> T parse(Class<T> cls) throws ParseException {
+		return this.parse(cls, false);
 	}
 }
