@@ -11,7 +11,6 @@ import com.raygroupintl.bnf.TArray;
 import com.raygroupintl.bnf.TCharacters;
 import com.raygroupintl.bnf.TEmpty;
 import com.raygroupintl.bnf.TFEmptyVerified;
-import com.raygroupintl.bnf.TSyntaxError;
 import com.raygroupintl.bnf.TokenStore;
 import com.raygroupintl.vista.struct.MError;
 
@@ -873,7 +872,7 @@ public class TFCommand extends TFSequence {
 			if (tcs != null) {
 				return tcs.get(cmdName);
 			} else {
-				return new TSyntaxError(MError.ERR_UNDEFINED_COMMAND , line, fromIndex);
+				throw new SyntaxErrorException(MError.ERR_UNDEFINED_COMMAND , fromIndex);
 			}			
 		}
 	}

@@ -18,7 +18,7 @@ public class TFEmpty extends TokenFactory {
 				return new TEmpty();
 			} else {
 				Token t = this.expected.tokenize(line, fromIndex);
-				if ((t != null) && ! (t instanceof TSyntaxError)) {
+				if (t != null)  {
 					return new TEmpty();
 				}
 			}

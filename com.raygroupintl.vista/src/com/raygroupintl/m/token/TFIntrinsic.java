@@ -190,7 +190,7 @@ public class TFIntrinsic extends TFSequence {
 			if (this.variables.containsKey(name)) {
 				return ValidateResult.BREAK;
 			} else {
-				throw new SyntaxErrorException(MError.ERR_UNKNOWN_INTRINSIC_VARIABLE, lineIndex);
+				throw new SyntaxErrorException(MError.ERR_UNKNOWN_INTRINSIC_VARIABLE, lineIndex, foundTokens);
 			}
 		} else if (seqIndex == 2) {
 			String name = getFoundIntrinsicName(foundTokens);
@@ -198,19 +198,19 @@ public class TFIntrinsic extends TFSequence {
 			String mnemonic = mName.getMnemonic();
 			FunctionInfo info = TFIntrinsic.this.function_infos.get(mnemonic);
 			if (info.getMinNumArguments() > 0) {
-				throw new SyntaxErrorException(MError.ERR_GENERAL_SYNTAX, lineIndex);				
+				throw new SyntaxErrorException(MError.ERR_GENERAL_SYNTAX, lineIndex, foundTokens);				
 			} else {
 				return ValidateResult.CONTINUE;
 			}
 		} else {
-			throw new SyntaxErrorException(MError.ERR_UNMATCHED_PARANTHESIS, lineIndex);
+			throw new SyntaxErrorException(MError.ERR_UNMATCHED_PARANTHESIS, lineIndex, foundTokens);
 		}
 	}
 	
 	@Override
 	protected void validateEnd(int seqIndex, int lineIndex, TokenStore foundTokens) throws SyntaxErrorException {
 		if (seqIndex > 0) {
-			throw new SyntaxErrorException( MError.ERR_UNMATCHED_PARANTHESIS, lineIndex);
+			throw new SyntaxErrorException( MError.ERR_UNMATCHED_PARANTHESIS, lineIndex, foundTokens);
 		}
 	}
 	

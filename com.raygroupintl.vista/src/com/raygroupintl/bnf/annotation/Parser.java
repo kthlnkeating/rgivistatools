@@ -453,7 +453,6 @@ public class Parser {
 			for (Triple<TFList, List> p : this.lists) {
 				TokenFactory f = this.symbols.get(p.annotation.value());
 				p.factory.setElementFactory(f);
-				p.factory.setAddErrorToList(p.annotation.adderror());
 			}	
 		}
 		
@@ -463,7 +462,6 @@ public class Parser {
 				TokenFactory l = this.symbols.get(p.annotation.left());
 				TokenFactory r = this.symbols.get(p.annotation.right());
 				TFList f = new TFList(e);
-				f.setAddErrorToList(p.annotation.adderror());
 				p.factory.setFactories(new TokenFactory[]{l, f, r});
 				p.factory.setRequiredFlags(new boolean[]{true, ! p.annotation.none(), true});
 			}	
@@ -484,7 +482,6 @@ public class Parser {
 				TFSequenceStatic ts = new TFSequenceStatic(d, t);
 				ts.setRequiredFlags(new boolean[]{true, true});
 				TFList tail = new TFList(ts);
-				tail.setAddErrorToList(p.annotation.adderror());
 				
 				TokenFactory leadingElement = e;
 				if (p.annotation.empty()) {
@@ -511,7 +508,6 @@ public class Parser {
 				TFSequenceStatic ts = new TFSequenceStatic(d, t);
 				ts.setRequiredFlags(new boolean[]{true, true});
 				TFList tail = new TFList(ts);
-				tail.setAddErrorToList(p.annotation.adderror());
 				
 				TokenFactory leadingElement = e;
 				if (p.annotation.empty()) {

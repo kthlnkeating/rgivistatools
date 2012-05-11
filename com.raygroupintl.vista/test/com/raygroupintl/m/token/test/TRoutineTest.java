@@ -94,12 +94,8 @@ public class TRoutineTest {
 		InputStream is = this.getClass().getResourceAsStream(fileName);
 		TFRoutine tf = TFRoutine.getInstance(version);
 		MRoutineContent content = MRoutineContent.getInstance(fileName.split(".m")[0], is);
-		try {
-			TRoutine r = tf.tokenize(content);
-			Assert.assertFalse("Unexpected error: " + fileName, r.hasError() || r.hasFatalError());	
-		} catch(SyntaxErrorException e) {
-			fail("Exception: " + e.getMessage());
-		}
+		TRoutine r = tf.tokenize(content);
+		Assert.assertFalse("Unexpected error: " + fileName, r.hasError() || r.hasFatalError());	
 	}
 
 	@Test

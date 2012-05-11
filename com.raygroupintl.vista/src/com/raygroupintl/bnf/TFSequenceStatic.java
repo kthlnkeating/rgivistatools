@@ -76,13 +76,13 @@ public final class TFSequenceStatic extends TFSequence {
 		if (seqIndex == this.firstRequired) {
 			for (int i=this.lookAhead; i<seqIndex; ++i) {
 				if (foundTokens.get(i) != null) {
-					throw new SyntaxErrorException(MError.ERR_GENERAL_SYNTAX, lineIndex);
+					throw new SyntaxErrorException(MError.ERR_GENERAL_SYNTAX, lineIndex, foundTokens);
 				}
 			}
 			return ValidateResult.NULL_RESULT;
 		}
 		if (this.requiredFlags[seqIndex]) {
-			throw new SyntaxErrorException(MError.ERR_GENERAL_SYNTAX, lineIndex);
+			throw new SyntaxErrorException(MError.ERR_GENERAL_SYNTAX, lineIndex, foundTokens);
 		} else {
 			return ValidateResult.CONTINUE;
 		}
@@ -91,7 +91,7 @@ public final class TFSequenceStatic extends TFSequence {
 	@Override
 	protected void validateEnd(int seqIndex, int lineIndex, TokenStore foundTokens) throws SyntaxErrorException {
 		if (seqIndex < this.lastRequired) {
-			throw new SyntaxErrorException(MError.ERR_GENERAL_SYNTAX, lineIndex);
+			throw new SyntaxErrorException(MError.ERR_GENERAL_SYNTAX, lineIndex, foundTokens);
 		}
 	}
 	

@@ -1,16 +1,20 @@
 package com.raygroupintl.bnf.annotation;
 
-import com.raygroupintl.bnf.TFConstChar;
 import com.raygroupintl.bnf.TokenFactory;
 
 public class DescriptionSpec {
-	public TokenFactory comma = new TFConstChar(',');
+	@CharSpecified(chars={','}, single=true)
+	public TokenFactory comma;
 	
-	public TokenFactory lpar = new TFConstChar('(');
-	public TokenFactory rpar = new TFConstChar(')');
+	@CharSpecified(chars={'('}, single=true)
+	public TokenFactory lpar;
+	@CharSpecified(chars={')'}, single=true)
+	public TokenFactory rpar;
 	
-	public TokenFactory lsqr = new TFConstChar('[');
-	public TokenFactory rsqr = new TFConstChar(']');
+	@CharSpecified(chars={'['}, single=true)
+	public TokenFactory lsqr;
+	@CharSpecified(chars={']'}, single=true)
+	public TokenFactory rsqr;
 	
 	@TokenType(TSymbol.class)
 	@CharSpecified(ranges={'a', 'z'})

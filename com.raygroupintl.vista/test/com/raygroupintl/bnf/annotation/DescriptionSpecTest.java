@@ -13,10 +13,12 @@ import org.junit.Test;
 
 import com.raygroupintl.bnf.SyntaxErrorException;
 import com.raygroupintl.bnf.TArray;
-import com.raygroupintl.bnf.TFConstChar;
+import com.raygroupintl.bnf.TFCharacter;
 import com.raygroupintl.bnf.TFSequenceStatic;
 import com.raygroupintl.bnf.Token;
 import com.raygroupintl.bnf.TokenFactory;
+import com.raygroupintl.charlib.CharPredicate;
+import com.raygroupintl.charlib.Predicate;
 
 public class DescriptionSpecTest {
 	private static DescriptionSpec spec;
@@ -69,7 +71,8 @@ public class DescriptionSpecTest {
 	}
 
 	private void updateMap(Map<String, TokenFactory> map, char ch) {
-		TokenFactory f = new TFConstChar(ch);
+		Predicate p = new CharPredicate(ch);
+		TokenFactory f = new TFCharacter(p);
 		map.put(String.valueOf(ch), f);		
 	}
 	

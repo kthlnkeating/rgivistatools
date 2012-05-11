@@ -46,7 +46,11 @@ public class ArrayAsTokenStore implements TokenStore {
 		return Arrays.asList(this.tokens);
 	}
 	
-	
+	@Override
+	public Token toToken() {
+		return new TArray(this.tokens);		
+	}
+		
 	@Override
 	public Iterator<Token> iterator() {
 		return new IterableArray<Token>(this.tokens).iterator();
@@ -55,6 +59,11 @@ public class ArrayAsTokenStore implements TokenStore {
 	@Override
 	public Token get(int index) {
 		return this.tokens[index];
+	}
+
+	@Override
+	public int size() {
+		return this.index;
 	}
 
 	@Override

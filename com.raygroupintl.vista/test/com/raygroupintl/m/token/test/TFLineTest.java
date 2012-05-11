@@ -15,6 +15,7 @@ import com.raygroupintl.bnf.Token;
 import com.raygroupintl.bnf.TokenFactory;
 import com.raygroupintl.m.token.MTFSupply;
 import com.raygroupintl.m.token.MVersion;
+import com.raygroupintl.m.token.TFRoutine;
 import com.raygroupintl.vista.struct.MError;
 
 public class TFLineTest {
@@ -48,7 +49,10 @@ public class TFLineTest {
 			}
 			return t;
 		} catch(SyntaxErrorException e) {
-			fail("Exception: " + e.getMessage());
+			Token t = TFRoutine.recoverFromError(line, e);
+			String r = t.getStringValue();
+			Assert.assertEquals(line, r);
+			Assert.assertFalse(errorAsWell);
 			return null;
 		}			
 	}
@@ -62,13 +66,9 @@ public class TFLineTest {
 			int numErrors = error == null ? 0 : error.size();
 			Assert.assertTrue(numErrors > 0);	
 		} catch(SyntaxErrorException e) {
-			Token t = e.getAsToken(line, 0);
+			Token t = TFCommonTest.getErrorToken(e, line);
 			String r = t.getStringValue();
 			Assert.assertEquals(line, r);	
-			List<MError> error = t.getErrors();
-			int numErrors = error == null ? 0 : error.size();
-			Assert.assertTrue(numErrors > 0);	
-			
 		}
 	}
 

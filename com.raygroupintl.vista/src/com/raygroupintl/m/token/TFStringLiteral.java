@@ -1,13 +1,14 @@
 package com.raygroupintl.m.token;
 
+import com.raygroupintl.bnf.ArrayAsTokenStore;
+import com.raygroupintl.bnf.SyntaxErrorException;
 import com.raygroupintl.bnf.Token;
 import com.raygroupintl.bnf.TokenFactory;
-import com.raygroupintl.bnf.TSyntaxError;
 import com.raygroupintl.vista.struct.MError;
 
 public class TFStringLiteral extends TokenFactory {
 	@Override
-	public Token tokenize(String line, int fromIndex) {
+	public Token tokenize(String line, int fromIndex) throws SyntaxErrorException {
 		int endIndex = line.length();
 		if (fromIndex < endIndex) {
 			char ch = line.charAt(fromIndex);
@@ -26,7 +27,7 @@ public class TFStringLiteral extends TokenFactory {
 					}				
 					sb.append(ch);
 				}
-				return new TSyntaxError(MError.ERR_UNMATCHED_QUOTATION, line, fromIndex);
+				throw new SyntaxErrorException(MError.ERR_UNMATCHED_QUOTATION, fromIndex, new ArrayAsTokenStore(0));
 			}
 		}
 		return null;

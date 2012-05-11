@@ -1,19 +1,32 @@
 package com.raygroupintl.bnf;
 
-import com.raygroupintl.vista.struct.MError;
+import java.util.ArrayList;
+import java.util.List;
 
 @SuppressWarnings("serial")
 public class SyntaxErrorException extends Exception {
 	private int code;
 	private int location;
+	private List<TokenStore> tokens = new ArrayList<TokenStore>();
+		
+	public SyntaxErrorException(int code, int location, TokenStore store) {
+		this.code = code;
+		this.location = location;
+		this.tokens.add(store);			
+	}
 	
 	public SyntaxErrorException(int code, int location) {
 		this.code = code;
 		this.location = location;
 	}
 	
+	public SyntaxErrorException(int location, TokenStore store) {
+		this.location = location;
+		this.tokens.add(store);
+	}
+	
 	public SyntaxErrorException(int location) {
-		this(MError.ERR_GENERAL_SYNTAX, location);
+		this.location = location;
 	}
 	
 	public int getLocation() {
@@ -24,9 +37,11 @@ public class SyntaxErrorException extends Exception {
 		return this.code;
 	}
 
-	public TSyntaxError getAsToken(String line, int fromIndex) {
-		TSyntaxError result = new TSyntaxError(this.code, line, this.location);
-		result.setFromIndex(fromIndex);
-		return result;
+	public void addStore(TokenStore store) {
+		this.tokens.add(store);
+	}
+	
+	public List<TokenStore> getTokenStores() {
+		return this.tokens;
 	}
 }

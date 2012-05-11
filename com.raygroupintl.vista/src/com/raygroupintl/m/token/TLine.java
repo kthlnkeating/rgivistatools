@@ -4,9 +4,10 @@ import java.util.List;
 
 import com.raygroupintl.bnf.Token;
 import com.raygroupintl.bnf.TArray;
+import com.raygroupintl.m.cmdtree.Line;
 import com.raygroupintl.m.struct.Fanout;
 
-public class TLine extends TArray {	
+public class TLine extends TArray implements NodeFactory {	
 	public TLine(Token[] tokens) {
 		super(tokens);
 	}
@@ -22,5 +23,10 @@ public class TLine extends TArray {
 	
 	public List<Fanout> getFanouts() {
 		return null;
+	}
+	
+	@Override
+	public Line getNode() {
+		return new Line();
 	}
 }

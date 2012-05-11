@@ -53,8 +53,14 @@ public abstract class TFSequence extends TokenFactory {
 			TokenStore foundTokens = new ArrayAsTokenStore(factoryCount);
 			for (int i=0; i<factoryCount; ++i) {
 				TokenFactory factory = this.getTokenFactory(i, foundTokens);
-				Token token = factory.tokenize(line, index);				
-				
+				Token token = null;
+				try {
+					token = factory.tokenize(line, index);				
+				} catch (SyntaxErrorException e) {
+					e.addStore(foundTokens);
+					throw e;
+				}
+					
 				ValidateResult vr = this.validate(i, index, foundTokens, token);
 				if (vr == ValidateResult.BREAK) break;
 				if (vr == ValidateResult.NULL_RESULT) return null;

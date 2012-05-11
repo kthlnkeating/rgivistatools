@@ -522,10 +522,10 @@ public class MTFSupply {
 	public TokenFactory comment = new TFComment();
 	@CChoice(value={"command", "comment"}, preds={"letter", ";"}, def="error")
 	public TokenFactory commandorcomment;
-	@List(value="commandorcomment", adderror=true)
+	@List(value="commandorcomment")
 	public TokenFactory commandorcommentlist;
 	@CharSpecified(chars={' ', '\t'})
-	public TokenFactory ls;  // = TFConstChars.getInstance(" \t");
+	public TokenFactory ls;
 	
 	@CharSpecified(chars={' ', '.'})
 	public TokenFactory level;

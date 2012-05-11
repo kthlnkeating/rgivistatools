@@ -11,13 +11,16 @@ import java.util.Set;
 
 import com.raygroupintl.bnf.Token;
 import com.raygroupintl.bnf.TBase;
+import com.raygroupintl.m.cmdtree.EntryTag;
+import com.raygroupintl.m.cmdtree.Line;
+import com.raygroupintl.m.cmdtree.Routine;
 import com.raygroupintl.m.struct.Fanout;
 import com.raygroupintl.m.struct.LineLocation;
 import com.raygroupintl.m.struct.RoutineFanouts;
 import com.raygroupintl.vista.struct.MError;
 import com.raygroupintl.vista.struct.MLocationedError;
 
-public class TRoutine extends TBase {
+public class TRoutine extends TBase implements NodeFactory {
 	private String name;
 	private List<TLine> lines = new ArrayList<TLine>();
 	private List<LineLocation> locations;
@@ -153,5 +156,25 @@ public class TRoutine extends TBase {
 			this.locations = this.buildLocations();
 		}
 		return this.locations;
+	}
+	
+	@Override
+	public Routine getNode() {
+		Routine result = new Routine(this.name);
+		int endIndex = this.lines.size();		
+		int index = 1;
+		EntryTag entryTag = null;
+		while (index < endIndex) {
+			TLine tline = this.lines.get(0);
+			String tag = tline.getTag();
+			if ((tag != null) || (tag == null)) {
+				if (tag == null) tag = "";
+				entryTag = new EntryTag(tag);					
+			}
+			Line node = tline.getNode();
+			entryTag.add(node);
+			++index;				
+		}
+		return result;
 	}
 }

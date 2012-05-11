@@ -1,8 +1,9 @@
-package com.raygroupintl.bnf;
+package com.raygroupintl.m.token;
 
 import java.util.Arrays;
 import java.util.List;
 
+import com.raygroupintl.bnf.Token;
 import com.raygroupintl.vista.struct.MError;
 
 public class TSyntaxError implements Token {	
