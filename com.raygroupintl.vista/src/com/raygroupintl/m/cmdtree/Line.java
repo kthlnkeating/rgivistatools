@@ -17,17 +17,19 @@
 package com.raygroupintl.m.cmdtree;
 
 public class Line extends Block<Node> {
+	private int index;
 	private int level;
-	
+		
 	public Line() {
 	}
 	
-	public Line(int level) {
+	public Line(int index, int level) {
+		this.index = index;
 		this.level = level;
 	}
 
 	public String getKey() {
-		return String.valueOf(this.level);
+		return String.valueOf(this.index);
 	}
 
 	public int getLevel() {

@@ -6,7 +6,9 @@ import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
+import java.util.NoSuchElementException;
 import java.util.Set;
 
 import com.raygroupintl.bnf.Token;
@@ -21,6 +23,61 @@ import com.raygroupintl.vista.struct.MError;
 import com.raygroupintl.vista.struct.MLocationedError;
 
 public class TRoutine extends TBase implements NodeFactory {
+	private class TLineIterator implements Iterator<TLine> {
+		private Routine routine = new Routine(TRoutine.this.name);
+		int minAllowedLevel;
+				
+		private EntryTag entryTag;
+		private int entryTagIndex;
+		private int containerIndex;
+				
+		public Routine getNode() {
+			while (this.containerIndex < TRoutine.this.lines.size()) {
+				this.next();
+			}
+			return this.routine;
+		}
+		
+		@Override
+	    public boolean hasNext() {
+			if (this.containerIndex < TRoutine.this.lines.size()) {
+				TLine next = TRoutine.this.lines.get(this.containerIndex);
+				int level = next.getLevel();
+				return level >= this.minAllowedLevel;
+			}
+			return false;
+	    }
+			
+		@Override
+		public TLine next() throws NoSuchElementException {
+			if (! hasNext()) {
+				throw new NoSuchElementException();
+			}
+			TLine line = TRoutine.this.lines.get(this.containerIndex);
+			++this.containerIndex;
+			String tag = line.getTag();
+			if ((tag != null) || (entryTag == null)) {
+				if (tag == null) tag = "";
+				this.entryTag = new EntryTag(tag);
+				this.entryTagIndex = 0;
+				this.routine.add(entryTag);
+			}
+			
+			int currentMinAllowedLevel = this.minAllowedLevel;
+			++this.minAllowedLevel;
+			Line node = line.getNode(this.entryTagIndex, this);
+			this.minAllowedLevel = currentMinAllowedLevel;
+			
+			this.entryTag.add(node);
+			return line;
+		}
+		
+		@Override
+		public void remove() {
+			throw new UnsupportedOperationException();
+		}
+	}
+
 	private String name;
 	private List<TLine> lines = new ArrayList<TLine>();
 	private List<LineLocation> locations;
@@ -160,21 +217,7 @@ public class TRoutine extends TBase implements NodeFactory {
 	
 	@Override
 	public Routine getNode() {
-		Routine result = new Routine(this.name);
-		int endIndex = this.lines.size();		
-		int index = 1;
-		EntryTag entryTag = null;
-		while (index < endIndex) {
-			TLine tline = this.lines.get(0);
-			String tag = tline.getTag();
-			if ((tag != null) || (tag == null)) {
-				if (tag == null) tag = "";
-				entryTag = new EntryTag(tag);					
-			}
-			Line node = tline.getNode();
-			entryTag.add(node);
-			++index;				
-		}
-		return result;
+		TLineIterator it = this.new TLineIterator();
+		return it.getNode();
 	}
 }
