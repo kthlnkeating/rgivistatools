@@ -14,6 +14,7 @@ import com.raygroupintl.bnf.SyntaxErrorException;
 import com.raygroupintl.bnf.TFCharacter;
 import com.raygroupintl.bnf.TFConstString;
 import com.raygroupintl.bnf.TFEmpty;
+import com.raygroupintl.bnf.TFEnd;
 import com.raygroupintl.bnf.TFList;
 import com.raygroupintl.bnf.TList;
 import com.raygroupintl.bnf.Token;
@@ -611,6 +612,7 @@ public class Parser {
 			T target = cls.newInstance();
 			Store store = new Store();
 			store.add(target);
+			store.symbols.put("end", new TFEnd());
 			store.updateEquivalents(target);
 			store.update(cls, ignore);
 			return target;

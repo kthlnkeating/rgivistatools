@@ -11,7 +11,7 @@ import com.raygroupintl.bnf.TokenStore;
 import com.raygroupintl.m.token.TSyntaxError;
 
 public class TFCommonTest {
-	private static void validTokenCheck(Token t, String v) {
+	public static void validTokenCheck(Token t, String v) {
 		Assert.assertEquals(v, t.getStringValue());
 		Assert.assertEquals(v.length(), t.getStringSize());		
 	}

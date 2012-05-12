@@ -600,7 +600,7 @@ public class TFCommand extends TFSequence {
 				return f;
 			}					
 			case 4:
-				return TFCommand.this.supply.spaces;
+				return TFCommand.this.supply.commandend;//      spaces;
 			default:
 				assert(i == 5);
 				return null;
@@ -608,9 +608,23 @@ public class TFCommand extends TFSequence {
 	}	
 
 	@Override
-	protected ValidateResult validateNull(int seqIndex, int lineIndex, TokenStore foundTokens) {
+	public Token tokenize(String line, int fromIndex) {
+		try {
+			return super.tokenize(line, fromIndex);
+		} catch (SyntaxErrorException e) {
+			TSyntaxError t = new TSyntaxError(e.getCode(), line, e.getLocation());
+			t.setFromIndex(fromIndex);
+			return t;
+		}
+	}
+	
+	
+	@Override
+	protected ValidateResult validateNull(int seqIndex, int lineIndex, TokenStore foundTokens)  throws SyntaxErrorException {
 		if (seqIndex == 0) {
 			return ValidateResult.NULL_RESULT;
+		} else if (seqIndex == 4) {
+			throw new SyntaxErrorException(MError.ERR_GENERAL_SYNTAX, lineIndex, foundTokens);
 		} else {
 			return ValidateResult.CONTINUE;				
 		}

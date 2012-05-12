@@ -1,9 +1,15 @@
 package com.raygroupintl.m.token;
 
+import static org.junit.Assert.fail;
+import junit.framework.Assert;
+
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
+import com.raygroupintl.bnf.SyntaxErrorException;
+import com.raygroupintl.bnf.Token;
+import com.raygroupintl.bnf.TokenFactory;
 import com.raygroupintl.m.token.MTFSupply;
 import com.raygroupintl.m.token.MVersion;
 import com.raygroupintl.m.token.TFCommand;
@@ -27,6 +33,16 @@ public class TFCommandTest {
 		fCache = null;
 	}
 		
+	private void testError(TokenFactory f, String v) {
+		try {
+			Token t = f.tokenize(v, 0);
+			Assert.assertTrue(t instanceof TSyntaxError);
+			TFCommonTest.validTokenCheck(t, v);
+		} catch(SyntaxErrorException e) {
+			fail("Unexpected exception.");
+		}
+	}
+
 	private void testBreak(TFCommand f) {
 		TFCommonTest.validCheckNS(f, "B");
 		TFCommonTest.validCheckNS(f, "B   ");
@@ -79,7 +95,7 @@ public class TFCommandTest {
 		TFCommonTest.validCheckNS(f, "G @A:P");
 		TFCommonTest.validCheckNS(f, "G ^@B");
 		TFCommonTest.validCheckNS(f, "G ^@B:P");
-		TFCommonTest.errorCheck(f, "G ^");
+		testError(f, "G ^");
 		TFCommonTest.validCheckNS(f, "G 0^DIE17");
 	}
 
@@ -151,15 +167,15 @@ public class TFCommandTest {
 		TFCommonTest.validCheckNS(f, "K (A)");
 		TFCommonTest.validCheckNS(f, "K (A,B)");
 		TFCommonTest.validCheckNS(f, "K %ZIS");
-		TFCommonTest.errorCheck(f, "K (^A)");
-		TFCommonTest.errorCheck(f, "K (A,^A)");
-		TFCommonTest.errorCheck(f, "K (A(25))");
-		TFCommonTest.errorCheck(f, "K (B,A(3,2))");
-		TFCommonTest.errorCheck(f, "K ()");
-		TFCommonTest.errorCheck(f, "K (,A)");
-		TFCommonTest.errorCheck(f, "K (D,,Y)");
-		TFCommonTest.errorCheck(f, "K CC,DD,EE,");
-		TFCommonTest.errorCheck(f, "K CC,,EE");
+		testError(f, "K (^A)");
+		testError(f, "K (A,^A)");
+		testError(f, "K (A(25))");
+		testError(f, "K (B,A(3,2))");
+		testError(f, "K ()");
+		testError(f, "K (,A)");
+		testError(f, "K (D,,Y)");
+		testError(f, "K CC,DD,EE,");
+		testError(f, "K CC,,EE");
 	}
 
 	@Test

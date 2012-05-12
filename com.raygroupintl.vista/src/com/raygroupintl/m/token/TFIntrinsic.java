@@ -182,7 +182,7 @@ public class TFIntrinsic extends TFSequence {
 	}	
 
 	@Override
-	protected ValidateResult validateNull(int seqIndex, int lineIndex, TokenStore foundTokens) throws SyntaxErrorException{
+	protected ValidateResult validateNull(int seqIndex, int lineIndex, TokenStore foundTokens) throws SyntaxErrorException {
 		if (seqIndex == 0) {
 			return ValidateResult.NULL_RESULT;
 		} else if (seqIndex == 1) {

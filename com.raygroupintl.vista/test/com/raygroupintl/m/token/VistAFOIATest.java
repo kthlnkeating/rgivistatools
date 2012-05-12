@@ -30,11 +30,11 @@ public class VistAFOIATest {
 		try {
 			List<Path> paths = FileSupply.getAllMFiles();
 			for (Path path : paths) {
-				//if (path.toString().indexOf("PRCATA") >= 0) return;
+				String n = path.getFileName().toString().split(".m")[0];
+				//if (! n.equals("ZTMB")) continue;
 				//byte[] b = Files.readAllBytes(path);
 				//String text = new String(b);
 				//rrr = path.getFileName().toString();
-				//String n = path.getFileName().toString().split(".m")[0];
 				//System.out.print(n + '\n');
 				//TRoutine r = tf.tokenize(n, text, 0);
 				//String tokenValue = r.getStringValue();					

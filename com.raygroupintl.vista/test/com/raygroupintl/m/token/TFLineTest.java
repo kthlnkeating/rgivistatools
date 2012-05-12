@@ -11,6 +11,8 @@ import org.junit.BeforeClass;
 import org.junit.Test;
 
 import com.raygroupintl.bnf.SyntaxErrorException;
+import com.raygroupintl.bnf.TArray;
+import com.raygroupintl.bnf.TList;
 import com.raygroupintl.bnf.Token;
 import com.raygroupintl.bnf.TokenFactory;
 import com.raygroupintl.m.token.MTFSupply;
@@ -55,6 +57,20 @@ public class TFLineTest {
 			Assert.assertFalse(errorAsWell);
 			return null;
 		}			
+	}
+
+	private void lineTest(TokenFactory f, String line, int errorCommand, int errorLocation) {
+		try {
+			Token t = f.tokenize(line, 0);
+			String r = t.getStringValue();
+			Assert.assertEquals(line, r);	
+			TList commands = (TList) ((TArray) t).get(4);
+			Token error = commands.get(errorCommand);
+			Assert.assertTrue(error instanceof TSyntaxError);
+			Assert.assertEquals(errorLocation, ((TSyntaxError) error).getErrorLocation());
+		} catch (SyntaxErrorException e) {
+			Assert.fail("Unexpected exception.");
+		}
 	}
 
 	private void lineErrorTest(TokenFactory f, String line) {
@@ -121,6 +137,7 @@ public class TFLineTest {
 		lineTest(f, " .I $Y>(IOSL-9) D UP^DVBCRPR1,NEXT,HDR^DVBCRPR1 W:$O(^DVB(396.4,OLDA,\"RES\",LINE))]\"\"&('+$G(DVBGUI)) !!,\"Exam Results Continued\",!!");
 		lineTest(f, " S Y=$$FPS^RCAMFN01($S($G(LDT)>0:$E(LDT,1,5),1:$E(DT,1,5))_$TR($J($$PST^RCAMFN01(DEB),2),\" \",0),$S(+$E($G(LDT),6,7)>$$STD^RCCPCFN:2,1:1)) D DD^%D");
 		lineTest(f, " S A=1 H  ");
+		lineTest(f, " I ZTOS'[\"VAX DSM\" J RESTART^%ZTM0[ZTUCI] D DONE Q", 1, 34);
 		lineErrorTest(f, " S A=4  K ,CC,EE");
 	}
 	

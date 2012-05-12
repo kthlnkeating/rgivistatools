@@ -518,6 +518,8 @@ public class MTFSupply {
 	@Sequence(value={"dollar", "ident"}, required="all")
 	public TokenFactory intrinsicname;
 
+	@Choice({"spaces", "comment", "end"})
+	public TokenFactory commandend;
 	public TFCommand command = new TFCommand(this);
 	public TokenFactory comment = new TFComment();
 	@CChoice(value={"command", "comment"}, preds={"letter", ";"}, def="error")
