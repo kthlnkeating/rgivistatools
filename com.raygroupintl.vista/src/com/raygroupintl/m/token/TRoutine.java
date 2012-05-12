@@ -7,7 +7,6 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Set;
 
 import com.raygroupintl.bnf.Token;
 import com.raygroupintl.bnf.TBase;
@@ -18,7 +17,6 @@ import com.raygroupintl.m.struct.Fanout;
 import com.raygroupintl.m.struct.LineLocation;
 import com.raygroupintl.m.struct.RoutineFanouts;
 import com.raygroupintl.vista.struct.MError;
-import com.raygroupintl.vista.struct.MLocationedError;
 
 public class TRoutine extends TBase implements NodeFactory {
 	private String name;
@@ -90,25 +88,6 @@ public class TRoutine extends TBase implements NodeFactory {
 		}		
 	}
 
-	public List<MLocationedError> getErrors(Set<LineLocation> exemptions) throws IOException {
-		List<MLocationedError> result = new ArrayList<MLocationedError>();
-		List<LineLocation> locations = this.getLineLocations();
-		for (int i=0; i<this.lines.size(); ++i) {
-			TLine line = this.lines.get(i);
-			LineLocation location = locations.get(i);
-			if ((exemptions == null) || (! exemptions.contains(location))) {
-				List<MError> errors = line.getErrors();
-				if ((errors != null) && (errors.size() > 0)) {
-					for (MError error : errors) {
-						MLocationedError p = new MLocationedError(error, location);
-						result.add(p);
-					}
-				}
-			}
-		}		
-		return result;
-	}	
-	
 	public RoutineFanouts getFanouts() {
 		RoutineFanouts result = new RoutineFanouts(this.name);
 		List<LineLocation> locations = this.getLineLocations();

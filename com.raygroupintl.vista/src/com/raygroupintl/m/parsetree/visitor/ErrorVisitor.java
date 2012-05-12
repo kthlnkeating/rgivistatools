@@ -18,6 +18,7 @@ package com.raygroupintl.m.parsetree.visitor;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 
 import com.raygroupintl.m.parsetree.ErrorNode;
 import com.raygroupintl.m.parsetree.Line;
@@ -31,14 +32,17 @@ public class ErrorVisitor extends Visitor {
 	private String tag = "";
 	private int index;
 
-	private List<MLocationedError> result = new ArrayList<MLocationedError>();
-		
+	private List<MLocationedError> result;
+	private Set<LineLocation> exemptions;
+	
 	@Override
 	protected void visitErrorNode(ErrorNode errorNode) {		
 		LineLocation location = new LineLocation(this.tag, this.index);
-		MError error = errorNode.getError();
-		MLocationedError element = new MLocationedError(error, location);  
-		this.result.add(element);
+		if ((this.exemptions == null) || (! this.exemptions.contains(location))) {
+			MError error = errorNode.getError();
+			MLocationedError element = new MLocationedError(error, location);  
+			this.result.add(element);
+		}
 	}
 		
 	@Override
@@ -49,6 +53,12 @@ public class ErrorVisitor extends Visitor {
 	}
 			
 	public List<MLocationedError> visitErrors(Routine routine) {
+		return this.visitErrors(routine, null);
+	}
+	
+	public List<MLocationedError> visitErrors(Routine routine, Set<LineLocation> exemptions) {
+		this.result = new ArrayList<MLocationedError>();		
+		this.exemptions = exemptions;
 		this.visitRoutine(routine);
 		return this.result;
 	}

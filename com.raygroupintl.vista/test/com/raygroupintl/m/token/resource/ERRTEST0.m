@@ -8,7 +8,7 @@ ADD(A,B) ;
 MULTIPLY(A,B) ;
  N PROD
  S PROD=A*
- Q PROD
+ Q PROD    ; QUIT
  ;
 MAIN
  N A,B
@@ -16,6 +16,6 @@ MAIN
  S C=
  S D=A+B
  S MULTIPLY(C,D)
- W D
+ W D Q ;
  Q
  ; 

@@ -53,7 +53,7 @@ public class TLine extends TArray implements NodeFactory {
 		Line result = new Line(this.tagName, this.index, this.getLevel());
 		TList cmds = (TList) this.get(4);
 		if (cmds != null) {
-			for (Iterator<Token> it = cmds.iteratorForDelimited(); it.hasNext();) {
+			for (Iterator<Token> it = cmds.iterator(); it.hasNext();) {
 				Token t = it.next();
 				if (t instanceof NodeFactory) {
 					Node node = ((NodeFactory) t).getNode();

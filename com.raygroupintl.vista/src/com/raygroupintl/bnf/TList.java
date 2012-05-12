@@ -153,4 +153,8 @@ public class TList implements Token {
 	public Iterator<Token> iteratorForDelimited() {
 		return this.new DelimitedIterator();
 	}
+
+	public Iterator<Token> iterator() {
+		return this.tokens.iterator();
+	}
 }

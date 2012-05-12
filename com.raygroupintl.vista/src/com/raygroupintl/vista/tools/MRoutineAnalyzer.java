@@ -11,6 +11,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import com.raygroupintl.bnf.SyntaxErrorException;
+import com.raygroupintl.m.parsetree.visitor.ErrorVisitor;
 import com.raygroupintl.m.struct.Fanout;
 import com.raygroupintl.m.struct.LineLocation;
 import com.raygroupintl.m.struct.RoutineFanouts;
@@ -31,12 +32,13 @@ public class MRoutineAnalyzer {
 		final FileOutputStream os = new FileOutputStream(file);
 		final String eol = TRoutine.getEOL();
 		List<Path> paths = FileSupply.getAllMFiles();
+		ErrorVisitor ev = new ErrorVisitor();
 		for (Path path : paths) {
 			TRoutine r = tf.tokenize(path);			
 			final String name = r.getName();
 			if (! exemptions.containsRoutine(name)) {
 				Set<LineLocation> locations = exemptions.getLines(name);
-				List<MLocationedError> errors = r.getErrors(locations);
+				List<MLocationedError> errors = ev.visitErrors(r.getNode(), locations);
 				if (errors.size() > 0) {
 					os.write((eol + eol + r.getName() + eol).getBytes());
 					errorCount += errors.size();
