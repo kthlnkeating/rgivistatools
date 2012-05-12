@@ -51,14 +51,23 @@ public class TFRoutine {
 	public TRoutine tokenize(MRoutineContent content) {
 		String name = content.getName();
 		TRoutine result = new TRoutine(name);
+		int index = 0;
+		String tagName = "";
 		for (String line : content.getLines()) {
+			TLine tokens = null;
 			try {
-				TLine tokens = (TLine) this.tfLine.tokenize(line, 0);
-				result.add(tokens);
+				tokens = (TLine) this.tfLine.tokenize(line, 0);
 			} catch (SyntaxErrorException e) {
-				TLine tl = recoverFromError(line, e);
-				result.add(tl);
+				tokens = recoverFromError(line, e);
 			}
+			String lineTagName = tokens.getTag();
+			if (lineTagName != null) {
+				tagName = lineTagName;
+				index = 0;
+			}
+			tokens.setIdentifier(tagName, index);
+			result.add(tokens);
+			++index;
 		}		
 		return result;
 	}
@@ -69,7 +78,7 @@ public class TFRoutine {
 		return r;
 	}
 		
-	private TRoutine tokenize(String name, String line, int fromIndex) throws SyntaxErrorException {
+	public TRoutine tokenize(String name, String line, int fromIndex) throws SyntaxErrorException {
 		int endIndex = line.length();
 		int index = fromIndex;
 		TRoutine result = new TRoutine(name);

@@ -17,11 +17,15 @@
 package com.raygroupintl.m.cmdtree;
 
 public class EntryTag extends Block<Line> {
-	private String tagName;
+	private String name;
+	private String routineName;
+	private int index;
 	private String[] parameters;
 	
-	public EntryTag(String tagName) {
-		this.tagName = tagName;
+	public EntryTag(String name, String routineName, int index) {
+		this.name = name;
+		this.routineName = routineName;
+		this.index = index;
 	}
 	
 	public EntryTag(String tagName, String[] parameters) {
@@ -29,7 +33,7 @@ public class EntryTag extends Block<Line> {
 	}
 		
 	public String getKey() {
-		return this.tagName;
+		return this.name + '^' + this.routineName + ',' + String.valueOf(this.index);
 	}
 	
 	public int getParameterCount() {

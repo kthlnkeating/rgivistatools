@@ -77,14 +77,14 @@ public class TSyntaxError implements Token {
 	public void beautify() {		
 	}
 	
-	public static TSyntaxError getInstance(int errorCode, String line, int index) {
-		TSyntaxError result = new TSyntaxError(errorCode, line, index);
-		return result;
-	}
+	//public static TSyntaxError getInstance(int errorCode, String line, int index) {
+	//	TSyntaxError result = new TSyntaxError(errorCode, line, index);
+	//	return result;
+	//}
 
-	public static TSyntaxError getInstance(int errorCode, String line, int index, int fromIndex) {
-		TSyntaxError result = new TSyntaxError(errorCode, line, index);
-		result.setFromIndex(fromIndex);
-		return result;
-	}
+	//public static TSyntaxError getInstance(int errorCode, String line, int index, int fromIndex) {
+	//	TSyntaxError result = new TSyntaxError(errorCode, line, index);
+	//	result.setFromIndex(fromIndex);
+	//	return result;
+	//}
 }

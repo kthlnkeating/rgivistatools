@@ -7,6 +7,9 @@ public class Visitor {
 		}
 	}
 
+	protected void visitErrorNode(ErrorNode error) {		
+	}
+	
 	protected void visitExpression(Expression expr) {
 	}
 	

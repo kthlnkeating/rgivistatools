@@ -16,27 +16,8 @@
 
 package com.raygroupintl.m.cmdtree;
 
-public class Line extends Block<Node> {
-	private String tagName;
-	private int index;
-	private int level;
-		
-	public Line(String tagName, int index, int level) {
-		this.tagName = tagName;
-		this.index = index;
-		this.level = level;
-	}
-
-	public String getKey() {
-		return this.tagName + ',' + String.valueOf(this.index);
-	}
-
-	public int getLevel() {
-		return this.level;
-	}
-
+public class IgnorableNode implements Node {
 	@Override
 	public void accept(Visitor visitor) {
-		visitor.visitLine(this);
 	}
 }

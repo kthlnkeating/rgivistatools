@@ -16,27 +16,22 @@
 
 package com.raygroupintl.m.cmdtree;
 
-public class Line extends Block<Node> {
-	private String tagName;
-	private int index;
-	private int level;
-		
-	public Line(String tagName, int index, int level) {
-		this.tagName = tagName;
-		this.index = index;
-		this.level = level;
-	}
+import com.raygroupintl.vista.struct.MError;
 
-	public String getKey() {
-		return this.tagName + ',' + String.valueOf(this.index);
+public class ErrorNode implements Node {
+	private int errorCode;
+	
+	public ErrorNode(int errorCode) {
+		this.errorCode = errorCode;
 	}
-
-	public int getLevel() {
-		return this.level;
+	
+	public MError getError() {
+		return new MError(this.errorCode);
 	}
-
+	
 	@Override
 	public void accept(Visitor visitor) {
-		visitor.visitLine(this);
+		visitor.visitErrorNode(this);
 	}
+
 }

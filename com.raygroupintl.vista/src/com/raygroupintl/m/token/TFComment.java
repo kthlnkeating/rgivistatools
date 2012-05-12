@@ -17,7 +17,7 @@ public class TFComment extends TokenFactory {
 				//	++index;
 				//}
 				int index = endIndex;
-				String commentContent = line.substring(fromIndex+1, index);
+				String commentContent = line.substring(fromIndex, index);
 				return new TComment(commentContent);
 			}
 		}

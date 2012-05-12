@@ -7,7 +7,6 @@ import com.raygroupintl.bnf.SyntaxErrorException;
 import com.raygroupintl.bnf.TFSequence;
 import com.raygroupintl.bnf.Token;
 import com.raygroupintl.bnf.TokenFactory;
-import com.raygroupintl.bnf.TArray;
 import com.raygroupintl.bnf.TCharacters;
 import com.raygroupintl.bnf.TEmpty;
 import com.raygroupintl.bnf.TFEmptyVerified;
@@ -20,22 +19,6 @@ public class TFCommand extends TFSequence {
 	
 	public TFCommand( MTFSupply supply) {
 		this.supply = supply;
-	}
-	
-	private static abstract class TCommand extends TArray {
-		public TCommand(Token[] tokens) {
-			super(tokens);
-		}
-		
-		protected abstract String getFullName();
-		
-		@Override
-		public void beautify() {
-			TCharacters n = (TCharacters) this.get(0);
-			String newName = this.getFullName();
-			n.setValue(newName);
-			super.beautify();
-		}			
 	}
 	
 	private static class TFGenericArgument extends TokenFactory {
@@ -81,99 +64,44 @@ public class TFCommand extends TFSequence {
 		public abstract Token getToken(Token[] tokens);
 	}
 		
-	private static class TCommandB extends TCommand {
-		public TCommandB(Token[] tokens) {
-			super(tokens);
-		}		
-		
-		@Override
-		protected String getFullName() {		
-			return "BREAK";
-		}			
-	}
-		
 	private static class TBCommandSpec extends TCommandSpec {
 		private TBCommandSpec(String value, MTFSupply supply) {
 			super(value, supply.expr);
 		}
 	
 		public Token getToken(Token[] tokens) {
-			return new TCommandB(tokens);
+			return new TCommand.B(tokens);
 		}
 	}
 	
-	private static class TCommandC extends TCommand {
-		public TCommandC(Token[] tokens) {
-			super(tokens);
-		}		
-		
-		@Override
-		protected String getFullName() {		
-			return "CLOSE";
-		}			
-	}
-		
 	private static class TCCommandSpec extends TCommandSpec {
 		private TCCommandSpec(String value, MTFSupply supply) {
 			super(value, supply.closearg);
 		}
 	
 		public Token getToken(Token[] tokens) {
-			return new TCommandC(tokens);
+			return new TCommand.C(tokens);
 		}
 	}
 	
-	private static class TCommandD extends TCommand {
-		public TCommandD(Token[] tokens) {
-			super(tokens);
-		}		
-		
-		@Override
-		protected String getFullName() {		
-			return "DO";
-		}			
-	}
-
 	private static class TDCommandSpec extends TCommandSpec {
 		private TDCommandSpec(String value, MTFSupply supply) {
 			super(value, supply.cmddargs);
 		}
 	
 		public Token getToken(Token[] tokens) {
-			return new TCommandD(tokens);
+			return new TCommand.D(tokens);
 		}
 	}
 	
-	private static class TCommandE extends TCommand {
-		public TCommandE(Token[] tokens) {
-			super(tokens);
-		}		
-		
-		@Override
-		protected String getFullName() {		
-			return "ELSE";
-		}			
-	}
-
 	private static class TECommandSpec extends TCommandSpec {
 		private TECommandSpec(String value, MTFSupply supply) {
 			super(value, TF_EMPTY);
 		}
 	
 		public Token getToken(Token[] tokens) {
-			return new TCommandE(tokens);
+			return new TCommand.E(tokens);
 		}
-	}
-
-	private static class TCommandF extends TCommand {
-		public TCommandF(Token[] tokens) {
-			super(tokens);
-		}		
-		
-		@Override
-		protected String getFullName() {		
-			return "FOR";
-		}			
 	}
 
 	private static class TFCommandSpec extends TCommandSpec {
@@ -182,19 +110,8 @@ public class TFCommand extends TFSequence {
 		}
 	
 		public Token getToken(Token[] tokens) {
-			return new TCommandF(tokens);
+			return new TCommand.F(tokens);
 		}
-	}
-
-	private static class TCommandG extends TCommand {
-		public TCommandG(Token[] tokens) {
-			super(tokens);
-		}		
-		
-		@Override
-		protected String getFullName() {		
-			return "GOTO";
-		}			
 	}
 
 	private static class TGCommandSpec extends TCommandSpec {
@@ -203,24 +120,8 @@ public class TFCommand extends TFSequence {
 		}
 	
 		public Token getToken(Token[] tokens) {
-			return new TCommandG(tokens);
+			return new TCommand.G(tokens);
 		}
-	}
-
-	private static class TCommandH extends TCommand {
-		public TCommandH(Token[] tokens) {
-			super(tokens);
-		}		
-		
-		@Override
-		protected String getFullName() {
-			Token argument = this.get(3);
-			if (argument == null) {
-				return "HALT";
-			} else {
-				return "HANG";
-			}
-		}			
 	}
 
 	private static class THCommandSpec extends TCommandSpec {
@@ -229,19 +130,8 @@ public class TFCommand extends TFSequence {
 		}
 	
 		public Token getToken(Token[] tokens) {
-			return new TCommandH(tokens);
+			return new TCommand.H(tokens);
 		}
-	}
-
-	private static class TCommandI extends TCommand {
-		public TCommandI(Token[] tokens) {
-			super(tokens);
-		}		
-		
-		@Override
-		protected String getFullName() {		
-			return "IF";
-		}			
 	}
 
 	private static class TICommandSpec extends TCommandSpec {
@@ -250,19 +140,8 @@ public class TFCommand extends TFSequence {
 		}
 	
 		public Token getToken(Token[] tokens) {
-			return new TCommandI(tokens);
+			return new TCommand.I(tokens);
 		}
-	}
-
-	private static class TCommandJ extends TCommand {
-		public TCommandJ(Token[] tokens) {
-			super(tokens);
-		}		
-		
-		@Override
-		protected String getFullName() {		
-			return "JOB";
-		}			
 	}
 
 	private static class TJCommandSpec extends TCommandSpec {
@@ -271,19 +150,8 @@ public class TFCommand extends TFSequence {
 		}
 	
 		public Token getToken(Token[] tokens) {
-			return new TCommandJ(tokens);
+			return new TCommand.J(tokens);
 		}
-	}
-
-	private static class TCommandK extends TCommand {
-		public TCommandK(Token[] tokens) {
-			super(tokens);
-		}		
-		
-		@Override
-		protected String getFullName() {		
-			return "KILL";
-		}			
 	}
 
 	private static class TKCommandSpec extends TCommandSpec {
@@ -292,19 +160,8 @@ public class TFCommand extends TFSequence {
 		}
 	
 		public Token getToken(Token[] tokens) {
-			return new TCommandK(tokens);
+			return new TCommand.K(tokens);
 		}
-	}
-
-	private static class TCommandL extends TCommand {
-		public TCommandL(Token[] tokens) {
-			super(tokens);
-		}		
-		
-		@Override
-		protected String getFullName() {		
-			return "LOCK";
-		}			
 	}
 
 	private static class TLCommandSpec extends TCommandSpec {
@@ -313,19 +170,8 @@ public class TFCommand extends TFSequence {
 		}
 	
 		public Token getToken(Token[] tokens) {
-			return new TCommandL(tokens);
+			return new TCommand.L(tokens);
 		}
-	}
-
-	private static class TCommandM extends TCommand {
-		public TCommandM(Token[] tokens) {
-			super(tokens);
-		}		
-		
-		@Override
-		protected String getFullName() {		
-			return "MERGE";
-		}			
 	}
 
 	private static class TMCommandSpec extends TCommandSpec {
@@ -334,19 +180,8 @@ public class TFCommand extends TFSequence {
 		}
 	
 		public Token getToken(Token[] tokens) {
-			return new TCommandM(tokens);
+			return new TCommand.M(tokens);
 		}
-	}
-
-	private static class TCommandN extends TCommand {
-		public TCommandN(Token[] tokens) {
-			super(tokens);
-		}		
-		
-		@Override
-		protected String getFullName() {		
-			return "NEW";
-		}			
 	}
 
 	private static class TNCommandSpec extends TCommandSpec {
@@ -355,19 +190,8 @@ public class TFCommand extends TFSequence {
 		}
 	
 		public Token getToken(Token[] tokens) {
-			return new TCommandN(tokens);
+			return new TCommand.N(tokens);
 		}
-	}
-
-	private static class TCommandO extends TCommand {
-		public TCommandO(Token[] tokens) {
-			super(tokens);
-		}		
-		
-		@Override
-		protected String getFullName() {		
-			return "OPEN";
-		}			
 	}
 
 	private static class TOCommandSpec extends TCommandSpec {
@@ -376,19 +200,8 @@ public class TFCommand extends TFSequence {
 		}
 	
 		public Token getToken(Token[] tokens) {
-			return new TCommandO(tokens);
+			return new TCommand.O(tokens);
 		}
-	}
-
-	private static class TCommandQ extends TCommand {
-		public TCommandQ(Token[] tokens) {
-			super(tokens);
-		}		
-		
-		@Override
-		protected String getFullName() {		
-			return "QUIT";
-		}			
 	}
 
 	private static class TQCommandSpec extends TCommandSpec {
@@ -397,19 +210,8 @@ public class TFCommand extends TFSequence {
 		}
 	
 		public Token getToken(Token[] tokens) {
-			return new TCommandQ(tokens);
+			return new TCommand.Q(tokens);
 		}
-	}
-
-	private static class TCommandR extends TCommand {
-		public TCommandR(Token[] tokens) {
-			super(tokens);
-		}		
-		
-		@Override
-		protected String getFullName() {		
-			return "READ";
-		}			
 	}
 
 	private static class TRCommandSpec extends TCommandSpec {
@@ -418,19 +220,8 @@ public class TFCommand extends TFSequence {
 		}
 	
 		public Token getToken(Token[] tokens) {
-			return new TCommandR(tokens);
+			return new TCommand.R(tokens);
 		}
-	}
-
-	private static class TCommandS extends TCommand {
-		public TCommandS(Token[] tokens) {
-			super(tokens);
-		}		
-		
-		@Override
-		protected String getFullName() {		
-			return "SET";
-		}			
 	}
 
 	private static class TSCommandSpec extends TCommandSpec {
@@ -439,19 +230,8 @@ public class TFCommand extends TFSequence {
 		}
 	
 		public Token getToken(Token[] tokens) {
-			return new TCommandS(tokens);
+			return new TCommand.S(tokens);
 		}
-	}
-
-	private static class TCommandTC extends TCommand {
-		public TCommandTC(Token[] tokens) {
-			super(tokens);
-		}		
-		
-		@Override
-		protected String getFullName() {		
-			return "TCOMMIT";
-		}			
 	}
 
 	private static class TTCCommandSpec extends TCommandSpec {
@@ -460,19 +240,8 @@ public class TFCommand extends TFSequence {
 		}
 	
 		public Token getToken(Token[] tokens) {
-			return new TCommandTC(tokens);
+			return new TCommand.TC(tokens);
 		}
-	}
-
-	private static class TCommandTR extends TCommand {
-		public TCommandTR(Token[] tokens) {
-			super(tokens);
-		}		
-		
-		@Override
-		protected String getFullName() {		
-			return "TRESTART";
-		}			
 	}
 
 	private static class TTRCommandSpec extends TCommandSpec {
@@ -481,19 +250,8 @@ public class TFCommand extends TFSequence {
 		}
 	
 		public Token getToken(Token[] tokens) {
-			return new TCommandTR(tokens);
+			return new TCommand.TR(tokens);
 		}
-	}
-
-	private static class TCommandTRO extends TCommand {
-		public TCommandTRO(Token[] tokens) {
-			super(tokens);
-		}		
-		
-		@Override
-		protected String getFullName() {		
-			return "TROLLBACK";
-		}			
 	}
 
 	private static class TTROCommandSpec extends TCommandSpec {
@@ -502,19 +260,8 @@ public class TFCommand extends TFSequence {
 		}
 	
 		public Token getToken(Token[] tokens) {
-			return new TCommandTRO(tokens);
+			return new TCommand.TRO(tokens);
 		}
-	}
-
-	private static class TCommandTS extends TCommand {
-		public TCommandTS(Token[] tokens) {
-			super(tokens);
-		}		
-		
-		@Override
-		protected String getFullName() {		
-			return "TSTART";
-		}			
 	}
 
 	private static class TTSCommandSpec extends TCommandSpec {
@@ -523,19 +270,8 @@ public class TFCommand extends TFSequence {
 		}
 	
 		public Token getToken(Token[] tokens) {
-			return new TCommandTS(tokens);
+			return new TCommand.TS(tokens);
 		}
-	}
-
-	private static class TCommandU extends TCommand {
-		public TCommandU(Token[] tokens) {
-			super(tokens);
-		}		
-		
-		@Override
-		protected String getFullName() {		
-			return "USE";
-		}			
 	}
 
 	private static class TUCommandSpec extends TCommandSpec {
@@ -544,19 +280,8 @@ public class TFCommand extends TFSequence {
 		}
 	
 		public Token getToken(Token[] tokens) {
-			return new TCommandU(tokens);
+			return new TCommand.U(tokens);
 		}
-	}
-
-	private static class TCommandW extends TCommand {
-		public TCommandW(Token[] tokens) {
-			super(tokens);
-		}		
-		
-		@Override
-		protected String getFullName() {		
-			return "WRITE";
-		}			
 	}
 
 	private static class TWCommandSpec extends TCommandSpec {
@@ -565,19 +290,8 @@ public class TFCommand extends TFSequence {
 		}
 	
 		public Token getToken(Token[] tokens) {
-			return new TCommandW(tokens);
+			return new TCommand.W(tokens);
 		}
-	}
-
-	private static class TCommandV extends TCommand {
-		public TCommandV(Token[] tokens) {
-			super(tokens);
-		}		
-		
-		@Override
-		protected String getFullName() {		
-			return "VIEW";
-		}			
 	}
 
 	private static class TVCommandSpec extends TCommandSpec {
@@ -586,19 +300,8 @@ public class TFCommand extends TFSequence {
 		}
 		
 		public Token getToken(Token[] tokens) {
-			return new TCommandV(tokens);
+			return new TCommand.V(tokens);
 		}
-	}
-
-	private static class TCommandX extends TCommand {
-		public TCommandX(Token[] tokens) {
-			super(tokens);
-		}		
-		
-		@Override
-		protected String getFullName() {		
-			return "XECUTE";
-		}			
 	}
 
 	private static class TXCommandSpec extends TCommandSpec {
@@ -607,7 +310,7 @@ public class TFCommand extends TFSequence {
 		}
 	
 		public Token getToken(Token[] tokens) {
-			return new TCommandX(tokens);
+			return new TCommand.X(tokens);
 		}
 	}
 
@@ -617,7 +320,7 @@ public class TFCommand extends TFSequence {
 		}
 	
 		public Token getToken(Token[] tokens) {
-			return new TArray(tokens);
+			return new TCommand.Generic(tokens);
 		}
 	}
 	

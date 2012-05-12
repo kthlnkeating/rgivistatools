@@ -1,11 +1,38 @@
 package com.raygroupintl.bnf;
 
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
+import java.util.NoSuchElementException;
 
 import com.raygroupintl.vista.struct.MError;
 
 public class TList implements Token {
+	private class DelimitedIterator implements Iterator<Token> {
+		private int index;
+		
+		@Override
+	    public boolean hasNext() {
+	    	return (this.index < TList.this.tokens.size());
+	    }
+	
+		@Override
+		public Token next() throws NoSuchElementException {
+			Token t = TList.this.tokens.get(this.index);
+			if (this.index > 0) {
+				t = ((TArray) t).get(1);
+			}
+			++this.index;
+			return t;
+		}
+		
+		@Override
+		public void remove() {
+			throw new UnsupportedOperationException();
+		}
+		
+	}
+	
 	private ArrayList<Token> tokens = new ArrayList<Token>();
 		
 	public TList() {
@@ -121,5 +148,9 @@ public class TList implements Token {
 
 	public void add(int index, Token token) {
 		this.tokens.add(index, token);
+	}
+	
+	public Iterator<Token> iteratorForDelimited() {
+		return this.new DelimitedIterator();
 	}
 }
