@@ -11,9 +11,9 @@ import java.util.Set;
 
 import com.raygroupintl.bnf.Token;
 import com.raygroupintl.bnf.TBase;
-import com.raygroupintl.m.cmdtree.EntryTag;
-import com.raygroupintl.m.cmdtree.Line;
-import com.raygroupintl.m.cmdtree.Routine;
+import com.raygroupintl.m.parsetree.EntryTag;
+import com.raygroupintl.m.parsetree.Line;
+import com.raygroupintl.m.parsetree.Routine;
 import com.raygroupintl.m.struct.Fanout;
 import com.raygroupintl.m.struct.LineLocation;
 import com.raygroupintl.m.struct.RoutineFanouts;

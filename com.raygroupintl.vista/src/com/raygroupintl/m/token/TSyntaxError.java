@@ -4,9 +4,10 @@ import java.util.Arrays;
 import java.util.List;
 
 import com.raygroupintl.bnf.Token;
+import com.raygroupintl.m.parsetree.ErrorNode;
 import com.raygroupintl.vista.struct.MError;
 
-public class TSyntaxError implements Token {	
+public class TSyntaxError implements Token, NodeFactory {	
 	private int errorCode = MError.ERR_GENERAL_SYNTAX;
 	private String line;
 	private int fromIndex;
@@ -77,14 +78,8 @@ public class TSyntaxError implements Token {
 	public void beautify() {		
 	}
 	
-	//public static TSyntaxError getInstance(int errorCode, String line, int index) {
-	//	TSyntaxError result = new TSyntaxError(errorCode, line, index);
-	//	return result;
-	//}
-
-	//public static TSyntaxError getInstance(int errorCode, String line, int index, int fromIndex) {
-	//	TSyntaxError result = new TSyntaxError(errorCode, line, index);
-	//	result.setFromIndex(fromIndex);
-	//	return result;
-	//}
+	@Override
+	public ErrorNode getNode() {
+		return new ErrorNode(this.errorCode);
+	}
 }

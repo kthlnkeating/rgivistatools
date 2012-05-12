@@ -14,19 +14,24 @@
 // limitations under the License.
 //---------------------------------------------------------------------------
 
-package com.raygroupintl.m.token;
+package com.raygroupintl.m.parsetree;
 
-import com.raygroupintl.bnf.TCharacters;
-import com.raygroupintl.m.parsetree.IgnorableNode;
+import com.raygroupintl.vista.struct.MError;
 
-public class TComment extends TCharacters implements NodeFactory {
-	public TComment(String value) {
-		super(value);
+public class ErrorNode implements Node {
+	private int errorCode;
+	
+	public ErrorNode(int errorCode) {
+		this.errorCode = errorCode;
+	}
+	
+	public MError getError() {
+		return new MError(this.errorCode);
 	}
 	
 	@Override
-	public IgnorableNode getNode() {
-		return new IgnorableNode();
+	public void accept(Visitor visitor) {
+		visitor.visitErrorNode(this);
 	}
-}
 
+}

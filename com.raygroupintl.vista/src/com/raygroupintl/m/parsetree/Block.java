@@ -14,19 +14,27 @@
 // limitations under the License.
 //---------------------------------------------------------------------------
 
-package com.raygroupintl.m.token;
+package com.raygroupintl.m.parsetree;
 
-import com.raygroupintl.bnf.TCharacters;
-import com.raygroupintl.m.parsetree.IgnorableNode;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 
-public class TComment extends TCharacters implements NodeFactory {
-	public TComment(String value) {
-		super(value);
+public abstract class Block<T extends Node> implements Node {
+	private List<T> nodes;
+
+	public void add(T node) {
+		if (this.nodes == null) {
+			this.nodes = new ArrayList<T>();
+		}
+		this.nodes.add(node);
 	}
 	
-	@Override
-	public IgnorableNode getNode() {
-		return new IgnorableNode();
+	public List<T> getNodes() {
+		if (this.nodes == null) {
+			return Collections.emptyList();
+		} else {
+			return Collections.unmodifiableList(this.nodes);
+		}
 	}
 }
-

@@ -14,19 +14,38 @@
 // limitations under the License.
 //---------------------------------------------------------------------------
 
-package com.raygroupintl.m.token;
+package com.raygroupintl.m.parsetree;
 
-import com.raygroupintl.bnf.TCharacters;
-import com.raygroupintl.m.parsetree.IgnorableNode;
-
-public class TComment extends TCharacters implements NodeFactory {
-	public TComment(String value) {
-		super(value);
+public class EntryTag extends Block<Line> {
+	private String name;
+	private String routineName;
+	private int index;
+	private String[] parameters;
+	
+	public EntryTag(String name, String routineName, int index) {
+		this.name = name;
+		this.routineName = routineName;
+		this.index = index;
 	}
 	
+	public EntryTag(String tagName, String[] parameters) {
+		this.parameters = parameters;
+	}
+		
+	public String getKey() {
+		return this.name + '^' + this.routineName + ',' + String.valueOf(this.index);
+	}
+	
+	public int getParameterCount() {
+		return this.parameters.length;
+	}
+	
+	public String getParameter(int index) {
+		return this.parameters[index];
+	}
+
 	@Override
-	public IgnorableNode getNode() {
-		return new IgnorableNode();
+	public void accept(Visitor visitor) {
+		visitor.visitEntryTag(this);
 	}
 }
-

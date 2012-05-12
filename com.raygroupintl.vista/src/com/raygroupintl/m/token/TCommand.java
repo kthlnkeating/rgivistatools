@@ -3,8 +3,8 @@ package com.raygroupintl.m.token;
 import com.raygroupintl.bnf.TArray;
 import com.raygroupintl.bnf.TCharacters;
 import com.raygroupintl.bnf.Token;
-import com.raygroupintl.m.cmdtree.GenericCommand;
-import com.raygroupintl.m.cmdtree.Node;
+import com.raygroupintl.m.parsetree.GenericCommand;
+import com.raygroupintl.m.parsetree.Node;
 
 class TCommand {
 	private static abstract class TCommandBase extends TArray implements NodeFactory {

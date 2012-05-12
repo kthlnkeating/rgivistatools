@@ -14,19 +14,21 @@
 // limitations under the License.
 //---------------------------------------------------------------------------
 
-package com.raygroupintl.m.token;
+package com.raygroupintl.m.parsetree;
 
-import com.raygroupintl.bnf.TCharacters;
-import com.raygroupintl.m.parsetree.IgnorableNode;
-
-public class TComment extends TCharacters implements NodeFactory {
-	public TComment(String value) {
-		super(value);
+public class Routine extends Block<EntryTag> {
+	private String name;
+	
+	public Routine(String name) {
+		this.name = name;
 	}
 	
+	public String getKey() {
+		return this.name;
+	}
+
 	@Override
-	public IgnorableNode getNode() {
-		return new IgnorableNode();
+	public void accept(Visitor visitor) {
+		visitor.visitRoutine(this);
 	}
 }
-

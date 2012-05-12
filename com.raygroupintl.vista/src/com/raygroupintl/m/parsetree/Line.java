@@ -14,19 +14,33 @@
 // limitations under the License.
 //---------------------------------------------------------------------------
 
-package com.raygroupintl.m.token;
+package com.raygroupintl.m.parsetree;
 
-import com.raygroupintl.bnf.TCharacters;
-import com.raygroupintl.m.parsetree.IgnorableNode;
+public class Line extends Block<Node> {
+	private String tag;
+	private int index;
+	private int level;
+		
+	public Line(String tag, int index, int level) {
+		this.tag = tag;
+		this.index = index;
+		this.level = level;
+	}
 
-public class TComment extends TCharacters implements NodeFactory {
-	public TComment(String value) {
-		super(value);
+	public String getTag() {
+		return this.tag;
 	}
 	
+	public int getIndex() {
+		return this.index;
+	}
+
+	public int getLevel() {
+		return this.level;
+	}
+
 	@Override
-	public IgnorableNode getNode() {
-		return new IgnorableNode();
+	public void accept(Visitor visitor) {
+		visitor.visitLine(this);
 	}
 }
-
