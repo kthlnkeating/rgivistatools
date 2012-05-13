@@ -113,6 +113,8 @@ public class MTFSupply {
 	public TokenFactory spaces;
 	@CharSpecified(chars={'$'})
 	public TokenFactory dollar;
+	@CharSpecified(chars={';'})
+	public TokenFactory semicolon;
 	
 	@WordSpecified("'?")
 	public TokenFactory nqmark;
@@ -521,7 +523,14 @@ public class MTFSupply {
 	@Choice({"spaces", "comment", "end"})
 	public TokenFactory commandend;
 	public TFCommand command = new TFCommand(this);
-	public TokenFactory comment = new TFComment();
+	
+	@CharSpecified(excludechars={'\r', '\n'})
+	public TokenFactory commentcontent;
+	@TokenType(TComment.class)
+	@Sequence(value={"semicolon", "commentcontent"}, required="ro")
+	public TokenFactory comment;
+	
+	
 	@CChoice(value={"command", "comment"}, preds={"letter", ";"}, def="error")
 	public TokenFactory commandorcomment;
 	@List(value="commandorcomment")

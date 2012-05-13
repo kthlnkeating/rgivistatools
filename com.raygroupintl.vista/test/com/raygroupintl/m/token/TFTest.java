@@ -9,6 +9,24 @@ import com.raygroupintl.m.token.TFStringLiteral;
 import com.raygroupintl.vista.struct.MError;
 
 public class TFTest {
+	public void testTFComment(MVersion version) {
+		MTFSupply m = MTFSupply.getInstance(version);
+		TokenFactory f = m.comment;
+		TFCommonTest.validCheck(f, ";", false);
+		TFCommonTest.validCheck(f, "; this is a comment", false);
+		TFCommonTest.nullCheck(f, "this is a comment");
+		TFCommonTest.validCheck(f, "; comment\n", "; comment");
+		TFCommonTest.validCheck(f, "; comment\n  ", "; comment");
+		TFCommonTest.validCheck(f, "; comment\r\n", "; comment");
+		TFCommonTest.validCheck(f, "; comment\r\n  ", "; comment");
+	}
+
+	@Test
+	public void testTFComment() {
+		testTFComment(MVersion.CACHE);
+		testTFComment(MVersion.ANSI_STD_95);		
+	}
+		
 	public void testTFEnvironment(MVersion version) {
 		MTFSupply m = MTFSupply.getInstance(version);
 		TokenFactory f = m.environment;

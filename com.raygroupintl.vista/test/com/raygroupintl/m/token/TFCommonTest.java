@@ -57,6 +57,15 @@ public class TFCommonTest {
 		validCheck(f, v, true);
 	}
 
+	static void nullCheck(TokenFactory f, String v) {
+		try {
+			Token t = f.tokenize(v, 0);
+			Assert.assertNull(t);
+		} catch(SyntaxErrorException e) {
+			fail("Unexpected exception.");
+		}
+	}
+	
 	static void validCheckNS(TokenFactory f, String v) {
 		validCheck(f, v, false);
 	}

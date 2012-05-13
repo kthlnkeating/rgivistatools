@@ -16,12 +16,13 @@
 
 package com.raygroupintl.m.token;
 
-import com.raygroupintl.bnf.TCharacters;
+import com.raygroupintl.bnf.TArray;
+import com.raygroupintl.bnf.Token;
 import com.raygroupintl.m.parsetree.IgnorableNode;
 
-public class TComment extends TCharacters implements NodeFactory {
-	public TComment(String value) {
-		super(value);
+public class TComment extends TArray implements NodeFactory {
+	public TComment(Token[] tokens) {
+		super(tokens);
 	}
 	
 	@Override
