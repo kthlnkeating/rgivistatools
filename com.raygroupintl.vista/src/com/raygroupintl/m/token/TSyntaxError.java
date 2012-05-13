@@ -29,12 +29,6 @@ public class TSyntaxError implements Token, NodeFactory {
 		this.errorLocationIndex = index;
 	}
 	
-	public TSyntaxError(String line, int locationIndex, int fromIndex) {
-		this.line = line;
-		this.fromIndex = fromIndex;
-		this.errorLocationIndex = locationIndex;
-	}
-	
 	public TSyntaxError(int errorCode, String line, int index) {
 		this(line, index);
 		this.errorCode = errorCode;

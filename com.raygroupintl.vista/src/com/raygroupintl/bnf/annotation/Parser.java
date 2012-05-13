@@ -274,6 +274,18 @@ public class Parser {
 			}
 		}
 		
+		private Predicate orPredicates(Predicate p0, Predicate p1) {
+			if (p1 == null) return p0;
+			if (p0 == null) return p1;
+			return new OrPredicate(p0, p1);
+		}
+
+		private Predicate andPredicates(Predicate p0, Predicate p1) {
+			if (p1 == null) return p0;
+			if (p0 == null) return p1;
+			return new AndPredicate(p0, p1);
+		}
+		
 		private TokenFactory addCharacters(String name, CharSpecified characters, Field f)  throws IllegalAccessException, InstantiationException, NoSuchMethodException {
 			Predicate p0 = getCharPredicate(characters.chars());
 			Predicate p1 = getCharRanges(characters.ranges());
@@ -285,17 +297,7 @@ public class Parser {
 			if (p3 != null) {
 				p3 = new ExcludePredicate(p3);
 			}			
-			Predicate[] ps = {p0, p1, p2, p3};
-			Predicate result = null;
-			for (Predicate p : ps) {
-				if (p != null) {
-					if (result == null) {
-						result = p;
-					} else {
-						result = new AndPredicate(result, p);
-					}
-				}
-			}
+			Predicate result = andPredicates(orPredicates(p0, p1), orPredicates(p2, p3));
 			if (characters.single()) {
 				TFCharacter tf = new TFCharacter(result);
 				this.updateAdapter(tf, f);

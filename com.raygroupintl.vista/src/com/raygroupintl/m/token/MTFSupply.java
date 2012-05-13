@@ -158,7 +158,12 @@ public class MTFSupply {
 	@Choice({"indirection", "patatoms"})
 	public TokenFactory pattern;
 	
-	public TokenFactory name = TFName.getInstance();
+	@CharSpecified(chars={'%'}, ranges={'a', 'z', 'A', 'Z'}, single=true)
+	public TokenFactory namefirst;
+	@CharSpecified(ranges={'a', 'z', 'A', 'Z', '0', '9'})
+	public TokenFactory nametail;
+	@Sequence(value={"namefirst", "nametail"}, required="ro")
+	public TokenFactory name;	
 	
 	@TokenType(TIdent.class)
 	@CharSpecified(ranges={'a', 'z', 'A', 'Z'})
