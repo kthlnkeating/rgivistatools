@@ -1,22 +1,10 @@
 package com.raygroupintl.m.token;
 
-import com.raygroupintl.bnf.TString;
+import com.raygroupintl.bnf.TArray;
+import com.raygroupintl.bnf.Token;
 
-public class TStringLiteral extends TString {
-	public TStringLiteral(String value) {
-		super(value);
-	}
-	
-	@Override
-	public String getStringValue() {
-		return '"' + super.getStringValue().replaceAll("\"", "\"\"") + '"';
-	}
-
-	@Override
-	public int getStringSize() {
-		String value = super.getStringValue();
-		int quoteCount = 0;
-		for (int i=0; i<value.length(); ++i) if (value.charAt(i) == '"') ++quoteCount;
-		return 2 + quoteCount + super.getStringSize();
+public class TStringLiteral extends TArray {
+	public TStringLiteral(Token[] tokens) {
+		super(tokens);
 	}
 }

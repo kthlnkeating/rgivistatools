@@ -77,6 +77,8 @@ public class MTFSupply {
 	public TokenFactory comma;
 	@CharSpecified(chars={'\''}, single=true)
 	public TokenFactory squote;
+	@CharSpecified(chars={'"'}, single=true)
+	public TokenFactory quote;
 	@CharSpecified(chars={'|'}, single=true)
 	public TokenFactory pipe;
 	@CharSpecified(chars={'['}, single=true)
@@ -199,7 +201,14 @@ public class MTFSupply {
 	public TokenFactory error = new TFSyntaxError( MError.ERR_GENERAL_SYNTAX);
 	@CharSpecified(chars={'+', '-', '\''})
 	public TokenFactory unaryop;
-	public TokenFactory strlit = new TFStringLiteral();
+	
+	@CharSpecified(excludechars={'\r', '\n', '"'})
+	public TokenFactory quotecontent;
+	@Sequence(value={"quote", "quotecontent", "quote"}, required="ror")
+	public TokenFactory strlitatom;
+	@TokenType(TStringLiteral.class)
+	@Sequence(value={"strlitatom", "strlit"}, required="ro")	
+	public TokenFactory strlit;
 	
 	@Sequence(value={"pipe", "expr", "pipe"}, required="all")
 	public TokenFactory env_0;

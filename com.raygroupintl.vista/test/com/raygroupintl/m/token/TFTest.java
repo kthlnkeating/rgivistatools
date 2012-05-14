@@ -5,7 +5,6 @@ import org.junit.Test;
 import com.raygroupintl.bnf.TokenFactory;
 import com.raygroupintl.m.token.MTFSupply;
 import com.raygroupintl.m.token.MVersion;
-import com.raygroupintl.m.token.TFStringLiteral;
 import com.raygroupintl.vista.struct.MError;
 
 public class TFTest {
@@ -239,12 +238,25 @@ public class TFTest {
 		testTFNumLit(MVersion.ANSI_STD_95);		
 	}
 
-	@Test
-	public void testTFStringLiteral() {
-		TFStringLiteral f = TFStringLiteral.getInstance();
+	public void testTFStringLiteral(MVersion version) {
+		MTFSupply m = MTFSupply.getInstance(version);
+		TokenFactory f = m.strlit;
+		TFCommonTest.validCheck(f, "\"This is a comment\"");
+		TFCommonTest.validCheck(f, "\"Comment with quotes \"\" one\"");
+		TFCommonTest.validCheck(f, "\"Comment with quotes \"\" one \"\" two\"");
+		TFCommonTest.validCheck(f, "\"Comment with quotes \"\" one \"\" two and end \"\"\"");
 		TFCommonTest.validCheck(f, "\"\"\"\"\"\"");
+		TFCommonTest.errorCheck(f, "\" unmatched");
+		TFCommonTest.errorCheck(f, "\" unmatched \"\" one");
+		TFCommonTest.errorCheck(f, "\" unmatched \"\" one \"\" two");
 	}
 	
+	@Test
+	public void testTFStringLiteral() {
+		testTFStringLiteral(MVersion.CACHE);
+		testTFStringLiteral(MVersion.ANSI_STD_95);		
+	}
+
 	private void testPattern(MVersion version) {
 		MTFSupply m = MTFSupply.getInstance(version);
 		TokenFactory f = m.pattern;

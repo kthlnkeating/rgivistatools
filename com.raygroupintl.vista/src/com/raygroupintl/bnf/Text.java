@@ -23,45 +23,19 @@ public class Text {
 		return this.index < this.text.length();
 	}
 	
-	public boolean hasNextChar() {
-		return this.index+1 < this.text.length();
-	}
-	
 	public char getChar() {
 		return this.text.charAt(this.index);
 	}
 	
-	public char getNextChar() {
-		return this.text.charAt(this.index+1);
+	public boolean onChar(int forward) {
+		return this.index+forward < this.text.length();
 	}
 	
-	public int getIndex() {
-		return this.index;
+	public char getChar(int forward) {
+		return this.text.charAt(this.index+forward);
 	}
 	
-	public void forward() {
-		++this.index;
-	}
-	
-	public String getPreviousString(int fromIndex) {
-		return this.text.substring(fromIndex, this.index);
-	}
-
-	public String getString(int length) {
-		return this.text.substring(this.index, this.index + length);
-	}
-
-	public boolean startsWith(String value) {
-		return this.text.startsWith(value, this.index);		
-	}
-	
-	public String extract(int length) {
-		String result = this.text.substring(this.index, this.index+length);
-		this.index += length;
-		return result;
-	}
-
-	public Token extractToken(String value, StringAdapter adapter, boolean ignoreCase) {
+	Token extractToken(String value, StringAdapter adapter, boolean ignoreCase) {
 		if (ignoreCase) {
 			String piece = this.text.substring(this.index, this.index+value.length());
 			if (piece.equalsIgnoreCase(value)) {
@@ -78,7 +52,7 @@ public class Text {
 		return null;	
 	}
 	
-	public Token extractToken(Predicate predicate, CharacterAdapter adapter) {
+	Token extractToken(Predicate predicate, CharacterAdapter adapter) {
 		if (this.index < this.text.length()) {
 			char ch = this.text.charAt(this.index);
 			if (predicate.check(ch)) {
@@ -89,7 +63,7 @@ public class Text {
 		return null;		
 	}
 	
-	public Token extractToken(Predicate predicate, StringAdapter adapter) {
+	Token extractToken(Predicate predicate, StringAdapter adapter) {
 		int fromIndex = this.index;
 		while (this.onChar()) {
 			char ch = this.getChar();
@@ -109,7 +83,13 @@ public class Text {
 		}
 	}
 	
-	public Token extractEOLToken() {
+	public Token extractToken(int length, StringAdapter adapter) {
+		Token result = adapter.convert(this.text.substring(this.index, this.index+length));
+		this.index += length;
+		return result;
+	}
+	
+	Token extractEOLToken() {
 		if (this.onChar()) {
 			char ch0th = this.getChar();
 			if ((ch0th == '\n') || (ch0th == '\r')) {
@@ -128,8 +108,6 @@ public class Text {
 	}
 	
 	public Text getCopy() {
-		Text result = new Text(this.text);
-		result.index = this.index;
-		return result;
+		return new Text(this.text, this.index);
 	}
 }
