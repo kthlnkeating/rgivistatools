@@ -8,18 +8,16 @@ public class TFCharacter extends TokenFactory {
 	
 	public TFCharacter(Predicate predicate) {
 		this.predicate = predicate;
+		this.adapter = new DefaultCharacterAdapter();
+	}
+		
+	public TFCharacter(Predicate predicate, CharacterAdapter adapter) {
+		this.predicate = predicate;
+		this.adapter = adapter;
 	}
 		
 	protected Token getToken(char value) {
-		if (this.adapter == null) {
-			return new TChar(value);
-		} else {
-			return this.adapter.convert(value);
-		}
-	}
-	
-	public void setAdapter(CharacterAdapter adapter) {
-		this.adapter = adapter;
+		return this.adapter.convert(value);
 	}
 	
 	@Override

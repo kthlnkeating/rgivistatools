@@ -9,17 +9,19 @@ import java.util.HashMap;
 import java.util.Map;
 
 import com.raygroupintl.bnf.CharacterAdapter;
-import com.raygroupintl.bnf.CharactersAdapter;
+import com.raygroupintl.bnf.DefaultCharacterAdapter;
+import com.raygroupintl.bnf.DefaultStringAdapter;
+import com.raygroupintl.bnf.StringAdapter;
 import com.raygroupintl.bnf.SyntaxErrorException;
 import com.raygroupintl.bnf.TFCharacter;
-import com.raygroupintl.bnf.TFConstString;
+import com.raygroupintl.bnf.TFConstant;
 import com.raygroupintl.bnf.TFEmpty;
 import com.raygroupintl.bnf.TFEnd;
 import com.raygroupintl.bnf.TFList;
 import com.raygroupintl.bnf.TList;
 import com.raygroupintl.bnf.Token;
 import com.raygroupintl.bnf.TokenFactory;
-import com.raygroupintl.bnf.TFCharacters;
+import com.raygroupintl.bnf.TFString;
 import com.raygroupintl.bnf.TFChoiceBasic;
 import com.raygroupintl.bnf.TFChoiceOnChar0th;
 import com.raygroupintl.bnf.TFChoiceOnChar1st;
@@ -73,7 +75,7 @@ public class Parser {
 		}
 	};
 	
-	private static class ConstructorAsCharactersAdapter implements CharactersAdapter {					
+	private static class ConstructorAsCharactersAdapter implements StringAdapter {					
 		private Constructor<? extends Token> constructor;
 		
 		public ConstructorAsCharactersAdapter(Constructor<? extends Token> constructor) {
@@ -142,58 +144,38 @@ public class Parser {
 			return value;			
 		}
 		
-		private void updateAdapter(TFCharacters token, Field f) throws IllegalAccessException, InstantiationException, NoSuchMethodException {
+		private StringAdapter getStringAdapter(Field f) throws IllegalAccessException, InstantiationException, NoSuchMethodException {
 			Adapter adapter = f.getAnnotation(Adapter.class);
 			if (adapter != null) {
 				Class<?> cls = adapter.value();			
-				CharactersAdapter ta = (CharactersAdapter) cls.newInstance();
-				token.setAdapter(ta);
-				return;
+				StringAdapter ta = (StringAdapter) cls.newInstance();
+				return ta;
 			}
 			TokenType tokenType = f.getAnnotation(TokenType.class);
 			if (tokenType != null) {
 				Class<? extends Token> tokenCls = tokenType.value();
 				Constructor<? extends Token> constructor = tokenCls.getConstructor(String.class);
-				CharactersAdapter ta = new ConstructorAsCharactersAdapter(constructor);
-				token.setAdapter(ta);
-				return;
-			}			
-		}
-
-		private void updateAdapter(TFConstString token, Field f) throws IllegalAccessException, InstantiationException, NoSuchMethodException {
-			Adapter adapter = f.getAnnotation(Adapter.class);
-			if (adapter != null) {
-				Class<?> cls = adapter.value();			
-				CharactersAdapter ta = (CharactersAdapter) cls.newInstance();
-				token.setAdapter(ta);
-				return;
+				StringAdapter ta = new ConstructorAsCharactersAdapter(constructor);
+				return ta;
 			}
-			TokenType tokenType = f.getAnnotation(TokenType.class);
-			if (tokenType != null) {
-				Class<? extends Token> tokenCls = tokenType.value();
-				Constructor<? extends Token> constructor = tokenCls.getConstructor(String.class);
-				CharactersAdapter ta = new ConstructorAsCharactersAdapter(constructor);
-				token.setAdapter(ta);
-				return;
-			}			
+			return new DefaultStringAdapter();
 		}
 
-		private void updateAdapter(TFCharacter token, Field f) throws IllegalAccessException, InstantiationException, NoSuchMethodException {
+		private CharacterAdapter getCharacterAdapter(Field f) throws IllegalAccessException, InstantiationException, NoSuchMethodException {
 			Adapter adapter = f.getAnnotation(Adapter.class);
 			if (adapter != null) {
 				Class<?> cls = adapter.value();			
 				CharacterAdapter ta = (CharacterAdapter) cls.newInstance();
-				token.setAdapter(ta);
-				return;
+				return ta;
 			}
 			TokenType tokenType = f.getAnnotation(TokenType.class);
 			if (tokenType != null) {
 				Class<? extends Token> tokenCls = tokenType.value();
 				Constructor<? extends Token> constructor = tokenCls.getConstructor(char.class);
 				CharacterAdapter ta = new ConstructorAsCharacterAdapter(constructor);
-				token.setAdapter(ta);
-				return;
-			}			
+				return ta;
+			}
+			return new DefaultCharacterAdapter();
 		}
 
 		private boolean updateAdapter(TFSequenceStatic token, Field f) throws IllegalAccessException, InstantiationException, NoSuchMethodException {
@@ -299,20 +281,20 @@ public class Parser {
 			}			
 			Predicate result = andPredicates(orPredicates(p0, p1), orPredicates(p2, p3));
 			if (characters.single()) {
-				TFCharacter tf = new TFCharacter(result);
-				this.updateAdapter(tf, f);
+				CharacterAdapter ca = this.getCharacterAdapter(f);
+				TFCharacter tf = new TFCharacter(result, ca);
 				return tf;
-			} else {			
-				TFCharacters tf = new TFCharacters(result);
-				this.updateAdapter(tf, f);
+			} else {		
+				StringAdapter sa = this.getStringAdapter(f);
+				TFString tf = new TFString(result, sa);
 				return tf;
 			}
 		}
 		
 		private TokenFactory addWords(String name, WordSpecified wordSpecied, Field f)  throws IllegalAccessException, InstantiationException, NoSuchMethodException {
 			String word = wordSpecied.value();
-			TFConstString tf = new TFConstString(word, wordSpecied.ignorecase());
-			this.updateAdapter(tf, f);
+			StringAdapter sa = this.getStringAdapter(f);
+			TFConstant tf = new TFConstant(word, sa, wordSpecied.ignorecase());
 			return tf;
 		}
 		

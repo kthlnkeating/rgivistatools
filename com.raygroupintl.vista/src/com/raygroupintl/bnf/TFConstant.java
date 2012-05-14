@@ -1,25 +1,23 @@
 package com.raygroupintl.bnf;
 
 
-public class TFConstString extends TokenFactory {
+public class TFConstant extends TokenFactory {
 	private String value;
 	private boolean ignoreCase;
-	private CharactersAdapter adapter;
+	private StringAdapter adapter;
 	
-	public TFConstString(String value) {
+	public TFConstant(String value, StringAdapter adapter) {
 		this.value = value;
+		this.adapter = adapter;
 		this.ignoreCase = false;
 	}
 	
-	public TFConstString(String value, boolean ignoreCase) {
+	public TFConstant(String value, StringAdapter adapter, boolean ignoreCase) {
 		this.value = value;
+		this.adapter = adapter;
 		this.ignoreCase = ignoreCase;
 	}
 
-	public void setAdapter(CharactersAdapter adapter) {
-		this.adapter = adapter;
-	}
-	
 	private String getMatched(String line, int fromIndex) {
 		if (this.ignoreCase) {
 			String piece = line.substring(fromIndex, fromIndex+this.value.length());
@@ -39,7 +37,7 @@ public class TFConstString extends TokenFactory {
 		String result = this.getMatched(line, fromIndex);
 		if (result != null) {
 			if (this.adapter == null) {
-				return new TCharacters(result);
+				return new TString(result);
 			} else {
 				return this.adapter.convert(result);
 			}

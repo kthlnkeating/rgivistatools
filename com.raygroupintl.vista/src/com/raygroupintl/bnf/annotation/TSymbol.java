@@ -2,10 +2,10 @@ package com.raygroupintl.bnf.annotation;
 
 import java.util.Map;
 
-import com.raygroupintl.bnf.TCharacters;
+import com.raygroupintl.bnf.TString;
 import com.raygroupintl.bnf.TokenFactory;
 
-public class TSymbol extends TCharacters implements SequencePieceGenerator{
+public class TSymbol extends TString implements SequencePieceGenerator{
 	public TSymbol(String value) {
 		super(value);
 	}

@@ -12,10 +12,10 @@ public class TFEol extends TokenFactory {
 				if (nextIndex < endIndex) {
 					char ch1st = line.charAt(nextIndex);
 					if ((ch1st == '\n') || (ch1st == '\r')) {
-						return new TCharacters(line.substring(fromIndex, fromIndex+2));
+						return new TString(line.substring(fromIndex, fromIndex+2));
 					}
 				}
-				return new TCharacters(line.substring(fromIndex, fromIndex+1));
+				return new TString(line.substring(fromIndex, fromIndex+1));
 			}
 		}
 		return null;

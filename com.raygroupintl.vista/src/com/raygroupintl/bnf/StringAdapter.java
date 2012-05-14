@@ -16,6 +16,6 @@
 
 package com.raygroupintl.bnf;
 
-public interface CharactersAdapter {
+public interface StringAdapter {
 	Token convert(String value);
 }

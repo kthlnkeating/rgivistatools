@@ -4,10 +4,10 @@ import java.util.List;
 
 import com.raygroupintl.vista.struct.MError;
 
-public class TCharacters extends TBase {
+public class TString extends TBase {
 	private String value;
 		
-	public TCharacters(String value) {
+	public TString(String value) {
 		this.value = value;
 	}
 		

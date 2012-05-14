@@ -7,7 +7,7 @@ import com.raygroupintl.bnf.SyntaxErrorException;
 import com.raygroupintl.bnf.TFSequence;
 import com.raygroupintl.bnf.Token;
 import com.raygroupintl.bnf.TokenFactory;
-import com.raygroupintl.bnf.TCharacters;
+import com.raygroupintl.bnf.TString;
 import com.raygroupintl.bnf.TEmpty;
 import com.raygroupintl.bnf.TFEmptyVerified;
 import com.raygroupintl.bnf.TokenStore;
@@ -40,7 +40,7 @@ public class TFCommand extends TFSequence {
 				++index;
 			}
 			if (index > fromIndex) {
-				return new TCharacters(line.substring(fromIndex, index));
+				return new TString(line.substring(fromIndex, index));
 			} else {
 				return new TEmpty();
 			}
@@ -49,7 +49,7 @@ public class TFCommand extends TFSequence {
 
 	private static final TFEmptyVerified TF_EMPTY = TFEmptyVerified.getInstance(' ');
 	
-	private static abstract class TCommandSpec extends TCharacters {
+	private static abstract class TCommandSpec extends TString {
 		private TokenFactory argumentFactory;
 		
 		public TCommandSpec(String value, TokenFactory argumentFactory) {

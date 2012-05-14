@@ -18,24 +18,17 @@ package com.raygroupintl.bnf;
 
 import com.raygroupintl.charlib.Predicate;
 
-public class TFCharacters extends TokenFactory {
+public class TFString extends TokenFactory {
 	private Predicate predicate;
-	private CharactersAdapter adapter;
+	private StringAdapter adapter;
 	
-	public TFCharacters(Predicate predicate) {
+	public TFString(Predicate predicate, StringAdapter adapter) {
 		this.predicate = predicate;
+		this.adapter = adapter;
 	}
 		
 	protected Token getToken(String value) {
-		if (this.adapter == null) {
-			return new TCharacters(value);
-		} else {
-			return this.adapter.convert(value);
-		}
-	}
-	
-	public void setAdapter(CharactersAdapter adapter) {
-		this.adapter = adapter;
+		return this.adapter.convert(value);
 	}
 	
 	@Override
