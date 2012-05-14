@@ -17,10 +17,6 @@ public class TFCommonTest {
 		Assert.assertEquals(v.length(), t.getStringSize());		
 	}
 	
-	static void validCheck(Token t, String v) {
-		validTokenCheck(t, v);
-	}
-	
 	public static Token getErrorToken(SyntaxErrorException e, int location, String v) {
 		Token t = new TSyntaxError(0, v.substring(location), location);
 		for (TokenStore ts : e.getTokenStores()) {
@@ -45,7 +41,7 @@ public class TFCommonTest {
 		try {
 			Text text = new Text(v);
 			Token t = f.tokenize(text);
-			validCheck(t, v);
+			validTokenCheck(t, v);
 			if (checkWithSpace) {
 				validCheck(f, v + " ", v);
 			}
@@ -106,7 +102,7 @@ public class TFCommonTest {
 	static void validCheck(TokenFactory f, String v, String compare) {
 		try {
 			Token t = f.tokenize(v, 0);
-			validCheck(t, compare);
+			validTokenCheck(t, compare);
 		} catch(SyntaxErrorException e) {
 			fail("Exception: " + e.getMessage());			
 		}
