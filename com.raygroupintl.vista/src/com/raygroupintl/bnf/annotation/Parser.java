@@ -9,8 +9,6 @@ import java.util.HashMap;
 import java.util.Map;
 
 import com.raygroupintl.bnf.CharacterAdapter;
-import com.raygroupintl.bnf.DefaultCharacterAdapter;
-import com.raygroupintl.bnf.DefaultStringAdapter;
 import com.raygroupintl.bnf.StringAdapter;
 import com.raygroupintl.bnf.SyntaxErrorException;
 import com.raygroupintl.bnf.TFCharacter;

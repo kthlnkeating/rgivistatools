@@ -72,7 +72,7 @@ public class DescriptionSpecTest {
 
 	private void updateMap(Map<String, TokenFactory> map, char ch) {
 		Predicate p = new CharPredicate(ch);
-		TokenFactory f = new TFCharacter(p);
+		TokenFactory f = new TFCharacter(p, new DefaultCharacterAdapter());
 		map.put(String.valueOf(ch), f);		
 	}
 	
