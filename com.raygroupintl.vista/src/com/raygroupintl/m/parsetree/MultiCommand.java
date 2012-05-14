@@ -14,19 +14,13 @@
 // limitations under the License.
 //---------------------------------------------------------------------------
 
-package com.raygroupintl.m.token;
+package com.raygroupintl.m.parsetree;
 
-import com.raygroupintl.bnf.Token;
-import com.raygroupintl.m.parsetree.IgnorableNode;
+public abstract class MultiCommand<T extends AtomicCommand> extends Block<T> {
+	public abstract Expression getPostcondition();
 
-public class TComment extends MTArray {
-	public TComment(Token[] tokens) {
-		super(tokens);
-	}
-	
 	@Override
-	public IgnorableNode getNode() {
-		return new IgnorableNode();
+	public void accept(Visitor visitor) {
+		visitor.visitMultiCommand(this);
 	}
 }
-

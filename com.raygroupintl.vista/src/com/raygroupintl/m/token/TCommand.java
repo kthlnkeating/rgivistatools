@@ -1,13 +1,12 @@
 package com.raygroupintl.m.token;
 
-import com.raygroupintl.bnf.TArray;
 import com.raygroupintl.bnf.TString;
 import com.raygroupintl.bnf.Token;
 import com.raygroupintl.m.parsetree.GenericCommand;
 import com.raygroupintl.m.parsetree.Node;
 
 class TCommand {
-	private static abstract class TCommandBase extends TArray implements NodeFactory {
+	private static abstract class TCommandBase extends MTArray {
 		public TCommandBase(Token[] tokens) {
 			super(tokens);
 		}

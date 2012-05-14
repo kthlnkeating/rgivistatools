@@ -16,7 +16,7 @@ import com.raygroupintl.m.struct.Fanout;
 import com.raygroupintl.m.struct.LineLocation;
 import com.raygroupintl.m.struct.RoutineFanouts;
 
-public class TRoutine implements Token, NodeFactory {
+public class TRoutine implements MToken {
 	private String name;
 	private List<TLine> lines = new ArrayList<TLine>();
 	private List<LineLocation> locations;

@@ -5,12 +5,11 @@ import java.util.List;
 
 import com.raygroupintl.bnf.TList;
 import com.raygroupintl.bnf.Token;
-import com.raygroupintl.bnf.TArray;
 import com.raygroupintl.m.parsetree.Line;
 import com.raygroupintl.m.parsetree.Node;
 import com.raygroupintl.m.struct.Fanout;
 
-public class TLine extends TArray implements NodeFactory {
+public class TLine extends MTArray {
 	String tagName = "";
 	int index = 0;
 
@@ -55,8 +54,8 @@ public class TLine extends TArray implements NodeFactory {
 		if (cmds != null) {
 			for (Iterator<Token> it = cmds.iterator(); it.hasNext();) {
 				Token t = it.next();
-				if (t instanceof NodeFactory) {
-					Node node = ((NodeFactory) t).getNode();
+				if (t instanceof MToken) {
+					Node node = ((MToken) t).getNode();
 					result.add(node);
 				}
 			}

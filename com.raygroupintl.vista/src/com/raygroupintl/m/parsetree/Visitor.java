@@ -19,7 +19,7 @@ public class Visitor {
 		}
 	}
 	
-	protected void visitCommand(Command command) {
+	protected void visitAtomicCommand(AtomicCommand command) {
 		Expression postCondExpr = command.getPostcondition();
 		if (postCondExpr != null) {
 			postCondExpr.accept(this);
@@ -28,6 +28,14 @@ public class Visitor {
 		if (arguments != null) {
 			arguments.accept(this);
 		}
+	}
+	
+	protected void visitMultiCommand(MultiCommand<?> command) {
+		Expression postCondExpr = command.getPostcondition();
+		if (postCondExpr != null) {
+			postCondExpr.accept(this);
+		}
+		this.visitBlock(command);
 	}
 	
 	protected void visitForBlock(ForBlock forBlock) {

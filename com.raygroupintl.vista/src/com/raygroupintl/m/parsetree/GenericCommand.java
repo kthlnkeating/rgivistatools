@@ -1,6 +1,6 @@
 package com.raygroupintl.m.parsetree;
 
-public class GenericCommand extends Command {
+public class GenericCommand extends AtomicCommand {
 	private Expression postCondition;
 	private ExpressionArray arguments;
 	

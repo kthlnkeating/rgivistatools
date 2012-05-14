@@ -5,7 +5,7 @@ import com.raygroupintl.bnf.Token;
 import com.raygroupintl.m.parsetree.ErrorNode;
 import com.raygroupintl.vista.struct.MError;
 
-public class TSyntaxError implements Token, NodeFactory {	
+public class TSyntaxError implements MToken {	
 	public static class Adapter implements StringAdapter {
 		private int errorCode = MError.ERR_GENERAL_SYNTAX;
 		private int errorIndex;

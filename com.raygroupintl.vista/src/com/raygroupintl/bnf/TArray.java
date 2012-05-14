@@ -49,4 +49,8 @@ public class TArray implements Token, TokenArray {
 			return null;
 		}
 	}
+	
+	protected Token[] getTokens() {
+		return this.tokens;
+	}
 }

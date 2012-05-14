@@ -17,16 +17,8 @@
 package com.raygroupintl.m.token;
 
 import com.raygroupintl.bnf.Token;
-import com.raygroupintl.m.parsetree.IgnorableNode;
+import com.raygroupintl.m.parsetree.Node;
 
-public class TComment extends MTArray {
-	public TComment(Token[] tokens) {
-		super(tokens);
-	}
-	
-	@Override
-	public IgnorableNode getNode() {
-		return new IgnorableNode();
-	}
+public interface MToken extends Token   {
+	Node getNode();
 }
-

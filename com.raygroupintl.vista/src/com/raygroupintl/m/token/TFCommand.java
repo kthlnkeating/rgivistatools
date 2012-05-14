@@ -94,7 +94,7 @@ public class TFCommand extends TFSequence {
 	
 	private static class TDCommandSpec extends TCommandSpec {
 		private TDCommandSpec(String value, MTFSupply supply) {
-			super(value, supply.cmddargs);
+			super(value, supply.doarguments);
 		}
 	
 		public Token getToken(Token[] tokens) {
@@ -124,7 +124,7 @@ public class TFCommand extends TFSequence {
 
 	private static class TGCommandSpec extends TCommandSpec {
 		private TGCommandSpec(String value, MTFSupply supply) {
-			super(value, supply.cmdgargs);
+			super(value, supply.gotoarguments);
 		}
 	
 		public Token getToken(Token[] tokens) {

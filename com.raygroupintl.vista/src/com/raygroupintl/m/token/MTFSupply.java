@@ -161,6 +161,7 @@ public class MTFSupply {
 	public TokenFactory env_0;
 	@List(value="expratom", delim="comma", left="lsqr", right="rsqr")
 	public TokenFactory env_1;
+	@TokenType(TEnvironment.class)
 	@Choice({"env_0", "env_1"})
 	public TokenFactory environment;
 	
@@ -309,9 +310,9 @@ public class MTFSupply {
 	@Sequence({"tagspec", "routinespec"})
 	public TokenFactory cmdgargmain;
 	@Sequence(value={"cmdgargmain", "postcondition"}, required="ro")
-	public TokenFactory cmdgarg;
-	@List(value="cmdgarg", delim="comma")
-	public TokenFactory cmdgargs;
+	public TokenFactory gotoargument;
+	@List(value="gotoargument", delim="comma")
+	public TokenFactory gotoarguments;
 	
 	@Sequence(value={"pound", "expr"}, required="all")
 	public TokenFactory readcount;
@@ -377,9 +378,9 @@ public class MTFSupply {
 	@Sequence(value={"labelpiece", "lineoffset", "doroutinef", "actuallist"}, required="oooo")
 	public TokenFactory extrinsicarg;
 	@Sequence(value={"labelpiece", "lineoffset", "doroutinef", "actuallist", "postcondition"}, required="ooooo")
-	public TokenFactory cmddarg;
-	@List(value="cmddarg", delim="comma")
-	public TokenFactory cmddargs;
+	public TokenFactory doargument;
+	@List(value="doargument", delim="comma")
+	public TokenFactory doarguments;
 
 	@Sequence(value={"environment", "name"}, required="or")
 	public TokenFactory doroutine;
