@@ -44,13 +44,6 @@ public class MTFSupply {
 			return new TGlobalNaked(tokens);
 		}
 	}
-	public static class ActualListAdapter implements SequenceAdapter {
-		@Override
-		public Token convert(Token[] tokens) {
-			TList list = (tokens[1] == null) ? new TList() : (TList) tokens[1];
-			return new TActualList(list);
-		}
-	}
 	public static class NumLitAdapter implements SequenceAdapter {
 		@Override
 		public Token convert(Token[] tokens) {
