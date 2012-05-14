@@ -1,7 +1,5 @@
 package com.raygroupintl.m.token;
 
-import static org.junit.Assert.fail;
-
 import java.util.Iterator;
 
 import junit.framework.Assert;
@@ -77,16 +75,6 @@ public class TFLineTest {
 		}
 	}
 
-	private void noErrorTest(TokenFactory f, String lineUnderTest) {
-		try {
-			Token line = f.tokenize(lineUnderTest, 0);
-			Assert.assertFalse("Unexpected error", line.hasError());
-			Assert.assertFalse("Unexpected fatal error", line.hasFatalError());				
-		} catch(SyntaxErrorException e) {
-			fail("Exception: " + e.getMessage());
-		}	
-	}
-	
 	private Token lineTest(TokenFactory f, String line) {
 		return lineTest(f, line, true);
 	}
@@ -128,26 +116,17 @@ public class TFLineTest {
 		lineTest(f, " S A=1 H  ");
 		lineTest(f, " I ZTOS'[\"VAX DSM\" J RESTART^%ZTM0[ZTUCI] D DONE Q", 1, 34);
 		lineTest(f, " S A=4  K ,CC,EE", false);
+		lineTest(f, " G @(\"TAG\"_B):C'>3");
+		lineTest(f, " G @A^@B");
+		lineTest(f, " G TAG3:A=3,@(\"TAG\"_B):C'>3,@A^@B");
+		lineTest(f, " D COMP,EN1^PRCAATR(Y) G:$D(DTOUT) Q G ASK");
+		lineTest(f, " D @(+$P(LST,\",\",FLD))");
 	}
 	
 	@Test
 	public void testBasic() {
 		testBasic(fCache, true);
 		testBasic(fStd95, false);
-	}
-	
-	public void testNoErrors(TokenFactory f) {
-		noErrorTest(f, " G @(\"TAG\"_B):C'>3");
-		noErrorTest(f, " G @A^@B");
-		noErrorTest(f, " G TAG3:A=3,@(\"TAG\"_B):C'>3,@A^@B");
-		noErrorTest(f, " D COMP,EN1^PRCAATR(Y) G:$D(DTOUT) Q G ASK");
-		noErrorTest(f, " D @(+$P(LST,\",\",FLD))");
-	}
-
-	@Test
-	public void testNoErrors() {
-		testNoErrors(fCache);
-		testNoErrors(fStd95);
 	}
 	
 	public void testBeautify(TokenFactory f) {

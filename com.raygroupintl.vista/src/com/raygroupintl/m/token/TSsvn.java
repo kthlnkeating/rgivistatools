@@ -1,11 +1,7 @@
 package com.raygroupintl.m.token;
 
-import java.util.Arrays;
-import java.util.List;
-
 import com.raygroupintl.bnf.Token;
 import com.raygroupintl.bnf.TArray;
-import com.raygroupintl.vista.struct.MError;
 import com.raygroupintl.vista.struct.MNameWithMnemonic;
 
 public class TSsvn extends TArray {
@@ -29,24 +25,14 @@ public class TSsvn extends TArray {
 		
 		@Override
 		public String getStringValue() {
-			return "^$" + super.getStringValue();
+			return "^$" + this.getIdentier();
 		}
 
 		@Override
 		public int getStringSize() {
-			return 2 + super.getStringSize();
+			return 2 + this.getIdentier().length();
 		}	
 
-		@Override
-		public List<MError> getErrors() {
-			String value = this.getIdentier();
-			if (SSVS.get(value) == null) {
-				return Arrays.asList(new MError[]{new MError(MError.ERR_UNKNOWN_INTRINSIC_FUNCTION)});
-			} else {
-				return null;
-			}
-		}
-		
 		@Override
 		protected MNameWithMnemonic getNameWithMnemonic() {
 			String value = this.getIdentier();

@@ -1,7 +1,6 @@
 package com.raygroupintl.m.token;
 
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 import com.raygroupintl.bnf.SyntaxErrorException;
@@ -23,18 +22,13 @@ public class TFIntrinsic extends TFSequence {
 		
 		@Override
 		public String getStringValue() {
-			return "$" + super.getStringValue();
+			return "$" + this.getIdentier();
 		}
 
 		@Override
 		public int getStringSize() {
-			return 1 + super.getStringSize();
+			return 1 + this.getIdentier().length();
 		}	
-
-		@Override
-		public List<MError> getErrors() {
-			return null;  // All errors during parsing
-		}
 	}
 
 	private static class TIntrinsicVariable extends TIntrinsicName {

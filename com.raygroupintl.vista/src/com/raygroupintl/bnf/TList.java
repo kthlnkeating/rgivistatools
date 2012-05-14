@@ -88,38 +88,6 @@ public class TList implements Token {
 	}
 
 	@Override
-	public List<MError> getErrors() {
-		List<MError> result = null;
-		for (Token token : this.tokens) {
-			if (token.hasError()) {
-				List<MError> errors = token.getErrors();
-				if (result == null) {
-					result = new ArrayList<MError>(errors);
-				} else {
-					result.addAll(errors);
-				}
-			}
-		}
-		return result;
-	}
-
-	@Override
-	public boolean hasError() {
-		for (Token token : this.tokens) {
-			if (token.hasError()) return true;
-		}
-		return false;
-	}
-
-	@Override
-	public boolean hasFatalError() {
-		for (Token token : this.tokens) {
-			if (token.hasFatalError()) return true;
-		}
-		return false;
-	}
-	
-	@Override
 	public void beautify() {
 		for (Token token : this.tokens) {
 			token.beautify();

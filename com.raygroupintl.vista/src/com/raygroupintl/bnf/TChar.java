@@ -1,10 +1,6 @@
 package com.raygroupintl.bnf;
 
-import java.util.List;
-
-import com.raygroupintl.vista.struct.MError;
-
-public class TChar extends TBase {
+public class TChar implements Token {
 	private char value;
 	
 	public TChar(char value) {
@@ -21,11 +17,6 @@ public class TChar extends TBase {
 		return 1;
 	}
 	
-	@Override
-	public List<MError> getErrors() {
-		return null;
-	}
-
 	@Override
 	public void beautify() {			
 	}

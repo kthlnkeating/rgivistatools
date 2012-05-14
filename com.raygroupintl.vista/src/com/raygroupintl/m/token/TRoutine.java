@@ -9,16 +9,14 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.raygroupintl.bnf.Token;
-import com.raygroupintl.bnf.TBase;
 import com.raygroupintl.m.parsetree.EntryTag;
 import com.raygroupintl.m.parsetree.Line;
 import com.raygroupintl.m.parsetree.Routine;
 import com.raygroupintl.m.struct.Fanout;
 import com.raygroupintl.m.struct.LineLocation;
 import com.raygroupintl.m.struct.RoutineFanouts;
-import com.raygroupintl.vista.struct.MError;
 
-public class TRoutine extends TBase implements NodeFactory {
+public class TRoutine implements Token, NodeFactory {
 	private String name;
 	private List<TLine> lines = new ArrayList<TLine>();
 	private List<LineLocation> locations;
@@ -50,20 +48,11 @@ public class TRoutine extends TBase implements NodeFactory {
 	}
 	
 	@Override
-	public List<MError> getErrors() {
-		List<MError> result = null;
-		for (TLine line : this.lines) {
-			List<MError> lerr = line.getErrors();
-			if (lerr != null) {
-				if (result == null) {
-					result = new ArrayList<MError>();	
-				}				
-				result.addAll(lerr);
-			}
-		}
-		return result;
+	public int getStringSize() {
+		String v = this.getStringValue();
+		return v.length();
 	}
-
+	
 	@Override
 	public void beautify() {		
 		for (TLine line : this.lines) {

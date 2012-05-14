@@ -1,9 +1,9 @@
 package com.raygroupintl.m.token;
 
-import com.raygroupintl.bnf.TBase;
+import com.raygroupintl.bnf.Token;
 import com.raygroupintl.vista.struct.MNameWithMnemonic;
 
-public abstract class TKeyword extends TBase {
+public abstract class TKeyword implements Token {
 	private String value;
 
 	public TKeyword(String value) {
@@ -14,16 +14,6 @@ public abstract class TKeyword extends TBase {
 		return this.value;
 	}
 	
-	@Override
-	public String getStringValue() {
-		return this.value;
-	}
-	
-	@Override
-	public int getStringSize() {
-		return this.value.length();
-	}
-		
 	protected abstract MNameWithMnemonic getNameWithMnemonic();
 	
 	@Override

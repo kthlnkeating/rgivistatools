@@ -18,7 +18,6 @@ public class TFCommonTest {
 	}
 	
 	static void validCheck(Token t, String v) {
-		Assert.assertFalse(t.hasError());
 		validTokenCheck(t, v);
 	}
 	

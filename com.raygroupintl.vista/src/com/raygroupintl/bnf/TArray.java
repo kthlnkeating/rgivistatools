@@ -1,10 +1,5 @@
 package com.raygroupintl.bnf;
 
-import java.util.ArrayList;
-import java.util.List;
-
-import com.raygroupintl.vista.struct.MError;
-
 public class TArray implements Token, TokenArray {
 	private Token[] tokens;
 	
@@ -32,38 +27,6 @@ public class TArray implements Token, TokenArray {
 			result +=  t.getStringSize();
 		}
 		return result;
-	}
-
-	@Override
-	public List<MError> getErrors() {
-		List<MError> result = null;
-		for (Token t : this.tokens) if (t != null) {
-			List<MError> errors = t.getErrors();
-			if (errors != null) {
-				if (result == null) {
-					result = new ArrayList<MError>(errors);
-				} else {
-					result.addAll(errors);
-				}
-			}
-		}
-		return result;
-	}
-	
-	@Override
-	public boolean hasError() {
-		for (Token t : this.tokens) if (t != null) {
-			if (t.hasError()) return true;
-		}
-		return false;
-	}
-
-	@Override
-	public boolean hasFatalError() {
-		for (Token t : this.tokens) if (t != null) {
-			if (t.hasFatalError()) return true;
-		}
-		return false;
 	}
 
 	@Override

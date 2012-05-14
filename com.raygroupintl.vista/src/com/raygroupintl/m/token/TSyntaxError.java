@@ -1,8 +1,5 @@
 package com.raygroupintl.m.token;
 
-import java.util.Arrays;
-import java.util.List;
-
 import com.raygroupintl.bnf.StringAdapter;
 import com.raygroupintl.bnf.Token;
 import com.raygroupintl.m.parsetree.ErrorNode;
@@ -46,22 +43,6 @@ public class TSyntaxError implements Token, NodeFactory {
 	@Override
 	public int getStringSize() {
 		return this.errorText.length();
-	}
-
-	@Override
-	public List<MError> getErrors() {
-		MError e = new MError(this.errorCode);
-		return Arrays.asList(new MError[]{e});
-	}
-
-	@Override
-	public boolean hasError() {
-		return true;
-	}
-
-	@Override
-	public boolean hasFatalError() {
-		return true;
 	}
 
 	@Override
