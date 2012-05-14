@@ -27,29 +27,9 @@ public class TFString extends TokenFactory {
 		this.adapter = adapter;
 	}
 		
-	protected Token getToken(String value) {
-		return this.adapter.convert(value);
-	}
-	
 	@Override
 	public Token tokenize(String line, int fromIndex) {
-		int endIndex = line.length();
-		int index = fromIndex;
-		while (index < endIndex) {
-			char ch = line.charAt(index);
-			if (! this.predicate.check(ch)) {
-				if (fromIndex == index) {
-					return null;
-				} else {
-					return this.getToken(line.substring(fromIndex, index));
-				}
-			}
-			++index;
-		}
-		if (fromIndex < endIndex) {
-			return this.getToken(line.substring(fromIndex));			
-		} else {
-			return null;
-		}
+		Text text = new Text(line, fromIndex);
+		return text.extractToken(this.predicate, this.adapter);
 	}
 }

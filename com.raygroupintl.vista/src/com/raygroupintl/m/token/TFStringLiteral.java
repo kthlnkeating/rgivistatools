@@ -1,6 +1,5 @@
 package com.raygroupintl.m.token;
 
-import com.raygroupintl.bnf.ArrayAsTokenStore;
 import com.raygroupintl.bnf.SyntaxErrorException;
 import com.raygroupintl.bnf.Token;
 import com.raygroupintl.bnf.TokenFactory;
@@ -27,7 +26,7 @@ public class TFStringLiteral extends TokenFactory {
 					}				
 					sb.append(ch);
 				}
-				throw new SyntaxErrorException(MError.ERR_UNMATCHED_QUOTATION, fromIndex, new ArrayAsTokenStore(0));
+				throw new SyntaxErrorException(MError.ERR_UNMATCHED_QUOTATION, fromIndex);
 			}
 		}
 		return null;
