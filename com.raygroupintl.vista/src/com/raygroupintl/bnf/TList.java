@@ -5,8 +5,6 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.NoSuchElementException;
 
-import com.raygroupintl.vista.struct.MError;
-
 public class TList implements Token {
 	private class DelimitedIterator implements Iterator<Token> {
 		private int index;

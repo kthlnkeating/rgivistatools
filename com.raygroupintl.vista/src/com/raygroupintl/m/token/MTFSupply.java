@@ -2,7 +2,6 @@ package com.raygroupintl.m.token;
 
 import com.raygroupintl.bnf.Token;
 import com.raygroupintl.bnf.TokenFactory;
-import com.raygroupintl.bnf.TArray;
 import com.raygroupintl.bnf.TFEmpty;
 import com.raygroupintl.bnf.TFSyntaxError;
 import com.raygroupintl.bnf.SequenceAdapter;
@@ -19,50 +18,6 @@ import com.raygroupintl.bnf.annotation.WordSpecified;
 import com.raygroupintl.vista.struct.MError;
 
 public class MTFSupply {
-	public static class IndirectionAdapter implements SequenceAdapter {
-		@Override
-		public Token convert(Token[] tokens) {
-			return new TIndirection(tokens);
-		}		
-	}
-	public static class LvnAdapter implements SequenceAdapter {
-		@Override
-		public Token convert(Token[] tokens) {
-			return new TLocal(tokens);
-		}		
-	}
-	public static class GvnAdapter implements SequenceAdapter {
-		@Override
-		public Token convert(Token[] tokens) {
-			return new TGlobalNamed(tokens);
-		}
-	}
-	public static class GvnNakedAdapter implements SequenceAdapter {
-		@Override
-		public Token convert(Token[] tokens) {
-			return new TGlobalNaked(tokens);
-		}
-	}
-	public static class NumLitAdapter implements SequenceAdapter {
-		@Override
-		public Token convert(Token[] tokens) {
-			String value = (new TArray(tokens)).getStringValue();
-			return new TNumLit(value);
-		}
-	}
-	public static class LabelRefAdapter implements SequenceAdapter {
-		@Override
-		public Token convert(Token[] tokens) {
-			return new TLabelRef(tokens);
-		}
-	}
-	public static class LineAdapter implements SequenceAdapter {
-		@Override
-		public Token convert(Token[] tokens) {
-			return new TLine(tokens);
-		}
-	}
-	
 	@CharSpecified(chars={'.'}, single=true)
 	public TokenFactory dot;
 	@CharSpecified(chars={','}, single=true)
@@ -173,7 +128,7 @@ public class MTFSupply {
 	@Sequence(value={"caret", "environment", "name"}, required="ror")
 	public TokenFactory envroutine;
 	
-	@Adapter(LabelRefAdapter.class)
+	@TokenType(TLabelRef.class)
 	@Sequence(value={"name", "envroutine"})
 	public TokenFactory labelref;
 	
@@ -185,7 +140,7 @@ public class MTFSupply {
 	@Sequence(value={"intlit", "mantista_1"})
 	public TokenFactory mantista;
 	
-	@Adapter(NumLitAdapter.class)
+	@TokenType(TNumLit.class)
 	@Sequence(value={"pm", "mantista", "exp"}, required="oro")
 	public TokenFactory numlit;
 		
@@ -237,7 +192,7 @@ public class MTFSupply {
 	@Sequence(value={"atlpar", "exprlist", "rpar"}, required="all")
 	public TokenFactory indirection_1;
 	
-	@Adapter(IndirectionAdapter.class)
+	@TokenType(TIndirection.class)
 	@Sequence(value={"indirection_0", "indirection_1"}, required="ro")
 	public TokenFactory indirection;
 	
@@ -247,7 +202,7 @@ public class MTFSupply {
 	@Sequence(value={"environment", "name", "exprlistinparan"}, required="oro")
 	public TokenFactory gvn_0;
 	
-	@Adapter(GvnAdapter.class)
+	@TokenType(TGlobalNamed.class)
 	@Sequence(value={"caret", "gvn_0"}, required="all")
 	public TokenFactory gvn;
 	
@@ -260,7 +215,7 @@ public class MTFSupply {
 	@Sequence(value={"unaryop", "expratom"}, required="all")
 	public TokenFactory unaryexpritem;
 	
-	@Adapter(GvnNakedAdapter.class)
+	@TokenType(TGlobalNaked.class)
 	@Sequence(value={"caret", "exprlistinparan"}, required="all")
 	public TokenFactory gvnnaked;
 	
@@ -290,7 +245,7 @@ public class MTFSupply {
 	@Choice({"glvn", "expritem"})
 	public TokenFactory expratom;
 
-	@Adapter(LvnAdapter.class)
+	@TokenType(TLocal.class)
 	@Sequence(value={"name", "exprlistinparan"}, required="ro")
 	public TokenFactory lvn;
 	
@@ -547,7 +502,7 @@ public class MTFSupply {
 	@CharSpecified(chars={' ', '.'})
 	public TokenFactory level;
 	
-	@Adapter(LineAdapter.class)
+	@TokenType(TLine.class)
 	@Sequence({"label", "lineformal", "ls", "level", "commandorcommentlist"})
 	public TokenFactory line;
 	

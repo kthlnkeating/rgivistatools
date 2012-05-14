@@ -1,9 +1,10 @@
 package com.raygroupintl.m.token;
 
-import com.raygroupintl.bnf.TString;
+import com.raygroupintl.bnf.TArray;
+import com.raygroupintl.bnf.Token;
 
-public class TNumLit extends TString {
-	public TNumLit(String value) {
-		super(value);
+public class TNumLit extends TArray {
+	public TNumLit(Token[] tokens) {
+		super(tokens);
 	}
 }
