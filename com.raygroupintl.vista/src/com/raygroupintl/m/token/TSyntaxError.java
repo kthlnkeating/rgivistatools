@@ -3,53 +3,49 @@ package com.raygroupintl.m.token;
 import java.util.Arrays;
 import java.util.List;
 
+import com.raygroupintl.bnf.StringAdapter;
 import com.raygroupintl.bnf.Token;
 import com.raygroupintl.m.parsetree.ErrorNode;
 import com.raygroupintl.vista.struct.MError;
 
 public class TSyntaxError implements Token, NodeFactory {	
-	private int errorCode = MError.ERR_GENERAL_SYNTAX;
-	private String line;
-	private int fromIndex;
-	private int endIndex;
-	private int errorLocationIndex;
-	
-	public TSyntaxError(String line, int index) {
-		this.line = line;
-		int i = index;
-		while (i < line.length()) {
-			char ch = line.charAt(i);
-			if ((ch == '\r') || (ch == '\n')) {
-				break;
-			}
-			++i;
+	public static class Adapter implements StringAdapter {
+		private int errorCode = MError.ERR_GENERAL_SYNTAX;
+		private int errorIndex;
+
+		public Adapter(int errorCode, int errorIndex) {
+			this.errorCode = errorCode;
+			this.errorIndex = errorIndex;
 		}		
-		this.fromIndex = index;
-		this.endIndex = i;
-		this.errorLocationIndex = index;
+	
+		@Override
+		public Token convert(String value) {
+			return new TSyntaxError(this.errorCode, value, this.errorIndex);
+		}
 	}
 	
-	public TSyntaxError(int errorCode, String line, int index) {
-		this(line, index);
+	private int errorCode = MError.ERR_GENERAL_SYNTAX;
+	private String errorText;
+	private int errorIndex;
+	
+	public TSyntaxError(int errorCode, String errorText, int errorIndex) {
 		this.errorCode = errorCode;
+		this.errorText = errorText;
+		this.errorIndex = errorIndex;
 	}
 	
-	public void setFromIndex(int fromIndex) {
-		this.fromIndex = fromIndex;
-	}
-	
-	public int getErrorLocation() {
-		return this.errorLocationIndex;
+	public int getErrorIndex() {
+		return this.errorIndex;
 	}
 	
 	@Override
 	public String getStringValue() {
-		return this.line.substring(fromIndex, this.endIndex);
+		return this.errorText;
 	}
 
 	@Override
 	public int getStringSize() {
-		return this.endIndex - this.fromIndex;
+		return this.errorText.length();
 	}
 
 	@Override

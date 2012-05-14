@@ -8,7 +8,7 @@ public final class TFSyntaxError extends TokenFactory {
 	}
 		
 	@Override
-	public Token tokenize(String line, int fromIndex) throws SyntaxErrorException {
-		throw new SyntaxErrorException(this.code, fromIndex);
+	public Token tokenize(Text text) throws SyntaxErrorException {
+		throw new SyntaxErrorException(this.code);
 	}
 }

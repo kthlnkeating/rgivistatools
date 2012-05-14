@@ -5,6 +5,7 @@ import static org.junit.Assert.fail;
 import junit.framework.Assert;
 
 import com.raygroupintl.bnf.SyntaxErrorException;
+import com.raygroupintl.bnf.Text;
 import com.raygroupintl.bnf.Token;
 import com.raygroupintl.bnf.TokenFactory;
 import com.raygroupintl.bnf.TokenStore;
@@ -21,8 +22,8 @@ public class TFCommonTest {
 		validTokenCheck(t, v);
 	}
 	
-	public static Token getErrorToken(SyntaxErrorException e, String v) {
-		Token t = new TSyntaxError(v, e.getLocation());
+	public static Token getErrorToken(SyntaxErrorException e, int location, String v) {
+		Token t = new TSyntaxError(0, v.substring(location), location);
 		for (TokenStore ts : e.getTokenStores()) {
 			ts.addToken(t);
 			t = ts.toToken();
@@ -30,14 +31,14 @@ public class TFCommonTest {
 		return t;
 	}
 	
-	static void errorCheck(SyntaxErrorException e, String v) {
-		Token t = getErrorToken(e, v);
+	static void errorCheck(SyntaxErrorException e, int location, String v) {
+		Token t = getErrorToken(e, location, v);
 		validTokenCheck(t, v);
 	}
 			
-	static void errorCheck(SyntaxErrorException e, String v, int errorCode) {
+	static void errorCheck(SyntaxErrorException e, int location, String v, int errorCode) {
 		Assert.assertEquals(errorCode,  e.getCode());
-		Token t = getErrorToken(e, v);
+		Token t = getErrorToken(e, location, v);
 		validTokenCheck(t, v);
 	}
 			
@@ -71,20 +72,22 @@ public class TFCommonTest {
 	}
 
 	static void errorCheck(TokenFactory f, String v) {
+		Text text = new Text(v);
 		try {
-			f.tokenize(v, 0);
+			f.tokenize(text);
 			fail("Expected exception did not fire.");
 		} catch(SyntaxErrorException e) {
-			errorCheck(e, v);
+			errorCheck(e, text.getIndex(), v);
 		}
 	}
 
 	static void errorCheck(TokenFactory f, String v, int errorCode, boolean checkWithSpace) {
+		Text text = new Text(v);
 		try {
-			f.tokenize(v, 0);
+			f.tokenize(text);
 			fail("Expected exception did not fire.");
 		} catch(SyntaxErrorException e) {
-			errorCheck(e, v, errorCode);
+			errorCheck(e, text.getIndex(), v, errorCode);
 			errorCheck(f, v + " ", v + " ", errorCode);		
 			if (checkWithSpace) {
 				errorCheck(f, v + " ", v, errorCode);
@@ -110,11 +113,12 @@ public class TFCommonTest {
 	}
 
 	static void errorCheck(TokenFactory f, String v, String compare, int errorCode) {
+		Text text = new Text(v);
 		try {
-			f.tokenize(v, 0);
+			f.tokenize(text);
 			fail("Expected exception did not fire.");
 		} catch(SyntaxErrorException e) {
-			errorCheck(e, compare, errorCode);
+			errorCheck(e, text.getIndex(), compare, errorCode);
 		}
 	}
 }

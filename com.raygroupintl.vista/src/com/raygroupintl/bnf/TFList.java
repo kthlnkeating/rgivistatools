@@ -21,15 +21,13 @@ public final class TFList extends TokenFactory {
 	}
 
 	@Override
-	public Token tokenize(String line, int fromIndex) throws SyntaxErrorException {
-		int endIndex = line.length();
-		if (fromIndex < endIndex) {
-			int index = fromIndex;
+	public Token tokenize(Text text) throws SyntaxErrorException {
+		if (text.onChar()) {
 			ListAsTokenStore list = new ListAsTokenStore();
-			while (index < endIndex) {
+			while (text.onChar()) {
 				Token token = null;
 				try {
-					token = this.elementFactory.tokenize(line, index);
+					token = this.elementFactory.tokenize(text);
 				} catch (SyntaxErrorException e) {
 					e.addStore(list);
 					throw e;
@@ -42,9 +40,7 @@ public final class TFList extends TokenFactory {
 					}
 				}
 				list.addToken(token);	
-				index += token.getStringSize();
 			}
-			assert(index == endIndex);	
 			return this.getToken(list.toList());
 		}
 		return null;

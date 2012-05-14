@@ -71,7 +71,7 @@ public class TFLineTest {
 			TList commands = (TList) ((TArray) t).get(4);
 			Token error = commands.get(errorCommand);
 			Assert.assertTrue(error instanceof TSyntaxError);
-			Assert.assertEquals(errorLocation, ((TSyntaxError) error).getErrorLocation());
+			Assert.assertEquals(errorLocation, ((TSyntaxError) error).getErrorIndex());
 		} catch (SyntaxErrorException e) {
 			Assert.fail("Unexpected exception.");
 		}

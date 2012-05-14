@@ -35,13 +35,13 @@ public abstract class TFChoiceOnChar extends TokenFactory {
 		return this.defaultFactory;
 	}
 	
-	protected abstract TokenFactory getFactory(String line, int index);
+	protected abstract TokenFactory getFactory(Text text);
 	
 	@Override
-	public Token tokenize(String line, int fromIndex) throws SyntaxErrorException {
-		TokenFactory f = this.getFactory(line, fromIndex);
+	public Token tokenize(Text text) throws SyntaxErrorException {
+		TokenFactory f = this.getFactory(text);
 		if (f != null) {
-			Token result = f.tokenize(line, fromIndex);
+			Token result = f.tokenize(text);
 			return result;
 		}
 		return null;

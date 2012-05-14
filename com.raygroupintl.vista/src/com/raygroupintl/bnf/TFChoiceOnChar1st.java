@@ -18,11 +18,11 @@ public class TFChoiceOnChar1st extends TFChoiceOnChar {
 	}
 
 	@Override
-	protected TokenFactory getFactory(String line, int index) {
-		if (index+1 < line.length()) {			
-			char ch0th = line.charAt(index);
+	protected TokenFactory getFactory(Text text) {
+		if (text.onChar(1)) {			
+			char ch0th = text.getChar();
 			if (ch0th == this.leadingChar) {
-				char ch1st = line.charAt(index+1);
+				char ch1st = text.getChar(1);
 				return this.getFactory(ch1st);
 			}
 		}

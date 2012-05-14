@@ -28,8 +28,7 @@ public class TFCharacter extends TokenFactory {
 	}
 		
 	@Override
-	public Token tokenize(String line, int fromIndex) {
-		Text text = new Text(line, fromIndex);
+	public Token tokenize(Text text) {
 		return text.extractToken(this.predicate, this.adapter);
 	}
 }

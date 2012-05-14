@@ -35,6 +35,22 @@ public class Text {
 		return this.text.charAt(this.index+forward);
 	}
 	
+	public int findEOL() {
+		int i = 0;
+		while (this.onChar(i)) {
+			char ch = this.getChar(i);
+			if ((ch == '\r') || (ch == '\n')) {
+				break;
+			}
+			++i;
+		}		
+		return i;
+	}
+	
+	public int getIndex() {
+		return this.index;
+	}
+	
 	Token extractToken(String value, StringAdapter adapter, boolean ignoreCase) {
 		if (ignoreCase) {
 			String piece = this.text.substring(this.index, this.index+value.length());
@@ -109,5 +125,10 @@ public class Text {
 	
 	public Text getCopy() {
 		return new Text(this.text, this.index);
+	}
+
+	public void copyFrom(Text text) {
+		this.text = text.text;
+		this.index = text.index;
 	}
 }

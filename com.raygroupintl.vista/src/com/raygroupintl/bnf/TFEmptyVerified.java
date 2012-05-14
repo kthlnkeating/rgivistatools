@@ -5,13 +5,13 @@ public abstract class TFEmptyVerified extends TokenFactory {
 	protected abstract boolean isExpected(char ch);
 		
 	@Override
-	public Token tokenize(String line, int fromIndex) throws SyntaxErrorException {
-		if (fromIndex < line.length()) {
-			char ch = line.charAt(fromIndex);
+	public Token tokenize(Text text) throws SyntaxErrorException {
+		if (text.onChar()) {
+			char ch = text.getChar();
 			if (this.isExpected(ch)) {
 				return new TEmpty();
 			} else {
-				throw new SyntaxErrorException(fromIndex);
+				throw new SyntaxErrorException();
 			}
 		}
 		return null;

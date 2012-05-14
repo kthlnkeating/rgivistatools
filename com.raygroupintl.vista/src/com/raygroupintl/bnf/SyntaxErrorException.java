@@ -6,31 +6,22 @@ import java.util.List;
 @SuppressWarnings("serial")
 public class SyntaxErrorException extends Exception {
 	private int code;
-	private int location;
 	private List<TokenStore> tokens = new ArrayList<TokenStore>();
 		
-	public SyntaxErrorException(int code, int location, TokenStore store) {
+	public SyntaxErrorException(int code, TokenStore store) {
 		this.code = code;
-		this.location = location;
 		this.tokens.add(store);			
 	}
 	
-	public SyntaxErrorException(int code, int location) {
+	public SyntaxErrorException() {
+	}
+	
+	public SyntaxErrorException(int code) {
 		this.code = code;
-		this.location = location;
 	}
 	
-	public SyntaxErrorException(int location, TokenStore store) {
-		this.location = location;
+	public SyntaxErrorException(TokenStore store) {
 		this.tokens.add(store);
-	}
-	
-	public SyntaxErrorException(int location) {
-		this.location = location;
-	}
-	
-	public int getLocation() {
-		return this.location;
 	}
 	
 	public int getCode() {

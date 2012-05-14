@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.nio.file.Path;
 
 import com.raygroupintl.bnf.SyntaxErrorException;
+import com.raygroupintl.bnf.Text;
 import com.raygroupintl.bnf.Token;
 import com.raygroupintl.bnf.TokenFactory;
 import com.raygroupintl.vista.struct.MRoutineContent;
@@ -16,7 +17,7 @@ public class TFRoutine {
 	}
 	
 	public static TLine recoverFromError(String line, SyntaxErrorException e) {
-		Token error = new TSyntaxError(line, 0);
+		Token error = new TSyntaxError(0, line, 0);
 		Token[] lineResult = {error, null, null, null, null};
 		return new TLine(lineResult);
 	}
@@ -29,7 +30,8 @@ public class TFRoutine {
 		for (String line : content.getLines()) {
 			TLine tokens = null;
 			try {
-				tokens = (TLine) this.tfLine.tokenize(line, 0);
+				Text text = new Text(line);
+				tokens = (TLine) this.tfLine.tokenize(text);
 			} catch (SyntaxErrorException e) {
 				tokens = recoverFromError(line, e);
 			}
@@ -51,7 +53,7 @@ public class TFRoutine {
 		return r;
 	}
 		
-	public TRoutine tokenize(String name, String line, int fromIndex) throws SyntaxErrorException {
+/*	public TRoutine tokenize(String name, String line, int fromIndex) throws SyntaxErrorException {
 		int endIndex = line.length();
 		int index = fromIndex;
 		TRoutine result = new TRoutine(name);
@@ -63,7 +65,7 @@ public class TFRoutine {
 		
 		return result;
 	}
-
+*/
 	public static TFRoutine getInstance(MVersion version) {
 		return new TFRoutine(version);
 	}	

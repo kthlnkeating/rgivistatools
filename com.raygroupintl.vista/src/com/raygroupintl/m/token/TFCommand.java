@@ -3,8 +3,10 @@ package com.raygroupintl.m.token;
 import java.util.HashMap;
 import java.util.Map;
 
+import com.raygroupintl.bnf.StringAdapter;
 import com.raygroupintl.bnf.SyntaxErrorException;
 import com.raygroupintl.bnf.TFSequence;
+import com.raygroupintl.bnf.Text;
 import com.raygroupintl.bnf.Token;
 import com.raygroupintl.bnf.TokenFactory;
 import com.raygroupintl.bnf.TString;
@@ -21,14 +23,20 @@ public class TFCommand extends TFSequence {
 		this.supply = supply;
 	}
 	
+	private static class CommandNameAdapter implements StringAdapter {
+		@Override
+		public Token convert(String value) {
+			return new TString(value);
+		}
+	}
+	
 	private static class TFGenericArgument extends TokenFactory {
 		@Override
-		public Token tokenize(String line, int fromIndex) {
-			int endIndex = line.length();
-			int index = fromIndex;
+		public Token tokenize(Text text) {
+			int index = 0;
 			boolean inQuotes = false;
-			while (index < endIndex) {
-				char ch = line.charAt(index);
+			while (text.onChar(index)) {
+				char ch = text.getChar(index);
 								
 				if (ch == '"') {
 					inQuotes = ! inQuotes;
@@ -39,8 +47,8 @@ public class TFCommand extends TFSequence {
 				}
 				++index;
 			}
-			if (index > fromIndex) {
-				return new TString(line.substring(fromIndex, index));
+			if (index > 0) {
+				return text.extractToken(index, new CommandNameAdapter());
 			} else {
 				return new TEmpty();
 			}
@@ -568,14 +576,14 @@ public class TFCommand extends TFSequence {
 			
 	private class TFCommandName extends TokenFactory {
 		@Override
-		public Token tokenize(String line, int fromIndex) throws SyntaxErrorException {
-			Token result = TFCommand.this.supply.ident.tokenize(line, fromIndex);			
+		public Token tokenize(Text text) throws SyntaxErrorException {
+			Token result = TFCommand.this.supply.ident.tokenize(text);			
 			String cmdName = result.getStringValue();
 			TCSFactory tcs = TFCommand.this.commandSpecs.get(cmdName.toUpperCase());
 			if (tcs != null) {
 				return tcs.get(cmdName);
 			} else {
-				throw new SyntaxErrorException(MError.ERR_UNDEFINED_COMMAND , fromIndex);
+				throw new SyntaxErrorException(MError.ERR_UNDEFINED_COMMAND);
 			}			
 		}
 	}
@@ -608,30 +616,34 @@ public class TFCommand extends TFSequence {
 	}	
 
 	@Override
-	public Token tokenize(String line, int fromIndex) {
+	public Token tokenize(Text text) {
+		Text textCopy = text.getCopy();
 		try {
-			return super.tokenize(line, fromIndex);
+			return super.tokenize(text);
 		} catch (SyntaxErrorException e) {
-			TSyntaxError t = new TSyntaxError(e.getCode(), line, e.getLocation());
-			t.setFromIndex(fromIndex);
+			int errorIndex = text.getIndex();
+			TSyntaxError.Adapter adapter = new TSyntaxError.Adapter(e.getCode(), errorIndex);
+			int lengthToEOL = textCopy.findEOL();
+			Token t = textCopy.extractToken(lengthToEOL, adapter);
+			text.copyFrom(textCopy);
 			return t;
 		}
 	}
 	
 	
 	@Override
-	protected ValidateResult validateNull(int seqIndex, int lineIndex, TokenStore foundTokens)  throws SyntaxErrorException {
+	protected ValidateResult validateNull(int seqIndex, TokenStore foundTokens)  throws SyntaxErrorException {
 		if (seqIndex == 0) {
 			return ValidateResult.NULL_RESULT;
 		} else if (seqIndex == 4) {
-			throw new SyntaxErrorException(MError.ERR_GENERAL_SYNTAX, lineIndex, foundTokens);
+			throw new SyntaxErrorException(MError.ERR_GENERAL_SYNTAX, foundTokens);
 		} else {
 			return ValidateResult.CONTINUE;				
 		}
 	}
 
 	@Override
-	public Token getToken(String line, int fromIndex, TokenStore tokens) {
+	public Token getToken(TokenStore tokens) {
 		Token token0 = tokens.get(0);
 		if (token0 instanceof TCommandSpec) {
 			TCommandSpec spec = (TCommandSpec) token0;

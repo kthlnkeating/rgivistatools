@@ -18,8 +18,7 @@ package com.raygroupintl.bnf;
 
 public class TFEol extends TokenFactory {
 	@Override
-	public Token tokenize(String line, int fromIndex) {
-		Text text = new Text(line, fromIndex);
+	public Token tokenize(Text text) {
 		return text.extractEOLToken();
 	}
 }

@@ -17,9 +17,10 @@
 package com.raygroupintl.bnf;
 
 public abstract class TokenFactory {
-	public abstract Token tokenize(String line, int fromIndex) throws SyntaxErrorException;
+	public abstract Token tokenize(Text text) throws SyntaxErrorException;
 	
-	public Token tokenize(Text text) throws SyntaxErrorException {
-		return null;
+	public Token tokenize(String content, int fromIndex)  throws SyntaxErrorException {
+		Text text = new Text(content);
+		return this.tokenize(text);
 	}
 }

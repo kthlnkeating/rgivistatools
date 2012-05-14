@@ -182,7 +182,7 @@ public class TFIntrinsic extends TFSequence {
 	}	
 
 	@Override
-	protected ValidateResult validateNull(int seqIndex, int lineIndex, TokenStore foundTokens) throws SyntaxErrorException {
+	protected ValidateResult validateNull(int seqIndex, TokenStore foundTokens) throws SyntaxErrorException {
 		if (seqIndex == 0) {
 			return ValidateResult.NULL_RESULT;
 		} else if (seqIndex == 1) {
@@ -190,7 +190,7 @@ public class TFIntrinsic extends TFSequence {
 			if (this.variables.containsKey(name)) {
 				return ValidateResult.BREAK;
 			} else {
-				throw new SyntaxErrorException(MError.ERR_UNKNOWN_INTRINSIC_VARIABLE, lineIndex, foundTokens);
+				throw new SyntaxErrorException(MError.ERR_UNKNOWN_INTRINSIC_VARIABLE, foundTokens);
 			}
 		} else if (seqIndex == 2) {
 			String name = getFoundIntrinsicName(foundTokens);
@@ -198,24 +198,24 @@ public class TFIntrinsic extends TFSequence {
 			String mnemonic = mName.getMnemonic();
 			FunctionInfo info = TFIntrinsic.this.function_infos.get(mnemonic);
 			if (info.getMinNumArguments() > 0) {
-				throw new SyntaxErrorException(MError.ERR_GENERAL_SYNTAX, lineIndex, foundTokens);				
+				throw new SyntaxErrorException(MError.ERR_GENERAL_SYNTAX, foundTokens);				
 			} else {
 				return ValidateResult.CONTINUE;
 			}
 		} else {
-			throw new SyntaxErrorException(MError.ERR_UNMATCHED_PARANTHESIS, lineIndex, foundTokens);
+			throw new SyntaxErrorException(MError.ERR_UNMATCHED_PARANTHESIS, foundTokens);
 		}
 	}
 	
 	@Override
-	protected void validateEnd(int seqIndex, int lineIndex, TokenStore foundTokens) throws SyntaxErrorException {
+	protected void validateEnd(int seqIndex, TokenStore foundTokens) throws SyntaxErrorException {
 		if (seqIndex > 0) {
-			throw new SyntaxErrorException( MError.ERR_UNMATCHED_PARANTHESIS, lineIndex, foundTokens);
+			throw new SyntaxErrorException( MError.ERR_UNMATCHED_PARANTHESIS, foundTokens);
 		}
 	}
 	
 	@Override
-	protected Token getToken(String line, int fromIndex, TokenStore foundTokens) {
+	protected Token getToken(TokenStore foundTokens) {
 		TArray token0 = (TArray) foundTokens.get(0);
 		if (token0.get(2) == null) {		
 			TIdent name = (TIdent) token0.get(1);		

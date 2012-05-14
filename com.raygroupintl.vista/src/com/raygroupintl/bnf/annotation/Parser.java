@@ -17,6 +17,7 @@ import com.raygroupintl.bnf.TFEmpty;
 import com.raygroupintl.bnf.TFEnd;
 import com.raygroupintl.bnf.TFList;
 import com.raygroupintl.bnf.TList;
+import com.raygroupintl.bnf.Text;
 import com.raygroupintl.bnf.Token;
 import com.raygroupintl.bnf.TokenFactory;
 import com.raygroupintl.bnf.TFString;
@@ -423,7 +424,8 @@ public class Parser {
 				}
 				for (Triple<TFSequenceStatic, Description> p : this.descriptions) {
 					String description = p.annotation.value();
-					TDescription token = (TDescription) descriptionSpec.description.tokenize(description, 0);
+					Text text = new Text(description, 0);
+					TDescription token = (TDescription) descriptionSpec.description.tokenize(text);
 					TFSequenceStatic f = (TFSequenceStatic) token.getFactory(this.symbols);
 					p.factory.copyFrom(f);
 				}

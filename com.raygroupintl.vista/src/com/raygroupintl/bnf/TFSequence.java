@@ -19,16 +19,16 @@ public abstract class TFSequence extends TokenFactory {
 		this.adapter = adapter;
 	}
 
-	protected abstract ValidateResult validateNull(int seqIndex, int lineIndex, TokenStore foundTokens) throws SyntaxErrorException;
+	protected abstract ValidateResult validateNull(int seqIndex, TokenStore foundTokens) throws SyntaxErrorException;
 
-	protected ValidateResult validateNext(int seqIndex, int lineIndex, TokenStore foundTokens, Token nextToken) throws SyntaxErrorException {
+	protected ValidateResult validateNext(int seqIndex, TokenStore foundTokens, Token nextToken) throws SyntaxErrorException {
 		return ValidateResult.CONTINUE;
 	}
 
-	protected void validateEnd(int seqIndex, int lineIndex, TokenStore foundTokens) throws SyntaxErrorException {		
+	protected void validateEnd(int seqIndex, TokenStore foundTokens) throws SyntaxErrorException {		
 	}
 
-	protected Token getToken(String line, int fromIndex, TokenStore foundTokens) {
+	protected Token getToken(TokenStore foundTokens) {
 		if (this.adapter == null) {
 			return new TArray(foundTokens.toArray());
 		} else {
@@ -36,45 +36,42 @@ public abstract class TFSequence extends TokenFactory {
 		}
 	}
 
-	private ValidateResult validate(int seqIndex, int lineIndex, TokenStore foundTokens, Token nextToken) throws SyntaxErrorException {
+	private ValidateResult validate(int seqIndex,TokenStore foundTokens, Token nextToken) throws SyntaxErrorException {
 		if (nextToken == null) {
-			return this.validateNull(seqIndex, lineIndex, foundTokens);
+			return this.validateNull(seqIndex, foundTokens);
 		} else {
-			return this.validateNext(seqIndex, lineIndex, foundTokens, nextToken);			
+			return this.validateNext(seqIndex, foundTokens, nextToken);			
 		}
 	}
 
 	@Override
-	public Token tokenize(String line, int fromIndex) throws SyntaxErrorException {
-		int endIndex = line.length();
-		if (fromIndex < endIndex) {
-			int index = fromIndex;
+	public Token tokenize(Text text) throws SyntaxErrorException {
+		if (text.onChar()) {
 			int factoryCount = this.getExpectedTokenCount();
 			TokenStore foundTokens = new ArrayAsTokenStore(factoryCount);
 			for (int i=0; i<factoryCount; ++i) {
 				TokenFactory factory = this.getTokenFactory(i, foundTokens);
 				Token token = null;
 				try {
-					token = factory.tokenize(line, index);				
+					token = factory.tokenize(text);				
 				} catch (SyntaxErrorException e) {
 					e.addStore(foundTokens);
 					throw e;
 				}
 					
-				ValidateResult vr = this.validate(i, index, foundTokens, token);
+				ValidateResult vr = this.validate(i, foundTokens, token);
 				if (vr == ValidateResult.BREAK) break;
 				if (vr == ValidateResult.NULL_RESULT) return null;
 	
 				foundTokens.addToken(token);
 				if (token != null) {				
-					index += token.getStringSize();					
-					if ((index >= endIndex) && (i < factoryCount-1)) {
-						this.validateEnd(i, index, foundTokens);
+					if (text.onEndOfText() && (i < factoryCount-1)) {
+						this.validateEnd(i, foundTokens);
 						break;
 					}
 				}
 			}
-			return this.getToken(line, fromIndex, foundTokens);
+			return this.getToken(foundTokens);
 		}		
 		return null;
 	}

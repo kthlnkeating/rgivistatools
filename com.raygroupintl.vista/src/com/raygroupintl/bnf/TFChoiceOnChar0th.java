@@ -12,9 +12,9 @@ public class TFChoiceOnChar0th extends TFChoiceOnChar {
 	}
 
 	@Override
-	protected TokenFactory getFactory(String line, int index) {
-		if (index < line.length()) {
-			char ch = line.charAt(index);
+	protected TokenFactory getFactory(Text text) {
+		if (text.onChar()) {
+			char ch = text.getChar();
 			return this.getFactory(ch);
 		} else {
 			return null;

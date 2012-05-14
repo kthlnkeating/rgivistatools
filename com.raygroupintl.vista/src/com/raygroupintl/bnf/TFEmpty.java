@@ -12,12 +12,13 @@ public class TFEmpty extends TokenFactory {
 	}
 	
 	@Override
-	public Token tokenize(String line, int fromIndex) throws SyntaxErrorException {
-		if (fromIndex < line.length()) {
+	public Token tokenize(Text text) throws SyntaxErrorException {
+		if (text.onChar()) {
 			if (this.expected == null) {
 				return new TEmpty();
 			} else {
-				Token t = this.expected.tokenize(line, fromIndex);
+				Text textCopy = text.getCopy();
+				Token t = this.expected.tokenize(textCopy);
 				if (t != null)  {
 					return new TEmpty();
 				}
