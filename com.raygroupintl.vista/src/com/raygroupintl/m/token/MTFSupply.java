@@ -5,7 +5,6 @@ import com.raygroupintl.bnf.TokenFactory;
 import com.raygroupintl.bnf.TArray;
 import com.raygroupintl.bnf.TFEmpty;
 import com.raygroupintl.bnf.TFSyntaxError;
-import com.raygroupintl.bnf.TList;
 import com.raygroupintl.bnf.SequenceAdapter;
 import com.raygroupintl.bnf.annotation.Adapter;
 import com.raygroupintl.bnf.annotation.CChoice;

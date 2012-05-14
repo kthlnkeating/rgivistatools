@@ -44,7 +44,8 @@ public class TFCommonTest {
 			
 	static void validCheck(TokenFactory f, String v, boolean checkWithSpace) {
 		try {
-			Token t = f.tokenize(v, 0);
+			Text text = new Text(v);
+			Token t = f.tokenize(text);
 			validCheck(t, v);
 			if (checkWithSpace) {
 				validCheck(f, v + " ", v);

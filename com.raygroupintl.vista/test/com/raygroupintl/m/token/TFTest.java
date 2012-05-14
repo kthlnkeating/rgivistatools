@@ -65,10 +65,14 @@ public class TFTest {
 		MTFSupply m = MTFSupply.getInstance(version);
 		TokenFactory f = m.environment;
 		TFCommonTest.validCheck(f, "|A|");
+		TFCommonTest.validCheck(f, "|A+B|");
+		TFCommonTest.validCheck(f, "[A]");
 		TFCommonTest.validCheck(f, "[A,B]");
+		TFCommonTest.validCheck(f, "[A,\"B\"]");
 		TFCommonTest.errorCheck(f, "||", MError.ERR_GENERAL_SYNTAX);
 		TFCommonTest.errorCheck(f, "[A,B", MError.ERR_GENERAL_SYNTAX);
 		TFCommonTest.errorCheck(f, "[]", MError.ERR_GENERAL_SYNTAX);
+		TFCommonTest.errorCheck(f, "[A+B]");
 	}
 
 	public void TFDeviceParams(MVersion version) {
