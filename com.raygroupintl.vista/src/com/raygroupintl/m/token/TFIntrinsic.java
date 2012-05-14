@@ -11,7 +11,6 @@ import com.raygroupintl.bnf.Token;
 import com.raygroupintl.bnf.TokenFactory;
 import com.raygroupintl.bnf.TArray;
 import com.raygroupintl.bnf.TFSyntaxError;
-import com.raygroupintl.bnf.TPair;
 import com.raygroupintl.bnf.TokenStore;
 import com.raygroupintl.vista.struct.MError;
 import com.raygroupintl.vista.struct.MNameWithMnemonic;
@@ -133,12 +132,12 @@ public class TFIntrinsic extends TFSequence {
 		}		
 	}
 	
-	private static class TIntrinsicFunction extends TPair {
-		private TIntrinsicFunction(TIntrinsicFunctionName name, TInParantheses argument) {
-			super(name, argument);
+	private static class TIntrinsicFunction extends TArray {
+		private TIntrinsicFunction(TIntrinsicFunctionName name, Token argument) {
+			super(new Token[]{name, argument});
 		}
 
-		public static TIntrinsicFunction getInstance(TIdent name, TInParantheses argument, MNameWithMnemonic mnemonicNName) {
+		public static TIntrinsicFunction getInstance(TIdent name, Token argument, MNameWithMnemonic mnemonicNName) {
 			TIntrinsicFunctionName functionName = new TIntrinsicFunctionName(name.getStringValue(), mnemonicNName);
 			return new TIntrinsicFunction(functionName, argument);
 		}
@@ -146,7 +145,7 @@ public class TFIntrinsic extends TFSequence {
 	
 	private static String getFoundIntrinsicName(TokenStore tokens) {
 		Token token0 = tokens.get(0);
-		String name = ((token0 instanceof TArray) ? (TArray) token0 : (TPair)token0).get(1).getStringValue().toUpperCase();
+		String name = ((TArray) token0).get(1).getStringValue().toUpperCase();
 		return name;
 	}
 	
@@ -158,9 +157,8 @@ public class TFIntrinsic extends TFSequence {
 	@Override
 	protected TokenFactory getTokenFactory(int i, TokenStore foundTokens) {
 		switch (i) {
-			case 0: {
+			case 0: 
 				return TFIntrinsic.this.supply.intrinsicname;
-			}
 			case 1:
 				return TFIntrinsic.this.supply.lpar;
 			case 2: {
@@ -226,7 +224,8 @@ public class TFIntrinsic extends TFSequence {
 				if (t == null) {
 					t = new TList();
 				}
-				return TIntrinsicFunction.getInstance(name, new TInParantheses(t), this.functions.get(name.getStringValue().toUpperCase()));
+				TArray argument = new TArray(new Token[]{foundTokens.get(1), foundTokens.get(2), foundTokens.get(3)});
+				return TIntrinsicFunction.getInstance(name, argument, this.functions.get(name.getStringValue().toUpperCase()));
 			}
 		} else {
 			return new TArray(foundTokens.toArray());

@@ -58,9 +58,4 @@ public class TSsvn extends TArray {
 	private TSsvn(TSsvnName name, Token param) {
 		super(new Token[]{name, param});
 	}
-	
-	public static TSsvn getInstance(TIdent name, Token param) {
-		String v = name.getStringValue();
-		return new TSsvn(new TSsvnName(v), param);
-	}
 }
