@@ -4,10 +4,12 @@ package com.raygroupintl.bnf;
 public class TFChoiceBasic extends TokenFactory {
 	private TokenFactory[] factories = {};
 	
-	public TFChoiceBasic() {
+	public TFChoiceBasic(String name) {
+		super(name);
 	}
 	
-	public TFChoiceBasic(TokenFactory... factories) {
+	public TFChoiceBasic(String name, TokenFactory... factories) {
+		super(name);
 		this.factories = factories;
 	}
 	

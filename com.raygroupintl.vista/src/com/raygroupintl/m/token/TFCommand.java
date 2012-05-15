@@ -19,7 +19,8 @@ public class TFCommand extends TFSequence {
 	private Map<String, TCSFactory> commandSpecs = new HashMap<String, TCSFactory>();
 	private MTFSupply supply;
 	
-	public TFCommand( MTFSupply supply) {
+	public TFCommand(String name, MTFSupply supply) {
+		super(name);
 		this.supply = supply;
 	}
 	
@@ -31,6 +32,10 @@ public class TFCommand extends TFSequence {
 	}
 	
 	private static class TFGenericArgument extends TokenFactory {
+		public TFGenericArgument(String name) {
+			super(name);
+		}
+		
 		@Override
 		public Token tokenize(Text text) {
 			int index = 0;
@@ -55,7 +60,7 @@ public class TFCommand extends TFSequence {
 		}
 	}
 
-	private static final TFEmptyVerified TF_EMPTY = TFEmptyVerified.getInstance(' ');
+	private static final TFEmptyVerified TF_EMPTY = TFEmptyVerified.getInstance("commandempty", ' ');
 	
 	private static abstract class TCommandSpec extends TString {
 		private TokenFactory argumentFactory;
@@ -304,7 +309,7 @@ public class TFCommand extends TFSequence {
 
 	private static class TVCommandSpec extends TCommandSpec {
 		private TVCommandSpec(String value, MTFSupply supply) {
-			super(value, new TFGenericArgument());
+			super(value, new TFGenericArgument("vargument"));
 		}
 		
 		public Token getToken(Token[] tokens) {
@@ -324,7 +329,7 @@ public class TFCommand extends TFSequence {
 
 	private static class TGenericCommandSpec extends TCommandSpec {
 		private TGenericCommandSpec(String value, MTFSupply supply) {
-			super(value, new TFGenericArgument());
+			super(value, new TFGenericArgument("genericargument"));
 		}
 	
 		public Token getToken(Token[] tokens) {
@@ -575,6 +580,10 @@ public class TFCommand extends TFSequence {
 	}
 			
 	private class TFCommandName extends TokenFactory {
+		public TFCommandName(String name) {
+			super(name);
+		}
+		
 		@Override
 		public Token tokenize(Text text) throws SyntaxErrorException {
 			Token result = TFCommand.this.supply.ident.tokenize(text);			
@@ -597,7 +606,7 @@ public class TFCommand extends TFSequence {
 	protected TokenFactory getTokenFactory(int i, TokenStore foundTokens) {
 		switch (i) {
 			case 0:
-				return TFCommand.this.new TFCommandName();
+				return TFCommand.this.new TFCommandName(this.getName() + "." + "name");
 			case 1:
 				return TFCommand.this.supply.postcondition;
 			case 2:
@@ -651,9 +660,5 @@ public class TFCommand extends TFSequence {
 		} else {
 			return token0;
 		}
-	}
-
-	public static TFCommand getInstance(MTFSupply supply) {
-		return new TFCommand(supply);
 	}
 }

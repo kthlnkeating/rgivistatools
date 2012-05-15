@@ -21,6 +21,10 @@ public class TFOperator extends TokenFactory {
 		public boolean validEnd;
 	}
 	
+	public TFOperator(String name) {
+		super(name);
+	}
+	
 	private Map<Character, OperatorBranch> operators = new HashMap<Character, OperatorBranch>();
 	
 	public void addOperator(String operator) {
@@ -62,9 +66,5 @@ public class TFOperator extends TokenFactory {
 			}
 		}
 		return null;
-	}
-	
-	public static TFOperator getInstance() {
-		return new TFOperator();
 	}
 }

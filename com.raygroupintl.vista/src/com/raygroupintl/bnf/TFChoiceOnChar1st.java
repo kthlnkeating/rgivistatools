@@ -5,11 +5,12 @@ import com.raygroupintl.charlib.Predicate;
 public class TFChoiceOnChar1st extends TFChoiceOnChar {
 	private char leadingChar;
 	
-	public TFChoiceOnChar1st() {		
+	public TFChoiceOnChar1st(String name) {		
+		super(name);
 	}
 			
-	public TFChoiceOnChar1st(char leadingChar, TokenFactory defaultFactory, Predicate[] predicates, TokenFactory[] factories) {
-		super(defaultFactory, predicates, factories);
+	public TFChoiceOnChar1st(String name, char leadingChar, TokenFactory defaultFactory, Predicate[] predicates, TokenFactory[] factories) {
+		super(name, defaultFactory, predicates, factories);
 		this.leadingChar = leadingChar;
 	}
 	

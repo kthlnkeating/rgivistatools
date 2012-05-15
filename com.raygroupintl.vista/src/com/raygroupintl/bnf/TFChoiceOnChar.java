@@ -7,10 +7,12 @@ public abstract class TFChoiceOnChar extends TokenFactory {
 	private Predicate[] predicates = {};
 	private TokenFactory[] factories = {};
 			
-	public TFChoiceOnChar() {		
+	public TFChoiceOnChar(String name) {		
+		super(name);
 	}
 			
-	public TFChoiceOnChar(TokenFactory defaultFactory,  Predicate[] predicates, TokenFactory[] factories) {
+	public TFChoiceOnChar(String name, TokenFactory defaultFactory,  Predicate[] predicates, TokenFactory[] factories) {
+		super(name);
 		this.defaultFactory = defaultFactory;
 		this.predicates = predicates;
 		this.factories = factories;

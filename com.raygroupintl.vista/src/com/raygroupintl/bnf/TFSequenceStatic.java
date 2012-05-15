@@ -47,10 +47,12 @@ public final class TFSequenceStatic extends TFSequence {
 	private RequiredFlags requiredFlags = new RequiredFlags();
 	private int lookAhead = 0;
 	
-	public TFSequenceStatic() {		
+	public TFSequenceStatic(String name) {		
+		super(name);
 	}
 	
-	public TFSequenceStatic(TokenFactory... factories) {
+	public TFSequenceStatic(String name, TokenFactory... factories) {
+		super(name);
 		this.factories = factories;
 		this.requiredFlags = new RequiredFlags(factories.length);
 	}
@@ -61,7 +63,7 @@ public final class TFSequenceStatic extends TFSequence {
 		this.requiredFlags.set(requiredFlags);
 	}
 
-	public void setRequiredFlags(boolean[] requiredFlags) {
+	public void setRequiredFlags(boolean... requiredFlags) {
 		if (requiredFlags.length != this.factories.length) throw new IllegalArgumentException();
 		this.requiredFlags.set(requiredFlags);
 	}

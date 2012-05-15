@@ -5,14 +5,16 @@ import java.util.List;
 public final class TFList extends TokenFactory {
 	private TokenFactory elementFactory;
 	
-	public TFList() {
+	public TFList(String name) {
+		super(name);
 	}
 	
-	public TFList(TokenFactory elementFactory) {
+	public TFList(String name, TokenFactory elementFactory) {
+		super(name);
 		this.elementFactory = elementFactory;
 	}
 	
-	public void setElementFactory(TokenFactory elementFactory) {
+	public void setElement(TokenFactory elementFactory) {
 		this.elementFactory = elementFactory;
 	}
 		
@@ -22,6 +24,8 @@ public final class TFList extends TokenFactory {
 
 	@Override
 	public Token tokenize(Text text) throws SyntaxErrorException {
+		if (elementFactory == null) throw new IllegalStateException("TFList.setElementFactory needs to be called before TFList.tokenize");
+		
 		if (text.onChar()) {
 			ListAsTokenStore list = new ListAsTokenStore();
 			while (text.onChar()) {

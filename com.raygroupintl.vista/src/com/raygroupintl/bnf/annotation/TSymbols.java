@@ -29,14 +29,14 @@ public abstract class TSymbols extends TList implements SequencePieceGenerator {
 	}
 	
 	@Override
-	public TokenFactory getFactory(Map<String, TokenFactory> map) {
+	public TokenFactory getFactory(String name, Map<String, TokenFactory> map) {
 		List<TokenFactory> factories = new ArrayList<TokenFactory>();
 		List<Boolean> flags = new ArrayList<Boolean>();		
 		for (int i=0; i<this.size(); ++i) {
 			Token t = this.get(i);
 			if (t instanceof SequencePieceGenerator) {
 				SequencePieceGenerator spg = (SequencePieceGenerator) t;
-				TokenFactory f = spg.getFactory(map);
+				TokenFactory f = spg.getFactory(name + "." + String.valueOf(i), map);
 				boolean b = spg.getRequired();
 				factories.add(f);
 				flags.add(b);
@@ -44,7 +44,7 @@ public abstract class TSymbols extends TList implements SequencePieceGenerator {
 		}
 		if (factories.size() == 0) return null;
 		if (factories.size() == 1) return factories.get(0);
-		TFSequenceStatic result = new TFSequenceStatic();
+		TFSequenceStatic result = new TFSequenceStatic(name);
 		
 		int n = factories.size();
 		TokenFactory[] fs = new TokenFactory[n];

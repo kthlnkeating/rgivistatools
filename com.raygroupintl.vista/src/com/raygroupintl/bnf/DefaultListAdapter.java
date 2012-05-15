@@ -16,28 +16,11 @@
 
 package com.raygroupintl.bnf;
 
-public class TFConstant extends TokenFactory {
-	private String value;
-	private boolean ignoreCase;
-	private StringAdapter adapter;
-	
-	public TFConstant(String name, String value, StringAdapter adapter) {
-		super(name);
-		this.value = value;
-		this.adapter = adapter;
-		this.ignoreCase = false;
-	}
-	
-	public TFConstant(String name, String value, StringAdapter adapter, boolean ignoreCase) {
-		super(name);
-		this.value = value;
-		this.adapter = adapter;
-		this.ignoreCase = ignoreCase;
-	}
+import java.util.List;
 
+public class DefaultListAdapter implements ListAdapter {
 	@Override
-	public Token tokenize(Text text) {
-		return text.extractToken(this.value, this.adapter, this.ignoreCase);
+	public Token convert(List<Token> tokens) {
+		return new TDelimitedList(tokens);
 	}
 }
-	

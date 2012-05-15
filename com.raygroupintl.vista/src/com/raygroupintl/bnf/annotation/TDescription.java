@@ -1,44 +1,30 @@
 package com.raygroupintl.bnf.annotation;
 
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
-import com.raygroupintl.bnf.TArray;
+import com.raygroupintl.bnf.TDelimitedList;
 import com.raygroupintl.bnf.TFSequenceStatic;
-import com.raygroupintl.bnf.TList;
 import com.raygroupintl.bnf.Token;
 import com.raygroupintl.bnf.TokenFactory;
 
-public class TDescription extends TSymbols {
-	public TDescription(Token[] tokens) {
-		super(convert(tokens));
-	}
-	
-	private static TList convert(Token[] tokens) {
-		if (tokens[1] == null) {
-			return new TList(tokens[0]);
-		} else {
-			TList r = (TList) tokens[1];
-			TList result = new TList(tokens[0]);
-			for (int i=0; i<r.size(); ++i) {
-				TArray re = (TArray) r.get(i);
-				result.add(re.get(0));
-				result.add(re.get(1));				
-			}
-			return result;
-		}		
+public class TDescription extends TDelimitedList implements SequencePieceGenerator {
+	public TDescription(List<Token> token) {
+		super(token);
 	}
 	
 	@Override
-	public TokenFactory getFactory(Map<String, TokenFactory> map) {
+	public TokenFactory getFactory(String name, Map<String, TokenFactory> map) {
 		List<TokenFactory> factories = new ArrayList<TokenFactory>();
-		List<Boolean> flags = new ArrayList<Boolean>();		
-		for (int i=0; i<this.size(); ++i) {
-			Token t = this.get(i);
+		List<Boolean> flags = new ArrayList<Boolean>();
+		int index = 0;
+		for (Iterator<Token> it=this.iterator(); it.hasNext(); ++index) {
+			Token t = it.next();
 			if (t instanceof SequencePieceGenerator) {
 				SequencePieceGenerator spg = (SequencePieceGenerator) t;
-				TokenFactory f = spg.getFactory(map);
+				TokenFactory f = spg.getFactory(name + "." + String.valueOf(index), map);
 				boolean b = spg.getRequired();
 				factories.add(f);
 				flags.add(b);
@@ -46,7 +32,7 @@ public class TDescription extends TSymbols {
 		}
 		if (factories.size() == 0) return null;
 
-		TFSequenceStatic result = new TFSequenceStatic();
+		TFSequenceStatic result = new TFSequenceStatic(name);
 		
 		int n = factories.size();
 		TokenFactory[] fs = new TokenFactory[n];

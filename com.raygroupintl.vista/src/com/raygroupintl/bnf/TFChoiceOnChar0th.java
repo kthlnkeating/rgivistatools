@@ -3,12 +3,12 @@ package com.raygroupintl.bnf;
 import com.raygroupintl.charlib.Predicate;
 
 public class TFChoiceOnChar0th extends TFChoiceOnChar {
-	public TFChoiceOnChar0th() {
-		super();
+	public TFChoiceOnChar0th(String name) {
+		super(name);
 	}
 
-	public TFChoiceOnChar0th(TokenFactory defaultFactory, Predicate[] predicates, TokenFactory... factories) {
-		super(defaultFactory, predicates, factories);
+	public TFChoiceOnChar0th(String name, TokenFactory defaultFactory, Predicate[] predicates, TokenFactory... factories) {
+		super(name, defaultFactory, predicates, factories);
 	}
 
 	@Override

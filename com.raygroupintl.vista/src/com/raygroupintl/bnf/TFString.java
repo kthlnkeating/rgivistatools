@@ -22,7 +22,8 @@ public class TFString extends TokenFactory {
 	private Predicate predicate;
 	private StringAdapter adapter;
 	
-	public TFString(Predicate predicate, StringAdapter adapter) {
+	public TFString(String name, Predicate predicate, StringAdapter adapter) {
+		super(name);
 		this.predicate = predicate;
 		this.adapter = adapter;
 	}

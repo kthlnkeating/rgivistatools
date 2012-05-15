@@ -22,7 +22,8 @@ public class TFCharacter extends TokenFactory {
 	private Predicate predicate;
 	private CharacterAdapter adapter;
 	
-	public TFCharacter(Predicate predicate, CharacterAdapter adapter) {
+	public TFCharacter(String name, Predicate predicate, CharacterAdapter adapter) {
+		super(name);
 		this.predicate = predicate;
 		this.adapter = adapter;
 	}

@@ -144,8 +144,8 @@ public class MTFSupply {
 	@Sequence(value={"pm", "mantista", "exp"}, required="oro")
 	public TokenFactory numlit;
 		
-	public TFOperator operator = new TFOperator();
-	public TokenFactory error = new TFSyntaxError( MError.ERR_GENERAL_SYNTAX);
+	public TFOperator operator = new TFOperator("operator");
+	public TokenFactory error = new TFSyntaxError("error", MError.ERR_GENERAL_SYNTAX);
 	@CharSpecified(chars={'+', '-', '\''})
 	public TokenFactory unaryop;
 	
@@ -484,7 +484,7 @@ public class MTFSupply {
 
 	@Choice({"spaces", "comment", "end"})
 	public TokenFactory commandend;
-	public TFCommand command = new TFCommand(this);
+	public TFCommand command = new TFCommand("command", this);
 	
 	@CharSpecified(excludechars={'\r', '\n'})
 	public TokenFactory commentcontent;
@@ -507,7 +507,7 @@ public class MTFSupply {
 	@Sequence({"label", "lineformal", "ls", "level", "commandorcommentlist"})
 	public TokenFactory line;
 	
-	public TFIntrinsic intrinsic = new TFIntrinsic(this);
+	public TFIntrinsic intrinsic = new TFIntrinsic("intrinsic", this);
 	
 	protected void initialize() {
 		this.intrinsic.addVariable("D", "DEVICE"); 	
@@ -727,7 +727,7 @@ public class MTFSupply {
 		@Choice({"classmethod", "expr"})
 		public TokenFactory setrhs;
 		
-		public TokenFactory empty = TFEmpty.getInstance();
+		public TokenFactory empty = new TFEmpty("empty");
 		@CChoice(value={"empty"}, preds={":"}, def="expr")
 		public TokenFactory casearg_0;
 		@Sequence(value={"casearg_0", "colon", "expr"}, required="all")

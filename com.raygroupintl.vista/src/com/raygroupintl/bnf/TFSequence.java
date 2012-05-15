@@ -7,11 +7,11 @@ public abstract class TFSequence extends TokenFactory {
 
 	private SequenceAdapter adapter;
 
-	public TFSequence() {
-		super();
+	public TFSequence(String name) {
+		super(name);
 	}
 
-	protected abstract TokenFactory getTokenFactory(int i, TokenStore foundTokens);
+	protected abstract TokenFactory getTokenFactory(int i, TokenStore foundTokens) throws SyntaxErrorException;
 
 	protected abstract int getExpectedTokenCount();
 

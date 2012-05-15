@@ -3,7 +3,8 @@ package com.raygroupintl.bnf;
 public final class TFSyntaxError extends TokenFactory {
 	private int code;
 	
-	public TFSyntaxError(int code) {
+	public TFSyntaxError(String name, int code) {
+		super(name);
 		this.code = code;
 	}
 		

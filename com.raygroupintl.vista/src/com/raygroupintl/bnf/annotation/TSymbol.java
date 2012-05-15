@@ -11,7 +11,7 @@ public class TSymbol extends TString implements SequencePieceGenerator{
 	}
 	
 	@Override
-	public TokenFactory getFactory(Map<String, TokenFactory> map) {
+	public TokenFactory getFactory(String name, Map<String, TokenFactory> map) {
 		String value = this.getStringValue();
 		return map.get(value);
 	}

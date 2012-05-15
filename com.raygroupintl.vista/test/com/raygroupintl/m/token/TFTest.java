@@ -21,7 +21,7 @@ public class TFTest {
 		TFCommonTest.validCheck(f, "((@(\"PSBTAB\"_(FLD))-(@(\"PSBTAB\"_(FLD-1))+1)))");
 		TFCommonTest.validCheck(f, ".@VAR");
 	}
-
+	
 	@Test
 	public void testTFActual() {
 		testTFActual(MVersion.CACHE);
@@ -31,6 +31,9 @@ public class TFTest {
 	private void testActualList(MVersion version) {
 		TokenFactory f = MTFSupply.getInstance(version).actuallist;
 		TFCommonTest.validCheck(f, "()");		
+		TFCommonTest.validCheck(f, "(C'>3)");		
+		TFCommonTest.validCheck(f, "(C'>3,B>1)");		
+		TFCommonTest.validCheck(f, "(C'>3,A=3,B]]1)");		
 		TFCommonTest.validCheck(f, "(LST,\",\",FLD)");		
 		TFCommonTest.validCheck(f, "(.LST,.5,FLD)");		
 		TFCommonTest.validCheck(f, "(.5,RCSUBJ,XMBODY,.XMTO,,.XMZ)");

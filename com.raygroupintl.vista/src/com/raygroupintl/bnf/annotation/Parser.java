@@ -9,10 +9,14 @@ import java.util.HashMap;
 import java.util.Map;
 
 import com.raygroupintl.bnf.CharacterAdapter;
+import com.raygroupintl.bnf.DefaultCharacterAdapter;
+import com.raygroupintl.bnf.DefaultStringAdapter;
+import com.raygroupintl.bnf.ListAdapter;
 import com.raygroupintl.bnf.StringAdapter;
 import com.raygroupintl.bnf.SyntaxErrorException;
 import com.raygroupintl.bnf.TFCharacter;
 import com.raygroupintl.bnf.TFConstant;
+import com.raygroupintl.bnf.TFDelimitedList;
 import com.raygroupintl.bnf.TFEmpty;
 import com.raygroupintl.bnf.TFEnd;
 import com.raygroupintl.bnf.TFList;
@@ -46,12 +50,10 @@ public class Parser {
 	}
 		
 	private static class Triple<T extends TokenFactory, A extends Annotation> {
-		public String name;
 		public T factory;
 		public A annotation;
 		
 		public Triple(String name, T factory, A annotation) {
-			this.name = name;
 			this.factory = factory;
 			this.annotation = annotation;
 		}
@@ -74,10 +76,10 @@ public class Parser {
 		}
 	};
 	
-	private static class ConstructorAsCharactersAdapter implements StringAdapter {					
+	private static class ConstructorAsStringAdapter implements StringAdapter {					
 		private Constructor<? extends Token> constructor;
 		
-		public ConstructorAsCharactersAdapter(Constructor<? extends Token> constructor) {
+		public ConstructorAsStringAdapter(Constructor<? extends Token> constructor) {
 			this.constructor = constructor;
 		}
 		
@@ -107,6 +109,23 @@ public class Parser {
 			}
 		}
 	};
+
+	private static class ConstructorAsListAdapter implements ListAdapter {					
+		private Constructor<? extends Token> constructor;
+		
+		public ConstructorAsListAdapter(Constructor<? extends Token> constructor) {
+			this.constructor = constructor;
+		}
+		
+		@Override
+		public Token convert(java.util.List<Token> tokens) {
+			try {
+				return (Token) this.constructor.newInstance(tokens);
+			} catch (Exception e) {
+				return null;
+			}
+		}
+	};
 	
 	private static class DLAdapter implements SequenceAdapter {
 		@Override
@@ -131,14 +150,14 @@ public class Parser {
 		private java.util.List<Triple<TFSequenceStatic, Description>> descriptions  = new ArrayList<Triple<TFSequenceStatic, Description>>();
 		private java.util.List<Triple<TFList, List>> lists  = new ArrayList<Triple<TFList, List>>();
 		private java.util.List<Triple<TFSequenceStatic, List>> enclosedLists  = new ArrayList<Triple<TFSequenceStatic, List>>();
-		private java.util.List<Triple<TFSequenceStatic, List>> delimitedLists  = new ArrayList<Triple<TFSequenceStatic, List>>();
+		private java.util.List<Triple<TFDelimitedList, List>> delimitedLists  = new ArrayList<Triple<TFDelimitedList, List>>();
 		private java.util.List<Triple<TFSequenceStatic, List>> enclosedDelimitedLists  = new ArrayList<Triple<TFSequenceStatic, List>>();
 		private java.util.List<Triple<TFChoiceOnChar0th, CChoice>> choice0ths  = new ArrayList<Triple<TFChoiceOnChar0th, CChoice>>();
 		private java.util.List<Triple<TFChoiceOnChar1st, CChoice>> choice1sts  = new ArrayList<Triple<TFChoiceOnChar1st, CChoice>>();
 		private Map<String, Field> otherSymbols = new HashMap<String, Field>();
 		
 		private TokenFactory addChoice(String name, Choice choice) {
-			TFChoiceBasic value = new TFChoiceBasic();
+			TFChoiceBasic value = new TFChoiceBasic(name);
 			this.choices.add(new Triple<TFChoiceBasic, Choice>(name, value, choice));
 			return value;			
 		}
@@ -154,7 +173,7 @@ public class Parser {
 			if (tokenType != null) {
 				Class<? extends Token> tokenCls = tokenType.value();
 				Constructor<? extends Token> constructor = tokenCls.getConstructor(String.class);
-				StringAdapter ta = new ConstructorAsCharactersAdapter(constructor);
+				StringAdapter ta = new ConstructorAsStringAdapter(constructor);
 				return ta;
 			}
 			return new DefaultStringAdapter();
@@ -177,6 +196,23 @@ public class Parser {
 			return new DefaultCharacterAdapter();
 		}
 
+		private ListAdapter getListAdapter(Field f) throws IllegalAccessException, InstantiationException, NoSuchMethodException {
+			Adapter adapter = f.getAnnotation(Adapter.class);
+			if (adapter != null) {
+				Class<?> cls = adapter.value();			
+				ListAdapter la = (ListAdapter) cls.newInstance();
+				return la;
+			}
+			TokenType tokenType = f.getAnnotation(TokenType.class);
+			if (tokenType != null) {
+				Class<? extends Token> tokenCls = tokenType.value();
+				Constructor<? extends Token> constructor = tokenCls.getConstructor(java.util.List.class);
+				ListAdapter ta = new ConstructorAsListAdapter(constructor);
+				return ta;
+			}
+			return null;
+		}
+
 		private boolean updateAdapter(TFSequenceStatic token, Field f) throws IllegalAccessException, InstantiationException, NoSuchMethodException {
 			Adapter adapter = f.getAnnotation(Adapter.class);
 			if (adapter != null) {
@@ -197,14 +233,14 @@ public class Parser {
 		}
 		
 		private TokenFactory addSequence(String name, Sequence sequence, Field f) throws IllegalAccessException, InstantiationException, NoSuchMethodException {
-			TFSequenceStatic value = new TFSequenceStatic();
+			TFSequenceStatic value = new TFSequenceStatic(name);
 			this.updateAdapter(value, f);
 			this.sequences.add(new Triple<TFSequenceStatic, Sequence>(name, value, sequence));
 			return value;			
 		}
 		
 		private TokenFactory addDescription(String name, Description description, Field f)  throws IllegalAccessException, InstantiationException, NoSuchMethodException {
-			TFSequenceStatic value = new TFSequenceStatic();
+			TFSequenceStatic value = new TFSequenceStatic(name);
 			this.updateAdapter(value, f);
 			this.descriptions.add(new Triple<TFSequenceStatic, Description>(name, value, description));
 			return value;		
@@ -216,25 +252,28 @@ public class Parser {
 			String right = list.right();
 			if (delimiter.length() == 0) {
 				if ((left.length() == 0) || (right.length() == 0)) {
-					TFList value = new TFList();
+					TFList value = new TFList(name);
 					this.lists.add(new Triple<TFList, List>(name, value, list));
 					return value;
 				} else {
-					TFSequenceStatic value = new TFSequenceStatic();
+					TFSequenceStatic value = new TFSequenceStatic(name);
 					this.updateAdapter(value, f);
 					this.enclosedLists.add(new Triple<TFSequenceStatic, List>(name, value, list));
 					return value;
 				}
 			} else {			
 				if ((left.length() == 0) || (right.length() == 0)) {
-					TFSequenceStatic value = new TFSequenceStatic();
-					if (! this.updateAdapter(value, f)) {
-						value.setAdapter(new DLAdapter());				
-					}
-					this.delimitedLists.add(new Triple<TFSequenceStatic, List>(name, value, list));
+					TFDelimitedList value = null;
+					ListAdapter adapter = this.getListAdapter(f);
+					if (adapter == null) {
+						 value = new TFDelimitedList(name);					
+					} else {
+						 value = new TFDelimitedList(name, adapter);
+					}					
+					this.delimitedLists.add(new Triple<TFDelimitedList, List>(name, value, list));
 					return value;
 				} else {
-					TFSequenceStatic value = new TFSequenceStatic();
+					TFSequenceStatic value = new TFSequenceStatic(name);
 					this.updateAdapter(value, f);
 					this.enclosedDelimitedLists.add(new Triple<TFSequenceStatic, List>(name, value, list));
 					return value;					
@@ -245,11 +284,11 @@ public class Parser {
 		private TokenFactory addCChoice(String name, CChoice cchoice) {
 			String lead = cchoice.lead();
 			if (lead.length() == 0) {
-				TFChoiceOnChar0th value = new TFChoiceOnChar0th();
+				TFChoiceOnChar0th value = new TFChoiceOnChar0th(name);
 				this.choice0ths.add(new Triple<TFChoiceOnChar0th, CChoice>(name, value, cchoice));
 				return value;
 			} else {
-				TFChoiceOnChar1st value = new TFChoiceOnChar1st();
+				TFChoiceOnChar1st value = new TFChoiceOnChar1st(name);
 				this.choice1sts.add(new Triple<TFChoiceOnChar1st, CChoice>(name, value, cchoice));
 				return value;
 			}
@@ -281,11 +320,11 @@ public class Parser {
 			Predicate result = andPredicates(orPredicates(p0, p1), orPredicates(p2, p3));
 			if (characters.single()) {
 				CharacterAdapter ca = this.getCharacterAdapter(f);
-				TFCharacter tf = new TFCharacter(result, ca);
+				TFCharacter tf = new TFCharacter(name, result, ca);
 				return tf;
 			} else {		
 				StringAdapter sa = this.getStringAdapter(f);
-				TFString tf = new TFString(result, sa);
+				TFString tf = new TFString(name, result, sa);
 				return tf;
 			}
 		}
@@ -293,7 +332,7 @@ public class Parser {
 		private TokenFactory addWords(String name, WordSpecified wordSpecied, Field f)  throws IllegalAccessException, InstantiationException, NoSuchMethodException {
 			String word = wordSpecied.value();
 			StringAdapter sa = this.getStringAdapter(f);
-			TFConstant tf = new TFConstant(word, sa, wordSpecied.ignorecase());
+			TFConstant tf = new TFConstant(name, word, sa, wordSpecied.ignorecase());
 			return tf;
 		}
 		
@@ -425,7 +464,7 @@ public class Parser {
 					String description = p.annotation.value();
 					Text text = new Text(description, 0);
 					TDescription token = (TDescription) descriptionSpec.description.tokenize(text);
-					TFSequenceStatic f = (TFSequenceStatic) token.getFactory(this.symbols);
+					TFSequenceStatic f = (TFSequenceStatic) token.getFactory(p.factory.getName(), this.symbols);
 					p.factory.copyFrom(f);
 				}
 			} catch (SyntaxErrorException se) {
@@ -436,7 +475,7 @@ public class Parser {
 		private void updateLists() {
 			for (Triple<TFList, List> p : this.lists) {
 				TokenFactory f = this.symbols.get(p.annotation.value());
-				p.factory.setElementFactory(f);
+				p.factory.setElement(f);
 			}	
 		}
 		
@@ -445,7 +484,7 @@ public class Parser {
 				TokenFactory e = this.symbols.get(p.annotation.value());
 				TokenFactory l = this.symbols.get(p.annotation.left());
 				TokenFactory r = this.symbols.get(p.annotation.right());
-				TFList f = new TFList(e);
+				TFList f = new TFList(p.factory.getName() + ".list", e);
 				p.factory.setFactories(new TokenFactory[]{l, f, r}, new boolean[]{true, ! p.annotation.none(), true});
 			}	
 		}
@@ -457,21 +496,22 @@ public class Parser {
 				TokenFactory l = this.symbols.get(p.annotation.left());
 				TokenFactory r = this.symbols.get(p.annotation.right());
 				TokenFactory t = e;
+				String name = p.factory.getName();
 				if (p.annotation.empty()) {
-					TokenFactory eDelimiter = new TFEmpty(d);
-					TokenFactory eRight = new TFEmpty(r);
-					t = new TFChoiceBasic(e, eDelimiter, eRight);
+					TokenFactory eDelimiter = new TFEmpty(name + ".edelim", d);
+					TokenFactory eRight = new TFEmpty(name + ".eright", r);
+					t = new TFChoiceBasic(name + ".element", e, eDelimiter, eRight);
 				}
-				TFSequenceStatic ts = new TFSequenceStatic(d, t);
+				TFSequenceStatic ts = new TFSequenceStatic(name + ".tailelement", d, t);
 				ts.setRequiredFlags(new boolean[]{true, true});
-				TFList tail = new TFList(ts);
+				TFList tail = new TFList(".tail", ts);
 				
 				TokenFactory leadingElement = e;
 				if (p.annotation.empty()) {
-					TokenFactory eDelimiter = new TFEmpty(d);
-					leadingElement = new TFChoiceBasic(e, eDelimiter);
+					TokenFactory eDelimiter = new TFEmpty(name + ".elead", d);
+					leadingElement = new TFChoiceBasic(name + ".lead", e, eDelimiter);
 				}				
-				TFSequenceStatic m = new TFSequenceStatic(leadingElement, tail);
+				TFSequenceStatic m = new TFSequenceStatic(name + ".effective", leadingElement, tail);
 				m.setRequiredFlags(new boolean[]{true, false});
 				m.setAdapter(new DLAdapter());				
 				p.factory.setFactories(new TokenFactory[]{l, m, r}, new boolean[]{true, ! p.annotation.none(), true});
@@ -479,24 +519,11 @@ public class Parser {
 		}
 		
 		private void updateDelimitedLists() {
-			for (Triple<TFSequenceStatic, List> p : this.delimitedLists) {
+			for (Triple<TFDelimitedList, List> p : this.delimitedLists) {
 				TokenFactory e = this.symbols.get(p.annotation.value());
 				TokenFactory d = this.symbols.get(p.annotation.delim());
-				TokenFactory t = e;
-				if (p.annotation.empty()) {
-					TokenFactory eDelimiter = new TFEmpty(d);
-					t = new TFChoiceBasic(e, eDelimiter);
-				}
-				TFSequenceStatic ts = new TFSequenceStatic(d, t);
-				ts.setRequiredFlags(new boolean[]{true, true});
-				TFList tail = new TFList(ts);
-				
-				TokenFactory leadingElement = e;
-				if (p.annotation.empty()) {
-					TokenFactory eDelimiter = new TFEmpty(d);
-					leadingElement = new TFChoiceBasic(e, eDelimiter);
-				}				
-				p.factory.setFactories(new TokenFactory[]{leadingElement, tail}, new boolean[]{true, false});
+				boolean empty = p.annotation.empty();
+				p.factory.set(e, d, empty);
 			}	
 		}
 		
@@ -592,7 +619,7 @@ public class Parser {
 			T target = cls.newInstance();
 			Store store = new Store();
 			store.add(target);
-			store.symbols.put("end", new TFEnd());
+			store.symbols.put("end", new TFEnd("end"));
 			store.updateEquivalents(target);
 			store.update(cls, ignore);
 			return target;
