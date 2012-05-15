@@ -10,6 +10,7 @@ import com.raygroupintl.bnf.Token;
 import com.raygroupintl.bnf.TokenFactory;
 import com.raygroupintl.bnf.TokenStore;
 import com.raygroupintl.m.token.TSyntaxError;
+import com.raygroupintl.vista.struct.MError;
 
 public class TFCommonTest {
 	public static void validTokenCheck(Token t, String v) {
@@ -32,7 +33,7 @@ public class TFCommonTest {
 	}
 			
 	static void errorCheck(SyntaxErrorException e, int location, String v, int errorCode) {
-		Assert.assertEquals(errorCode,  e.getCode());
+		Assert.assertEquals(errorCode,  e.getCode() == 0 ? MError.ERR_GENERAL_SYNTAX : e.getCode());
 		Token t = getErrorToken(e, location, v);
 		validTokenCheck(t, v);
 	}

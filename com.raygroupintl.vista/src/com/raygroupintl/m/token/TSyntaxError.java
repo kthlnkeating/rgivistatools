@@ -51,6 +51,6 @@ public class TSyntaxError implements MToken {
 	
 	@Override
 	public ErrorNode getNode() {
-		return new ErrorNode(this.errorCode);
+		return new ErrorNode(this.errorCode > 0 ? this.errorCode : MError.ERR_GENERAL_SYNTAX);
 	}
 }

@@ -1,12 +1,50 @@
 package com.raygroupintl.bnf;
 
-import com.raygroupintl.vista.struct.MError;
-
 public final class TFSequenceStatic extends TFSequence {
+	private final static class RequiredFlags {
+		private boolean[] flags;
+		private int firstRequired = Integer.MAX_VALUE;
+		private int lastRequired = Integer.MIN_VALUE;
+
+		public RequiredFlags() {
+			this(0);
+		}
+
+		public RequiredFlags(int size) {
+			flags = new boolean[size];
+		}
+
+		public void set(boolean[] flags) {
+			this.flags = flags;
+			this.firstRequired = Integer.MAX_VALUE;			
+			this.lastRequired = Integer.MIN_VALUE;			
+			int index = 0;
+			for (boolean b : flags) {
+				if (b) {
+					if (this.firstRequired == Integer.MAX_VALUE) {
+						this.firstRequired = index;
+					}
+					this.lastRequired = index;
+				}
+				++index;
+			}		
+		}
+		
+		public int getFirstRequiredIndex() {
+			return this.firstRequired;
+		}
+		
+		public int getLastRequiredIndex() {
+			return this.lastRequired;
+		}
+		
+		public boolean isRequired(int i) {
+			return this.flags[i];
+		}		
+	}
+	
 	private TokenFactory[] factories = {};
-	private boolean[] requiredFlags = {};
-	private int firstRequired = Integer.MAX_VALUE;
-	private int lastRequired = Integer.MIN_VALUE;
+	private RequiredFlags requiredFlags = new RequiredFlags();
 	private int lookAhead = 0;
 	
 	public TFSequenceStatic() {		
@@ -14,37 +52,23 @@ public final class TFSequenceStatic extends TFSequence {
 	
 	public TFSequenceStatic(TokenFactory... factories) {
 		this.factories = factories;
-		this.requiredFlags = new boolean[factories.length];
+		this.requiredFlags = new RequiredFlags(factories.length);
 	}
 		
 	public void setFactories(TokenFactory[] factories, boolean[] requiredFlags) {
+		if (requiredFlags.length != factories.length) throw new IllegalArgumentException();
 		this.factories = factories;
-		this.setRequiredFlags(requiredFlags);
+		this.requiredFlags.set(requiredFlags);
 	}
 
-	private void update() {
-		this.firstRequired = Integer.MAX_VALUE;
-		this.lastRequired = Integer.MIN_VALUE;
-		int index = 0;
-		for (boolean b : this.requiredFlags) {
-			if (b) {
-				if (this.firstRequired == Integer.MAX_VALUE) {
-					this.firstRequired = index;
-				}
-				this.lastRequired = index;
-			}
-			++index;
-		}		
-	}
-	
 	public void setRequiredFlags(boolean[] requiredFlags) {
 		if (requiredFlags.length != this.factories.length) throw new IllegalArgumentException();
-		this.requiredFlags = requiredFlags;
-		this.update();
+		this.requiredFlags.set(requiredFlags);
 	}
 	
 	public void copyFrom(TFSequenceStatic source) {
-		this.setFactories(source.factories, source.requiredFlags);
+		this.factories = source.factories;
+		this.requiredFlags = source.requiredFlags;
 	}
 	
 	public void setLookAhead(int index) {
@@ -53,19 +77,22 @@ public final class TFSequenceStatic extends TFSequence {
 	
 	@Override
 	protected ValidateResult validateNull(int seqIndex, TokenStore foundTokens) throws SyntaxErrorException {
-		if ((seqIndex < this.firstRequired) || (seqIndex > this.lastRequired)) {
+		int firstRequired = this.requiredFlags.getFirstRequiredIndex();
+		int lastRequired = this.requiredFlags.getLastRequiredIndex();
+		
+		if ((seqIndex < firstRequired) || (seqIndex > lastRequired)) {
 			return ValidateResult.CONTINUE;
 		}		
-		if (seqIndex == this.firstRequired) {
+		if (seqIndex == firstRequired) {
 			for (int i=this.lookAhead; i<seqIndex; ++i) {
 				if (foundTokens.get(i) != null) {
-					throw new SyntaxErrorException(MError.ERR_GENERAL_SYNTAX, foundTokens);
+					throw new SyntaxErrorException(foundTokens);
 				}
 			}
 			return ValidateResult.NULL_RESULT;
 		}
-		if (this.requiredFlags[seqIndex]) {
-			throw new SyntaxErrorException(MError.ERR_GENERAL_SYNTAX, foundTokens);
+		if (this.requiredFlags.isRequired(seqIndex)) {
+			throw new SyntaxErrorException(foundTokens);
 		} else {
 			return ValidateResult.CONTINUE;
 		}
@@ -73,8 +100,8 @@ public final class TFSequenceStatic extends TFSequence {
 	
 	@Override
 	protected void validateEnd(int seqIndex, TokenStore foundTokens) throws SyntaxErrorException {
-		if (seqIndex < this.lastRequired) {
-			throw new SyntaxErrorException(MError.ERR_GENERAL_SYNTAX, foundTokens);
+		if (seqIndex < this.requiredFlags.getLastRequiredIndex()) {
+			throw new SyntaxErrorException(foundTokens);
 		}
 	}
 	
