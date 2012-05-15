@@ -53,8 +53,7 @@ public abstract class TSymbols extends TList implements SequencePieceGenerator {
 			fs[i] = factories.get(i);
 			bs[i] = flags.get(i);
 		}		
-		result.setFactories(fs);
-		result.setRequiredFlags(bs);
+		result.setFactories(fs, bs);
 		return result;
 	}
 }

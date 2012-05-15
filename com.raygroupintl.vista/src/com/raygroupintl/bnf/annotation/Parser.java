@@ -410,9 +410,8 @@ public class Parser {
 		private void updateSequences() {
 			for (Triple<TFSequenceStatic, Sequence> p : this.sequences) {
 				TokenFactory[] fs = getFactories(this.symbols, p.annotation.value());
-				p.factory.setFactories(fs);
 				boolean[] required = getRequiredFlags(p.annotation.required(), fs.length);
-				p.factory.setRequiredFlags(required);			
+				p.factory.setFactories(fs, required);
 			}
 		}
 	
@@ -447,8 +446,7 @@ public class Parser {
 				TokenFactory l = this.symbols.get(p.annotation.left());
 				TokenFactory r = this.symbols.get(p.annotation.right());
 				TFList f = new TFList(e);
-				p.factory.setFactories(new TokenFactory[]{l, f, r});
-				p.factory.setRequiredFlags(new boolean[]{true, ! p.annotation.none(), true});
+				p.factory.setFactories(new TokenFactory[]{l, f, r}, new boolean[]{true, ! p.annotation.none(), true});
 			}	
 		}
 		
@@ -476,8 +474,7 @@ public class Parser {
 				TFSequenceStatic m = new TFSequenceStatic(leadingElement, tail);
 				m.setRequiredFlags(new boolean[]{true, false});
 				m.setAdapter(new DLAdapter());				
-				p.factory.setFactories(new TokenFactory[]{l, m, r});
-				p.factory.setRequiredFlags(new boolean[]{true, ! p.annotation.none(), true});
+				p.factory.setFactories(new TokenFactory[]{l, m, r}, new boolean[]{true, ! p.annotation.none(), true});
 			}	
 		}
 		
@@ -499,8 +496,7 @@ public class Parser {
 					TokenFactory eDelimiter = new TFEmpty(d);
 					leadingElement = new TFChoiceBasic(e, eDelimiter);
 				}				
-				p.factory.setFactories(new TokenFactory[]{leadingElement, tail});
-				p.factory.setRequiredFlags(new boolean[]{true, false});
+				p.factory.setFactories(new TokenFactory[]{leadingElement, tail}, new boolean[]{true, false});
 			}	
 		}
 		

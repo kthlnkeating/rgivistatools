@@ -1,7 +1,5 @@
 package com.raygroupintl.bnf;
 
-import java.util.Arrays;
-
 import com.raygroupintl.vista.struct.MError;
 
 public final class TFSequenceStatic extends TFSequence {
@@ -16,16 +14,12 @@ public final class TFSequenceStatic extends TFSequence {
 	
 	public TFSequenceStatic(TokenFactory... factories) {
 		this.factories = factories;
-		if (factories.length > this.requiredFlags.length) {
-			this.requiredFlags = Arrays.copyOf(this.requiredFlags, factories.length);
-		}
+		this.requiredFlags = new boolean[factories.length];
 	}
 		
-	public void setFactories(TokenFactory[] factories) {
+	public void setFactories(TokenFactory[] factories, boolean[] requiredFlags) {
 		this.factories = factories;
-		if (factories.length > this.requiredFlags.length) {
-			this.requiredFlags = Arrays.copyOf(this.requiredFlags, factories.length);
-		}
+		this.setRequiredFlags(requiredFlags);
 	}
 
 	private void update() {
@@ -43,29 +37,18 @@ public final class TFSequenceStatic extends TFSequence {
 		}		
 	}
 	
-	public void setRequiredFlags(boolean[] flags) {
-		if ((this.factories.length > 0) && (this.factories.length < flags.length)) {
-			this.requiredFlags = Arrays.copyOf(flags, this.factories.length);
-		} else {
-			this.requiredFlags = flags;
-		}
+	public void setRequiredFlags(boolean[] requiredFlags) {
+		if (requiredFlags.length != this.factories.length) throw new IllegalArgumentException();
+		this.requiredFlags = requiredFlags;
 		this.update();
 	}
 	
 	public void copyFrom(TFSequenceStatic source) {
-		this.setFactories(source.factories);
-		this.setRequiredFlags(source.requiredFlags);
+		this.setFactories(source.factories, source.requiredFlags);
 	}
 	
 	public void setLookAhead(int index) {
 		this.lookAhead = index;
-	}
-	
-	protected void setRequiredAll() {
-		this.firstRequired = 0;
-		this.lastRequired = Integer.MAX_VALUE;
-		this.requiredFlags = new boolean[5];
-		Arrays.fill(this.requiredFlags, true);
 	}
 	
 	@Override

@@ -55,8 +55,7 @@ public class TDescription extends TSymbols {
 			fs[i] = factories.get(i);
 			bs[i] = flags.get(i);
 		}		
-		result.setFactories(fs);
-		result.setRequiredFlags(bs);
+		result.setFactories(fs, bs);
 		return result;
 	}
 
