@@ -1,6 +1,7 @@
 package com.raygroupintl.bnf.annotation;
 
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
@@ -10,33 +11,22 @@ import com.raygroupintl.bnf.TList;
 import com.raygroupintl.bnf.Token;
 import com.raygroupintl.bnf.TokenFactory;
 
-public abstract class TSymbols extends TList implements SequencePieceGenerator {
-	public TSymbols(TList list) {
-		super(list);
+public abstract class TSymbols extends TArray implements SequencePieceGenerator {
+	public TSymbols(Token[] tokens) {
+		super(tokens);
 	}
 
-	protected static TList convertEnclosed(Token[] tokens) {
-		TList result = new TList(tokens[0]);
-		TList r = (TList) tokens[1];
-		result.add(r.get(0));
-		for (int i=1; i<r.size(); ++i) {
-			TArray re = (TArray) r.get(i);
-			result.add(re.get(0));
-			result.add(re.get(1));				
-		}
-		result.add(tokens[2]);
-		return result;
-	}
-	
 	@Override
 	public TokenFactory getFactory(String name, Map<String, TokenFactory> map) {
 		List<TokenFactory> factories = new ArrayList<TokenFactory>();
-		List<Boolean> flags = new ArrayList<Boolean>();		
-		for (int i=0; i<this.size(); ++i) {
-			Token t = this.get(i);
+		List<Boolean> flags = new ArrayList<Boolean>();	
+		TList list = (TList) this.get(1);
+		int index = 0;
+		for (Iterator<Token> it=list.iterator(); it.hasNext(); ++index) {
+			Token t = it.next();
 			if (t instanceof SequencePieceGenerator) {
 				SequencePieceGenerator spg = (SequencePieceGenerator) t;
-				TokenFactory f = spg.getFactory(name + "." + String.valueOf(i), map);
+				TokenFactory f = spg.getFactory(name + "." + String.valueOf(index), map);
 				boolean b = spg.getRequired();
 				factories.add(f);
 				flags.add(b);

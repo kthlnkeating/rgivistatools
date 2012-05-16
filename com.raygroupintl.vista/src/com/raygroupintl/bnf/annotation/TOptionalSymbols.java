@@ -4,7 +4,7 @@ import com.raygroupintl.bnf.Token;
 
 public class TOptionalSymbols extends TSymbols {
 	public TOptionalSymbols(Token[] tokens) {
-		super(convertEnclosed(tokens));
+		super(tokens);
 	}
 
 	@Override	

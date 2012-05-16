@@ -96,20 +96,71 @@ public class DescriptionSpecTest {
 		}
 	}
 
+	private Map<String, TokenFactory> getMap() {
+		Map<String, TokenFactory> map = new HashMap<String, TokenFactory>();
+		char[] chs = {'x', 'y', 'a', 'b', 'c', 'd', 'e'};
+		for (char ch : chs) {
+			updateMap(map, ch);
+		}
+		return map;
+	}
+	
 	@Test
-	public void testDescription() {
+	public void testList() {
 		try {
-			Token description = spec.description.tokenize("x, y, [(a, b), [c], d], e", 0);
+			TDescription description = (TDescription) spec.description.tokenize("x, {y:',':'(':')'}, [{a}, [{b:':'}], [c], d], e", 0);
+			Assert.assertNotNull(description);
+			Assert.assertTrue(description instanceof TDescription);
+			Assert.assertEquals("x, {y:',':'(':')'}, [{a}, [{b:':'}], [c], d], e", description.getStringValue());
+			Map<String, TokenFactory> map = this.getMap();
+			TokenFactory f = description.getFactory("test", map);
+			Assert.assertNotNull(f);
+			Assert.assertTrue(f instanceof TFSequenceStatic);
+			testTDescription(f, "x(y)e"); 
+			testTDescription(f, "x(y,y)e"); 
+			testTDescription(f, "x(y,y,y)e"); 
+			testTDescription(f, "x(y)aaab:bde"); 
+			testTDescription(f, "x(y,y)abde"); 
+			testTDescription(f, "x(y,y)abcde"); 
+			testTDescription(f, "x(y,y,y)acde"); 
+			testTDescription(f, "x(y,y,y)aaaade"); 
+			testErrorTDescription(f, "xye"); 
+			testErrorTDescription(f, "x(ya)de"); 
+			testErrorTDescription(f, "x(yy)abde"); 
+		} catch (SyntaxErrorException se) {
+			fail("Unexpected exception: " + se.getMessage());			
+		}
+	}
+
+	@Test
+	public void testList0() {
+		try {
+			TDescription description = (TDescription) spec.description.tokenize("{y:',':'(':')'}, {a}", 0);
+			Assert.assertNotNull(description);
+			Assert.assertTrue(description instanceof TDescription);
+			Assert.assertEquals("{y:',':'(':')'}, {a}", description.getStringValue());
+			Map<String, TokenFactory> map = this.getMap();
+			TokenFactory f = description.getFactory("test", map);
+			Assert.assertNotNull(f);
+			Assert.assertTrue(f instanceof TFSequenceStatic);
+			testTDescription(f, "(y)a"); 
+			testTDescription(f, "(y,y)aa"); 
+			testErrorTDescription(f, "(y,x)aa"); 
+			testErrorTDescription(f, "(y,y)"); 
+		} catch (SyntaxErrorException se) {
+			fail("Unexpected exception: " + se.getMessage());			
+		}
+	}
+
+	@Test
+	public void testSequence() {
+		try {
+			TDescription description = (TDescription) spec.description.tokenize("x, y, [(a, b), [c], d], e", 0);
 			Assert.assertNotNull(description);
 			Assert.assertTrue(description instanceof TDescription);
 			Assert.assertEquals("x, y, [(a, b), [c], d], e", description.getStringValue());
-			Map<String, TokenFactory> map = new HashMap<String, TokenFactory>();
-			char[] chs = {'x', 'y', 'a', 'b', 'c', 'd', 'e'};
-			for (char ch : chs) {
-				updateMap(map, ch);
-			}
-			TDescription t = (TDescription) description;
-			TokenFactory f = t.getFactory("test", map);
+			Map<String, TokenFactory> map = this.getMap();
+			TokenFactory f = description.getFactory("test", map);
 			Assert.assertNotNull(f);
 			Assert.assertTrue(f instanceof TFSequenceStatic);
 			testTDescription(f, "xye"); 
@@ -121,5 +172,4 @@ public class DescriptionSpecTest {
 			fail("Unexpected exception: " + se.getMessage());			
 		}
 	}
-	
 }

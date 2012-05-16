@@ -5,7 +5,7 @@ import java.util.Map;
 import com.raygroupintl.bnf.TString;
 import com.raygroupintl.bnf.TokenFactory;
 
-public class TSymbol extends TString implements SequencePieceGenerator{
+public class TSymbol extends TString implements SequencePieceGenerator {
 	public TSymbol(String value) {
 		super(value);
 	}

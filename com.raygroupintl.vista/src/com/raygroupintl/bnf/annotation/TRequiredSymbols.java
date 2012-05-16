@@ -4,7 +4,7 @@ import com.raygroupintl.bnf.Token;
 
 public class TRequiredSymbols extends TSymbols {
 	public TRequiredSymbols(Token[] tokens) {
-		super(convertEnclosed(tokens));
+		super(tokens);
 	}
 	
 	@Override	

@@ -17,10 +17,8 @@ import com.raygroupintl.bnf.SyntaxErrorException;
 import com.raygroupintl.bnf.TFCharacter;
 import com.raygroupintl.bnf.TFConstant;
 import com.raygroupintl.bnf.TFDelimitedList;
-import com.raygroupintl.bnf.TFEmpty;
 import com.raygroupintl.bnf.TFEnd;
 import com.raygroupintl.bnf.TFList;
-import com.raygroupintl.bnf.TList;
 import com.raygroupintl.bnf.Text;
 import com.raygroupintl.bnf.Token;
 import com.raygroupintl.bnf.TokenFactory;
@@ -127,19 +125,6 @@ public class Parser {
 		}
 	};
 	
-	private static class DLAdapter implements SequenceAdapter {
-		@Override
-		public Token convert(Token[] tokens) {
-			if (tokens[1] == null) {
-				return new TList(tokens[0]);	
-			} else {		
-				TList result = (TList) tokens[1];
-				result.add(0, tokens[0]);
-				return result;
-			}			
-		}
-	}
-
 	private static class Store {
 		private static DescriptionSpec descriptionSpec;
 		
@@ -495,26 +480,11 @@ public class Parser {
 				TokenFactory d = this.symbols.get(p.annotation.delim());
 				TokenFactory l = this.symbols.get(p.annotation.left());
 				TokenFactory r = this.symbols.get(p.annotation.right());
-				TokenFactory t = e;
-				String name = p.factory.getName();
-				if (p.annotation.empty()) {
-					TokenFactory eDelimiter = new TFEmpty(name + ".edelim", d);
-					TokenFactory eRight = new TFEmpty(name + ".eright", r);
-					t = new TFChoiceBasic(name + ".element", e, eDelimiter, eRight);
-				}
-				TFSequenceStatic ts = new TFSequenceStatic(name + ".tailelement", d, t);
-				ts.setRequiredFlags(new boolean[]{true, true});
-				TFList tail = new TFList(".tail", ts);
 				
-				TokenFactory leadingElement = e;
-				if (p.annotation.empty()) {
-					TokenFactory eDelimiter = new TFEmpty(name + ".elead", d);
-					leadingElement = new TFChoiceBasic(name + ".lead", e, eDelimiter);
-				}				
-				TFSequenceStatic m = new TFSequenceStatic(name + ".effective", leadingElement, tail);
-				m.setRequiredFlags(new boolean[]{true, false});
-				m.setAdapter(new DLAdapter());				
-				p.factory.setFactories(new TokenFactory[]{l, m, r}, new boolean[]{true, ! p.annotation.none(), true});
+				TFDelimitedList dl = new TFDelimitedList(p.factory.getName() + ".list");
+				dl.set(e, d, p.annotation.empty());
+				
+				p.factory.setFactories(new TokenFactory[]{l, dl, r}, new boolean[]{true, ! p.annotation.none(), true});
 			}	
 		}
 		
