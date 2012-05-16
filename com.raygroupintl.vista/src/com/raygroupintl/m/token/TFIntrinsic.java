@@ -9,7 +9,7 @@ import com.raygroupintl.bnf.TFSequence;
 import com.raygroupintl.bnf.TList;
 import com.raygroupintl.bnf.Token;
 import com.raygroupintl.bnf.TokenFactory;
-import com.raygroupintl.bnf.TArray;
+import com.raygroupintl.bnf.TSequence;
 import com.raygroupintl.bnf.TFSyntaxError;
 import com.raygroupintl.bnf.TokenStore;
 import com.raygroupintl.vista.struct.MError;
@@ -128,7 +128,7 @@ public class TFIntrinsic extends TFSequence {
 		}		
 	}
 	
-	private static class TIntrinsicFunction extends TArray {
+	private static class TIntrinsicFunction extends TSequence {
 		private TIntrinsicFunction(TIntrinsicFunctionName name, Token argument) {
 			super(Arrays.asList(new Token[]{name, argument}));
 		}
@@ -141,7 +141,7 @@ public class TFIntrinsic extends TFSequence {
 	
 	private static String getFoundIntrinsicName(TokenStore tokens) {
 		Token token0 = tokens.get(0);
-		String name = ((TArray) token0).get(1).getStringValue().toUpperCase();
+		String name = ((TSequence) token0).get(1).getStringValue().toUpperCase();
 		return name;
 	}
 	
@@ -210,7 +210,7 @@ public class TFIntrinsic extends TFSequence {
 	
 	@Override
 	protected Token getToken(TokenStore foundTokens) {
-		TArray token0 = (TArray) foundTokens.get(0);
+		TSequence token0 = (TSequence) foundTokens.get(0);
 		if (token0.get(2) == null) {		
 			TIdent name = (TIdent) token0.get(1);		
 			if (foundTokens.get(1) == null) {
@@ -220,11 +220,11 @@ public class TFIntrinsic extends TFSequence {
 				if (t == null) {
 					t = new TList();
 				}
-				TArray argument = new TArray(Arrays.asList(new Token[]{foundTokens.get(1), foundTokens.get(2), foundTokens.get(3)}));
+				TSequence argument = new TSequence(Arrays.asList(new Token[]{foundTokens.get(1), foundTokens.get(2), foundTokens.get(3)}));
 				return TIntrinsicFunction.getInstance(name, argument, this.functions.get(name.getStringValue().toUpperCase()));
 			}
 		} else {
-			return new TArray(foundTokens.toList());
+			return new TSequence(foundTokens.toList());
 		}
 	}
 }

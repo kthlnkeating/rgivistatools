@@ -14,11 +14,11 @@ import com.raygroupintl.bnf.TokenFactory;
 import com.raygroupintl.bnf.TString;
 import com.raygroupintl.bnf.TEmpty;
 import com.raygroupintl.bnf.TFEmptyVerified;
-import com.raygroupintl.bnf.TokenFactorySupply2;
+import com.raygroupintl.bnf.TokenFactorySupply;
 import com.raygroupintl.bnf.TokenStore;
 import com.raygroupintl.vista.struct.MError;
 
-public class TFCommand extends TokenFactorySupply2 {
+public class TFCommand extends TokenFactorySupply {
 	private Map<String, TCSFactory> commandSpecs = new HashMap<String, TCSFactory>();
 	private MTFSupply supply;
 	

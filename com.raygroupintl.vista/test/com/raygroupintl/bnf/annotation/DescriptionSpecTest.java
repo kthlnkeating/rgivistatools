@@ -13,7 +13,7 @@ import org.junit.Test;
 
 import com.raygroupintl.bnf.DefaultCharacterAdapter;
 import com.raygroupintl.bnf.SyntaxErrorException;
-import com.raygroupintl.bnf.TArray;
+import com.raygroupintl.bnf.TSequence;
 import com.raygroupintl.bnf.TFCharacter;
 import com.raygroupintl.bnf.TFSequenceStatic;
 import com.raygroupintl.bnf.Token;
@@ -81,7 +81,7 @@ public class DescriptionSpecTest {
 		try {
 			Token result = f.tokenize(v, 0);
 			Assert.assertNotNull(result);
-			Assert.assertTrue(result instanceof TArray);
+			Assert.assertTrue(result instanceof TSequence);
 			Assert.assertEquals(v, result.getStringValue());
 		} catch (SyntaxErrorException se) {
 			fail("Unexpected exception: " + se.getMessage());			

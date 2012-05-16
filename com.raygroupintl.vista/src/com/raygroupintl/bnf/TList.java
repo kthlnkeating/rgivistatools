@@ -5,7 +5,7 @@ import java.util.Iterator;
 import java.util.List;
 
 public class TList implements Token {
-	private ArrayList<Token> tokens = new ArrayList<Token>();
+	private List<Token> tokens = new ArrayList<Token>();
 		
 	public TList() {
 	}
@@ -20,11 +20,7 @@ public class TList implements Token {
 	}
 
 	public TList(List<Token> tokens) {
-		this.tokens.addAll(tokens);
-	}
-
-	public TList(TList tokens) {
-		this.tokens.addAll(tokens.tokens);
+		this.tokens = tokens;
 	}
 
 	@Override
@@ -50,18 +46,6 @@ public class TList implements Token {
 		for (Token token : this.tokens) {
 			token.beautify();
 		}
-	}
-	
-	public void add(Token token) {
-		this.tokens.add(token);
-	}
-	
-	public void addAll(List<Token> tokens) {
-		this.tokens.addAll(tokens);
-	}
-	
-	public void addAll(TList tokens) {
-		this.tokens.addAll(tokens.tokens);
 	}
 	
 	public Token get(int index) {

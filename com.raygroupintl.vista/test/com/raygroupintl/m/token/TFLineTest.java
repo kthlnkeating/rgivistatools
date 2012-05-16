@@ -9,7 +9,7 @@ import org.junit.BeforeClass;
 import org.junit.Test;
 
 import com.raygroupintl.bnf.SyntaxErrorException;
-import com.raygroupintl.bnf.TArray;
+import com.raygroupintl.bnf.TSequence;
 import com.raygroupintl.bnf.TList;
 import com.raygroupintl.bnf.Token;
 import com.raygroupintl.bnf.TokenFactory;
@@ -41,7 +41,7 @@ public class TFLineTest {
 			Token t = f.tokenize(line, 0);
 			String r = t.getStringValue();
 			Assert.assertEquals(line, r);	
-			TList commands = (TList) ((TArray) t).get(4);
+			TList commands = (TList) ((TSequence) t).get(4);
 			boolean found = false;
 			for (Iterator<Token> it=commands.iterator(); it.hasNext();) {
 				Token errorCandidate = it.next();
@@ -66,7 +66,7 @@ public class TFLineTest {
 			Token t = f.tokenize(line, 0);
 			String r = t.getStringValue();
 			Assert.assertEquals(line, r);	
-			TList commands = (TList) ((TArray) t).get(4);
+			TList commands = (TList) ((TSequence) t).get(4);
 			Token error = commands.get(errorCommand);
 			Assert.assertTrue(error instanceof TSyntaxError);
 			Assert.assertEquals(errorLocation, ((TSyntaxError) error).getErrorIndex());

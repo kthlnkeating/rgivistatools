@@ -3,13 +3,13 @@ package com.raygroupintl.bnf.annotation;
 import java.util.Map;
 
 import com.raygroupintl.bnf.DefaultCharacterAdapter;
-import com.raygroupintl.bnf.TArray;
+import com.raygroupintl.bnf.TSequence;
 import com.raygroupintl.bnf.TFCharacter;
 import com.raygroupintl.bnf.Token;
 import com.raygroupintl.bnf.TokenFactory;
 import com.raygroupintl.charlib.CharPredicate;
 
-public class TCharSymbol extends TArray implements SequencePieceGenerator {
+public class TCharSymbol extends TSequence implements SequencePieceGenerator {
 	public TCharSymbol(java.util.List<Token> tokens) {
 		super(tokens);
 	}

@@ -44,7 +44,7 @@ public class ArrayAsTokenStore implements TokenStore {
 	
 	@Override
 	public Token toToken() {
-		return new TArray(this.tokens);		
+		return new TSequence(this.tokens);		
 	}
 		
 	@Override

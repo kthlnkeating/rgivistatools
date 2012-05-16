@@ -2,14 +2,14 @@ package com.raygroupintl.bnf.annotation;
 
 import java.util.Map;
 
-import com.raygroupintl.bnf.TArray;
+import com.raygroupintl.bnf.TSequence;
 import com.raygroupintl.bnf.TFDelimitedList;
 import com.raygroupintl.bnf.TFList;
 import com.raygroupintl.bnf.TFSequenceStatic;
 import com.raygroupintl.bnf.Token;
 import com.raygroupintl.bnf.TokenFactory;
 
-public class TSymbolList extends TArray  implements SequencePieceGenerator {
+public class TSymbolList extends TSequence  implements SequencePieceGenerator {
 	public TSymbolList(java.util.List<Token> tokens) {
 		super(tokens);
 	}
@@ -28,13 +28,13 @@ public class TSymbolList extends TArray  implements SequencePieceGenerator {
 	public TokenFactory getFactory(String name, Map<String, TokenFactory> map) {
 		SequencePieceGenerator elementGenerator = (SequencePieceGenerator) this.get(1);
 		TokenFactory element = elementGenerator.getFactory(name + ".element", map);
-		TArray delimleftrightspec = (TArray) this.get(2);
+		TSequence delimleftrightspec = (TSequence) this.get(2);
 		if (delimleftrightspec == null) {
 			return new TFList(name, element);
 		} else {
 			SequencePieceGenerator delimGenerator = (SequencePieceGenerator) delimleftrightspec.get(1);
 			TokenFactory delimiter = delimGenerator == null ? null : delimGenerator.getFactory(name + ".delimiter", map);
-			TArray leftrightSpec = (TArray) delimleftrightspec.get(2);
+			TSequence leftrightSpec = (TSequence) delimleftrightspec.get(2);
 			TokenFactory dl = this.getListFactory(name, element, delimiter, false);
 			if (leftrightSpec == null) {
 				return dl;				

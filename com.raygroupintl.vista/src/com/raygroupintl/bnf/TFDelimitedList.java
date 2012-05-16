@@ -55,7 +55,7 @@ public class TFDelimitedList extends TokenFactory {
 		if (this.effective == null) {
 			throw new IllegalStateException("TFDelimitedList.set needs to be called before TFDelimitedList.tokenize");
 		} else {
-			TArray internalResult = (TArray) this.effective.tokenize(text);
+			TSequence internalResult = (TSequence) this.effective.tokenize(text);
 			if (internalResult == null) {
 				return null;
 			} else {

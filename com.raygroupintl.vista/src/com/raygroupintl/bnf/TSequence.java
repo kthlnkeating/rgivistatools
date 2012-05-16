@@ -2,14 +2,14 @@ package com.raygroupintl.bnf;
 
 import java.util.List;
 
-public class TArray implements Token, TokenArray {
+public class TSequence implements Token {
 	private List<Token> tokens;
 	
-	public TArray(List<Token> tokens) {
+	public TSequence(List<Token> tokens) {
 		this.tokens = tokens;
 	}
 
-	public TArray(TArray token) {
+	public TSequence(TSequence token) {
 		this.tokens = token.tokens;
 	}
 
@@ -38,12 +38,10 @@ public class TArray implements Token, TokenArray {
 		}
 	}
 	
-	@Override
 	public int getCount() {
 		return this.tokens.size();
 	}
 	
-	@Override
 	public Token get(int i) {
 		if (this.tokens.size() > i) {
 			return this.tokens.get(i);

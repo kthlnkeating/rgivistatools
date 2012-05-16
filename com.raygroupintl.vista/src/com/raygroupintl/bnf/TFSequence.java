@@ -30,7 +30,7 @@ public abstract class TFSequence extends TokenFactory {
 
 	protected Token getToken(TokenStore foundTokens) {
 		if (this.adapter == null) {
-			return new TArray(foundTokens.toList());
+			return new TSequence(foundTokens.toList());
 		} else {
 			return this.adapter.convert(foundTokens.toList());
 		}

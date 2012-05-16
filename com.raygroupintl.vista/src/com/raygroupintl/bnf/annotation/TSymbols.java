@@ -5,13 +5,13 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
-import com.raygroupintl.bnf.TArray;
+import com.raygroupintl.bnf.TSequence;
 import com.raygroupintl.bnf.TFSequenceStatic;
 import com.raygroupintl.bnf.TList;
 import com.raygroupintl.bnf.Token;
 import com.raygroupintl.bnf.TokenFactory;
 
-public abstract class TSymbols extends TArray implements SequencePieceGenerator {
+public abstract class TSymbols extends TSequence implements SequencePieceGenerator {
 	public TSymbols(List<Token> tokens) {
 		super(tokens);
 	}

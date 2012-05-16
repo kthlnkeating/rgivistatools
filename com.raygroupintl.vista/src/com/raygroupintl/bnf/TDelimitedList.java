@@ -24,7 +24,7 @@ public class TDelimitedList extends TList {
 				this.firstNextCall = false;
 				return this.iterator.next();
 			} else {
-				TArray fullResult = (TArray) this.iterator.next();
+				TSequence fullResult = (TSequence) this.iterator.next();
 				Token result = fullResult.get(1);
 				if (result == null) {
 					result = new TEmpty();
