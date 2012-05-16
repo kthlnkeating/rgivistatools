@@ -5,17 +5,19 @@ import java.util.Map;
 
 import com.raygroupintl.bnf.StringAdapter;
 import com.raygroupintl.bnf.SyntaxErrorException;
-import com.raygroupintl.bnf.TFSequence;
+import com.raygroupintl.bnf.TArray;
+import com.raygroupintl.bnf.TFSequenceStatic;
 import com.raygroupintl.bnf.Text;
 import com.raygroupintl.bnf.Token;
 import com.raygroupintl.bnf.TokenFactory;
 import com.raygroupintl.bnf.TString;
 import com.raygroupintl.bnf.TEmpty;
 import com.raygroupintl.bnf.TFEmptyVerified;
+import com.raygroupintl.bnf.TokenFactorySupply2;
 import com.raygroupintl.bnf.TokenStore;
 import com.raygroupintl.vista.struct.MError;
 
-public class TFCommand extends TFSequence {
+public class TFCommand extends TokenFactorySupply2 {
 	private Map<String, TCSFactory> commandSpecs = new HashMap<String, TCSFactory>();
 	private MTFSupply supply;
 	
@@ -578,52 +580,43 @@ public class TFCommand extends TFSequence {
 		};
 		this.commandSpecs.put(name, generic);
 	}
-			
-	private class TFCommandName extends TokenFactory {
-		public TFCommandName(String name) {
-			super(name);
+	
+	@Override
+	public TokenFactory getSupplyTokenFactory() {
+		return this.supply.ident;
+	}
+	
+	private class TFCommandRest extends TFSequenceStatic {
+		public TFCommandRest(String name, TokenFactory... factories) {
+			super(name, factories);
 		}
 		
 		@Override
-		public Token tokenize(Text text) throws SyntaxErrorException {
-			Token result = TFCommand.this.supply.ident.tokenize(text);			
-			String cmdName = result.getStringValue();
-			TCSFactory tcs = TFCommand.this.commandSpecs.get(cmdName.toUpperCase());
-			if (tcs != null) {
-				return tcs.get(cmdName);
+		protected ValidateResult validateNull(int seqIndex, TokenStore foundTokens) throws SyntaxErrorException {
+			if (seqIndex == 3) {
+				throw new SyntaxErrorException(MError.ERR_GENERAL_SYNTAX, foundTokens);				
 			} else {
-				throw new SyntaxErrorException(MError.ERR_UNDEFINED_COMMAND);
-			}			
+				return ValidateResult.CONTINUE;
+			}
 		}
 	}
-		
-	@Override
-	protected int getExpectedTokenCount() {
-		return 5;
-	}
-	
-	@Override
-	protected TokenFactory getTokenFactory(int i, TokenStore foundTokens) {
-		switch (i) {
-			case 0:
-				return TFCommand.this.new TFCommandName(this.getName() + "." + "name");
-			case 1:
-				return TFCommand.this.supply.postcondition;
-			case 2:
-				return TFCommand.this.supply.space;
-			case 3: {
-				TCommandSpec cmd = (TCommandSpec) foundTokens.get(0);
-				TokenFactory f = cmd.getArgumentFactory();
-				return f;
-			}					
-			case 4:
-				return TFCommand.this.supply.commandend;//      spaces;
-			default:
-				assert(i == 5);
-				return null;
-		}
-	}	
 
+	@Override
+	public TokenFactory getNextTokenFactory(Token token) throws SyntaxErrorException {
+		String cmdName = token.getStringValue();
+		TCSFactory tcs = this.commandSpecs.get(cmdName.toUpperCase());
+		if (tcs != null) {
+			TCommandSpec spec = tcs.get(cmdName);
+			TokenFactory argumentFactory = spec.getArgumentFactory();
+			TFSequenceStatic tf = new TFCommandRest(this.getName(), this.supply.postcondition, this.supply.space, argumentFactory, this.supply.commandend);
+			tf.setRequiredFlags(false, false, false, false);
+			return tf;
+		} else {
+			throw new SyntaxErrorException(MError.ERR_UNDEFINED_COMMAND);
+		}					
+	}
+
+		
 	@Override
 	public Token tokenize(Text text) {
 		Text textCopy = text.getCopy();
@@ -641,24 +634,19 @@ public class TFCommand extends TFSequence {
 	
 	
 	@Override
-	protected ValidateResult validateNull(int seqIndex, TokenStore foundTokens)  throws SyntaxErrorException {
-		if (seqIndex == 0) {
-			return ValidateResult.NULL_RESULT;
-		} else if (seqIndex == 4) {
-			throw new SyntaxErrorException(MError.ERR_GENERAL_SYNTAX, foundTokens);
+	public Token getToken(Token supplyToken, Token nextToken) {
+		String cmdName = supplyToken.getStringValue();
+		TCSFactory tcs = this.commandSpecs.get(cmdName.toUpperCase());
+		TCommandSpec spec = tcs.get(cmdName);
+		if (nextToken == null) {
+			Token[] result = {supplyToken, null};
+			return spec.getToken(result);			
 		} else {
-			return ValidateResult.CONTINUE;				
-		}
-	}
-
-	@Override
-	public Token getToken(TokenStore tokens) {
-		Token token0 = tokens.get(0);
-		if (token0 instanceof TCommandSpec) {
-			TCommandSpec spec = (TCommandSpec) token0;
-			return spec.getToken(tokens.toArray());
-		} else {
-			return token0;
+				TArray nextTokens = (TArray) nextToken;
+				Token[] result = new Token[nextTokens.getCount()+1];
+				result[0] = supplyToken;
+				for (int i=1; i<result.length; ++i) result[i] = nextTokens.get(i-1);		
+				return spec.getToken(result);
 		}
 	}
 }

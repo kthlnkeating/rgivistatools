@@ -1,6 +1,6 @@
 package com.raygroupintl.bnf;
 
-public final class TFSequenceStatic extends TFSequence {
+public class TFSequenceStatic extends TFSequence {
 	private final static class RequiredFlags {
 		private boolean[] flags;
 		private int firstRequired = Integer.MAX_VALUE;
