@@ -21,8 +21,6 @@ import java.util.List;
 public interface TokenStore extends Iterable<Token> {
 	void addToken(Token token);
 	
-	Token[] toArray();
-	
 	List<Token> toList();
 	
 	Token toToken();

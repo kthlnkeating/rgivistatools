@@ -1,5 +1,7 @@
 package com.raygroupintl.m.token;
 
+import java.util.List;
+
 import com.raygroupintl.bnf.TArray;
 import com.raygroupintl.bnf.TString;
 import com.raygroupintl.bnf.Token;
@@ -10,7 +12,7 @@ import com.raygroupintl.m.parsetree.Node;
 
 class TCommand {
 	private static abstract class TCommandBase extends MTArray {
-		public TCommandBase(Token[] tokens) {
+		public TCommandBase(List<Token> tokens) {
 			super(tokens);
 		}
 		
@@ -53,7 +55,7 @@ class TCommand {
 	}
 	
 	static class B extends TCommandBase {
-		public B(Token[] tokens) {
+		public B(List<Token> tokens) {
 			super(tokens);
 		}		
 		
@@ -64,7 +66,7 @@ class TCommand {
 	}
 		
 	static class C extends TCommandBase {
-		public C(Token[] tokens) {
+		public C(List<Token> tokens) {
 			super(tokens);
 		}		
 		
@@ -75,7 +77,7 @@ class TCommand {
 	}
 		
 	static class D extends TCommandBase {
-		public D(Token[] tokens) {
+		public D(List<Token> tokens) {
 			super(tokens);
 		}		
 		
@@ -103,7 +105,7 @@ class TCommand {
 	}
 
 	static class E extends TCommandBase {
-		public E(Token[] tokens) {
+		public E(List<Token> tokens) {
 			super(tokens);
 		}		
 		
@@ -114,7 +116,7 @@ class TCommand {
 	}
 
 	static class F extends TCommandBase {
-		public F(Token[] tokens) {
+		public F(List<Token> tokens) {
 			super(tokens);
 		}		
 		
@@ -125,7 +127,7 @@ class TCommand {
 	}
 
 	static class G extends TCommandBase {
-		public G(Token[] tokens) {
+		public G(List<Token> tokens) {
 			super(tokens);
 		}		
 		
@@ -136,7 +138,7 @@ class TCommand {
 	}
 
 	static class H extends TCommandBase {
-		public H(Token[] tokens) {
+		public H(List<Token> tokens) {
 			super(tokens);
 		}		
 		
@@ -152,7 +154,7 @@ class TCommand {
 	}
 
 	static class I extends TCommandBase {
-		public I(Token[] tokens) {
+		public I(List<Token> tokens) {
 			super(tokens);
 		}		
 		
@@ -163,7 +165,7 @@ class TCommand {
 	}
 
 	static class J extends TCommandBase {
-		public J(Token[] tokens) {
+		public J(List<Token> tokens) {
 			super(tokens);
 		}		
 		
@@ -174,7 +176,7 @@ class TCommand {
 	}
 
 	static class K extends TCommandBase {
-		public K(Token[] tokens) {
+		public K(List<Token> tokens) {
 			super(tokens);
 		}		
 		
@@ -186,7 +188,7 @@ class TCommand {
 
 
 	static class L extends TCommandBase {
-		public L(Token[] tokens) {
+		public L(List<Token> tokens) {
 			super(tokens);
 		}		
 		
@@ -197,7 +199,7 @@ class TCommand {
 	}
 
 	static class M extends TCommandBase {
-		public M(Token[] tokens) {
+		public M(List<Token> tokens) {
 			super(tokens);
 		}		
 		
@@ -208,7 +210,7 @@ class TCommand {
 	}
 
 	static class N extends TCommandBase {
-		public N(Token[] tokens) {
+		public N(List<Token> tokens) {
 			super(tokens);
 		}		
 		
@@ -219,7 +221,7 @@ class TCommand {
 	}
 
 	static class O extends TCommandBase {
-		public O(Token[] tokens) {
+		public O(List<Token> tokens) {
 			super(tokens);
 		}		
 		
@@ -231,7 +233,7 @@ class TCommand {
 
 
 	static class Q extends TCommandBase {
-		public Q(Token[] tokens) {
+		public Q(List<Token> tokens) {
 			super(tokens);
 		}		
 		
@@ -242,7 +244,7 @@ class TCommand {
 	}
 
 	static class R extends TCommandBase {
-		public R(Token[] tokens) {
+		public R(List<Token> tokens) {
 			super(tokens);
 		}		
 		
@@ -253,7 +255,7 @@ class TCommand {
 	}
 
 	static class S extends TCommandBase {
-		public S(Token[] tokens) {
+		public S(List<Token> tokens) {
 			super(tokens);
 		}		
 		
@@ -264,7 +266,7 @@ class TCommand {
 	}
 
 	static class TC extends TCommandBase {
-		public TC(Token[] tokens) {
+		public TC(List<Token> tokens) {
 			super(tokens);
 		}		
 		
@@ -275,7 +277,7 @@ class TCommand {
 	}
 
 	static class TR extends TCommandBase {
-		public TR(Token[] tokens) {
+		public TR(List<Token> tokens) {
 			super(tokens);
 		}		
 		
@@ -286,7 +288,7 @@ class TCommand {
 	}
 
 	static class TRO extends TCommandBase {
-		public TRO(Token[] tokens) {
+		public TRO(List<Token> tokens) {
 			super(tokens);
 		}		
 		
@@ -297,7 +299,7 @@ class TCommand {
 	}
 
 	static class TS extends TCommandBase {
-		public TS(Token[] tokens) {
+		public TS(List<Token> tokens) {
 			super(tokens);
 		}		
 		
@@ -308,7 +310,7 @@ class TCommand {
 	}
 
 	static class U extends TCommandBase {
-		public U(Token[] tokens) {
+		public U(List<Token> tokens) {
 			super(tokens);
 		}		
 		
@@ -319,7 +321,7 @@ class TCommand {
 	}
 
 	static class W extends TCommandBase {
-		public W(Token[] tokens) {
+		public W(List<Token> tokens) {
 			super(tokens);
 		}		
 		
@@ -330,7 +332,7 @@ class TCommand {
 	}
 
 	static class V extends TCommandBase {
-		public V(Token[] tokens) {
+		public V(List<Token> tokens) {
 			super(tokens);
 		}		
 		
@@ -341,7 +343,7 @@ class TCommand {
 	}
 
 	static class X extends TCommandBase {
-		public X(Token[] tokens) {
+		public X(List<Token> tokens) {
 			super(tokens);
 		}		
 		
@@ -352,7 +354,7 @@ class TCommand {
 	}
 
 	static class Generic extends TCommandBase {
-		public Generic(Token[] tokens) {
+		public Generic(List<Token> tokens) {
 			super(tokens);
 		}		
 		

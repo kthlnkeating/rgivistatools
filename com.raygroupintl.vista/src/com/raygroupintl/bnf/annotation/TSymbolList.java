@@ -10,7 +10,7 @@ import com.raygroupintl.bnf.Token;
 import com.raygroupintl.bnf.TokenFactory;
 
 public class TSymbolList extends TArray  implements SequencePieceGenerator {
-	public TSymbolList(Token[] tokens) {
+	public TSymbolList(java.util.List<Token> tokens) {
 		super(tokens);
 	}
 	

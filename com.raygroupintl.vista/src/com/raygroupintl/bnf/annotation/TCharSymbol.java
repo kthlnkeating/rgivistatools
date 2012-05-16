@@ -10,7 +10,7 @@ import com.raygroupintl.bnf.TokenFactory;
 import com.raygroupintl.charlib.CharPredicate;
 
 public class TCharSymbol extends TArray implements SequencePieceGenerator {
-	public TCharSymbol(Token[] tokens) {
+	public TCharSymbol(java.util.List<Token> tokens) {
 		super(tokens);
 	}
 	

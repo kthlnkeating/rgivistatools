@@ -1,9 +1,11 @@
 package com.raygroupintl.bnf;
 
+import java.util.List;
+
 public class TArray implements Token, TokenArray {
-	private Token[] tokens;
+	private List<Token> tokens;
 	
-	public TArray(Token[] tokens) {
+	public TArray(List<Token> tokens) {
 		this.tokens = tokens;
 	}
 
@@ -38,19 +40,15 @@ public class TArray implements Token, TokenArray {
 	
 	@Override
 	public int getCount() {
-		return this.tokens.length;
+		return this.tokens.size();
 	}
 	
 	@Override
 	public Token get(int i) {
-		if (this.tokens.length > i) {
-			return this.tokens[i];
+		if (this.tokens.size() > i) {
+			return this.tokens.get(i);
 		} else {
 			return null;
 		}
-	}
-	
-	protected Token[] getTokens() {
-		return this.tokens;
 	}
 }

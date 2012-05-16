@@ -1,5 +1,6 @@
 package com.raygroupintl.m.token;
 
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -129,7 +130,7 @@ public class TFIntrinsic extends TFSequence {
 	
 	private static class TIntrinsicFunction extends TArray {
 		private TIntrinsicFunction(TIntrinsicFunctionName name, Token argument) {
-			super(new Token[]{name, argument});
+			super(Arrays.asList(new Token[]{name, argument}));
 		}
 
 		public static TIntrinsicFunction getInstance(TIdent name, Token argument, MNameWithMnemonic mnemonicNName) {
@@ -219,11 +220,11 @@ public class TFIntrinsic extends TFSequence {
 				if (t == null) {
 					t = new TList();
 				}
-				TArray argument = new TArray(new Token[]{foundTokens.get(1), foundTokens.get(2), foundTokens.get(3)});
+				TArray argument = new TArray(Arrays.asList(new Token[]{foundTokens.get(1), foundTokens.get(2), foundTokens.get(3)}));
 				return TIntrinsicFunction.getInstance(name, argument, this.functions.get(name.getStringValue().toUpperCase()));
 			}
 		} else {
-			return new TArray(foundTokens.toArray());
+			return new TArray(foundTokens.toList());
 		}
 	}
 }

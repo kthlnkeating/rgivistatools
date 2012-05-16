@@ -651,14 +651,15 @@ public class MTFSupply {
 	public static class CacheSupply extends MTFSupply {
 		public static class ObjTailAdapter implements SequenceAdapter {
 			@Override
-			public Token convert(Token[] tokens) {					
+			public Token convert(java.util.List<Token> tokens) {					
 				return new TObjectTail(tokens);
 			}
 		}
 		public static class LvnAdapter implements SequenceAdapter {
 			@Override
-			public Token convert(Token[] tokens) {
-				if ((tokens[1] != null) && (tokens[1] instanceof TObjectTail)) {					
+			public Token convert(java.util.List<Token> tokens) {
+				
+				if ((tokens.size() > 2) && (tokens.get(1) != null) && (tokens.get(1) instanceof TObjectTail)) {					
 					return new TObjectExpr(tokens);
 				} else {					
 					return new TLocal(tokens);

@@ -16,6 +16,7 @@
 
 package com.raygroupintl.bnf;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Iterator;
 import java.util.List;
@@ -23,27 +24,22 @@ import java.util.List;
 import com.raygroupintl.struct.IterableArray;
 
 public class ArrayAsTokenStore implements TokenStore {
-	private Token[] tokens;
+	private List<Token> tokens;
 	int index = 0;
 	
 	public ArrayAsTokenStore(int length) {
-		this.tokens = new Token[length];
+		this.tokens = new ArrayList<Token>(length);
 	}
 	
 	@Override
 	public void addToken(Token token) {
-		this.tokens[this.index] = token;
+		this.tokens.add(token);
 		++index;
 	}
 	
 	@Override
-	public Token[] toArray() {
-		return this.tokens;
-	}
-	
-	@Override
 	public List<Token> toList() {
-		return Arrays.asList(this.tokens);
+		return this.tokens;
 	}
 	
 	@Override
@@ -53,12 +49,16 @@ public class ArrayAsTokenStore implements TokenStore {
 		
 	@Override
 	public Iterator<Token> iterator() {
-		return new IterableArray<Token>(this.tokens).iterator();
+		return this.tokens.iterator();
 	}
 
 	@Override
 	public Token get(int index) {
-		return this.tokens[index];
+		if (index < this.tokens.size()) {
+			return this.tokens.get(index);
+		} else {
+			return null;
+		}
 	}
 
 	@Override

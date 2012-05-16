@@ -16,11 +16,13 @@
 
 package com.raygroupintl.m.token;
 
+import java.util.List;
+
 import com.raygroupintl.bnf.Token;
 import com.raygroupintl.m.parsetree.IgnorableNode;
 
 public class TComment extends MTArray {
-	public TComment(Token[] tokens) {
+	public TComment(List<Token> tokens) {
 		super(tokens);
 	}
 	

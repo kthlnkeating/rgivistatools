@@ -65,7 +65,7 @@ public class Parser {
 		}
 		
 		@Override
-		public Token convert(Token[] tokens) {
+		public Token convert(java.util.List<Token> tokens) {
 			try {
 				return (Token) this.constructor.newInstance((Object) tokens);
 			} catch (Exception e) {
@@ -209,7 +209,7 @@ public class Parser {
 			TokenType tokenType = f.getAnnotation(TokenType.class);
 			if (tokenType != null) {
 				Class<? extends Token> tokenCls = tokenType.value();
-				Constructor<? extends Token> constructor = tokenCls.getConstructor(Token[].class);
+				Constructor<? extends Token> constructor = tokenCls.getConstructor(java.util.List.class);
 				SequenceAdapter ta = new ConstructorAsSequenceAdapter(constructor);
 				token.setAdapter(ta);
 				return true;

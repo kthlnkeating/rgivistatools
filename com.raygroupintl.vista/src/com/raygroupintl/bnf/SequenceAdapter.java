@@ -16,6 +16,8 @@
 
 package com.raygroupintl.bnf;
 
+import java.util.List;
+
 public interface SequenceAdapter {
-	Token convert(Token[] tokens);
+	Token convert(List<Token> tokens);
 }

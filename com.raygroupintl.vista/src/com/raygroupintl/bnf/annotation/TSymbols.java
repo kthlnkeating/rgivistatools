@@ -12,7 +12,7 @@ import com.raygroupintl.bnf.Token;
 import com.raygroupintl.bnf.TokenFactory;
 
 public abstract class TSymbols extends TArray implements SequencePieceGenerator {
-	public TSymbols(Token[] tokens) {
+	public TSymbols(List<Token> tokens) {
 		super(tokens);
 	}
 

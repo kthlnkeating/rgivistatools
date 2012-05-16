@@ -1,5 +1,8 @@
 package com.raygroupintl.m.token;
 
+import java.util.Arrays;
+import java.util.List;
+
 import com.raygroupintl.bnf.Token;
 import com.raygroupintl.bnf.TArray;
 import com.raygroupintl.vista.struct.MNameWithMnemonic;
@@ -42,6 +45,6 @@ public class TSsvn extends TArray {
 	}
 
 	private TSsvn(TSsvnName name, Token param) {
-		super(new Token[]{name, param});
+		super(Arrays.asList(new Token[]{name, param}));
 	}
 }

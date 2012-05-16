@@ -13,7 +13,7 @@ public class TLine extends MTArray {
 	String tagName = "";
 	int index = 0;
 
-	public TLine(Token[] tokens) {
+	public TLine(List<Token> tokens) {
 		super(tokens);
 	}
 

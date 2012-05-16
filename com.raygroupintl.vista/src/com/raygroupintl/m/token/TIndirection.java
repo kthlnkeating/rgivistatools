@@ -1,10 +1,12 @@
 package com.raygroupintl.m.token;
 
+import java.util.List;
+
 import com.raygroupintl.bnf.Token;
 import com.raygroupintl.bnf.TArray;
 
 public class TIndirection extends TArray {
-	public TIndirection(Token[] tokens) {
+	public TIndirection(List<Token> tokens) {
 		super(tokens);
 	}	
 }

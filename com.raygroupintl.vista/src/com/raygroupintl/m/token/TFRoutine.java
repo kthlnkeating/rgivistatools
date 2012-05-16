@@ -2,6 +2,7 @@ package com.raygroupintl.m.token;
 
 import java.io.IOException;
 import java.nio.file.Path;
+import java.util.Arrays;
 
 import com.raygroupintl.bnf.SyntaxErrorException;
 import com.raygroupintl.bnf.Text;
@@ -19,7 +20,7 @@ public class TFRoutine {
 	public static TLine recoverFromError(String line, SyntaxErrorException e) {
 		Token error = new TSyntaxError(0, line, 0);
 		Token[] lineResult = {error, null, null, null, null};
-		return new TLine(lineResult);
+		return new TLine(Arrays.asList(lineResult));
 	}
 	
 	public TRoutine tokenize(MRoutineContent content) {

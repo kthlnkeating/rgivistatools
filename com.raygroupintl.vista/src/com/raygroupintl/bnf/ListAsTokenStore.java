@@ -32,11 +32,6 @@ public class ListAsTokenStore implements TokenStore {
 	}
 
 	@Override
-	public Token[] toArray() {
-		return this.list.toArray(new Token[0]);
-	}
-	
-	@Override
 	public List<Token> toList() {
 		return this.list;
 	}
