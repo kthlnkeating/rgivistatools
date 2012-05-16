@@ -1,9 +1,9 @@
 package com.raygroupintl.m.parsetree;
 
 public abstract class AtomicCommand implements Node {
-	public abstract Expression getPostcondition();
+	public abstract Nodes getPostcondition();
 	
-	public abstract ExpressionArray getArguments();
+	public abstract NodeArray getArguments();
 
 	@Override
 	public void accept(Visitor visitor) {

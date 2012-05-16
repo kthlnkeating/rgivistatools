@@ -1,10 +1,10 @@
 package com.raygroupintl.m.parsetree;
 
-public class AtomicGoto extends AtomicCommand implements Caller {
+public class AtomicDo extends AtomicCommand implements Caller {
 	private Nodes postCondition;
 	private CallInfo callInfo;
 	
-	public AtomicGoto(Nodes postCondition, CallInfo callInfo) {
+	public AtomicDo(Nodes postCondition, CallInfo callInfo) {
 		this.postCondition = postCondition;
 		this.callInfo = callInfo;
 	}

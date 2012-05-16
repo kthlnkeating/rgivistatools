@@ -1,7 +1,7 @@
 package com.raygroupintl.m.parsetree;
 
 public class Indirection extends UnaryOperator {
-	public Indirection(Expression expr) {
+	public Indirection(Nodes expr) {
 		super(expr);
 	}
 }

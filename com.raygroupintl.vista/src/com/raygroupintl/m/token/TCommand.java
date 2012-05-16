@@ -1,7 +1,10 @@
 package com.raygroupintl.m.token;
 
+import com.raygroupintl.bnf.TArray;
 import com.raygroupintl.bnf.TString;
 import com.raygroupintl.bnf.Token;
+import com.raygroupintl.m.parsetree.Do;
+import com.raygroupintl.m.parsetree.DoBlock;
 import com.raygroupintl.m.parsetree.GenericCommand;
 import com.raygroupintl.m.parsetree.Node;
 
@@ -9,6 +12,28 @@ class TCommand {
 	private static abstract class TCommandBase extends MTArray {
 		public TCommandBase(Token[] tokens) {
 			super(tokens);
+		}
+		
+		protected Token getArguments() {
+			TArray nameFollowUp = (TArray) this.get(1);
+			if (nameFollowUp == null) {
+				return null;
+			}
+			Token arguments = nameFollowUp.get(2);
+			return arguments;
+		}
+	
+		protected Token getPostCondition() {
+			TArray nameFollowUp = (TArray) this.get(1);
+			if (nameFollowUp == null) {
+				return null;
+			}
+			TArray postConditionWithColon = (TArray) nameFollowUp.get(0);
+			if (postConditionWithColon == null) {
+				return null;
+			} else {
+				return postConditionWithColon.get(1);
+			}
 		}
 	
 		protected abstract String getFullName();
@@ -58,6 +83,23 @@ class TCommand {
 		protected String getFullName() {		
 			return "DO";
 		}			
+
+		@Override
+		public Node getNode() {
+			Token argument = (Token) this.getArguments();
+			if ((argument == null) || (argument.getStringSize() == 0)) {
+				return new DoBlock();
+			} else {
+				Token postCondition = this.getPostCondition(); 
+				if ((postCondition == null) || ! (postCondition instanceof MToken)) {
+					return new Do(null);
+				} else {
+					Node postConditionNode = ((MToken) postCondition).getNode();
+					Do result = new Do(postConditionNode);
+					return result;
+				}
+			}
+		}
 	}
 
 	static class E extends TCommandBase {

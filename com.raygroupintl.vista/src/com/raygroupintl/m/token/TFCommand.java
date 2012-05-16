@@ -5,7 +5,6 @@ import java.util.Map;
 
 import com.raygroupintl.bnf.StringAdapter;
 import com.raygroupintl.bnf.SyntaxErrorException;
-import com.raygroupintl.bnf.TArray;
 import com.raygroupintl.bnf.TFSequenceStatic;
 import com.raygroupintl.bnf.Text;
 import com.raygroupintl.bnf.Token;
@@ -583,7 +582,7 @@ public class TFCommand extends TokenFactorySupply2 {
 	
 	@Override
 	public TokenFactory getSupplyTokenFactory() {
-		return this.supply.ident;
+		return this.new TFCommandName("command.name", this.supply.ident);
 	}
 	
 	private class TFCommandRest extends TFSequenceStatic {
@@ -601,19 +600,39 @@ public class TFCommand extends TokenFactorySupply2 {
 		}
 	}
 
+	private class TFCommandName extends TokenFactory {
+		private TokenFactory slave;
+		
+		public TFCommandName(String name, TokenFactory slave) {
+			super(name);
+			this.slave = slave;
+		}
+		
+		@Override
+		public Token tokenize(Text text) throws SyntaxErrorException {
+			Token token = this.slave.tokenize(text);
+			if (token == null) {
+				return null;
+			} else {
+				String cmdName = token.getStringValue();
+				TCSFactory tcs = TFCommand.this.commandSpecs.get(cmdName.toUpperCase());
+				if (tcs == null) {
+					throw new SyntaxErrorException(MError.ERR_UNDEFINED_COMMAND);					
+				} else {
+					TCommandSpec spec = tcs.get(cmdName);
+					return spec;
+				}
+			}
+		}
+	}
+	
 	@Override
 	public TokenFactory getNextTokenFactory(Token token) throws SyntaxErrorException {
-		String cmdName = token.getStringValue();
-		TCSFactory tcs = this.commandSpecs.get(cmdName.toUpperCase());
-		if (tcs != null) {
-			TCommandSpec spec = tcs.get(cmdName);
-			TokenFactory argumentFactory = spec.getArgumentFactory();
-			TFSequenceStatic tf = new TFCommandRest(this.getName(), this.supply.postcondition, this.supply.space, argumentFactory, this.supply.commandend);
-			tf.setRequiredFlags(false, false, false, false);
-			return tf;
-		} else {
-			throw new SyntaxErrorException(MError.ERR_UNDEFINED_COMMAND);
-		}					
+		TCommandSpec spec = (TCommandSpec) token;
+		TokenFactory argumentFactory = spec.getArgumentFactory();
+		TFSequenceStatic tf = new TFCommandRest(this.getName(), this.supply.postcondition, this.supply.space, argumentFactory, this.supply.commandend);
+		tf.setRequiredFlags(false, false, false, false);
+		return tf;
 	}
 
 		
@@ -638,15 +657,6 @@ public class TFCommand extends TokenFactorySupply2 {
 		String cmdName = supplyToken.getStringValue();
 		TCSFactory tcs = this.commandSpecs.get(cmdName.toUpperCase());
 		TCommandSpec spec = tcs.get(cmdName);
-		if (nextToken == null) {
-			Token[] result = {supplyToken, null};
-			return spec.getToken(result);			
-		} else {
-				TArray nextTokens = (TArray) nextToken;
-				Token[] result = new Token[nextTokens.getCount()+1];
-				result[0] = supplyToken;
-				for (int i=1; i<result.length; ++i) result[i] = nextTokens.get(i-1);		
-				return spec.getToken(result);
-		}
+		return spec.getToken(new Token[]{supplyToken, nextToken});
 	}
 }

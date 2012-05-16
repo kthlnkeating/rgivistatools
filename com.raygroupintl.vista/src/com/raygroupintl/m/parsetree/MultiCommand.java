@@ -17,8 +17,16 @@
 package com.raygroupintl.m.parsetree;
 
 public abstract class MultiCommand<T extends AtomicCommand> extends Block<T> {
-	public abstract Expression getPostcondition();
+	private Node postCondition;
+	
+	public MultiCommand(Node postCondition) {
+		this.postCondition = postCondition;
+	}
 
+	public Node getPostCondition() {
+		return this.postCondition;
+	}
+	
 	@Override
 	public void accept(Visitor visitor) {
 		visitor.visitMultiCommand(this);

@@ -1,6 +1,6 @@
 package com.raygroupintl.m.parsetree;
 
-public class ExtrinsicFunction extends ExpressionArray implements Caller {
+public class ExtrinsicFunction extends NodeArray implements Caller {
 	private CallInfo info;
 	
 	public ExtrinsicFunction(CallInfo info) {

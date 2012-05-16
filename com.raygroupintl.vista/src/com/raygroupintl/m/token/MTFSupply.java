@@ -377,6 +377,7 @@ public class MTFSupply {
 
 	@Sequence(value={"labelpiece", "lineoffset", "doroutinef", "actuallist"}, required="oooo")
 	public TokenFactory extrinsicarg;
+	@TokenType(TDoArgument.class)
 	@Sequence(value={"labelpiece", "lineoffset", "doroutinef", "actuallist", "postcondition"}, required="ooooo")
 	public TokenFactory doargument;
 	@List(value="doargument", delim="comma")

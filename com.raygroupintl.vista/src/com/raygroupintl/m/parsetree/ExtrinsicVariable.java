@@ -1,6 +1,6 @@
 package com.raygroupintl.m.parsetree;
 
-public class ExtrinsicVariable extends Expression implements Caller {
+public class ExtrinsicVariable implements Node, Caller {
 	private CallInfo info;
 	
 	public ExtrinsicVariable(CallInfo info) {
@@ -10,5 +10,9 @@ public class ExtrinsicVariable extends Expression implements Caller {
 	@Override
 	public CallInfo getCallInfo() {
 		return this.info;
+	}
+
+	@Override
+	public void accept(Visitor visitor) {
 	}
 }

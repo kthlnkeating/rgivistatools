@@ -10,30 +10,27 @@ public class Visitor {
 	protected void visitErrorNode(ErrorNode error) {		
 	}
 	
-	protected void visitExpression(Expression expr) {
-	}
-	
-	protected void visitCompoundExpression(CompoundExpression compoundExpression) {
-		for (Expression expr : compoundExpression.getSubExpressions()) {
-			expr.accept(this);
+	protected void visitNodes(Nodes compoundExpression) {
+		for (Node node : compoundExpression.getNodes()) {
+			node.accept(this);
 		}
 	}
 	
 	protected void visitAtomicCommand(AtomicCommand command) {
-		Expression postCondExpr = command.getPostcondition();
+		Nodes postCondExpr = command.getPostcondition();
 		if (postCondExpr != null) {
 			postCondExpr.accept(this);
 		}
-		ExpressionArray arguments = command.getArguments();
+		NodeArray arguments = command.getArguments();
 		if (arguments != null) {
 			arguments.accept(this);
 		}
 	}
 	
 	protected void visitMultiCommand(MultiCommand<?> command) {
-		Expression postCondExpr = command.getPostcondition();
-		if (postCondExpr != null) {
-			postCondExpr.accept(this);
+		Node postCondition = command.getPostCondition();
+		if (postCondition != null) {
+			postCondition.accept(this);
 		}
 		this.visitBlock(command);
 	}

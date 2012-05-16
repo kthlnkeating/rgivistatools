@@ -1,21 +1,21 @@
 package com.raygroupintl.m.parsetree;
 
 public class GenericCommand extends AtomicCommand {
-	private Expression postCondition;
-	private ExpressionArray arguments;
+	private Nodes postCondition;
+	private NodeArray arguments;
 	
-	public GenericCommand(ExpressionArray arguments, Expression postCondition) {
+	public GenericCommand(NodeArray arguments, Nodes postCondition) {
 		this.arguments = arguments;
 		this.postCondition = postCondition;
 	}
 	
 	@Override
-	public Expression getPostcondition() {
+	public Nodes getPostcondition() {
 		return this.postCondition;
 	}
 
 	@Override
-	public ExpressionArray getArguments() {
+	public NodeArray getArguments() {
 		return this.arguments;
 	}
 }
