@@ -11,6 +11,7 @@ import org.junit.Test;
 import com.raygroupintl.bnf.SyntaxErrorException;
 import com.raygroupintl.bnf.TSequence;
 import com.raygroupintl.bnf.TList;
+import com.raygroupintl.bnf.Text;
 import com.raygroupintl.bnf.Token;
 import com.raygroupintl.bnf.TokenFactory;
 import com.raygroupintl.m.token.MTFSupply;
@@ -38,7 +39,8 @@ public class TFLineTest {
 		
 	private Token lineTest(TokenFactory f, String line, boolean errorAsWell) {
 		try {
-			Token t = f.tokenize(line, 0);
+			Text text = new Text(line);
+			Token t = f.tokenize(text);
 			String r = t.getStringValue();
 			Assert.assertEquals(line, r);	
 			TList commands = (TList) ((TSequence) t).get(4);
@@ -63,7 +65,8 @@ public class TFLineTest {
 
 	private void lineTest(TokenFactory f, String line, int errorCommand, int errorLocation) {
 		try {
-			Token t = f.tokenize(line, 0);
+			Text text = new Text(line);
+			Token t = f.tokenize(text);
 			String r = t.getStringValue();
 			Assert.assertEquals(line, r);	
 			TList commands = (TList) ((TSequence) t).get(4);

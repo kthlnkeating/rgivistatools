@@ -27,7 +27,8 @@ public class GrammarTest {
 
 	private void testCommon(String v) {
 		try {
-			Token number = grammar.number.tokenize(v, 0);
+			Text text = new Text(v, 0);
+			Token number = grammar.number.tokenize(text);
 			Assert.assertNotNull(number);
 			Assert.assertTrue(number instanceof TNumber);
 			Assert.assertEquals(v, number.getStringValue());
@@ -38,7 +39,8 @@ public class GrammarTest {
 	
 	private void testErrorCommon(String v) {
 		try {
-			Token number = grammar.number.tokenize(v, 0);
+			Text text = new Text(v, 0);
+			Token number = grammar.number.tokenize(text);
 			Assert.assertNotNull(number);
 			Assert.assertTrue(number instanceof TNumber);
 			Assert.assertFalse(v.equals(number.getStringValue()));

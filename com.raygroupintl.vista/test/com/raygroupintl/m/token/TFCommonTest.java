@@ -57,7 +57,8 @@ public class TFCommonTest {
 
 	static void nullCheck(TokenFactory f, String v) {
 		try {
-			Token t = f.tokenize(v, 0);
+			Text text = new Text(v);
+			Token t = f.tokenize(text);
 			Assert.assertNull(t);
 		} catch(SyntaxErrorException e) {
 			fail("Unexpected exception.");
@@ -102,7 +103,8 @@ public class TFCommonTest {
 
 	static void validCheck(TokenFactory f, String v, String compare) {
 		try {
-			Token t = f.tokenize(v, 0);
+			Text text = new Text(v);
+			Token t = f.tokenize(text);
 			validTokenCheck(t, compare);
 		} catch(SyntaxErrorException e) {
 			fail("Exception: " + e.getMessage());			

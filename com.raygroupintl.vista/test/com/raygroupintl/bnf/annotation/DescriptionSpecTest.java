@@ -16,6 +16,7 @@ import com.raygroupintl.bnf.SyntaxErrorException;
 import com.raygroupintl.bnf.TSequence;
 import com.raygroupintl.bnf.TFCharacter;
 import com.raygroupintl.bnf.TFSequenceStatic;
+import com.raygroupintl.bnf.Text;
 import com.raygroupintl.bnf.Token;
 import com.raygroupintl.bnf.TokenFactory;
 import com.raygroupintl.charlib.CharPredicate;
@@ -38,7 +39,8 @@ public class DescriptionSpecTest {
 	@Test
 	public void testSymbol() {
 		try {
-			Token symbol = spec.symbol.tokenize("token", 0);
+			Text text = new Text("token");
+			Token symbol = spec.symbol.tokenize(text);
 			Assert.assertNotNull(symbol);
 			Assert.assertTrue(symbol instanceof TSymbol);
 			Assert.assertEquals("token", symbol.getStringValue());
@@ -50,7 +52,8 @@ public class DescriptionSpecTest {
 	@Test
 	public void testOptionalSymbols() {
 		try {
-			Token optionalSymbols = spec.optionalsymbols.tokenize("[a, b, ([c], [d])]", 0);
+			Text text = new Text("[a, b, ([c], [d])]");
+			Token optionalSymbols = spec.optionalsymbols.tokenize(text);
 			Assert.assertNotNull(optionalSymbols);
 			Assert.assertTrue(optionalSymbols instanceof TOptionalSymbols);
 			Assert.assertEquals("[a, b, ([c], [d])]", optionalSymbols.getStringValue());
@@ -62,7 +65,8 @@ public class DescriptionSpecTest {
 	@Test
 	public void testRequiredSymbols() {
 		try {
-			Token requiredSymbols = spec.requiredsymbols.tokenize("([a, b], [c], [d])", 0);
+			Text text = new Text("([a, b], [c], [d])");
+			Token requiredSymbols = spec.requiredsymbols.tokenize(text);
 			Assert.assertNotNull(requiredSymbols);
 			Assert.assertTrue(requiredSymbols instanceof TRequiredSymbols);
 			Assert.assertEquals("([a, b], [c], [d])", requiredSymbols.getStringValue());
@@ -79,7 +83,8 @@ public class DescriptionSpecTest {
 	
 	private void testTDescription(TokenFactory f, String v) {
 		try {
-			Token result = f.tokenize(v, 0);
+			Text text = new Text(v);
+			Token result = f.tokenize(text);
 			Assert.assertNotNull(result);
 			Assert.assertTrue(result instanceof TSequence);
 			Assert.assertEquals(v, result.getStringValue());
@@ -90,7 +95,8 @@ public class DescriptionSpecTest {
 	
 	private void testErrorTDescription(TokenFactory f, String v) {
 		try {
-			f.tokenize(v, 0);
+			Text text = new Text(v);
+			f.tokenize(text);
 			fail("Expected exception did not fire");			
 		} catch (SyntaxErrorException se) {
 		}
@@ -108,7 +114,8 @@ public class DescriptionSpecTest {
 	@Test
 	public void testList() {
 		try {
-			TDescription description = (TDescription) spec.description.tokenize("x, {y:',':'(':')'}, [{a}, [{b:':'}], [c], d], e", 0);
+			Text text = new Text("x, {y:',':'(':')'}, [{a}, [{b:':'}], [c], d], e");
+			TDescription description = (TDescription) spec.description.tokenize(text);
 			Assert.assertNotNull(description);
 			Assert.assertTrue(description instanceof TDescription);
 			Assert.assertEquals("x, {y:',':'(':')'}, [{a}, [{b:':'}], [c], d], e", description.getStringValue());
@@ -135,7 +142,8 @@ public class DescriptionSpecTest {
 	@Test
 	public void testList0() {
 		try {
-			TDescription description = (TDescription) spec.description.tokenize("{y:',':'(':')'}, {a}", 0);
+			Text text = new Text("{y:',':'(':')'}, {a}");
+			TDescription description = (TDescription) spec.description.tokenize(text);
 			Assert.assertNotNull(description);
 			Assert.assertTrue(description instanceof TDescription);
 			Assert.assertEquals("{y:',':'(':')'}, {a}", description.getStringValue());
@@ -155,7 +163,8 @@ public class DescriptionSpecTest {
 	@Test
 	public void testSequence() {
 		try {
-			TDescription description = (TDescription) spec.description.tokenize("x, y, [(a, b), [c], d], e", 0);
+			Text text = new Text("x, y, [(a, b), [c], d], e");
+			TDescription description = (TDescription) spec.description.tokenize(text);
 			Assert.assertNotNull(description);
 			Assert.assertTrue(description instanceof TDescription);
 			Assert.assertEquals("x, y, [(a, b), [c], d], e", description.getStringValue());

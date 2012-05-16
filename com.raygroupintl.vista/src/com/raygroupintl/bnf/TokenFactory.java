@@ -28,9 +28,4 @@ public abstract class TokenFactory {
 	}
 	
 	public abstract Token tokenize(Text text) throws SyntaxErrorException;
-	
-	public Token tokenize(String content, int fromIndex)  throws SyntaxErrorException {
-		Text text = new Text(content);
-		return this.tokenize(text);
-	}
 }
