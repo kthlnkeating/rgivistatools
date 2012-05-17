@@ -1,23 +1,33 @@
 package com.raygroupintl.bnf;
 
+import java.util.List;
+
 public abstract class TFSequence extends TokenFactory {
 	public enum ValidateResult {
 		CONTINUE, BREAK, NULL_RESULT
 	}
 
+	private static final SequenceAdapter DEFAULT_ADAPTER = new SequenceAdapter() {		
+		@Override
+		public Token convert(List<Token> tokens) {
+			return new TSequence(tokens);
+		}
+	}; 
+		
 	private SequenceAdapter adapter;
 
 	public TFSequence(String name) {
+		this(name, DEFAULT_ADAPTER);
+	}
+
+	public TFSequence(String name, SequenceAdapter adapter) {
 		super(name);
+		this.adapter = adapter == null ? DEFAULT_ADAPTER : adapter;
 	}
 
 	protected abstract TokenFactory getTokenFactory(int i, TokenStore foundTokens) throws SyntaxErrorException;
 
 	protected abstract int getExpectedTokenCount();
-
-	public void setAdapter(SequenceAdapter adapter) {
-		this.adapter = adapter;
-	}
 
 	protected abstract ValidateResult validateNull(int seqIndex, TokenStore foundTokens) throws SyntaxErrorException;
 

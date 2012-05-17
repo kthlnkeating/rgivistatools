@@ -17,11 +17,8 @@
 package com.raygroupintl.bnf;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Iterator;
 import java.util.List;
-
-import com.raygroupintl.struct.IterableArray;
 
 public class ArrayAsTokenStore implements TokenStore {
 	private List<Token> tokens;
@@ -42,11 +39,6 @@ public class ArrayAsTokenStore implements TokenStore {
 		return this.tokens;
 	}
 	
-	@Override
-	public Token toToken() {
-		return new TSequence(this.tokens);		
-	}
-		
 	@Override
 	public Iterator<Token> iterator() {
 		return this.tokens.iterator();

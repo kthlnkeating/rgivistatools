@@ -9,7 +9,7 @@ import com.raygroupintl.m.parsetree.Line;
 import com.raygroupintl.m.parsetree.Node;
 import com.raygroupintl.m.struct.Fanout;
 
-public class TLine extends MTArray {
+public class TLine extends MTSequence {
 	String tagName = "";
 	int index = 0;
 

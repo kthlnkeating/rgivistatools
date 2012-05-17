@@ -21,7 +21,7 @@ import java.util.List;
 import com.raygroupintl.bnf.Token;
 import com.raygroupintl.m.parsetree.IgnorableNode;
 
-public class TComment extends MTArray {
+public class TComment extends MTSequence {
 	public TComment(List<Token> tokens) {
 		super(tokens);
 	}

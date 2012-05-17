@@ -17,21 +17,33 @@
 package com.raygroupintl.bnf;
 
 public class TFConstant extends TokenFactory {
+	private static final StringAdapter DEFAULT_ADAPTER = new StringAdapter() {
+		@Override
+		public Token convert(String value) {
+			return new TString(value);
+		}
+	}; 
+
 	private String value;
 	private boolean ignoreCase;
 	private StringAdapter adapter;
 	
+	public TFConstant(String name, String value) {
+		this(name, value, DEFAULT_ADAPTER, false);
+	}
+	
+	public TFConstant(String name, String value, boolean ignoreCase) {
+		this(name, value, DEFAULT_ADAPTER, ignoreCase);
+	}
+	
 	public TFConstant(String name, String value, StringAdapter adapter) {
-		super(name);
-		this.value = value;
-		this.adapter = adapter;
-		this.ignoreCase = false;
+		this(name, value, adapter, false);
 	}
 	
 	public TFConstant(String name, String value, StringAdapter adapter, boolean ignoreCase) {
 		super(name);
 		this.value = value;
-		this.adapter = adapter;
+		this.adapter = adapter == null ? DEFAULT_ADAPTER : adapter;
 		this.ignoreCase = ignoreCase;
 	}
 

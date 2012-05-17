@@ -11,7 +11,6 @@ import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
-import com.raygroupintl.bnf.DefaultCharacterAdapter;
 import com.raygroupintl.bnf.SyntaxErrorException;
 import com.raygroupintl.bnf.TSequence;
 import com.raygroupintl.bnf.TFCharacter;
@@ -77,7 +76,7 @@ public class DescriptionSpecTest {
 
 	private void updateMap(Map<String, TokenFactory> map, char ch) {
 		Predicate p = new CharPredicate(ch);
-		TokenFactory f = new TFCharacter(String.valueOf(ch), p, new DefaultCharacterAdapter());
+		TokenFactory f = new TFCharacter(String.valueOf(ch), p);
 		map.put(String.valueOf(ch), f);		
 	}
 	

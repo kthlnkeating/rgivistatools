@@ -23,8 +23,6 @@ public interface TokenStore extends Iterable<Token> {
 	
 	List<Token> toList();
 	
-	Token toToken();
-	
 	Token get(int index);
 	
 	int size();

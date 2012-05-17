@@ -19,13 +19,24 @@ package com.raygroupintl.bnf;
 import com.raygroupintl.charlib.Predicate;
 
 public class TFCharacter extends TokenFactory {
+	private static final CharacterAdapter DEFAULT_ADAPTER = new CharacterAdapter() {
+		@Override
+		public Token convert(char value) {
+			return new TChar(value);
+		}
+	}; 
+	
 	private Predicate predicate;
 	private CharacterAdapter adapter;
 	
+	public TFCharacter(String name, Predicate predicate) {
+		this(name, predicate, DEFAULT_ADAPTER);
+	}
+
 	public TFCharacter(String name, Predicate predicate, CharacterAdapter adapter) {
 		super(name);
 		this.predicate = predicate;
-		this.adapter = adapter;
+		this.adapter = adapter == null ? DEFAULT_ADAPTER : adapter;
 	}
 		
 	@Override

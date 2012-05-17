@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
-public class TList implements Token {
+public class TList implements Token, Iterable<Token> {
 	private List<Token> tokens = new ArrayList<Token>();
 		
 	public TList() {
@@ -60,6 +60,7 @@ public class TList implements Token {
 		this.tokens.add(index, token);
 	}
 	
+	@Override
 	public Iterator<Token> iterator() {
 		return this.tokens.iterator();
 	}

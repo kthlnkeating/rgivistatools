@@ -37,11 +37,6 @@ public class ListAsTokenStore implements TokenStore {
 	}
 	
 	@Override
-	public Token toToken() {
-		return this.list == null ? new TList() : new TList(this.list);		
-	}
-		
-	@Override
 	public Iterator<Token> iterator() {
 		return this.list.iterator();
 	}

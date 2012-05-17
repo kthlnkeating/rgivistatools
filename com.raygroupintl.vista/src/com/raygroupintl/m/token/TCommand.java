@@ -11,7 +11,7 @@ import com.raygroupintl.m.parsetree.GenericCommand;
 import com.raygroupintl.m.parsetree.Node;
 
 class TCommand {
-	private static abstract class TCommandBase extends MTArray {
+	private static abstract class TCommandBase extends MTSequence {
 		public TCommandBase(List<Token> tokens) {
 			super(tokens);
 		}

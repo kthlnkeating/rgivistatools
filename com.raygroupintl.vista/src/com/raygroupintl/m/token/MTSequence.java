@@ -14,19 +14,21 @@
 // limitations under the License.
 //---------------------------------------------------------------------------
 
-package com.raygroupintl.m.parsetree;
+package com.raygroupintl.m.token;
 
-import com.raygroupintl.struct.IterableSingle;
+import java.util.List;
 
-public class UnaryOperator extends Nodes {
-	private IterableSingle<Node> nodes;
+import com.raygroupintl.bnf.TSequence;
+import com.raygroupintl.bnf.Token;
+import com.raygroupintl.m.parsetree.Node;
 
-	public UnaryOperator(Nodes nodes) {
-		this.nodes = new IterableSingle<Node>(nodes);
+public class MTSequence extends TSequence implements MToken {
+	public MTSequence(List<Token> tokens) {
+		super(tokens);
 	}
-	
+
 	@Override
-	public Iterable<Node> getNodes() {
-		return this.nodes;
-	}	
+	public Node getNode() {
+		return NodeUtilities.getNodes(this);
+	}
 }

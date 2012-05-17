@@ -18,24 +18,27 @@ public class TFCommonTest {
 		Assert.assertEquals(v.length(), t.getStringSize());		
 	}
 	
-	public static Token getErrorToken(SyntaxErrorException e, int location, String v) {
+	private static void errorCheck(SyntaxErrorException e, int location, String v) {
 		Token t = new TSyntaxError(0, v.substring(location), location);
+		int totalSize = t.getStringSize();
+		String totalString = t.getStringValue();
+		
 		for (TokenStore ts : e.getTokenStores()) {
-			ts.addToken(t);
-			t = ts.toToken();
+			for (int i=ts.size()-1; i>=0; --i) {
+				Token n = ts.get(i);
+				if (n != null) {
+					totalSize += n.getStringSize();
+					totalString = n.getStringValue() + totalString;
+				}
+			}
 		}
-		return t;
+		Assert.assertEquals(v, totalString);
+		Assert.assertEquals(v.length(), totalSize);		
 	}
 	
-	static void errorCheck(SyntaxErrorException e, int location, String v) {
-		Token t = getErrorToken(e, location, v);
-		validTokenCheck(t, v);
-	}
-			
 	static void errorCheck(SyntaxErrorException e, int location, String v, int errorCode) {
 		Assert.assertEquals(errorCode,  e.getCode() == 0 ? MError.ERR_GENERAL_SYNTAX : e.getCode());
-		Token t = getErrorToken(e, location, v);
-		validTokenCheck(t, v);
+		errorCheck(e, location, v);
 	}
 			
 	static void validCheck(TokenFactory f, String v, boolean checkWithSpace) {

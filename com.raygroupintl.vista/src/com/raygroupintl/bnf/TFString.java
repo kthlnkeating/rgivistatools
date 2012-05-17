@@ -19,13 +19,24 @@ package com.raygroupintl.bnf;
 import com.raygroupintl.charlib.Predicate;
 
 public class TFString extends TokenFactory {
+	private static final StringAdapter DEFAULT_ADAPTER = new StringAdapter() {
+		@Override
+		public Token convert(String value) {
+			return new TString(value);
+		}
+	}; 
+	
 	private Predicate predicate;
 	private StringAdapter adapter;
 	
+	public TFString(String name, Predicate predicate) {
+		this(name, predicate, DEFAULT_ADAPTER);
+	}
+		
 	public TFString(String name, Predicate predicate, StringAdapter adapter) {
 		super(name);
 		this.predicate = predicate;
-		this.adapter = adapter;
+		this.adapter = adapter == null ? DEFAULT_ADAPTER : adapter;
 	}
 		
 	@Override

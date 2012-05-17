@@ -1,16 +1,16 @@
 package com.raygroupintl.m.token;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import com.raygroupintl.bnf.SyntaxErrorException;
 import com.raygroupintl.bnf.TFSequence;
-import com.raygroupintl.bnf.TList;
 import com.raygroupintl.bnf.Token;
 import com.raygroupintl.bnf.TokenFactory;
 import com.raygroupintl.bnf.TSequence;
-import com.raygroupintl.bnf.TFSyntaxError;
 import com.raygroupintl.bnf.TokenStore;
 import com.raygroupintl.vista.struct.MError;
 import com.raygroupintl.vista.struct.MNameWithMnemonic;
@@ -216,11 +216,9 @@ public class TFIntrinsic extends TFSequence {
 			if (foundTokens.get(1) == null) {
 				return TIntrinsicVariable.getInstance(name, this.variables.get(name.getStringValue().toUpperCase()));			
 			} else {
-				Token t = foundTokens.get(2);
-				if (t == null) {
-					t = new TList();
-				}
-				TSequence argument = new TSequence(Arrays.asList(new Token[]{foundTokens.get(1), foundTokens.get(2), foundTokens.get(3)}));
+				List<Token> result = new ArrayList<Token>(3);
+				for (int i=1; i<4; ++i) result.add(foundTokens.get(i));
+				TSequence argument = new TSequence(result);
 				return TIntrinsicFunction.getInstance(name, argument, this.functions.get(name.getStringValue().toUpperCase()));
 			}
 		} else {

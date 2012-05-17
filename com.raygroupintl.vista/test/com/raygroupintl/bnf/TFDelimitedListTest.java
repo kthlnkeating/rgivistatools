@@ -62,8 +62,8 @@ public class TFDelimitedListTest {
 
 	@Test
 	public void test() {
-		TokenFactory delimiter = new TFCharacter(",", new CharPredicate(','), new DefaultCharacterAdapter());
-		TokenFactory element = new TFString("e", new CharRangePredicate('a', 'z'), new DefaultStringAdapter());
+		TokenFactory delimiter = new TFCharacter(",", new CharPredicate(','));
+		TokenFactory element = new TFString("e", new CharRangePredicate('a', 'z'));
 		
 		TFDelimitedList dl = new TFDelimitedList("dl");
 		try {

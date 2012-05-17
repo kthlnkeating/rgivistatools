@@ -9,8 +9,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import com.raygroupintl.bnf.CharacterAdapter;
-import com.raygroupintl.bnf.DefaultCharacterAdapter;
-import com.raygroupintl.bnf.DefaultStringAdapter;
+import com.raygroupintl.bnf.DelimitedListAdapter;
 import com.raygroupintl.bnf.ListAdapter;
 import com.raygroupintl.bnf.StringAdapter;
 import com.raygroupintl.bnf.SyntaxErrorException;
@@ -47,7 +46,7 @@ public class Parser {
 		PREDICATES.put("idstart", new IdentifierStartPredicate());
 	}
 		
-	private static class Triple<T extends TokenFactory, A extends Annotation> {
+	private static final class Triple<T extends TokenFactory, A extends Annotation> {
 		public T factory;
 		public A annotation;
 		
@@ -56,40 +55,6 @@ public class Parser {
 			this.annotation = annotation;
 		}
 	}
-	
-	private static class ConstructorAsSequenceAdapter implements SequenceAdapter {					
-		private Constructor<? extends Token> constructor;
-		
-		public ConstructorAsSequenceAdapter(Constructor<? extends Token> constructor) {
-			this.constructor = constructor;
-		}
-		
-		@Override
-		public Token convert(java.util.List<Token> tokens) {
-			try {
-				return (Token) this.constructor.newInstance((Object) tokens);
-			} catch (Exception e) {
-				return null;
-			}
-		}
-	};
-	
-	private static class ConstructorAsStringAdapter implements StringAdapter {					
-		private Constructor<? extends Token> constructor;
-		
-		public ConstructorAsStringAdapter(Constructor<? extends Token> constructor) {
-			this.constructor = constructor;
-		}
-		
-		@Override
-		public Token convert(String value) {
-			try {
-				return (Token) this.constructor.newInstance((Object) value);
-			} catch (Exception e) {
-				return null;
-			}
-		}
-	};
 	
 	private static class ConstructorAsCharacterAdapter implements CharacterAdapter {					
 		private Constructor<? extends Token> constructor;
@@ -108,10 +73,61 @@ public class Parser {
 		}
 	};
 
+	private static class ConstructorAsStringAdapter implements StringAdapter {					
+		private Constructor<? extends Token> constructor;
+		
+		public ConstructorAsStringAdapter(Constructor<? extends Token> constructor) {
+			this.constructor = constructor;
+		}
+		
+		@Override
+		public Token convert(String value) {
+			try {
+				return (Token) this.constructor.newInstance((Object) value);
+			} catch (Exception e) {
+				return null;
+			}
+		}
+	};
+	
+	private static class ConstructorAsSequenceAdapter implements SequenceAdapter {					
+		private Constructor<? extends Token> constructor;
+		
+		public ConstructorAsSequenceAdapter(Constructor<? extends Token> constructor) {
+			this.constructor = constructor;
+		}
+		
+		@Override
+		public Token convert(java.util.List<Token> tokens) {
+			try {
+				return (Token) this.constructor.newInstance((Object) tokens);
+			} catch (Exception e) {
+				return null;
+			}
+		}
+	};
+	
 	private static class ConstructorAsListAdapter implements ListAdapter {					
 		private Constructor<? extends Token> constructor;
 		
 		public ConstructorAsListAdapter(Constructor<? extends Token> constructor) {
+			this.constructor = constructor;
+		}
+		
+		@Override
+		public Token convert(java.util.List<Token> tokens) {
+			try {
+				return (Token) this.constructor.newInstance(tokens);
+			} catch (Exception e) {
+				return null;
+			}
+		}
+	};
+	
+	private static class ConstructorAsDelimitedListAdapter implements DelimitedListAdapter {					
+		private Constructor<? extends Token> constructor;
+		
+		public ConstructorAsDelimitedListAdapter(Constructor<? extends Token> constructor) {
 			this.constructor = constructor;
 		}
 		
@@ -147,23 +163,6 @@ public class Parser {
 			return value;			
 		}
 		
-		private StringAdapter getStringAdapter(Field f) throws IllegalAccessException, InstantiationException, NoSuchMethodException {
-			Adapter adapter = f.getAnnotation(Adapter.class);
-			if (adapter != null) {
-				Class<?> cls = adapter.value();			
-				StringAdapter ta = (StringAdapter) cls.newInstance();
-				return ta;
-			}
-			TokenType tokenType = f.getAnnotation(TokenType.class);
-			if (tokenType != null) {
-				Class<? extends Token> tokenCls = tokenType.value();
-				Constructor<? extends Token> constructor = tokenCls.getConstructor(String.class);
-				StringAdapter ta = new ConstructorAsStringAdapter(constructor);
-				return ta;
-			}
-			return new DefaultStringAdapter();
-		}
-
 		private CharacterAdapter getCharacterAdapter(Field f) throws IllegalAccessException, InstantiationException, NoSuchMethodException {
 			Adapter adapter = f.getAnnotation(Adapter.class);
 			if (adapter != null) {
@@ -178,7 +177,41 @@ public class Parser {
 				CharacterAdapter ta = new ConstructorAsCharacterAdapter(constructor);
 				return ta;
 			}
-			return new DefaultCharacterAdapter();
+			return null;
+		}
+
+		private StringAdapter getStringAdapter(Field f) throws IllegalAccessException, InstantiationException, NoSuchMethodException {
+			Adapter adapter = f.getAnnotation(Adapter.class);
+			if (adapter != null) {
+				Class<?> cls = adapter.value();			
+				StringAdapter ta = (StringAdapter) cls.newInstance();
+				return ta;
+			}
+			TokenType tokenType = f.getAnnotation(TokenType.class);
+			if (tokenType != null) {
+				Class<? extends Token> tokenCls = tokenType.value();
+				Constructor<? extends Token> constructor = tokenCls.getConstructor(String.class);
+				StringAdapter ta = new ConstructorAsStringAdapter(constructor);
+				return ta;
+			}
+			return null;
+		}
+
+		private SequenceAdapter getSequenceAdapter(Field f) throws IllegalAccessException, InstantiationException, NoSuchMethodException {
+			Adapter adapter = f.getAnnotation(Adapter.class);
+			if (adapter != null) {
+				Class<?> cls = adapter.value();			
+				SequenceAdapter la = (SequenceAdapter) cls.newInstance();
+				return la;
+			}
+			TokenType tokenType = f.getAnnotation(TokenType.class);
+			if (tokenType != null) {
+				Class<? extends Token> tokenCls = tokenType.value();
+				Constructor<? extends Token> constructor = tokenCls.getConstructor(java.util.List.class);
+				SequenceAdapter ta = new ConstructorAsSequenceAdapter(constructor);
+				return ta;
+			}
+			return null;
 		}
 
 		private ListAdapter getListAdapter(Field f) throws IllegalAccessException, InstantiationException, NoSuchMethodException {
@@ -198,35 +231,33 @@ public class Parser {
 			return null;
 		}
 
-		private boolean updateAdapter(TFSequenceStatic token, Field f) throws IllegalAccessException, InstantiationException, NoSuchMethodException {
+		private DelimitedListAdapter getDelimitedListAdapter(Field f) throws IllegalAccessException, InstantiationException, NoSuchMethodException {
 			Adapter adapter = f.getAnnotation(Adapter.class);
 			if (adapter != null) {
 				Class<?> cls = adapter.value();			
-				SequenceAdapter ta = (SequenceAdapter) cls.newInstance();
-				token.setAdapter(ta);
-				return true;
+				DelimitedListAdapter la = (DelimitedListAdapter) cls.newInstance();
+				return la;
 			}
 			TokenType tokenType = f.getAnnotation(TokenType.class);
 			if (tokenType != null) {
 				Class<? extends Token> tokenCls = tokenType.value();
 				Constructor<? extends Token> constructor = tokenCls.getConstructor(java.util.List.class);
-				SequenceAdapter ta = new ConstructorAsSequenceAdapter(constructor);
-				token.setAdapter(ta);
-				return true;
-			}		
-			return false;
+				DelimitedListAdapter ta = new ConstructorAsDelimitedListAdapter(constructor);
+				return ta;
+			}
+			return null;
 		}
 		
 		private TokenFactory addSequence(String name, Sequence sequence, Field f) throws IllegalAccessException, InstantiationException, NoSuchMethodException {
-			TFSequenceStatic value = new TFSequenceStatic(name);
-			this.updateAdapter(value, f);
+			SequenceAdapter adapter = this.getSequenceAdapter(f);
+			TFSequenceStatic value = new TFSequenceStatic(name, adapter);
 			this.sequences.add(new Triple<TFSequenceStatic, Sequence>(name, value, sequence));
 			return value;			
 		}
 		
 		private TokenFactory addDescription(String name, Description description, Field f)  throws IllegalAccessException, InstantiationException, NoSuchMethodException {
-			TFSequenceStatic value = new TFSequenceStatic(name);
-			this.updateAdapter(value, f);
+			SequenceAdapter adapter = this.getSequenceAdapter(f);
+			TFSequenceStatic value = new TFSequenceStatic(name, adapter);
 			this.descriptions.add(new Triple<TFSequenceStatic, Description>(name, value, description));
 			return value;		
 		}
@@ -237,29 +268,25 @@ public class Parser {
 			String right = list.right();
 			if (delimiter.length() == 0) {
 				if ((left.length() == 0) || (right.length() == 0)) {
-					TFList value = new TFList(name);
+					ListAdapter la = this.getListAdapter(f);
+					TFList value = new TFList(name, la);
 					this.lists.add(new Triple<TFList, List>(name, value, list));
 					return value;
 				} else {
-					TFSequenceStatic value = new TFSequenceStatic(name);
-					this.updateAdapter(value, f);
+					SequenceAdapter la = this.getSequenceAdapter(f);
+					TFSequenceStatic value = new TFSequenceStatic(name, la);
 					this.enclosedLists.add(new Triple<TFSequenceStatic, List>(name, value, list));
 					return value;
 				}
 			} else {			
 				if ((left.length() == 0) || (right.length() == 0)) {
-					TFDelimitedList value = null;
-					ListAdapter adapter = this.getListAdapter(f);
-					if (adapter == null) {
-						 value = new TFDelimitedList(name);					
-					} else {
-						 value = new TFDelimitedList(name, adapter);
-					}					
+					DelimitedListAdapter adapter = this.getDelimitedListAdapter(f);
+					TFDelimitedList value = new TFDelimitedList(name, adapter);
 					this.delimitedLists.add(new Triple<TFDelimitedList, List>(name, value, list));
 					return value;
 				} else {
-					TFSequenceStatic value = new TFSequenceStatic(name);
-					this.updateAdapter(value, f);
+					SequenceAdapter la = this.getSequenceAdapter(f);
+					TFSequenceStatic value = new TFSequenceStatic(name, la);
 					this.enclosedDelimitedLists.add(new Triple<TFSequenceStatic, List>(name, value, list));
 					return value;					
 				}

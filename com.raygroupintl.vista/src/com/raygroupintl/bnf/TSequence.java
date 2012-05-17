@@ -1,8 +1,9 @@
 package com.raygroupintl.bnf;
 
+import java.util.Iterator;
 import java.util.List;
 
-public class TSequence implements Token {
+public class TSequence implements Token, Iterable<Token> {
 	private List<Token> tokens;
 	
 	public TSequence(List<Token> tokens) {
@@ -38,7 +39,7 @@ public class TSequence implements Token {
 		}
 	}
 	
-	public int getCount() {
+	public int size() {
 		return this.tokens.size();
 	}
 	
@@ -48,5 +49,10 @@ public class TSequence implements Token {
 		} else {
 			return null;
 		}
+	}
+	
+	@Override
+	public Iterator<Token> iterator() {
+		return this.tokens.iterator();
 	}
 }

@@ -14,19 +14,12 @@
 // limitations under the License.
 //---------------------------------------------------------------------------
 
-package com.raygroupintl.m.parsetree;
+package com.raygroupintl.m.token;
 
-import com.raygroupintl.struct.IterableSingle;
+import com.raygroupintl.bnf.TString;
 
-public class UnaryOperator extends Nodes {
-	private IterableSingle<Node> nodes;
-
-	public UnaryOperator(Nodes nodes) {
-		this.nodes = new IterableSingle<Node>(nodes);
+public abstract class MTString extends TString implements MToken {
+	public MTString(String value) {
+		super(value);
 	}
-	
-	@Override
-	public Iterable<Node> getNodes() {
-		return this.nodes;
-	}	
 }

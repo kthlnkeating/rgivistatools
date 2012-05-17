@@ -10,6 +10,10 @@ public class Visitor {
 	protected void visitErrorNode(ErrorNode error) {		
 	}
 	
+	protected void visitIntegerLiteral(IntegerLiteral literal) {		
+	}
+	
+	
 	protected void visitNodes(Nodes compoundExpression) {
 		for (Node node : compoundExpression.getNodes()) {
 			node.accept(this);

@@ -51,6 +51,10 @@ public class TFSequenceStatic extends TFSequence {
 		super(name);
 	}
 	
+	public TFSequenceStatic(String name, SequenceAdapter adapter) {		
+		super(name, adapter);
+	}
+	
 	public TFSequenceStatic(String name, TokenFactory... factories) {
 		super(name);
 		this.factories = factories;

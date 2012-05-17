@@ -2,7 +2,6 @@ package com.raygroupintl.bnf.annotation;
 
 import java.util.Map;
 
-import com.raygroupintl.bnf.DefaultCharacterAdapter;
 import com.raygroupintl.bnf.TSequence;
 import com.raygroupintl.bnf.TFCharacter;
 import com.raygroupintl.bnf.Token;
@@ -19,7 +18,7 @@ public class TCharSymbol extends TSequence implements SequencePieceGenerator {
 		String value = this.get(1).getStringValue();
 		char ch = value.charAt(0);
 		String sch = String.valueOf(ch);
-		TFCharacter result = new TFCharacter(sch, new CharPredicate(ch), new DefaultCharacterAdapter());
+		TFCharacter result = new TFCharacter(sch, new CharPredicate(ch));
 		return result;
 	}
 	

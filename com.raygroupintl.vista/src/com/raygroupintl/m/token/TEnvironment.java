@@ -6,7 +6,7 @@ import com.raygroupintl.bnf.Token;
 import com.raygroupintl.m.parsetree.IgnorableNode;
 import com.raygroupintl.m.parsetree.Node;
 
-public class TEnvironment extends MTArray {	
+public class TEnvironment extends MTSequence {	
 	public TEnvironment(List<Token> tokens) {
 		super(tokens);
 	}

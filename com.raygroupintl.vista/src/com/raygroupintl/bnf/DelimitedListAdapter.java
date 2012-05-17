@@ -18,9 +18,6 @@ package com.raygroupintl.bnf;
 
 import java.util.List;
 
-public class DefaultListAdapter implements ListAdapter {
-	@Override
-	public Token convert(List<Token> tokens) {
-		return new TDelimitedList(tokens);
-	}
+public interface DelimitedListAdapter {
+	Token convert(List<Token> tokens);
 }

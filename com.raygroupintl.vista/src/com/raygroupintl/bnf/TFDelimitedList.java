@@ -4,24 +4,27 @@ import java.util.Arrays;
 import java.util.List;
 
 public class TFDelimitedList extends TokenFactory {
+	private static final DelimitedListAdapter DEFAULT_ADAPTER = new DelimitedListAdapter() {		
+		@Override
+		public Token convert(List<Token> tokens) {
+			return new TDelimitedList(tokens);
+		}
+	}; 
+	
 	private TFSequenceStatic effective;	
-	private ListAdapter adapter;
+	private DelimitedListAdapter adapter;
 	
 	public TFDelimitedList(String name) {
-		this(name, new DefaultListAdapter());
+		this(name, DEFAULT_ADAPTER);
 	}
 	
-	public TFDelimitedList(String name, ListAdapter adapter) {
+	public TFDelimitedList(String name, DelimitedListAdapter adapter) {
 		super(name);
-		this.adapter = adapter;
+		this.adapter = adapter == null ? DEFAULT_ADAPTER : adapter;
 	}
 		
 	protected Token getToken(List<Token> tokens) {
-		if (this.adapter == null) {
-			return new TDelimitedList(tokens);
-		} else {
-			return this.adapter.convert(tokens);
-		}
+		return this.adapter.convert(tokens);
 	}
 	
 	private TokenFactory getLeadingFactory(TokenFactory element, TokenFactory delimiter, boolean emptyAllowed) {

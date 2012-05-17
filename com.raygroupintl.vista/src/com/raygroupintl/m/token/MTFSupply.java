@@ -187,7 +187,7 @@ public class MTFSupply {
 	
 	@Sequence(value={"eq", "expr"}, required="all")
 	public TokenFactory eqexpr;
-			
+	
 	@Sequence(value={"at", "expratom"}, required="all")
 	public TokenFactory indirection_0;
 	@Sequence(value={"atlpar", "exprlist", "rpar"}, required="all")
