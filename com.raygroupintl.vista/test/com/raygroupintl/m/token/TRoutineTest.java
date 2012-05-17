@@ -80,9 +80,11 @@ public class TRoutineTest {
 	}
 		
 	public void testNonErrorFiles(MTFSupply m) {
-		String fileName = "resource/XRGITST0.m";
-		List<MLocationedError> result = this.getErrors(fileName, m);
-		Assert.assertEquals(0, result.size());
+		String[] fileNames = {"resource/XRGITST0.m", "resource/CMDTEST0.m"};
+		for (String fileName : fileNames) {
+			List<MLocationedError> result = this.getErrors(fileName, m);
+			Assert.assertEquals(0, result.size());
+		}
 	}
 
 	@Test

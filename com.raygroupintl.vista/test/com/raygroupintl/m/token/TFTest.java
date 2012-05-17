@@ -86,10 +86,10 @@ public class TFTest {
 		TFCommonTest.validCheck(f, "[A]");
 		TFCommonTest.validCheck(f, "[A,B]");
 		TFCommonTest.validCheck(f, "[A,\"B\"]");
-		TFCommonTest.errorCheck(f, "||", MError.ERR_GENERAL_SYNTAX);
-		TFCommonTest.errorCheck(f, "[A,B", MError.ERR_GENERAL_SYNTAX);
-		TFCommonTest.errorCheck(f, "[]", MError.ERR_GENERAL_SYNTAX);
-		TFCommonTest.errorCheck(f, "[A+B]");
+		TFCommonTest.errorCheck(f, "||", MError.ERR_GENERAL_SYNTAX, 1);
+		TFCommonTest.errorCheck(f, "[A,B", MError.ERR_GENERAL_SYNTAX, 4);
+		TFCommonTest.errorCheck(f, "[]", MError.ERR_GENERAL_SYNTAX, 1);
+		TFCommonTest.errorCheck(f, "[A+B]", MError.ERR_GENERAL_SYNTAX, 2);
 	}
 
 	@Test
@@ -109,6 +109,29 @@ public class TFTest {
 		TFDeviceParams(supplyStd95);		
 	}
 
+	public void testTFExtDoArgument(MTFSupply m) {
+		TokenFactory f = m.extdoargument;
+		TFCommonTest.validCheck(f, "&ROUTINE");
+		TFCommonTest.validCheck(f, "&ROUTINE(P0,\"RGI\",13)");
+		TFCommonTest.validCheck(f, "&%^R5");
+		TFCommonTest.validCheck(f, "&T1^ROUTINE(P0,,.P2)");
+		TFCommonTest.validCheck(f, "&P0.ROUTINE");
+		TFCommonTest.validCheck(f, "&P1.ROUTINE(P0,\"RGI\",13)");
+		TFCommonTest.validCheck(f, "&P2.%^R5");
+		TFCommonTest.validCheck(f, "&P3.T1^ROUTINE(P0,,.P2)");
+		TFCommonTest.nullCheck(f, "^ROUTINE");
+		TFCommonTest.errorCheck(f, "&&", MError.ERR_GENERAL_SYNTAX, 1);
+		TFCommonTest.errorCheck(f, "&RO(P0,", MError.ERR_GENERAL_SYNTAX, 7);
+		TFCommonTest.errorCheck(f, "&RO..A,", MError.ERR_GENERAL_SYNTAX, 4);
+		TFCommonTest.errorCheck(f, "&RO.(A),", MError.ERR_GENERAL_SYNTAX, 4);
+	}
+
+	@Test
+	public void testTFExtDoArgument() {
+		testTFExtDoArgument(supplyCache);
+		testTFExtDoArgument(supplyStd95);		
+	}
+	
 	public void testTFExternal(MTFSupply m) {
 		TokenFactory f = m.external;
 		TFCommonTest.validCheck(f, "$&ZLIB.%GETDVI(%XX,\"DEVCLASS\")");

@@ -82,6 +82,10 @@ public class TFCommandTest {
 		testCommand(f, "D @ABC");
 		testCommand(f, "D @ABC,C^D,EE^FF:$$GT");
 		testCommand(f, "D:D=RR @ABC,C^D,EE^FF:$$GT");
+		testCommand(f, "D &A.B,&A.C(P0)");
+		testCommand(f, "D &B,&C(P0,.P1)");
+		testCommand(f, "D &A.B^R,&A.C^R(P0,P3)");
+		testCommand(f, "D &B^R,&C^R(,P0)");
 	}
 
 	@Test

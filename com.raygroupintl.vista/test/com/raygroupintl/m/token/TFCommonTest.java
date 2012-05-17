@@ -82,26 +82,17 @@ public class TFCommonTest {
 		}
 	}
 
-	static void errorCheck(TokenFactory f, String v, int errorCode, boolean checkWithSpace) {
+	static void errorCheck(TokenFactory f, String v, int errorCode, int location) {
 		Text text = new Text(v);
 		try {
 			f.tokenize(text);
 			fail("Expected exception did not fire.");
 		} catch(SyntaxErrorException e) {
+			int actualLocation = text.getIndex();
+			Assert.assertEquals(location, actualLocation);
 			errorCheck(e, text.getIndex(), v, errorCode);
 			errorCheck(f, v + " ", v + " ", errorCode);		
-			if (checkWithSpace) {
-				errorCheck(f, v + " ", v, errorCode);
-			}
 		}
-	}
-
-	static void errorCheck(TokenFactory f, String v, int errorCode) {
-		errorCheck(f, v, errorCode, true);
-	}
-
-	static void errorCheckNS(TokenFactory f, String v, int errorCode) {
-		errorCheck(f, v, errorCode, false);
 	}
 
 	static void validCheck(TokenFactory f, String v, String compare) {
