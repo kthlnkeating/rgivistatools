@@ -1,9 +1,9 @@
 package com.raygroupintl.m.token;
 
-import com.raygroupintl.bnf.StringAdapter;
-import com.raygroupintl.bnf.Token;
 import com.raygroupintl.m.parsetree.ErrorNode;
-import com.raygroupintl.vista.struct.MError;
+import com.raygroupintl.m.struct.MError;
+import com.raygroupintl.parser.StringAdapter;
+import com.raygroupintl.parser.Token;
 
 public class TSyntaxError implements MToken {	
 	public static class Adapter implements StringAdapter {

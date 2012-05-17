@@ -18,10 +18,10 @@ package com.raygroupintl.m.token;
 
 import java.util.List;
 
-import com.raygroupintl.bnf.Token;
 import com.raygroupintl.m.parsetree.Indirection;
 import com.raygroupintl.m.parsetree.Node;
 import com.raygroupintl.m.parsetree.Nodes;
+import com.raygroupintl.parser.Token;
 
 public class TIndirection extends MTSequence {
 	public TIndirection(List<Token> tokens) {

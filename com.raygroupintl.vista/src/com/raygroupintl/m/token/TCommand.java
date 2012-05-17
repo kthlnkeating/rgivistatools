@@ -2,12 +2,12 @@ package com.raygroupintl.m.token;
 
 import java.util.List;
 
-import com.raygroupintl.bnf.TString;
-import com.raygroupintl.bnf.Token;
 import com.raygroupintl.m.parsetree.Do;
 import com.raygroupintl.m.parsetree.DoBlock;
 import com.raygroupintl.m.parsetree.GenericCommand;
 import com.raygroupintl.m.parsetree.Node;
+import com.raygroupintl.parser.TString;
+import com.raygroupintl.parser.Token;
 
 class TCommand {
 	private static abstract class TCommandBase extends MTSequence {

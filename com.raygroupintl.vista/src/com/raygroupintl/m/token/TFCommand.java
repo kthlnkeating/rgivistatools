@@ -5,18 +5,18 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import com.raygroupintl.bnf.StringAdapter;
-import com.raygroupintl.bnf.SyntaxErrorException;
-import com.raygroupintl.bnf.TFSequenceStatic;
-import com.raygroupintl.bnf.Text;
-import com.raygroupintl.bnf.Token;
-import com.raygroupintl.bnf.TokenFactory;
-import com.raygroupintl.bnf.TString;
-import com.raygroupintl.bnf.TEmpty;
-import com.raygroupintl.bnf.TFEmptyVerified;
-import com.raygroupintl.bnf.TokenFactorySupply;
-import com.raygroupintl.bnf.TokenStore;
-import com.raygroupintl.vista.struct.MError;
+import com.raygroupintl.m.struct.MError;
+import com.raygroupintl.parser.StringAdapter;
+import com.raygroupintl.parser.SyntaxErrorException;
+import com.raygroupintl.parser.TEmpty;
+import com.raygroupintl.parser.TFEmptyVerified;
+import com.raygroupintl.parser.TFSequenceStatic;
+import com.raygroupintl.parser.TString;
+import com.raygroupintl.parser.Text;
+import com.raygroupintl.parser.Token;
+import com.raygroupintl.parser.TokenFactory;
+import com.raygroupintl.parser.TokenFactorySupply;
+import com.raygroupintl.parser.TokenStore;
 
 public class TFCommand extends TokenFactorySupply {
 	private Map<String, TCSFactory> commandSpecs = new HashMap<String, TCSFactory>();

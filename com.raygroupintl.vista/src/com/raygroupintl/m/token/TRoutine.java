@@ -8,13 +8,13 @@ import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.raygroupintl.bnf.Token;
 import com.raygroupintl.m.parsetree.EntryTag;
 import com.raygroupintl.m.parsetree.Line;
 import com.raygroupintl.m.parsetree.Routine;
 import com.raygroupintl.m.struct.Fanout;
 import com.raygroupintl.m.struct.LineLocation;
 import com.raygroupintl.m.struct.RoutineFanouts;
+import com.raygroupintl.parser.Token;
 
 public class TRoutine implements MToken {
 	private String name;

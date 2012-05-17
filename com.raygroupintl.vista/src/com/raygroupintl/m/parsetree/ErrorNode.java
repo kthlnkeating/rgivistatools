@@ -16,7 +16,7 @@
 
 package com.raygroupintl.m.parsetree;
 
-import com.raygroupintl.vista.struct.MError;
+import com.raygroupintl.m.struct.MError;
 
 public class ErrorNode implements Node {
 	private int errorCode;

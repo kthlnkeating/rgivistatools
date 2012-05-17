@@ -10,19 +10,19 @@ import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import com.raygroupintl.bnf.SyntaxErrorException;
 import com.raygroupintl.m.parsetree.visitor.ErrorVisitor;
 import com.raygroupintl.m.struct.Fanout;
 import com.raygroupintl.m.struct.LineLocation;
+import com.raygroupintl.m.struct.MLocationedError;
 import com.raygroupintl.m.struct.RoutineFanouts;
 import com.raygroupintl.m.token.MTFSupply;
 import com.raygroupintl.m.token.MVersion;
 import com.raygroupintl.m.token.TFRoutine;
 import com.raygroupintl.m.token.TRoutine;
+import com.raygroupintl.parser.SyntaxErrorException;
 import com.raygroupintl.vista.repository.FileSupply;
 import com.raygroupintl.vista.repository.PackageInfo;
 import com.raygroupintl.vista.repository.RepositoryInfo;
-import com.raygroupintl.vista.struct.MLocationedError;
 
 public class MRoutineAnalyzer {
 	private final static Logger LOGGER = Logger.getLogger(MRoutineAnalyzer.class.getName());

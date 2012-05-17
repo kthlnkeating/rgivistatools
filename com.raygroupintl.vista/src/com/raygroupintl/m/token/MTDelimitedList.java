@@ -18,9 +18,9 @@ package com.raygroupintl.m.token;
 
 import java.util.List;
 
-import com.raygroupintl.bnf.TDelimitedList;
-import com.raygroupintl.bnf.Token;
 import com.raygroupintl.m.parsetree.Node;
+import com.raygroupintl.parser.TDelimitedList;
+import com.raygroupintl.parser.Token;
 
 public class MTDelimitedList extends TDelimitedList implements MToken {
 	public MTDelimitedList(List<Token> tokens) {

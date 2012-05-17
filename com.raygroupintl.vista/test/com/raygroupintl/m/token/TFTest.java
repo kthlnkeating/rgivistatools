@@ -4,10 +4,10 @@ import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
-import com.raygroupintl.bnf.TokenFactory;
+import com.raygroupintl.m.struct.MError;
 import com.raygroupintl.m.token.MTFSupply;
 import com.raygroupintl.m.token.MVersion;
-import com.raygroupintl.vista.struct.MError;
+import com.raygroupintl.parser.TokenFactory;
 
 public class TFTest {
 	private static MTFSupply supplyStd95;

@@ -3,11 +3,11 @@ package com.raygroupintl.m.token;
 import java.util.Iterator;
 import java.util.List;
 
-import com.raygroupintl.bnf.TList;
-import com.raygroupintl.bnf.Token;
 import com.raygroupintl.m.parsetree.Line;
 import com.raygroupintl.m.parsetree.Node;
 import com.raygroupintl.m.struct.Fanout;
+import com.raygroupintl.parser.TList;
+import com.raygroupintl.parser.Token;
 
 public class TLine extends MTSequence {
 	String tagName = "";

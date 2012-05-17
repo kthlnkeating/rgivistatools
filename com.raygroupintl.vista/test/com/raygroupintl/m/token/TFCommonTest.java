@@ -4,13 +4,13 @@ import static org.junit.Assert.fail;
 
 import junit.framework.Assert;
 
-import com.raygroupintl.bnf.SyntaxErrorException;
-import com.raygroupintl.bnf.Text;
-import com.raygroupintl.bnf.Token;
-import com.raygroupintl.bnf.TokenFactory;
-import com.raygroupintl.bnf.TokenStore;
+import com.raygroupintl.m.struct.MError;
 import com.raygroupintl.m.token.TSyntaxError;
-import com.raygroupintl.vista.struct.MError;
+import com.raygroupintl.parser.SyntaxErrorException;
+import com.raygroupintl.parser.Text;
+import com.raygroupintl.parser.Token;
+import com.raygroupintl.parser.TokenFactory;
+import com.raygroupintl.parser.TokenStore;
 
 public class TFCommonTest {
 	public static void validTokenCheck(Token t, String v) {

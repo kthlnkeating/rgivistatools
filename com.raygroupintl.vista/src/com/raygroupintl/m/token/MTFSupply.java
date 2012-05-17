@@ -1,23 +1,23 @@
 package com.raygroupintl.m.token;
 
-import com.raygroupintl.bnf.Token;
-import com.raygroupintl.bnf.TokenFactory;
-import com.raygroupintl.bnf.TFEmpty;
-import com.raygroupintl.bnf.TFSyntaxError;
-import com.raygroupintl.bnf.SequenceAdapter;
-import com.raygroupintl.bnf.annotation.Adapter;
-import com.raygroupintl.bnf.annotation.AdapterSupply;
-import com.raygroupintl.bnf.annotation.CChoice;
-import com.raygroupintl.bnf.annotation.CharSpecified;
-import com.raygroupintl.bnf.annotation.Equivalent;
-import com.raygroupintl.bnf.annotation.ParseException;
-import com.raygroupintl.bnf.annotation.Parser;
-import com.raygroupintl.bnf.annotation.Sequence;
-import com.raygroupintl.bnf.annotation.Choice;
-import com.raygroupintl.bnf.annotation.List;
-import com.raygroupintl.bnf.annotation.TokenType;
-import com.raygroupintl.bnf.annotation.WordSpecified;
-import com.raygroupintl.vista.struct.MError;
+import com.raygroupintl.m.struct.MError;
+import com.raygroupintl.parser.SequenceAdapter;
+import com.raygroupintl.parser.TFEmpty;
+import com.raygroupintl.parser.TFSyntaxError;
+import com.raygroupintl.parser.Token;
+import com.raygroupintl.parser.TokenFactory;
+import com.raygroupintl.parser.annotation.Adapter;
+import com.raygroupintl.parser.annotation.AdapterSupply;
+import com.raygroupintl.parser.annotation.CChoice;
+import com.raygroupintl.parser.annotation.CharSpecified;
+import com.raygroupintl.parser.annotation.Choice;
+import com.raygroupintl.parser.annotation.Equivalent;
+import com.raygroupintl.parser.annotation.List;
+import com.raygroupintl.parser.annotation.ParseException;
+import com.raygroupintl.parser.annotation.Parser;
+import com.raygroupintl.parser.annotation.Sequence;
+import com.raygroupintl.parser.annotation.TokenType;
+import com.raygroupintl.parser.annotation.WordSpecified;
 
 public class MTFSupply {
 	@CharSpecified(chars={'.'}, single=true)

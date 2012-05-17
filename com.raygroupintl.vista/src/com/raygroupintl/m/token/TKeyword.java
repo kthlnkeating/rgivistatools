@@ -1,6 +1,6 @@
 package com.raygroupintl.m.token;
 
-import com.raygroupintl.vista.struct.MNameWithMnemonic;
+import com.raygroupintl.m.struct.MNameWithMnemonic;
 
 public abstract class TKeyword extends MTString {
 	public TKeyword(String value) {

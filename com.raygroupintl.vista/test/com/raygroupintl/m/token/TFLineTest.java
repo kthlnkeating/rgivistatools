@@ -8,15 +8,15 @@ import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
-import com.raygroupintl.bnf.SyntaxErrorException;
-import com.raygroupintl.bnf.TSequence;
-import com.raygroupintl.bnf.TList;
-import com.raygroupintl.bnf.Text;
-import com.raygroupintl.bnf.Token;
-import com.raygroupintl.bnf.TokenFactory;
 import com.raygroupintl.m.token.MTFSupply;
 import com.raygroupintl.m.token.MVersion;
 import com.raygroupintl.m.token.TFRoutine;
+import com.raygroupintl.parser.SyntaxErrorException;
+import com.raygroupintl.parser.TList;
+import com.raygroupintl.parser.TSequence;
+import com.raygroupintl.parser.Text;
+import com.raygroupintl.parser.Token;
+import com.raygroupintl.parser.TokenFactory;
 
 public class TFLineTest {
 	private static TokenFactory fStd95;

@@ -4,11 +4,11 @@ import java.io.IOException;
 import java.nio.file.Path;
 import java.util.Arrays;
 
-import com.raygroupintl.bnf.SyntaxErrorException;
-import com.raygroupintl.bnf.Text;
-import com.raygroupintl.bnf.Token;
-import com.raygroupintl.bnf.TokenFactory;
-import com.raygroupintl.vista.struct.MRoutineContent;
+import com.raygroupintl.m.struct.MRoutineContent;
+import com.raygroupintl.parser.SyntaxErrorException;
+import com.raygroupintl.parser.Text;
+import com.raygroupintl.parser.Token;
+import com.raygroupintl.parser.TokenFactory;
 
 public class TFRoutine {
 	private TokenFactory tfLine;

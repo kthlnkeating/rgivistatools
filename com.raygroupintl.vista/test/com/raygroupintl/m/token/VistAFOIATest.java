@@ -9,16 +9,16 @@ import java.util.Set;
 
 import org.junit.Test;
 
-import com.raygroupintl.bnf.annotation.ParseException;
 import com.raygroupintl.m.parsetree.visitor.ErrorVisitor;
 import com.raygroupintl.m.struct.LineLocation;
+import com.raygroupintl.m.struct.MLocationedError;
+import com.raygroupintl.m.struct.MRoutineContent;
 import com.raygroupintl.m.token.MVersion;
 import com.raygroupintl.m.token.TFRoutine;
 import com.raygroupintl.m.token.TLine;
 import com.raygroupintl.m.token.TRoutine;
+import com.raygroupintl.parser.annotation.ParseException;
 import com.raygroupintl.vista.repository.FileSupply;
-import com.raygroupintl.vista.struct.MLocationedError;
-import com.raygroupintl.vista.struct.MRoutineContent;
 import com.raygroupintl.vista.tools.ErrorExemptions;
 
 import junit.framework.Assert;

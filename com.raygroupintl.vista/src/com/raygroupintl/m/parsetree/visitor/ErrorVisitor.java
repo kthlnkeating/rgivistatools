@@ -25,8 +25,8 @@ import com.raygroupintl.m.parsetree.Line;
 import com.raygroupintl.m.parsetree.Routine;
 import com.raygroupintl.m.parsetree.Visitor;
 import com.raygroupintl.m.struct.LineLocation;
-import com.raygroupintl.vista.struct.MError;
-import com.raygroupintl.vista.struct.MLocationedError;
+import com.raygroupintl.m.struct.MError;
+import com.raygroupintl.m.struct.MLocationedError;
 
 public class ErrorVisitor extends Visitor {
 	private String tag = "";

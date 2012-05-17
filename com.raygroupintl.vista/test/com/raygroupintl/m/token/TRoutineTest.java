@@ -12,12 +12,12 @@ import org.junit.Test;
 import com.raygroupintl.m.parsetree.Routine;
 import com.raygroupintl.m.parsetree.visitor.ErrorVisitor;
 import com.raygroupintl.m.struct.LineLocation;
+import com.raygroupintl.m.struct.MLocationedError;
+import com.raygroupintl.m.struct.MRoutineContent;
 import com.raygroupintl.m.token.MVersion;
 import com.raygroupintl.m.token.TFRoutine;
 import com.raygroupintl.m.token.TLine;
 import com.raygroupintl.m.token.TRoutine;
-import com.raygroupintl.vista.struct.MLocationedError;
-import com.raygroupintl.vista.struct.MRoutineContent;
 
 public class TRoutineTest {
 	private static MTFSupply supplyStd95;

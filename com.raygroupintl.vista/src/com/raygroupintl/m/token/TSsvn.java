@@ -2,8 +2,8 @@ package com.raygroupintl.m.token;
 
 import java.util.Arrays;
 
-import com.raygroupintl.bnf.Token;
-import com.raygroupintl.vista.struct.MNameWithMnemonic;
+import com.raygroupintl.m.struct.MNameWithMnemonic;
+import com.raygroupintl.parser.Token;
 
 public class TSsvn extends MTSequence {
 	private static final MNameWithMnemonic.Map SSVS = new MNameWithMnemonic.Map();

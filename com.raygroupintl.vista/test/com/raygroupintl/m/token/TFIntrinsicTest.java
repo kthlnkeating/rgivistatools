@@ -4,11 +4,11 @@ import static org.junit.Assert.fail;
 
 import org.junit.Test;
 
-import com.raygroupintl.bnf.TokenFactory;
-import com.raygroupintl.bnf.annotation.ParseException;
+import com.raygroupintl.m.struct.MError;
 import com.raygroupintl.m.token.MTFSupply;
 import com.raygroupintl.m.token.MVersion;
-import com.raygroupintl.vista.struct.MError;
+import com.raygroupintl.parser.TokenFactory;
+import com.raygroupintl.parser.annotation.ParseException;
 
 public class TFIntrinsicTest {
 	private void testTFIntrinsic(MVersion version) {

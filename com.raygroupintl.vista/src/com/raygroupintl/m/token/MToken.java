@@ -16,8 +16,8 @@
 
 package com.raygroupintl.m.token;
 
-import com.raygroupintl.bnf.Token;
 import com.raygroupintl.m.parsetree.Node;
+import com.raygroupintl.parser.Token;
 
 public interface MToken extends Token {
 	Node getNode();

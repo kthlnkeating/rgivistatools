@@ -4,7 +4,7 @@ import org.junit.runner.RunWith;
 import org.junit.runners.Suite;
 import org.junit.runners.Suite.SuiteClasses;
 
-import com.raygroupintl.bnf.TFDelimitedListTest;
+import com.raygroupintl.parser.TFDelimitedListTest;
 
 @RunWith(Suite.class)
 @SuiteClasses({

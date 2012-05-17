@@ -2,13 +2,13 @@ package com.raygroupintl.m.token;
 
 import java.util.List;
 
-import com.raygroupintl.bnf.CharacterAdapter;
-import com.raygroupintl.bnf.DelimitedListAdapter;
-import com.raygroupintl.bnf.ListAdapter;
-import com.raygroupintl.bnf.SequenceAdapter;
-import com.raygroupintl.bnf.StringAdapter;
-import com.raygroupintl.bnf.Token;
-import com.raygroupintl.bnf.annotation.AdapterSupply;
+import com.raygroupintl.parser.CharacterAdapter;
+import com.raygroupintl.parser.DelimitedListAdapter;
+import com.raygroupintl.parser.ListAdapter;
+import com.raygroupintl.parser.SequenceAdapter;
+import com.raygroupintl.parser.StringAdapter;
+import com.raygroupintl.parser.Token;
+import com.raygroupintl.parser.annotation.AdapterSupply;
 
 public class MAdapterSupply implements AdapterSupply {
 	private CharacterAdapter characterAdapter;

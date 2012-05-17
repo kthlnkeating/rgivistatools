@@ -6,14 +6,14 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import com.raygroupintl.bnf.SyntaxErrorException;
-import com.raygroupintl.bnf.TFSequence;
-import com.raygroupintl.bnf.Token;
-import com.raygroupintl.bnf.TokenFactory;
-import com.raygroupintl.bnf.TSequence;
-import com.raygroupintl.bnf.TokenStore;
-import com.raygroupintl.vista.struct.MError;
-import com.raygroupintl.vista.struct.MNameWithMnemonic;
+import com.raygroupintl.m.struct.MError;
+import com.raygroupintl.m.struct.MNameWithMnemonic;
+import com.raygroupintl.parser.SyntaxErrorException;
+import com.raygroupintl.parser.TFSequence;
+import com.raygroupintl.parser.TSequence;
+import com.raygroupintl.parser.Token;
+import com.raygroupintl.parser.TokenFactory;
+import com.raygroupintl.parser.TokenStore;
 
 public class TFIntrinsic extends TFSequence {		
 	private static abstract class TIntrinsicName extends TKeyword {

@@ -3,10 +3,10 @@ package com.raygroupintl.m.token;
 import java.util.HashMap;
 import java.util.Map;
 
-import com.raygroupintl.bnf.StringAdapter;
-import com.raygroupintl.bnf.Text;
-import com.raygroupintl.bnf.Token;
-import com.raygroupintl.bnf.TokenFactory;
+import com.raygroupintl.parser.StringAdapter;
+import com.raygroupintl.parser.Text;
+import com.raygroupintl.parser.Token;
+import com.raygroupintl.parser.TokenFactory;
 
 public class TFOperator extends TokenFactory {
 	private static class OperatorAdapter implements StringAdapter {

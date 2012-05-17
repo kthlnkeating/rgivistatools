@@ -18,9 +18,9 @@ package com.raygroupintl.m.token;
 
 import java.util.List;
 
-import com.raygroupintl.bnf.TSequence;
-import com.raygroupintl.bnf.Token;
 import com.raygroupintl.m.parsetree.Node;
+import com.raygroupintl.parser.TSequence;
+import com.raygroupintl.parser.Token;
 
 public class MTSequence extends TSequence implements MToken {
 	public MTSequence(List<Token> tokens) {

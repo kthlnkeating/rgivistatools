@@ -18,8 +18,8 @@ package com.raygroupintl.m.token;
 
 import java.util.List;
 
-import com.raygroupintl.bnf.Token;
 import com.raygroupintl.m.parsetree.IgnorableNode;
+import com.raygroupintl.parser.Token;
 
 public class TComment extends MTSequence {
 	public TComment(List<Token> tokens) {
