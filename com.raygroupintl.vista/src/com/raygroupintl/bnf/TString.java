@@ -6,7 +6,11 @@ public class TString implements Token {
 	public TString(String value) {
 		this.value = value;
 	}
-		
+	
+	protected String getValue() {
+		return this.value;
+	}
+	
 	@Override
 	public String getStringValue() {
 		return this.value;

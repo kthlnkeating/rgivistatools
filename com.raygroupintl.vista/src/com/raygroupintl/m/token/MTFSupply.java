@@ -6,9 +6,11 @@ import com.raygroupintl.bnf.TFEmpty;
 import com.raygroupintl.bnf.TFSyntaxError;
 import com.raygroupintl.bnf.SequenceAdapter;
 import com.raygroupintl.bnf.annotation.Adapter;
+import com.raygroupintl.bnf.annotation.AdapterSupply;
 import com.raygroupintl.bnf.annotation.CChoice;
 import com.raygroupintl.bnf.annotation.CharSpecified;
 import com.raygroupintl.bnf.annotation.Equivalent;
+import com.raygroupintl.bnf.annotation.ParseException;
 import com.raygroupintl.bnf.annotation.Parser;
 import com.raygroupintl.bnf.annotation.Sequence;
 import com.raygroupintl.bnf.annotation.Choice;
@@ -762,30 +764,31 @@ public class MTFSupply {
 	
 	private static MTFSupply CACHE_SUPPLY;
 	private static MTFSupply STD_95_SUPPLY;
-		
-	public static MTFSupply getInstance(MVersion version) {
-		try {
-			Parser parser = new Parser();
-			switch (version) {
-				case CACHE: {
-					if (CACHE_SUPPLY == null) {
-						CACHE_SUPPLY = parser.parse(CacheSupply.class);
-						CACHE_SUPPLY.initialize();
-					}
-					return CACHE_SUPPLY;
+	
+	private static MTFSupply generateSupply(Class<? extends MTFSupply> cls) throws ParseException {
+		AdapterSupply as = new MAdapterSupply();
+		Parser parser = new Parser();
+		MTFSupply result = 	parser.parse(cls, as);
+		result.initialize();
+		return result;
+	}
+	
+	public static MTFSupply getInstance(MVersion version) throws ParseException {
+		switch (version) {
+			case CACHE: {
+				if (CACHE_SUPPLY == null) {
+					CACHE_SUPPLY = generateSupply(CacheSupply.class);
 				}
-				case ANSI_STD_95: {
-					if (STD_95_SUPPLY == null) {
-						STD_95_SUPPLY = parser.parse(MTFSupply.class);
-						STD_95_SUPPLY.initialize();
-					}
-					return STD_95_SUPPLY;
-				}
-				default:
-					return null;
+				return CACHE_SUPPLY;
 			}
-		} catch (Throwable t) {
-			return null;
+			case ANSI_STD_95: {
+				if (STD_95_SUPPLY == null) {
+					STD_95_SUPPLY = generateSupply(MTFSupply.class);
+				}
+				return STD_95_SUPPLY;
+			}
+			default:
+				throw new IllegalArgumentException("Unknown M version");
 		}
 	}	
 }

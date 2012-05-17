@@ -25,10 +25,12 @@ class NodeUtilities {
 	static Nodes getNodes(Iterable<Token> iterable) {
 		NodeList result = new NodeList();
 		for (Token t : iterable) {
-			if ((t != null) || (t instanceof MToken)) {
+			if ((t != null) && (t instanceof MToken)) {
 				MToken mt = (MToken) t;
 				Node node = mt.getNode();
-				result.add(node);
+				if (node != null) {
+					result.add(node);
+				}
 			}
 		}
 		return result;		

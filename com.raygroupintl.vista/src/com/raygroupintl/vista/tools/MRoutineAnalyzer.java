@@ -15,6 +15,7 @@ import com.raygroupintl.m.parsetree.visitor.ErrorVisitor;
 import com.raygroupintl.m.struct.Fanout;
 import com.raygroupintl.m.struct.LineLocation;
 import com.raygroupintl.m.struct.RoutineFanouts;
+import com.raygroupintl.m.token.MTFSupply;
 import com.raygroupintl.m.token.MVersion;
 import com.raygroupintl.m.token.TFRoutine;
 import com.raygroupintl.m.token.TRoutine;
@@ -59,15 +60,14 @@ public class MRoutineAnalyzer {
 		os.close();
 	}
 	
-	public void writeErrors(CLIParams options) throws IOException, SyntaxErrorException {		
+	public void writeErrors(CLIParams options, TFRoutine topToken) throws IOException, SyntaxErrorException {		
 		String outputFile = options.outputFile; 
-		TFRoutine tf = TFRoutine.getInstance(MVersion.CACHE);
 		ErrorExemptions exemptions = ErrorExemptions.getVistAFOIAInstance();
-		this.writeErrors(tf, exemptions, outputFile);				
+		this.writeErrors(topToken, exemptions, outputFile);				
 	}
 
 	
-	public void writeFanout(CLIParams options) throws IOException, SyntaxErrorException {
+	public void writeFanout(CLIParams options, TFRoutine topToken) throws IOException, SyntaxErrorException {
 		RepositoryInfo ri = RepositoryInfo.getInstance();
 		
 		FileSupply fs = new FileSupply();
@@ -78,10 +78,9 @@ public class MRoutineAnalyzer {
 		}		
 		List<Path> paths = fs.getFiles();
 
-		TFRoutine tf = TFRoutine.getInstance(MVersion.CACHE);
 		List<RoutineFanouts> fanouts = new ArrayList<RoutineFanouts>();
 		for (Path path : paths) {			
-			TRoutine r = tf.tokenize(path);
+			TRoutine r = topToken.tokenize(path);
 			RoutineFanouts rfo = r.getFanouts();
 			fanouts.add(rfo);
 		}
@@ -103,19 +102,21 @@ public class MRoutineAnalyzer {
 		os.write(eol.getBytes());
 	}
 	
-	public static void main(String[] args) throws Exception {
+	public static void main(String[] args) {
 		try {
 			CLIParams options = CLIParams.getInstance(args);
 			if (options == null) return;
 
 			MRoutineAnalyzer m = new MRoutineAnalyzer();
+			MTFSupply supply = MTFSupply.getInstance(MVersion.CACHE);
+			TFRoutine tf = TFRoutine.getInstance(supply);
 			String at = options.analysisType;
 			if (at.equalsIgnoreCase("error")) {
-				m.writeErrors(options);
+				m.writeErrors(options, tf);
 				return;
 			}
 			if (at.equalsIgnoreCase("fanout")) {
-				m.writeFanout(options);
+				m.writeFanout(options, tf);
 				return;
 			}
 			LOGGER.log(Level.SEVERE, "Unknown analysis type " + at);

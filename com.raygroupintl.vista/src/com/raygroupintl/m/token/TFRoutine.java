@@ -13,8 +13,8 @@ import com.raygroupintl.vista.struct.MRoutineContent;
 public class TFRoutine {
 	private TokenFactory tfLine;
 	
-	private TFRoutine(MVersion version) {
-		this.tfLine = MTFSupply.getInstance(version).line;
+	private TFRoutine(MTFSupply supply) {
+		this.tfLine = supply.line;
 	}
 	
 	public static TLine recoverFromError(String line, SyntaxErrorException e) {
@@ -67,7 +67,7 @@ public class TFRoutine {
 		return result;
 	}
 */
-	public static TFRoutine getInstance(MVersion version) {
-		return new TFRoutine(version);
+	public static TFRoutine getInstance(MTFSupply supply) {
+		return new TFRoutine(supply);
 	}	
 }

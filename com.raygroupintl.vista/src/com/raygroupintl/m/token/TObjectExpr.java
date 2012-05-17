@@ -3,9 +3,8 @@ package com.raygroupintl.m.token;
 import java.util.List;
 
 import com.raygroupintl.bnf.Token;
-import com.raygroupintl.bnf.TSequence;
 
-public class TObjectExpr extends TSequence {
+public class TObjectExpr extends MTSequence {
 	public TObjectExpr(List<Token> tokens) {
 		super(tokens);
 	}

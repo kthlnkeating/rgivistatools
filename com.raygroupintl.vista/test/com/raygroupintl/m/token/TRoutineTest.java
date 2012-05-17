@@ -5,6 +5,8 @@ import java.util.List;
 
 import junit.framework.Assert;
 
+import org.junit.AfterClass;
+import org.junit.BeforeClass;
 import org.junit.Test;
 
 import com.raygroupintl.m.parsetree.Routine;
@@ -18,26 +20,41 @@ import com.raygroupintl.vista.struct.MLocationedError;
 import com.raygroupintl.vista.struct.MRoutineContent;
 
 public class TRoutineTest {
-	private TRoutine getRoutineToken(String fileName, MVersion version) {
-		TFRoutine tf = TFRoutine.getInstance(version);
+	private static MTFSupply supplyStd95;
+	private static MTFSupply supplyCache;
+	
+	@BeforeClass
+	public static void setUpBeforeClass() throws Exception {
+		supplyStd95 = MTFSupply.getInstance(MVersion.ANSI_STD_95);
+		supplyCache = MTFSupply.getInstance(MVersion.CACHE);
+	}
+
+	@AfterClass
+	public static void tearDownAfterClass() throws Exception {
+		supplyStd95 = null;
+		supplyCache = null;
+	}
+	
+	private TRoutine getRoutineToken(String fileName, MTFSupply m) {
+		TFRoutine tf = TFRoutine.getInstance(m);
 		InputStream is = this.getClass().getResourceAsStream(fileName);
 		MRoutineContent content = MRoutineContent.getInstance(fileName.split(".m")[0], is);
 		TRoutine r = tf.tokenize(content);
 		return r;
 	}
 	
-	private List<MLocationedError> getErrors(String fileName, MVersion version) {
-		TRoutine token = this.getRoutineToken(fileName, version);
+	private List<MLocationedError> getErrors(String fileName, MTFSupply m) {
+		TRoutine token = this.getRoutineToken(fileName, m);
 		Routine r = token.getNode();
 		ErrorVisitor v = new ErrorVisitor();
 		List<MLocationedError> result = v.visitErrors(r);
 		return result;
 	}
 	
-	public void testBeautify(MVersion version) {
-		TRoutine original = this.getRoutineToken("resource/BEAT0SRC.m", version);
-		TRoutine source = this.getRoutineToken("resource/BEAT0SRC.m", version);
-		TRoutine result = this.getRoutineToken("resource/BEAT0RST.m", version);
+	public void testBeautify(MTFSupply m) {
+		TRoutine original = this.getRoutineToken("resource/BEAT0SRC.m", m);
+		TRoutine source = this.getRoutineToken("resource/BEAT0SRC.m", m);
+		TRoutine result = this.getRoutineToken("resource/BEAT0RST.m", m);
 		
 		source.beautify();
 		List<TLine> originalLines = original.asList();
@@ -58,20 +75,20 @@ public class TRoutineTest {
 	
 	@Test
 	public void testBeautify() {
-		testBeautify(MVersion.CACHE);
-		testBeautify(MVersion.ANSI_STD_95);
+		testBeautify(supplyCache);
+		testBeautify(supplyStd95);
 	}
 		
-	public void testNonErrorFiles(MVersion version) {
+	public void testNonErrorFiles(MTFSupply m) {
 		String fileName = "resource/XRGITST0.m";
-		List<MLocationedError> result = this.getErrors(fileName, version);
+		List<MLocationedError> result = this.getErrors(fileName, m);
 		Assert.assertEquals(0, result.size());
 	}
 
 	@Test
 	public void testNonErrorFiles() {
-		testNonErrorFiles(MVersion.CACHE);
-		testNonErrorFiles(MVersion.ANSI_STD_95);
+		testNonErrorFiles(supplyCache);
+		testNonErrorFiles(supplyStd95);
 	}
 	
 	private void testErrTest0Error(MLocationedError error, String expectedTag, int expectedOffset) {
@@ -80,9 +97,9 @@ public class TRoutineTest {
 		Assert.assertEquals(expectedOffset, location.getOffset());		
 	}
 	
-	private void testErrTest0(MVersion version) {
+	private void testErrTest0(MTFSupply m) {
 		String fileName = "resource/ERRTEST0.m";
-		List<MLocationedError> result = this.getErrors(fileName, version);
+		List<MLocationedError> result = this.getErrors(fileName, m);
 		Assert.assertEquals(3, result.size());
 		testErrTest0Error(result.get(0), "MULTIPLY", 2);
 		testErrTest0Error(result.get(1), "MAIN", 3);
@@ -91,7 +108,7 @@ public class TRoutineTest {
 
 	@Test
 	public void testErrTest0() {
-		testErrTest0(MVersion.CACHE);
-		testErrTest0(MVersion.ANSI_STD_95);		
+		testErrTest0(supplyCache);
+		testErrTest0(supplyStd95);		
 	}	
 }

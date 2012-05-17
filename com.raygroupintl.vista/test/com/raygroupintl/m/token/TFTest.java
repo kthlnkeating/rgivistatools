@@ -1,5 +1,7 @@
 package com.raygroupintl.m.token;
 
+import org.junit.AfterClass;
+import org.junit.BeforeClass;
 import org.junit.Test;
 
 import com.raygroupintl.bnf.TokenFactory;
@@ -8,8 +10,22 @@ import com.raygroupintl.m.token.MVersion;
 import com.raygroupintl.vista.struct.MError;
 
 public class TFTest {
-	public void testTFActual(MVersion version) {
-		MTFSupply m = MTFSupply.getInstance(version);
+	private static MTFSupply supplyStd95;
+	private static MTFSupply supplyCache;
+	
+	@BeforeClass
+	public static void setUpBeforeClass() throws Exception {
+		supplyStd95 = MTFSupply.getInstance(MVersion.ANSI_STD_95);
+		supplyCache = MTFSupply.getInstance(MVersion.CACHE);
+	}
+
+	@AfterClass
+	public static void tearDownAfterClass() throws Exception {
+		supplyStd95 = null;
+		supplyCache = null;
+	}
+
+	public void testTFActual(MTFSupply m) {
 		TokenFactory f = m.actual;
 		TFCommonTest.validCheck(f, ".57");
 		TFCommonTest.validCheck(f, ".57  ", ".57");
@@ -24,12 +40,12 @@ public class TFTest {
 	
 	@Test
 	public void testTFActual() {
-		testTFActual(MVersion.CACHE);
-		testTFActual(MVersion.ANSI_STD_95);		
+		testTFActual(supplyCache);
+		testTFActual(supplyStd95);		
 	}
 
-	private void testActualList(MVersion version) {
-		TokenFactory f = MTFSupply.getInstance(version).actuallist;
+	private void testActualList(MTFSupply m) {
+		TokenFactory f = m.actuallist;
 		TFCommonTest.validCheck(f, "()");		
 		TFCommonTest.validCheck(f, "(C'>3)");		
 		TFCommonTest.validCheck(f, "(C'>3,B>1)");		
@@ -42,12 +58,11 @@ public class TFTest {
 
 	@Test
 	public void testActualList() {
-		testActualList(MVersion.CACHE);
-		testActualList(MVersion.ANSI_STD_95);
+		testActualList(supplyCache);
+		testActualList(supplyStd95);
 	}
 
-	public void testTFComment(MVersion version) {
-		MTFSupply m = MTFSupply.getInstance(version);
+	public void testTFComment(MTFSupply m) {
 		TokenFactory f = m.comment;
 		TFCommonTest.validCheck(f, ";", false);
 		TFCommonTest.validCheck(f, "; this is a comment", false);
@@ -60,12 +75,11 @@ public class TFTest {
 
 	@Test
 	public void testTFComment() {
-		testTFComment(MVersion.CACHE);
-		testTFComment(MVersion.ANSI_STD_95);		
+		testTFComment(supplyCache);
+		testTFComment(supplyStd95);		
 	}
 		
-	public void testTFEnvironment(MVersion version) {
-		MTFSupply m = MTFSupply.getInstance(version);
+	public void testTFEnvironment(MTFSupply m) {
 		TokenFactory f = m.environment;
 		TFCommonTest.validCheck(f, "|A|");
 		TFCommonTest.validCheck(f, "|A+B|");
@@ -78,31 +92,36 @@ public class TFTest {
 		TFCommonTest.errorCheck(f, "[A+B]");
 	}
 
-	public void TFDeviceParams(MVersion version) {
-		TokenFactory f = MTFSupply.getInstance(version).deviceparams;
+	@Test
+	public void testTFEnvironment() {
+		testTFEnvironment(supplyCache);
+		testTFEnvironment(supplyStd95);		
+	}
+		
+	public void TFDeviceParams(MTFSupply m) {
+		TokenFactory f = m.deviceparams;
 		TFCommonTest.validCheck(f, "(:XOBPORT:\"AT\")");
 	}
 	
 	@Test
 	public void testTFDeviceParams() {
-		TFDeviceParams(MVersion.CACHE);
-		TFDeviceParams(MVersion.ANSI_STD_95);		
+		TFDeviceParams(supplyCache);
+		TFDeviceParams(supplyStd95);		
 	}
 
-	@Test
-	public void testTFEnvironment() {
-		testTFEnvironment(MVersion.CACHE);
-		testTFEnvironment(MVersion.ANSI_STD_95);		
-	}
-		
-	public void testTFExternal(MVersion version) {
-		MTFSupply m = MTFSupply.getInstance(version);
+	public void testTFExternal(MTFSupply m) {
 		TokenFactory f = m.external;
 		TFCommonTest.validCheck(f, "$&ZLIB.%GETDVI(%XX,\"DEVCLASS\")");
 	}
 
-	private void testTFExpr(MVersion version) {
-		TokenFactory f = MTFSupply.getInstance(version).expr;
+	@Test
+	public void testTFExternal() {
+		testTFExternal(supplyCache);
+		testTFExternal(supplyStd95);		
+	}
+
+	private void testTFExpr(MTFSupply m) {
+		TokenFactory f = m.expr;
 		TFCommonTest.validCheck(f, "^A");
 		TFCommonTest.validCheck(f, "@^%ZOSF(\"TRAP\")");
 		TFCommonTest.validCheck(f, "^A(1)");
@@ -124,12 +143,11 @@ public class TFTest {
 
 	@Test
 	public void testTFExpr() {
-		testTFExpr(MVersion.CACHE);
-		testTFExpr(MVersion.ANSI_STD_95);
+		testTFExpr(supplyCache);
+		testTFExpr(supplyStd95);
 	}
 
-	public void testTFExprItem(MVersion version) {
-		MTFSupply m = MTFSupply.getInstance(version);
+	public void testTFExprItem(MTFSupply m) {
 		TokenFactory f = m.expritem;
 		TFCommonTest.validCheck(f, "$$TEST(A)");
 		TFCommonTest.validCheck(f, "$$TEST^DOHA");
@@ -151,29 +169,22 @@ public class TFTest {
 
 	@Test
 	public void testTFExprItem() {
-		testTFExprItem(MVersion.CACHE);
-		testTFExprItem(MVersion.ANSI_STD_95);		
+		testTFExprItem(supplyCache);
+		testTFExprItem(supplyStd95);		
 	}
 
-	@Test
-	public void testTFExternal() {
-		testTFExternal(MVersion.CACHE);
-		testTFExternal(MVersion.ANSI_STD_95);		
-	}
-
-	public void testTFGvn(MVersion version) {
-		TokenFactory f = MTFSupply.getInstance(version).gvn;
+	public void testTFGvn(MTFSupply m) {
+		TokenFactory f = m.gvn;
 		TFCommonTest.validCheck(f, "^PRCA(430,+$G(PRCABN),0)");
 	}
 
 	@Test
 	public void testTFGvn() {
-		testTFGvn(MVersion.CACHE);
-		testTFGvn(MVersion.ANSI_STD_95);		
+		testTFGvn(supplyCache);
+		testTFGvn(supplyStd95);		
 	}
 
-	public void testTFGvnAll(MVersion version) {
-		MTFSupply m = MTFSupply.getInstance(version);
+	public void testTFGvnAll(MTFSupply m) {
 		TokenFactory f = m.gvnall;
 		TFCommonTest.validCheck(f, "^PRCA(430,+$G(PRCABN),0)");
 		TFCommonTest.validCheck(f, "^(430,+$G(PRCABN),0)");
@@ -184,12 +195,12 @@ public class TFTest {
 
 	@Test
 	public void testTFGvnAll() {
-		testTFGvnAll(MVersion.CACHE);
-		testTFGvnAll(MVersion.ANSI_STD_95);		
+		testTFGvnAll(supplyCache);
+		testTFGvnAll(supplyStd95);		
 	}
 
-	private void testTFIndirection(MVersion version) {
-		TokenFactory f = MTFSupply.getInstance(version).indirection;		
+	private void testTFIndirection(MTFSupply m) {
+		TokenFactory f = m.indirection;		
 		TFCommonTest.validCheck(f, "@(+$P(LST,\",\",FLD))");
 		TFCommonTest.validCheck(f, "@H@(0)");
 		TFCommonTest.validCheck(f, "@XARRAY@(FROMX1,TO1)");
@@ -202,12 +213,11 @@ public class TFTest {
 	
 	@Test
 	public void testTFIndirection() {
-		testTFIndirection(MVersion.CACHE);
-		testTFIndirection(MVersion.ANSI_STD_95);
+		testTFIndirection(supplyCache);
+		testTFIndirection(supplyStd95);
 	}
 
-	public void testTFName(MVersion version) {
-		MTFSupply m = MTFSupply.getInstance(version);
+	public void testTFName(MTFSupply m) {
 		TokenFactory f = m.name;
 		TFCommonTest.validCheck(f, "RGI3");
 		TFCommonTest.validCheck(f, "%RGI");
@@ -223,12 +233,11 @@ public class TFTest {
 
 	@Test
 	public void testTFName() {
-		testTFName(MVersion.CACHE);
-		testTFName(MVersion.ANSI_STD_95);		
+		testTFName(supplyCache);
+		testTFName(supplyStd95);		
 	}
 
-	public void testTFNumLit(MVersion version) {
-		MTFSupply m = MTFSupply.getInstance(version);
+	public void testTFNumLit(MTFSupply m) {
 		TokenFactory f = m.numlit;
 		TFCommonTest.validCheck(f, ".11");
 		TFCommonTest.validCheck(f, "1.11");
@@ -241,12 +250,11 @@ public class TFTest {
 
 	@Test
 	public void testTFNumLit() {
-		testTFNumLit(MVersion.CACHE);
-		testTFNumLit(MVersion.ANSI_STD_95);		
+		testTFNumLit(supplyCache);
+		testTFNumLit(supplyStd95);		
 	}
 
-	public void testTFStringLiteral(MVersion version) {
-		MTFSupply m = MTFSupply.getInstance(version);
+	public void testTFStringLiteral(MTFSupply m) {
 		TokenFactory f = m.strlit;
 		TFCommonTest.validCheck(f, "\"This is a comment\"");
 		TFCommonTest.validCheck(f, "\"Comment with quotes \"\" one\"");
@@ -260,12 +268,11 @@ public class TFTest {
 	
 	@Test
 	public void testTFStringLiteral() {
-		testTFStringLiteral(MVersion.CACHE);
-		testTFStringLiteral(MVersion.ANSI_STD_95);		
+		testTFStringLiteral(supplyCache);
+		testTFStringLiteral(supplyStd95);		
 	}
 
-	private void testPattern(MVersion version) {
-		MTFSupply m = MTFSupply.getInstance(version);
+	private void testPattern(MTFSupply m) {
 		TokenFactory f = m.pattern;
 		TFCommonTest.validCheck(f, "1\"C-\".E");
 		TFCommonTest.validCheck(f, "1\"C-\".E ","1\"C-\".E");
@@ -285,7 +292,7 @@ public class TFTest {
 
 	@Test
 	public void testPattern() {
-		testPattern(MVersion.CACHE);
-		testPattern(MVersion.ANSI_STD_95);
+		testPattern(supplyCache);
+		testPattern(supplyStd95);
 	}
 }

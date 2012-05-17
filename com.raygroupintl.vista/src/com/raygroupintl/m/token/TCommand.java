@@ -2,7 +2,6 @@ package com.raygroupintl.m.token;
 
 import java.util.List;
 
-import com.raygroupintl.bnf.TSequence;
 import com.raygroupintl.bnf.TString;
 import com.raygroupintl.bnf.Token;
 import com.raygroupintl.m.parsetree.Do;
@@ -17,7 +16,7 @@ class TCommand {
 		}
 		
 		protected Token getArguments() {
-			TSequence nameFollowUp = (TSequence) this.get(1);
+			MTSequence nameFollowUp = (MTSequence) this.get(1);
 			if (nameFollowUp == null) {
 				return null;
 			}
@@ -26,11 +25,11 @@ class TCommand {
 		}
 	
 		protected Token getPostCondition() {
-			TSequence nameFollowUp = (TSequence) this.get(1);
+			MTSequence nameFollowUp = (MTSequence) this.get(1);
 			if (nameFollowUp == null) {
 				return null;
 			}
-			TSequence postConditionWithColon = (TSequence) nameFollowUp.get(0);
+			MTSequence postConditionWithColon = (MTSequence) nameFollowUp.get(0);
 			if (postConditionWithColon == null) {
 				return null;
 			} else {

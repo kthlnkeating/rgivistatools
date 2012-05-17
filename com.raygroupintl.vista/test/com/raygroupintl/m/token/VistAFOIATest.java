@@ -2,12 +2,14 @@ package com.raygroupintl.m.token;
 
 import static org.junit.Assert.fail;
 
+import java.io.IOException;
 import java.nio.file.Path;
 import java.util.List;
 import java.util.Set;
 
 import org.junit.Test;
 
+import com.raygroupintl.bnf.annotation.ParseException;
 import com.raygroupintl.m.parsetree.visitor.ErrorVisitor;
 import com.raygroupintl.m.struct.LineLocation;
 import com.raygroupintl.m.token.MVersion;
@@ -24,15 +26,17 @@ import junit.framework.Assert;
 public class VistAFOIATest {
 	@Test
 	public void testAll() {
-		final TFRoutine tf = TFRoutine.getInstance(MVersion.CACHE);
-		final ErrorExemptions exemptions = ErrorExemptions.getVistAFOIAInstance();
-		//String rrr = null;
-		//int index = 0;
 		try {
+			MTFSupply m = MTFSupply.getInstance(MVersion.CACHE);
+			final TFRoutine tf = TFRoutine.getInstance(m);
+			final ErrorExemptions exemptions = ErrorExemptions.getVistAFOIAInstance();
+			//String rrr = null;
+			//int index = 0;
+
 			List<Path> paths = FileSupply.getAllMFiles();
 			for (Path path : paths) {
-				String n = path.getFileName().toString().split(".m")[0];
-				//if (! n.equals("ZTMB")) continue;
+				//String n = path.getFileName().toString().split(".m")[0];
+				//if (! n.equals("PRCAATR")) continue;
 				//byte[] b = Files.readAllBytes(path);
 				//String text = new String(b);
 				//rrr = path.getFileName().toString();
@@ -64,8 +68,10 @@ public class VistAFOIATest {
 				}	
 				//++index;
 			}
-		} catch (Throwable t) {
-			fail("Exception: " + t.getMessage());			
+		} catch (ParseException e) {
+			fail("Exception: " + e.getMessage());			
+		} catch (IOException e) {
+			fail("Exception: " + e.getMessage());			
 		}
 	}
 }

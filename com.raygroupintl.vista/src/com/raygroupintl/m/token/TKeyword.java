@@ -1,17 +1,14 @@
 package com.raygroupintl.m.token;
 
-import com.raygroupintl.bnf.Token;
 import com.raygroupintl.vista.struct.MNameWithMnemonic;
 
-public abstract class TKeyword implements Token {
-	private String value;
-
+public abstract class TKeyword extends MTString {
 	public TKeyword(String value) {
-		this.value = value;
+		super(value);
 	}
 
 	public String getIdentier() {
-		return this.value;
+		return this.getValue();
 	}
 	
 	protected abstract MNameWithMnemonic getNameWithMnemonic();
@@ -20,7 +17,7 @@ public abstract class TKeyword implements Token {
 	public void beautify() {
 		MNameWithMnemonic name = this.getNameWithMnemonic();
 		if (name != null) {
-			this.value = name.getName();
+			this.setValue(name.getName());
 		}
 	}	
 }

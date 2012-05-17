@@ -21,6 +21,7 @@ import com.raygroupintl.vista.struct.MError;
 public class TFCommand extends TokenFactorySupply {
 	private Map<String, TCSFactory> commandSpecs = new HashMap<String, TCSFactory>();
 	private MTFSupply supply;
+	private MAdapterSupply adapterSupply = new MAdapterSupply();
 	
 	public TFCommand(String name, MTFSupply supply) {
 		super(name);
@@ -65,7 +66,7 @@ public class TFCommand extends TokenFactorySupply {
 
 	private static final TFEmptyVerified TF_EMPTY = TFEmptyVerified.getInstance("commandempty", ' ');
 	
-	private static abstract class TCommandSpec extends TString {
+	private static abstract class TCommandSpec extends MTString {
 		private TokenFactory argumentFactory;
 		
 		public TCommandSpec(String value, TokenFactory argumentFactory) {
@@ -589,7 +590,7 @@ public class TFCommand extends TokenFactorySupply {
 	
 	private class TFCommandRest extends TFSequenceStatic {
 		public TFCommandRest(String name, TokenFactory... factories) {
-			super(name, factories);
+			super(name, TFCommand.this.adapterSupply.getSequenceAdapter(), factories);
 		}
 		
 		@Override

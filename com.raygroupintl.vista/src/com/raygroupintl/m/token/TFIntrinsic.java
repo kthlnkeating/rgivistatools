@@ -128,7 +128,7 @@ public class TFIntrinsic extends TFSequence {
 		}		
 	}
 	
-	private static class TIntrinsicFunction extends TSequence {
+	private static class TIntrinsicFunction extends MTSequence {
 		private TIntrinsicFunction(TIntrinsicFunctionName name, Token argument) {
 			super(Arrays.asList(new Token[]{name, argument}));
 		}
@@ -141,7 +141,7 @@ public class TFIntrinsic extends TFSequence {
 	
 	private static String getFoundIntrinsicName(TokenStore tokens) {
 		Token token0 = tokens.get(0);
-		String name = ((TSequence) token0).get(1).getStringValue().toUpperCase();
+		String name = ((MTSequence) token0).get(1).getStringValue().toUpperCase();
 		return name;
 	}
 	
@@ -210,7 +210,7 @@ public class TFIntrinsic extends TFSequence {
 	
 	@Override
 	protected Token getToken(TokenStore foundTokens) {
-		TSequence token0 = (TSequence) foundTokens.get(0);
+		MTSequence token0 = (MTSequence) foundTokens.get(0);
 		if (token0.get(2) == null) {		
 			TIdent name = (TIdent) token0.get(1);		
 			if (foundTokens.get(1) == null) {
@@ -218,11 +218,11 @@ public class TFIntrinsic extends TFSequence {
 			} else {
 				List<Token> result = new ArrayList<Token>(3);
 				for (int i=1; i<4; ++i) result.add(foundTokens.get(i));
-				TSequence argument = new TSequence(result);
+				MTSequence argument = new MTSequence(result);
 				return TIntrinsicFunction.getInstance(name, argument, this.functions.get(name.getStringValue().toUpperCase()));
 			}
 		} else {
-			return new TSequence(foundTokens.toList());
+			return new MTSequence(foundTokens.toList());
 		}
 	}
 }

@@ -248,32 +248,36 @@ public class Parser {
 			return null;
 		}
 		
-		private TokenFactory addSequence(String name, Sequence sequence, Field f) throws IllegalAccessException, InstantiationException, NoSuchMethodException {
+		private TokenFactory addSequence(String name, Sequence sequence, Field f, AdapterSupply adapterSupply) throws IllegalAccessException, InstantiationException, NoSuchMethodException {
 			SequenceAdapter adapter = this.getSequenceAdapter(f);
+			if ((adapter == null) && (adapterSupply != null)) adapter = adapterSupply.getSequenceAdapter();
 			TFSequenceStatic value = new TFSequenceStatic(name, adapter);
 			this.sequences.add(new Triple<TFSequenceStatic, Sequence>(name, value, sequence));
 			return value;			
 		}
 		
-		private TokenFactory addDescription(String name, Description description, Field f)  throws IllegalAccessException, InstantiationException, NoSuchMethodException {
+		private TokenFactory addDescription(String name, Description description, Field f, AdapterSupply adapterSupply)  throws IllegalAccessException, InstantiationException, NoSuchMethodException {
 			SequenceAdapter adapter = this.getSequenceAdapter(f);
+			if ((adapter == null) && (adapterSupply != null)) adapter = adapterSupply.getSequenceAdapter();
 			TFSequenceStatic value = new TFSequenceStatic(name, adapter);
 			this.descriptions.add(new Triple<TFSequenceStatic, Description>(name, value, description));
 			return value;		
 		}
 		
-		private TokenFactory addList(String name, List list, Field f)  throws IllegalAccessException, InstantiationException, NoSuchMethodException {
+		private TokenFactory addList(String name, List list, Field f, AdapterSupply adapterSupply)  throws IllegalAccessException, InstantiationException, NoSuchMethodException {
 			String delimiter = list.delim();
 			String left = list.left();
 			String right = list.right();
 			if (delimiter.length() == 0) {
 				if ((left.length() == 0) || (right.length() == 0)) {
 					ListAdapter la = this.getListAdapter(f);
+					if ((la == null) && (adapterSupply != null)) la = adapterSupply.getListAdapter();
 					TFList value = new TFList(name, la);
 					this.lists.add(new Triple<TFList, List>(name, value, list));
 					return value;
 				} else {
 					SequenceAdapter la = this.getSequenceAdapter(f);
+					if ((la == null) && (adapterSupply != null)) la = adapterSupply.getSequenceAdapter();
 					TFSequenceStatic value = new TFSequenceStatic(name, la);
 					this.enclosedLists.add(new Triple<TFSequenceStatic, List>(name, value, list));
 					return value;
@@ -281,11 +285,13 @@ public class Parser {
 			} else {			
 				if ((left.length() == 0) || (right.length() == 0)) {
 					DelimitedListAdapter adapter = this.getDelimitedListAdapter(f);
+					if ((adapter == null) && (adapterSupply != null))adapter = adapterSupply.getDelimitedListAdapter();
 					TFDelimitedList value = new TFDelimitedList(name, adapter);
 					this.delimitedLists.add(new Triple<TFDelimitedList, List>(name, value, list));
 					return value;
 				} else {
 					SequenceAdapter la = this.getSequenceAdapter(f);
+					if ((la == null) && (adapterSupply != null)) la = adapterSupply.getSequenceAdapter();
 					TFSequenceStatic value = new TFSequenceStatic(name, la);
 					this.enclosedDelimitedLists.add(new Triple<TFSequenceStatic, List>(name, value, list));
 					return value;					
@@ -318,7 +324,7 @@ public class Parser {
 			return new AndPredicate(p0, p1);
 		}
 		
-		private TokenFactory addCharacters(String name, CharSpecified characters, Field f)  throws IllegalAccessException, InstantiationException, NoSuchMethodException {
+		private TokenFactory addCharacters(String name, CharSpecified characters, Field f, AdapterSupply adapterSupply)  throws IllegalAccessException, InstantiationException, NoSuchMethodException {
 			Predicate p0 = getCharPredicate(characters.chars());
 			Predicate p1 = getCharRanges(characters.ranges());
 			Predicate p2 = getCharPredicate(characters.excludechars());
@@ -332,10 +338,12 @@ public class Parser {
 			Predicate result = andPredicates(orPredicates(p0, p1), orPredicates(p2, p3));
 			if (characters.single()) {
 				CharacterAdapter ca = this.getCharacterAdapter(f);
+				if ((ca == null) && (adapterSupply != null)) ca = adapterSupply.getCharacterAdapter();
 				TFCharacter tf = new TFCharacter(name, result, ca);
 				return tf;
 			} else {		
 				StringAdapter sa = this.getStringAdapter(f);
+				if ((sa == null) && (adapterSupply != null)) sa = adapterSupply.getStringAdapter();
 				TFString tf = new TFString(name, result, sa);
 				return tf;
 			}
@@ -348,7 +356,7 @@ public class Parser {
 			return tf;
 		}
 		
-		private TokenFactory add(Field f) throws ClassNotFoundException, IllegalAccessException, InstantiationException, NoSuchMethodException {
+		private TokenFactory add(Field f, AdapterSupply adapterSupply) throws ClassNotFoundException, IllegalAccessException, InstantiationException, NoSuchMethodException {
 			String name = f.getName();
 			
 			Choice choice = f.getAnnotation(Choice.class);
@@ -357,15 +365,15 @@ public class Parser {
 			}			
 			Sequence sequence = f.getAnnotation(Sequence.class);
 			if (sequence != null) {
-				return this.addSequence(name, sequence, f);
+				return this.addSequence(name, sequence, f, adapterSupply);
 			}			
 			Description description = f.getAnnotation(Description.class);
 			if (description != null) {
-				return this.addDescription(name, description, f);
+				return this.addDescription(name, description, f, adapterSupply);
 			}			
 			List list = f.getAnnotation(List.class);
 			if (list != null) {
-				return this.addList(name, list, f);
+				return this.addList(name, list, f, adapterSupply);
 			}			
 			CChoice cchoice = f.getAnnotation(CChoice.class);
 			if (cchoice != null) {
@@ -373,7 +381,7 @@ public class Parser {
 			}		
 			CharSpecified characters = f.getAnnotation(CharSpecified.class);
 			if (characters != null) {
-				return this.addCharacters(name, characters, f);
+				return this.addCharacters(name, characters, f, adapterSupply);
 			}
 			WordSpecified words = f.getAnnotation(WordSpecified.class);
 			if (words != null) {
@@ -382,7 +390,7 @@ public class Parser {
 			return null;
 		}
 		
-		public <T> void add(T target) throws ClassNotFoundException, IllegalAccessException, InstantiationException, NoSuchMethodException {
+		public <T> void add(T target, AdapterSupply adapterSupply) throws ClassNotFoundException, IllegalAccessException, InstantiationException, NoSuchMethodException {
 			Class<?> cls = target.getClass();
 			while (! cls.equals(Object.class)) {
 				for (Field f : cls.getDeclaredFields()) {
@@ -392,7 +400,7 @@ public class Parser {
 						if (already == null) {					
 							TokenFactory value = (TokenFactory) f.get(target);
 							if (value == null) {
-								value = this.add(f);
+								value = this.add(f, adapterSupply);
 								if (value != null) {
 									f.set(target, value);
 								} else {
@@ -470,7 +478,7 @@ public class Parser {
 			try {
 				if (descriptionSpec == null) {
 					Parser parser = new Parser();
-					descriptionSpec = parser.parse(DescriptionSpec.class, true);
+					descriptionSpec = parser.parse(DescriptionSpec.class, null, true);
 				}
 				for (Triple<TFSequenceStatic, Description> p : this.descriptions) {
 					String description = p.annotation.value();
@@ -611,11 +619,11 @@ public class Parser {
 		return result;
 	}
 		
-	private <T> T parse(Class<T> cls, boolean ignore) throws ParseException {
+	private <T> T parse(Class<T> cls, AdapterSupply adapterSupply, boolean ignore) throws ParseException {
 		try {
 			T target = cls.newInstance();
 			Store store = new Store();
-			store.add(target);
+			store.add(target, adapterSupply);
 			store.symbols.put("end", new TFEnd("end"));
 			store.updateEquivalents(target);
 			store.update(cls, ignore);
@@ -631,7 +639,11 @@ public class Parser {
 		}
 	}
 
+	public <T> T parse(Class<T> cls, AdapterSupply adapterSupply) throws ParseException {
+		return this.parse(cls, adapterSupply, false);
+	}
+
 	public <T> T parse(Class<T> cls) throws ParseException {
-		return this.parse(cls, false);
+		return this.parse(cls, null, false);
 	}
 }

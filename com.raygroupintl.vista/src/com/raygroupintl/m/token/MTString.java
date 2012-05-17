@@ -17,9 +17,16 @@
 package com.raygroupintl.m.token;
 
 import com.raygroupintl.bnf.TString;
+import com.raygroupintl.m.parsetree.IgnorableNode;
+import com.raygroupintl.m.parsetree.Node;
 
-public abstract class MTString extends TString implements MToken {
+public class MTString extends TString implements MToken {
 	public MTString(String value) {
 		super(value);
+	}
+	
+	@Override
+	public Node getNode() {
+		return new IgnorableNode();
 	}
 }
