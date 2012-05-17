@@ -11,7 +11,8 @@ import org.junit.Test;
 
 import com.raygroupintl.m.parsetree.visitor.ErrorVisitor;
 import com.raygroupintl.m.struct.LineLocation;
-import com.raygroupintl.m.struct.MLocationedError;
+import com.raygroupintl.m.struct.MError;
+import com.raygroupintl.m.struct.ObjectInRoutine;
 import com.raygroupintl.m.struct.MRoutineContent;
 import com.raygroupintl.m.token.MVersion;
 import com.raygroupintl.m.token.TFRoutine;
@@ -63,7 +64,7 @@ public class VistAFOIATest {
 				ErrorVisitor ev = new ErrorVisitor();
 				if (! exemptions.containsRoutine(name)) {
 					Set<LineLocation> locations = exemptions.getLines(name);
-					List<MLocationedError> errors = ev.visitErrors(r.getNode(), locations);
+					List<ObjectInRoutine<MError>> errors = ev.visitErrors(r.getNode(), locations);
 					Assert.assertEquals(errors.size(), 0);						
 				}	
 				//++index;

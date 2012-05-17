@@ -26,13 +26,13 @@ import com.raygroupintl.m.parsetree.Routine;
 import com.raygroupintl.m.parsetree.Visitor;
 import com.raygroupintl.m.struct.LineLocation;
 import com.raygroupintl.m.struct.MError;
-import com.raygroupintl.m.struct.MLocationedError;
+import com.raygroupintl.m.struct.ObjectInRoutine;
 
 public class ErrorVisitor extends Visitor {
 	private String tag = "";
 	private int index;
 
-	private List<MLocationedError> result;
+	private List<ObjectInRoutine<MError>> result;
 	private Set<LineLocation> exemptions;
 	
 	@Override
@@ -40,7 +40,7 @@ public class ErrorVisitor extends Visitor {
 		LineLocation location = new LineLocation(this.tag, this.index);
 		if ((this.exemptions == null) || (! this.exemptions.contains(location))) {
 			MError error = errorNode.getError();
-			MLocationedError element = new MLocationedError(error, location);  
+			ObjectInRoutine<MError> element = new ObjectInRoutine<MError>(error, location);  
 			this.result.add(element);
 		}
 	}
@@ -52,12 +52,12 @@ public class ErrorVisitor extends Visitor {
 		super.visitLine(line);
 	}
 			
-	public List<MLocationedError> visitErrors(Routine routine) {
+	public List<ObjectInRoutine<MError>> visitErrors(Routine routine) {
 		return this.visitErrors(routine, null);
 	}
 	
-	public List<MLocationedError> visitErrors(Routine routine, Set<LineLocation> exemptions) {
-		this.result = new ArrayList<MLocationedError>();		
+	public List<ObjectInRoutine<MError>> visitErrors(Routine routine, Set<LineLocation> exemptions) {
+		this.result = new ArrayList<ObjectInRoutine<MError>>();		
 		this.exemptions = exemptions;
 		this.visitRoutine(routine);
 		return this.result;

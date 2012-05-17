@@ -12,7 +12,8 @@ import org.junit.Test;
 import com.raygroupintl.m.parsetree.Routine;
 import com.raygroupintl.m.parsetree.visitor.ErrorVisitor;
 import com.raygroupintl.m.struct.LineLocation;
-import com.raygroupintl.m.struct.MLocationedError;
+import com.raygroupintl.m.struct.MError;
+import com.raygroupintl.m.struct.ObjectInRoutine;
 import com.raygroupintl.m.struct.MRoutineContent;
 import com.raygroupintl.m.token.MVersion;
 import com.raygroupintl.m.token.TFRoutine;
@@ -43,11 +44,11 @@ public class TRoutineTest {
 		return r;
 	}
 	
-	private List<MLocationedError> getErrors(String fileName, MTFSupply m) {
+	private List<ObjectInRoutine<MError>> getErrors(String fileName, MTFSupply m) {
 		TRoutine token = this.getRoutineToken(fileName, m);
 		Routine r = token.getNode();
 		ErrorVisitor v = new ErrorVisitor();
-		List<MLocationedError> result = v.visitErrors(r);
+		List<ObjectInRoutine<MError>> result = v.visitErrors(r);
 		return result;
 	}
 	
@@ -82,7 +83,7 @@ public class TRoutineTest {
 	public void testNonErrorFiles(MTFSupply m) {
 		String[] fileNames = {"resource/XRGITST0.m", "resource/CMDTEST0.m"};
 		for (String fileName : fileNames) {
-			List<MLocationedError> result = this.getErrors(fileName, m);
+			List<ObjectInRoutine<MError>> result = this.getErrors(fileName, m);
 			Assert.assertEquals(0, result.size());
 		}
 	}
@@ -93,7 +94,7 @@ public class TRoutineTest {
 		testNonErrorFiles(supplyStd95);
 	}
 	
-	private void testErrTest0Error(MLocationedError error, String expectedTag, int expectedOffset) {
+	private void testErrTest0Error(ObjectInRoutine<MError> error, String expectedTag, int expectedOffset) {
 		LineLocation location = error.getLocation();
 		Assert.assertEquals(expectedTag, location.getTag());
 		Assert.assertEquals(expectedOffset, location.getOffset());		
@@ -101,7 +102,7 @@ public class TRoutineTest {
 	
 	private void testErrTest0(MTFSupply m) {
 		String fileName = "resource/ERRTEST0.m";
-		List<MLocationedError> result = this.getErrors(fileName, m);
+		List<ObjectInRoutine<MError>> result = this.getErrors(fileName, m);
 		Assert.assertEquals(3, result.size());
 		testErrTest0Error(result.get(0), "MULTIPLY", 2);
 		testErrTest0Error(result.get(1), "MAIN", 3);

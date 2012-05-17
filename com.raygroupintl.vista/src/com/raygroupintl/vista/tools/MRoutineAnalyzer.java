@@ -13,7 +13,8 @@ import java.util.logging.Logger;
 import com.raygroupintl.m.parsetree.visitor.ErrorVisitor;
 import com.raygroupintl.m.struct.Fanout;
 import com.raygroupintl.m.struct.LineLocation;
-import com.raygroupintl.m.struct.MLocationedError;
+import com.raygroupintl.m.struct.MError;
+import com.raygroupintl.m.struct.ObjectInRoutine;
 import com.raygroupintl.m.struct.RoutineFanouts;
 import com.raygroupintl.m.token.MTFSupply;
 import com.raygroupintl.m.token.MVersion;
@@ -39,18 +40,18 @@ public class MRoutineAnalyzer {
 			final String name = r.getName();
 			if (! exemptions.containsRoutine(name)) {
 				Set<LineLocation> locations = exemptions.getLines(name);
-				List<MLocationedError> errors = ev.visitErrors(r.getNode(), locations);
+				List<ObjectInRoutine<MError>> errors = ev.visitErrors(r.getNode(), locations);
 				if (errors.size() > 0) {
 					os.write((eol + eol + r.getName() + eol).getBytes());
 					errorCount += errors.size();
 					LineLocation lastLocation = new LineLocation("", 0);
-					for (MLocationedError error: errors) {
+					for (ObjectInRoutine<MError> error: errors) {
 						if (! error.getLocation().equals(lastLocation)) {
 							lastLocation = error.getLocation();
 							String offset = (lastLocation.getOffset() == 0 ? "" : '+' + String.valueOf(lastLocation.getOffset()));
 							os.write(("  " + lastLocation.getTag() + offset + eol).getBytes());
 						}
-						os.write(("    " + error.getError().getText() + eol).getBytes());
+						os.write(("    " + error.getObject().getText() + eol).getBytes());
 					}
 					errorCount += errors.size();
 				}
