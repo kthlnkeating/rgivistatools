@@ -48,7 +48,7 @@ public abstract class TSymbols extends TSequence implements RulePieceGenerator {
 	}
 	
 	@Override
-	public void validateAsTop() throws ParseErrorException {
+	public TokenFactory getPreliminaryTop(String name) {
 		throw new ParseErrorException("Rules cannot have a top level optional or required specification.");
 	}
 }

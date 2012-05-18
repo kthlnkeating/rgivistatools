@@ -40,6 +40,17 @@ public class TFDelimitedList extends TFBasic {
 		this.adapter = adapter == null ? DEFAULT_ADAPTER : adapter;
 	}
 		
+	@Override
+	public void copyFrom(TFBasic rhs) {
+		if (rhs instanceof TFDelimitedList) {
+			TFDelimitedList rhsCasted = (TFDelimitedList) rhs;
+			this.effective = rhsCasted.effective;
+			this.adapter = rhsCasted.adapter;
+		} else {
+			throw new IllegalArgumentException("Illegal attemp to copy from " + rhs.getClass().getName() + " to " + TFDelimitedList.class.getName());
+		}
+	}
+	
 	public void setAdapter(DelimitedListAdapter adapter) {
 		this.adapter = adapter;
 	}

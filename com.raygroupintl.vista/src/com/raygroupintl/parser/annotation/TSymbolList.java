@@ -58,6 +58,26 @@ public class TSymbolList extends TSequence  implements RulePieceGenerator {
 	}
 	
 	@Override
-	public void validateAsTop() throws ParseErrorException {
+	public TokenFactory getPreliminaryTop(String name) {
+		TSequence delimleftrightspec = (TSequence) this.get(2);
+		if (delimleftrightspec == null) {
+			return new TFList(name);
+		} else {
+			RulePieceGenerator delimGenerator = (RulePieceGenerator) delimleftrightspec.get(1);
+			TSequence leftrightSpec = (TSequence) delimleftrightspec.get(2);
+			if (leftrightSpec == null) {
+				if (delimGenerator == null) {
+					return new TFList(name);
+				} else {
+					return new TFDelimitedList(name);					
+				}
+			} else {
+				if (delimGenerator == null) {
+					return new TFList(name);
+				} else {
+					return new TFDelimitedList(name);					
+				}
+			}
+		}	
 	}	
 }

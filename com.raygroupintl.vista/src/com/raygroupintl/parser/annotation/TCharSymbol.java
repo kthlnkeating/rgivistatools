@@ -47,7 +47,7 @@ public class TCharSymbol extends TSequence implements RulePieceGenerator {
 	}
 	
 	@Override
-	public void validateAsTop() throws ParseErrorException {
+	public TokenFactory getPreliminaryTop(String name) {
 		throw new ParseErrorException("Character symbols cannot be rules.");
 	}
 }

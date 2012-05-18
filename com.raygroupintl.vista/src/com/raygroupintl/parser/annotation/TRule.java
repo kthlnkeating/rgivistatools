@@ -16,6 +16,19 @@ public class TRule extends TDelimitedList implements RuleGenerator {
 	}
 	
 	@Override
+	public TokenFactory getEmptyTokenFactory(String name) {
+		int size = this.size();
+		if (size == 0) {
+			throw new ParseErrorException("Empty rule.");
+		}
+		if (size > 1) {
+			return new TFSequenceStatic(name);
+		}
+		RulePieceGenerator rpg = (RulePieceGenerator) this.get(0);
+		return rpg.getPreliminaryTop(name);
+	}
+		
+	@Override
 	public TokenFactory getTopFactory(String name, Map<String, TokenFactory> map) {
 		List<TokenFactory> factories = new ArrayList<TokenFactory>();
 		List<Boolean> flags = new ArrayList<Boolean>();

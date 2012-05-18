@@ -44,20 +44,29 @@ public class Parser {
 		public T factory;
 		public A annotation;
 		
-		public Triple(String name, T factory, A annotation) {
+		public Triple(T factory, A annotation) {
 			this.factory = factory;
 			this.annotation = annotation;
 		}
 	}
 	
+	private static final class RuleStore {
+		public TFSequenceStatic factory;
+		public TRule rule;
+		
+		public RuleStore(TFSequenceStatic factory, TRule rule) {
+			this.factory = factory;
+			this.rule = rule;
+		}
+	}
+	
 	private static class Store {
-		private static RuleGrammar descriptionSpec;
+		private static RuleGrammar ruleGrammar;
 		
 		public Map<String, TokenFactory> symbols = new HashMap<String, TokenFactory>();
 		
 		private java.util.List<Triple<TFChoiceBasic, Choice>> choices  = new ArrayList<Triple<TFChoiceBasic, Choice>>();
 		private java.util.List<Triple<TFSequenceStatic, Sequence>> sequences  = new ArrayList<Triple<TFSequenceStatic, Sequence>>();
-		private java.util.List<Triple<TFSequenceStatic, Rule>> descriptions  = new ArrayList<Triple<TFSequenceStatic, Rule>>();
 		private java.util.List<Triple<TFList, List>> lists  = new ArrayList<Triple<TFList, List>>();
 		private java.util.List<Triple<TFSequenceStatic, List>> enclosedLists  = new ArrayList<Triple<TFSequenceStatic, List>>();
 		private java.util.List<Triple<TFDelimitedList, List>> delimitedLists  = new ArrayList<Triple<TFDelimitedList, List>>();
@@ -66,9 +75,11 @@ public class Parser {
 		private java.util.List<Triple<TFChoiceOnChar1st, CChoice>> choice1sts  = new ArrayList<Triple<TFChoiceOnChar1st, CChoice>>();
 		private Map<String, Field> otherSymbols = new HashMap<String, Field>();
 		
+		private java.util.List<RuleStore> rules  = new ArrayList<RuleStore>();
+
 		private TokenFactory addChoice(String name, Choice choice) {
 			TFChoiceBasic value = new TFChoiceBasic(name);
-			this.choices.add(new Triple<TFChoiceBasic, Choice>(name, value, choice));
+			this.choices.add(new Triple<TFChoiceBasic, Choice>(value, choice));
 			return value;			
 		}
 		
@@ -89,14 +100,24 @@ public class Parser {
 
 		private TokenFactory addSequence(String name, Sequence sequence, Field f, AdapterSupply adapterSupply) {
 			TFSequenceStatic value = new TFSequenceStatic(name);
-			this.sequences.add(new Triple<TFSequenceStatic, Sequence>(name, value, sequence));
+			this.sequences.add(new Triple<TFSequenceStatic, Sequence>(value, sequence));
 			return value;			
 		}
 		
-		private TokenFactory addDescription(String name, Rule description, Field f, AdapterSupply adapterSupply) {
-			TFSequenceStatic value = new TFSequenceStatic(name);
-			this.descriptions.add(new Triple<TFSequenceStatic, Rule>(name, value, description));
-			return value;		
+		private TokenFactory addRule(String name, Rule ruleAnnotation, Field f, AdapterSupply adapterSupply) {
+			try {
+				if (ruleGrammar == null) {
+					Parser parser = new Parser();
+					ruleGrammar = parser.parse(RuleGrammar.class, null, true);
+				}
+				Text text = new Text(ruleAnnotation.value());
+				TRule trule = (TRule) ruleGrammar.rule.tokenize(text);
+				TFSequenceStatic value = new TFSequenceStatic(name);
+				this.rules.add(new RuleStore(value, trule));
+				return value;		
+			} catch (SyntaxErrorException | ParseException e) {
+				throw new ParseErrorException("Error in rule grammar", e);
+			}
 		}
 		
 		private TokenFactory addList(String name, List list, Field f, AdapterSupply adapterSupply) {
@@ -106,21 +127,21 @@ public class Parser {
 			if (delimiter.length() == 0) {
 				if ((left.length() == 0) || (right.length() == 0)) {
 					TFList value = new TFList(name);
-					this.lists.add(new Triple<TFList, List>(name, value, list));
+					this.lists.add(new Triple<TFList, List>(value, list));
 					return value;
 				} else {
 					TFSequenceStatic value = new TFSequenceStatic(name);
-					this.enclosedLists.add(new Triple<TFSequenceStatic, List>(name, value, list));
+					this.enclosedLists.add(new Triple<TFSequenceStatic, List>(value, list));
 					return value;
 				}
 			} else {			
 				if ((left.length() == 0) || (right.length() == 0)) {
 					TFDelimitedList value = new TFDelimitedList(name);
-					this.delimitedLists.add(new Triple<TFDelimitedList, List>(name, value, list));
+					this.delimitedLists.add(new Triple<TFDelimitedList, List>(value, list));
 					return value;
 				} else {
 					TFSequenceStatic value = new TFSequenceStatic(name);
-					this.enclosedDelimitedLists.add(new Triple<TFSequenceStatic, List>(name, value, list));
+					this.enclosedDelimitedLists.add(new Triple<TFSequenceStatic, List>(value, list));
 					return value;					
 				}
 			}
@@ -130,11 +151,11 @@ public class Parser {
 			String lead = cchoice.lead();
 			if (lead.length() == 0) {
 				TFChoiceOnChar0th value = new TFChoiceOnChar0th(name);
-				this.choice0ths.add(new Triple<TFChoiceOnChar0th, CChoice>(name, value, cchoice));
+				this.choice0ths.add(new Triple<TFChoiceOnChar0th, CChoice>(value, cchoice));
 				return value;
 			} else {
 				TFChoiceOnChar1st value = new TFChoiceOnChar1st(name);
-				this.choice1sts.add(new Triple<TFChoiceOnChar1st, CChoice>(name, value, cchoice));
+				this.choice1sts.add(new Triple<TFChoiceOnChar1st, CChoice>(value, cchoice));
 				return value;
 			}
 		}
@@ -191,7 +212,7 @@ public class Parser {
 			}			
 			Rule description = f.getAnnotation(Rule.class);
 			if (description != null) {
-				return this.addDescription(name, description, f, adapterSupply);
+				return this.addRule(name, description, f, adapterSupply);
 			}			
 			List list = f.getAnnotation(List.class);
 			if (list != null) {
@@ -299,21 +320,11 @@ public class Parser {
 			}
 		}
 	
-		private void updateDescription() throws ParseException {
-			try {
-				if (descriptionSpec == null) {
-					Parser parser = new Parser();
-					descriptionSpec = parser.parse(RuleGrammar.class, null, true);
-				}
-				for (Triple<TFSequenceStatic, Rule> p : this.descriptions) {
-					String description = p.annotation.value();
-					Text text = new Text(description, 0);
-					TRule token = (TRule) descriptionSpec.rule.tokenize(text);
-					TFSequenceStatic f = (TFSequenceStatic) token.getTopFactory(p.factory.getName(), this.symbols);
-					p.factory.copyFrom(f);
-				}
-			} catch (SyntaxErrorException se) {
-				throw new ParseException(se);
+		private void updateDescription() {
+			for (RuleStore p : this.rules) {
+				TRule trule = p.rule;
+				TFSequenceStatic f = (TFSequenceStatic) trule.getTopFactory(p.factory.getName(), this.symbols);
+				p.factory.copyFrom(f);
 			}
 		}
 

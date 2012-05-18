@@ -23,5 +23,5 @@ import com.raygroupintl.parser.TokenFactory;
 interface RulePieceGenerator {
 	TokenFactory getFactory(String name, Map<String, TokenFactory> symbols);
 	boolean getRequired();
-	void validateAsTop() throws ParseErrorException;
+	TokenFactory getPreliminaryTop(String name);
 }

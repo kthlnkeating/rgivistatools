@@ -40,7 +40,17 @@ public class TFCharacter extends TFBasic {
 		this.predicate = predicate;
 		this.adapter = adapter == null ? DEFAULT_ADAPTER : adapter;
 	}
-		
+	
+	@Override
+	public void copyFrom(TFBasic rhs) {
+		if (rhs instanceof TFCharacter) {
+			this.predicate = ((TFCharacter) rhs).predicate;
+			this.adapter = ((TFCharacter) rhs).adapter;
+		} else {
+			throw new IllegalArgumentException("Illegal attemp to copy from " + rhs.getClass().getName() + " to " + TFCharacter.class.getName());
+		}
+	}
+	
 	public void setAdapter(CharacterAdapter adapter) {
 		this.adapter = adapter;
 	}

@@ -42,6 +42,11 @@ public abstract class TFSequence extends TFBasic {
 		this.adapter = adapter == null ? DEFAULT_ADAPTER : adapter;
 	}
 
+	@Override
+	public void copyFrom(TFBasic rhs) {
+		throw new UnsupportedOperationException("CopyFrom is not implemented for " + rhs.getClass().getName());
+	}
+
 	public void setAdapter(SequenceAdapter adapter) {
 		this.adapter = adapter;
 	}

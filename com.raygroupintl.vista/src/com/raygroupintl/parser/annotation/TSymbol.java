@@ -38,6 +38,7 @@ public class TSymbol extends TString implements RulePieceGenerator {
 	}	
 
 	@Override
-	public void validateAsTop() throws ParseErrorException {
+	public TokenFactory getPreliminaryTop(String name) {
+		return null;
 	}
 }

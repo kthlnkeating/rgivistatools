@@ -66,7 +66,18 @@ public class TFSequenceStatic extends TFSequence {
 		this.factories = factories;
 		this.requiredFlags = new RequiredFlags(factories.length);
 	}
-		
+			
+	@Override
+	public void copyFrom(TFBasic rhs) {
+		if (rhs instanceof TFSequenceStatic) {
+			TFSequenceStatic rhsCasted = (TFSequenceStatic) rhs;
+			this.factories = rhsCasted.factories;
+			this.requiredFlags = rhsCasted.requiredFlags;
+		} else {
+			throw new IllegalArgumentException("Illegal attemp to copy from " + rhs.getClass().getName() + " to " + TFSequenceStatic.class.getName());
+		}
+	}
+
 	public void setFactories(TokenFactory[] factories, boolean[] requiredFlags) {
 		if (requiredFlags.length != factories.length) throw new IllegalArgumentException();
 		this.factories = factories;
@@ -76,11 +87,6 @@ public class TFSequenceStatic extends TFSequence {
 	public void setRequiredFlags(boolean... requiredFlags) {
 		if (requiredFlags.length != this.factories.length) throw new IllegalArgumentException();
 		this.requiredFlags.set(requiredFlags);
-	}
-	
-	public void copyFrom(TFSequenceStatic source) {
-		this.factories = source.factories;
-		this.requiredFlags = source.requiredFlags;
 	}
 	
 	public void setLookAhead(int index) {
