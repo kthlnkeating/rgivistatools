@@ -11,7 +11,7 @@ import com.raygroupintl.parser.annotation.AdapterSupply;
 import com.raygroupintl.parser.annotation.CChoice;
 import com.raygroupintl.parser.annotation.CharSpecified;
 import com.raygroupintl.parser.annotation.Choice;
-import com.raygroupintl.parser.annotation.Description;
+import com.raygroupintl.parser.annotation.Rule;
 import com.raygroupintl.parser.annotation.Equivalent;
 import com.raygroupintl.parser.annotation.List;
 import com.raygroupintl.parser.annotation.ParseException;
@@ -377,11 +377,11 @@ public class MTFSupply {
 	public TokenFactory extrinsicarg;
 	
 	@TokenType(TExtDoArgument.class)
-	@Description("'&', name, ['.', name], ['^', name], [actuallist], [postcondition]")
+	@Rule("'&', name, ['.', name], ['^', name], [actuallist], [postcondition]")
 	public TokenFactory extdoargument;
 
 	@TokenType(TDoArgument.class)	
-	@Description("[labelpiece], [lineoffset], [doroutinef], [actuallist], [postcondition]")
+	@Rule("[labelpiece], [lineoffset], [doroutinef], [actuallist], [postcondition]")
 	public TokenFactory doargument;
 	
 	@Choice({"extdoargument", "doargument"})

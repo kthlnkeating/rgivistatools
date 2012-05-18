@@ -10,20 +10,20 @@ import com.raygroupintl.parser.TFSequenceStatic;
 import com.raygroupintl.parser.Token;
 import com.raygroupintl.parser.TokenFactory;
 
-public class TDescription extends TDelimitedList implements SequencePieceGenerator {
-	public TDescription(List<Token> token) {
+public class TRule extends TDelimitedList implements RuleGenerator {
+	public TRule(List<Token> token) {
 		super(token);
 	}
 	
 	@Override
-	public TokenFactory getFactory(String name, Map<String, TokenFactory> map) {
+	public TokenFactory getTopFactory(String name, Map<String, TokenFactory> map) {
 		List<TokenFactory> factories = new ArrayList<TokenFactory>();
 		List<Boolean> flags = new ArrayList<Boolean>();
 		int index = 0;
 		for (Iterator<Token> it=this.iterator(); it.hasNext(); ++index) {
 			Token t = it.next();
-			if (t instanceof SequencePieceGenerator) {
-				SequencePieceGenerator spg = (SequencePieceGenerator) t;
+			if (t instanceof RulePieceGenerator) {
+				RulePieceGenerator spg = (RulePieceGenerator) t;
 				TokenFactory f = spg.getFactory(name + "." + String.valueOf(index), map);
 				boolean b = spg.getRequired();
 				factories.add(f);
@@ -44,9 +44,4 @@ public class TDescription extends TDelimitedList implements SequencePieceGenerat
 		result.setFactories(fs, bs);
 		return result;
 	}
-
-	@Override	
-	public boolean getRequired() {
-		return true;
-	}	
 }

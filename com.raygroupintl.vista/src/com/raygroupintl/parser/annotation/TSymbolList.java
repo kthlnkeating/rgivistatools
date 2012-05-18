@@ -9,7 +9,7 @@ import com.raygroupintl.parser.TSequence;
 import com.raygroupintl.parser.Token;
 import com.raygroupintl.parser.TokenFactory;
 
-public class TSymbolList extends TSequence  implements SequencePieceGenerator {
+public class TSymbolList extends TSequence  implements RulePieceGenerator {
 	public TSymbolList(java.util.List<Token> tokens) {
 		super(tokens);
 	}
@@ -26,13 +26,13 @@ public class TSymbolList extends TSequence  implements SequencePieceGenerator {
 	
 	@Override
 	public TokenFactory getFactory(String name, Map<String, TokenFactory> map) {
-		SequencePieceGenerator elementGenerator = (SequencePieceGenerator) this.get(1);
+		RulePieceGenerator elementGenerator = (RulePieceGenerator) this.get(1);
 		TokenFactory element = elementGenerator.getFactory(name + ".element", map);
 		TSequence delimleftrightspec = (TSequence) this.get(2);
 		if (delimleftrightspec == null) {
 			return new TFList(name, element);
 		} else {
-			SequencePieceGenerator delimGenerator = (SequencePieceGenerator) delimleftrightspec.get(1);
+			RulePieceGenerator delimGenerator = (RulePieceGenerator) delimleftrightspec.get(1);
 			TokenFactory delimiter = delimGenerator == null ? null : delimGenerator.getFactory(name + ".delimiter", map);
 			TSequence leftrightSpec = (TSequence) delimleftrightspec.get(2);
 			TokenFactory dl = this.getListFactory(name, element, delimiter, false);
@@ -40,8 +40,8 @@ public class TSymbolList extends TSequence  implements SequencePieceGenerator {
 				return dl;				
 			} else {
 				TFSequenceStatic result = new TFSequenceStatic(name);
-				SequencePieceGenerator leftGenerator = (SequencePieceGenerator) leftrightSpec.get(1);
-				SequencePieceGenerator rightGenerator = (SequencePieceGenerator) leftrightSpec.get(3);
+				RulePieceGenerator leftGenerator = (RulePieceGenerator) leftrightSpec.get(1);
+				RulePieceGenerator rightGenerator = (RulePieceGenerator) leftrightSpec.get(3);
 				TokenFactory left = leftGenerator.getFactory(name + ".left", map);
 				TokenFactory right = rightGenerator.getFactory(name + ".right", map);
 				TokenFactory[] factories = {left, dl, right};
@@ -55,5 +55,9 @@ public class TSymbolList extends TSequence  implements SequencePieceGenerator {
 	@Override	
 	public boolean getRequired() {
 		return true;
+	}
+	
+	@Override
+	public void validateAsTop() throws ParseErrorException {
 	}	
 }

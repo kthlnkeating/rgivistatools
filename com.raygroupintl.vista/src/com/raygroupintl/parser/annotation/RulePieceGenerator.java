@@ -18,26 +18,10 @@ package com.raygroupintl.parser.annotation;
 
 import java.util.Map;
 
-import com.raygroupintl.parser.TString;
 import com.raygroupintl.parser.TokenFactory;
 
-public class TSymbol extends TString implements RulePieceGenerator {
-	public TSymbol(String value) {
-		super(value);
-	}
-	
-	@Override
-	public TokenFactory getFactory(String name, Map<String, TokenFactory> symbols) {
-		String value = this.getStringValue();
-		return symbols.get(value);
-	}
-	
-	@Override	
-	public boolean getRequired() {
-		return true;
-	}	
-
-	@Override
-	public void validateAsTop() throws ParseErrorException {
-	}
+interface RulePieceGenerator {
+	TokenFactory getFactory(String name, Map<String, TokenFactory> symbols);
+	boolean getRequired();
+	void validateAsTop() throws ParseErrorException;
 }

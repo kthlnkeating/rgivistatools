@@ -6,6 +6,6 @@ import java.lang.annotation.Target;
 
 @Retention(java.lang.annotation.RetentionPolicy.RUNTIME)
 @Target({ElementType.FIELD, ElementType.TYPE})
-public @interface Description {
+public @interface Rule {
 	public String value();
 }

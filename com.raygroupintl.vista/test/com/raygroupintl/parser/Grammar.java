@@ -3,7 +3,7 @@ package com.raygroupintl.parser;
 import com.raygroupintl.parser.TokenFactory;
 import com.raygroupintl.parser.annotation.CharSpecified;
 import com.raygroupintl.parser.annotation.Choice;
-import com.raygroupintl.parser.annotation.Description;
+import com.raygroupintl.parser.annotation.Rule;
 import com.raygroupintl.parser.annotation.TokenType;
 
 public class Grammar {
@@ -33,11 +33,11 @@ public class Grammar {
 	public TokenFactory local;
 
 	@TokenType(TNumber.class)
-	@Description("[pm], ([intlit], [(dot, intlit)]), [e, [pm], intlit]")
+	@Rule("[pm], ([intlit], [(dot, intlit)]), [e, [pm], intlit]")
 	public TokenFactory number;
 	
 	@TokenType(TGlobal.class)
-	@Description("caret, local")
+	@Rule("caret, local")
 	public TokenFactory global;
 	
 	@Choice({"local", "global", "number"})
@@ -46,7 +46,7 @@ public class Grammar {
 	@Choice({"plus", "minus"})
 	public TokenFactory operator;
 
-	@Description("expratom, [operator, expr]")
+	@Rule("expratom, [operator, expr]")
 	public TokenFactory expr;
 	
 	

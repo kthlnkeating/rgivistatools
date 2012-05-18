@@ -11,7 +11,7 @@ import com.raygroupintl.parser.TSequence;
 import com.raygroupintl.parser.Token;
 import com.raygroupintl.parser.TokenFactory;
 
-public abstract class TSymbols extends TSequence implements SequencePieceGenerator {
+public abstract class TSymbols extends TSequence implements RulePieceGenerator {
 	public TSymbols(List<Token> tokens) {
 		super(tokens);
 	}
@@ -24,8 +24,8 @@ public abstract class TSymbols extends TSequence implements SequencePieceGenerat
 		int index = 0;
 		for (Iterator<Token> it=list.iterator(); it.hasNext(); ++index) {
 			Token t = it.next();
-			if (t instanceof SequencePieceGenerator) {
-				SequencePieceGenerator spg = (SequencePieceGenerator) t;
+			if (t instanceof RulePieceGenerator) {
+				RulePieceGenerator spg = (RulePieceGenerator) t;
 				TokenFactory f = spg.getFactory(name + "." + String.valueOf(index), map);
 				boolean b = spg.getRequired();
 				factories.add(f);
@@ -45,5 +45,10 @@ public abstract class TSymbols extends TSequence implements SequencePieceGenerat
 		}		
 		result.setFactories(fs, bs);
 		return result;
+	}
+	
+	@Override
+	public void validateAsTop() throws ParseErrorException {
+		throw new ParseErrorException("Rules cannot have a top level optional or required specification.");
 	}
 }

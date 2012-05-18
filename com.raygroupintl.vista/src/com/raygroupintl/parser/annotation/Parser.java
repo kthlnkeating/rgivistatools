@@ -142,13 +142,13 @@ public class Parser {
 	};
 	
 	private static class Store {
-		private static DescriptionSpec descriptionSpec;
+		private static RuleGrammar descriptionSpec;
 		
 		public Map<String, TokenFactory> symbols = new HashMap<String, TokenFactory>();
 		
 		private java.util.List<Triple<TFChoiceBasic, Choice>> choices  = new ArrayList<Triple<TFChoiceBasic, Choice>>();
 		private java.util.List<Triple<TFSequenceStatic, Sequence>> sequences  = new ArrayList<Triple<TFSequenceStatic, Sequence>>();
-		private java.util.List<Triple<TFSequenceStatic, Description>> descriptions  = new ArrayList<Triple<TFSequenceStatic, Description>>();
+		private java.util.List<Triple<TFSequenceStatic, Rule>> descriptions  = new ArrayList<Triple<TFSequenceStatic, Rule>>();
 		private java.util.List<Triple<TFList, List>> lists  = new ArrayList<Triple<TFList, List>>();
 		private java.util.List<Triple<TFSequenceStatic, List>> enclosedLists  = new ArrayList<Triple<TFSequenceStatic, List>>();
 		private java.util.List<Triple<TFDelimitedList, List>> delimitedLists  = new ArrayList<Triple<TFDelimitedList, List>>();
@@ -256,11 +256,11 @@ public class Parser {
 			return value;			
 		}
 		
-		private TokenFactory addDescription(String name, Description description, Field f, AdapterSupply adapterSupply)  throws IllegalAccessException, InstantiationException, NoSuchMethodException {
+		private TokenFactory addDescription(String name, Rule description, Field f, AdapterSupply adapterSupply)  throws IllegalAccessException, InstantiationException, NoSuchMethodException {
 			SequenceAdapter adapter = this.getSequenceAdapter(f);
 			if ((adapter == null) && (adapterSupply != null)) adapter = adapterSupply.getSequenceAdapter();
 			TFSequenceStatic value = new TFSequenceStatic(name, adapter);
-			this.descriptions.add(new Triple<TFSequenceStatic, Description>(name, value, description));
+			this.descriptions.add(new Triple<TFSequenceStatic, Rule>(name, value, description));
 			return value;		
 		}
 		
@@ -367,7 +367,7 @@ public class Parser {
 			if (sequence != null) {
 				return this.addSequence(name, sequence, f, adapterSupply);
 			}			
-			Description description = f.getAnnotation(Description.class);
+			Rule description = f.getAnnotation(Rule.class);
 			if (description != null) {
 				return this.addDescription(name, description, f, adapterSupply);
 			}			
@@ -478,13 +478,13 @@ public class Parser {
 			try {
 				if (descriptionSpec == null) {
 					Parser parser = new Parser();
-					descriptionSpec = parser.parse(DescriptionSpec.class, null, true);
+					descriptionSpec = parser.parse(RuleGrammar.class, null, true);
 				}
-				for (Triple<TFSequenceStatic, Description> p : this.descriptions) {
+				for (Triple<TFSequenceStatic, Rule> p : this.descriptions) {
 					String description = p.annotation.value();
 					Text text = new Text(description, 0);
-					TDescription token = (TDescription) descriptionSpec.description.tokenize(text);
-					TFSequenceStatic f = (TFSequenceStatic) token.getFactory(p.factory.getName(), this.symbols);
+					TRule token = (TRule) descriptionSpec.rule.tokenize(text);
+					TFSequenceStatic f = (TFSequenceStatic) token.getTopFactory(p.factory.getName(), this.symbols);
 					p.factory.copyFrom(f);
 				}
 			} catch (SyntaxErrorException se) {

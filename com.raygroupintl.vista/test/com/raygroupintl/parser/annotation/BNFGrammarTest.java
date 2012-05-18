@@ -20,20 +20,20 @@ import com.raygroupintl.parser.TSequence;
 import com.raygroupintl.parser.Text;
 import com.raygroupintl.parser.Token;
 import com.raygroupintl.parser.TokenFactory;
-import com.raygroupintl.parser.annotation.DescriptionSpec;
+import com.raygroupintl.parser.annotation.RuleGrammar;
 import com.raygroupintl.parser.annotation.Parser;
-import com.raygroupintl.parser.annotation.TDescription;
+import com.raygroupintl.parser.annotation.TRule;
 import com.raygroupintl.parser.annotation.TOptionalSymbols;
 import com.raygroupintl.parser.annotation.TRequiredSymbols;
 import com.raygroupintl.parser.annotation.TSymbol;
 
-public class DescriptionSpecTest {
-	private static DescriptionSpec spec;
+public class BNFGrammarTest {
+	private static RuleGrammar spec;
 	
 	@BeforeClass
 	public static void setUpBeforeClass() throws Exception {
 		Parser parser = new Parser();
-		spec = parser.parse(DescriptionSpec.class);
+		spec = parser.parse(RuleGrammar.class);
 	}
 
 	@AfterClass
@@ -120,12 +120,12 @@ public class DescriptionSpecTest {
 	public void testList() {
 		try {
 			Text text = new Text("x, {y:',':'(':')'}, [{a}, [{b:':'}], [c], d], e");
-			TDescription description = (TDescription) spec.description.tokenize(text);
-			Assert.assertNotNull(description);
-			Assert.assertTrue(description instanceof TDescription);
-			Assert.assertEquals("x, {y:',':'(':')'}, [{a}, [{b:':'}], [c], d], e", description.getStringValue());
+			TRule rule = (TRule) spec.rule.tokenize(text);
+			Assert.assertNotNull(rule);
+			Assert.assertTrue(rule instanceof TRule);
+			Assert.assertEquals("x, {y:',':'(':')'}, [{a}, [{b:':'}], [c], d], e", rule.getStringValue());
 			Map<String, TokenFactory> map = this.getMap();
-			TokenFactory f = description.getFactory("test", map);
+			TokenFactory f = rule.getTopFactory("test", map);
 			Assert.assertNotNull(f);
 			Assert.assertTrue(f instanceof TFSequenceStatic);
 			testTDescription(f, "x(y)e"); 
@@ -148,12 +148,12 @@ public class DescriptionSpecTest {
 	public void testList0() {
 		try {
 			Text text = new Text("{y:',':'(':')'}, {a}");
-			TDescription description = (TDescription) spec.description.tokenize(text);
-			Assert.assertNotNull(description);
-			Assert.assertTrue(description instanceof TDescription);
-			Assert.assertEquals("{y:',':'(':')'}, {a}", description.getStringValue());
+			TRule rule = (TRule) spec.rule.tokenize(text);
+			Assert.assertNotNull(rule);
+			Assert.assertTrue(rule instanceof TRule);
+			Assert.assertEquals("{y:',':'(':')'}, {a}", rule.getStringValue());
 			Map<String, TokenFactory> map = this.getMap();
-			TokenFactory f = description.getFactory("test", map);
+			TokenFactory f = rule.getTopFactory("test", map);
 			Assert.assertNotNull(f);
 			Assert.assertTrue(f instanceof TFSequenceStatic);
 			testTDescription(f, "(y)a"); 
@@ -169,12 +169,12 @@ public class DescriptionSpecTest {
 	public void testSequence() {
 		try {
 			Text text = new Text("x, y, [(a, b), [c], d], e");
-			TDescription description = (TDescription) spec.description.tokenize(text);
-			Assert.assertNotNull(description);
-			Assert.assertTrue(description instanceof TDescription);
-			Assert.assertEquals("x, y, [(a, b), [c], d], e", description.getStringValue());
+			TRule rule = (TRule) spec.rule.tokenize(text);
+			Assert.assertNotNull(rule);
+			Assert.assertTrue(rule instanceof TRule);
+			Assert.assertEquals("x, y, [(a, b), [c], d], e", rule.getStringValue());
 			Map<String, TokenFactory> map = this.getMap();
-			TokenFactory f = description.getFactory("test", map);
+			TokenFactory f = rule.getTopFactory("test", map);
 			Assert.assertNotNull(f);
 			Assert.assertTrue(f instanceof TFSequenceStatic);
 			testTDescription(f, "xye"); 

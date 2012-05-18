@@ -2,7 +2,7 @@ package com.raygroupintl.parser.annotation;
 
 import com.raygroupintl.parser.TokenFactory;
 
-public class DescriptionSpec {
+public class RuleGrammar {
 	@CharSpecified(chars={','}, single=true)
 	public TokenFactory comma;
 	
@@ -79,7 +79,7 @@ public class DescriptionSpec {
 	@Choice({"symbol", "optionalsymbols", "requiredsymbols", "list"})
 	public TokenFactory anysymbols;
 	
-	@TokenType(TDescription.class)
+	@TokenType(TRule.class)
 	@List(value="anysymbols", delim="delimiter")
-	public TokenFactory description;
+	public TokenFactory rule;
 }
