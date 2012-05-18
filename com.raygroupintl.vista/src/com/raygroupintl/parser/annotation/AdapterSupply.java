@@ -5,6 +5,7 @@ import com.raygroupintl.parser.DelimitedListAdapter;
 import com.raygroupintl.parser.ListAdapter;
 import com.raygroupintl.parser.SequenceAdapter;
 import com.raygroupintl.parser.StringAdapter;
+import com.raygroupintl.parser.TokenFactory;
 
 public interface AdapterSupply {
 	CharacterAdapter getCharacterAdapter();
@@ -12,4 +13,6 @@ public interface AdapterSupply {
 	SequenceAdapter getSequenceAdapter();
 	ListAdapter getListAdapter();
 	DelimitedListAdapter getDelimitedListAdapter();
+	
+	Object getAdapter(Class<? extends TokenFactory> tokenCls);
 }

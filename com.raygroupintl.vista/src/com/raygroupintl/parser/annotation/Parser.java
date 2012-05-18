@@ -72,7 +72,7 @@ public class Parser {
 			return value;			
 		}
 		
-		private void updateAdapter(Field f, TFBasic target, Object defaultAdapter)  {
+		private void updateAdapter(Field f, TFBasic target, AdapterSupply adapterSupply)  {
 			Adapter adapter = f.getAnnotation(Adapter.class);
 			if (adapter != null) {
 				target.setAdapter(adapter.value());
@@ -80,22 +80,23 @@ public class Parser {
 				TokenType tokenType = f.getAnnotation(TokenType.class);
 				if (tokenType != null) {
 					target.setTargetType(tokenType.value());
-				} else if (defaultAdapter != null){
-					target.setAdapter(defaultAdapter);
+				} else if (adapterSupply != null){
+					Object a = adapterSupply.getAdapter(target.getClass());
+					target.setAdapter(a);
 				}
 			}
 		}
 
 		private TokenFactory addSequence(String name, Sequence sequence, Field f, AdapterSupply adapterSupply) {
 			TFSequenceStatic value = new TFSequenceStatic(name);
-			this.updateAdapter(f, value, adapterSupply == null ? null : adapterSupply.getSequenceAdapter());
+			this.updateAdapter(f, value, adapterSupply);
 			this.sequences.add(new Triple<TFSequenceStatic, Sequence>(name, value, sequence));
 			return value;			
 		}
 		
 		private TokenFactory addDescription(String name, Rule description, Field f, AdapterSupply adapterSupply) {
 			TFSequenceStatic value = new TFSequenceStatic(name);
-			this.updateAdapter(f, value, adapterSupply == null ? null : adapterSupply.getSequenceAdapter());
+			this.updateAdapter(f, value, adapterSupply);
 			this.descriptions.add(new Triple<TFSequenceStatic, Rule>(name, value, description));
 			return value;		
 		}
@@ -107,24 +108,24 @@ public class Parser {
 			if (delimiter.length() == 0) {
 				if ((left.length() == 0) || (right.length() == 0)) {
 					TFList value = new TFList(name);
-					this.updateAdapter(f, value, adapterSupply == null ? null : adapterSupply.getListAdapter());
+					this.updateAdapter(f, value, adapterSupply);
 					this.lists.add(new Triple<TFList, List>(name, value, list));
 					return value;
 				} else {
 					TFSequenceStatic value = new TFSequenceStatic(name);
-					this.updateAdapter(f, value, adapterSupply == null ? null : adapterSupply.getSequenceAdapter());
+					this.updateAdapter(f, value, adapterSupply);
 					this.enclosedLists.add(new Triple<TFSequenceStatic, List>(name, value, list));
 					return value;
 				}
 			} else {			
 				if ((left.length() == 0) || (right.length() == 0)) {
 					TFDelimitedList value = new TFDelimitedList(name);
-					this.updateAdapter(f, value, adapterSupply == null ? null : adapterSupply.getDelimitedListAdapter());
+					this.updateAdapter(f, value, adapterSupply);
 					this.delimitedLists.add(new Triple<TFDelimitedList, List>(name, value, list));
 					return value;
 				} else {
 					TFSequenceStatic value = new TFSequenceStatic(name);
-					this.updateAdapter(f, value, adapterSupply == null ? null : adapterSupply.getSequenceAdapter());
+					this.updateAdapter(f, value, adapterSupply);
 					this.enclosedDelimitedLists.add(new Triple<TFSequenceStatic, List>(name, value, list));
 					return value;					
 				}
@@ -170,11 +171,11 @@ public class Parser {
 			Predicate result = andPredicates(orPredicates(p0, p1), orPredicates(p2, p3));
 			if (characters.single()) {
 				TFCharacter tf = new TFCharacter(name, result);
-				this.updateAdapter(f, tf, adapterSupply == null ? null : adapterSupply.getCharacterAdapter());
+				this.updateAdapter(f, tf, adapterSupply);
 				return tf;
 			} else {		
 				TFString tf = new TFString(name, result);
-				this.updateAdapter(f, tf, adapterSupply == null ? null : adapterSupply.getStringAdapter());
+				this.updateAdapter(f, tf, adapterSupply);
 				return tf;
 			}
 		}
@@ -182,7 +183,7 @@ public class Parser {
 		private TokenFactory addWords(String name, WordSpecified wordSpecied, Field f, AdapterSupply adapterSupply) {
 			String word = wordSpecied.value();
 			TFConstant tf = new TFConstant(name, word, wordSpecied.ignorecase());
-			this.updateAdapter(f, tf, adapterSupply == null ? null : adapterSupply.getStringAdapter());
+			this.updateAdapter(f, tf, adapterSupply);
 			return tf;
 		}
 		
