@@ -15,16 +15,20 @@ class TCommand {
 			super(tokens);
 		}
 		
-		protected Token getArguments() {
+		protected Node getArgumentNode() {
 			MTSequence nameFollowUp = (MTSequence) this.get(1);
 			if (nameFollowUp == null) {
 				return null;
 			}
-			Token arguments = nameFollowUp.get(2);
-			return arguments;
+			MToken argument = (MToken) nameFollowUp.get(2);
+			if ((argument == null) || (argument.getStringSize() == 0)) {
+				return null;
+			} else {				
+				return argument.getNode();
+			}
 		}
 	
-		protected Token getPostCondition() {
+		protected Node getPostConditionNode() {
 			MTSequence nameFollowUp = (MTSequence) this.get(1);
 			if (nameFollowUp == null) {
 				return null;
@@ -33,7 +37,8 @@ class TCommand {
 			if (postConditionWithColon == null) {
 				return null;
 			} else {
-				return postConditionWithColon.get(1);
+				MToken postConditionToken = (MToken) postConditionWithColon.get(1);
+				return postConditionToken.getNode();
 			}
 		}
 	
@@ -49,7 +54,7 @@ class TCommand {
 		
 		@Override
 		public Node getNode() {
-			return new GenericCommand(null, null);
+			return new GenericCommand(null);
 		}
 	}
 	
@@ -87,18 +92,13 @@ class TCommand {
 
 		@Override
 		public Node getNode() {
-			Token argument = (Token) this.getArguments();
-			if ((argument == null) || (argument.getStringSize() == 0)) {
-				return new DoBlock();
+			Node postConditionNode = this.getPostConditionNode();
+			Node argumentNode = this.getArgumentNode();
+			if (argumentNode == null) {
+				return new DoBlock(postConditionNode);
 			} else {
-				Token postCondition = this.getPostCondition(); 
-				if ((postCondition == null) || ! (postCondition instanceof MToken)) {
-					return new Do(null);
-				} else {
-					Node postConditionNode = ((MToken) postCondition).getNode();
-					Do result = new Do(postConditionNode);
-					return result;
-				}
+				Do result = new Do(postConditionNode, argumentNode);
+				return result;
 			}
 		}
 	}

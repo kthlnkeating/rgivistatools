@@ -1,23 +1,16 @@
 package com.raygroupintl.m.parsetree;
 
 public class AtomicGoto extends AtomicCommand implements Caller {
-	private Nodes postCondition;
 	private CallInfo callInfo;
 	
-	public AtomicGoto(Nodes postCondition, CallInfo callInfo) {
-		this.postCondition = postCondition;
+	public AtomicGoto(Node additionalNodes, CallInfo callInfo) {
+		super(additionalNodes);
 		this.callInfo = callInfo;
 	}
 		
 	@Override
-	public Nodes getPostcondition() {
-		return this.postCondition;
-	}
-
-	@Override
-	public NodeArray getArguments() {
-		return null;
-	}
+	public void accept(Visitor visitor) {
+	}	
 
 	@Override
 	public CallInfo getCallInfo() {

@@ -10,7 +10,7 @@ import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import com.raygroupintl.m.parsetree.visitor.ErrorVisitor;
+import com.raygroupintl.m.parsetree.visitor.ErrorRecorder;
 import com.raygroupintl.m.struct.Fanout;
 import com.raygroupintl.m.struct.LineLocation;
 import com.raygroupintl.m.struct.MError;
@@ -34,7 +34,7 @@ public class MRoutineAnalyzer {
 		final FileOutputStream os = new FileOutputStream(file);
 		final String eol = TRoutine.getEOL();
 		List<Path> paths = FileSupply.getAllMFiles();
-		ErrorVisitor ev = new ErrorVisitor();
+		ErrorRecorder ev = new ErrorRecorder();
 		for (Path path : paths) {
 			TRoutine r = tf.tokenize(path);			
 			final String name = r.getName();

@@ -20,23 +20,24 @@ public class Visitor {
 		}
 	}
 	
-	protected void visitAtomicCommand(AtomicCommand command) {
-		Nodes postCondExpr = command.getPostcondition();
-		if (postCondExpr != null) {
-			postCondExpr.accept(this);
-		}
-		NodeArray arguments = command.getArguments();
-		if (arguments != null) {
-			arguments.accept(this);
-		}
-	}
-	
-	protected void visitMultiCommand(MultiCommand<?> command) {
+	private void visitMultiCommand(MultiCommand command) {
 		Node postCondition = command.getPostCondition();
 		if (postCondition != null) {
 			postCondition.accept(this);
 		}
-		this.visitBlock(command);
+		Node argument = command.getArgument();
+		if (argument != null) {
+			argument.accept(this);
+		}
+	}
+	
+	private void visitAdditionalNodeHolder(AdditionalNodeHolder nodeHolder) {
+		Node addlNode = nodeHolder.getAdditionalNode();
+		addlNode.accept(this);
+	}
+	
+	protected void visitAtomicCommand(AtomicCommand atomicCommand) {
+		this.visitAdditionalNodeHolder(atomicCommand);
 	}
 	
 	protected void visitForBlock(ForBlock forBlock) {
@@ -44,7 +45,27 @@ public class Visitor {
 	}
 	
 	protected void visitDoBlock(DoBlock doBlock) {
+		Node postCondition = doBlock.getPostCondition();
+		if (postCondition != null) {
+			postCondition.accept(this);
+		}
 		this.visitBlock(doBlock);
+	}
+	
+	protected void visitExternalDo(ExternalDo externalDo) {
+		this.visitAtomicCommand(externalDo);
+	}
+	
+	protected void visitAtomicDo(AtomicDo atomicDo) {
+		this.visitAtomicCommand(atomicDo);
+	}
+	
+	protected void visitDo(Do d) {
+		this.visitMultiCommand(d);
+	}
+	
+	protected void visitGoto(Goto g) {
+		this.visitMultiCommand(g);
 	}
 	
 	protected void visitLine(Line line) {

@@ -9,7 +9,7 @@ import java.util.Set;
 
 import org.junit.Test;
 
-import com.raygroupintl.m.parsetree.visitor.ErrorVisitor;
+import com.raygroupintl.m.parsetree.visitor.ErrorRecorder;
 import com.raygroupintl.m.struct.LineLocation;
 import com.raygroupintl.m.struct.MError;
 import com.raygroupintl.m.struct.ObjectInRoutine;
@@ -61,7 +61,7 @@ public class VistAFOIATest {
 					Assert.assertEquals("Different: " + msg, line, readLine);
 				}
 				String name = r.getName();
-				ErrorVisitor ev = new ErrorVisitor();
+				ErrorRecorder ev = new ErrorRecorder();
 				if (! exemptions.containsRoutine(name)) {
 					Set<LineLocation> locations = exemptions.getLines(name);
 					List<ObjectInRoutine<MError>> errors = ev.visitErrors(r.getNode(), locations);

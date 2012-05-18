@@ -373,20 +373,15 @@ public class MTFSupply {
 	@List(value="cmdjarg", delim="comma")
 	public TokenFactory cmdjargs;
 	
-	@Sequence(value={"label", "lineoffset"}, required="ro")
-	public TokenFactory dlabelwoffset;
-	@Choice({"rindirection", "dlabelwoffset"})
-	public TokenFactory dentryspec_0;	
-
 	@Sequence(value={"labelpiece", "lineoffset", "doroutinef", "actuallist"}, required="oooo")
 	public TokenFactory extrinsicarg;
 	
 	@TokenType(TExtDoArgument.class)
-	@Description("'&', name, ['.', name], ['^', name], [actuallist]")
+	@Description("'&', name, ['.', name], ['^', name], [actuallist], [postcondition]")
 	public TokenFactory extdoargument;
 
 	@TokenType(TDoArgument.class)	
-	@Sequence(value={"labelpiece", "lineoffset", "doroutinef", "actuallist", "postcondition"}, required="ooooo")
+	@Description("[labelpiece], [lineoffset], [doroutinef], [actuallist], [postcondition]")
 	public TokenFactory doargument;
 	
 	@Choice({"extdoargument", "doargument"})
@@ -727,13 +722,6 @@ public class MTFSupply {
 		public TokenFactory labelpiece_0;
 		@CChoice(value={"indirection", "classmethod", "systemcall"}, preds={"@", "#", "$"}, def="labelpiece_0")
 		public TokenFactory labelpiece;
-	
-		@Choice({"methods", "lineoffset"})
-		public TokenFactory dlabelwoffset_1;
-		@Sequence(value={"label", "dlabelwoffset_1"}, required="ro")
-		public TokenFactory dlabelwoffset;		
-		@Choice({"indirection", "systemcall", "classmethod", "dlabelwoffset"})
-		public TokenFactory dentryspec_0;
 	
 		@Sequence(value={"environment", "name", "method"}, required="oro")
 		public TokenFactory doroutine;

@@ -10,7 +10,8 @@ import org.junit.BeforeClass;
 import org.junit.Test;
 
 import com.raygroupintl.m.parsetree.Routine;
-import com.raygroupintl.m.parsetree.visitor.ErrorVisitor;
+import com.raygroupintl.m.parsetree.visitor.ErrorRecorder;
+import com.raygroupintl.m.parsetree.visitor.OccuranceRecorder;
 import com.raygroupintl.m.struct.LineLocation;
 import com.raygroupintl.m.struct.MError;
 import com.raygroupintl.m.struct.ObjectInRoutine;
@@ -47,9 +48,16 @@ public class TRoutineTest {
 	private List<ObjectInRoutine<MError>> getErrors(String fileName, MTFSupply m) {
 		TRoutine token = this.getRoutineToken(fileName, m);
 		Routine r = token.getNode();
-		ErrorVisitor v = new ErrorVisitor();
+		ErrorRecorder v = new ErrorRecorder();
 		List<ObjectInRoutine<MError>> result = v.visitErrors(r);
 		return result;
+	}
+	
+	private OccuranceRecorder getOccurances(String fileName, MTFSupply m) {
+		TRoutine token = this.getRoutineToken(fileName, m);
+		Routine r = token.getNode();
+		OccuranceRecorder or = OccuranceRecorder.record(r);
+		return or;
 	}
 	
 	public void testBeautify(MTFSupply m) {
@@ -113,5 +121,21 @@ public class TRoutineTest {
 	public void testErrTest0() {
 		testErrTest0(supplyCache);
 		testErrTest0(supplyStd95);		
-	}	
+	}
+	
+	private void testCmdTest0(MTFSupply m) {
+		String fileName = "resource/CMDTEST0.m";
+		OccuranceRecorder or = this.getOccurances(fileName, m);
+		Assert.assertEquals(0, or.getErrorNodeCount());
+		Assert.assertEquals(6, or.getDoBlockCount());
+		Assert.assertEquals(21, or.getDoCount());
+		Assert.assertEquals(29, or.getAtomicDoCount());
+		Assert.assertEquals(8, or.getExternalDoCount());
+	}
+
+	@Test
+	public void testCmdTest0() {
+		testCmdTest0(supplyCache);
+		testCmdTest0(supplyStd95);		
+	}
 }

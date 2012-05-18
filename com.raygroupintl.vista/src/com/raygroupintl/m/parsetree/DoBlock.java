@@ -1,7 +1,14 @@
 package com.raygroupintl.m.parsetree;
 
 public class DoBlock extends Block<Line> {
-	public DoBlock() {
+	private Node postCondition;
+	
+	public DoBlock(Node postCondition) {
+		this.postCondition = postCondition;
+	}
+	
+	public Node getPostCondition() {
+		return this.postCondition;
 	}
 	
 	@Override

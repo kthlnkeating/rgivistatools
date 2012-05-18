@@ -14,21 +14,24 @@
 // limitations under the License.
 //---------------------------------------------------------------------------
 
-package com.raygroupintl.m.token;
+package com.raygroupintl.m.parsetree.visitor;
 
-import java.util.List;
+import com.raygroupintl.m.parsetree.Line;
+import com.raygroupintl.m.parsetree.Visitor;
+import com.raygroupintl.m.struct.LineLocation;
 
-import com.raygroupintl.m.parsetree.Nodes;
-import com.raygroupintl.parser.TList;
-import com.raygroupintl.parser.Token;
-
-public class MTList extends TList implements MToken {
-	public MTList(List<Token> tokens) {
-		super(tokens);
+class LineLocationMarker extends Visitor {
+	private LineLocation lastLocation;
+	
+	@Override
+	protected void visitLine(Line line) {
+		String tag = line.getTag();
+		int index = line.getIndex();
+		this.lastLocation = new LineLocation(tag, index);
+		super.visitLine(line);
 	}
 
-	@Override
-	public Nodes getNode() {
-		return NodeUtilities.getNodes(this);
+	protected LineLocation getLastLocation() {
+		return this.lastLocation;
 	}
 }

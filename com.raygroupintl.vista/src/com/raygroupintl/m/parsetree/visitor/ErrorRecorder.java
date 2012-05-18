@@ -21,23 +21,18 @@ import java.util.List;
 import java.util.Set;
 
 import com.raygroupintl.m.parsetree.ErrorNode;
-import com.raygroupintl.m.parsetree.Line;
 import com.raygroupintl.m.parsetree.Routine;
-import com.raygroupintl.m.parsetree.Visitor;
 import com.raygroupintl.m.struct.LineLocation;
 import com.raygroupintl.m.struct.MError;
 import com.raygroupintl.m.struct.ObjectInRoutine;
 
-public class ErrorVisitor extends Visitor {
-	private String tag = "";
-	private int index;
-
+public class ErrorRecorder extends LineLocationMarker {
 	private List<ObjectInRoutine<MError>> result;
 	private Set<LineLocation> exemptions;
 	
 	@Override
 	protected void visitErrorNode(ErrorNode errorNode) {		
-		LineLocation location = new LineLocation(this.tag, this.index);
+		LineLocation location = this.getLastLocation();
 		if ((this.exemptions == null) || (! this.exemptions.contains(location))) {
 			MError error = errorNode.getError();
 			ObjectInRoutine<MError> element = new ObjectInRoutine<MError>(error, location);  
@@ -45,13 +40,6 @@ public class ErrorVisitor extends Visitor {
 		}
 	}
 		
-	@Override
-	protected void visitLine(Line line) {
-		this.tag = line.getTag();
-		this.index = line.getIndex();
-		super.visitLine(line);
-	}
-			
 	public List<ObjectInRoutine<MError>> visitErrors(Routine routine) {
 		return this.visitErrors(routine, null);
 	}
