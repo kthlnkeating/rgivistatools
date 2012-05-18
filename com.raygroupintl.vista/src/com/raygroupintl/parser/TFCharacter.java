@@ -16,9 +16,11 @@
 
 package com.raygroupintl.parser;
 
+import java.lang.reflect.Constructor;
+
 import com.raygroupintl.charlib.Predicate;
 
-public class TFCharacter extends TokenFactory {
+public class TFCharacter extends TFBasic {
 	private static final CharacterAdapter DEFAULT_ADAPTER = new CharacterAdapter() {
 		@Override
 		public Token convert(char value) {
@@ -39,8 +41,36 @@ public class TFCharacter extends TokenFactory {
 		this.adapter = adapter == null ? DEFAULT_ADAPTER : adapter;
 	}
 		
+	public void setAdapter(CharacterAdapter adapter) {
+		this.adapter = adapter;
+	}
+	
 	@Override
 	public Token tokenize(Text text) {
 		return text.extractToken(this.predicate, this.adapter);
 	}
+
+	@Override
+	public void setTargetType(Class<? extends Token> cls) {
+		final Constructor<? extends Token> constructor = this.getConstructor(cls, char.class, TChar.class);
+		this.adapter = new CharacterAdapter() {			
+			@Override
+			public Token convert(char ch) {
+				try{
+					return (Token) constructor.newInstance(ch);
+				} catch (Exception e) {	
+					return null;
+				}
+			}
+		};
+	}
+	
+	@Override
+	public void setAdapter(Object adapter) {
+		if (adapter instanceof CharacterAdapter) {
+			this.adapter = (CharacterAdapter) adapter;					
+		} else {
+			throw new IllegalArgumentException("Wrong adapter type " + adapter.getClass().getName());
+		}
+	}	
 }

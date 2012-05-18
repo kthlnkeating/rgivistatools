@@ -1,8 +1,25 @@
+//---------------------------------------------------------------------------
+// Copyright 2012 Ray Group International
+//
+// Licensed under the Apache License, Version 2.0 (the "License");
+// you may not use this file except in compliance with the License.
+// You may obtain a copy of the License at
+//
+//     http://www.apache.org/licenses/LICENSE-2.0
+//
+// Unless required by applicable law or agreed to in writing, software
+// distributed under the License is distributed on an "AS IS" BASIS,
+// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+// See the License for the specific language governing permissions and
+// limitations under the License.
+//---------------------------------------------------------------------------
+
 package com.raygroupintl.parser;
 
+import java.lang.reflect.Constructor;
 import java.util.List;
 
-public abstract class TFSequence extends TokenFactory {
+public abstract class TFSequence extends TFBasic {
 	public enum ValidateResult {
 		CONTINUE, BREAK, NULL_RESULT
 	}
@@ -25,6 +42,10 @@ public abstract class TFSequence extends TokenFactory {
 		this.adapter = adapter == null ? DEFAULT_ADAPTER : adapter;
 	}
 
+	public void setAdapter(SequenceAdapter adapter) {
+		this.adapter = adapter;
+	}
+	
 	protected abstract TokenFactory getTokenFactory(int i, TokenStore foundTokens) throws SyntaxErrorException;
 
 	protected abstract int getExpectedTokenCount();
@@ -85,4 +106,28 @@ public abstract class TFSequence extends TokenFactory {
 		}		
 		return null;
 	}
+		
+	@Override
+	public void setTargetType(Class<? extends Token> cls) {
+		final Constructor<? extends Token> constructor = this.getConstructor(cls, List.class, TSequence.class);
+		this.adapter = new SequenceAdapter() {			
+			@Override
+			public Token convert(List<Token> tokens) {
+				try{
+					return (Token) constructor.newInstance(tokens);
+				} catch (Exception e) {	
+					return null;
+				}
+			}
+		};
+	}
+	
+	@Override
+	public void setAdapter(Object adapter) {
+		if (adapter instanceof SequenceAdapter) {
+			this.adapter = (SequenceAdapter) adapter;					
+		} else {
+			throw new IllegalArgumentException("Wrong adapter type " + adapter.getClass().getName());
+		}
+	}	
 }

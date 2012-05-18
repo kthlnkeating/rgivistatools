@@ -16,7 +16,9 @@
 
 package com.raygroupintl.parser;
 
-public class TFConstant extends TokenFactory {
+import java.lang.reflect.Constructor;
+
+public class TFConstant extends TFBasic {
 	private static final StringAdapter DEFAULT_ADAPTER = new StringAdapter() {
 		@Override
 		public Token convert(String value) {
@@ -47,9 +49,37 @@ public class TFConstant extends TokenFactory {
 		this.ignoreCase = ignoreCase;
 	}
 
+	public void setAdapter(StringAdapter adapter) {
+		this.adapter = adapter;
+	}
+	
 	@Override
 	public Token tokenize(Text text) {
 		return text.extractToken(this.value, this.adapter, this.ignoreCase);
 	}
+
+	@Override
+	public void setTargetType(Class<? extends Token> cls) {
+		final Constructor<? extends Token> constructor = this.getConstructor(cls, String.class, TString.class);
+		this.adapter = new StringAdapter() {			
+			@Override
+			public Token convert(String value) {
+				try{
+					return (Token) constructor.newInstance(value);
+				} catch (Exception e) {	
+					return null;
+				}
+			}
+		};
+	}
+	
+	@Override
+	public void setAdapter(Object adapter) {
+		if (adapter instanceof StringAdapter) {
+			this.adapter = (StringAdapter) adapter;					
+		} else {
+			throw new IllegalArgumentException("Wrong adapter type " + adapter.getClass().getName());
+		}
+	}	
 }
 	

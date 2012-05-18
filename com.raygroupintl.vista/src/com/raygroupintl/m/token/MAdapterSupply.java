@@ -66,7 +66,7 @@ public class MAdapterSupply implements AdapterSupply {
 				}
 			};
 		}
-		return null;
+		return this.listAdapter;
 	}
 
 	@Override

@@ -16,9 +16,10 @@
 
 package com.raygroupintl.parser;
 
+import java.lang.reflect.Constructor;
 import java.util.List;
 
-public final class TFList extends TokenFactory {
+public final class TFList extends TFBasic {
 	private static final ListAdapter DEFAULT_ADAPTER = new ListAdapter() {		
 		@Override
 		public Token convert(List<Token> tokens) {
@@ -46,6 +47,10 @@ public final class TFList extends TokenFactory {
 		super(name);
 		this.adapter = adapter == null ? DEFAULT_ADAPTER : adapter;
 		this.elementFactory = elementFactory;
+	}
+	
+	public void setAdapter(ListAdapter adapter) {
+		this.adapter = adapter;
 	}
 	
 	public void setElement(TokenFactory elementFactory) {
@@ -83,4 +88,28 @@ public final class TFList extends TokenFactory {
 		}
 		return null;
 	}
+	
+	@Override
+	public void setTargetType(Class<? extends Token> cls) {
+		final Constructor<? extends Token> constructor = this.getConstructor(cls, List.class, TList.class);
+		this.adapter = new ListAdapter() {			
+			@Override
+			public Token convert(List<Token> tokens) {
+				try{
+					return (Token) constructor.newInstance(tokens);
+				} catch (Exception e) {	
+					return null;
+				}
+			}
+		};
+	}
+	
+	@Override
+	public void setAdapter(Object adapter) {
+		if (adapter instanceof ListAdapter) {
+			this.adapter = (ListAdapter) adapter;					
+		} else {
+			throw new IllegalArgumentException("Wrong adapter type " + adapter.getClass().getName());
+		}
+	}	
 }
