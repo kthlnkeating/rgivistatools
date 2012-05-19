@@ -18,6 +18,7 @@ package com.raygroupintl.parser.annotation;
 
 import java.util.Map;
 
+import com.raygroupintl.parser.TFBasic;
 import com.raygroupintl.parser.TString;
 import com.raygroupintl.parser.TokenFactory;
 
@@ -38,7 +39,17 @@ public class TSymbol extends TString implements RulePieceGenerator {
 	}	
 
 	@Override
-	public TokenFactory getPreliminaryTop(String name) {
-		return null;
+	public TokenFactory getTopFactory(String name, Map<String, TokenFactory> symbols, boolean asShell) {
+		String value = this.getStringValue();
+		TokenFactory source = symbols.get(value);
+		if (source == null) {
+			if (! asShell) throw new ParseErrorException("Undefined symbol " + value + "used in the rule");
+			return null;
+		}
+		if (source instanceof TFBasic) {
+			return ((TFBasic) source).getCopy(name);
+		} else {
+			throw new ParseErrorException("Custom symbol " + value + " cannot be used as a top symbol in rules");
+		}
 	}
 }

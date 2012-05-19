@@ -50,15 +50,19 @@ public class TFConstant extends TFBasic {
 	}
 
 	@Override
-	public void copyFrom(TFBasic rhs) {
+	public void copyWoutAdapterFrom(TFBasic rhs) {
 		if (rhs instanceof TFConstant) {
 			TFConstant rhsCasted = (TFConstant) rhs;
 			this.value = rhsCasted.value;
 			this.ignoreCase = rhsCasted.ignoreCase;
-			this.adapter = rhsCasted.adapter;
 		} else {
 			throw new IllegalArgumentException("Illegal attemp to copy from " + rhs.getClass().getName() + " to " + TFConstant.class.getName());
 		}
+	}
+	
+	@Override
+	public TFBasic getCopy(String name) {
+		return new TFConstant(name, this.value, this.adapter, this.ignoreCase);
 	}
 	
 	public void setAdapter(StringAdapter adapter) {

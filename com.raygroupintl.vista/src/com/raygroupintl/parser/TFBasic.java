@@ -30,7 +30,9 @@ public abstract class TFBasic extends TokenFactory {
 	
 	public abstract void setAdapter(Object adapter);
 	
-	public abstract void copyFrom(TFBasic rhs);
+	public abstract void copyWoutAdapterFrom(TFBasic rhs);
+	
+	public abstract TFBasic getCopy(String name);
 	
 	public void setAdapter(Class<?> adapterCls) {
 		try {

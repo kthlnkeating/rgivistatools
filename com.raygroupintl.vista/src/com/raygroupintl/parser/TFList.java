@@ -50,14 +50,18 @@ public final class TFList extends TFBasic {
 	}
 	
 	@Override
-	public void copyFrom(TFBasic rhs) {
+	public void copyWoutAdapterFrom(TFBasic rhs) {
 		if (rhs instanceof TFList) {
 			TFList rhsCasted = (TFList) rhs;
 			this.elementFactory = rhsCasted.elementFactory;
-			this.adapter = rhsCasted.adapter;
 		} else {
 			throw new IllegalArgumentException("Illegal attemp to copy from " + rhs.getClass().getName() + " to " + TFList.class.getName());
 		}
+	}
+
+	@Override
+	public TFBasic getCopy(String name) {
+		return new TFList(name, this.adapter, this.elementFactory);
 	}
 
 	public void setAdapter(ListAdapter adapter) {
@@ -68,7 +72,7 @@ public final class TFList extends TFBasic {
 		this.elementFactory = elementFactory;
 	}
 		
-	protected Token getToken(List<Token> list) {
+	private Token getToken(List<Token> list) {
 		return this.adapter.convert(list);
 	}
 

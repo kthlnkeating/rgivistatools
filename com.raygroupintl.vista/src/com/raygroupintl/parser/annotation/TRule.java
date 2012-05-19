@@ -16,7 +16,7 @@ public class TRule extends TDelimitedList implements RuleGenerator {
 	}
 	
 	@Override
-	public TokenFactory getEmptyTokenFactory(String name) {
+	public TokenFactory getTopFactoryShell(String name, Map<String, TokenFactory> symbols) {
 		int size = this.size();
 		if (size == 0) {
 			throw new ParseErrorException("Empty rule.");
@@ -25,23 +25,27 @@ public class TRule extends TDelimitedList implements RuleGenerator {
 			return new TFSequenceStatic(name);
 		}
 		RulePieceGenerator rpg = (RulePieceGenerator) this.get(0);
-		return rpg.getPreliminaryTop(name);
+		return rpg.getTopFactory(name, symbols, true);
 	}
 		
 	@Override
-	public TokenFactory getTopFactory(String name, Map<String, TokenFactory> map) {
+	public TokenFactory getTopFactory(String name, Map<String, TokenFactory> symbols) {
 		List<TokenFactory> factories = new ArrayList<TokenFactory>();
 		List<Boolean> flags = new ArrayList<Boolean>();
 		int index = 0;
 		for (Iterator<Token> it=this.iterator(); it.hasNext(); ++index) {
 			RulePieceGenerator rpg = (RulePieceGenerator) it.next();
-			TokenFactory f = rpg.getFactory(name + "." + String.valueOf(index), map);
+			TokenFactory f = rpg.getFactory(name + "." + String.valueOf(index), symbols);
 			boolean b = rpg.getRequired();
 			factories.add(f);
 			flags.add(b);
 		}
 		if (factories.size() == 0) return null;
-
+		if (factories.size() == 1) {
+			RulePieceGenerator rpg = (RulePieceGenerator) this.get(0);
+			return rpg.getTopFactory(name, symbols, false);
+		}		
+		
 		TFSequenceStatic result = new TFSequenceStatic(name);
 		
 		int n = factories.size();

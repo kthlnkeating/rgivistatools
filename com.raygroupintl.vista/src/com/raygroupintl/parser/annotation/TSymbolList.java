@@ -58,26 +58,30 @@ public class TSymbolList extends TSequence  implements RulePieceGenerator {
 	}
 	
 	@Override
-	public TokenFactory getPreliminaryTop(String name) {
-		TSequence delimleftrightspec = (TSequence) this.get(2);
-		if (delimleftrightspec == null) {
-			return new TFList(name);
-		} else {
-			RulePieceGenerator delimGenerator = (RulePieceGenerator) delimleftrightspec.get(1);
-			TSequence leftrightSpec = (TSequence) delimleftrightspec.get(2);
-			if (leftrightSpec == null) {
-				if (delimGenerator == null) {
-					return new TFList(name);
-				} else {
-					return new TFDelimitedList(name);					
-				}
+	public TokenFactory getTopFactory(String name, Map<String, TokenFactory> symbols, boolean asShell) {
+		if (! asShell) {
+			return this.getFactory(name, symbols);
+		} else {			
+			TSequence delimleftrightspec = (TSequence) this.get(2);
+			if (delimleftrightspec == null) {
+				return new TFList(name);
 			} else {
-				if (delimGenerator == null) {
-					return new TFList(name);
+				RulePieceGenerator delimGenerator = (RulePieceGenerator) delimleftrightspec.get(1);
+				TSequence leftrightSpec = (TSequence) delimleftrightspec.get(2);
+				if (leftrightSpec == null) {
+					if (delimGenerator == null) {
+						return new TFList(name);
+					} else {
+						return new TFDelimitedList(name);					
+					}
 				} else {
-					return new TFDelimitedList(name);					
+					if (delimGenerator == null) {
+						return new TFList(name);
+					} else {
+						return new TFDelimitedList(name);					
+					}
 				}
 			}
-		}	
+		}
 	}	
 }

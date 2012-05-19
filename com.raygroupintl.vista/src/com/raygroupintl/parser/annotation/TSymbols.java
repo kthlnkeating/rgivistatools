@@ -48,7 +48,7 @@ public abstract class TSymbols extends TSequence implements RulePieceGenerator {
 	}
 	
 	@Override
-	public TokenFactory getPreliminaryTop(String name) {
+	public TokenFactory getTopFactory(String name, Map<String, TokenFactory> symbols, boolean asShell) {
 		throw new ParseErrorException("Rules cannot have a top level optional or required specification.");
 	}
 }

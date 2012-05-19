@@ -40,22 +40,31 @@ public class TFDelimitedList extends TFBasic {
 		this.adapter = adapter == null ? DEFAULT_ADAPTER : adapter;
 	}
 		
+	private TFDelimitedList(String name, TFSequenceStatic effective, DelimitedListAdapter adapter) {
+		super(name);
+		this.adapter = adapter == null ? DEFAULT_ADAPTER : adapter;
+	}
+		
 	@Override
-	public void copyFrom(TFBasic rhs) {
+	public void copyWoutAdapterFrom(TFBasic rhs) {
 		if (rhs instanceof TFDelimitedList) {
 			TFDelimitedList rhsCasted = (TFDelimitedList) rhs;
 			this.effective = rhsCasted.effective;
-			this.adapter = rhsCasted.adapter;
 		} else {
 			throw new IllegalArgumentException("Illegal attemp to copy from " + rhs.getClass().getName() + " to " + TFDelimitedList.class.getName());
 		}
 	}
 	
+	@Override
+	public TFBasic getCopy(String name) {
+		return new TFDelimitedList(name, this.effective, this.adapter);
+	}
+
 	public void setAdapter(DelimitedListAdapter adapter) {
 		this.adapter = adapter;
 	}
 	
-	protected Token getToken(List<Token> tokens) {
+	private Token getToken(List<Token> tokens) {
 		return this.adapter.convert(tokens);
 	}
 	

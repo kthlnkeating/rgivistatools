@@ -656,12 +656,6 @@ public class MTFSupply {
 	
 	
 	public static class CacheSupply extends MTFSupply {
-		public static class ObjTailAdapter implements SequenceAdapter {
-			@Override
-			public Token convert(java.util.List<Token> tokens) {					
-				return new TObjectTail(tokens);
-			}
-		}
 		public static class LvnAdapter implements SequenceAdapter {
 			@Override
 			public Token convert(java.util.List<Token> tokens) {
@@ -682,7 +676,7 @@ public class MTFSupply {
 		@List("lvn_objtail_ms")
 		public TokenFactory lvn_objtail_m;
 		
-		@Adapter(ObjTailAdapter.class)
+		@TokenType(TObjectTail.class)
 		@Sequence(value={"lvn_objtail_m", "actuallist"}, required="ro")
 		public TokenFactory lvn_objtail;
 		

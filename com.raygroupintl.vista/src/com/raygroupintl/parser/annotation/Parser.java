@@ -112,6 +112,7 @@ public class Parser {
 				}
 				Text text = new Text(ruleAnnotation.value());
 				TRule trule = (TRule) ruleGrammar.rule.tokenize(text);
+				
 				TFSequenceStatic value = new TFSequenceStatic(name);
 				this.rules.add(new RuleStore(value, trule));
 				return value;		
@@ -324,7 +325,7 @@ public class Parser {
 			for (RuleStore p : this.rules) {
 				TRule trule = p.rule;
 				TFSequenceStatic f = (TFSequenceStatic) trule.getTopFactory(p.factory.getName(), this.symbols);
-				p.factory.copyFrom(f);
+				p.factory.copyWoutAdapterFrom(f);
 			}
 		}
 

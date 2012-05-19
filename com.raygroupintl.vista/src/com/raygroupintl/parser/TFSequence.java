@@ -31,7 +31,7 @@ public abstract class TFSequence extends TFBasic {
 		}
 	}; 
 		
-	private SequenceAdapter adapter;
+	protected SequenceAdapter adapter;
 
 	public TFSequence(String name) {
 		this(name, DEFAULT_ADAPTER);
@@ -43,8 +43,13 @@ public abstract class TFSequence extends TFBasic {
 	}
 
 	@Override
-	public void copyFrom(TFBasic rhs) {
-		throw new UnsupportedOperationException("CopyFrom is not implemented for " + rhs.getClass().getName());
+	public void copyWoutAdapterFrom(TFBasic rhs) {
+		throw new UnsupportedOperationException("CopyFrom is not implemented for " + TFSequence.class.getName());
+	}
+
+	@Override
+	public TFBasic getCopy(String name) {
+		throw new UnsupportedOperationException("GetCopy is not implemented for " + TFSequence.class.getName());
 	}
 
 	public void setAdapter(SequenceAdapter adapter) {
@@ -65,11 +70,7 @@ public abstract class TFSequence extends TFBasic {
 	}
 
 	protected Token getToken(TokenStore foundTokens) {
-		if (this.adapter == null) {
-			return new TSequence(foundTokens.toList());
-		} else {
-			return this.adapter.convert(foundTokens.toList());
-		}
+		return this.adapter.convert(foundTokens.toList());
 	}
 
 	private ValidateResult validate(int seqIndex,TokenStore foundTokens, Token nextToken) throws SyntaxErrorException {

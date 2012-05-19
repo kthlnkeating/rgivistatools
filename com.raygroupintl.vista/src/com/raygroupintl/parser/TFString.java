@@ -42,16 +42,20 @@ public class TFString extends TFBasic {
 	}
 		
 	@Override
-	public void copyFrom(TFBasic rhs) {
+	public void copyWoutAdapterFrom(TFBasic rhs) {
 		if (rhs instanceof TFString) {
 			TFString rhsCasted = (TFString) rhs;
 			this.predicate = rhsCasted.predicate;
-			this.adapter = rhsCasted.adapter;
 		} else {
 			throw new IllegalArgumentException("Illegal attemp to copy from " + rhs.getClass().getName() + " to " + TFString.class.getName());
 		}
 	}
 
+	@Override
+	public TFBasic getCopy(String name) {
+		return new TFString(name, this.predicate, this.adapter);
+	}
+	
 	public void setAdapter(StringAdapter adapter) {
 		this.adapter = adapter;
 	}
