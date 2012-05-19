@@ -5,7 +5,9 @@ import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Map;
+import java.util.Set;
 
 import com.raygroupintl.charlib.AndPredicate;
 import com.raygroupintl.charlib.CharPredicate;
@@ -73,7 +75,6 @@ public class Parser {
 		private java.util.List<Triple<TFSequenceStatic, List>> enclosedDelimitedLists  = new ArrayList<Triple<TFSequenceStatic, List>>();
 		private java.util.List<Triple<TFChoiceOnChar0th, CChoice>> choice0ths  = new ArrayList<Triple<TFChoiceOnChar0th, CChoice>>();
 		private java.util.List<Triple<TFChoiceOnChar1st, CChoice>> choice1sts  = new ArrayList<Triple<TFChoiceOnChar1st, CChoice>>();
-		private Map<String, Field> otherSymbols = new HashMap<String, Field>();
 		
 		private java.util.List<RuleStore> rules  = new ArrayList<RuleStore>();
 
@@ -231,54 +232,77 @@ public class Parser {
 			if (words != null) {
 				return this.addWords(name, words, f, adapterSupply);
 			}
+			Equivalent equiv = f.getAnnotation(Equivalent.class);
+			if (equiv != null) {
+				String source = equiv.value();
+				TokenFactory sourceFactory = this.symbols.get(source);
+				return sourceFactory;
+			}
 			return null;
 		}
 		
+		private <T> boolean handleField(T target, Field f, AdapterSupply adapterSupply) throws IllegalAccessException {
+			String name = f.getName();
+			TokenFactory already = this.symbols.get(name);
+			if (already == null) {					
+				TokenFactory value = (TokenFactory) f.get(target);
+				if (value == null) {
+					value = this.add(f, adapterSupply);
+					if (value != null) {
+						if (value instanceof TFBasic) {
+							this.updateAdapter(f, (TFBasic) value, adapterSupply);
+						}								
+						f.set(target, value);
+					} else {
+						return false;
+					}
+				}
+				if (value != null) {
+					this.symbols.put(name, value);
+				}
+			} else {
+				f.set(target, already);						
+			}
+			return true;
+		}
+		
+		private <T> void handleWithRemaining(T target, AdapterSupply adapterSupply, Field f, Set<String> remainingNames, java.util.List<Field> remaining) throws IllegalAccessException{
+			String name = f.getName();
+			if (remainingNames.contains(name)) {
+				remaining.add(f);							
+				return;
+			}
+			if (! this.handleField(target, f, adapterSupply)) {
+				remainingNames.add(name);
+				remaining.add(f);
+			}			
+		}
+		
 		public <T> void add(T target, AdapterSupply adapterSupply) throws ClassNotFoundException, IllegalAccessException, InstantiationException, NoSuchMethodException {
+			Set<String> remainingNames = new HashSet<String>();
+			java.util.List<Field> remaining = new ArrayList<Field>();
 			Class<?> cls = target.getClass();
 			while (! cls.equals(Object.class)) {
 				for (Field f : cls.getDeclaredFields()) {
 					if (TokenFactory.class.isAssignableFrom(f.getType())) {
-						String name = f.getName();
-						TokenFactory already = this.symbols.get(name);
-						if (already == null) {					
-							TokenFactory value = (TokenFactory) f.get(target);
-							if (value == null) {
-								value = this.add(f, adapterSupply);
-								if (value instanceof TFBasic) {
-									this.updateAdapter(f, (TFBasic) value, adapterSupply);
-								}								
-								if (value != null) {
-									f.set(target, value);
-								} else {
-									this.otherSymbols.put(name, f);
-								}
-							}
-							if (value != null) {
-								this.symbols.put(name, value);
-							}
-						} else {
-							f.set(target, already);						
-						}
+						this.handleWithRemaining(target, adapterSupply, f, remainingNames, remaining);
 					}
 				}
 				cls = cls.getSuperclass();
+			}
+			while (remaining.size() > 0) {
+				remainingNames = new HashSet<String>();
+				java.util.List<Field> loopRemaining = new ArrayList<Field>();
+				for (Field f : remaining) {
+					this.handleWithRemaining(target, adapterSupply, f, remainingNames, loopRemaining);
+				}
+				if (remaining.size() == loopRemaining.size()) {
+					throw new ParseErrorException("There looks to be a circular symbol condition");
+				}
+				remaining = loopRemaining;
 			}			
 		}
 		
-		public <T> void updateEquivalents(T target) throws IllegalAccessException {
-			for (String name : this.otherSymbols.keySet()) {			
-				Field f = this.otherSymbols.get(name);
-				Equivalent annot = f.getAnnotation(Equivalent.class);
-				if (annot != null) {
-					String source = annot.value();
-					TokenFactory sourceFactory = this.symbols.get(source);
-					f.set(target, sourceFactory);
-					this.symbols.put(name, sourceFactory);
-				}			
-			}
-		}
-
 		private void updateChoices() {		
 			for (Triple<TFChoiceBasic, Choice> p : this.choices) {
 				TokenFactory[] fs = getFactories(this.symbols, p.annotation.value());
@@ -462,7 +486,6 @@ public class Parser {
 			Store store = new Store();
 			store.add(target, adapterSupply);
 			store.symbols.put("end", new TFEnd("end"));
-			store.updateEquivalents(target);
 			store.update(cls, ignore);
 			return target;
 		} catch (IllegalAccessException iae) {
