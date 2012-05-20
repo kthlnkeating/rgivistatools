@@ -66,12 +66,11 @@ public class TFForkableChoice extends TFBasic {
 	}
 	
 	public void setTargetType(Class<? extends Token> cls) {
-		throw new UnsupportedOperationException("setTargetType is not implemented for " + TFForkableChoice.class.getName());		
+		//throw new UnsupportedOperationException("setTargetType is not implemented for " + TFForkableChoice.class.getName());		
 	}
 	
 	public void setAdapter(Object adapter) {
-		throw new UnsupportedOperationException("setaDAPTER is not implemented for " + TFForkableChoice.class.getName());		
-		
+		//throw new UnsupportedOperationException("setaDAPTER is not implemented for " + TFForkableChoice.class.getName());				
 	}
 	
 	public void copyWoutAdapterFrom(TFBasic rhs) {

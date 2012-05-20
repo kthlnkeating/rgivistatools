@@ -224,6 +224,7 @@ public class TFTest {
 
 	private void testTFIndirection(MTFSupply m) {
 		TokenFactory f = m.indirection;		
+		TFCommonTest.validCheck(f, "@A");
 		TFCommonTest.validCheck(f, "@(+$P(LST,\",\",FLD))");
 		TFCommonTest.validCheck(f, "@H@(0)");
 		TFCommonTest.validCheck(f, "@XARRAY@(FROMX1,TO1)");
@@ -238,6 +239,17 @@ public class TFTest {
 	public void testTFIndirection() {
 		testTFIndirection(supplyCache);
 		testTFIndirection(supplyStd95);
+	}
+
+	public void testTFLvn(MTFSupply m) {
+		TokenFactory f = m.lvn;
+		TFCommonTest.validCheck(f, "A");
+	}
+
+	@Test
+	public void testTFLvn() {
+		testTFLvn(supplyCache);
+		testTFLvn(supplyStd95);		
 	}
 
 	public void testTFName(MTFSupply m) {

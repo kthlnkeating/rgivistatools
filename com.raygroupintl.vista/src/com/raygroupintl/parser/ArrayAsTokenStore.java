@@ -17,7 +17,6 @@
 package com.raygroupintl.parser;
 
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
 
 public class ArrayAsTokenStore implements TokenStore {
@@ -39,11 +38,6 @@ public class ArrayAsTokenStore implements TokenStore {
 		return this.tokens;
 	}
 	
-	@Override
-	public Iterator<Token> iterator() {
-		return this.tokens.iterator();
-	}
-
 	@Override
 	public Token get(int index) {
 		if (index < this.tokens.size()) {

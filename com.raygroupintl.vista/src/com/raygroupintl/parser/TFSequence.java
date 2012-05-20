@@ -127,11 +127,11 @@ public class TFSequence extends TFBasic {
 		return this.factories.length;
 	}
 	
-	protected ValidateResult validateNext(int seqIndex, TokenStore foundTokens, Token nextToken) throws SyntaxErrorException {
+	protected ValidateResult validateNext(int seqIndex, TokenStore foundTokens, Token nextToken, boolean noException) throws SyntaxErrorException {
 		return ValidateResult.CONTINUE;
 	}
 
-	protected ValidateResult validateNull(int seqIndex, TokenStore foundTokens) throws SyntaxErrorException {
+	protected ValidateResult validateNull(int seqIndex, TokenStore foundTokens, boolean noException) throws SyntaxErrorException {
 		int firstRequired = this.requiredFlags.getFirstRequiredIndex();
 		int lastRequired = this.requiredFlags.getLastRequiredIndex();
 		
@@ -139,6 +139,7 @@ public class TFSequence extends TFBasic {
 			return ValidateResult.CONTINUE;
 		}		
 		if (seqIndex == firstRequired) {
+			if (noException) return ValidateResult.NULL_RESULT;
 			for (int i=this.lookAhead; i<seqIndex; ++i) {
 				if (foundTokens.get(i) != null) {
 					throw new SyntaxErrorException(foundTokens);
@@ -147,30 +148,36 @@ public class TFSequence extends TFBasic {
 			return ValidateResult.NULL_RESULT;
 		}
 		if (this.requiredFlags.isRequired(seqIndex)) {
+			if (noException) return ValidateResult.NULL_RESULT;
 			throw new SyntaxErrorException(foundTokens);
 		} else {
 			return ValidateResult.CONTINUE;
 		}
 	}
 	
-	protected void validateEnd(int seqIndex, TokenStore foundTokens) throws SyntaxErrorException {
+	protected boolean validateEnd(int seqIndex, TokenStore foundTokens, boolean noException) throws SyntaxErrorException {
 		if (seqIndex < this.requiredFlags.getLastRequiredIndex()) {
+			if (noException) return false;
 			throw new SyntaxErrorException(foundTokens);
 		}
+		return true;
 	}
 	
-	private ValidateResult validate(int seqIndex,TokenStore foundTokens, Token nextToken) throws SyntaxErrorException {
+	private ValidateResult validate(int seqIndex,TokenStore foundTokens, Token nextToken, boolean noException) throws SyntaxErrorException {
 		if (nextToken == null) {
-			return this.validateNull(seqIndex, foundTokens);
+			return this.validateNull(seqIndex, foundTokens, noException);
 		} else {
-			return this.validateNext(seqIndex, foundTokens, nextToken);			
+			return this.validateNext(seqIndex, foundTokens, nextToken, noException);			
 		}
 	}
 
 	protected Token getToken(TokenStore foundTokens) {
-		for (Token token : foundTokens) {
-			if (token != null) return this.adapter.convert(foundTokens.toList());
-		}
+		//for (Token token : foundTokens) {
+		//	if (token != null) return this.adapter.convert(foundTokens.toList());
+		//}
+		for (int i=0; i<foundTokens.size(); ++i) {
+			if (foundTokens.get(i) != null) return this.adapter.convert(foundTokens.toList());
+		}		
 		return null;
 	}
 
@@ -178,12 +185,12 @@ public class TFSequence extends TFBasic {
 	public final Token tokenize(Text text) throws SyntaxErrorException {
 		if (text.onChar()) {
 			TokenStore foundTokens = new ArrayAsTokenStore(this.factories.length);
-			return this.tokenize(text, 0, foundTokens);
+			return this.tokenize(text, 0, foundTokens, false);
 		}		
 		return null;
 	}
 	
-	final Token tokenize(Text text, int firstSeqIndex, TokenStore foundTokens) throws SyntaxErrorException {
+	final Token tokenize(Text text, int firstSeqIndex, TokenStore foundTokens, boolean noException) throws SyntaxErrorException {
 		int factoryCount = this.factories.length;
 		for (int i=firstSeqIndex; i<factoryCount; ++i) {
 			TokenFactory factory = this.factories[i];
@@ -191,18 +198,19 @@ public class TFSequence extends TFBasic {
 			try {
 				token = factory.tokenize(text);				
 			} catch (SyntaxErrorException e) {
+				if (noException) return null;
 				e.addStore(foundTokens);
 				throw e;
 			}
 				
-			ValidateResult vr = this.validate(i, foundTokens, token);
+			ValidateResult vr = this.validate(i, foundTokens, token, noException);
 			if (vr == ValidateResult.BREAK) break;
 			if (vr == ValidateResult.NULL_RESULT) return null;
 
 			foundTokens.addToken(token);
 			if (token != null) {				
 				if (text.onEndOfText() && (i < factoryCount-1)) {
-					this.validateEnd(i, foundTokens);
+					if (! this.validateEnd(i, foundTokens, noException)) return null;
 					break;
 				}
 			}

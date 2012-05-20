@@ -17,7 +17,6 @@
 package com.raygroupintl.parser;
 
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
 
 public class ListAsTokenStore implements TokenStore {
@@ -34,11 +33,6 @@ public class ListAsTokenStore implements TokenStore {
 	@Override
 	public List<Token> toList() {
 		return this.list;
-	}
-	
-	@Override
-	public Iterator<Token> iterator() {
-		return this.list.iterator();
 	}
 	
 	@Override

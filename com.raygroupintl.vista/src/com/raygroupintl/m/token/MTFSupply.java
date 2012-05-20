@@ -6,7 +6,6 @@ import com.raygroupintl.parser.TFEmpty;
 import com.raygroupintl.parser.TFSyntaxError;
 import com.raygroupintl.parser.Token;
 import com.raygroupintl.parser.TokenFactory;
-import com.raygroupintl.parser.annotation.Adapter;
 import com.raygroupintl.parser.annotation.AdapterSupply;
 import com.raygroupintl.parser.annotation.CChoice;
 import com.raygroupintl.parser.annotation.CharSpecified;
@@ -200,7 +199,7 @@ public class MTFSupply {
 	@Sequence(value={"indirection_0", "indirection_1"}, required="ro")
 	public TokenFactory indirection;
 	
-	@CChoice(value={"lvn", "gvnall", "indirection"}, preds={"idstart", "^", "@"})
+	@Rule("lvn | gvnall | indirection")
 	public TokenFactory glvn;
 	
 	@Sequence(value={"environment", "name", "exprlistinparan"}, required="oro")
@@ -677,22 +676,13 @@ public class MTFSupply {
 		@Choice({"glvn", "expritem", "classmethod"})
 		public TokenFactory expratom;
 		
-		@Sequence(value={"dot", "name"}, required="all")
-		public TokenFactory lvn_objtail_ms;
-		@List("lvn_objtail_ms")
-		public TokenFactory lvn_objtail_m;
+		@TokenType(TObjectExpr.class)
+		@Rule("name, '.', {name:'.'}, [actuallist]")
+		public TokenFactory objectexpr;
 		
-		@TokenType(TObjectTail.class)
-		@Sequence(value={"lvn_objtail_m", "actuallist"}, required="ro")
-		public TokenFactory lvn_objtail;
-		
-		@Choice(value={"exprlistinparan", "lvn_objtail"})
-		public TokenFactory lvn_next;
-		
-		@Adapter(LvnAdapter.class)
-		@Sequence(value={"name", "lvn_next"}, required="ro")
-		public TokenFactory lvn;
-		
+		@Rule("objectexpr | lvn | gvnall | indirection")
+		public TokenFactory glvn;
+			
 		@Choice({"expratom", "classmethod"})
 		public TokenFactory expr_0;
 		@Sequence(value={"expr_0", "exprtail"}, required="ro")

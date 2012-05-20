@@ -120,10 +120,11 @@ public class TFIntrinsic extends TokenFactorySupply {
 		}
 */
 		@Override
-		protected ValidateResult validateNull(int seqIndex, TokenStore foundTokens) throws SyntaxErrorException {
+		protected ValidateResult validateNull(int seqIndex, TokenStore foundTokens, boolean noException) throws SyntaxErrorException {
 			if (seqIndex == 0 && this.nullAllowed) {
 				return ValidateResult.CONTINUE;
 			}
+			if (noException) return ValidateResult.NULL_RESULT;
 			SyntaxErrorException e = new SyntaxErrorException(foundTokens);
 			TokenStore store = new ArrayAsTokenStore(1);
 			store.addToken(this.token);
