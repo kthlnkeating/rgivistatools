@@ -583,8 +583,14 @@ public class MTFSupply {
 		this.intrinsic.addVariable("ZINTERRUPT");
 		this.intrinsic.addVariable("ZRO");
 		this.intrinsic.addVariable("R");
+		this.intrinsic.addVariable("EREF");
+		this.intrinsic.addVariable("ZDIR");
 		this.intrinsic.addVariable("ZS");
 		this.intrinsic.addVariable("ZROUTINES");
+		this.intrinsic.addVariable("ZGBLDIR");
+		this.intrinsic.addVariable("ZN");
+		this.intrinsic.addVariable("ZSTATUS");
+		this.intrinsic.addVariable("REFERENCE");
 		this.intrinsic.addVariable("ETRAP");
 		this.intrinsic.addVariable("ZTIMESTAMP");
 		this.intrinsic.addVariable("ZERROR");

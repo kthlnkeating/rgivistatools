@@ -31,20 +31,8 @@ public class VistAFOIATest {
 			MTFSupply m = MTFSupply.getInstance(MVersion.CACHE);
 			final TFRoutine tf = TFRoutine.getInstance(m);
 			final ErrorExemptions exemptions = ErrorExemptions.getVistAFOIAInstance();
-			//String rrr = null;
-			//int index = 0;
-
 			List<Path> paths = FileSupply.getAllMFiles();
 			for (Path path : paths) {
-				//String n = path.getFileName().toString().split(".m")[0];
-				//if (! n.equals("PRCAATR")) continue;
-				//byte[] b = Files.readAllBytes(path);
-				//String text = new String(b);
-				//rrr = path.getFileName().toString();
-				//System.out.print(n + '\n');
-				//TRoutine r = tf.tokenize(n, text, 0);
-				//String tokenValue = r.getStringValue();					
-				//Assert.assertEquals("Different: " + n, text, tokenValue);					
 				MRoutineContent content = MRoutineContent.getInstance(path); 
 				TRoutine r = tf.tokenize(content);
 				List<String> lines = content.getLines();
@@ -53,8 +41,6 @@ public class VistAFOIATest {
 				Assert.assertEquals(lines.size(), count);
 				for (int i=0; i<count; ++i) {
 					String line = lines.get(i);
-					//System.out.print("   " + String.valueOf(i) + '\n');
-					//System.out.print(line + '\n');
 					TLine result = results.get(i);
 					String readLine = result.getStringValue();
 					String msg = path.getFileName().toString() + " Line " +  String.valueOf(i);
@@ -67,7 +53,6 @@ public class VistAFOIATest {
 					List<ObjectInRoutine<MError>> errors = ev.visitErrors(r.getNode(), locations);
 					Assert.assertEquals(errors.size(), 0);						
 				}	
-				//++index;
 			}
 		} catch (ParseException e) {
 			fail("Exception: " + e.getMessage());			
