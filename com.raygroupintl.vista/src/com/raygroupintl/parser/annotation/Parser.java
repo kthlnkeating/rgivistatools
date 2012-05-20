@@ -29,7 +29,7 @@ import com.raygroupintl.parser.TFConstant;
 import com.raygroupintl.parser.TFDelimitedList;
 import com.raygroupintl.parser.TFEnd;
 import com.raygroupintl.parser.TFList;
-import com.raygroupintl.parser.TFSequenceStatic;
+import com.raygroupintl.parser.TFSequence;
 import com.raygroupintl.parser.TFString;
 import com.raygroupintl.parser.Text;
 import com.raygroupintl.parser.TokenFactory;
@@ -68,11 +68,11 @@ public class Parser {
 		public Map<String, TokenFactory> symbols = new HashMap<String, TokenFactory>();
 		
 		private java.util.List<Triple<TFChoiceBasic, Choice>> choices  = new ArrayList<Triple<TFChoiceBasic, Choice>>();
-		private java.util.List<Triple<TFSequenceStatic, Sequence>> sequences  = new ArrayList<Triple<TFSequenceStatic, Sequence>>();
+		private java.util.List<Triple<TFSequence, Sequence>> sequences  = new ArrayList<Triple<TFSequence, Sequence>>();
 		private java.util.List<Triple<TFList, List>> lists  = new ArrayList<Triple<TFList, List>>();
-		private java.util.List<Triple<TFSequenceStatic, List>> enclosedLists  = new ArrayList<Triple<TFSequenceStatic, List>>();
+		private java.util.List<Triple<TFSequence, List>> enclosedLists  = new ArrayList<Triple<TFSequence, List>>();
 		private java.util.List<Triple<TFDelimitedList, List>> delimitedLists  = new ArrayList<Triple<TFDelimitedList, List>>();
-		private java.util.List<Triple<TFSequenceStatic, List>> enclosedDelimitedLists  = new ArrayList<Triple<TFSequenceStatic, List>>();
+		private java.util.List<Triple<TFSequence, List>> enclosedDelimitedLists  = new ArrayList<Triple<TFSequence, List>>();
 		private java.util.List<Triple<TFChoiceOnChar0th, CChoice>> choice0ths  = new ArrayList<Triple<TFChoiceOnChar0th, CChoice>>();
 		private java.util.List<Triple<TFChoiceOnChar1st, CChoice>> choice1sts  = new ArrayList<Triple<TFChoiceOnChar1st, CChoice>>();
 		
@@ -100,8 +100,8 @@ public class Parser {
 		}
 
 		private TokenFactory addSequence(String name, Sequence sequence, Field f, AdapterSupply adapterSupply) {
-			TFSequenceStatic value = new TFSequenceStatic(name);
-			this.sequences.add(new Triple<TFSequenceStatic, Sequence>(value, sequence));
+			TFSequence value = new TFSequence(name);
+			this.sequences.add(new Triple<TFSequence, Sequence>(value, sequence));
 			return value;			
 		}
 		
@@ -135,8 +135,8 @@ public class Parser {
 					this.lists.add(new Triple<TFList, List>(value, list));
 					return value;
 				} else {
-					TFSequenceStatic value = new TFSequenceStatic(name);
-					this.enclosedLists.add(new Triple<TFSequenceStatic, List>(value, list));
+					TFSequence value = new TFSequence(name);
+					this.enclosedLists.add(new Triple<TFSequence, List>(value, list));
 					return value;
 				}
 			} else {			
@@ -145,8 +145,8 @@ public class Parser {
 					this.delimitedLists.add(new Triple<TFDelimitedList, List>(value, list));
 					return value;
 				} else {
-					TFSequenceStatic value = new TFSequenceStatic(name);
-					this.enclosedDelimitedLists.add(new Triple<TFSequenceStatic, List>(value, list));
+					TFSequence value = new TFSequence(name);
+					this.enclosedDelimitedLists.add(new Triple<TFSequence, List>(value, list));
 					return value;					
 				}
 			}
@@ -341,7 +341,7 @@ public class Parser {
 		}
 		
 		private void updateSequences() {
-			for (Triple<TFSequenceStatic, Sequence> p : this.sequences) {
+			for (Triple<TFSequence, Sequence> p : this.sequences) {
 				TokenFactory[] fs = getFactories(this.symbols, p.annotation.value());
 				boolean[] required = getRequiredFlags(p.annotation.required(), fs.length);
 				p.factory.setFactories(fs, required);
@@ -364,7 +364,7 @@ public class Parser {
 		}
 		
 		private void updateEnclosedLists() {
-			for (Triple<TFSequenceStatic, List> p : this.enclosedLists) {
+			for (Triple<TFSequence, List> p : this.enclosedLists) {
 				TokenFactory e = this.symbols.get(p.annotation.value());
 				TokenFactory l = this.symbols.get(p.annotation.left());
 				TokenFactory r = this.symbols.get(p.annotation.right());
@@ -374,7 +374,7 @@ public class Parser {
 		}
 		
 		private void updateEnclosedDelimitedLists() {
-			for (Triple<TFSequenceStatic, List> p : this.enclosedDelimitedLists) {
+			for (Triple<TFSequence, List> p : this.enclosedDelimitedLists) {
 				TokenFactory e = this.symbols.get(p.annotation.value());
 				TokenFactory d = this.symbols.get(p.annotation.delim());
 				TokenFactory l = this.symbols.get(p.annotation.left());

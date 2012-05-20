@@ -15,7 +15,7 @@ import com.raygroupintl.charlib.CharPredicate;
 import com.raygroupintl.charlib.Predicate;
 import com.raygroupintl.parser.SyntaxErrorException;
 import com.raygroupintl.parser.TFCharacter;
-import com.raygroupintl.parser.TFSequenceStatic;
+import com.raygroupintl.parser.TFSequence;
 import com.raygroupintl.parser.TSequence;
 import com.raygroupintl.parser.Text;
 import com.raygroupintl.parser.Token;
@@ -127,7 +127,7 @@ public class BNFGrammarTest {
 			Map<String, TokenFactory> map = this.getMap();
 			TokenFactory f = rule.getTopFactory("test", map);
 			Assert.assertNotNull(f);
-			Assert.assertTrue(f instanceof TFSequenceStatic);
+			Assert.assertTrue(f instanceof TFSequence);
 			testTDescription(f, "x(y)e"); 
 			testTDescription(f, "x(y,y)e"); 
 			testTDescription(f, "x(y,y,y)e"); 
@@ -155,7 +155,7 @@ public class BNFGrammarTest {
 			Map<String, TokenFactory> map = this.getMap();
 			TokenFactory f = rule.getTopFactory("test", map);
 			Assert.assertNotNull(f);
-			Assert.assertTrue(f instanceof TFSequenceStatic);
+			Assert.assertTrue(f instanceof TFSequence);
 			testTDescription(f, "(y)a"); 
 			testTDescription(f, "(y,y)aa"); 
 			testErrorTDescription(f, "(y,x)aa"); 
@@ -176,7 +176,7 @@ public class BNFGrammarTest {
 			Map<String, TokenFactory> map = this.getMap();
 			TokenFactory f = rule.getTopFactory("test", map);
 			Assert.assertNotNull(f);
-			Assert.assertTrue(f instanceof TFSequenceStatic);
+			Assert.assertTrue(f instanceof TFSequence);
 			testTDescription(f, "xye"); 
 			testTDescription(f, "xyabde"); 
 			testTDescription(f, "xyabcde"); 

@@ -10,7 +10,7 @@ import com.raygroupintl.parser.StringAdapter;
 import com.raygroupintl.parser.SyntaxErrorException;
 import com.raygroupintl.parser.TEmpty;
 import com.raygroupintl.parser.TFEmptyVerified;
-import com.raygroupintl.parser.TFSequenceStatic;
+import com.raygroupintl.parser.TFSequence;
 import com.raygroupintl.parser.TString;
 import com.raygroupintl.parser.Text;
 import com.raygroupintl.parser.Token;
@@ -588,7 +588,7 @@ public class TFCommand extends TokenFactorySupply {
 		return this.new TFCommandName("command.name", this.supply.ident);
 	}
 	
-	private class TFCommandRest extends TFSequenceStatic {
+	private class TFCommandRest extends TFSequence {
 		public TFCommandRest(String name, TokenFactory... factories) {
 			super(name, TFCommand.this.adapterSupply.getSequenceAdapter(), factories);
 		}
@@ -633,7 +633,7 @@ public class TFCommand extends TokenFactorySupply {
 	public TokenFactory getNextTokenFactory(Token token) throws SyntaxErrorException {
 		TCommandSpec spec = (TCommandSpec) token;
 		TokenFactory argumentFactory = spec.getArgumentFactory();
-		TFSequenceStatic tf = new TFCommandRest(this.getName(), this.supply.postcondition, this.supply.space, argumentFactory, this.supply.commandend);
+		TFSequence tf = new TFCommandRest(this.getName(), this.supply.postcondition, this.supply.space, argumentFactory, this.supply.commandend);
 		tf.setRequiredFlags(false, false, false, false);
 		return tf;
 	}

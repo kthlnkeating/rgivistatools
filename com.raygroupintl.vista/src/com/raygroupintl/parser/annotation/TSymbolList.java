@@ -5,7 +5,7 @@ import java.util.Map;
 import com.raygroupintl.parser.TFBasic;
 import com.raygroupintl.parser.TFDelimitedList;
 import com.raygroupintl.parser.TFList;
-import com.raygroupintl.parser.TFSequenceStatic;
+import com.raygroupintl.parser.TFSequence;
 import com.raygroupintl.parser.TSequence;
 import com.raygroupintl.parser.Token;
 import com.raygroupintl.parser.TokenFactory;
@@ -40,7 +40,7 @@ public class TSymbolList extends TSequence  implements RulePieceGenerator {
 			if (leftrightSpec == null) {
 				return dl;				
 			} else {
-				TFSequenceStatic result = new TFSequenceStatic(name);
+				TFSequence result = new TFSequence(name);
 				RulePieceGenerator leftGenerator = (RulePieceGenerator) leftrightSpec.get(1);
 				RulePieceGenerator rightGenerator = (RulePieceGenerator) leftrightSpec.get(3);
 				TokenFactory left = leftGenerator.getFactory(name + ".left", map);

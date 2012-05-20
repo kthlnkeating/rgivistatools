@@ -1,29 +1,55 @@
-//---------------------------------------------------------------------------
-// Copyright 2012 Ray Group International
-//
-// Licensed under the Apache License, Version 2.0 (the "License");
-// you may not use this file except in compliance with the License.
-// You may obtain a copy of the License at
-//
-//     http://www.apache.org/licenses/LICENSE-2.0
-//
-// Unless required by applicable law or agreed to in writing, software
-// distributed under the License is distributed on an "AS IS" BASIS,
-// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-// See the License for the specific language governing permissions and
-// limitations under the License.
-//---------------------------------------------------------------------------
-
 package com.raygroupintl.parser;
 
 import java.lang.reflect.Constructor;
 import java.util.List;
 
-public abstract class TFSequence extends TFBasic {
+public class TFSequence extends TFBasic {
 	public enum ValidateResult {
 		CONTINUE, BREAK, NULL_RESULT
 	}
 
+	private final static class RequiredFlags {
+		private boolean[] flags;
+		private int firstRequired = Integer.MAX_VALUE;
+		private int lastRequired = Integer.MIN_VALUE;
+
+		public RequiredFlags() {
+			this(0);
+		}
+
+		public RequiredFlags(int size) {
+			flags = new boolean[size];
+		}
+
+		public void set(boolean[] flags) {
+			this.flags = flags;
+			this.firstRequired = Integer.MAX_VALUE;			
+			this.lastRequired = Integer.MIN_VALUE;			
+			int index = 0;
+			for (boolean b : flags) {
+				if (b) {
+					if (this.firstRequired == Integer.MAX_VALUE) {
+						this.firstRequired = index;
+					}
+					this.lastRequired = index;
+				}
+				++index;
+			}		
+		}
+		
+		public int getFirstRequiredIndex() {
+			return this.firstRequired;
+		}
+		
+		public int getLastRequiredIndex() {
+			return this.lastRequired;
+		}
+		
+		public boolean isRequired(int i) {
+			return this.flags[i];
+		}		
+	}
+	
 	private static final SequenceAdapter DEFAULT_ADAPTER = new SequenceAdapter() {		
 		@Override
 		public Token convert(List<Token> tokens) {
@@ -31,20 +57,41 @@ public abstract class TFSequence extends TFBasic {
 		}
 	}; 
 		
-	protected SequenceAdapter adapter;
-
-	public TFSequence(String name) {
+	private TokenFactory[] factories = {};
+	private RequiredFlags requiredFlags = new RequiredFlags();
+	private SequenceAdapter adapter;
+	private int lookAhead = 0;
+	
+	public TFSequence(String name) {		
 		this(name, DEFAULT_ADAPTER);
 	}
-
-	public TFSequence(String name, SequenceAdapter adapter) {
+	
+	public TFSequence(String name, SequenceAdapter adapter) {		
 		super(name);
 		this.adapter = adapter == null ? DEFAULT_ADAPTER : adapter;
 	}
-
+	
+	public TFSequence(String name, SequenceAdapter adapter, TokenFactory... factories) {
+		this(name, adapter);
+		this.factories = factories;
+		this.requiredFlags = new RequiredFlags(factories.length);
+	}
+		
+	public TFSequence(String name, TokenFactory... factories) {
+		this(name);
+		this.factories = factories;
+		this.requiredFlags = new RequiredFlags(factories.length);
+	}
+			
 	@Override
 	public void copyWoutAdapterFrom(TFBasic rhs) {
-		throw new UnsupportedOperationException("CopyFrom is not implemented for " + TFSequence.class.getName());
+		if (rhs instanceof TFSequence) {
+			TFSequence rhsCasted = (TFSequence) rhs;
+			this.factories = rhsCasted.factories;
+			this.requiredFlags = rhsCasted.requiredFlags;
+		} else {
+			throw new IllegalArgumentException("Illegal attemp to copy from " + rhs.getClass().getName() + " to " + TFSequence.class.getName());
+		}
 	}
 
 	@Override
@@ -52,27 +99,57 @@ public abstract class TFSequence extends TFBasic {
 		throw new UnsupportedOperationException("GetCopy is not implemented for " + TFSequence.class.getName());
 	}
 
+	public void setFactories(TokenFactory[] factories, boolean[] requiredFlags) {
+		if (requiredFlags.length != factories.length) throw new IllegalArgumentException();
+		this.factories = factories;
+		this.requiredFlags.set(requiredFlags);
+	}
+
+	public void setRequiredFlags(boolean... requiredFlags) {
+		if (requiredFlags.length != this.factories.length) throw new IllegalArgumentException();
+		this.requiredFlags.set(requiredFlags);
+	}
+	
+	public void setLookAhead(int index) {
+		this.lookAhead = index;
+	}
+	
 	public void setAdapter(SequenceAdapter adapter) {
 		this.adapter = adapter;
 	}
-	
-	protected abstract TokenFactory getTokenFactory(int i, TokenStore foundTokens) throws SyntaxErrorException;
-
-	protected abstract int getExpectedTokenCount();
-
-	protected abstract ValidateResult validateNull(int seqIndex, TokenStore foundTokens) throws SyntaxErrorException;
 
 	protected ValidateResult validateNext(int seqIndex, TokenStore foundTokens, Token nextToken) throws SyntaxErrorException {
 		return ValidateResult.CONTINUE;
 	}
 
-	protected void validateEnd(int seqIndex, TokenStore foundTokens) throws SyntaxErrorException {		
+	protected ValidateResult validateNull(int seqIndex, TokenStore foundTokens) throws SyntaxErrorException {
+		int firstRequired = this.requiredFlags.getFirstRequiredIndex();
+		int lastRequired = this.requiredFlags.getLastRequiredIndex();
+		
+		if ((seqIndex < firstRequired) || (seqIndex > lastRequired)) {
+			return ValidateResult.CONTINUE;
+		}		
+		if (seqIndex == firstRequired) {
+			for (int i=this.lookAhead; i<seqIndex; ++i) {
+				if (foundTokens.get(i) != null) {
+					throw new SyntaxErrorException(foundTokens);
+				}
+			}
+			return ValidateResult.NULL_RESULT;
+		}
+		if (this.requiredFlags.isRequired(seqIndex)) {
+			throw new SyntaxErrorException(foundTokens);
+		} else {
+			return ValidateResult.CONTINUE;
+		}
 	}
-
-	protected Token getToken(TokenStore foundTokens) {
-		return this.adapter.convert(foundTokens.toList());
+	
+	protected void validateEnd(int seqIndex, TokenStore foundTokens) throws SyntaxErrorException {
+		if (seqIndex < this.requiredFlags.getLastRequiredIndex()) {
+			throw new SyntaxErrorException(foundTokens);
+		}
 	}
-
+	
 	private ValidateResult validate(int seqIndex,TokenStore foundTokens, Token nextToken) throws SyntaxErrorException {
 		if (nextToken == null) {
 			return this.validateNull(seqIndex, foundTokens);
@@ -81,13 +158,20 @@ public abstract class TFSequence extends TFBasic {
 		}
 	}
 
+	protected Token getToken(TokenStore foundTokens) {
+		for (Token token : foundTokens) {
+			if (token != null) return this.adapter.convert(foundTokens.toList());
+		}
+		return null;
+	}
+
 	@Override
 	public Token tokenize(Text text) throws SyntaxErrorException {
 		if (text.onChar()) {
-			int factoryCount = this.getExpectedTokenCount();
+			int factoryCount = this.factories.length;
 			TokenStore foundTokens = new ArrayAsTokenStore(factoryCount);
 			for (int i=0; i<factoryCount; ++i) {
-				TokenFactory factory = this.getTokenFactory(i, foundTokens);
+				TokenFactory factory = this.factories[i];
 				Token token = null;
 				try {
 					token = factory.tokenize(text);				

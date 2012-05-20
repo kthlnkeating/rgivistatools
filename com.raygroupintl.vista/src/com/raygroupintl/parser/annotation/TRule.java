@@ -7,7 +7,7 @@ import java.util.Map;
 
 import com.raygroupintl.parser.TDelimitedList;
 import com.raygroupintl.parser.TFBasic;
-import com.raygroupintl.parser.TFSequenceStatic;
+import com.raygroupintl.parser.TFSequence;
 import com.raygroupintl.parser.Token;
 import com.raygroupintl.parser.TokenFactory;
 
@@ -23,7 +23,7 @@ public class TRule extends TDelimitedList implements RuleGenerator {
 			throw new ParseErrorException("Empty rule.");
 		}
 		if (size > 1) {
-			return new TFSequenceStatic(name);
+			return new TFSequence(name);
 		}
 		RulePieceGenerator rpg = (RulePieceGenerator) this.get(0);
 		return rpg.getTopFactory(name, symbols, true);
@@ -47,7 +47,7 @@ public class TRule extends TDelimitedList implements RuleGenerator {
 			return rpg.getTopFactory(name, symbols, false);
 		}		
 		
-		TFSequenceStatic result = new TFSequenceStatic(name);
+		TFSequence result = new TFSequence(name);
 		
 		int n = factories.size();
 		TokenFactory[] fs = new TokenFactory[n];

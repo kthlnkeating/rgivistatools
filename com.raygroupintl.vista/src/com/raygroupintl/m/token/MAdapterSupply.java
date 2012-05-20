@@ -13,7 +13,7 @@ import com.raygroupintl.parser.TFCharacter;
 import com.raygroupintl.parser.TFConstant;
 import com.raygroupintl.parser.TFDelimitedList;
 import com.raygroupintl.parser.TFList;
-import com.raygroupintl.parser.TFSequenceStatic;
+import com.raygroupintl.parser.TFSequence;
 import com.raygroupintl.parser.TFString;
 import com.raygroupintl.parser.Token;
 import com.raygroupintl.parser.TokenFactory;
@@ -112,7 +112,7 @@ public class MAdapterSupply implements AdapterSupply {
 		result.put(TFString.class, stringAdapter);
 		result.put(TFConstant.class, stringAdapter);
 
-		result.put(TFSequenceStatic.class, new SequenceAdapter() {			
+		result.put(TFSequence.class, new SequenceAdapter() {			
 			@Override
 			public Token convert(List<Token> tokens) {
 				return new MTSequence(tokens);

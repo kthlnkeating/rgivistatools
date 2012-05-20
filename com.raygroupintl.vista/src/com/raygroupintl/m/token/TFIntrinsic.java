@@ -9,7 +9,7 @@ import com.raygroupintl.m.struct.MError;
 import com.raygroupintl.m.struct.MNameWithMnemonic;
 import com.raygroupintl.parser.ArrayAsTokenStore;
 import com.raygroupintl.parser.SyntaxErrorException;
-import com.raygroupintl.parser.TFSequenceStatic;
+import com.raygroupintl.parser.TFSequence;
 import com.raygroupintl.parser.Token;
 import com.raygroupintl.parser.TokenFactory;
 import com.raygroupintl.parser.TokenFactorySupply;
@@ -92,7 +92,7 @@ public class TFIntrinsic extends TokenFactorySupply {
 		return this.addFunction(argumentFactory, name, 1, Integer.MAX_VALUE);
 	}
 
-	private class TFIntrinsicRest extends TFSequenceStatic {	
+	private class TFIntrinsicRest extends TFSequence {	
 		private Token token;
 		private boolean nullAllowed;
 		
@@ -117,7 +117,7 @@ public class TFIntrinsic extends TokenFactorySupply {
 	
 	@Override
 	public TokenFactory getSupplyTokenFactory() {
-		TFSequenceStatic result = new TFSequenceStatic("instrinsic.name", this.supply.intrinsicname, this.supply.lpar);
+		TFSequence result = new TFSequence("instrinsic.name", this.supply.intrinsicname, this.supply.lpar);
 		result.setRequiredFlags(true, false);
 		result.setTargetType(TIntrinsicVariable.class);
 		return result;		
@@ -140,7 +140,7 @@ public class TFIntrinsic extends TokenFactorySupply {
 			String mnemonic = mName.getMnemonic();
 			FunctionInfo info = TFIntrinsic.this.function_infos.get(mnemonic);
 			TokenFactory argumentFactory = info.getArgumentFactory();
-			TFSequenceStatic result = new TFIntrinsicRest(token, info.getMinNumArguments() == 0, "instrinsic.name", argumentFactory, this.supply.rpar);
+			TFSequence result = new TFIntrinsicRest(token, info.getMinNumArguments() == 0, "instrinsic.name", argumentFactory, this.supply.rpar);
 			result.setRequiredFlags(info.getMinNumArguments() > 0, true);
 			return result;
 		} else {

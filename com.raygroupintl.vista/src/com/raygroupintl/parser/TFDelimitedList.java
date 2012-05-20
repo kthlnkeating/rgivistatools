@@ -28,7 +28,7 @@ public class TFDelimitedList extends TFBasic {
 		}
 	}; 
 	
-	private TFSequenceStatic effective;	
+	private TFSequence effective;	
 	private DelimitedListAdapter adapter;
 	
 	public TFDelimitedList(String name) {
@@ -40,7 +40,7 @@ public class TFDelimitedList extends TFBasic {
 		this.adapter = adapter == null ? DEFAULT_ADAPTER : adapter;
 	}
 		
-	private TFDelimitedList(String name, TFSequenceStatic effective, DelimitedListAdapter adapter) {
+	private TFDelimitedList(String name, TFSequence effective, DelimitedListAdapter adapter) {
 		super(name);
 		this.adapter = adapter == null ? DEFAULT_ADAPTER : adapter;
 	}
@@ -81,12 +81,12 @@ public class TFDelimitedList extends TFBasic {
 	public void set(TokenFactory element, TokenFactory delimiter, boolean emptyAllowed) {
 		TokenFactory leadingElement = this.getLeadingFactory(element, delimiter, emptyAllowed);
 		String tailElementName = this.getName() + "." + "tailelement";
-		TFSequenceStatic tailElement = new TFSequenceStatic(tailElementName, delimiter, element);
+		TFSequence tailElement = new TFSequence(tailElementName, delimiter, element);
 		tailElement.setRequiredFlags(true, !emptyAllowed);
 		String tailListName = this.getName() + "." + "taillist";
 		TokenFactory tail = new TFList(tailListName, tailElement);
 		String name = this.getName() + "." + "effective";
-		this.effective = new TFSequenceStatic(name, leadingElement, tail);
+		this.effective = new TFSequence(name, leadingElement, tail);
 		this.effective.setRequiredFlags(true, false);
 	}
 	

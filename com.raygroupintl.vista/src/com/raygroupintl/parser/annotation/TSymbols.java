@@ -6,7 +6,7 @@ import java.util.List;
 import java.util.Map;
 
 import com.raygroupintl.parser.TFBasic;
-import com.raygroupintl.parser.TFSequenceStatic;
+import com.raygroupintl.parser.TFSequence;
 import com.raygroupintl.parser.TList;
 import com.raygroupintl.parser.TSequence;
 import com.raygroupintl.parser.Token;
@@ -35,7 +35,7 @@ public abstract class TSymbols extends TSequence implements RulePieceGenerator {
 		}
 		if (factories.size() == 0) return null;
 		if (factories.size() == 1) return factories.get(0);
-		TFSequenceStatic result = new TFSequenceStatic(name);
+		TFSequence result = new TFSequence(name);
 		
 		int n = factories.size();
 		TokenFactory[] fs = new TokenFactory[n];
