@@ -6,6 +6,7 @@ import java.util.List;
 import java.util.Map;
 
 import com.raygroupintl.parser.TDelimitedList;
+import com.raygroupintl.parser.TFBasic;
 import com.raygroupintl.parser.TFSequenceStatic;
 import com.raygroupintl.parser.Token;
 import com.raygroupintl.parser.TokenFactory;
@@ -16,7 +17,7 @@ public class TRule extends TDelimitedList implements RuleGenerator {
 	}
 	
 	@Override
-	public TokenFactory getTopFactoryShell(String name, Map<String, TokenFactory> symbols) {
+	public TFBasic getTopFactoryShell(String name, Map<String, TokenFactory> symbols) {
 		int size = this.size();
 		if (size == 0) {
 			throw new ParseErrorException("Empty rule.");
@@ -29,7 +30,7 @@ public class TRule extends TDelimitedList implements RuleGenerator {
 	}
 		
 	@Override
-	public TokenFactory getTopFactory(String name, Map<String, TokenFactory> symbols) {
+	public TFBasic getTopFactory(String name, Map<String, TokenFactory> symbols) {
 		List<TokenFactory> factories = new ArrayList<TokenFactory>();
 		List<Boolean> flags = new ArrayList<Boolean>();
 		int index = 0;

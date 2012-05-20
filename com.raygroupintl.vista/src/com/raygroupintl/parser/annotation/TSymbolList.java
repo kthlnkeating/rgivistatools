@@ -2,6 +2,7 @@ package com.raygroupintl.parser.annotation;
 
 import java.util.Map;
 
+import com.raygroupintl.parser.TFBasic;
 import com.raygroupintl.parser.TFDelimitedList;
 import com.raygroupintl.parser.TFList;
 import com.raygroupintl.parser.TFSequenceStatic;
@@ -14,7 +15,7 @@ public class TSymbolList extends TSequence  implements RulePieceGenerator {
 		super(tokens);
 	}
 	
-	private TokenFactory getListFactory(String name, TokenFactory element, TokenFactory delimiter, boolean emptyAllowed) {
+	private TFBasic getListFactory(String name, TokenFactory element, TokenFactory delimiter, boolean emptyAllowed) {
 		if (delimiter == null) { 
 			return new TFList(name, element);
 		} else {
@@ -25,7 +26,7 @@ public class TSymbolList extends TSequence  implements RulePieceGenerator {
 	}
 	
 	@Override
-	public TokenFactory getFactory(String name, Map<String, TokenFactory> map) {
+	public TFBasic getFactory(String name, Map<String, TokenFactory> map) {
 		RulePieceGenerator elementGenerator = (RulePieceGenerator) this.get(1);
 		TokenFactory element = elementGenerator.getFactory(name + ".element", map);
 		TSequence delimleftrightspec = (TSequence) this.get(2);
@@ -35,7 +36,7 @@ public class TSymbolList extends TSequence  implements RulePieceGenerator {
 			RulePieceGenerator delimGenerator = (RulePieceGenerator) delimleftrightspec.get(1);
 			TokenFactory delimiter = delimGenerator == null ? null : delimGenerator.getFactory(name + ".delimiter", map);
 			TSequence leftrightSpec = (TSequence) delimleftrightspec.get(2);
-			TokenFactory dl = this.getListFactory(name, element, delimiter, false);
+			TFBasic dl = this.getListFactory(name, element, delimiter, false);
 			if (leftrightSpec == null) {
 				return dl;				
 			} else {
@@ -58,7 +59,7 @@ public class TSymbolList extends TSequence  implements RulePieceGenerator {
 	}
 	
 	@Override
-	public TokenFactory getTopFactory(String name, Map<String, TokenFactory> symbols, boolean asShell) {
+	public TFBasic getTopFactory(String name, Map<String, TokenFactory> symbols, boolean asShell) {
 		if (! asShell) {
 			return this.getFactory(name, symbols);
 		} else {			

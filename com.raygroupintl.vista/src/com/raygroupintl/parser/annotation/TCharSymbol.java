@@ -19,6 +19,7 @@ package com.raygroupintl.parser.annotation;
 import java.util.Map;
 
 import com.raygroupintl.charlib.CharPredicate;
+import com.raygroupintl.parser.TFBasic;
 import com.raygroupintl.parser.TFCharacter;
 import com.raygroupintl.parser.TSequence;
 import com.raygroupintl.parser.Token;
@@ -47,7 +48,7 @@ public class TCharSymbol extends TSequence implements RulePieceGenerator {
 	}
 	
 	@Override
-	public TokenFactory getTopFactory(String name, Map<String, TokenFactory> symbols, boolean asShell) {
+	public TFBasic getTopFactory(String name, Map<String, TokenFactory> symbols, boolean asShell) {
 		throw new ParseErrorException("Character symbols cannot be rules.");
 	}
 }

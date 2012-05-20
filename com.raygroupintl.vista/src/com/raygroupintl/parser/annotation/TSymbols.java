@@ -5,6 +5,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
+import com.raygroupintl.parser.TFBasic;
 import com.raygroupintl.parser.TFSequenceStatic;
 import com.raygroupintl.parser.TList;
 import com.raygroupintl.parser.TSequence;
@@ -48,7 +49,7 @@ public abstract class TSymbols extends TSequence implements RulePieceGenerator {
 	}
 	
 	@Override
-	public TokenFactory getTopFactory(String name, Map<String, TokenFactory> symbols, boolean asShell) {
+	public TFBasic getTopFactory(String name, Map<String, TokenFactory> symbols, boolean asShell) {
 		throw new ParseErrorException("Rules cannot have a top level optional or required specification.");
 	}
 }

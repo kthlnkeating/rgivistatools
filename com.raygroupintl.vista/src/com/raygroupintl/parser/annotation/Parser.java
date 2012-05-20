@@ -53,10 +53,10 @@ public class Parser {
 	}
 	
 	private static final class RuleStore {
-		public TFSequenceStatic factory;
+		public TFBasic factory;
 		public TRule rule;
 		
-		public RuleStore(TFSequenceStatic factory, TRule rule) {
+		public RuleStore(TFBasic factory, TRule rule) {
 			this.factory = factory;
 			this.rule = rule;
 		}
@@ -114,9 +114,12 @@ public class Parser {
 				Text text = new Text(ruleAnnotation.value());
 				TRule trule = (TRule) ruleGrammar.rule.tokenize(text);
 				
-				TFSequenceStatic value = new TFSequenceStatic(name);
-				this.rules.add(new RuleStore(value, trule));
-				return value;		
+				TFBasic value = (TFBasic) trule.getTopFactoryShell(name, this.symbols);
+				if (value != null) {
+					this.rules.add(new RuleStore(value, trule));
+					return value;		
+				}
+				return null;
 			} catch (SyntaxErrorException | ParseException e) {
 				throw new ParseErrorException("Error in rule grammar", e);
 			}
@@ -348,7 +351,7 @@ public class Parser {
 		private void updateDescription() {
 			for (RuleStore p : this.rules) {
 				TRule trule = p.rule;
-				TFSequenceStatic f = (TFSequenceStatic) trule.getTopFactory(p.factory.getName(), this.symbols);
+				TFBasic f = (TFBasic) trule.getTopFactory(p.factory.getName(), this.symbols);
 				p.factory.copyWoutAdapterFrom(f);
 			}
 		}

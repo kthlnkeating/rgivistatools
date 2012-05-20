@@ -39,7 +39,7 @@ public class TSymbol extends TString implements RulePieceGenerator {
 	}	
 
 	@Override
-	public TokenFactory getTopFactory(String name, Map<String, TokenFactory> symbols, boolean asShell) {
+	public TFBasic getTopFactory(String name, Map<String, TokenFactory> symbols, boolean asShell) {
 		String value = this.getStringValue();
 		TokenFactory source = symbols.get(value);
 		if (source == null) {

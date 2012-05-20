@@ -18,10 +18,11 @@ package com.raygroupintl.parser.annotation;
 
 import java.util.Map;
 
+import com.raygroupintl.parser.TFBasic;
 import com.raygroupintl.parser.TokenFactory;
 
 interface RulePieceGenerator {
 	TokenFactory getFactory(String name, Map<String, TokenFactory> symbols);
 	boolean getRequired();
-	TokenFactory getTopFactory(String name, Map<String, TokenFactory> symbols, boolean asShell);
+	TFBasic getTopFactory(String name, Map<String, TokenFactory> symbols, boolean asShell);
 }
