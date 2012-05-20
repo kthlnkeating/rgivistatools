@@ -19,8 +19,12 @@ public abstract class TokenFactorySupply extends TokenFactory {
 			return null;
 		} else {
 			TokenFactory tf = this.getNextTokenFactory(token);
-			Token nextToken = tf.tokenize(text);
-			return this.getToken(token, nextToken);
+			if (tf == null) {
+				return token;
+			} else {
+				Token nextToken = tf.tokenize(text);
+				return this.getToken(token, nextToken);
+			}
 		}
 	}	
 }

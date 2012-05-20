@@ -1,7 +1,6 @@
 package com.raygroupintl.m.token;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -15,40 +14,18 @@ import com.raygroupintl.parser.TokenFactory;
 import com.raygroupintl.parser.TokenStore;
 
 public class TFIntrinsic extends TFSequence {		
-	private static abstract class TIntrinsicName extends TKeyword {
-		public TIntrinsicName(String value) {
-			super(value);
-		}
-		
-		@Override
-		public String getStringValue() {
-			return "$" + this.getIdentier();
-		}
-
-		@Override
-		public int getStringSize() {
-			return 1 + this.getIdentier().length();
-		}	
-	}
-
-	private static class TIntrinsicVariable extends TIntrinsicName {
-		private MNameWithMnemonic mName;
-		
-		private TIntrinsicVariable(String value, MNameWithMnemonic mName) {
-			super(value);
-			this.mName = mName;
-		}
-		
-		@Override
-		protected MNameWithMnemonic getNameWithMnemonic() {
-			return mName;
-		}
-		
-		public static TIntrinsicVariable getInstance(TIdent name, MNameWithMnemonic mName) {
-			return new TIntrinsicVariable(name.getStringValue(), mName);
+	private static class TIntrinsicVariable extends MTSequence {
+		private TIntrinsicVariable(List<Token> tokens) {
+			super(tokens);
 		}
 	}
 
+	private static class TIntrinsicFunction extends MTSequence {
+		private TIntrinsicFunction(List<Token> tokens) {
+			super(tokens);
+		}
+	}
+	
 	private static class FunctionInfo {
 		private TokenFactory argumentFactory;
 		private int minNumArguments;
@@ -113,31 +90,6 @@ public class TFIntrinsic extends TFSequence {
 		return this.addFunction(argumentFactory, name, 1, Integer.MAX_VALUE);
 	}
 
-	private static class TIntrinsicFunctionName extends TIntrinsicName {
-		private MNameWithMnemonic mName;
-		
-		public TIntrinsicFunctionName(String name, MNameWithMnemonic mnemonicNName) {
-			super(name);
-			this.mName = mnemonicNName;
-		}
-		
-		@Override
-		protected MNameWithMnemonic getNameWithMnemonic() {
-			return this.mName;
-		}		
-	}
-	
-	private static class TIntrinsicFunction extends MTSequence {
-		private TIntrinsicFunction(TIntrinsicFunctionName name, Token argument) {
-			super(Arrays.asList(new Token[]{name, argument}));
-		}
-
-		public static TIntrinsicFunction getInstance(TIdent name, Token argument, MNameWithMnemonic mnemonicNName) {
-			TIntrinsicFunctionName functionName = new TIntrinsicFunctionName(name.getStringValue(), mnemonicNName);
-			return new TIntrinsicFunction(functionName, argument);
-		}
-	}
-	
 	private static String getFoundIntrinsicName(TokenStore tokens) {
 		Token token0 = tokens.get(0);
 		String name = ((MTSequence) token0).get(1).getStringValue().toUpperCase();
@@ -211,14 +163,14 @@ public class TFIntrinsic extends TFSequence {
 	protected Token getToken(TokenStore foundTokens) {
 		MTSequence token0 = (MTSequence) foundTokens.get(0);
 		if (token0.get(2) == null) {		
-			TIdent name = (TIdent) token0.get(1);		
 			if (foundTokens.get(1) == null) {
-				return TIntrinsicVariable.getInstance(name, this.variables.get(name.getStringValue().toUpperCase()));			
+				List<Token> result = new ArrayList<Token>(2);
+				for (int i=0; i<2; ++i) result.add(foundTokens.get(i));
+				return new TIntrinsicVariable(result);
 			} else {
 				List<Token> result = new ArrayList<Token>(3);
-				for (int i=1; i<4; ++i) result.add(foundTokens.get(i));
-				MTSequence argument = new MTSequence(result);
-				return TIntrinsicFunction.getInstance(name, argument, this.functions.get(name.getStringValue().toUpperCase()));
+				for (int i=0; i<4; ++i) result.add(foundTokens.get(i));
+				return new TIntrinsicFunction(result);
 			}
 		} else {
 			return new MTSequence(foundTokens.toList());
