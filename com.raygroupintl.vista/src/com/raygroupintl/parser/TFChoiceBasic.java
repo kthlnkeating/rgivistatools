@@ -17,10 +17,6 @@ public class TFChoiceBasic extends TokenFactory {
 		this.factories = factories;
 	}
 	
-	public int getNumChoices() {
-		return this.factories.length;
-	}
-	
 	@Override
 	public Token tokenize(Text text) throws SyntaxErrorException {
 		if (text.onChar()) {
@@ -32,9 +28,5 @@ public class TFChoiceBasic extends TokenFactory {
 			}
 		}
 		return null;
-	}
-	
-	public boolean isInitialize() {
-		return this.factories.length > 0;
 	}
 }

@@ -82,7 +82,12 @@ public class TFSequence extends TFBasic {
 		this.factories = factories;
 		this.requiredFlags = new RequiredFlags(factories.length);
 	}
-			
+	
+	@Override
+	protected TokenFactory getLeadingFactory() {
+		return this.factories[0];
+	}
+				
 	@Override
 	public void copyWoutAdapterFrom(TFBasic rhs) {
 		if (rhs instanceof TFSequence) {
@@ -118,6 +123,10 @@ public class TFSequence extends TFBasic {
 		this.adapter = adapter;
 	}
 
+	public int getSequenceCount() {
+		return this.factories.length;
+	}
+	
 	protected ValidateResult validateNext(int seqIndex, TokenStore foundTokens, Token nextToken) throws SyntaxErrorException {
 		return ValidateResult.CONTINUE;
 	}
@@ -166,36 +175,41 @@ public class TFSequence extends TFBasic {
 	}
 
 	@Override
-	public Token tokenize(Text text) throws SyntaxErrorException {
+	public final Token tokenize(Text text) throws SyntaxErrorException {
 		if (text.onChar()) {
-			int factoryCount = this.factories.length;
-			TokenStore foundTokens = new ArrayAsTokenStore(factoryCount);
-			for (int i=0; i<factoryCount; ++i) {
-				TokenFactory factory = this.factories[i];
-				Token token = null;
-				try {
-					token = factory.tokenize(text);				
-				} catch (SyntaxErrorException e) {
-					e.addStore(foundTokens);
-					throw e;
-				}
-					
-				ValidateResult vr = this.validate(i, foundTokens, token);
-				if (vr == ValidateResult.BREAK) break;
-				if (vr == ValidateResult.NULL_RESULT) return null;
-	
-				foundTokens.addToken(token);
-				if (token != null) {				
-					if (text.onEndOfText() && (i < factoryCount-1)) {
-						this.validateEnd(i, foundTokens);
-						break;
-					}
-				}
-			}
-			return this.getToken(foundTokens);
+			TokenStore foundTokens = new ArrayAsTokenStore(this.factories.length);
+			return this.tokenize(text, 0, foundTokens);
 		}		
 		return null;
 	}
+	
+	final Token tokenize(Text text, int firstSeqIndex, TokenStore foundTokens) throws SyntaxErrorException {
+		int factoryCount = this.factories.length;
+		for (int i=firstSeqIndex; i<factoryCount; ++i) {
+			TokenFactory factory = this.factories[i];
+			Token token = null;
+			try {
+				token = factory.tokenize(text);				
+			} catch (SyntaxErrorException e) {
+				e.addStore(foundTokens);
+				throw e;
+			}
+				
+			ValidateResult vr = this.validate(i, foundTokens, token);
+			if (vr == ValidateResult.BREAK) break;
+			if (vr == ValidateResult.NULL_RESULT) return null;
+
+			foundTokens.addToken(token);
+			if (token != null) {				
+				if (text.onEndOfText() && (i < factoryCount-1)) {
+					this.validateEnd(i, foundTokens);
+					break;
+				}
+			}
+		}
+		return this.getToken(foundTokens);	
+	}
+	
 		
 	@Override
 	public void setTargetType(Class<? extends Token> cls) {

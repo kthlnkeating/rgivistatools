@@ -27,5 +27,9 @@ public abstract class TokenFactory {
 		return this.name;
 	}
 	
+	protected TokenFactory getLeadingFactory() {
+		return this;
+	}
+	
 	public abstract Token tokenize(Text text) throws SyntaxErrorException;
 }

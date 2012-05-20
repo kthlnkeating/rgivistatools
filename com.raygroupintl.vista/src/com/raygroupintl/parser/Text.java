@@ -131,4 +131,8 @@ public class Text {
 		this.text = text.text;
 		this.index = text.index;
 	}
+	
+	public void resetIndex(int index) {
+		this.index = index;
+	}
 }

@@ -76,11 +76,7 @@ public class TSymbolList extends TSequence  implements RulePieceGenerator {
 						return new TFDelimitedList(name);					
 					}
 				} else {
-					if (delimGenerator == null) {
-						return new TFList(name);
-					} else {
-						return new TFDelimitedList(name);					
-					}
+					return new TFSequence(name);
 				}
 			}
 		}

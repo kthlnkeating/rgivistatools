@@ -29,6 +29,9 @@ public class RuleGrammar {
 	@CharSpecified(excludechars={'\''}, single=true)
 	public TokenFactory squoted;
 
+	@CharSpecified(chars={'|'}, single=true)
+	public TokenFactory pipe;
+
 	@TokenType(TSymbol.class)
 	@CharSpecified(ranges={'a', 'z'})
 	public TokenFactory specifiedsymbol; 
@@ -40,6 +43,10 @@ public class RuleGrammar {
 	@Choice({"specifiedsymbol", "charsymbol"})
 	public TokenFactory symbol; 
 	
+	@TokenType(TChoice.class)
+	@List(value="symbol", delim="choicedelimiter")
+	public TokenFactory symbolchoice; 
+
 	@CharSpecified(chars={' '})
 	public TokenFactory sp;
 
@@ -58,6 +65,9 @@ public class RuleGrammar {
 	@Sequence(value={"sp", "rcur", "sp"}, required="oro")
 	public TokenFactory closelist;
 	
+	@Sequence(value={"sp", "pipe", "sp"}, required="oro")
+	public TokenFactory choicedelimiter;
+
 	@Sequence(value={"sp", "comma", "sp"}, required="oro")
 	public TokenFactory delimiter;
 	
@@ -76,7 +86,7 @@ public class RuleGrammar {
 	@Sequence(value={"openlist", "anysymbols", "delimleftrightspec", "closelist"}, required="rror")
 	public TokenFactory list;
 	
-	@Choice({"symbol", "optionalsymbols", "requiredsymbols", "list"})
+	@Choice({"symbolchoice", "optionalsymbols", "requiredsymbols", "list"})
 	public TokenFactory anysymbols;
 	
 	@TokenType(TRule.class)

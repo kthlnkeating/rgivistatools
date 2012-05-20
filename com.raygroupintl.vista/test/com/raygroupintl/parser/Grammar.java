@@ -30,8 +30,19 @@ public class Grammar {
 	public TokenFactory caret;
 
 	@CharSpecified(ranges={'a', 'z'})
+	public TokenFactory name;
+
+	@Rule("{name:',':'(':')'}")
+	public TokenFactory params;
+		
+	@TokenType(TLocal.class)
+	@Rule("name, [params]")
 	public TokenFactory local;
 
+	@TokenType(TObject.class)
+	@Rule("name, {('.', name)}, [params]")
+	public TokenFactory object;
+	
 	@TokenType(TNumber.class)
 	@Rule("[pm], ([intlit], [(dot, intlit)]), [e, [pm], intlit]")
 	public TokenFactory number;
@@ -40,7 +51,7 @@ public class Grammar {
 	@Rule("caret, local")
 	public TokenFactory global;
 	
-	@Choice({"local", "global", "number"})
+	@Rule("object | local | global | number")
 	public TokenFactory expratom;
 
 	@Choice({"plus", "minus"})
@@ -48,7 +59,4 @@ public class Grammar {
 
 	@Rule("expratom, [operator, expr]")
 	public TokenFactory expr;
-	
-	
-	
 }
