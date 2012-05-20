@@ -31,21 +31,21 @@ public class TFIntrinsic extends TokenFactorySupply {
 	private static class FunctionInfo {
 		private TokenFactory argumentFactory;
 		private int minNumArguments;
-		private int maxNumArguments;
+		//private int maxNumArguments;
 		
 		public FunctionInfo(TokenFactory argumentFactory, int minNumArguments, int maxNumArguments) {
 			this.argumentFactory = argumentFactory;
 			this.minNumArguments = minNumArguments;
-			this.maxNumArguments = maxNumArguments;
+			//this.maxNumArguments = maxNumArguments;
 		}		
 
 		public int getMinNumArguments() {
 			return this.minNumArguments;
 		}
 		
-		public int getMaxNumArguments() {
-			return this.maxNumArguments;
-		}
+		//public int getMaxNumArguments() {
+		//	return this.maxNumArguments;
+		//}
 		
 		public TokenFactory getArgumentFactory() {
 			return this.argumentFactory;
@@ -95,13 +95,30 @@ public class TFIntrinsic extends TokenFactorySupply {
 	private class TFIntrinsicRest extends TFSequence {	
 		private Token token;
 		private boolean nullAllowed;
+		//private FunctionInfo info;
 		
-		public TFIntrinsicRest(Token token, boolean nullAllowed, String name, TokenFactory... factories) {
+		public TFIntrinsicRest(FunctionInfo info, Token token, boolean nullAllowed, String name, TokenFactory... factories) {
 			super(name, factories);
 			this.token = token;
 			this.nullAllowed = nullAllowed;
+			//this.info = info;
 		}
 		
+/*		@Override
+		protected ValidateResult validateNext(int seqIndex, TokenStore foundTokens, Token nextToken) throws SyntaxErrorException {
+			if (seqIndex == 0) {
+				TList list = (TList) nextToken;
+				int n = list.size();
+				if (n < this.info.getMinNumArguments()) {
+					throw new SyntaxErrorException(MError.ERR_UNKNOWN_INTRINSIC_FUNCTION, foundTokens);				
+				}
+				if (n > this.info.getMaxNumArguments()) {
+					throw new SyntaxErrorException(MError.ERR_UNKNOWN_INTRINSIC_FUNCTION, foundTokens);				
+				}
+			}
+			return ValidateResult.CONTINUE;
+		}
+*/
 		@Override
 		protected ValidateResult validateNull(int seqIndex, TokenStore foundTokens) throws SyntaxErrorException {
 			if (seqIndex == 0 && this.nullAllowed) {
@@ -140,7 +157,7 @@ public class TFIntrinsic extends TokenFactorySupply {
 			String mnemonic = mName.getMnemonic();
 			FunctionInfo info = TFIntrinsic.this.function_infos.get(mnemonic);
 			TokenFactory argumentFactory = info.getArgumentFactory();
-			TFSequence result = new TFIntrinsicRest(token, info.getMinNumArguments() == 0, "instrinsic.name", argumentFactory, this.supply.rpar);
+			TFSequence result = new TFIntrinsicRest(info, token, info.getMinNumArguments() == 0, "instrinsic.name", argumentFactory, this.supply.rpar);
 			result.setRequiredFlags(info.getMinNumArguments() > 0, true);
 			return result;
 		} else {

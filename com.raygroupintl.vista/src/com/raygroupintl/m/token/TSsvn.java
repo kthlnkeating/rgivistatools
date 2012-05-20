@@ -1,6 +1,6 @@
 package com.raygroupintl.m.token;
 
-import java.util.Arrays;
+import java.util.List;
 
 import com.raygroupintl.m.struct.MNameWithMnemonic;
 import com.raygroupintl.parser.Token;
@@ -19,30 +19,7 @@ public class TSsvn extends MTSequence {
 		SSVS.update("W", "WINDOW"); 	
 	}
 	
-	private static class TSsvnName  extends TKeyword {
-		public TSsvnName(String value) {
-			super(value);
-		}
-		
-		@Override
-		public String getStringValue() {
-			return "^$" + this.getIdentier();
-		}
-
-		@Override
-		public int getStringSize() {
-			return 2 + this.getIdentier().length();
-		}	
-
-		@Override
-		protected MNameWithMnemonic getNameWithMnemonic() {
-			String value = this.getIdentier();
-			MNameWithMnemonic name = SSVS.get(value);
-			return name;
-		}		
-	}
-
-	private TSsvn(TSsvnName name, Token param) {
-		super(Arrays.asList(new Token[]{name, param}));
-	}
+	public TSsvn(List<Token> tokens) {
+		super(tokens);
+	}		
 }
