@@ -13,17 +13,13 @@ import com.raygroupintl.charlib.AndPredicate;
 import com.raygroupintl.charlib.CharPredicate;
 import com.raygroupintl.charlib.CharRangePredicate;
 import com.raygroupintl.charlib.CharsPredicate;
-import com.raygroupintl.charlib.DigitPredicate;
 import com.raygroupintl.charlib.ExcludePredicate;
-import com.raygroupintl.charlib.LetterPredicate;
 import com.raygroupintl.charlib.OrPredicate;
 import com.raygroupintl.charlib.Predicate;
-import com.raygroupintl.m.struct.IdentifierStartPredicate;
 import com.raygroupintl.parser.SyntaxErrorException;
 import com.raygroupintl.parser.TFBasic;
 import com.raygroupintl.parser.TFCharacter;
 import com.raygroupintl.parser.TFChoiceBasic;
-import com.raygroupintl.parser.TFChoiceOnChar0th;
 import com.raygroupintl.parser.TFConstant;
 import com.raygroupintl.parser.TFDelimitedList;
 import com.raygroupintl.parser.TFEnd;
@@ -34,13 +30,6 @@ import com.raygroupintl.parser.Text;
 import com.raygroupintl.parser.TokenFactory;
 
 public class Parser {
-	private static final Map<String, Predicate> PREDICATES = new HashMap<String, Predicate>();
-	static {
-		PREDICATES.put("letter", new LetterPredicate());
-		PREDICATES.put("digit", new DigitPredicate());
-		PREDICATES.put("idstart", new IdentifierStartPredicate());
-	}
-		
 	private static final class Triple<T extends TokenFactory, A extends Annotation> {
 		public T factory;
 		public A annotation;
@@ -72,7 +61,6 @@ public class Parser {
 		private java.util.List<Triple<TFSequence, List>> enclosedLists  = new ArrayList<Triple<TFSequence, List>>();
 		private java.util.List<Triple<TFDelimitedList, List>> delimitedLists  = new ArrayList<Triple<TFDelimitedList, List>>();
 		private java.util.List<Triple<TFSequence, List>> enclosedDelimitedLists  = new ArrayList<Triple<TFSequence, List>>();
-		private java.util.List<Triple<TFChoiceOnChar0th, CChoice>> choice0ths  = new ArrayList<Triple<TFChoiceOnChar0th, CChoice>>();
 		
 		private java.util.List<RuleStore> rules  = new ArrayList<RuleStore>();
 
@@ -149,12 +137,6 @@ public class Parser {
 			}
 		}
 		
-		private TokenFactory addCChoice(String name, CChoice cchoice) {
-			TFChoiceOnChar0th value = new TFChoiceOnChar0th(name);
-			this.choice0ths.add(new Triple<TFChoiceOnChar0th, CChoice>(value, cchoice));
-			return value;
-		}
-		
 		private Predicate orPredicates(Predicate p0, Predicate p1) {
 			if (p1 == null) return p0;
 			if (p0 == null) return p1;
@@ -213,10 +195,6 @@ public class Parser {
 			if (list != null) {
 				return this.addList(name, list, f, adapterSupply);
 			}			
-			CChoice cchoice = f.getAnnotation(CChoice.class);
-			if (cchoice != null) {
-				return this.addCChoice(name, cchoice);
-			}		
 			CharSpecified characters = f.getAnnotation(CharSpecified.class);
 			if (characters != null) {
 				return this.addCharacters(name, characters, f, adapterSupply);
@@ -303,19 +281,6 @@ public class Parser {
 			}
 		}
 		
-		private void updateChoicesOnChar0th() {
-			for (Triple<TFChoiceOnChar0th, CChoice> p : this.choice0ths) {
-				TokenFactory[] fs = getFactories(this.symbols, p.annotation.value());
-				Predicate[] ps = getPredicates(p.annotation.preds());
-				p.factory.setChoices(ps, fs);
-				String dcode = p.annotation.def();
-				if (dcode.length() > 0) {
-					TokenFactory df = this.symbols.get(dcode);
-					p.factory.setDefault(df);
-				}
-			}
-		}
-		
 		private void updateSequences() {
 			for (Triple<TFSequence, Sequence> p : this.sequences) {
 				TokenFactory[] fs = getFactories(this.symbols, p.annotation.value());
@@ -391,7 +356,6 @@ public class Parser {
 		
 		public void update(Class<?> cls, boolean ignore)  throws IllegalAccessException, InstantiationException, ParseException {
 			this.updateChoices();
-			this.updateChoicesOnChar0th();
 			this.updateSequences();
 			this.updateLists();
 			this.updateEnclosedLists();
@@ -456,25 +420,6 @@ public class Parser {
 		return result;
 	}
 	
-	private static Predicate[] getPredicates(String[] codes) {
-		int n = codes.length;
-		Predicate[] result = new Predicate[n];
-		for (int i=0; i<n; ++i) {
-			String code = codes[i];
-			if (code.length() == 1) {
-				result[i] = new CharPredicate(code.charAt(0));
-			} else {
-				Predicate named = PREDICATES.get(code);
-				if (named == null) {
-					result[i] = new CharsPredicate(code.toCharArray());	
-				} else {
-					result[i] = PREDICATES.get(code);
-				}
-			}
-		}
-		return result;
-	}
-		
 	private <T> T parse(Class<T> cls, AdapterSupply adapterSupply, boolean ignore) throws ParseException {
 		try {
 			T target = cls.newInstance();

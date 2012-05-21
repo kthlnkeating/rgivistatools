@@ -1,11 +1,9 @@
 package com.raygroupintl.m.token;
 
 import com.raygroupintl.m.struct.MError;
-import com.raygroupintl.parser.TFEmpty;
 import com.raygroupintl.parser.TFSyntaxError;
 import com.raygroupintl.parser.TokenFactory;
 import com.raygroupintl.parser.annotation.AdapterSupply;
-import com.raygroupintl.parser.annotation.CChoice;
 import com.raygroupintl.parser.annotation.CharSpecified;
 import com.raygroupintl.parser.annotation.Choice;
 import com.raygroupintl.parser.annotation.Rule;
@@ -714,16 +712,7 @@ public class MTFSupply {
 		@Choice({"classmethod", "expr"})
 		public TokenFactory setrhs;
 		
-		public TokenFactory empty = new TFEmpty("empty");
-		@CChoice(value={"empty"}, preds={":"}, def="expr")
-		public TokenFactory casearg_0;
-		@Sequence(value={"casearg_0", "colon", "expr"}, required="all")
-		public TokenFactory casearg_1;		
-		@List(value="casearg_1", delim="comma")
-		public TokenFactory casearg_list;			
-		@Sequence(value={"comma", "casearg_list"}, required="all")
-		public TokenFactory cases;
-		@Sequence(value={"expr", "cases"}, required="all")
+		@Rule("expr, ',', {([expr], [':', expr]):','}")
 		public TokenFactory dcasearg;
 	
 		@List(value="actual", delim="comma")
