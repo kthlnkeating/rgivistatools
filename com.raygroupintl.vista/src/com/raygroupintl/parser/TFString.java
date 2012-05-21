@@ -56,6 +56,11 @@ public class TFString extends TFBasic {
 		return new TFString(name, this.predicate, this.adapter);
 	}
 	
+	@Override
+	public boolean isInitialized() {
+		return true;
+	}
+	
 	public void setAdapter(StringAdapter adapter) {
 		this.adapter = adapter;
 	}

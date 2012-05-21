@@ -32,6 +32,9 @@ public class TSymbol extends TString implements RulePieceGenerator {
 		String value = this.getStringValue();
 		TokenFactory result = symbols.get(value);
 		if (result == null) throw new ParseErrorException("Undefined symbol " + value + " used in the rule");
+		if (! result.isInitialized()) {
+			return null;
+		}
 		return result;
 	}
 	

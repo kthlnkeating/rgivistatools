@@ -76,9 +76,14 @@ public class OccuranceRecorder extends LineLocationMarker {
 	
 	private static int countAllOn(Map<LineLocation, Integer> map) {
 		int count = 0;
-		for (Integer value : map.values()) {
+		for (LineLocation location : map.keySet()) {
+			Integer value = map.get(location);
 			count += value;
 		}
+		
+		//for (Integer value : map.values()) {
+		//	count += value;
+		//}
 		return count;
 	}
 

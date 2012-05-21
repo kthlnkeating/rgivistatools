@@ -16,7 +16,7 @@ public class TFCommonTest {
 		Assert.assertEquals(v.length(), t.getStringSize());		
 	}
 	
-	static void validCheck(TokenFactory f, String v, boolean checkWithSpace) {
+	static Token validCheck(TokenFactory f, String v, boolean checkWithSpace) {
 		try {
 			Text text = new Text(v);
 			Token t = f.tokenize(text);
@@ -24,13 +24,22 @@ public class TFCommonTest {
 			if (checkWithSpace) {
 				validCheck(f, v + " ", v);
 			}
+			return t;
 		} catch(SyntaxErrorException e) {
-			fail("Exception: " + e.getMessage());			
+			fail("Exception: " + e.getMessage());	
+			return null;
 		}
 	}
 
-	static void validCheck(TokenFactory f, String v) {
-		validCheck(f, v, true);
+	static Token validCheck(TokenFactory f, String v) {
+		return validCheck(f, v, true);
+	}
+
+	static Token validCheck(TokenFactory f, String v, Class<? extends Token> cls) {
+		Token t = validCheck(f, v, true);
+		Assert.assertNotNull(t);
+		Assert.assertTrue(t.getClass().equals(cls));
+		return t;
 	}
 
 	static void nullCheck(TokenFactory f, String v) {

@@ -88,4 +88,18 @@ public class TFForkableChoice extends TFBasic {
 		throw new UnsupportedOperationException("GetCopy is not implemented for " + TFForkableChoice.class.getName());
 	}
 
+	@Override
+	public boolean isInitialized() {
+		if (this.factories.size() > 0) {
+			for (TokenFactory f : this.factories) {
+				if (f instanceof TFBasic) {
+					if (! ((TFBasic) f).isInitialized()) return false;
+				}
+			}
+			return true;
+		} else {
+			return false;
+		}
+		
+	}
 }

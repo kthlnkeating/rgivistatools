@@ -32,6 +32,10 @@ public abstract class TFBasic extends TokenFactory {
 	
 	public abstract TFBasic getCopy(String name);
 	
+	public boolean isInitialized() {
+		return false;
+	}
+	
 	protected Constructor<? extends Token> getConstructor(Class<? extends Token> cls, Class<?> constructorArgument, Class<? extends Token> targetCls) {
 		try {
 			if (! targetCls.isAssignableFrom(cls)) {

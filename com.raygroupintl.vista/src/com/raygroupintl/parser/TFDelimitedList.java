@@ -60,6 +60,11 @@ public class TFDelimitedList extends TFBasic {
 		return new TFDelimitedList(name, this.effective, this.adapter);
 	}
 
+	@Override
+	public boolean isInitialized() {
+		return this.effective != null;
+	}
+
 	public void setAdapter(DelimitedListAdapter adapter) {
 		this.adapter = adapter;
 	}

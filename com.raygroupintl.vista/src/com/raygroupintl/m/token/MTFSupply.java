@@ -374,10 +374,18 @@ public class MTFSupply {
 	public TokenFactory extdoargument;
 
 	@TokenType(TDoArgument.class)	
-	@Rule("[labelpiece], [lineoffset], [doroutinef], [actuallist], [postcondition]")
+	@Rule("indirection, [lineoffset], [doroutinef], [actuallist], [postcondition]")
+	public TokenFactory inddoargument;
+
+	@TokenType(TDoArgument.class)	
+	@Rule("label, [lineoffset], [doroutinef], [actuallist], [postcondition]")
 	public TokenFactory doargument;
 	
-	@Choice({"extdoargument", "doargument"})
+	@TokenType(TDoArgument.class)	
+	@Rule("doroutinef, [actuallist], [postcondition]")
+	public TokenFactory onlyrdoargument;
+	
+	@Rule("extdoargument | inddoargument | doargument | onlyrdoargument")
 	public TokenFactory doargumentall;
 	
 	@List(value="doargumentall", delim="comma")
@@ -690,11 +698,23 @@ public class MTFSupply {
 		@Sequence(value={"system", "methods", "actuallist"}, required="ror")
 		public TokenFactory systemcall;
 		
-		@Sequence(value={"label", "method"}, required="ro")
-		public TokenFactory labelpiece_0;
-		@CChoice(value={"indirection", "classmethod", "systemcall"}, preds={"@", "#", "$"}, def="labelpiece_0")
-		public TokenFactory labelpiece;
-	
+		//@Sequence(value={"label", "method"}, required="ro")
+		//public TokenFactory labelpiece_0;
+		//@CChoice(value={"indirection", "classmethod", "systemcall"}, preds={"@", "#", "$"}, def="labelpiece_0")
+		//public TokenFactory labelpiece;
+
+		@Rule("label, method, [lineoffset], [doroutinef], [actuallist], [postcondition]")
+		public TokenFactory objdoargument;
+		@Rule("classmethod, [lineoffset], [doroutinef], [actuallist], [postcondition]")
+		public TokenFactory clsdoargument;
+		@Rule("systemcall, [lineoffset], [doroutinef], [actuallist], [postcondition]")
+		public TokenFactory sysdoargument;
+
+		@Rule("objdoargument | extdoargument | inddoargument | doargument | onlyrdoargument | clsdoargument | sysdoargument")
+		public TokenFactory doargumentall;
+
+		
+		
 		@Sequence(value={"environment", "name", "method"}, required="oro")
 		public TokenFactory doroutine;
 

@@ -26,6 +26,9 @@ public abstract class TSymbols extends TSequence implements RulePieceGenerator {
 		for (Iterator<Token> it=list.iterator(); it.hasNext(); ++index) {
 			RulePieceGenerator spg = (RulePieceGenerator) it.next();
 			TokenFactory f = spg.getFactory(name + "." + String.valueOf(index), map);
+			if (f == null) {
+				return null;
+			}
 			boolean b = spg.getRequired();
 			factories.add(f);
 			flags.add(b);

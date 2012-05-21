@@ -324,11 +324,28 @@ public class Parser {
 			}
 		}
 	
-		private void updateDescription() {
-			for (RuleStore p : this.rules) {
+		private static void updateRules(java.util.List<RuleStore> list, java.util.List<RuleStore> remaining, Map<String, TokenFactory> symbols) {
+			for (RuleStore p : list) {
 				TRule trule = p.rule;
-				TFBasic f = (TFBasic) trule.getTopFactory(p.factory.getName(), this.symbols);
-				p.factory.copyWoutAdapterFrom(f);
+				TFBasic f = (TFBasic) trule.getTopFactory(p.factory.getName(), symbols);
+				if (f == null) {
+					remaining.add(p);
+				} else {					
+					p.factory.copyWoutAdapterFrom(f);
+				}
+			}
+		}
+
+		private void updateRules() {
+			java.util.List<RuleStore> remaining = new ArrayList<RuleStore>();
+			updateRules(this.rules, remaining, this.symbols);
+			while (remaining.size() > 0) {
+				java.util.List<RuleStore> nextRemaining = new ArrayList<RuleStore>();
+				updateRules(remaining, nextRemaining, this.symbols);
+				if (nextRemaining.size() == remaining.size()) {
+					throw new ParseErrorException("There looks to be a circular symbol condition");					
+				}
+				remaining = nextRemaining;
 			}
 		}
 
@@ -381,7 +398,7 @@ public class Parser {
 			this.updateEnclosedDelimitedLists();
 			this.updateDelimitedLists();
 			if (! ignore) {
-				this.updateDescription();
+				this.updateRules();
 			}
 		}		
 	}

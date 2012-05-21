@@ -52,17 +52,19 @@ public class Text {
 	}
 	
 	Token extractToken(String value, StringAdapter adapter, boolean ignoreCase) {
-		if (ignoreCase) {
-			String piece = this.text.substring(this.index, this.index+value.length());
-			if (piece.equalsIgnoreCase(value)) {
-				this.index += value.length();
-				return adapter.convert(piece);
-			}
-		} else {
-			if (this.text.startsWith(value, this.index)) {
+		if (this.text.length() >= this.index + value.length()) {
+			if (ignoreCase) {
 				String piece = this.text.substring(this.index, this.index+value.length());
-				this.index += value.length();
-				return adapter.convert(piece);
+				if (piece.equalsIgnoreCase(value)) {
+					this.index += value.length();
+					return adapter.convert(piece);
+				}
+			} else {
+				if (this.text.startsWith(value, this.index)) {
+					String piece = this.text.substring(this.index, this.index+value.length());
+					this.index += value.length();
+					return adapter.convert(piece);
+				}
 			}
 		}
 		return null;	

@@ -1,5 +1,7 @@
 package com.raygroupintl.m.token;
 
+import junit.framework.Assert;
+
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.junit.Test;
@@ -7,6 +9,7 @@ import org.junit.Test;
 import com.raygroupintl.m.struct.MError;
 import com.raygroupintl.m.token.MTFSupply;
 import com.raygroupintl.m.token.MVersion;
+import com.raygroupintl.parser.Token;
 import com.raygroupintl.parser.TokenFactory;
 
 public class TFTest {
@@ -130,6 +133,36 @@ public class TFTest {
 	public void testTFExtDoArgument() {
 		testTFExtDoArgument(supplyCache);
 		testTFExtDoArgument(supplyStd95);		
+	}
+	
+	public void testTFDoArgument(MTFSupply m) {
+		TokenFactory f = m.doargument;
+		TFCommonTest.validCheck(f, "T1:COND1", TDoArgument.class);
+		TFCommonTest.validCheck(f, "T2", TDoArgument.class);
+		TFCommonTest.validCheck(f, "T0", TDoArgument.class);
+	}
+
+	@Test
+	public void testTFDoArgument() {
+		testTFDoArgument(supplyCache);
+		testTFDoArgument(supplyStd95);		
+	}
+	
+	public void testTFDoArguments(MTFSupply m) {
+		TokenFactory f = m.doarguments;
+		Token t = TFCommonTest.validCheck(f, "T0,T1:COND1,T2", MTDelimitedList.class);
+		Assert.assertNotNull(t);
+		MTDelimitedList dl = (MTDelimitedList) t;
+		for (Token lt : dl) {
+			Assert.assertNotNull(lt);
+			Assert.assertTrue(lt instanceof TDoArgument);
+		}
+	}
+
+	@Test
+	public void testTFDoArguments() {
+		testTFDoArguments(supplyCache);
+		testTFDoArguments(supplyStd95);		
 	}
 	
 	public void testTFExternal(MTFSupply m) {

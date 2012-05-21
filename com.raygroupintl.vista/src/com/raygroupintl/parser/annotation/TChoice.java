@@ -39,6 +39,9 @@ public class TChoice extends TDelimitedList implements RulePieceGenerator {
 			for (Token t : this) {
 				RulePieceGenerator r = (RulePieceGenerator) t;
 				TokenFactory f = r.getFactory(name, symbols);
+				if (f == null) {
+					return null;
+				}
 				result.add(f);
 			}
 			return result;

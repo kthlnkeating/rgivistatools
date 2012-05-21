@@ -57,6 +57,6 @@ public class Grammar {
 	@Choice({"plus", "minus"})
 	public TokenFactory operator;
 
-	@Rule("expratom, [operator, expr]")
+	@Rule("expratom, [{(operator, expratom)}]")
 	public TokenFactory expr;
 }

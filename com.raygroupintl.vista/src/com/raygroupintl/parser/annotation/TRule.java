@@ -30,22 +30,27 @@ public class TRule extends TDelimitedList implements RuleGenerator {
 		
 	@Override
 	public TokenFactory getTopFactory(String name, Map<String, TokenFactory> symbols) {
+		if (this.size() == 0) {
+			throw new ParseErrorException("Empty rule.");
+		}
+		if (this.size() == 1) {
+			RulePieceGenerator rpg = (RulePieceGenerator) this.get(0);
+			return rpg.getTopFactory(name, symbols, false);
+		}		
+		
 		List<TokenFactory> factories = new ArrayList<TokenFactory>();
 		List<Boolean> flags = new ArrayList<Boolean>();
 		int index = 0;
 		for (Iterator<Token> it=this.iterator(); it.hasNext(); ++index) {
 			RulePieceGenerator rpg = (RulePieceGenerator) it.next();
 			TokenFactory f = rpg.getFactory(name + "." + String.valueOf(index), symbols);
+			if (f == null) {
+				return null;
+			}
 			boolean b = rpg.getRequired();
 			factories.add(f);
 			flags.add(b);
 		}
-		if (factories.size() == 0) return null;
-		if (factories.size() == 1) {
-			RulePieceGenerator rpg = (RulePieceGenerator) this.get(0);
-			return rpg.getTopFactory(name, symbols, false);
-		}		
-		
 		TFSequence result = new TFSequence(name);
 		
 		int n = factories.size();

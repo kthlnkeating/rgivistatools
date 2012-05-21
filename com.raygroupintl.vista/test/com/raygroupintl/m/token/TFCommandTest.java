@@ -93,6 +93,7 @@ public class TFCommandTest {
 		testDo(fCache);
 		testDo(fStd95);
 		testCommand(fCache, "DO $system.Status.DecomposeStatus(%objlasterror,.XOBLERR)");
+		testCommand(fCache, "D READER.Read()");
 	}
 
 	private void testFor(TFCommand f) {

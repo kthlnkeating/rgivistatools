@@ -55,6 +55,11 @@ public class TFCharacter extends TFBasic {
 		return new TFCharacter(name, this.predicate, this.adapter);
 	}
 	
+	@Override
+	public boolean isInitialized() {
+		return true;
+	}
+	
 	public void setAdapter(CharacterAdapter adapter) {
 		this.adapter = adapter;
 	}

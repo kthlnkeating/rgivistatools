@@ -31,5 +31,9 @@ public abstract class TokenFactory {
 		return this;
 	}
 	
+	public boolean isInitialized() {
+		return true;
+	}
+	
 	public abstract Token tokenize(Text text) throws SyntaxErrorException;
 }

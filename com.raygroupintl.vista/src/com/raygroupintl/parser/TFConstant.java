@@ -65,6 +65,11 @@ public class TFConstant extends TFBasic {
 		return new TFConstant(name, this.value, this.adapter, this.ignoreCase);
 	}
 	
+	@Override
+	public boolean isInitialized() {
+		return true;
+	}
+	
 	public void setAdapter(StringAdapter adapter) {
 		this.adapter = adapter;
 	}

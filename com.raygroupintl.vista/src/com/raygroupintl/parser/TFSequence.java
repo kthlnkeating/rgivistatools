@@ -103,6 +103,11 @@ public class TFSequence extends TFBasic {
 		throw new UnsupportedOperationException("GetCopy is not implemented for " + TFSequence.class.getName());
 	}
 
+	@Override
+	public boolean isInitialized() {
+		return this.factories.length > 0;
+	}
+	
 	public void setFactories(TokenFactory[] factories, boolean[] requiredFlags) {
 		if (requiredFlags.length != factories.length) throw new IllegalArgumentException();
 		this.factories = factories;

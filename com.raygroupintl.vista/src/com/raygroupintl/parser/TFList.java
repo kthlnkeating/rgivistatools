@@ -64,6 +64,11 @@ public final class TFList extends TFBasic {
 		return new TFList(name, this.adapter, this.elementFactory);
 	}
 
+	@Override
+	public boolean isInitialized() {
+		return this.elementFactory != null;
+	}
+
 	public void setAdapter(ListAdapter adapter) {
 		this.adapter = adapter;
 	}
