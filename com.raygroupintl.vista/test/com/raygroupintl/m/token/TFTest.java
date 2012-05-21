@@ -276,7 +276,7 @@ public class TFTest {
 		TokenFactory f = m.numlit;
 		TFCommonTest.validCheck(f, ".11");
 		TFCommonTest.validCheck(f, "1.11");
-		TFCommonTest.validCheck(f, "-3.11");
+		TFCommonTest.validCheck(f, "3.11");
 		TFCommonTest.validCheck(f, ".11E12");
 		TFCommonTest.errorCheck(f, "1.E12", MError.ERR_GENERAL_SYNTAX, 2);
 		TFCommonTest.errorCheck(f, "1.E-12", MError.ERR_GENERAL_SYNTAX, 2);

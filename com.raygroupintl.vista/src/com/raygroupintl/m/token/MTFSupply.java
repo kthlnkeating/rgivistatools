@@ -133,15 +133,13 @@ public class MTFSupply {
 	public TokenFactory labelref;
 	
 	
-	@Sequence(value={"e", "pm", "intlit"}, required="ror")
-	public TokenFactory exp;
 	@Sequence(value={"dot", "intlit"}, required="all")
 	public TokenFactory mantista_1;
 	@Sequence(value={"intlit", "mantista_1"})
 	public TokenFactory mantista;
 	
 	@TokenType(TNumLit.class)
-	@Sequence(value={"pm", "mantista", "exp"}, required="oro")
+	@Rule("mantista, ['E', ['+' | '-'], intlit]")
 	public TokenFactory numlit;
 		
 	public TFOperator operator = new TFOperator("operator");
@@ -225,10 +223,10 @@ public class MTFSupply {
 	@List(value="dselectarg_e", delim="comma")
 	public TokenFactory dselectarg;
 	
-	@CChoice(value={"gvnssvn", "gvnnaked", "gvn", "gvn"}, preds={"$", "(", "%|[", "letter"}, lead="^", def="error")
+	@Rule("gvnssvn | gvnnaked | gvn")
 	public TokenFactory gvnall;
 
-	@CChoice(value={"extrinsic", "external", "intrinsic"}, preds={"$", "&", "letter"}, lead="$")
+	@Rule("extrinsic | external | intrinsic")
 	public TokenFactory expritem_d;
 	
 	@CChoice(value={"strlit", "expritem_d", "unaryexpritem", "numlit", "exprinpar", "numlit"}, preds={"\"", "$", "'+-", ".", "(", "digit"})
