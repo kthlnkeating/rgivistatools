@@ -96,7 +96,7 @@ public class MTFSupply {
 	public TokenFactory patcode;	
 	@Sequence(value={"intlit", "dot", "intlit"})
 	public TokenFactory repcount;
-	@CChoice(value={"alternation", "patcode", "strlit"}, preds={"(", "letter", "\""})
+	@Rule("alternation | patcode | strlit")
 	public TokenFactory patatom_re;
 	@Sequence(value={"repcount", "patatom_re"}, required="all")
 	public TokenFactory patatom;	
@@ -227,9 +227,9 @@ public class MTFSupply {
 	public TokenFactory gvnall;
 
 	@Rule("extrinsic | external | intrinsic")
-	public TokenFactory expritem_d;
+	public TokenFactory expritemd;
 	
-	@CChoice(value={"strlit", "expritem_d", "unaryexpritem", "numlit", "exprinpar", "numlit"}, preds={"\"", "$", "'+-", ".", "(", "digit"})
+	@Rule("strlit | expritemd | unaryexpritem | numlit | exprinpar")
 	public TokenFactory expritem;
 	
 	@Rule("'.', name")
@@ -258,15 +258,15 @@ public class MTFSupply {
 	@Sequence(value={"expr", "deviceparam_1"}, required="ro")
 	public TokenFactory deviceparam;
 	@List(value="deviceparam", delim="colon", left="lpar", right="rpar", empty=true)
-	public TokenFactory deviceparams_i;
-	@CChoice(value={"deviceparams_i"}, def="deviceparam", preds={"("})
+	public TokenFactory deviceparamsi;
+	@Rule("deviceparamsi | deviceparam")
 	public TokenFactory deviceparams;
 	
 	@Choice({"indirection", "name"})
 	public TokenFactory cmdkexcarg;
 	@List(value="cmdkexcarg", delim="comma", left="lpar", right="rpar")
 	public TokenFactory cmdkexcargs;
-	@CChoice(value={"cmdkexcargs", "indirection"}, preds={"(", "@"}, def="glvn")
+	@Rule("cmdkexcargs | indirection | glvn")
 	public TokenFactory cmdkarg;
 	@List(value="cmdkarg", delim="comma")
 	public TokenFactory cmdkargs;
@@ -323,12 +323,12 @@ public class MTFSupply {
 	public TokenFactory format;
 	
 	@Sequence(value={"glvn", "readcount", "timeout"}, required="roo")
-	public TokenFactory cmdrarg_def;	
+	public TokenFactory cmdrargdef;	
 	@Sequence(value={"asterix", "glvn", "timeout"}, required="rro")
-	public TokenFactory cmdrarg_ast;	
+	public TokenFactory cmdrargast;	
 	@Sequence(value={"indirection", "timeout"}, required="ro")
-	public TokenFactory cmdrarg_at;	
-	@CChoice(value={"format", "strlit", "cmdrarg_ast", "cmdrarg_at"}, preds={"!#?/", "\"", "*", "@"}, def="cmdrarg_def")
+	public TokenFactory cmdrargat;	
+	@Rule("format | strlit | cmdrargast | cmdrargat | cmdrargdef")
 	public TokenFactory cmdrarg;
 	@List(value="cmdrarg", delim="comma")
 	public TokenFactory cmdrargs;
@@ -436,7 +436,7 @@ public class MTFSupply {
 	@Sequence(value={"lvn", "eq", "forrhss"}, required="all")
 	public TokenFactory forarg;
 	
-	@CChoice(value={"gvn", "indirection"}, preds={"^", "@"}, def="lvn")
+	@Rule("gvn | indirection | lvn")
 	public TokenFactory lockee_single;
 	@List(value="lockee", delim="comma", left="lpar", right="rpar")
 	public TokenFactory lockee_list;
@@ -449,7 +449,7 @@ public class MTFSupply {
 	
 	@List(value="lvn", delim="comma", left="lpar", right="rpar")
 	public TokenFactory lvns;
-	@CChoice(value={"lvns", "indirection", "intrinsic"}, preds={"(", "@", "$"}, def="name")
+	@Rule("lvns | indirection | intrinsic | name")
 	public TokenFactory newarg;
 	@List(value="newarg", delim="comma")
 	public TokenFactory newargs;
@@ -478,8 +478,8 @@ public class MTFSupply {
 	public TokenFactory xecuteargs;
 
 	@Sequence(value={"slash", "name", "actuallist"}, required="all")
-	public TokenFactory writearg_slash;
-	@CChoice(value={"format", "writearg_slash", "asterixexpr", "indirection"}, preds={"!#?", "/", "*", "@"}, def="expr")
+	public TokenFactory writeargslash;
+	@Rule("format | writeargslash | asterixexpr | indirection | expr")
 	public TokenFactory writearg;
 	@List(value="writearg", delim="comma")
 	public TokenFactory writeargs;
@@ -502,7 +502,7 @@ public class MTFSupply {
 	public TokenFactory comment;
 	
 	
-	@CChoice(value={"command", "comment"}, preds={"letter", ";"}, def="error")
+	@Rule("command | comment | error")
 	public TokenFactory commandorcomment;
 	@List(value="commandorcomment")
 	public TokenFactory commandorcommentlist;
@@ -698,11 +698,6 @@ public class MTFSupply {
 		@Sequence(value={"system", "methods", "actuallist"}, required="ror")
 		public TokenFactory systemcall;
 		
-		//@Sequence(value={"label", "method"}, required="ro")
-		//public TokenFactory labelpiece_0;
-		//@CChoice(value={"indirection", "classmethod", "systemcall"}, preds={"@", "#", "$"}, def="labelpiece_0")
-		//public TokenFactory labelpiece;
-
 		@Rule("label, method, [lineoffset], [doroutinef], [actuallist], [postcondition]")
 		public TokenFactory objdoargument;
 		@Rule("classmethod, [lineoffset], [doroutinef], [actuallist], [postcondition]")
@@ -713,8 +708,6 @@ public class MTFSupply {
 		@Rule("objdoargument | extdoargument | inddoargument | doargument | onlyrdoargument | clsdoargument | sysdoargument")
 		public TokenFactory doargumentall;
 
-		
-		
 		@Sequence(value={"environment", "name", "method"}, required="oro")
 		public TokenFactory doroutine;
 
