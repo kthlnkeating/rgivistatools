@@ -24,7 +24,6 @@ import com.raygroupintl.parser.TFBasic;
 import com.raygroupintl.parser.TFCharacter;
 import com.raygroupintl.parser.TFChoiceBasic;
 import com.raygroupintl.parser.TFChoiceOnChar0th;
-import com.raygroupintl.parser.TFChoiceOnChar1st;
 import com.raygroupintl.parser.TFConstant;
 import com.raygroupintl.parser.TFDelimitedList;
 import com.raygroupintl.parser.TFEnd;
@@ -74,7 +73,6 @@ public class Parser {
 		private java.util.List<Triple<TFDelimitedList, List>> delimitedLists  = new ArrayList<Triple<TFDelimitedList, List>>();
 		private java.util.List<Triple<TFSequence, List>> enclosedDelimitedLists  = new ArrayList<Triple<TFSequence, List>>();
 		private java.util.List<Triple<TFChoiceOnChar0th, CChoice>> choice0ths  = new ArrayList<Triple<TFChoiceOnChar0th, CChoice>>();
-		private java.util.List<Triple<TFChoiceOnChar1st, CChoice>> choice1sts  = new ArrayList<Triple<TFChoiceOnChar1st, CChoice>>();
 		
 		private java.util.List<RuleStore> rules  = new ArrayList<RuleStore>();
 
@@ -106,8 +104,12 @@ public class Parser {
 					Parser parser = new Parser();
 					ruleGrammar = parser.parse(RuleGrammar.class, null, true);
 				}
-				Text text = new Text(ruleAnnotation.value());
+				String ruleText = ruleAnnotation.value();
+				Text text = new Text(ruleText);
 				TRule trule = (TRule) ruleGrammar.rule.tokenize(text);
+				if (trule.getStringSize() != ruleText.length()) {
+					throw new ParseErrorException("Error in rule specification for " + name);					
+				}
 				
 				TFBasic value = (TFBasic) trule.getTopFactoryShell(name, this.symbols);
 				if (value != null) {
@@ -148,16 +150,9 @@ public class Parser {
 		}
 		
 		private TokenFactory addCChoice(String name, CChoice cchoice) {
-			String lead = cchoice.lead();
-			if (lead.length() == 0) {
-				TFChoiceOnChar0th value = new TFChoiceOnChar0th(name);
-				this.choice0ths.add(new Triple<TFChoiceOnChar0th, CChoice>(value, cchoice));
-				return value;
-			} else {
-				TFChoiceOnChar1st value = new TFChoiceOnChar1st(name);
-				this.choice1sts.add(new Triple<TFChoiceOnChar1st, CChoice>(value, cchoice));
-				return value;
-			}
+			TFChoiceOnChar0th value = new TFChoiceOnChar0th(name);
+			this.choice0ths.add(new Triple<TFChoiceOnChar0th, CChoice>(value, cchoice));
+			return value;
 		}
 		
 		private Predicate orPredicates(Predicate p0, Predicate p1) {
@@ -321,20 +316,6 @@ public class Parser {
 			}
 		}
 		
-		private void updateChoicesOnChar1st() {
-			for (Triple<TFChoiceOnChar1st, CChoice> p : this.choice1sts) {
-				TokenFactory[] fs = getFactories(this.symbols, p.annotation.value());
-				Predicate[] ps = getPredicates(p.annotation.preds());
-				p.factory.setLeadingChar(p.annotation.lead().charAt(0));
-				p.factory.setChoices(ps, fs);
-				String dcode = p.annotation.def();
-				if (dcode.length() > 0) {
-					TokenFactory df = this.symbols.get(dcode);
-					p.factory.setDefault(df);
-				}
-			}
-		}
-		
 		private void updateSequences() {
 			for (Triple<TFSequence, Sequence> p : this.sequences) {
 				TokenFactory[] fs = getFactories(this.symbols, p.annotation.value());
@@ -394,7 +375,6 @@ public class Parser {
 		public void update(Class<?> cls, boolean ignore)  throws IllegalAccessException, InstantiationException, ParseException {
 			this.updateChoices();
 			this.updateChoicesOnChar0th();
-			this.updateChoicesOnChar1st();
 			this.updateSequences();
 			this.updateLists();
 			this.updateEnclosedLists();

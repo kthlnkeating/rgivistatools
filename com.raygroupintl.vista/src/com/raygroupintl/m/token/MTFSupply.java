@@ -131,17 +131,17 @@ public class MTFSupply {
 	@TokenType(TLabelRef.class)
 	@Sequence(value={"name", "envroutine"})
 	public TokenFactory labelref;
-	
-	
-	@Sequence(value={"dot", "intlit"}, required="all")
-	public TokenFactory mantista_1;
-	@Sequence(value={"intlit", "mantista_1"})
-	public TokenFactory mantista;
-	
-	@TokenType(TNumLit.class)
-	@Rule("mantista, ['E', ['+' | '-'], intlit]")
-	public TokenFactory numlit;
 		
+	@TokenType(TNumLit.class)
+	@Rule("'.', intlit, ['E', ['+' | '-'], intlit]")
+	public TokenFactory numlita;
+	@TokenType(TNumLit.class)
+	@Rule("intlit, ['.', intlit], ['E', ['+' | '-'], intlit]")
+	public TokenFactory numlitb;
+	
+	@Choice({"numlita", "numlitb"})
+	public TokenFactory numlit;
+	
 	public TFOperator operator = new TFOperator("operator");
 	public TokenFactory error = new TFSyntaxError("error", MError.ERR_GENERAL_SYNTAX);
 	@CharSpecified(chars={'+', '-', '\''})
@@ -232,13 +232,11 @@ public class MTFSupply {
 	@CChoice(value={"strlit", "expritem_d", "unaryexpritem", "numlit", "exprinpar", "numlit"}, preds={"\"", "$", "'+-", ".", "(", "digit"})
 	public TokenFactory expritem;
 	
-	@Sequence(value={"dot", "name"}, required="all")
-	public TokenFactory actual_d1;
-	@Sequence(value={"dot", "indirection"}, required="all")
-	public TokenFactory actual_d2;
-	@CChoice(value={"numlit", "actual_d1", "actual_d2"}, preds={"digit", "idstart", "@"}, lead=".", def="error")
-	public TokenFactory actual_d;
-	@CChoice(value={"actual_d"}, preds={"."}, def="expr")
+	@Rule("'.', name")
+	public TokenFactory actualda;
+	@Rule("'.', indirection")
+	public TokenFactory actualdb;
+	@Rule("numlita | actualda | actualdb | expr")
 	public TokenFactory actual;
 	
 	@Choice({"glvn", "expritem"})

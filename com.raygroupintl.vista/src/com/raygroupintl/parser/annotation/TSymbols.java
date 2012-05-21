@@ -24,14 +24,11 @@ public abstract class TSymbols extends TSequence implements RulePieceGenerator {
 		TList list = (TList) this.get(1);
 		int index = 0;
 		for (Iterator<Token> it=list.iterator(); it.hasNext(); ++index) {
-			Token t = it.next();
-			if (t instanceof RulePieceGenerator) {
-				RulePieceGenerator spg = (RulePieceGenerator) t;
-				TokenFactory f = spg.getFactory(name + "." + String.valueOf(index), map);
-				boolean b = spg.getRequired();
-				factories.add(f);
-				flags.add(b);
-			}
+			RulePieceGenerator spg = (RulePieceGenerator) it.next();
+			TokenFactory f = spg.getFactory(name + "." + String.valueOf(index), map);
+			boolean b = spg.getRequired();
+			factories.add(f);
+			flags.add(b);
 		}
 		if (factories.size() == 0) return null;
 		if (factories.size() == 1) return factories.get(0);

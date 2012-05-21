@@ -30,7 +30,9 @@ public class TSymbol extends TString implements RulePieceGenerator {
 	@Override
 	public TokenFactory getFactory(String name, Map<String, TokenFactory> symbols) {
 		String value = this.getStringValue();
-		return symbols.get(value);
+		TokenFactory result = symbols.get(value);
+		if (result == null) throw new ParseErrorException("Undefined symbol " + value + " used in the rule");
+		return result;
 	}
 	
 	@Override	
@@ -43,7 +45,7 @@ public class TSymbol extends TString implements RulePieceGenerator {
 		String value = this.getStringValue();
 		TokenFactory source = symbols.get(value);
 		if (source == null) {
-			if (! asShell) throw new ParseErrorException("Undefined symbol " + value + "used in the rule");
+			if (! asShell) throw new ParseErrorException("Undefined symbol " + value + " used in the rule");
 			return null;
 		}
 		if (source instanceof TFBasic) {
