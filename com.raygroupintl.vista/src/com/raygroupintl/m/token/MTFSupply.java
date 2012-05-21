@@ -388,12 +388,16 @@ public class MTFSupply {
 	
 	@List(value="doargumentall", delim="comma")
 	public TokenFactory doarguments;
-
-	@Sequence(value={"environment", "name"}, required="or")
+	
+	@Rule("environment, name")
+	public TokenFactory envdoroutine;
+	@Rule("name")
 	public TokenFactory doroutine;
-	@Choice({"rindirection", "doroutine"})
-	public TokenFactory doroutineind;
-	@Sequence(value={"caret", "doroutineind"}, required="ro")
+	@Rule("indirection")
+	public TokenFactory inddoroutine;
+	@Rule("envdoroutine | doroutine | inddoroutine")
+	public TokenFactory doroutinepostcaret;
+	@Rule("'^', doroutinepostcaret")
 	public TokenFactory doroutinef;
 	
 	@Choice(value={"indirection", "label"})
@@ -705,10 +709,12 @@ public class MTFSupply {
 
 		@Rule("objdoargument | extdoargument | inddoargument | doargument | onlyrdoargument | clsdoargument | sysdoargument")
 		public TokenFactory doargumentall;
-
-		@Sequence(value={"environment", "name", "method"}, required="oro")
-		public TokenFactory doroutine;
-
+		
+		@Rule("name, method")
+		public TokenFactory objdoroutine;
+		@Rule("envdoroutine | objdoroutine | doroutine | inddoroutine")
+		public TokenFactory doroutinepostcaret;
+		
 		@Choice({"classmethod", "expr"})
 		public TokenFactory setrhs;
 		

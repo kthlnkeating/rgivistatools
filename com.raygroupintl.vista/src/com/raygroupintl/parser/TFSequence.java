@@ -52,10 +52,71 @@ public class TFSequence extends TFBasic {
 	
 	private static final SequenceAdapter DEFAULT_ADAPTER = new SequenceAdapter() {		
 		@Override
-		public Token convert(List<Token> tokens) {
+		public TSequence convert(List<Token> tokens) {
 			return new TSequence(tokens);
 		}
 	}; 
+	
+	static class TFSequenceCopy extends TFBasic {
+		private SequenceAdapter adapter;
+		private TFSequence slave;
+		
+		private TFSequenceCopy(String name, TFSequence slave) {
+			super(name);
+			this.slave = slave;
+		}
+		
+		@Override
+		public final TSequence tokenize(Text text) throws SyntaxErrorException {
+			TSequence result = this.slave.tokenize(text);
+			if ((result == null) || (this.adapter == null)) {
+				return result;
+			}
+			return this.adapter.convert(result.toList());
+		}
+		
+		public TSequence convert(TSequence result) {
+			if ((result == null) || (this.adapter == null)) {
+				return result;
+			}
+			return this.adapter.convert(result.toList());			
+		}
+		
+		@Override
+		public void setTargetType(Class<? extends Token> cls) {
+			this.adapter = getAdapter(cls);
+		}
+
+		@Override
+		public void setAdapter(Object adapter) {
+			this.adapter = getAdapter(adapter);					
+		}	
+		
+		@Override
+		public void copyWoutAdapterFrom(TFBasic rhs) {
+			if (rhs instanceof TFSequenceCopy) {
+				TFSequenceCopy rhsCasted = (TFSequenceCopy) rhs;
+				this.slave = rhsCasted.slave;
+			} else {
+				throw new IllegalArgumentException("Illegal attemp to copy from " + rhs.getClass().getName() + " to " + TFSequenceCopy.class.getName());
+			}
+		}
+
+		@Override
+		public TFBasic getCopy(String name) {
+			return new TFSequenceCopy(name, this.slave);
+		}		
+		
+		@Override
+		public boolean isInitialized() {
+			return this.slave.isInitialized();
+		}	
+		
+		@Override
+		protected TokenFactory getLeadingFactory() {
+			return this.slave;
+		}		
+	}
 		
 	private TokenFactory[] factories = {};
 	private RequiredFlags requiredFlags = new RequiredFlags();
@@ -100,7 +161,7 @@ public class TFSequence extends TFBasic {
 
 	@Override
 	public TFBasic getCopy(String name) {
-		throw new UnsupportedOperationException("GetCopy is not implemented for " + TFSequence.class.getName());
+		return new TFSequenceCopy(name, this);
 	}
 
 	@Override
@@ -171,7 +232,7 @@ public class TFSequence extends TFBasic {
 		}
 	}
 
-	protected Token getToken(TokenStore foundTokens) {
+	protected TSequence getToken(TokenStore foundTokens) {
 		for (int i=0; i<foundTokens.size(); ++i) {
 			if (foundTokens.get(i) != null) return this.adapter.convert(foundTokens.toList());
 		}		
@@ -179,7 +240,7 @@ public class TFSequence extends TFBasic {
 	}
 
 	@Override
-	public final Token tokenize(Text text) throws SyntaxErrorException {
+	public final TSequence tokenize(Text text) throws SyntaxErrorException {
 		if (text.onChar()) {
 			TokenStore foundTokens = new ArrayAsTokenStore(this.factories.length);
 			return this.tokenize(text, 0, foundTokens, false);
@@ -187,7 +248,7 @@ public class TFSequence extends TFBasic {
 		return null;
 	}
 	
-	final Token tokenize(Text text, int firstSeqIndex, TokenStore foundTokens, boolean noException) throws SyntaxErrorException {
+	final TSequence tokenize(Text text, int firstSeqIndex, TokenStore foundTokens, boolean noException) throws SyntaxErrorException {
 		int factoryCount = this.factories.length;
 		for (int i=firstSeqIndex; i<factoryCount; ++i) {
 			TokenFactory factory = this.factories[i];
@@ -214,28 +275,36 @@ public class TFSequence extends TFBasic {
 		return this.getToken(foundTokens);	
 	}
 	
-		
-	@Override
-	public void setTargetType(Class<? extends Token> cls) {
-		final Constructor<? extends Token> constructor = this.getConstructor(cls, List.class, TSequence.class);
-		this.adapter = new SequenceAdapter() {			
+	private static SequenceAdapter getAdapter(Class<? extends Token> cls) {
+		final Constructor<? extends Token> constructor = getConstructor(cls, List.class, TSequence.class);
+		return new SequenceAdapter() {			
 			@Override
-			public Token convert(List<Token> tokens) {
+			public TSequence convert(List<Token> tokens) {
 				try{
-					return (Token) constructor.newInstance(tokens);
+					return (TSequence) constructor.newInstance(tokens);
 				} catch (Exception e) {	
 					return null;
 				}
 			}
 		};
+		
+	}
+		
+	@Override
+	public void setTargetType(Class<? extends Token> cls) {
+		this.adapter = getAdapter(cls);
 	}
 	
-	@Override
-	public void setAdapter(Object adapter) {
+	private static SequenceAdapter getAdapter(Object adapter) {
 		if (adapter instanceof SequenceAdapter) {
-			this.adapter = (SequenceAdapter) adapter;					
+			return (SequenceAdapter) adapter;					
 		} else {
 			throw new IllegalArgumentException("Wrong adapter type " + adapter.getClass().getName());
 		}
+	}	
+	
+	@Override
+	public void setAdapter(Object adapter) {
+		this.adapter = getAdapter(adapter);					
 	}	
 }

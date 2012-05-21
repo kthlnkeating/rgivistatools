@@ -25,6 +25,7 @@ public class TFForkedSequence extends TokenFactory {
 	private TokenFactory leader;
 	private List<TFSequence> followers;
 	private boolean singleValid;
+	private TFSequence.TFSequenceCopy copy;
 	
 	public TFForkedSequence(String name) {
 		super(name);
@@ -35,13 +36,12 @@ public class TFForkedSequence extends TokenFactory {
 		this.leader = leader;
 	}
 	
-	public void setLeader(TokenFactory leader) {
-		this.leader = leader;
-	}
-	
 	public void addFollower(TokenFactory follower) {
-		if (follower == this.leader) {
+		if ((follower == this.leader) || (follower instanceof TFSequence.TFSequenceCopy)) {
 			this.singleValid = true;
+			if (follower instanceof TFSequence.TFSequenceCopy) {
+				this.copy = (TFSequence.TFSequenceCopy) follower;
+			}
 			return;
 		}
 		if (follower instanceof TFSequence) {			
@@ -81,7 +81,11 @@ public class TFForkedSequence extends TokenFactory {
 			}
 		}
 		if (this.singleValid) {
-			return leading;
+			if (this.copy != null) {
+				return this.copy.convert((TSequence) leading);
+			} else {
+				return leading;
+			}
 		}
 		throw new SyntaxErrorException();
 	}

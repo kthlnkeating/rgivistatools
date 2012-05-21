@@ -15,6 +15,7 @@ import com.raygroupintl.parser.TFDelimitedList;
 import com.raygroupintl.parser.TFList;
 import com.raygroupintl.parser.TFSequence;
 import com.raygroupintl.parser.TFString;
+import com.raygroupintl.parser.TSequence;
 import com.raygroupintl.parser.Token;
 import com.raygroupintl.parser.TokenFactory;
 import com.raygroupintl.parser.annotation.AdapterSupply;
@@ -59,7 +60,7 @@ public class MAdapterSupply implements AdapterSupply {
 		if (this.sequenceAdapter == null) {
 			this.sequenceAdapter = new SequenceAdapter() {				
 				@Override
-				public Token convert(List<Token> tokens) {
+				public TSequence convert(List<Token> tokens) {
 					return new MTSequence(tokens);
 				}
 			};
@@ -114,7 +115,7 @@ public class MAdapterSupply implements AdapterSupply {
 
 		result.put(TFSequence.class, new SequenceAdapter() {			
 			@Override
-			public Token convert(List<Token> tokens) {
+			public TSequence convert(List<Token> tokens) {
 				return new MTSequence(tokens);
 			}
 		});
@@ -143,6 +144,9 @@ public class MAdapterSupply implements AdapterSupply {
 			this.adapters = getAdapterMap();
 		}
 		Object result = this.adapters.get(tokenCls);
+		if (result == null) {
+			return this.adapters.get(TFSequence.class);
+		}
 		return result;
 	}
 }

@@ -55,4 +55,8 @@ public class TSequence implements Token, Iterable<Token> {
 	public Iterator<Token> iterator() {
 		return this.tokens.iterator();
 	}
+	
+	public List<Token> toList() {
+		return this.tokens;
+	}
 }
