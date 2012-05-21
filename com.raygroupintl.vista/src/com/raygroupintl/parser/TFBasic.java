@@ -19,8 +19,6 @@ package com.raygroupintl.parser;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Modifier;
 
-import com.raygroupintl.parser.annotation.ParseErrorException;
-
 public abstract class TFBasic extends TokenFactory {
 	public TFBasic(String name) {
 		super(name);
@@ -33,15 +31,6 @@ public abstract class TFBasic extends TokenFactory {
 	public abstract void copyWoutAdapterFrom(TFBasic rhs);
 	
 	public abstract TFBasic getCopy(String name);
-	
-	public void setAdapter(Class<?> adapterCls) {
-		try {
-			Object adapter = adapterCls.newInstance();
-			this.setAdapter(adapter);
-		} catch (IllegalAccessException | InstantiationException ie) {
-			throw new ParseErrorException(adapterCls.getName() + " is not a valid class", ie);
-		}
-	}
 	
 	protected Constructor<? extends Token> getConstructor(Class<? extends Token> cls, Class<?> constructorArgument, Class<? extends Token> targetCls) {
 		try {

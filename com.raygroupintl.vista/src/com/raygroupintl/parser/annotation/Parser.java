@@ -85,17 +85,12 @@ public class Parser {
 		}
 		
 		private void updateAdapter(Field f, TFBasic target, AdapterSupply adapterSupply)  {
-			Adapter adapter = f.getAnnotation(Adapter.class);
-			if (adapter != null) {
-				target.setAdapter(adapter.value());
-			} else {
-				TokenType tokenType = f.getAnnotation(TokenType.class);
-				if (tokenType != null) {
-					target.setTargetType(tokenType.value());
-				} else if (adapterSupply != null){
-					Object a = adapterSupply.getAdapter(target.getClass());
-					target.setAdapter(a);
-				}
+			TokenType tokenType = f.getAnnotation(TokenType.class);
+			if (tokenType != null) {
+				target.setTargetType(tokenType.value());
+			} else if (adapterSupply != null){
+				Object a = adapterSupply.getAdapter(target.getClass());
+				target.setAdapter(a);
 			}
 		}
 

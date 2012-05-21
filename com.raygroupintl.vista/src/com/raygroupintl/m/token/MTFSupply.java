@@ -1,10 +1,8 @@
 package com.raygroupintl.m.token;
 
 import com.raygroupintl.m.struct.MError;
-import com.raygroupintl.parser.SequenceAdapter;
 import com.raygroupintl.parser.TFEmpty;
 import com.raygroupintl.parser.TFSyntaxError;
-import com.raygroupintl.parser.Token;
 import com.raygroupintl.parser.TokenFactory;
 import com.raygroupintl.parser.annotation.AdapterSupply;
 import com.raygroupintl.parser.annotation.CChoice;
@@ -661,18 +659,6 @@ public class MTFSupply {
 	
 	
 	public static class CacheSupply extends MTFSupply {
-		public static class LvnAdapter implements SequenceAdapter {
-			@Override
-			public Token convert(java.util.List<Token> tokens) {
-				
-				if ((tokens.size() > 2) && (tokens.get(1) != null) && (tokens.get(1) instanceof TObjectTail)) {					
-					return new TObjectExpr(tokens);
-				} else {					
-					return new TLocal(tokens);
-				}
-			}		
-		}
-					
 		@Choice({"glvn", "expritem", "classmethod"})
 		public TokenFactory expratom;
 		
