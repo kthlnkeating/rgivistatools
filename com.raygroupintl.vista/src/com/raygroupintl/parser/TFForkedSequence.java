@@ -82,8 +82,6 @@ public class TFForkedSequence extends TokenFactory {
 		if (this.singleValid) {
 			return leading;
 		}
-		TokenStore foundTokens = new ArrayAsTokenStore(2);
-		foundTokens.addToken(leading);
-		throw new SyntaxErrorException(foundTokens);
+		throw new SyntaxErrorException();
 	}
 }

@@ -597,7 +597,7 @@ public class TFCommand extends TokenFactorySupply {
 		protected ValidateResult validateNull(int seqIndex, TokenStore foundTokens, boolean noException) throws SyntaxErrorException {
 			if (seqIndex == 3) {
 				if (noException) return ValidateResult.NULL_RESULT;
-				throw new SyntaxErrorException(MError.ERR_GENERAL_SYNTAX, foundTokens);				
+				throw new SyntaxErrorException(MError.ERR_GENERAL_SYNTAX);				
 			} else {
 				return ValidateResult.CONTINUE;
 			}

@@ -278,9 +278,9 @@ public class TFTest {
 		TFCommonTest.validCheck(f, "1.11");
 		TFCommonTest.validCheck(f, "-3.11");
 		TFCommonTest.validCheck(f, ".11E12");
-		TFCommonTest.errorCheck(f, "1.E12");
-		TFCommonTest.errorCheck(f, "1.E-12");
-		TFCommonTest.errorCheck(f, "1.E+12");
+		TFCommonTest.errorCheck(f, "1.E12", MError.ERR_GENERAL_SYNTAX, 2);
+		TFCommonTest.errorCheck(f, "1.E-12", MError.ERR_GENERAL_SYNTAX, 2);
+		TFCommonTest.errorCheck(f, "1.E+12", MError.ERR_GENERAL_SYNTAX, 2);
 	}
 
 	@Test
@@ -296,9 +296,9 @@ public class TFTest {
 		TFCommonTest.validCheck(f, "\"Comment with quotes \"\" one \"\" two\"");
 		TFCommonTest.validCheck(f, "\"Comment with quotes \"\" one \"\" two and end \"\"\"");
 		TFCommonTest.validCheck(f, "\"\"\"\"\"\"");
-		TFCommonTest.errorCheck(f, "\" unmatched");
-		TFCommonTest.errorCheck(f, "\" unmatched \"\" one");
-		TFCommonTest.errorCheck(f, "\" unmatched \"\" one \"\" two");
+		TFCommonTest.errorCheck(f, "\" unmatched", MError.ERR_GENERAL_SYNTAX, 11);
+		TFCommonTest.errorCheck(f, "\" unmatched \"\" one", MError.ERR_GENERAL_SYNTAX, 18);
+		TFCommonTest.errorCheck(f, "\" unmatched \"\" one \"\" two", MError.ERR_GENERAL_SYNTAX, 25);
 	}
 	
 	@Test

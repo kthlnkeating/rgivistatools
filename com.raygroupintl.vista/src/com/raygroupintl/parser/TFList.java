@@ -87,7 +87,6 @@ public final class TFList extends TFBasic {
 				try {
 					token = this.elementFactory.tokenize(text);
 				} catch (SyntaxErrorException e) {
-					e.addStore(list);
 					throw e;
 				}
 				if (token == null) {

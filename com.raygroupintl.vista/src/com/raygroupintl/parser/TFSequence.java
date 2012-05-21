@@ -60,7 +60,6 @@ public class TFSequence extends TFBasic {
 	private TokenFactory[] factories = {};
 	private RequiredFlags requiredFlags = new RequiredFlags();
 	private SequenceAdapter adapter;
-	private int lookAhead = 0;
 	
 	public TFSequence(String name) {		
 		this(name, DEFAULT_ADAPTER);
@@ -115,10 +114,6 @@ public class TFSequence extends TFBasic {
 		this.requiredFlags.set(requiredFlags);
 	}
 	
-	public void setLookAhead(int index) {
-		this.lookAhead = index;
-	}
-	
 	public void setAdapter(SequenceAdapter adapter) {
 		this.adapter = adapter;
 	}
@@ -140,16 +135,16 @@ public class TFSequence extends TFBasic {
 		}		
 		if (seqIndex == firstRequired) {
 			if (noException) return ValidateResult.NULL_RESULT;
-			for (int i=this.lookAhead; i<seqIndex; ++i) {
+			for (int i=0; i<seqIndex; ++i) {
 				if (foundTokens.get(i) != null) {
-					throw new SyntaxErrorException(foundTokens);
+					throw new SyntaxErrorException();
 				}
 			}
 			return ValidateResult.NULL_RESULT;
 		}
 		if (this.requiredFlags.isRequired(seqIndex)) {
 			if (noException) return ValidateResult.NULL_RESULT;
-			throw new SyntaxErrorException(foundTokens);
+			throw new SyntaxErrorException();
 		} else {
 			return ValidateResult.CONTINUE;
 		}
@@ -158,7 +153,7 @@ public class TFSequence extends TFBasic {
 	protected boolean validateEnd(int seqIndex, TokenStore foundTokens, boolean noException) throws SyntaxErrorException {
 		if (seqIndex < this.requiredFlags.getLastRequiredIndex()) {
 			if (noException) return false;
-			throw new SyntaxErrorException(foundTokens);
+			throw new SyntaxErrorException();
 		}
 		return true;
 	}
@@ -172,9 +167,6 @@ public class TFSequence extends TFBasic {
 	}
 
 	protected Token getToken(TokenStore foundTokens) {
-		//for (Token token : foundTokens) {
-		//	if (token != null) return this.adapter.convert(foundTokens.toList());
-		//}
 		for (int i=0; i<foundTokens.size(); ++i) {
 			if (foundTokens.get(i) != null) return this.adapter.convert(foundTokens.toList());
 		}		
@@ -199,7 +191,6 @@ public class TFSequence extends TFBasic {
 				token = factory.tokenize(text);				
 			} catch (SyntaxErrorException e) {
 				if (noException) return null;
-				e.addStore(foundTokens);
 				throw e;
 			}
 				

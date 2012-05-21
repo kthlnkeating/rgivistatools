@@ -7,7 +7,6 @@ import java.util.Map;
 
 import com.raygroupintl.m.struct.MError;
 import com.raygroupintl.m.struct.MNameWithMnemonic;
-import com.raygroupintl.parser.ArrayAsTokenStore;
 import com.raygroupintl.parser.SyntaxErrorException;
 import com.raygroupintl.parser.TFSequence;
 import com.raygroupintl.parser.Token;
@@ -93,13 +92,11 @@ public class TFIntrinsic extends TokenFactorySupply {
 	}
 
 	private class TFIntrinsicRest extends TFSequence {	
-		private Token token;
 		private boolean nullAllowed;
 		//private FunctionInfo info;
 		
-		public TFIntrinsicRest(FunctionInfo info, Token token, boolean nullAllowed, String name, TokenFactory... factories) {
+		public TFIntrinsicRest(FunctionInfo info, boolean nullAllowed, String name, TokenFactory... factories) {
 			super(name, factories);
-			this.token = token;
 			this.nullAllowed = nullAllowed;
 			//this.info = info;
 		}
@@ -125,11 +122,7 @@ public class TFIntrinsic extends TokenFactorySupply {
 				return ValidateResult.CONTINUE;
 			}
 			if (noException) return ValidateResult.NULL_RESULT;
-			SyntaxErrorException e = new SyntaxErrorException(foundTokens);
-			TokenStore store = new ArrayAsTokenStore(1);
-			store.addToken(this.token);
-			e.addStore(store);
-			throw e;
+			throw new SyntaxErrorException();
 		}
 	}
 	
@@ -151,23 +144,19 @@ public class TFIntrinsic extends TokenFactorySupply {
 			String mn = mna[0].toUpperCase();			
 			MNameWithMnemonic mName = TFIntrinsic.this.functions.get(mn);
 			if (mName == null) {
-				TokenStore foundTokens = new ArrayAsTokenStore(2);
-				foundTokens.addToken(token);
-				throw new SyntaxErrorException(MError.ERR_UNKNOWN_INTRINSIC_FUNCTION, foundTokens);
+				throw new SyntaxErrorException(MError.ERR_UNKNOWN_INTRINSIC_FUNCTION);
 			}
 			String mnemonic = mName.getMnemonic();
 			FunctionInfo info = TFIntrinsic.this.function_infos.get(mnemonic);
 			TokenFactory argumentFactory = info.getArgumentFactory();
-			TFSequence result = new TFIntrinsicRest(info, token, info.getMinNumArguments() == 0, "instrinsic.name", argumentFactory, this.supply.rpar);
+			TFSequence result = new TFIntrinsicRest(info, info.getMinNumArguments() == 0, "instrinsic.name", argumentFactory, this.supply.rpar);
 			result.setRequiredFlags(info.getMinNumArguments() > 0, true);
 			return result;
 		} else {
 			String base =name.substring(1);
 			MNameWithMnemonic mName = TFIntrinsic.this.variables.get(base);
 			if (mName == null) {
-				TokenStore foundTokens = new ArrayAsTokenStore(2);
-				foundTokens.addToken(token);
-				throw new SyntaxErrorException(MError.ERR_UNKNOWN_INTRINSIC_VARIABLE, foundTokens);
+				throw new SyntaxErrorException(MError.ERR_UNKNOWN_INTRINSIC_VARIABLE);
 			}
 			return null;
 		}
