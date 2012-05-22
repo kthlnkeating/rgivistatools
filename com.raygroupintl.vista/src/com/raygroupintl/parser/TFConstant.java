@@ -81,7 +81,7 @@ public class TFConstant extends TFBasic {
 
 	@Override
 	public void setTargetType(Class<? extends Token> cls) {
-		final Constructor<? extends Token> constructor = this.getConstructor(cls, String.class, TString.class);
+		final Constructor<? extends Token> constructor = getConstructor(cls, String.class, TString.class);
 		this.adapter = new StringAdapter() {			
 			@Override
 			public Token convert(String value) {

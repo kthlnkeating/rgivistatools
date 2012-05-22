@@ -4,8 +4,8 @@ import java.util.List;
 
 import com.raygroupintl.parser.Token;
 
-public class TLabelRef extends MTSequence {
-	public TLabelRef(List<Token> tokens) {
+public class TLabel extends MTSequence {
+	public TLabel(List<Token> tokens) {
 		super(tokens);
 	}
 }

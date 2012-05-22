@@ -71,7 +71,7 @@ public class TFCharacter extends TFBasic {
 
 	@Override
 	public void setTargetType(Class<? extends Token> cls) {
-		final Constructor<? extends Token> constructor = this.getConstructor(cls, char.class, TChar.class);
+		final Constructor<? extends Token> constructor = getConstructor(cls, char.class, TChar.class);
 		this.adapter = new CharacterAdapter() {			
 			@Override
 			public Token convert(char ch) {

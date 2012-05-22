@@ -110,7 +110,7 @@ public final class TFList extends TFBasic {
 	
 	@Override
 	public void setTargetType(Class<? extends Token> cls) {
-		final Constructor<? extends Token> constructor = this.getConstructor(cls, List.class, TList.class);
+		final Constructor<? extends Token> constructor = getConstructor(cls, List.class, TList.class);
 		this.adapter = new ListAdapter() {			
 			@Override
 			public Token convert(List<Token> tokens) {

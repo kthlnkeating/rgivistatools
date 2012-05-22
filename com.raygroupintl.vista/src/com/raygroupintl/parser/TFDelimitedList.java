@@ -125,7 +125,7 @@ public class TFDelimitedList extends TFBasic {
 
 	@Override
 	public void setTargetType(Class<? extends Token> cls) {
-		final Constructor<? extends Token> constructor = this.getConstructor(cls, List.class, TDelimitedList.class);
+		final Constructor<? extends Token> constructor = getConstructor(cls, List.class, TDelimitedList.class);
 		this.adapter = new DelimitedListAdapter() {			
 			@Override
 			public Token convert(List<Token> tokens) {

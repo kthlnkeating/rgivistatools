@@ -119,17 +119,14 @@ public class MTFSupply {
 	@TokenType(TIntLit.class)
 	@CharSpecified(ranges={'0', '9'})
 	public TokenFactory intlit;
-		
-	@Choice({"name", "intlit"})
+	
+	@TokenType(TLabel.class)
+	@Rule("name | intlit")
 	public TokenFactory label;
 	
 	@Sequence(value={"caret", "environment", "name"}, required="ror")
 	public TokenFactory envroutine;
 	
-	@TokenType(TLabelRef.class)
-	@Sequence(value={"name", "envroutine"})
-	public TokenFactory labelref;
-		
 	@TokenType(TNumLit.class)
 	@Rule("'.', intlit, ['E', ['+' | '-'], intlit]")
 	public TokenFactory numlita;
@@ -372,11 +369,11 @@ public class MTFSupply {
 	public TokenFactory extdoargument;
 
 	@TokenType(TDoArgument.class)	
-	@Rule("indirection, [lineoffset], [doroutinef], [actuallist], [postcondition]")
+	@Rule("inddolabel, [dolineoffset], [doroutinef], [actuallist], [postcondition]")
 	public TokenFactory inddoargument;
 
 	@TokenType(TDoArgument.class)	
-	@Rule("label, [lineoffset], [doroutinef], [actuallist], [postcondition]")
+	@Rule("label, [dolineoffset], [doroutinef], [actuallist], [postcondition]")
 	public TokenFactory doargument;
 	
 	@TokenType(TDoArgument.class)	
@@ -400,6 +397,12 @@ public class MTFSupply {
 	@Rule("'^', doroutinepostcaret")
 	public TokenFactory doroutinef;
 	
+	@Rule("indirection")
+	public TokenFactory inddolabel;
+	
+	@Rule("'+', expr")
+	public TokenFactory dolineoffset;
+
 	@Choice(value={"indirection", "label"})
 	public TokenFactory labelpiece;
 	
@@ -700,11 +703,11 @@ public class MTFSupply {
 		@Sequence(value={"system", "methods", "actuallist"}, required="ror")
 		public TokenFactory systemcall;
 		
-		@Rule("label, method, [lineoffset], [doroutinef], [actuallist], [postcondition]")
+		@Rule("label, method, [dolineoffset], [doroutinef], [actuallist], [postcondition]")
 		public TokenFactory objdoargument;
-		@Rule("classmethod, [lineoffset], [doroutinef], [actuallist], [postcondition]")
+		@Rule("classmethod, [dolineoffset], [doroutinef], [actuallist], [postcondition]")
 		public TokenFactory clsdoargument;
-		@Rule("systemcall, [lineoffset], [doroutinef], [actuallist], [postcondition]")
+		@Rule("systemcall, [dolineoffset], [doroutinef], [actuallist], [postcondition]")
 		public TokenFactory sysdoargument;
 
 		@Rule("objdoargument | extdoargument | inddoargument | doargument | onlyrdoargument | clsdoargument | sysdoargument")
