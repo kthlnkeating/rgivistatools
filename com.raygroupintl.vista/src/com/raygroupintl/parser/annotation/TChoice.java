@@ -24,7 +24,7 @@ import com.raygroupintl.parser.TFForkableChoice;
 import com.raygroupintl.parser.Token;
 import com.raygroupintl.parser.TokenFactory;
 
-public class TChoice extends TDelimitedList implements TopFactorySupplyRule, FactorySupplyRule {
+public class TChoice extends TDelimitedList implements TopTFRule, FactorySupplyRule {
 	public TChoice(List<Token> tokens) {
 		super(tokens);
 	}
@@ -56,7 +56,7 @@ public class TChoice extends TDelimitedList implements TopFactorySupplyRule, Fac
 	@Override
 	public TokenFactory getTopFactory(String name, Map<String, TokenFactory> symbols, boolean asShell) {
 		if (this.size() == 1) {
-			TopFactorySupplyRule r = (TopFactorySupplyRule) this.get(0);
+			TopTFRule r = (TopTFRule) this.get(0);
 			return r.getTopFactory(name, symbols, asShell);
 		} else {
 			if (asShell) {

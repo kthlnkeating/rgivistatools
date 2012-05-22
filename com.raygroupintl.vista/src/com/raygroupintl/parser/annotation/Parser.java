@@ -16,7 +16,6 @@ import com.raygroupintl.charlib.CharsPredicate;
 import com.raygroupintl.charlib.ExcludePredicate;
 import com.raygroupintl.charlib.OrPredicate;
 import com.raygroupintl.charlib.Predicate;
-import com.raygroupintl.parser.SyntaxErrorException;
 import com.raygroupintl.parser.TFBasic;
 import com.raygroupintl.parser.TFCharacter;
 import com.raygroupintl.parser.TFChoiceBasic;
@@ -26,7 +25,6 @@ import com.raygroupintl.parser.TFEnd;
 import com.raygroupintl.parser.TFList;
 import com.raygroupintl.parser.TFSequence;
 import com.raygroupintl.parser.TFString;
-import com.raygroupintl.parser.Text;
 import com.raygroupintl.parser.TokenFactory;
 
 public class Parser {
@@ -42,16 +40,16 @@ public class Parser {
 	
 	private static final class RuleStore {
 		public TFBasic factory;
-		public TRule rule;
+		public TopTFRule rule;
 		
-		public RuleStore(TFBasic factory, TRule rule) {
+		public RuleStore(TFBasic factory, TopTFRule rule) {
 			this.factory = factory;
 			this.rule = rule;
 		}
 	}
 	
 	private static class Store {
-		private static RuleGrammar ruleGrammar;
+		private static RuleParser ruleParser;
 		
 		public Map<String, TokenFactory> symbols = new HashMap<String, TokenFactory>();
 		
@@ -63,7 +61,8 @@ public class Parser {
 		private java.util.List<Triple<TFSequence, List>> enclosedDelimitedLists  = new ArrayList<Triple<TFSequence, List>>();
 		
 		private java.util.List<RuleStore> rules  = new ArrayList<RuleStore>();
-
+		private Map<String, TopTFRule> topRules = new HashMap<String, TopTFRule>();
+		
 		private TokenFactory addChoice(String name, Choice choice) {
 			TFChoiceBasic value = new TFChoiceBasic(name);
 			this.choices.add(new Triple<TFChoiceBasic, Choice>(value, choice));
@@ -87,27 +86,18 @@ public class Parser {
 		}
 		
 		private TokenFactory addRule(String name, Rule ruleAnnotation, Field f, AdapterSupply adapterSupply) {
-			try {
-				if (ruleGrammar == null) {
-					Parser parser = new Parser();
-					ruleGrammar = parser.parse(RuleGrammar.class, null, true);
-				}
-				String ruleText = ruleAnnotation.value();
-				Text text = new Text(ruleText);
-				TRule trule = (TRule) ruleGrammar.rule.tokenize(text);
-				if (trule.getStringSize() != ruleText.length()) {
-					throw new ParseErrorException("Error in rule specification for " + name);					
-				}
-				
-				TFBasic value = (TFBasic) trule.getTopFactoryShell(name, this.symbols);
-				if (value != null) {
-					this.rules.add(new RuleStore(value, trule));
-					return value;		
-				}
-				return null;
-			} catch (SyntaxErrorException | ParseException e) {
-				throw new ParseErrorException("Error in rule grammar: " + e.getMessage(), e);
+			if (ruleParser == null) {
+				ruleParser = new RuleParser();
 			}
+			String ruleText = ruleAnnotation.value();
+			TopTFRule topRule = ruleParser.getTopTFRule(name, ruleText, this.topRules);
+			TFBasic value = (TFBasic) topRule.getTopFactory(name, this.symbols, true);
+			if (value != null) {
+				this.rules.add(new RuleStore(value, topRule));
+				this.topRules.put(name, topRule);
+				return value;		
+			}
+			return null;
 		}
 		
 		private TokenFactory addList(String name, List list, Field f, AdapterSupply adapterSupply) {
@@ -291,8 +281,8 @@ public class Parser {
 	
 		private static void updateRules(java.util.List<RuleStore> list, java.util.List<RuleStore> remaining, Map<String, TokenFactory> symbols) {
 			for (RuleStore p : list) {
-				TRule trule = p.rule;
-				TFBasic f = (TFBasic) trule.getTopFactory(p.factory.getName(), symbols);
+				TopTFRule trule = p.rule;
+				TFBasic f = (TFBasic) trule.getTopFactory(p.factory.getName(), symbols, false);
 				if (f == null) {
 					remaining.add(p);
 				} else {					
@@ -420,7 +410,7 @@ public class Parser {
 		return result;
 	}
 	
-	private <T> T parse(Class<T> cls, AdapterSupply adapterSupply, boolean ignore) throws ParseException {
+	<T> T parse(Class<T> cls, AdapterSupply adapterSupply, boolean ignore) throws ParseException {
 		try {
 			T target = cls.newInstance();
 			Store store = new Store();

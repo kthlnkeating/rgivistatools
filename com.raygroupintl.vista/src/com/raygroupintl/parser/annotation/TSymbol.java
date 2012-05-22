@@ -22,7 +22,7 @@ import com.raygroupintl.parser.TFBasic;
 import com.raygroupintl.parser.TString;
 import com.raygroupintl.parser.TokenFactory;
 
-public class TSymbol extends TString implements TopFactorySupplyRule, FactorySupplyRule {
+public class TSymbol extends TString implements TopTFRule, FactorySupplyRule {
 	public TSymbol(String value) {
 		super(value);
 	}

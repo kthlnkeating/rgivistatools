@@ -10,7 +10,7 @@ import com.raygroupintl.parser.TSequence;
 import com.raygroupintl.parser.Token;
 import com.raygroupintl.parser.TokenFactory;
 
-public class TSymbolList extends TSequence  implements TopFactorySupplyRule, FactorySupplyRule {
+public class TSymbolList extends TSequence  implements TopTFRule, FactorySupplyRule {
 	public TSymbolList(java.util.List<Token> tokens) {
 		super(tokens);
 	}

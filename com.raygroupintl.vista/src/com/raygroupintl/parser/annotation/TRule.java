@@ -10,7 +10,7 @@ import com.raygroupintl.parser.TFSequence;
 import com.raygroupintl.parser.Token;
 import com.raygroupintl.parser.TokenFactory;
 
-public class TRule extends TDelimitedList implements TopFactorySupplyRule {
+public class TRule extends TDelimitedList implements TopTFRule {
 	public TRule(List<Token> token) {
 		super(token);
 	}
@@ -25,26 +25,10 @@ public class TRule extends TDelimitedList implements TopFactorySupplyRule {
 	}
 	
 	public TokenFactory getTopFactoryShell(String name, Map<String, TokenFactory> symbols) {
-		int size = this.size();
-		if (size == 0) {
-			throw new ParseErrorException("Empty rule.");
-		}
-		if (size > 1) {
-			return new TFSequence(name);
-		}
-		TopFactorySupplyRule rpg = (TopFactorySupplyRule) this.get(0);
-		return rpg.getTopFactory(name, symbols, true);
+		return new TFSequence(name);
 	}
 		
 	public TokenFactory getTopFactory(String name, Map<String, TokenFactory> symbols) {
-		if (this.size() == 0) {
-			throw new ParseErrorException("Empty rule.");
-		}
-		if (this.size() == 1) {
-			TopFactorySupplyRule rpg = (TopFactorySupplyRule) this.get(0);
-			return rpg.getTopFactory(name, symbols, false);
-		}		
-		
 		List<TokenFactory> factories = new ArrayList<TokenFactory>();
 		List<Boolean> flags = new ArrayList<Boolean>();
 		int index = 0;
@@ -69,5 +53,20 @@ public class TRule extends TDelimitedList implements TopFactorySupplyRule {
 		}		
 		result.setFactories(fs, bs);
 		return result;
+	}
+
+	TopTFRule getTopTFRule(String name, Map<String, TopTFRule> existingRules) {
+		if (this.size() == 0) {
+			throw new ParseErrorException("Rule " + name + " is empty.");
+		}
+		if (this.size() == 1) {
+			try {
+				return (TopTFRule) this.get(0);
+			} catch (ClassCastException e) {
+				throw new ParseErrorException("Rule " + name + " is invalid for a top level.");
+				
+			}
+		}		
+		return this;
 	}
 }
