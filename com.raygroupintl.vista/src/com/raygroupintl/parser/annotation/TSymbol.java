@@ -57,4 +57,9 @@ public class TSymbol extends TString implements TopTFRule, FactorySupplyRule {
 			throw new ParseErrorException("Custom symbol " + value + " cannot be used as a top symbol in rules");
 		}
 	}
+	
+	@Override
+	public TopTFRule preprocess(Map<String, TopTFRule> existingRules) {
+		return this;
+	}
 }

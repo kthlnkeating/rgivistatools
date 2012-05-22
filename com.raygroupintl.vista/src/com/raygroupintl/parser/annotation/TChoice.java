@@ -55,15 +55,20 @@ public class TChoice extends TDelimitedList implements TopTFRule, FactorySupplyR
 
 	@Override
 	public TokenFactory getTopFactory(String name, Map<String, TokenFactory> symbols, boolean asShell) {
-		if (this.size() == 1) {
-			TopTFRule r = (TopTFRule) this.get(0);
-			return r.getTopFactory(name, symbols, asShell);
+		if (asShell) {
+			return new TFForkableChoice(name);	
 		} else {
-			if (asShell) {
-				return new TFForkableChoice(name);	
-			} else {
-				return this.getFactory(name, symbols);
-			}
+			return this.getFactory(name, symbols);
+		}
+	}
+	
+	@Override
+	public TopTFRule preprocess(Map<String, TopTFRule> existingRules) {
+		if (this.size() == 1) {
+			TopTFRule result = (TopTFRule) this.get(0);
+			return result.preprocess(existingRules);
+		} else {		
+			return this;
 		}
 	}
 }

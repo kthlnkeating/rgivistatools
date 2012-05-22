@@ -91,8 +91,8 @@ public class Parser {
 			}
 			String ruleText = ruleAnnotation.value();
 			TopTFRule topRule = ruleParser.getTopTFRule(name, ruleText, this.topRules);
-			TFBasic value = (TFBasic) topRule.getTopFactory(name, this.symbols, true);
-			if (value != null) {
+			if (topRule != null) {
+				TFBasic value = (TFBasic) topRule.getTopFactory(name, this.symbols, true);
 				this.rules.add(new RuleStore(value, topRule));
 				this.topRules.put(name, topRule);
 				return value;		
