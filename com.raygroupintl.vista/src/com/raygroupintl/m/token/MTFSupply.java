@@ -65,8 +65,6 @@ public class MTFSupply {
 	
 	@WordSpecified("'?")
 	public TokenFactory nqmark;
-	@WordSpecified("@(")
-	public TokenFactory atlpar;
 	@WordSpecified("^$")
 	public TokenFactory caretquest;
 	@WordSpecified("$$")
@@ -181,14 +179,13 @@ public class MTFSupply {
 	@Sequence(value={"eq", "expr"}, required="all")
 	public TokenFactory eqexpr;
 	
-	@Sequence(value={"at", "expratom"}, required="all")
-	public TokenFactory indirection_0;
-	@Sequence(value={"atlpar", "exprlist", "rpar"}, required="all")
-	public TokenFactory indirection_1;
-	
 	@TokenType(TIndirection.class)
-	@Sequence(value={"indirection_0", "indirection_1"}, required="ro")
+	@Rule("'@', expratom, [\"@(\", exprlist, ')']")
 	public TokenFactory indirection;
+	@TokenType(TIndirection.class)
+	@Rule("'@', expratom")
+	public TokenFactory rindirection;
+	
 	
 	@Rule("lvn | gvnall | indirection")
 	public TokenFactory glvn;
@@ -348,8 +345,6 @@ public class MTFSupply {
 	@List(value="cmduarg", delim="comma")
 	public TokenFactory cmduargs;
 	
-	@Sequence(value={"at", "expratom"}, required="all")
-	public TokenFactory rindirection;
 	@Sequence(value={"label", "lineoffset"}, required="ro")
 	public TokenFactory labelwoffset;
 	@Choice({"rindirection", "labelwoffset"})
@@ -369,7 +364,7 @@ public class MTFSupply {
 	public TokenFactory extdoargument;
 
 	@TokenType(TDoArgument.class)	
-	@Rule("inddolabel, [dolineoffset], [doroutinef], [actuallist], [postcondition]")
+	@Rule("rindirection, [dolineoffset], [doroutinef], [actuallist], [postcondition]")
 	public TokenFactory inddoargument;
 
 	@TokenType(TDoArgument.class)	
@@ -390,15 +385,12 @@ public class MTFSupply {
 	public TokenFactory envdoroutine;
 	@Rule("name")
 	public TokenFactory doroutine;
-	@Rule("indirection")
+	@Rule("rindirection")
 	public TokenFactory inddoroutine;
 	@Rule("envdoroutine | doroutine | inddoroutine")
 	public TokenFactory doroutinepostcaret;
 	@Rule("'^', doroutinepostcaret")
 	public TokenFactory doroutinef;
-	
-	@Rule("indirection")
-	public TokenFactory inddolabel;
 	
 	@Rule("'+', expr")
 	public TokenFactory dolineoffset;

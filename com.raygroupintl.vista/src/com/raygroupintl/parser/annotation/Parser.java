@@ -106,7 +106,7 @@ public class Parser {
 				}
 				return null;
 			} catch (SyntaxErrorException | ParseException e) {
-				throw new ParseErrorException("Error in rule grammar", e);
+				throw new ParseErrorException("Error in rule grammar: " + e.getMessage(), e);
 			}
 		}
 		

@@ -29,6 +29,11 @@ public class RuleGrammar {
 	@CharSpecified(excludechars={'\''}, single=true)
 	public TokenFactory squoted;
 
+	@CharSpecified(chars={'"'}, single=true)
+	public TokenFactory quote;
+	@CharSpecified(excludechars={'"'})
+	public TokenFactory quoted;
+
 	@CharSpecified(chars={'|'}, single=true)
 	public TokenFactory pipe;
 
@@ -40,7 +45,11 @@ public class RuleGrammar {
 	@Sequence(value={"squote", "squoted", "squote"}, required="all")
 	public TokenFactory charsymbol; 
 	
-	@Choice({"specifiedsymbol", "charsymbol"})
+	@TokenType(TConstSymbol.class)
+	@Sequence(value={"quote", "quoted", "quote"}, required="all")
+	public TokenFactory constsymbol; 
+	
+	@Choice({"specifiedsymbol", "charsymbol", "constsymbol"})
 	public TokenFactory symbol; 
 	
 	@TokenType(TChoice.class)

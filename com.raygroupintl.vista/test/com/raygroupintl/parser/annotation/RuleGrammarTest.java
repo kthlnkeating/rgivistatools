@@ -27,7 +27,7 @@ import com.raygroupintl.parser.annotation.TOptionalSymbols;
 import com.raygroupintl.parser.annotation.TRequiredSymbols;
 import com.raygroupintl.parser.annotation.TSymbol;
 
-public class BNFGrammarTest {
+public class RuleGrammarTest {
 	private static RuleGrammar spec;
 	
 	@BeforeClass
@@ -75,6 +75,19 @@ public class BNFGrammarTest {
 			Assert.assertNotNull(requiredSymbols);
 			Assert.assertTrue(requiredSymbols instanceof TRequiredSymbols);
 			Assert.assertEquals("([a, b], [c], [d])", requiredSymbols.getStringValue());
+		} catch (SyntaxErrorException se) {
+			fail("Unexpected exception: " + se.getMessage());			
+		}
+	}
+
+	@Test
+	public void testConstSymbols() {
+		try {
+			Text text = new Text("\"@(\"");
+			Token constSymbol = spec.constsymbol.tokenize(text);
+			Assert.assertNotNull(constSymbol);
+			Assert.assertTrue(constSymbol instanceof TConstSymbol);
+			Assert.assertEquals("\"@(\"", constSymbol.getStringValue());
 		} catch (SyntaxErrorException se) {
 			fail("Unexpected exception: " + se.getMessage());			
 		}
