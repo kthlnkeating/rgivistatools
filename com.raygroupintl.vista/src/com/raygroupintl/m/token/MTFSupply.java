@@ -364,18 +364,26 @@ public class MTFSupply {
 	public TokenFactory extdoargument;
 
 	@TokenType(TDoArgument.class)	
-	@Rule("rindirection, [dolineoffset], [doroutinef], [actuallist], [postcondition]")
+	@Rule("rindirection, [dolineoffset], [doroutinef], [postcondition]")
 	public TokenFactory inddoargument;
 
 	@TokenType(TDoArgument.class)	
-	@Rule("label, [dolineoffset], [doroutinef], [actuallist], [postcondition]")
+	@Rule("label, dolineoffset, [doroutinef], [postcondition]")
+	public TokenFactory offsetdoargument;
+
+	@TokenType(TDoArgument.class)	
+	@Rule("label, ['^', doroutinepostcaret], [actuallist], [postcondition]")
 	public TokenFactory doargument;
 	
 	@TokenType(TDoArgument.class)	
-	@Rule("doroutinef, [actuallist], [postcondition]")
+	@Rule("'^', noindroutinepostcaret, [actuallist], [postcondition]")
+	public TokenFactory onlyrsimpledoargument;
+	
+	@TokenType(TDoArgument.class)	
+	@Rule("'^', indirection, [postcondition]")
 	public TokenFactory onlyrdoargument;
 	
-	@Rule("extdoargument | inddoargument | doargument | onlyrdoargument")
+	@Rule("extdoargument | inddoargument | offsetdoargument | doargument | onlyrsimpledoargument | onlyrdoargument")
 	public TokenFactory doargumentall;
 	
 	@List(value="doargumentall", delim="comma")
@@ -385,6 +393,10 @@ public class MTFSupply {
 	public TokenFactory envdoroutine;
 	@Rule("name")
 	public TokenFactory doroutine;
+	@Rule("envdoroutine | doroutine")
+	public TokenFactory noindroutinepostcaret;
+	
+	
 	@Rule("rindirection")
 	public TokenFactory inddoroutine;
 	@Rule("envdoroutine | doroutine | inddoroutine")
@@ -702,7 +714,7 @@ public class MTFSupply {
 		@Rule("systemcall, [dolineoffset], [doroutinef], [actuallist], [postcondition]")
 		public TokenFactory sysdoargument;
 
-		@Rule("objdoargument | extdoargument | inddoargument | doargument | onlyrdoargument | clsdoargument | sysdoargument")
+		@Rule("objdoargument | extdoargument | inddoargument | offsetdoargument | doargument | onlyrsimpledoargument | onlyrdoargument | clsdoargument | sysdoargument")
 		public TokenFactory doargumentall;
 		
 		@Rule("name, method")
