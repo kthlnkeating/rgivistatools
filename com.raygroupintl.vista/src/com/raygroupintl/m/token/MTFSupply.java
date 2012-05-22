@@ -63,8 +63,6 @@ public class MTFSupply {
 	@CharSpecified(chars={';'})
 	public TokenFactory semicolon;
 	
-	@WordSpecified("'?")
-	public TokenFactory nqmark;
 	@WordSpecified("^$")
 	public TokenFactory caretquest;
 	@WordSpecified("$$")
@@ -158,7 +156,7 @@ public class MTFSupply {
 	
 	@Sequence(value={"qmark", "pattern"}, required="all")
 	public TokenFactory exprtail_s0;
-	@Sequence(value={"nqmark", "pattern"}, required="all")
+	@Rule("\"'?\", pattern")
 	public TokenFactory exprtail_s1;
 	@Sequence(value={"operator", "expratom"}, required="all")
 	public TokenFactory exprtail_s2;

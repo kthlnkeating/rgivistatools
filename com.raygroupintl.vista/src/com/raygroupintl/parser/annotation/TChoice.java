@@ -24,7 +24,7 @@ import com.raygroupintl.parser.TFForkableChoice;
 import com.raygroupintl.parser.Token;
 import com.raygroupintl.parser.TokenFactory;
 
-public class TChoice extends TDelimitedList implements RulePieceGenerator {
+public class TChoice extends TDelimitedList implements TopFactorySupplyRule, FactorySupplyRule {
 	public TChoice(List<Token> tokens) {
 		super(tokens);
 	}
@@ -32,12 +32,12 @@ public class TChoice extends TDelimitedList implements RulePieceGenerator {
 	@Override
 	public TokenFactory getFactory(String name, Map<String, TokenFactory> symbols) {
 		if (this.size() == 1) {
-			RulePieceGenerator r = (RulePieceGenerator) this.get(0);
+			FactorySupplyRule r = (FactorySupplyRule) this.get(0);
 			return r.getFactory(name, symbols);
 		} else {
 			TFForkableChoice result = new TFForkableChoice(name);
 			for (Token t : this) {
-				RulePieceGenerator r = (RulePieceGenerator) t;
+				FactorySupplyRule r = (FactorySupplyRule) t;
 				TokenFactory f = r.getFactory(name, symbols);
 				if (f == null) {
 					return null;
@@ -56,7 +56,7 @@ public class TChoice extends TDelimitedList implements RulePieceGenerator {
 	@Override
 	public TokenFactory getTopFactory(String name, Map<String, TokenFactory> symbols, boolean asShell) {
 		if (this.size() == 1) {
-			RulePieceGenerator r = (RulePieceGenerator) this.get(0);
+			TopFactorySupplyRule r = (TopFactorySupplyRule) this.get(0);
 			return r.getTopFactory(name, symbols, asShell);
 		} else {
 			if (asShell) {

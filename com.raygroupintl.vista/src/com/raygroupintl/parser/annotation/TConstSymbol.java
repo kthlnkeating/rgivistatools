@@ -18,13 +18,12 @@ package com.raygroupintl.parser.annotation;
 
 import java.util.Map;
 
-import com.raygroupintl.parser.TFBasic;
 import com.raygroupintl.parser.TFConstant;
 import com.raygroupintl.parser.TSequence;
 import com.raygroupintl.parser.Token;
 import com.raygroupintl.parser.TokenFactory;
 
-public class TConstSymbol extends TSequence implements RulePieceGenerator {
+public class TConstSymbol extends TSequence implements FactorySupplyRule {
 	public TConstSymbol(java.util.List<Token> tokens) {
 		super(tokens);
 	}
@@ -44,10 +43,5 @@ public class TConstSymbol extends TSequence implements RulePieceGenerator {
 	@Override	
 	public boolean getRequired() {
 		return true;
-	}
-	
-	@Override
-	public TFBasic getTopFactory(String name, Map<String, TokenFactory> symbols, boolean asShell) {
-		throw new ParseErrorException("Constant symbols cannot be rules.");
 	}
 }

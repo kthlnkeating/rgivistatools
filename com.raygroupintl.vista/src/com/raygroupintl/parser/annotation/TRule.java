@@ -10,12 +10,20 @@ import com.raygroupintl.parser.TFSequence;
 import com.raygroupintl.parser.Token;
 import com.raygroupintl.parser.TokenFactory;
 
-public class TRule extends TDelimitedList implements RuleGenerator {
+public class TRule extends TDelimitedList implements TopFactorySupplyRule {
 	public TRule(List<Token> token) {
 		super(token);
 	}
 	
 	@Override
+	public TokenFactory getTopFactory(String name, Map<String, TokenFactory> symbols, boolean asShell) {
+		if (asShell) {
+			return this.getTopFactoryShell(name, symbols);
+		} else {
+			return this.getTopFactory(name, symbols);
+		}
+	}
+	
 	public TokenFactory getTopFactoryShell(String name, Map<String, TokenFactory> symbols) {
 		int size = this.size();
 		if (size == 0) {
@@ -24,17 +32,16 @@ public class TRule extends TDelimitedList implements RuleGenerator {
 		if (size > 1) {
 			return new TFSequence(name);
 		}
-		RulePieceGenerator rpg = (RulePieceGenerator) this.get(0);
+		TopFactorySupplyRule rpg = (TopFactorySupplyRule) this.get(0);
 		return rpg.getTopFactory(name, symbols, true);
 	}
 		
-	@Override
 	public TokenFactory getTopFactory(String name, Map<String, TokenFactory> symbols) {
 		if (this.size() == 0) {
 			throw new ParseErrorException("Empty rule.");
 		}
 		if (this.size() == 1) {
-			RulePieceGenerator rpg = (RulePieceGenerator) this.get(0);
+			TopFactorySupplyRule rpg = (TopFactorySupplyRule) this.get(0);
 			return rpg.getTopFactory(name, symbols, false);
 		}		
 		
@@ -42,7 +49,7 @@ public class TRule extends TDelimitedList implements RuleGenerator {
 		List<Boolean> flags = new ArrayList<Boolean>();
 		int index = 0;
 		for (Iterator<Token> it=this.iterator(); it.hasNext(); ++index) {
-			RulePieceGenerator rpg = (RulePieceGenerator) it.next();
+			FactorySupplyRule rpg = (FactorySupplyRule) it.next();
 			TokenFactory f = rpg.getFactory(name + "." + String.valueOf(index), symbols);
 			if (f == null) {
 				return null;

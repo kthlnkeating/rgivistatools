@@ -5,14 +5,13 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
-import com.raygroupintl.parser.TFBasic;
 import com.raygroupintl.parser.TFSequence;
 import com.raygroupintl.parser.TList;
 import com.raygroupintl.parser.TSequence;
 import com.raygroupintl.parser.Token;
 import com.raygroupintl.parser.TokenFactory;
 
-public abstract class TSymbols extends TSequence implements RulePieceGenerator {
+public abstract class TSymbols extends TSequence implements FactorySupplyRule {
 	public TSymbols(List<Token> tokens) {
 		super(tokens);
 	}
@@ -24,7 +23,7 @@ public abstract class TSymbols extends TSequence implements RulePieceGenerator {
 		TList list = (TList) this.get(1);
 		int index = 0;
 		for (Iterator<Token> it=list.iterator(); it.hasNext(); ++index) {
-			RulePieceGenerator spg = (RulePieceGenerator) it.next();
+			FactorySupplyRule spg = (FactorySupplyRule) it.next();
 			TokenFactory f = spg.getFactory(name + "." + String.valueOf(index), map);
 			if (f == null) {
 				return null;
@@ -46,10 +45,5 @@ public abstract class TSymbols extends TSequence implements RulePieceGenerator {
 		}		
 		result.setFactories(fs, bs);
 		return result;
-	}
-	
-	@Override
-	public TFBasic getTopFactory(String name, Map<String, TokenFactory> symbols, boolean asShell) {
-		throw new ParseErrorException("Rules cannot have a top level optional or required specification.");
 	}
 }
