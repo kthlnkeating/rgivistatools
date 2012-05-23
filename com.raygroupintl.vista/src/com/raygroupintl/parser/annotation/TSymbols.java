@@ -26,13 +26,13 @@ public abstract class TSymbols extends TSequence implements RuleSupply {
 		}
 		
 		if (count == 1) {
-			return ((RuleSupply) lastToken).getRule(required);
+			return ((RuleSupply) lastToken).getRule(this.required);
 		}
 		
-		FSRSequence result = new FSRSequence(required);
+		FSRSequence result = new FSRSequence(this.required);
 		for (Token t : list) {
 			RuleSupply rs = (RuleSupply) t;
-			FactorySupplyRule fsr = rs.getRule(this.required);
+			FactorySupplyRule fsr = rs.getRule(true);
 			result.add(fsr);
 		}
 		return result;

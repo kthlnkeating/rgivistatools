@@ -10,6 +10,7 @@ public class FSRSingle extends FSRBase implements TopTFRule {
 	
 	public FSRSingle(String value, boolean required) {
 		super(required);
+		this.value = value;
 	}
 	
 	@Override

@@ -2,37 +2,29 @@ package com.raygroupintl.parser.annotation;
 
 import java.util.Map;
 
-import com.raygroupintl.parser.TFBasic;
+import com.raygroupintl.parser.TFList;
 import com.raygroupintl.parser.TokenFactory;
 
 public class FSRList extends FSRBase implements TopTFRule {
-	private String value;
+	private FactorySupplyRule element;
 	
-	public FSRSingle(String value, boolean required) {
+	public FSRList(FactorySupplyRule element, boolean required) {
 		super(required);
+		this.element = element;
 	}
 	
 	@Override
-	public TokenFactory getFactory(String name, Map<String, TokenFactory> symbols) {
-		TokenFactory result = symbols.get(this.value);
-		if (result == null) throw new ParseErrorException("Undefined symbol " + value + " used in the rule");
-		if (! result.isInitialized()) {
-			return null;
-		}
-		return result;
+	public TFList getFactory(String name, Map<String, TokenFactory> symbols) {
+		TokenFactory element = this.element.getFactory(name + ".element", symbols);
+		return new TFList(name, element);		
 	}
 
 	@Override
-	public TFBasic getTopFactory(String name, Map<String, TokenFactory> symbols, boolean asShell) {
-		TokenFactory source = symbols.get(this.value);
-		if (source == null) {
-			if (! asShell) throw new ParseErrorException("Undefined symbol " + this.value + " used in the rule");
-			return null;
-		}
-		if (source instanceof TFBasic) {
-			return ((TFBasic) source).getCopy(name);
-		} else {
-			throw new ParseErrorException("Custom symbol " + this.value + " cannot be used as a top symbol in rules");
+	public TFList getTopFactory(String name, Map<String, TokenFactory> symbols, boolean asShell) {
+		if (! asShell) {
+			return this.getFactory(name, symbols);
+		} else {			
+			return new TFList(name);
 		}
 	}
 }

@@ -258,7 +258,11 @@ public class Parser {
 					this.handleWithRemaining(target, adapterSupply, f, remainingNames, loopRemaining);
 				}
 				if (remaining.size() == loopRemaining.size()) {
-					throw new ParseErrorException("There looks to be a circular symbol condition");
+					String symbols = "";
+					for (Field f : remaining) {
+						symbols += ", " + f.getName();
+					}
+					throw new ParseErrorException("Following symbols are not resolved: " + symbols.substring(1));
 				}
 				remaining = loopRemaining;
 			}			

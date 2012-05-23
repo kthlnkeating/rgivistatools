@@ -21,7 +21,7 @@ import java.util.List;
 import com.raygroupintl.parser.TDelimitedList;
 import com.raygroupintl.parser.Token;
 
-public class TChoice extends TDelimitedList implements RuleSupply  {
+public class TChoice extends TDelimitedList implements RuleSupply {
 	public TChoice(List<Token> tokens) {
 		super(tokens);
 	}
