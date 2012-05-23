@@ -16,18 +16,6 @@
 
 package com.raygroupintl.parser.annotation;
 
-import com.raygroupintl.parser.TSequence;
-import com.raygroupintl.parser.Token;
-
-public class TConstSymbol extends TSequence implements RuleSupply {
-	public TConstSymbol(java.util.List<Token> tokens) {
-		super(tokens);
-	}
-	
-	@Override
-	public FactorySupplyRule getRule(boolean required) {
-		String key = this.getStringValue();
-		String value = key.substring(1, key.length()-1);
-		return new FSRConst(value, required);
-	}
+public interface RuleSupply {
+	FactorySupplyRule getRule(boolean required);
 }

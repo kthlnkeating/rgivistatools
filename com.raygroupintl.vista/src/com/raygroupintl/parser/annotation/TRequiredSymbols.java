@@ -4,11 +4,6 @@ import com.raygroupintl.parser.Token;
 
 public class TRequiredSymbols extends TSymbols {
 	public TRequiredSymbols(java.util.List<Token> tokens) {
-		super(tokens);
+		super(tokens, true);
 	}
-	
-	@Override	
-	public boolean getRequired() {
-		return true;
-	}	
 }

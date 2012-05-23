@@ -16,38 +16,18 @@
 
 package com.raygroupintl.parser.annotation;
 
-import java.util.Map;
-
-import com.raygroupintl.charlib.CharPredicate;
-import com.raygroupintl.parser.TFCharacter;
 import com.raygroupintl.parser.TSequence;
 import com.raygroupintl.parser.Token;
-import com.raygroupintl.parser.TokenFactory;
 
-public class TCharSymbol extends TSequence implements FactorySupplyRule {
+public class TCharSymbol extends TSequence implements RuleSupply {
 	public TCharSymbol(java.util.List<Token> tokens) {
 		super(tokens);
 	}
 	
 	@Override
-	public TokenFactory getFactory(String name, Map<String, TokenFactory> symbols) {
+	public FactorySupplyRule getRule(boolean required) {
 		String key = this.getStringValue();
-		TokenFactory result = symbols.get(key);
-		if (result == null) {		
-			char ch = key.charAt(1);
-			result = new TFCharacter(key, new CharPredicate(ch));
-			symbols.put(key, result);
-		}
-		return result;
-	}
-	
-	@Override	
-	public boolean getRequired() {
-		return true;
-	}
-	
-	@Override
-	public FactorySupplyRule reduce() {
-		return this;
+		char ch = key.charAt(1);
+		return new FSRChar(ch, required);
 	}
 }

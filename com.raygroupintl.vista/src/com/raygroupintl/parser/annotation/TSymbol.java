@@ -16,50 +16,16 @@
 
 package com.raygroupintl.parser.annotation;
 
-import java.util.Map;
-
-import com.raygroupintl.parser.TFBasic;
 import com.raygroupintl.parser.TString;
-import com.raygroupintl.parser.TokenFactory;
 
-public class TSymbol extends TString implements TopTFRule, FactorySupplyRule {
+public class TSymbol extends TString implements RuleSupply {
 	public TSymbol(String value) {
 		super(value);
 	}
 	
 	@Override
-	public TokenFactory getFactory(String name, Map<String, TokenFactory> symbols) {
+	public FactorySupplyRule getRule(boolean required) {
 		String value = this.getStringValue();
-		TokenFactory result = symbols.get(value);
-		if (result == null) throw new ParseErrorException("Undefined symbol " + value + " used in the rule");
-		if (! result.isInitialized()) {
-			return null;
-		}
-		return result;
-	}
-	
-	@Override	
-	public boolean getRequired() {
-		return true;
-	}	
-
-	@Override
-	public TFBasic getTopFactory(String name, Map<String, TokenFactory> symbols, boolean asShell) {
-		String value = this.getStringValue();
-		TokenFactory source = symbols.get(value);
-		if (source == null) {
-			if (! asShell) throw new ParseErrorException("Undefined symbol " + value + " used in the rule");
-			return null;
-		}
-		if (source instanceof TFBasic) {
-			return ((TFBasic) source).getCopy(name);
-		} else {
-			throw new ParseErrorException("Custom symbol " + value + " cannot be used as a top symbol in rules");
-		}
-	}
-	
-	@Override
-	public FactorySupplyRule reduce() {
-		return this;
+		return new FSRSingle(value, required);
 	}
 }

@@ -17,58 +17,28 @@
 package com.raygroupintl.parser.annotation;
 
 import java.util.List;
-import java.util.Map;
 
 import com.raygroupintl.parser.TDelimitedList;
-import com.raygroupintl.parser.TFForkableChoice;
 import com.raygroupintl.parser.Token;
-import com.raygroupintl.parser.TokenFactory;
 
-public class TChoice extends TDelimitedList implements TopTFRule, FactorySupplyRule {
+public class TChoice extends TDelimitedList implements RuleSupply  {
 	public TChoice(List<Token> tokens) {
 		super(tokens);
 	}
 	
 	@Override
-	public TokenFactory getFactory(String name, Map<String, TokenFactory> symbols) {
+	public FactorySupplyRule getRule(boolean required) {
 		if (this.size() == 1) {
-			FactorySupplyRule r = (FactorySupplyRule) this.get(0);
-			return r.getFactory(name, symbols);
+			RuleSupply r = (RuleSupply) this.get(0);
+			return r.getRule(required);
 		} else {
-			TFForkableChoice result = new TFForkableChoice(name);
+			FSRChoice result = new FSRChoice(required);
 			for (Token t : this) {
-				FactorySupplyRule r = (FactorySupplyRule) t;
-				TokenFactory f = r.getFactory(name, symbols);
-				if (f == null) {
-					return null;
-				}
-				result.add(f);
+				RuleSupply r  = (RuleSupply) t;
+				FactorySupplyRule fsr = r.getRule(required);
+				result.add(fsr);
 			}
 			return result;
-		}
-	}
-	
-	@Override	
-	public boolean getRequired() {
-		return true;
-	}	
-
-	@Override
-	public TokenFactory getTopFactory(String name, Map<String, TokenFactory> symbols, boolean asShell) {
-		if (asShell) {
-			return new TFForkableChoice(name);	
-		} else {
-			return this.getFactory(name, symbols);
-		}
-	}
-	
-	@Override
-	public FactorySupplyRule reduce() {
-		if (this.size() == 1) {
-			FactorySupplyRule result = (FactorySupplyRule) this.get(0);
-			return result.reduce();
-		} else {		
-			return this;
 		}
 	}
 }

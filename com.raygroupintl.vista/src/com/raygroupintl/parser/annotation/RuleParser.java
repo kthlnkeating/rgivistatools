@@ -25,7 +25,7 @@ public class RuleParser {
 				String msg = "Error in rule " + name + " at position " + String.valueOf(errorLocation);		
 				throw new ParseErrorException(msg);					
 			}
-			return t.getTopTFRule(name, existing);
+			return (TopTFRule) t.getRule(true);
 		} catch (SyntaxErrorException e) {
 			int errorLocation = text.getIndex();
 			String msg = "Error in rule " + name + " at position " + String.valueOf(errorLocation);		
