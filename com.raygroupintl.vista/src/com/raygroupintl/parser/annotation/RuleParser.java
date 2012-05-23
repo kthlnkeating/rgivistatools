@@ -1,14 +1,12 @@
 package com.raygroupintl.parser.annotation;
 
-import java.util.Map;
-
 import com.raygroupintl.parser.SyntaxErrorException;
 import com.raygroupintl.parser.Text;
 
 public class RuleParser {
 	private RuleGrammar grammar;
 
-	public TopTFRule getTopTFRule(String name, String ruleText, Map<String, TopTFRule> existing) {
+	public TopTFRule getTopTFRule(String name, String ruleText) {
 		if (this.grammar == null) {
 			try {
 				Parser parser = new Parser();

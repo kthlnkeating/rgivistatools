@@ -36,6 +36,12 @@ public class RuleGrammar {
 
 	@CharSpecified(chars={'|'}, single=true)
 	public TokenFactory pipe;
+	
+	@CharSpecified(chars={'+', '-'}, single=true)
+	public TokenFactory pm;
+	
+	@WordSpecified("...")
+	public TokenFactory ellipsis;
 
 	@TokenType(TSymbol.class)
 	@CharSpecified(ranges={'a', 'z'})
@@ -44,14 +50,25 @@ public class RuleGrammar {
 	@TokenType(TCharSymbol.class)
 	@Sequence(value={"squote", "squoted", "squote"}, required="all")
 	public TokenFactory charsymbol; 
-	
+
+	@Sequence(value={"ellipsis", "charsymbol"}, required="all")
+	public TokenFactory charsymbolto; 
+	@Sequence(value={"charsymbol", "charsymbolto", "sp"}, required="roo")
+	public TokenFactory charsymbolwr; 
+	@Sequence(value={"dpm", "charsymbolwr"}, required="all")
+	public TokenFactory charsymbolpp; 
+	@List(value="charsymbolpp")
+	public TokenFactory charsymbollist; 
+	@TokenType(TCharSymbol.class)
+	@Sequence(value={"dpm", "charsymbolwr", "charsymbollist"}, required="oro")
+	public TokenFactory charsymbolall; 
+
 	@TokenType(TConstSymbol.class)
 	@Sequence(value={"quote", "quoted", "quote"}, required="all")
 	public TokenFactory constsymbol; 
 	
-	@Choice({"specifiedsymbol", "charsymbol", "constsymbol"})
+	@Choice({"specifiedsymbol", "charsymbolall", "constsymbol", "optionalsymbols", "requiredsymbols", "list"})
 	public TokenFactory symbol; 
-	
 	
 	@TokenType(TChoice.class)
 	@List(value="symbol", delim="choicedelimiter")
@@ -64,6 +81,9 @@ public class RuleGrammar {
 	public TokenFactory openrequired;
 	@Sequence(value={"sp", "rpar", "sp"}, required="oro")
 	public TokenFactory closerequired;
+
+	@Sequence(value={"pm", "sp"}, required="ro")
+	public TokenFactory dpm;	
 	
 	@Sequence(value={"sp", "lsqr", "sp"}, required="oro")
 	public TokenFactory openoptional;
@@ -82,10 +102,10 @@ public class RuleGrammar {
 	public TokenFactory delimiter;
 	
 	@TokenType(TOptionalSymbols.class)
-	@List(value="anysymbols", delim="delimiter", left="openoptional", right="closeoptional")
+	@List(value="symbolchoice", delim="delimiter", left="openoptional", right="closeoptional")
 	public TokenFactory optionalsymbols; 
 	@TokenType(TRequiredSymbols.class)
-	@List(value="anysymbols", delim="delimiter", left="openrequired", right="closerequired")
+	@List(value="symbolchoice", delim="delimiter", left="openrequired", right="closerequired")
 	public TokenFactory requiredsymbols;
 	
 	@Sequence(value={"colon", "anysymbols", "colon", "anysymbols"}, required="all")
@@ -93,13 +113,13 @@ public class RuleGrammar {
 	@Sequence(value={"colon", "anysymbols", "leftrightspec"}, required="roo")
 	public TokenFactory delimleftrightspec;
 	@TokenType(TSymbolList.class)
-	@Sequence(value={"openlist", "anysymbols", "delimleftrightspec", "closelist"}, required="rror")
+	@Sequence(value={"openlist", "symbolchoice", "delimleftrightspec", "closelist"}, required="rror")
 	public TokenFactory list;
 	
-	@Choice({"symbolchoice", "optionalsymbols", "requiredsymbols", "list"})
+	@Choice({"specifiedsymbol", "charsymbolall", "constsymbol"})
 	public TokenFactory anysymbols;
 	
 	@TokenType(TRule.class)
-	@List(value="anysymbols", delim="delimiter")
+	@List(value="symbolchoice", delim="delimiter")
 	public TokenFactory rule;
 }

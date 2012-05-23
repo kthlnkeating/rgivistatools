@@ -61,7 +61,6 @@ public class Parser {
 		private java.util.List<Triple<TFSequence, List>> enclosedDelimitedLists  = new ArrayList<Triple<TFSequence, List>>();
 		
 		private java.util.List<RuleStore> rules  = new ArrayList<RuleStore>();
-		private Map<String, TopTFRule> topRules = new HashMap<String, TopTFRule>();
 		
 		private TokenFactory addChoice(String name, Choice choice) {
 			TFChoiceBasic value = new TFChoiceBasic(name);
@@ -90,11 +89,10 @@ public class Parser {
 				ruleParser = new RuleParser();
 			}
 			String ruleText = ruleAnnotation.value();
-			TopTFRule topRule = ruleParser.getTopTFRule(name, ruleText, this.topRules);
+			TopTFRule topRule = ruleParser.getTopTFRule(name, ruleText);
 			if (topRule != null) {
 				TFBasic value = (TFBasic) topRule.getTopFactory(name, this.symbols, true);
 				this.rules.add(new RuleStore(value, topRule));
-				this.topRules.put(name, topRule);
 				return value;		
 			}
 			return null;

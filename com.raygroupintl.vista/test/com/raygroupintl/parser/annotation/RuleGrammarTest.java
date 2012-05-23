@@ -16,7 +16,6 @@ import com.raygroupintl.charlib.Predicate;
 import com.raygroupintl.parser.SyntaxErrorException;
 import com.raygroupintl.parser.TFCharacter;
 import com.raygroupintl.parser.TFSequence;
-import com.raygroupintl.parser.TSequence;
 import com.raygroupintl.parser.Text;
 import com.raygroupintl.parser.Token;
 import com.raygroupintl.parser.TokenFactory;
@@ -99,24 +98,24 @@ public class RuleGrammarTest {
 		map.put(String.valueOf(ch), f);		
 	}
 	
-	private void testTDescription(TokenFactory f, String v) {
+	private void testRule(TokenFactory f, String v) {
 		try {
 			Text text = new Text(v);
 			Token result = f.tokenize(text);
 			Assert.assertNotNull(result);
-			Assert.assertTrue(result instanceof TSequence);
 			Assert.assertEquals(v, result.getStringValue());
 		} catch (SyntaxErrorException se) {
 			fail("Unexpected exception: " + se.getMessage());			
 		}
 	}
 	
-	private void testErrorTDescription(TokenFactory f, String v) {
+	private void testRuleError(TokenFactory f, String v, int location) {
+		Text text = new Text(v);
 		try {
-			Text text = new Text(v);
 			f.tokenize(text);
 			fail("Expected exception did not fire");			
 		} catch (SyntaxErrorException se) {
+			Assert.assertEquals(location, text.getIndex());
 		}
 	}
 
@@ -141,17 +140,17 @@ public class RuleGrammarTest {
 			TokenFactory f = rule.getRule(true).getFactory("test", map);
 			Assert.assertNotNull(f);
 			Assert.assertTrue(f instanceof TFSequence);
-			testTDescription(f, "x(y)e"); 
-			testTDescription(f, "x(y,y)e"); 
-			testTDescription(f, "x(y,y,y)e"); 
-			testTDescription(f, "x(y)aaab:bde"); 
-			testTDescription(f, "x(y,y)abde"); 
-			testTDescription(f, "x(y,y)abcde"); 
-			testTDescription(f, "x(y,y,y)acde"); 
-			testTDescription(f, "x(y,y,y)aaaade"); 
-			testErrorTDescription(f, "xye"); 
-			testErrorTDescription(f, "x(ya)de"); 
-			testErrorTDescription(f, "x(yy)abde"); 
+			testRule(f, "x(y)e"); 
+			testRule(f, "x(y,y)e"); 
+			testRule(f, "x(y,y,y)e"); 
+			testRule(f, "x(y)aaab:bde"); 
+			testRule(f, "x(y,y)abde"); 
+			testRule(f, "x(y,y)abcde"); 
+			testRule(f, "x(y,y,y)acde"); 
+			testRule(f, "x(y,y,y)aaaade"); 
+			testRuleError(f, "xye", 1); 
+			testRuleError(f, "x(ya)de", 3); 
+			testRuleError(f, "x(yy)abde", 3); 
 		} catch (SyntaxErrorException se) {
 			fail("Unexpected exception: " + se.getMessage());			
 		}
@@ -169,10 +168,36 @@ public class RuleGrammarTest {
 			TokenFactory f = rule.getRule(true).getFactory("test", map);
 			Assert.assertNotNull(f);
 			Assert.assertTrue(f instanceof TFSequence);
-			testTDescription(f, "(y)a"); 
-			testTDescription(f, "(y,y)aa"); 
-			testErrorTDescription(f, "(y,x)aa"); 
-			testErrorTDescription(f, "(y,y)"); 
+			testRule(f, "(y)a"); 
+			testRule(f, "(y,y)aa"); 
+			testRuleError(f, "(y,x)aa", 3); 
+			testRuleError(f, "(y,y)", 5); 
+		} catch (SyntaxErrorException se) {
+			fail("Unexpected exception: " + se.getMessage());			
+		}
+	}
+
+	//@Test
+	public void testChar() {
+		try {
+			Text text = new Text("intlit, ['.', intlit], ['E', ['+' | '-'], intlit]");
+			TRule rule = (TRule) spec.rule.tokenize(text);
+			Assert.assertNotNull(rule);
+			Assert.assertTrue(rule instanceof TRule);
+			Assert.assertEquals("intlit, ['.', intlit], ['E', ['+' | '-'], intlit]", rule.getStringValue());
+		} catch (SyntaxErrorException se) {
+			fail("Unexpected exception: " + se.getMessage());			
+		}
+	}
+
+	@Test
+	public void testChar0() {
+		try {
+			Text text = new Text("'+' | '-'");
+			TRule rule = (TRule) spec.rule.tokenize(text);
+			Assert.assertNotNull(rule);
+			Assert.assertTrue(rule instanceof TRule);
+			Assert.assertEquals("'+' | '-'", rule.getStringValue());
 		} catch (SyntaxErrorException se) {
 			fail("Unexpected exception: " + se.getMessage());			
 		}
@@ -190,13 +215,59 @@ public class RuleGrammarTest {
 			TokenFactory f = rule.getRule(true).getFactory("test", map);
 			Assert.assertNotNull(f);
 			Assert.assertTrue(f instanceof TFSequence);
-			testTDescription(f, "xye"); 
-			testTDescription(f, "xyabde"); 
-			testTDescription(f, "xyabcde"); 
-			testErrorTDescription(f, "xyae"); 
-			testErrorTDescription(f, "xyde"); 
+			testRule(f, "xye"); 
+			testRule(f, "xyabde"); 
+			testRule(f, "xyabcde"); 
+			testRuleError(f, "xyae", 3); 
+			testRuleError(f, "xyde", 2); 
 		} catch (SyntaxErrorException se) {
 			fail("Unexpected exception: " + se.getMessage());			
 		}
+	}
+	
+	private TokenFactory getFactory(String inputText, Map<String, TokenFactory> map, String name) {
+		try {
+			Text text = new Text(inputText);
+			TRule rule = (TRule) spec.rule.tokenize(text);
+			Assert.assertNotNull(rule);
+			Assert.assertTrue(rule instanceof TRule);
+			Assert.assertEquals(inputText, rule.getStringValue());
+			TokenFactory f = rule.getRule(true).getFactory("namea", map);
+			Assert.assertNotNull(f);
+			map.put(name, f);
+			return f;
+		} catch (SyntaxErrorException se) {
+			fail("Unexpected exception: " + se.getMessage());
+			return null;
+		}
+	}
+	
+	@Test
+	public void testCharSpecified() {
+		Map<String, TokenFactory> map = new HashMap<String, TokenFactory>();
+		TokenFactory namea = getFactory("{'a' + 'c' + 'd'...'f'}", map, "namea");
+		TokenFactory nameb = getFactory("{'a'...'z' - 'd'...'f'}", map, "nameb");
+		TokenFactory namec = getFactory("{'a'...'m' + 'q' - 'd'...'f' - 'i'}", map, "namec");
+		TokenFactory named = getFactory("{- 'b' + 'a'...'z'}", map, "named");
+
+		testRule(namea, "accdd"); 
+		testRule(namea, "efcdd"); 
+		testRuleError(namea, "pqr", 0); 
+		testRuleError(namea, "abc", 1); 
+			
+		testRule(nameb, "apqzr"); 
+		testRule(nameb, "xyzmn"); 
+		testRuleError(nameb, "abcde", 3); 
+		testRuleError(nameb, "xfdyz", 1); 
+		
+		testRule(namec, "amccb"); 
+		testRule(namec, "qqacc"); 
+		testRuleError(namec, "qqaie", 3); 
+		testRuleError(namec, "sertf", 1); 
+		
+		testRule(named, "accdd"); 
+		testRule(named, "efcdd"); 
+		testRuleError(named, "bqr", 0); 
+		testRuleError(named, "abc", 1); 
 	}
 }
