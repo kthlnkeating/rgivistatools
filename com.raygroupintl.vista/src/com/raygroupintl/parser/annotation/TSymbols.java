@@ -5,6 +5,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
+import com.raygroupintl.parser.TDelimitedList;
 import com.raygroupintl.parser.TFSequence;
 import com.raygroupintl.parser.TList;
 import com.raygroupintl.parser.TSequence;
@@ -45,5 +46,14 @@ public abstract class TSymbols extends TSequence implements FactorySupplyRule {
 		}		
 		result.setFactories(fs, bs);
 		return result;
+	}
+
+	@Override
+	public FactorySupplyRule reduce() {
+		//for (Token t : (TDelimitedList) this.get(1)) {
+		//	FactorySupplyRule r = (FactorySupplyRule) t;
+		//	r.reduce();
+		//}
+		return this;
 	}
 }

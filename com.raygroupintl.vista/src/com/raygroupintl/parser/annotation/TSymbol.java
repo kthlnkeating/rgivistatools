@@ -59,7 +59,7 @@ public class TSymbol extends TString implements TopTFRule, FactorySupplyRule {
 	}
 	
 	@Override
-	public TopTFRule preprocess(Map<String, TopTFRule> existingRules) {
+	public FactorySupplyRule reduce() {
 		return this;
 	}
 }

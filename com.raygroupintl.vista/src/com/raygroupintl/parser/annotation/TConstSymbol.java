@@ -44,4 +44,9 @@ public class TConstSymbol extends TSequence implements FactorySupplyRule {
 	public boolean getRequired() {
 		return true;
 	}
+
+	@Override
+	public FactorySupplyRule reduce() {
+		return this;
+	}
 }

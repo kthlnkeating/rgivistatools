@@ -23,4 +23,5 @@ import com.raygroupintl.parser.TokenFactory;
 interface FactorySupplyRule {
 	TokenFactory getFactory(String name, Map<String, TokenFactory> symbols);
 	boolean getRequired();
+	FactorySupplyRule reduce();
 }

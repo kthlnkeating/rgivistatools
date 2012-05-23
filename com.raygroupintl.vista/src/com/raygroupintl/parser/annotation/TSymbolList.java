@@ -83,7 +83,7 @@ public class TSymbolList extends TSequence  implements TopTFRule, FactorySupplyR
 	}	
 	
 	@Override
-	public TopTFRule preprocess(Map<String, TopTFRule> existingRules) {
+	public FactorySupplyRule reduce() {
 		return this;
 	}
 }

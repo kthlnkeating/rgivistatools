@@ -63,10 +63,10 @@ public class TChoice extends TDelimitedList implements TopTFRule, FactorySupplyR
 	}
 	
 	@Override
-	public TopTFRule preprocess(Map<String, TopTFRule> existingRules) {
+	public FactorySupplyRule reduce() {
 		if (this.size() == 1) {
-			TopTFRule result = (TopTFRule) this.get(0);
-			return result.preprocess(existingRules);
+			FactorySupplyRule result = (FactorySupplyRule) this.get(0);
+			return result.reduce();
 		} else {		
 			return this;
 		}

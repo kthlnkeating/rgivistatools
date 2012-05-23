@@ -24,11 +24,6 @@ public class TRule extends TDelimitedList implements TopTFRule {
 		}
 	}
 	
-	@Override
-	public TopTFRule preprocess(Map<String, TopTFRule> existingRules) {
-		return this;
-	}
-
 	public TokenFactory getTopFactoryShell(String name, Map<String, TokenFactory> symbols) {
 		return new TFSequence(name);
 	}
@@ -64,10 +59,15 @@ public class TRule extends TDelimitedList implements TopTFRule {
 		if (this.size() == 0) {
 			throw new ParseErrorException("Rule " + name + " is empty.");
 		}
+		//for (Token t : this) {
+		//	FactorySupplyRule r = (FactorySupplyRule) t;
+		//	r.reduce();
+		//}
 		if (this.size() == 1) {
 			try {
-				TopTFRule result = (TopTFRule) this.get(0);
-				return result.preprocess(existingRules);
+				FactorySupplyRule r = (FactorySupplyRule) this.get(0);
+				TopTFRule result = (TopTFRule) r.reduce();
+				return result;
 			} catch (ClassCastException e) {
 				throw new ParseErrorException("Rule " + name + " is invalid for a top level.");
 				

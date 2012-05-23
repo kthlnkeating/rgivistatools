@@ -52,6 +52,7 @@ public class RuleGrammar {
 	@Choice({"specifiedsymbol", "charsymbol", "constsymbol"})
 	public TokenFactory symbol; 
 	
+	
 	@TokenType(TChoice.class)
 	@List(value="symbol", delim="choicedelimiter")
 	public TokenFactory symbolchoice; 

@@ -369,6 +369,10 @@ public class MTFSupply {
 	@Rule("label, dolineoffset, [doroutinef], [postcondition]")
 	public TokenFactory offsetdoargument;
 
+	//@TokenType(TDoArgument.class)	
+	//@Rule("label, ['^', doroutinepostcaret], [actuallist], [postcondition]")
+	//public TokenFactory doargument;
+	
 	@TokenType(TDoArgument.class)	
 	@Rule("label, ['^', doroutinepostcaret], [actuallist], [postcondition]")
 	public TokenFactory doargument;
@@ -399,6 +403,7 @@ public class MTFSupply {
 	public TokenFactory inddoroutine;
 	@Rule("envdoroutine | doroutine | inddoroutine")
 	public TokenFactory doroutinepostcaret;
+	
 	@Rule("'^', doroutinepostcaret")
 	public TokenFactory doroutinef;
 	

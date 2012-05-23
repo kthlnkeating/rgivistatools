@@ -6,5 +6,4 @@ import com.raygroupintl.parser.TokenFactory;
 
 public interface TopTFRule {
 	TokenFactory getTopFactory(String name, Map<String, TokenFactory> symbols, boolean asShell);
-	TopTFRule preprocess(Map<String, TopTFRule> existingRules);
 }

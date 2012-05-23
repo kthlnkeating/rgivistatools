@@ -45,4 +45,9 @@ public class TCharSymbol extends TSequence implements FactorySupplyRule {
 	public boolean getRequired() {
 		return true;
 	}
+	
+	@Override
+	public FactorySupplyRule reduce() {
+		return this;
+	}
 }
