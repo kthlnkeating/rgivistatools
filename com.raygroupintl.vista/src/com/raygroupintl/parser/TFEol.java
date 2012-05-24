@@ -16,13 +16,15 @@
 
 package com.raygroupintl.parser;
 
+import com.raygroupintl.parser.annotation.AdapterSupply;
+
 public class TFEol extends TokenFactory {
 	public TFEol(String name) {
 		super(name);
 	}
 	
 	@Override
-	public Token tokenize(Text text) {
+	public Token tokenize(Text text, AdapterSupply adapterSupply) {
 		return text.extractEOLToken();
 	}
 }

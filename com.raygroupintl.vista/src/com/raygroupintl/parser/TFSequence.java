@@ -3,6 +3,8 @@ package com.raygroupintl.parser;
 import java.lang.reflect.Constructor;
 import java.util.List;
 
+import com.raygroupintl.parser.annotation.AdapterSupply;
+
 public class TFSequence extends TFBasic {
 	public enum ValidateResult {
 		CONTINUE, BREAK, NULL_RESULT
@@ -67,8 +69,8 @@ public class TFSequence extends TFBasic {
 		}
 		
 		@Override
-		public final TSequence tokenize(Text text) throws SyntaxErrorException {
-			TSequence result = this.slave.tokenize(text);
+		public final TSequence tokenize(Text text, AdapterSupply adapterSupply) throws SyntaxErrorException {
+			TSequence result = this.slave.tokenize(text, adapterSupply);
 			if ((result == null) || (this.adapter == null)) {
 				return result;
 			}
@@ -240,21 +242,21 @@ public class TFSequence extends TFBasic {
 	}
 
 	@Override
-	public final TSequence tokenize(Text text) throws SyntaxErrorException {
+	public final TSequence tokenize(Text text, AdapterSupply adapterSupply) throws SyntaxErrorException {
 		if (text.onChar()) {
 			TokenStore foundTokens = new ArrayAsTokenStore(this.factories.length);
-			return this.tokenize(text, 0, foundTokens, false);
+			return this.tokenize(text, adapterSupply, 0, foundTokens, false);
 		}		
 		return null;
 	}
 	
-	final TSequence tokenize(Text text, int firstSeqIndex, TokenStore foundTokens, boolean noException) throws SyntaxErrorException {
+	final TSequence tokenize(Text text, AdapterSupply adapterSupply, int firstSeqIndex, TokenStore foundTokens, boolean noException) throws SyntaxErrorException {
 		int factoryCount = this.factories.length;
 		for (int i=firstSeqIndex; i<factoryCount; ++i) {
 			TokenFactory factory = this.factories[i];
 			Token token = null;
 			try {
-				token = factory.tokenize(text);				
+				token = factory.tokenize(text, adapterSupply);				
 			} catch (SyntaxErrorException e) {
 				if (noException) return null;
 				throw e;

@@ -1,5 +1,7 @@
 package com.raygroupintl.parser;
 
+import com.raygroupintl.parser.annotation.AdapterSupply;
+
 
 public abstract class TFEmptyVerified extends TokenFactory {
 	public TFEmptyVerified(String name) {
@@ -9,7 +11,7 @@ public abstract class TFEmptyVerified extends TokenFactory {
 	protected abstract boolean isExpected(char ch);
 		
 	@Override
-	public Token tokenize(Text text) throws SyntaxErrorException {
+	public Token tokenize(Text text, AdapterSupply adapterSupply) throws SyntaxErrorException {
 		if (text.onChar()) {
 			char ch = text.getChar();
 			if (this.isExpected(ch)) {

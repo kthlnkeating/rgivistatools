@@ -19,6 +19,7 @@ package com.raygroupintl.parser;
 import java.lang.reflect.Constructor;
 
 import com.raygroupintl.charlib.Predicate;
+import com.raygroupintl.parser.annotation.AdapterSupply;
 
 public class TFString extends TFBasic {
 	private static final StringAdapter DEFAULT_ADAPTER = new StringAdapter() {
@@ -66,7 +67,7 @@ public class TFString extends TFBasic {
 	}
 	
 	@Override
-	public Token tokenize(Text text) {
+	public Token tokenize(Text text, AdapterSupply adapterSupply) {
 		return text.extractToken(this.predicate, this.adapter);
 	}
 

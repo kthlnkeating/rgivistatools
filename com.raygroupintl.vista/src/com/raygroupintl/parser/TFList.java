@@ -19,6 +19,8 @@ package com.raygroupintl.parser;
 import java.lang.reflect.Constructor;
 import java.util.List;
 
+import com.raygroupintl.parser.annotation.AdapterSupply;
+
 public final class TFList extends TFBasic {
 	private static final ListAdapter DEFAULT_ADAPTER = new ListAdapter() {		
 		@Override
@@ -82,7 +84,7 @@ public final class TFList extends TFBasic {
 	}
 
 	@Override
-	public Token tokenize(Text text) throws SyntaxErrorException {
+	public Token tokenize(Text text, AdapterSupply adapterSupply) throws SyntaxErrorException {
 		if (elementFactory == null) throw new IllegalStateException("TFList.setElementFactory needs to be called before TFList.tokenize");
 		
 		if (text.onChar()) {
@@ -90,7 +92,7 @@ public final class TFList extends TFBasic {
 			while (text.onChar()) {
 				Token token = null;
 				try {
-					token = this.elementFactory.tokenize(text);
+					token = this.elementFactory.tokenize(text, adapterSupply);
 				} catch (SyntaxErrorException e) {
 					throw e;
 				}

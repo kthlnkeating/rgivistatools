@@ -18,6 +18,8 @@ package com.raygroupintl.parser;
 
 import java.lang.reflect.Constructor;
 
+import com.raygroupintl.parser.annotation.AdapterSupply;
+
 public class TFConstant extends TFBasic {
 	private static final StringAdapter DEFAULT_ADAPTER = new StringAdapter() {
 		@Override
@@ -75,7 +77,7 @@ public class TFConstant extends TFBasic {
 	}
 	
 	@Override
-	public Token tokenize(Text text) {
+	public Token tokenize(Text text, AdapterSupply adapterSupply) {
 		return text.extractToken(this.value, this.adapter, this.ignoreCase);
 	}
 

@@ -9,9 +9,11 @@ import com.raygroupintl.parser.SyntaxErrorException;
 import com.raygroupintl.parser.Text;
 import com.raygroupintl.parser.Token;
 import com.raygroupintl.parser.TokenFactory;
+import com.raygroupintl.parser.annotation.AdapterSupply;
 
 public class TFRoutine {
 	private TokenFactory tfLine;
+	private AdapterSupply mAdapterSupply = new MAdapterSupply();
 	
 	private TFRoutine(MTFSupply supply) {
 		this.tfLine = supply.line;
@@ -32,7 +34,7 @@ public class TFRoutine {
 			TLine tokens = null;
 			try {
 				Text text = new Text(line);
-				tokens = (TLine) this.tfLine.tokenize(text);
+				tokens = (TLine) this.tfLine.tokenize(text, this.mAdapterSupply);
 			} catch (SyntaxErrorException e) {
 				tokens = recoverFromError(line, e);
 			}

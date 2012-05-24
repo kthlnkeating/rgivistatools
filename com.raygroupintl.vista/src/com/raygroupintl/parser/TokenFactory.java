@@ -16,6 +16,8 @@
 
 package com.raygroupintl.parser;
 
+import com.raygroupintl.parser.annotation.AdapterSupply;
+
 public abstract class TokenFactory {
 	private String name;
 	
@@ -35,5 +37,5 @@ public abstract class TokenFactory {
 		return true;
 	}
 	
-	public abstract Token tokenize(Text text) throws SyntaxErrorException;
+	public abstract Token tokenize(Text text, AdapterSupply adapterSupply) throws SyntaxErrorException;
 }

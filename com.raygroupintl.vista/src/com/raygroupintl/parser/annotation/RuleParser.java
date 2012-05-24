@@ -1,5 +1,6 @@
 package com.raygroupintl.parser.annotation;
 
+import com.raygroupintl.parser.DefaultAdapterSupply;
 import com.raygroupintl.parser.SyntaxErrorException;
 import com.raygroupintl.parser.Text;
 
@@ -17,7 +18,8 @@ public class RuleParser {
 		}
 		Text text = new Text(ruleText);
 		try {
-			TRule t = (TRule) this.grammar.rule.tokenize(text);
+			AdapterSupply adapterSupply = new DefaultAdapterSupply();
+			TRule t = (TRule) this.grammar.rule.tokenize(text, adapterSupply);
 			if (t.getStringSize() != ruleText.length()) {
 				int errorLocation = t.getStringSize();
 				String msg = "Error in rule " + name + " at position " + String.valueOf(errorLocation);		

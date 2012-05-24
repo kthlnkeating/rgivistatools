@@ -19,6 +19,7 @@ package com.raygroupintl.parser;
 import java.lang.reflect.Constructor;
 
 import com.raygroupintl.charlib.Predicate;
+import com.raygroupintl.parser.annotation.AdapterSupply;
 
 public class TFCharacter extends TFBasic {
 	private static final CharacterAdapter DEFAULT_ADAPTER = new CharacterAdapter() {
@@ -65,7 +66,7 @@ public class TFCharacter extends TFBasic {
 	}
 	
 	@Override
-	public Token tokenize(Text text) {
+	public Token tokenize(Text text, AdapterSupply adapterSupply) {
 		return text.extractToken(this.predicate, this.adapter);
 	}
 

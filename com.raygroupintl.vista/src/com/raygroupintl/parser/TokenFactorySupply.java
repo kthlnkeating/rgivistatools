@@ -1,5 +1,7 @@
 package com.raygroupintl.parser;
 
+import com.raygroupintl.parser.annotation.AdapterSupply;
+
 public abstract class TokenFactorySupply extends TokenFactory {
 	public TokenFactorySupply(String name) {
 		super(name);
@@ -12,9 +14,9 @@ public abstract class TokenFactorySupply extends TokenFactory {
 	public abstract Token getToken(Token supplyToken, Token nextToken);
 	
 	@Override
-	public Token tokenize(Text text) throws SyntaxErrorException {
+	public Token tokenize(Text text, AdapterSupply adapterSupply) throws SyntaxErrorException {
 		TokenFactory supplyFactory = getSupplyTokenFactory();
-		Token token = supplyFactory.tokenize(text);
+		Token token = supplyFactory.tokenize(text, adapterSupply);
 		if (token == null) {
 			return null;
 		} else {
@@ -22,7 +24,7 @@ public abstract class TokenFactorySupply extends TokenFactory {
 			if (tf == null) {
 				return token;
 			} else {
-				Token nextToken = tf.tokenize(text);
+				Token nextToken = tf.tokenize(text, adapterSupply);
 				return this.getToken(token, nextToken);
 			}
 		}

@@ -7,6 +7,7 @@ import com.raygroupintl.parser.StringAdapter;
 import com.raygroupintl.parser.Text;
 import com.raygroupintl.parser.Token;
 import com.raygroupintl.parser.TokenFactory;
+import com.raygroupintl.parser.annotation.AdapterSupply;
 
 public class TFOperator extends TokenFactory {
 	private static class OperatorAdapter implements StringAdapter {
@@ -47,7 +48,7 @@ public class TFOperator extends TokenFactory {
 	}
 		
 	@Override
-	public Token tokenize(Text text) {
+	public Token tokenize(Text text, AdapterSupply adapterSupply) {
 		if (text.onChar()) {
 			char ch = text.getChar();	
 			OperatorBranch branch = this.operators.get(ch);

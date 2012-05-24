@@ -14,10 +14,12 @@ import com.raygroupintl.parser.SyntaxErrorException;
 import com.raygroupintl.parser.Text;
 import com.raygroupintl.parser.Token;
 import com.raygroupintl.parser.TokenFactory;
+import com.raygroupintl.parser.annotation.AdapterSupply;
 
 public class TFCommandTest {	
 	private static TFCommand fStd95;
 	private static TFCommand fCache;
+	private static AdapterSupply adapterSupply;
 	
 	@BeforeClass
 	public static void setUpBeforeClass() throws Exception {
@@ -26,18 +28,22 @@ public class TFCommandTest {
 		
 		MTFSupply tfsCache = MTFSupply.getInstance(MVersion.CACHE);
 		fCache =  tfsCache.command;
+		
+		adapterSupply = new MAdapterSupply();
 	}
 
 	@AfterClass
+	
 	public static void tearDownAfterClass() throws Exception {
 		fStd95 = null;
 		fCache = null;
+		adapterSupply = null;
 	}
 		
 	private void testCommand(TokenFactory f, String v, boolean error) {
 		try {
 			Text text = new Text(v);
-			Token t = f.tokenize(text);
+			Token t = f.tokenize(text, adapterSupply);
 			if (error) {
 				Assert.assertTrue(t instanceof TSyntaxError);
 			} else {

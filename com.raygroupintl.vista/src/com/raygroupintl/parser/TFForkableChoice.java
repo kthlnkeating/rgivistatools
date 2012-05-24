@@ -21,6 +21,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import com.raygroupintl.parser.annotation.AdapterSupply;
+
 public class TFForkableChoice extends TFBasic {
 	private List<TokenFactory> factories = new ArrayList<TokenFactory>();
 	private Map<String, Integer> choiceOrder = new HashMap<String, Integer>();
@@ -53,10 +55,10 @@ public class TFForkableChoice extends TFBasic {
 	
 	
 	@Override
-	public Token tokenize(Text text) throws SyntaxErrorException {
+	public Token tokenize(Text text, AdapterSupply adapterSupply) throws SyntaxErrorException {
 		if (text.onChar()) {
 			for (TokenFactory f : this.factories) {
-				Token result = f.tokenize(text);
+				Token result = f.tokenize(text, adapterSupply);
 				if (result != null) {
 					return result;
 				}

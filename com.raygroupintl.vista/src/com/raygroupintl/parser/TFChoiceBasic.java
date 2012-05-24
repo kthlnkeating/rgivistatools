@@ -1,5 +1,7 @@
 package com.raygroupintl.parser;
 
+import com.raygroupintl.parser.annotation.AdapterSupply;
+
 
 public class TFChoiceBasic extends TokenFactory {
 	private TokenFactory[] factories = {};
@@ -18,10 +20,10 @@ public class TFChoiceBasic extends TokenFactory {
 	}
 	
 	@Override
-	public Token tokenize(Text text) throws SyntaxErrorException {
+	public Token tokenize(Text text, AdapterSupply adapterSupply) throws SyntaxErrorException {
 		if (text.onChar()) {
 			for (TokenFactory f : this.factories) {
-				Token result = f.tokenize(text);
+				Token result = f.tokenize(text, adapterSupply);
 				if (result != null) {
 					return result;
 				}

@@ -20,6 +20,8 @@ import java.lang.reflect.Constructor;
 import java.util.Arrays;
 import java.util.List;
 
+import com.raygroupintl.parser.annotation.AdapterSupply;
+
 public class TFDelimitedList extends TFBasic {
 	private static final DelimitedListAdapter DEFAULT_ADAPTER = new DelimitedListAdapter() {		
 		@Override
@@ -100,11 +102,11 @@ public class TFDelimitedList extends TFBasic {
 	}
 
 	@Override
-	public Token tokenize(Text text) throws SyntaxErrorException {
+	public Token tokenize(Text text, AdapterSupply adapterSupply) throws SyntaxErrorException {
 		if (this.effective == null) {
 			throw new IllegalStateException("TFDelimitedList.set needs to be called before TFDelimitedList.tokenize");
 		} else {
-			TSequence internalResult = (TSequence) this.effective.tokenize(text);
+			TSequence internalResult = (TSequence) this.effective.tokenize(text, adapterSupply);
 			if (internalResult == null) {
 				return null;
 			} else {

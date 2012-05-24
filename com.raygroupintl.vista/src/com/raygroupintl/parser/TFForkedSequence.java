@@ -19,6 +19,7 @@ package com.raygroupintl.parser;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.raygroupintl.parser.annotation.AdapterSupply;
 import com.raygroupintl.parser.annotation.ParseErrorException;
 
 public class TFForkedSequence extends TokenFactory {
@@ -55,8 +56,8 @@ public class TFForkedSequence extends TokenFactory {
 	}
 	
 	@Override
-	public Token tokenize(Text text) throws SyntaxErrorException {
-		Token leading = this.leader.tokenize(text);
+	public Token tokenize(Text text, AdapterSupply adapterSupply) throws SyntaxErrorException {
+		Token leading = this.leader.tokenize(text, adapterSupply);
 		if (leading == null) {
 			return null;
 		}
@@ -65,7 +66,7 @@ public class TFForkedSequence extends TokenFactory {
 			for (TFSequence follower : this.followers) {
 				TokenStore foundTokens = new ArrayAsTokenStore(follower.getSequenceCount());
 				foundTokens.addToken(leading);
-				Token result = follower.tokenize(text, 1, foundTokens, true);
+				Token result = follower.tokenize(text, adapterSupply, 1, foundTokens, true);
 				if (result != null) {
 					return result;
 				}

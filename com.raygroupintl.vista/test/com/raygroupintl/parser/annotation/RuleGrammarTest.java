@@ -13,6 +13,7 @@ import org.junit.Test;
 
 import com.raygroupintl.charlib.CharPredicate;
 import com.raygroupintl.charlib.Predicate;
+import com.raygroupintl.parser.DefaultAdapterSupply;
 import com.raygroupintl.parser.SyntaxErrorException;
 import com.raygroupintl.parser.TFCharacter;
 import com.raygroupintl.parser.TFSequence;
@@ -28,23 +29,26 @@ import com.raygroupintl.parser.annotation.TSymbol;
 
 public class RuleGrammarTest {
 	private static RuleGrammar spec;
+	private static AdapterSupply adapterSupply;
 	
 	@BeforeClass
 	public static void setUpBeforeClass() throws Exception {
 		Parser parser = new Parser();
 		spec = parser.parse(RuleGrammar.class);
+		adapterSupply = new DefaultAdapterSupply();
 	}
 
 	@AfterClass
 	public static void tearDownAfterClass() throws Exception {
 		spec = null;
+		adapterSupply = null;
 	}
 
 	@Test
 	public void testSymbol() {
 		try {
 			Text text = new Text("token");
-			Token symbol = spec.symbol.tokenize(text);
+			Token symbol = spec.symbol.tokenize(text, adapterSupply);
 			Assert.assertNotNull(symbol);
 			Assert.assertTrue(symbol instanceof TSymbol);
 			Assert.assertEquals("token", symbol.getStringValue());
@@ -57,7 +61,7 @@ public class RuleGrammarTest {
 	public void testOptionalSymbols() {
 		try {
 			Text text = new Text("[a, b, ([c], [d])]");
-			Token optionalSymbols = spec.optionalsymbols.tokenize(text);
+			Token optionalSymbols = spec.optionalsymbols.tokenize(text, adapterSupply);
 			Assert.assertNotNull(optionalSymbols);
 			Assert.assertTrue(optionalSymbols instanceof TOptionalSymbols);
 			Assert.assertEquals("[a, b, ([c], [d])]", optionalSymbols.getStringValue());
@@ -70,7 +74,7 @@ public class RuleGrammarTest {
 	public void testRequiredSymbols() {
 		try {
 			Text text = new Text("([a, b], [c], [d])");
-			Token requiredSymbols = spec.requiredsymbols.tokenize(text);
+			Token requiredSymbols = spec.requiredsymbols.tokenize(text, adapterSupply);
 			Assert.assertNotNull(requiredSymbols);
 			Assert.assertTrue(requiredSymbols instanceof TRequiredSymbols);
 			Assert.assertEquals("([a, b], [c], [d])", requiredSymbols.getStringValue());
@@ -83,7 +87,7 @@ public class RuleGrammarTest {
 	public void testConstSymbols() {
 		try {
 			Text text = new Text("\"@(\"");
-			Token constSymbol = spec.constsymbol.tokenize(text);
+			Token constSymbol = spec.constsymbol.tokenize(text, adapterSupply);
 			Assert.assertNotNull(constSymbol);
 			Assert.assertTrue(constSymbol instanceof TConstSymbol);
 			Assert.assertEquals("\"@(\"", constSymbol.getStringValue());
@@ -101,7 +105,7 @@ public class RuleGrammarTest {
 	private void testRule(TokenFactory f, String v, String compare) {
 		try {
 			Text text = new Text(v);
-			Token result = f.tokenize(text);
+			Token result = f.tokenize(text, adapterSupply);
 			Assert.assertNotNull(result);
 			Assert.assertEquals(compare, result.getStringValue());
 		} catch (SyntaxErrorException se) {
@@ -116,7 +120,7 @@ public class RuleGrammarTest {
 	private void testRuleError(TokenFactory f, String v, int location) {
 		Text text = new Text(v);
 		try {
-			f.tokenize(text);
+			f.tokenize(text, adapterSupply);
 			fail("Expected exception did not fire");			
 		} catch (SyntaxErrorException se) {
 			Assert.assertEquals(location, text.getIndex());
@@ -126,7 +130,7 @@ public class RuleGrammarTest {
 	private void testRuleNull(TokenFactory f, String v) {
 		try {
 			Text text = new Text(v);
-			Token result = f.tokenize(text);
+			Token result = f.tokenize(text, adapterSupply);
 			Assert.assertNull(result);
 		} catch (SyntaxErrorException se) {
 			fail("Unexpected exception: " + se.getMessage());			
@@ -146,7 +150,7 @@ public class RuleGrammarTest {
 	public void testList() {
 		try {
 			Text text = new Text("x, {y:',':'(':')'}, [{a}, [{b:':'}], [c], d], e");
-			TRule rule = (TRule) spec.rule.tokenize(text);
+			TRule rule = (TRule) spec.rule.tokenize(text, adapterSupply);
 			Assert.assertNotNull(rule);
 			Assert.assertTrue(rule instanceof TRule);
 			Assert.assertEquals("x, {y:',':'(':')'}, [{a}, [{b:':'}], [c], d], e", rule.getStringValue());
@@ -174,7 +178,7 @@ public class RuleGrammarTest {
 	public void testList0() {
 		try {
 			Text text = new Text("{y:',':'(':')'}, {a}");
-			TRule rule = (TRule) spec.rule.tokenize(text);
+			TRule rule = (TRule) spec.rule.tokenize(text, adapterSupply);
 			Assert.assertNotNull(rule);
 			Assert.assertTrue(rule instanceof TRule);
 			Assert.assertEquals("{y:',':'(':')'}, {a}", rule.getStringValue());
@@ -195,7 +199,7 @@ public class RuleGrammarTest {
 	public void testChar() {
 		try {
 			Text text = new Text("intlit, ['.', intlit], ['E', ['+' | '-'], intlit]");
-			TRule rule = (TRule) spec.rule.tokenize(text);
+			TRule rule = (TRule) spec.rule.tokenize(text, adapterSupply);
 			Assert.assertNotNull(rule);
 			Assert.assertTrue(rule instanceof TRule);
 			Assert.assertEquals("intlit, ['.', intlit], ['E', ['+' | '-'], intlit]", rule.getStringValue());
@@ -208,7 +212,7 @@ public class RuleGrammarTest {
 	public void testChar0() {
 		try {
 			Text text = new Text("'+' | '-'");
-			TRule rule = (TRule) spec.rule.tokenize(text);
+			TRule rule = (TRule) spec.rule.tokenize(text, adapterSupply);
 			Assert.assertNotNull(rule);
 			Assert.assertTrue(rule instanceof TRule);
 			Assert.assertEquals("'+' | '-'", rule.getStringValue());
@@ -221,7 +225,7 @@ public class RuleGrammarTest {
 	public void testSequence() {
 		try {
 			Text text = new Text("x, y, [(a, b), [c], d], e");
-			TRule rule = (TRule) spec.rule.tokenize(text);
+			TRule rule = (TRule) spec.rule.tokenize(text, adapterSupply);
 			Assert.assertNotNull(rule);
 			Assert.assertTrue(rule instanceof TRule);
 			Assert.assertEquals("x, y, [(a, b), [c], d], e", rule.getStringValue());
@@ -242,7 +246,7 @@ public class RuleGrammarTest {
 	private TokenFactory getFactory(String inputText, Map<String, TokenFactory> map, String name) {
 		try {
 			Text text = new Text(inputText);
-			TRule rule = (TRule) spec.rule.tokenize(text);
+			TRule rule = (TRule) spec.rule.tokenize(text, adapterSupply);
 			Assert.assertNotNull(rule);
 			Assert.assertTrue(rule instanceof TRule);
 			Assert.assertEquals(inputText, rule.getStringValue());

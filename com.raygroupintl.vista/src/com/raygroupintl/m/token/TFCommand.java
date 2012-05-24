@@ -17,6 +17,7 @@ import com.raygroupintl.parser.Token;
 import com.raygroupintl.parser.TokenFactory;
 import com.raygroupintl.parser.TokenFactorySupply;
 import com.raygroupintl.parser.TokenStore;
+import com.raygroupintl.parser.annotation.AdapterSupply;
 
 public class TFCommand extends TokenFactorySupply {
 	private Map<String, TCSFactory> commandSpecs = new HashMap<String, TCSFactory>();
@@ -41,7 +42,7 @@ public class TFCommand extends TokenFactorySupply {
 		}
 		
 		@Override
-		public Token tokenize(Text text) {
+		public Token tokenize(Text text, AdapterSupply adapterSupply) {
 			int index = 0;
 			boolean inQuotes = false;
 			while (text.onChar(index)) {
@@ -613,8 +614,8 @@ public class TFCommand extends TokenFactorySupply {
 		}
 		
 		@Override
-		public Token tokenize(Text text) throws SyntaxErrorException {
-			Token token = this.slave.tokenize(text);
+		public Token tokenize(Text text, AdapterSupply adapterSupply) throws SyntaxErrorException {
+			Token token = this.slave.tokenize(text, adapterSupply);
 			if (token == null) {
 				return null;
 			} else {
@@ -641,10 +642,10 @@ public class TFCommand extends TokenFactorySupply {
 
 		
 	@Override
-	public Token tokenize(Text text) {
+	public Token tokenize(Text text, AdapterSupply adapterSupply) {
 		Text textCopy = text.getCopy();
 		try {
-			return super.tokenize(text);
+			return super.tokenize(text, adapterSupply);
 		} catch (SyntaxErrorException e) {
 			int errorIndex = text.getIndex();
 			TSyntaxError.Adapter adapter = new TSyntaxError.Adapter(e.getCode(), errorIndex);
