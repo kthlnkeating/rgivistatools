@@ -14,13 +14,11 @@
 // limitations under the License.
 //---------------------------------------------------------------------------
 
-package com.raygroupintl.parser.annotation;
+package com.raygroupintl.charlib;
 
-import java.util.Map;
-
-import com.raygroupintl.parser.TokenFactory;
-
-interface FactorySupplyRule {
-	TokenFactory getFactory(String name, Map<String, TokenFactory> symbols);
-	boolean getRequired();
+public class FalsePredicate implements Predicate {
+	@Override
+	public boolean check(char ch) {
+		return false;
+	}
 }

@@ -98,15 +98,19 @@ public class RuleGrammarTest {
 		map.put(String.valueOf(ch), f);		
 	}
 	
-	private void testRule(TokenFactory f, String v) {
+	private void testRule(TokenFactory f, String v, String compare) {
 		try {
 			Text text = new Text(v);
 			Token result = f.tokenize(text);
 			Assert.assertNotNull(result);
-			Assert.assertEquals(v, result.getStringValue());
+			Assert.assertEquals(compare, result.getStringValue());
 		} catch (SyntaxErrorException se) {
 			fail("Unexpected exception: " + se.getMessage());			
 		}
+	}
+	
+	private void testRule(TokenFactory f, String v) {
+		testRule(f, v, v);
 	}
 	
 	private void testRuleError(TokenFactory f, String v, int location) {
@@ -119,6 +123,16 @@ public class RuleGrammarTest {
 		}
 	}
 
+	private void testRuleNull(TokenFactory f, String v) {
+		try {
+			Text text = new Text(v);
+			Token result = f.tokenize(text);
+			Assert.assertNull(result);
+		} catch (SyntaxErrorException se) {
+			fail("Unexpected exception: " + se.getMessage());			
+		}
+	}
+	
 	private Map<String, TokenFactory> getMap() {
 		Map<String, TokenFactory> map = new HashMap<String, TokenFactory>();
 		char[] chs = {'x', 'y', 'a', 'b', 'c', 'd', 'e'};
@@ -252,22 +266,22 @@ public class RuleGrammarTest {
 
 		testRule(namea, "accdd"); 
 		testRule(namea, "efcdd"); 
-		testRuleError(namea, "pqr", 0); 
-		testRuleError(namea, "abc", 1); 
+		testRuleNull(namea, "pqr"); 
+		testRule(namea, "abc", "a"); 
 			
 		testRule(nameb, "apqzr"); 
 		testRule(nameb, "xyzmn"); 
-		testRuleError(nameb, "abcde", 3); 
-		testRuleError(nameb, "xfdyz", 1); 
+		testRule(nameb, "abcde", "abc"); 
+		testRule(nameb, "xfdyz", "x"); 
 		
 		testRule(namec, "amccb"); 
 		testRule(namec, "qqacc"); 
-		testRuleError(namec, "qqaie", 3); 
-		testRuleError(namec, "sertf", 1); 
+		testRule(namec, "qqaie", "qqa"); 
+		testRule(namec, "gertf", "g"); 
 		
 		testRule(named, "accdd"); 
 		testRule(named, "efcdd"); 
-		testRuleError(named, "bqr", 0); 
-		testRuleError(named, "abc", 1); 
+		testRuleNull(named, "bqr"); 
+		testRule(named, "afbc", "af"); 
 	}
 }

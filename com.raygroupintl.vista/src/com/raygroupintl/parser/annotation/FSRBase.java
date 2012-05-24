@@ -11,9 +11,4 @@ public abstract class FSRBase implements FactorySupplyRule {
 	public boolean getRequired() {
 		return this.required;
 	}
-
-	@Override
-	public FactorySupplyRule reduce() {
-		return null;
-	}
 }

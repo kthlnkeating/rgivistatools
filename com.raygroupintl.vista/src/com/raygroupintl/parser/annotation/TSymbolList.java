@@ -13,6 +13,13 @@ public class TSymbolList extends TSequence implements RuleSupply {
 		RuleSupply ers = (RuleSupply) this.get(1);
 		FactorySupplyRule e = ers.getRule(true);
 		TSequence delimleftright = (TSequence) this.get(2);
+		if (e instanceof FSRChar) {
+			if (delimleftright != null) {
+				throw new ParseErrorException("Delimiters or enclosers are not supported with character based rules");
+			}
+			((FSRChar) e).setInList(true);
+			return e;
+		}		
 		if (delimleftright == null) {
 			return new FSRList(e, required);
 		} else {

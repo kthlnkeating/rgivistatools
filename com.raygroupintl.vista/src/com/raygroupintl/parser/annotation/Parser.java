@@ -9,13 +9,8 @@ import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 
-import com.raygroupintl.charlib.AndPredicate;
-import com.raygroupintl.charlib.CharPredicate;
-import com.raygroupintl.charlib.CharRangePredicate;
-import com.raygroupintl.charlib.CharsPredicate;
-import com.raygroupintl.charlib.ExcludePredicate;
-import com.raygroupintl.charlib.OrPredicate;
 import com.raygroupintl.charlib.Predicate;
+import com.raygroupintl.charlib.PredicateFactory;
 import com.raygroupintl.parser.TFBasic;
 import com.raygroupintl.parser.TFCharacter;
 import com.raygroupintl.parser.TFChoiceBasic;
@@ -125,30 +120,14 @@ public class Parser {
 			}
 		}
 		
-		private Predicate orPredicates(Predicate p0, Predicate p1) {
-			if (p1 == null) return p0;
-			if (p0 == null) return p1;
-			return new OrPredicate(p0, p1);
-		}
-
-		private Predicate andPredicates(Predicate p0, Predicate p1) {
-			if (p1 == null) return p0;
-			if (p0 == null) return p1;
-			return new AndPredicate(p0, p1);
-		}
-		
 		private TokenFactory addCharacters(String name, CharSpecified characters, Field f, AdapterSupply adapterSupply) {
-			Predicate p0 = getCharPredicate(characters.chars());
-			Predicate p1 = getCharRanges(characters.ranges());
-			Predicate p2 = getCharPredicate(characters.excludechars());
-			if (p2 != null) {
-				p2 = new ExcludePredicate(p2);
-			}			
-			Predicate p3 = getCharRanges(characters.excluderanges());
-			if (p3 != null) {
-				p3 = new ExcludePredicate(p3);
-			}			
-			Predicate result = andPredicates(orPredicates(p0, p1), orPredicates(p2, p3));
+			PredicateFactory pf = new PredicateFactory();
+			pf.addChars(characters.chars());
+			pf.addRanges(characters.ranges());
+			pf.removeChars(characters.excludechars());
+			pf.removeRanges(characters.excluderanges());
+			Predicate result = pf.generate();
+					
 			if (characters.single()) {
 				TFCharacter tf = new TFCharacter(name, result);
 				return tf;
@@ -357,31 +336,6 @@ public class Parser {
 				this.updateRules();
 			}
 		}		
-	}
-	
-	private static Predicate getCharPredicate(char[] chs) {
-		if (chs.length == 1) {
-			return new CharPredicate(chs[0]);
-		} else if (chs.length > 1) {
-			return new CharsPredicate(chs);
-		} else {
-			return null;
-		}		
-	}
-	
-	private static Predicate getCharRanges(char[] chs) {
-		Predicate result = null;
-		for (int i=1; i<chs.length; i=i+2) {
-			char ch0 = chs[i];
-			char ch1 = chs[i-1];
-			Predicate p =  new CharRangePredicate(ch0, ch1);
-			if (result == null) {
-				result = p;
-			} else {
-				result = new OrPredicate(result, p);
-			}
-		}
-		return result;
 	}
 	
 	private static TokenFactory[] getFactories(Map<String, TokenFactory> map, String[] names) {

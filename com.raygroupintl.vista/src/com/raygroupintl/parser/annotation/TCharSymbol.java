@@ -16,6 +16,8 @@
 
 package com.raygroupintl.parser.annotation;
 
+import com.raygroupintl.charlib.PredicateFactory;
+import com.raygroupintl.parser.TList;
 import com.raygroupintl.parser.TSequence;
 import com.raygroupintl.parser.Token;
 
@@ -24,10 +26,41 @@ public class TCharSymbol extends TSequence implements RuleSupply {
 		super(tokens);
 	}
 	
+	private static char getChar(String inQuotes) {
+		return inQuotes.charAt(1);
+	}
+	
+	private static void update(PredicateFactory pf, Token sign, TSequence spec) {
+		boolean exclude = (sign != null) && (sign.getStringValue().charAt(0) == '-');
+		char ch = getChar(spec.get(0).getStringValue());
+		Token tRangeBound = spec.get(1);
+		if (tRangeBound == null) {
+			if (exclude) {
+				pf.removeChar(ch);
+			} else {
+				pf.addChar(ch);
+			}
+		} else {			
+			char chOther = getChar(((TSequence) tRangeBound).get(1).getStringValue());
+			if (exclude) {
+				pf.removeRange(ch, chOther);
+			} else {
+				pf.addRange(ch, chOther);
+			}
+		}
+	}
+	
 	@Override
 	public FactorySupplyRule getRule(boolean required) {
+		PredicateFactory pf = new PredicateFactory();
+		update(pf, this.get(0), (TSequence) this.get(1));
+		TList list = (TList) this.get(2);
+		if (list != null) for (Token t : list) {
+			TSequence casted = (TSequence) t;
+			update(pf, casted.get(0), (TSequence) casted.get(1));
+		}
+		
 		String key = this.getStringValue();
-		char ch = key.charAt(1);
-		return new FSRChar(ch, required);
+		return new FSRChar(key, pf.generate(), required);
 	}
 }
