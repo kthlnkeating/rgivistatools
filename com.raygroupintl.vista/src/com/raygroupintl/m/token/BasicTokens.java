@@ -2,6 +2,10 @@ package com.raygroupintl.m.token;
 
 import java.util.List;
 
+import com.raygroupintl.m.parsetree.Indirection;
+import com.raygroupintl.m.parsetree.Node;
+import com.raygroupintl.m.parsetree.Nodes;
+import com.raygroupintl.parser.TSequence;
 import com.raygroupintl.parser.Token;
 
 public class BasicTokens {
@@ -23,16 +27,23 @@ public class BasicTokens {
 		}
 	}
 	
-	public static class MTFanoutRoutine extends MTString {
-		public MTFanoutRoutine(String value) {
-			super(value);
+	public static class MTFanoutRoutine extends MTSequence {
+		public MTFanoutRoutine(List<Token> tokens) {
+			super(tokens);
 		}
 	}
 	
-	public static class MTIndirectFanoutRoutine extends MTSequence {
+	public static class MTIndirectFanoutRoutine extends TIndirection {
 		public MTIndirectFanoutRoutine(List<Token> tokens) {
 			super(tokens);
 		}
+
+		//@Override
+		//public Node getNode() {
+		//	Nodes nodes = NodeUtilities.getNodes(this);
+		//	Indirection result = new Indirection(nodes);
+		//	return result;
+		//}		
 	}
 	
 	public static class MTEnvironmentFanoutRoutine extends MTSequence {

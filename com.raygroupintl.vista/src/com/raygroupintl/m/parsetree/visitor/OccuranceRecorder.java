@@ -24,11 +24,13 @@ import com.raygroupintl.m.parsetree.Do;
 import com.raygroupintl.m.parsetree.DoBlock;
 import com.raygroupintl.m.parsetree.ErrorNode;
 import com.raygroupintl.m.parsetree.ExternalDo;
+import com.raygroupintl.m.parsetree.Indirection;
 import com.raygroupintl.m.parsetree.Routine;
 import com.raygroupintl.m.struct.LineLocation;
 
 public class OccuranceRecorder extends LineLocationMarker {
 	private Map<LineLocation, Integer> errors = new HashMap<LineLocation, Integer>();
+	private Map<LineLocation, Integer> indirection = new HashMap<LineLocation, Integer>();
 	private Map<LineLocation, Integer> doBlocks = new HashMap<LineLocation, Integer>();
 	private Map<LineLocation, Integer> externalDoCalls = new HashMap<LineLocation, Integer>();
 	private Map<LineLocation, Integer> atomicDoCalls = new HashMap<LineLocation, Integer>();
@@ -48,6 +50,12 @@ public class OccuranceRecorder extends LineLocationMarker {
 		LineLocation location = this.getLastLocation();
 		increment(this.errors, location);
 		super.visitErrorNode(error);
+	}
+
+	protected void visitIndirection(Indirection indirection) {
+		LineLocation location = this.getLastLocation();
+		increment(this.indirection, location);
+		super.visitIndirection(indirection);
 	}
 
 	protected void visitDoBlock(DoBlock doBlock) {
@@ -95,6 +103,10 @@ public class OccuranceRecorder extends LineLocationMarker {
 		return countAllOn(this.doBlocks);
 	}
 
+	public int getIndirectionCount() {
+		return countAllOn(this.indirection);
+	}
+
 	public int getExternalDoCount() {
 		return countAllOn(this.externalDoCalls);
 	}
@@ -118,6 +130,10 @@ public class OccuranceRecorder extends LineLocationMarker {
 	
 	public int countErrorNodeOn(LineLocation location) {
 		return countOn(this.errors, location);
+	}
+
+	public int countIndirectionOn(LineLocation location) {
+		return countOn(this.indirection, location);
 	}
 
 	public int countDoBlockOn(LineLocation location) {

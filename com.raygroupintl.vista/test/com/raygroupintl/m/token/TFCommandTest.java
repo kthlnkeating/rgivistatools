@@ -67,6 +67,7 @@ public class TFCommandTest {
 	}
 
 	private void testDo(TFCommand f) {
+		testCommand(f, "D A^@B");
 		testCommand(f, "D SENDMSG^XMXAPI(.5,RCSUBJ,XMBODY,.XMTO,,.XMZ)");
 		testCommand(f, "D SET^IBCSC5A(BILLDA,.ARRXS,)");
 		testCommand(f, "D ^%ZIS");
@@ -77,7 +78,6 @@ public class TFCommandTest {
 		testCommand(f, "D:X=Y A^B");
 		testCommand(f, "D:X=Y A+3^B,B+4^C");
 		testCommand(f, "D @A^B");
-		testCommand(f, "D A^@B");
 		testCommand(f, "D @A^@B");
 		testCommand(f, "D @ABC");
 		testCommand(f, "D @ABC,C^D,EE^FF:$$GT");

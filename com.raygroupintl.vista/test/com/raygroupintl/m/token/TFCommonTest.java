@@ -6,14 +6,38 @@ import junit.framework.Assert;
 
 import com.raygroupintl.m.struct.MError;
 import com.raygroupintl.parser.SyntaxErrorException;
+import com.raygroupintl.parser.TChar;
+import com.raygroupintl.parser.TList;
+import com.raygroupintl.parser.TSequence;
+import com.raygroupintl.parser.TString;
 import com.raygroupintl.parser.Text;
 import com.raygroupintl.parser.Token;
 import com.raygroupintl.parser.TokenFactory;
 
 public class TFCommonTest {
+	private static void checkObjectType(Token t) {
+		if (t instanceof TChar) return;
+		if (t instanceof TString) return;
+		Assert.assertTrue(t instanceof MToken);
+		if (t instanceof TSequence) {
+			for (Token r : (TSequence) t) {
+				if (r != null) checkObjectType(r);
+			}
+			return;
+		}
+		if (t instanceof TList) {
+			for (Token r : (TList) t) {
+				if (r != null) checkObjectType(r);
+			}
+			return;			
+		}
+	}
+	
+	
 	public static void validTokenCheck(Token t, String v) {
 		Assert.assertEquals(v, t.getStringValue());
-		Assert.assertEquals(v.length(), t.getStringSize());		
+		Assert.assertEquals(v.length(), t.getStringSize());
+		//checkObjectType(t);
 	}
 	
 	static Token validCheck(TokenFactory f, String v, boolean checkWithSpace) {

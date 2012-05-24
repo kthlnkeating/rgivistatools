@@ -39,7 +39,7 @@ public abstract class TFBasic extends TokenFactory {
 	static protected Constructor<? extends Token> getConstructor(Class<? extends Token> cls, Class<?> constructorArgument, Class<? extends Token> targetCls) {
 		try {
 			if (! targetCls.isAssignableFrom(cls)) {
-				throw new IllegalArgumentException(cls.getName() + "must extend " + targetCls.getName() + ".");
+				throw new IllegalArgumentException(targetCls.getName() + " must extend " + cls.getName() + ".");
 			}
 			int modifiers = cls.getModifiers();
 			if (! Modifier.isPublic(modifiers)) {

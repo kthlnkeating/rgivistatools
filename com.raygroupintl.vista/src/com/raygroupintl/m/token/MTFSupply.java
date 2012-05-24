@@ -347,7 +347,6 @@ public class MTFSupply {
 	public TokenFactory jobparams;
 	@List(value="cmdjarg", delim="comma")
 	public TokenFactory cmdjargs;
-	
 	@Sequence(value={"labelpiece", "lineoffset", "doroutinef", "actuallist"}, required="oooo")
 	public TokenFactory extrinsicarg;
 	
@@ -385,15 +384,21 @@ public class MTFSupply {
 	@List(value="doargumentall", delim="comma")
 	public TokenFactory doarguments;
 	
+	@TokenType(BasicTokens.MTEnvironmentFanoutRoutine.class)
 	@Rule("environment, name")
 	public TokenFactory envdoroutine;
+	
+	@TokenType(BasicTokens.MTFanoutRoutine.class)
 	@Rule("name")
 	public TokenFactory doroutine;
+	
 	@Rule("envdoroutine | doroutine")
 	public TokenFactory noindroutinepostcaret;
 	
+	@TokenType(BasicTokens.MTIndirectFanoutRoutine.class)
 	@Rule("rindirection")
 	public TokenFactory inddoroutine;
+	
 	@Rule("envdoroutine | doroutine | inddoroutine")
 	public TokenFactory doroutinepostcaret;
 	

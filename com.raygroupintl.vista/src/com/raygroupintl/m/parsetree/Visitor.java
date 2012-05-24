@@ -36,6 +36,10 @@ public class Visitor {
 		addlNode.accept(this);
 	}
 	
+	protected void visitIndirection(Indirection indirection) {
+		this.visitAdditionalNodeHolder(indirection);
+	}
+		
 	protected void visitAtomicCommand(AtomicCommand atomicCommand) {
 		this.visitAdditionalNodeHolder(atomicCommand);
 	}

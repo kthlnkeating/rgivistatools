@@ -16,8 +16,13 @@
 
 package com.raygroupintl.m.parsetree;
 
-public class Indirection extends UnaryOperator {
-	public Indirection(Nodes nodes) {
-		super(nodes);
+public class Indirection extends AdditionalNodeHolder {
+	public Indirection(Node node) {
+		super(node);
 	}
+	
+	@Override
+	public void accept(Visitor visitor) {
+		visitor.visitIndirection(this);
+	}	
 }
