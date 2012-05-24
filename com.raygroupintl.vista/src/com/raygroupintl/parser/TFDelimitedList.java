@@ -23,28 +23,16 @@ import java.util.List;
 import com.raygroupintl.parser.annotation.AdapterSupply;
 
 public class TFDelimitedList extends TFBasic {
-	private static final DelimitedListAdapter DEFAULT_ADAPTER = new DelimitedListAdapter() {		
-		@Override
-		public Token convert(List<Token> tokens) {
-			return new TDelimitedList(tokens);
-		}
-	}; 
-	
 	private TFSequence effective;	
 	private DelimitedListAdapter adapter;
 	
 	public TFDelimitedList(String name) {
-		this(name, DEFAULT_ADAPTER);
-	}
-	
-	public TFDelimitedList(String name, DelimitedListAdapter adapter) {
 		super(name);
-		this.adapter = adapter == null ? DEFAULT_ADAPTER : adapter;
 	}
 		
-	private TFDelimitedList(String name, TFSequence effective, DelimitedListAdapter adapter) {
+	private TFDelimitedList(String name, TFSequence effective) {
 		super(name);
-		this.adapter = adapter == null ? DEFAULT_ADAPTER : adapter;
+		this.effective = effective;
 	}
 		
 	@Override
@@ -59,7 +47,7 @@ public class TFDelimitedList extends TFBasic {
 	
 	@Override
 	public TFBasic getCopy(String name) {
-		return new TFDelimitedList(name, this.effective, this.adapter);
+		return new TFDelimitedList(name, this.effective);
 	}
 
 	@Override
@@ -67,12 +55,8 @@ public class TFDelimitedList extends TFBasic {
 		return this.effective != null;
 	}
 
-	public void setAdapter(DelimitedListAdapter adapter) {
-		this.adapter = adapter;
-	}
-	
-	private Token getToken(List<Token> tokens) {
-		return this.adapter.convert(tokens);
+	private Token getToken(List<Token> tokens, AdapterSupply adapterSupply) {
+		return this.adapter == null ? adapterSupply.getDelimitedListAdapter().convert(tokens) : this.adapter.convert(tokens);
 	}
 	
 	private TokenFactory getLeadingFactory(TokenFactory element, TokenFactory delimiter, boolean emptyAllowed) {
@@ -114,12 +98,12 @@ public class TFDelimitedList extends TFBasic {
 				Token tailTokens = internalResult.get(1);
 				if (tailTokens == null) {
 					Token[] tmpResult = {leadingToken};
-					return this.getToken(Arrays.asList(tmpResult));	
+					return this.getToken(Arrays.asList(tmpResult), adapterSupply);	
 				} else {		
 					TList result = (TList) tailTokens;
 					List<Token> list = result.getList();
 					list.add(0, leadingToken);
-					return this.getToken(list);
+					return this.getToken(list, adapterSupply);
 				}
 			}
 		}
@@ -139,13 +123,4 @@ public class TFDelimitedList extends TFBasic {
 			}
 		};
 	}
-	
-	@Override
-	public void setAdapter(Object adapter) {
-		if (adapter instanceof DelimitedListAdapter) {
-			this.adapter = (DelimitedListAdapter) adapter;					
-		} else {
-			throw new IllegalArgumentException("Wrong adapter type " + adapter.getClass().getName());
-		}
-	}	
 }

@@ -11,7 +11,7 @@ public class RuleParser {
 		if (this.grammar == null) {
 			try {
 				Parser parser = new Parser();
-				this.grammar = parser.parse(RuleGrammar.class, null, true);
+				this.grammar = parser.parse(RuleGrammar.class, true);
 			} catch (ParseException e) {
 				throw new ParseErrorException("Error in rule grammar.");
 			}

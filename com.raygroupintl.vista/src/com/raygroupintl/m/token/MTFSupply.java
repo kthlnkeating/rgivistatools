@@ -3,7 +3,6 @@ package com.raygroupintl.m.token;
 import com.raygroupintl.m.struct.MError;
 import com.raygroupintl.parser.TFSyntaxError;
 import com.raygroupintl.parser.TokenFactory;
-import com.raygroupintl.parser.annotation.AdapterSupply;
 import com.raygroupintl.parser.annotation.CharSpecified;
 import com.raygroupintl.parser.annotation.Choice;
 import com.raygroupintl.parser.annotation.Rule;
@@ -757,9 +756,8 @@ public class MTFSupply {
 	private static MTFSupply STD_95_SUPPLY;
 	
 	private static MTFSupply generateSupply(Class<? extends MTFSupply> cls) throws ParseException {
-		AdapterSupply as = new MAdapterSupply();
 		Parser parser = new Parser();
-		MTFSupply result = 	parser.parse(cls, as);
+		MTFSupply result = 	parser.parse(cls);
 		result.initialize();
 		return result;
 	}

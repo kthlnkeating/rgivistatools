@@ -21,33 +21,17 @@ import java.lang.reflect.Constructor;
 import com.raygroupintl.parser.annotation.AdapterSupply;
 
 public class TFConstant extends TFBasic {
-	private static final StringAdapter DEFAULT_ADAPTER = new StringAdapter() {
-		@Override
-		public Token convert(String value) {
-			return new TString(value);
-		}
-	}; 
-
 	private String value;
 	private boolean ignoreCase;
 	private StringAdapter adapter;
 	
 	public TFConstant(String name, String value) {
-		this(name, value, DEFAULT_ADAPTER, false);
+		this(name, value, false);
 	}
 	
 	public TFConstant(String name, String value, boolean ignoreCase) {
-		this(name, value, DEFAULT_ADAPTER, ignoreCase);
-	}
-	
-	public TFConstant(String name, String value, StringAdapter adapter) {
-		this(name, value, adapter, false);
-	}
-	
-	public TFConstant(String name, String value, StringAdapter adapter, boolean ignoreCase) {
 		super(name);
 		this.value = value;
-		this.adapter = adapter == null ? DEFAULT_ADAPTER : adapter;
 		this.ignoreCase = ignoreCase;
 	}
 
@@ -64,7 +48,7 @@ public class TFConstant extends TFBasic {
 	
 	@Override
 	public TFBasic getCopy(String name) {
-		return new TFConstant(name, this.value, this.adapter, this.ignoreCase);
+		return new TFConstant(name, this.value, this.ignoreCase);
 	}
 	
 	@Override
@@ -72,13 +56,9 @@ public class TFConstant extends TFBasic {
 		return true;
 	}
 	
-	public void setAdapter(StringAdapter adapter) {
-		this.adapter = adapter;
-	}
-	
 	@Override
 	public Token tokenize(Text text, AdapterSupply adapterSupply) {
-		return text.extractToken(this.value, this.adapter, this.ignoreCase);
+		return text.extractToken(this.value, this.adapter == null ? adapterSupply.getStringAdapter() : this.adapter, this.ignoreCase);
 	}
 
 	@Override
@@ -95,14 +75,5 @@ public class TFConstant extends TFBasic {
 			}
 		};
 	}
-	
-	@Override
-	public void setAdapter(Object adapter) {
-		if (adapter instanceof StringAdapter) {
-			this.adapter = (StringAdapter) adapter;					
-		} else {
-			throw new IllegalArgumentException("Wrong adapter type " + adapter.getClass().getName());
-		}
-	}	
 }
 	

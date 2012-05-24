@@ -77,7 +77,7 @@ public class TFForkedSequence extends TokenFactory {
 				TokenStore foundTokens = new ArrayAsTokenStore(follower.getSequenceCount());
 				foundTokens.addToken(leading);
 				if (follower.validateEnd(0, foundTokens, true)) {
-					return follower.getToken(foundTokens);
+					return follower.getToken(foundTokens, adapterSupply);
 				}
 			}
 		}

@@ -131,7 +131,7 @@ public class TRoutineTest {
 		Assert.assertEquals(21, or.getDoCount());
 		Assert.assertEquals(29, or.getAtomicDoCount());
 		Assert.assertEquals(8, or.getExternalDoCount());
-		//Assert.assertEquals(12, or.getIndirectionCount());
+		Assert.assertEquals(12, or.getIndirectionCount());
 	}
 
 	@Test

@@ -22,24 +22,12 @@ import com.raygroupintl.charlib.Predicate;
 import com.raygroupintl.parser.annotation.AdapterSupply;
 
 public class TFString extends TFBasic {
-	private static final StringAdapter DEFAULT_ADAPTER = new StringAdapter() {
-		@Override
-		public Token convert(String value) {
-			return new TString(value);
-		}
-	}; 
-	
 	private Predicate predicate;
 	private StringAdapter adapter;
 	
 	public TFString(String name, Predicate predicate) {
-		this(name, predicate, DEFAULT_ADAPTER);
-	}
-		
-	public TFString(String name, Predicate predicate, StringAdapter adapter) {
 		super(name);
 		this.predicate = predicate;
-		this.adapter = adapter == null ? DEFAULT_ADAPTER : adapter;
 	}
 		
 	@Override
@@ -54,7 +42,7 @@ public class TFString extends TFBasic {
 
 	@Override
 	public TFBasic getCopy(String name) {
-		return new TFString(name, this.predicate, this.adapter);
+		return new TFString(name, this.predicate);
 	}
 	
 	@Override
@@ -62,13 +50,9 @@ public class TFString extends TFBasic {
 		return true;
 	}
 	
-	public void setAdapter(StringAdapter adapter) {
-		this.adapter = adapter;
-	}
-	
 	@Override
 	public Token tokenize(Text text, AdapterSupply adapterSupply) {
-		return text.extractToken(this.predicate, this.adapter);
+		return text.extractToken(this.predicate, this.adapter == null ? adapterSupply.getStringAdapter() : this.adapter);
 	}
 
 	@Override
@@ -85,13 +69,4 @@ public class TFString extends TFBasic {
 			}
 		};
 	}
-	
-	@Override
-	public void setAdapter(Object adapter) {
-		if (adapter instanceof StringAdapter) {
-			this.adapter = (StringAdapter) adapter;					
-		} else {
-			throw new IllegalArgumentException("Wrong adapter type " + adapter.getClass().getName());
-		}
-	}	
 }

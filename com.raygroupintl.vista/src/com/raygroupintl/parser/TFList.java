@@ -22,32 +22,15 @@ import java.util.List;
 import com.raygroupintl.parser.annotation.AdapterSupply;
 
 public final class TFList extends TFBasic {
-	private static final ListAdapter DEFAULT_ADAPTER = new ListAdapter() {		
-		@Override
-		public Token convert(List<Token> tokens) {
-			return new TList(tokens);
-		}
-	}; 
-	
 	private TokenFactory elementFactory;
 	private ListAdapter adapter;
 	
 	public TFList(String name) {
-		this(name, DEFAULT_ADAPTER);
-	}
-	
-	public TFList(String name, ListAdapter adapter) {
 		super(name);
-		this.adapter = adapter == null ? DEFAULT_ADAPTER : adapter;
 	}
 	
 	public TFList(String name, TokenFactory elementFactory) {
-		this(name, DEFAULT_ADAPTER, elementFactory);
-	}
-	
-	public TFList(String name, ListAdapter adapter, TokenFactory elementFactory) {
 		super(name);
-		this.adapter = adapter == null ? DEFAULT_ADAPTER : adapter;
 		this.elementFactory = elementFactory;
 	}
 	
@@ -63,7 +46,7 @@ public final class TFList extends TFBasic {
 
 	@Override
 	public TFBasic getCopy(String name) {
-		return new TFList(name, this.adapter, this.elementFactory);
+		return new TFList(name, this.elementFactory);
 	}
 
 	@Override
@@ -71,16 +54,12 @@ public final class TFList extends TFBasic {
 		return this.elementFactory != null;
 	}
 
-	public void setAdapter(ListAdapter adapter) {
-		this.adapter = adapter;
-	}
-	
 	public void setElement(TokenFactory elementFactory) {
 		this.elementFactory = elementFactory;
 	}
 		
-	private Token getToken(List<Token> list) {
-		return this.adapter.convert(list);
+	private Token getToken(List<Token> list, AdapterSupply adapterSupply) {
+		return this.adapter == null ? adapterSupply.getListAdapter().convert(list) : this.adapter.convert(list);
 	}
 
 	@Override
@@ -98,14 +77,14 @@ public final class TFList extends TFBasic {
 				}
 				if (token == null) {
 					if (list.hasToken()) {
-						return this.getToken(list.toList());
+						return this.getToken(list.toList(), adapterSupply);
 					} else {
 						return null;
 					}
 				}
 				list.addToken(token);	
 			}
-			return this.getToken(list.toList());
+			return this.getToken(list.toList(), adapterSupply);
 		}
 		return null;
 	}
@@ -124,13 +103,4 @@ public final class TFList extends TFBasic {
 			}
 		};
 	}
-	
-	@Override
-	public void setAdapter(Object adapter) {
-		if (adapter instanceof ListAdapter) {
-			this.adapter = (ListAdapter) adapter;					
-		} else {
-			throw new IllegalArgumentException("Wrong adapter type " + adapter.getClass().getName());
-		}
-	}	
 }

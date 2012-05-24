@@ -52,13 +52,6 @@ public class TFSequence extends TFBasic {
 		}		
 	}
 	
-	private static final SequenceAdapter DEFAULT_ADAPTER = new SequenceAdapter() {		
-		@Override
-		public TSequence convert(List<Token> tokens) {
-			return new TSequence(tokens);
-		}
-	}; 
-	
 	static class TFSequenceCopy extends TFBasic {
 		private SequenceAdapter adapter;
 		private TFSequence slave;
@@ -90,11 +83,6 @@ public class TFSequence extends TFBasic {
 		}
 
 		@Override
-		public void setAdapter(Object adapter) {
-			this.adapter = getAdapter(adapter);					
-		}	
-		
-		@Override
 		public void copyWoutAdapterFrom(TFBasic rhs) {
 			if (rhs instanceof TFSequenceCopy) {
 				TFSequenceCopy rhsCasted = (TFSequenceCopy) rhs;
@@ -125,26 +113,15 @@ public class TFSequence extends TFBasic {
 	private SequenceAdapter adapter;
 	
 	public TFSequence(String name) {		
-		this(name, DEFAULT_ADAPTER);
-	}
-	
-	public TFSequence(String name, SequenceAdapter adapter) {		
 		super(name);
-		this.adapter = adapter == null ? DEFAULT_ADAPTER : adapter;
 	}
 	
-	public TFSequence(String name, SequenceAdapter adapter, TokenFactory... factories) {
-		this(name, adapter);
-		this.factories = factories;
-		this.requiredFlags = new RequiredFlags(factories.length);
-	}
-		
 	public TFSequence(String name, TokenFactory... factories) {
 		this(name);
 		this.factories = factories;
 		this.requiredFlags = new RequiredFlags(factories.length);
 	}
-	
+		
 	@Override
 	protected TokenFactory getLeadingFactory() {
 		return this.factories[0];
@@ -182,10 +159,6 @@ public class TFSequence extends TFBasic {
 		this.requiredFlags.set(requiredFlags);
 	}
 	
-	public void setAdapter(SequenceAdapter adapter) {
-		this.adapter = adapter;
-	}
-
 	public int getSequenceCount() {
 		return this.factories.length;
 	}
@@ -234,9 +207,15 @@ public class TFSequence extends TFBasic {
 		}
 	}
 
-	protected TSequence getToken(TokenStore foundTokens) {
+	protected TSequence getToken(TokenStore foundTokens, AdapterSupply adapterSupply) {
 		for (int i=0; i<foundTokens.size(); ++i) {
-			if (foundTokens.get(i) != null) return this.adapter.convert(foundTokens.toList());
+			if (foundTokens.get(i) != null) {
+				if (this.adapter != null) {
+					return this.adapter.convert(foundTokens.toList());
+				} else {
+					return adapterSupply.getSequenceAdapter().convert(foundTokens.toList());
+				}
+			}
 		}		
 		return null;
 	}
@@ -274,7 +253,7 @@ public class TFSequence extends TFBasic {
 				}
 			}
 		}
-		return this.getToken(foundTokens);	
+		return this.getToken(foundTokens, adapterSupply);	
 	}
 	
 	private static SequenceAdapter getAdapter(Class<? extends Token> cls) {
@@ -296,17 +275,4 @@ public class TFSequence extends TFBasic {
 	public void setTargetType(Class<? extends Token> cls) {
 		this.adapter = getAdapter(cls);
 	}
-	
-	private static SequenceAdapter getAdapter(Object adapter) {
-		if (adapter instanceof SequenceAdapter) {
-			return (SequenceAdapter) adapter;					
-		} else {
-			throw new IllegalArgumentException("Wrong adapter type " + adapter.getClass().getName());
-		}
-	}	
-	
-	@Override
-	public void setAdapter(Object adapter) {
-		this.adapter = getAdapter(adapter);					
-	}	
 }

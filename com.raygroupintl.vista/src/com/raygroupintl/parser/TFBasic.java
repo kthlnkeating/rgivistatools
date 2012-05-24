@@ -26,8 +26,6 @@ public abstract class TFBasic extends TokenFactory {
 
 	public abstract void setTargetType(Class<? extends Token> cls);
 	
-	public abstract void setAdapter(Object adapter);
-	
 	public abstract void copyWoutAdapterFrom(TFBasic rhs);
 	
 	public abstract TFBasic getCopy(String name);

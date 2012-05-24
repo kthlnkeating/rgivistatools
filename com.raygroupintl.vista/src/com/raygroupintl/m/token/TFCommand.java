@@ -22,7 +22,6 @@ import com.raygroupintl.parser.annotation.AdapterSupply;
 public class TFCommand extends TokenFactorySupply {
 	private Map<String, TCSFactory> commandSpecs = new HashMap<String, TCSFactory>();
 	private MTFSupply supply;
-	private MAdapterSupply adapterSupply = new MAdapterSupply();
 	
 	public TFCommand(String name, MTFSupply supply) {
 		super(name);
@@ -591,7 +590,7 @@ public class TFCommand extends TokenFactorySupply {
 	
 	private class TFCommandRest extends TFSequence {
 		public TFCommandRest(String name, TokenFactory... factories) {
-			super(name, TFCommand.this.adapterSupply.getSequenceAdapter(), factories);
+			super(name, factories);
 		}
 		
 		@Override

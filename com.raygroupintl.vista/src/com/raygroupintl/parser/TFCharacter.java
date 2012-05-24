@@ -22,24 +22,12 @@ import com.raygroupintl.charlib.Predicate;
 import com.raygroupintl.parser.annotation.AdapterSupply;
 
 public class TFCharacter extends TFBasic {
-	private static final CharacterAdapter DEFAULT_ADAPTER = new CharacterAdapter() {
-		@Override
-		public Token convert(char value) {
-			return new TChar(value);
-		}
-	}; 
-	
 	private Predicate predicate;
 	private CharacterAdapter adapter;
 	
 	public TFCharacter(String name, Predicate predicate) {
-		this(name, predicate, DEFAULT_ADAPTER);
-	}
-
-	public TFCharacter(String name, Predicate predicate, CharacterAdapter adapter) {
 		super(name);
 		this.predicate = predicate;
-		this.adapter = adapter == null ? DEFAULT_ADAPTER : adapter;
 	}
 	
 	@Override
@@ -53,7 +41,7 @@ public class TFCharacter extends TFBasic {
 	
 	@Override
 	public TFBasic getCopy(String name) {
-		return new TFCharacter(name, this.predicate, this.adapter);
+		return new TFCharacter(name, this.predicate);
 	}
 	
 	@Override
@@ -61,13 +49,9 @@ public class TFCharacter extends TFBasic {
 		return true;
 	}
 	
-	public void setAdapter(CharacterAdapter adapter) {
-		this.adapter = adapter;
-	}
-	
 	@Override
 	public Token tokenize(Text text, AdapterSupply adapterSupply) {
-		return text.extractToken(this.predicate, this.adapter);
+		return text.extractToken(this.predicate, this.adapter == null ? adapterSupply.getCharacterAdapter() : this.adapter);
 	}
 
 	@Override
@@ -84,13 +68,4 @@ public class TFCharacter extends TFBasic {
 			}
 		};
 	}
-	
-	@Override
-	public void setAdapter(Object adapter) {
-		if (adapter instanceof CharacterAdapter) {
-			this.adapter = (CharacterAdapter) adapter;					
-		} else {
-			throw new IllegalArgumentException("Wrong adapter type " + adapter.getClass().getName());
-		}
-	}	
 }

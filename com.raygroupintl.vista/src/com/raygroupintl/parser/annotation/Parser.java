@@ -63,23 +63,20 @@ public class Parser {
 			return value;			
 		}
 		
-		private void updateAdapter(Field f, TFBasic target, AdapterSupply adapterSupply)  {
+		private void updateAdapter(Field f, TFBasic target)  {
 			TokenType tokenType = f.getAnnotation(TokenType.class);
 			if (tokenType != null) {
 				target.setTargetType(tokenType.value());
-			} else if (adapterSupply != null){
-				Object a = adapterSupply.getAdapter(target.getClass());
-				target.setAdapter(a);
-			}
+			} 		
 		}
 
-		private TokenFactory addSequence(String name, Sequence sequence, Field f, AdapterSupply adapterSupply) {
+		private TokenFactory addSequence(String name, Sequence sequence, Field f) {
 			TFSequence value = new TFSequence(name);
 			this.sequences.add(new Triple<TFSequence, Sequence>(value, sequence));
 			return value;			
 		}
 		
-		private TokenFactory addRule(String name, Rule ruleAnnotation, Field f, AdapterSupply adapterSupply) {
+		private TokenFactory addRule(String name, Rule ruleAnnotation, Field f) {
 			if (ruleParser == null) {
 				ruleParser = new RuleParser();
 			}
@@ -93,7 +90,7 @@ public class Parser {
 			return null;
 		}
 		
-		private TokenFactory addList(String name, List list, Field f, AdapterSupply adapterSupply) {
+		private TokenFactory addList(String name, List list, Field f) {
 			String delimiter = list.delim();
 			String left = list.left();
 			String right = list.right();
@@ -120,7 +117,7 @@ public class Parser {
 			}
 		}
 		
-		private TokenFactory addCharacters(String name, CharSpecified characters, Field f, AdapterSupply adapterSupply) {
+		private TokenFactory addCharacters(String name, CharSpecified characters, Field f) {
 			PredicateFactory pf = new PredicateFactory();
 			pf.addChars(characters.chars());
 			pf.addRanges(characters.ranges());
@@ -137,13 +134,13 @@ public class Parser {
 			}
 		}
 		
-		private TokenFactory addWords(String name, WordSpecified wordSpecied, Field f, AdapterSupply adapterSupply) {
+		private TokenFactory addWords(String name, WordSpecified wordSpecied, Field f) {
 			String word = wordSpecied.value();
 			TFConstant tf = new TFConstant(name, word, wordSpecied.ignorecase());
 			return tf;
 		}
 		
-		private TokenFactory add(Field f, AdapterSupply adapterSupply)  {
+		private TokenFactory add(Field f)  {
 			String name = f.getName();
 			
 			Choice choice = f.getAnnotation(Choice.class);
@@ -152,37 +149,37 @@ public class Parser {
 			}			
 			Sequence sequence = f.getAnnotation(Sequence.class);
 			if (sequence != null) {
-				return this.addSequence(name, sequence, f, adapterSupply);
+				return this.addSequence(name, sequence, f);
 			}			
 			Rule description = f.getAnnotation(Rule.class);
 			if (description != null) {
-				return this.addRule(name, description, f, adapterSupply);
+				return this.addRule(name, description, f);
 			}			
 			List list = f.getAnnotation(List.class);
 			if (list != null) {
-				return this.addList(name, list, f, adapterSupply);
+				return this.addList(name, list, f);
 			}			
 			CharSpecified characters = f.getAnnotation(CharSpecified.class);
 			if (characters != null) {
-				return this.addCharacters(name, characters, f, adapterSupply);
+				return this.addCharacters(name, characters, f);
 			}
 			WordSpecified words = f.getAnnotation(WordSpecified.class);
 			if (words != null) {
-				return this.addWords(name, words, f, adapterSupply);
+				return this.addWords(name, words, f);
 			}
 			return null;
 		}
 		
-		private <T> boolean handleField(T target, Field f, AdapterSupply adapterSupply) throws IllegalAccessException {
+		private <T> boolean handleField(T target, Field f) throws IllegalAccessException {
 			String name = f.getName();
 			TokenFactory already = this.symbols.get(name);
 			if (already == null) {					
 				TokenFactory value = (TokenFactory) f.get(target);
 				if (value == null) {
-					value = this.add(f, adapterSupply);
+					value = this.add(f);
 					if (value != null) {
 						if (value instanceof TFBasic) {
-							this.updateAdapter(f, (TFBasic) value, adapterSupply);
+							this.updateAdapter(f, (TFBasic) value);
 						}								
 						f.set(target, value);
 					} else {
@@ -198,26 +195,26 @@ public class Parser {
 			return true;
 		}
 		
-		private <T> void handleWithRemaining(T target, AdapterSupply adapterSupply, Field f, Set<String> remainingNames, java.util.List<Field> remaining) throws IllegalAccessException{
+		private <T> void handleWithRemaining(T target, Field f, Set<String> remainingNames, java.util.List<Field> remaining) throws IllegalAccessException{
 			String name = f.getName();
 			if (remainingNames.contains(name)) {
 				remaining.add(f);							
 				return;
 			}
-			if (! this.handleField(target, f, adapterSupply)) {
+			if (! this.handleField(target, f)) {
 				remainingNames.add(name);
 				remaining.add(f);
 			}			
 		}
 		
-		public <T> void add(T target, AdapterSupply adapterSupply) throws ClassNotFoundException, IllegalAccessException, InstantiationException, NoSuchMethodException {
+		public <T> void add(T target) throws ClassNotFoundException, IllegalAccessException, InstantiationException, NoSuchMethodException {
 			Set<String> remainingNames = new HashSet<String>();
 			java.util.List<Field> remaining = new ArrayList<Field>();
 			Class<?> cls = target.getClass();
 			while (! cls.equals(Object.class)) {
 				for (Field f : cls.getDeclaredFields()) {
 					if (TokenFactory.class.isAssignableFrom(f.getType())) {
-						this.handleWithRemaining(target, adapterSupply, f, remainingNames, remaining);
+						this.handleWithRemaining(target, f, remainingNames, remaining);
 					}
 				}
 				cls = cls.getSuperclass();
@@ -226,7 +223,7 @@ public class Parser {
 				remainingNames = new HashSet<String>();
 				java.util.List<Field> loopRemaining = new ArrayList<Field>();
 				for (Field f : remaining) {
-					this.handleWithRemaining(target, adapterSupply, f, remainingNames, loopRemaining);
+					this.handleWithRemaining(target, f, remainingNames, loopRemaining);
 				}
 				if (remaining.size() == loopRemaining.size()) {
 					String symbols = "";
@@ -360,11 +357,11 @@ public class Parser {
 		return result;
 	}
 	
-	<T> T parse(Class<T> cls, AdapterSupply adapterSupply, boolean ignore) throws ParseException {
+	<T> T parse(Class<T> cls, boolean ignore) throws ParseException {
 		try {
 			T target = cls.newInstance();
 			Store store = new Store();
-			store.add(target, adapterSupply);
+			store.add(target);
 			store.symbols.put("end", new TFEnd("end"));
 			store.update(cls, ignore);
 			return target;
@@ -379,11 +376,7 @@ public class Parser {
 		}
 	}
 
-	public <T> T parse(Class<T> cls, AdapterSupply adapterSupply) throws ParseException {
-		return this.parse(cls, adapterSupply, false);
-	}
-
 	public <T> T parse(Class<T> cls) throws ParseException {
-		return this.parse(cls, null, false);
+		return this.parse(cls, false);
 	}
 }
