@@ -263,7 +263,8 @@ public class RuleGrammarTest {
 		TokenFactory nameb = getFactory("{'a'...'z' - 'd'...'f'}", map, "nameb");
 		TokenFactory namec = getFactory("{'a'...'m' + 'q' - 'd'...'f' - 'i'}", map, "namec");
 		TokenFactory named = getFactory("{- 'b' + 'a'...'z'}", map, "named");
-
+		TokenFactory namee = getFactory("'%' + 'a'...'z' + 'A'...'Z', [{'a'...'z' + 'A'...'Z' + '0'...'9'}]", map, "namee");
+		
 		testRule(namea, "accdd"); 
 		testRule(namea, "efcdd"); 
 		testRuleNull(namea, "pqr"); 
@@ -283,5 +284,12 @@ public class RuleGrammarTest {
 		testRule(named, "efcdd"); 
 		testRuleNull(named, "bqr"); 
 		testRule(named, "afbc", "af"); 
+
+		testRule(namee, "TAG1"); 
+		testRule(namee, "%"); 
+		testRule(namee, "tAt1"); 
+		testRule(namee, "%tag"); 
+		testRuleNull(namee, "1bqr"); 
+		testRule(namee, "af+bc", "af"); 
 	}
 }

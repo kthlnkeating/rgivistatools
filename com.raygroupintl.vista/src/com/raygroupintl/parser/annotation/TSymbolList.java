@@ -11,7 +11,7 @@ public class TSymbolList extends TSequence implements RuleSupply {
 	@Override
 	public FactorySupplyRule getRule(boolean required) {
 		RuleSupply ers = (RuleSupply) this.get(1);
-		FactorySupplyRule e = ers.getRule(true);
+		FactorySupplyRule e = ers.getRule(required);
 		TSequence delimleftright = (TSequence) this.get(2);
 		if (e instanceof FSRChar) {
 			if (delimleftright != null) {

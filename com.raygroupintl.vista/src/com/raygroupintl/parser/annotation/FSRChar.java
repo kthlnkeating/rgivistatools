@@ -3,11 +3,12 @@ package com.raygroupintl.parser.annotation;
 import java.util.Map;
 
 import com.raygroupintl.charlib.Predicate;
+import com.raygroupintl.parser.TFBasic;
 import com.raygroupintl.parser.TFCharacter;
 import com.raygroupintl.parser.TFString;
 import com.raygroupintl.parser.TokenFactory;
 
-public class FSRChar extends FSRBase {
+public class FSRChar extends FSRBase implements TopTFRule {
 	private String expr;
 	private Predicate predicate;
 	private boolean inList;
@@ -28,7 +29,7 @@ public class FSRChar extends FSRBase {
 	}
 	
 	@Override
-	public TokenFactory getFactory(String name, Map<String, TokenFactory> symbols) {
+	public TFBasic getFactory(String name, Map<String, TokenFactory> symbols) {
 		TokenFactory result = symbols.get(this.expr);
 		if (result == null) {
 			if (this.inList) {
@@ -38,6 +39,11 @@ public class FSRChar extends FSRBase {
 			} 
 			symbols.put(this.expr, result);
 		}
-		return result;
+		return (TFBasic) result;
+	}
+	
+	@Override
+	public TFBasic getTopFactory(String name, Map<String, TokenFactory> symbols, boolean asShell) {
+		return this.getFactory(name, symbols);
 	}
 }
