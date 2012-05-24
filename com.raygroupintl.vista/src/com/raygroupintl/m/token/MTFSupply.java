@@ -7,7 +7,6 @@ import com.raygroupintl.parser.annotation.AdapterSupply;
 import com.raygroupintl.parser.annotation.CharSpecified;
 import com.raygroupintl.parser.annotation.Choice;
 import com.raygroupintl.parser.annotation.Rule;
-import com.raygroupintl.parser.annotation.Equivalent;
 import com.raygroupintl.parser.annotation.List;
 import com.raygroupintl.parser.annotation.ParseException;
 import com.raygroupintl.parser.annotation.Parser;
@@ -414,8 +413,10 @@ public class MTFSupply {
 	public TokenFactory setlhsbasics;
 	@Choice(value={"setlhsbasics", "setlhsbasic"})
 	public TokenFactory setlhs;
-	@Equivalent("expr")
+	
+	@Rule("expr")
 	public TokenFactory setrhs;
+	
 	@Sequence(value={"setlhs", "eq", "setrhs"}, required="all")
 	public TokenFactory setarg_direct;
 	@Sequence(value={"indirection", "eq", "setrhs"}, required="roo")
@@ -720,7 +721,7 @@ public class MTFSupply {
 		@Rule("envdoroutine | objdoroutine | doroutine | inddoroutine")
 		public TokenFactory doroutinepostcaret;
 		
-		@Choice({"classmethod", "expr"})
+		@Rule("classmethod | expr")
 		public TokenFactory setrhs;
 		
 		@Rule("expr, ',', {([expr], [':', expr]):','}")

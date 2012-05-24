@@ -170,12 +170,6 @@ public class Parser {
 			if (words != null) {
 				return this.addWords(name, words, f, adapterSupply);
 			}
-			Equivalent equiv = f.getAnnotation(Equivalent.class);
-			if (equiv != null) {
-				String source = equiv.value();
-				TokenFactory sourceFactory = this.symbols.get(source);
-				return sourceFactory;
-			}
 			return null;
 		}
 		
