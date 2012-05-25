@@ -229,7 +229,7 @@ public class MTFSupply {
 	@Sequence(value={"name", "exprlistinparan"}, required="ro")
 	public TokenFactory lvn;
 	
-	@Sequence(value={"expratom", "exprtail"}, required="ro")
+	@Rule("expratom, [exprtail]")
 	public TokenFactory expr;
 	
 	@TokenType(TActualList.class)
@@ -684,9 +684,7 @@ public class MTFSupply {
 		@Rule("objectexpr | lvn | gvnall | indirection")
 		public TokenFactory glvn;
 			
-		@Choice({"expratom", "classmethod"})
-		public TokenFactory expr_0;
-		@Sequence(value={"expr_0", "exprtail"}, required="ro")
+		@Rule("expratom | classmethod, [exprtail]")
 		public TokenFactory expr;
 		
 		@WordSpecified("##class")
