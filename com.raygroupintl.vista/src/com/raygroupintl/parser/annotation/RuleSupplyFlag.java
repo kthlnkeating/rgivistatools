@@ -16,8 +16,24 @@
 
 package com.raygroupintl.parser.annotation;
 
-import java.util.Map;
-
-interface RuleSupply {	
-	FactorySupplyRule getRule(RuleSupplyFlag flag, Map<String, RuleSupply> existing);
+enum RuleSupplyFlag {
+	INNER_REQUIRED,
+	INNER_OPTIONAL,
+	TOP;
+	
+	RuleSupplyFlag demoteInner() {
+		if (this == INNER_OPTIONAL) {
+			return INNER_OPTIONAL;
+		} else {
+			return INNER_REQUIRED;
+		}
+	}
+	
+	boolean toRuleRequiredFlag() {
+		if (this == INNER_OPTIONAL) {
+			return false;
+		} else {
+			return true;
+		}
+	}
 }

@@ -16,6 +16,8 @@
 
 package com.raygroupintl.parser.annotation;
 
+import java.util.Map;
+
 import com.raygroupintl.parser.TSequence;
 import com.raygroupintl.parser.Token;
 
@@ -25,9 +27,9 @@ public class TConstSymbol extends TSequence implements RuleSupply {
 	}
 	
 	@Override
-	public FactorySupplyRule getRule(boolean required) {
+	public FactorySupplyRule getRule(RuleSupplyFlag flag, Map<String, RuleSupply> existing) {
 		String key = this.getStringValue();
 		String value = key.substring(1, key.length()-1);
-		return new FSRConst(value, required);
+		return new FSRConst(value, flag.toRuleRequiredFlag());
 	}
 }

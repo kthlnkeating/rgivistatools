@@ -8,7 +8,7 @@ import com.raygroupintl.parser.TFBasic;
 import com.raygroupintl.parser.TFForkableChoice;
 import com.raygroupintl.parser.TokenFactory;
 
-public class FSRChoice extends FSRBase implements TopTFRule {
+public class FSRChoice extends FSRBase {
 	private List<FactorySupplyRule> list = new ArrayList<FactorySupplyRule>(); 
 	 
 	public FSRChoice(boolean required) {

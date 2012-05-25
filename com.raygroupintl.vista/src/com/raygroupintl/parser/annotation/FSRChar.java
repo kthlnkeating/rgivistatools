@@ -8,7 +8,7 @@ import com.raygroupintl.parser.TFCharacter;
 import com.raygroupintl.parser.TFString;
 import com.raygroupintl.parser.TokenFactory;
 
-public class FSRChar extends FSRBase implements TopTFRule {
+public class FSRChar extends FSRBase {
 	private String expr;
 	private Predicate predicate;
 	private boolean inList;

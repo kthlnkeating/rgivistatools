@@ -17,6 +17,7 @@
 package com.raygroupintl.parser.annotation;
 
 import java.util.List;
+import java.util.Map;
 
 import com.raygroupintl.parser.TDelimitedList;
 import com.raygroupintl.parser.Token;
@@ -27,15 +28,15 @@ public class TChoice extends TDelimitedList implements RuleSupply {
 	}
 	
 	@Override
-	public FactorySupplyRule getRule(boolean required) {
+	public FactorySupplyRule getRule(RuleSupplyFlag flag, Map<String, RuleSupply> existing) {
 		if (this.size() == 1) {
 			RuleSupply r = (RuleSupply) this.get(0);
-			return r.getRule(required);
+			return r.getRule(flag, existing);
 		} else {
-			FSRChoice result = new FSRChoice(required);
+			FSRChoice result = new FSRChoice(flag.toRuleRequiredFlag());
 			for (Token t : this) {
 				RuleSupply r  = (RuleSupply) t;
-				FactorySupplyRule fsr = r.getRule(required);
+				FactorySupplyRule fsr = r.getRule(flag.demoteInner(), existing);
 				result.add(fsr);
 			}
 			return result;

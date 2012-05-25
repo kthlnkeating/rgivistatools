@@ -16,6 +16,8 @@
 
 package com.raygroupintl.parser.annotation;
 
+import java.util.Map;
+
 import com.raygroupintl.parser.TString;
 
 public class TSymbol extends TString implements RuleSupply {
@@ -24,8 +26,8 @@ public class TSymbol extends TString implements RuleSupply {
 	}
 	
 	@Override
-	public FactorySupplyRule getRule(boolean required) {
+	public FactorySupplyRule getRule(RuleSupplyFlag flag, Map<String, RuleSupply> existing) {
 		String value = this.getStringValue();
-		return new FSRSingle(value, required);
+		return new FSRSingle(value, flag.toRuleRequiredFlag());
 	}
 }

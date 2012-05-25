@@ -7,7 +7,7 @@ import com.raygroupintl.parser.Text;
 public class RuleParser {
 	private RuleGrammar grammar;
 
-	public TopTFRule getTopTFRule(String name, String ruleText) {
+	public RuleSupply getTopTFRule(String name, String ruleText) {
 		if (this.grammar == null) {
 			try {
 				Parser parser = new Parser();
@@ -25,7 +25,7 @@ public class RuleParser {
 				String msg = "Error in rule " + name + " at position " + String.valueOf(errorLocation);		
 				throw new ParseErrorException(msg);					
 			}
-			return (TopTFRule) t.getRule(true);
+			return t;
 		} catch (SyntaxErrorException e) {
 			int errorLocation = text.getIndex();
 			String msg = "Error in rule " + name + " at position " + String.valueOf(errorLocation);		

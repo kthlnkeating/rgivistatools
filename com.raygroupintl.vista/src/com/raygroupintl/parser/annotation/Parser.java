@@ -35,9 +35,9 @@ public class Parser {
 	
 	private static final class RuleStore {
 		public TFBasic factory;
-		public TopTFRule rule;
+		public FactorySupplyRule rule;
 		
-		public RuleStore(TFBasic factory, TopTFRule rule) {
+		public RuleStore(TFBasic factory, FactorySupplyRule rule) {
 			this.factory = factory;
 			this.rule = rule;
 		}
@@ -56,7 +56,8 @@ public class Parser {
 		private java.util.List<Triple<TFSequence, List>> enclosedDelimitedLists  = new ArrayList<Triple<TFSequence, List>>();
 		
 		private java.util.List<RuleStore> rules  = new ArrayList<RuleStore>();
-		private Map<String, TopTFRule> topRules  = new HashMap<String, TopTFRule>();
+		private Map<String, RuleSupply> ruleSupplies  = new HashMap<String, RuleSupply>();
+		private Map<String, FactorySupplyRule> topRules  = new HashMap<String, FactorySupplyRule>();
 		
 		private TokenFactory addChoice(String name, Choice choice) {
 			TFChoiceBasic value = new TFChoiceBasic(name);
@@ -82,7 +83,17 @@ public class Parser {
 				ruleParser = new RuleParser();
 			}
 			String ruleText = ruleAnnotation.value();
-			TopTFRule topRule = ruleParser.getTopTFRule(name, ruleText);
+			RuleSupply ruleSupply = this.ruleSupplies.get(name);
+			if (ruleSupply == null) {
+				ruleSupply = ruleParser.getTopTFRule(name, ruleText);
+				if (ruleSupply == null) return null;
+				this.ruleSupplies.put(name, ruleSupply);
+			}
+			FactorySupplyRule topRule = this.topRules.get(name);	
+			if (topRule == null) {
+				topRule = ruleSupply.getRule(RuleSupplyFlag.TOP, this.ruleSupplies);		
+				this.topRules.put(name, topRule);
+			}
 			if (topRule != null) {
 				TFBasic value = (TFBasic) topRule.getTopFactory(name, this.symbols, true);
 				this.rules.add(new RuleStore(value, topRule));
@@ -254,7 +265,7 @@ public class Parser {
 	
 		private static void updateRules(java.util.List<RuleStore> list, java.util.List<RuleStore> remaining, Map<String, TokenFactory> symbols) {
 			for (RuleStore p : list) {
-				TopTFRule trule = p.rule;
+				FactorySupplyRule trule = p.rule;
 				TFBasic f = (TFBasic) trule.getTopFactory(p.factory.getName(), symbols, false);
 				if (f == null) {
 					remaining.add(p);

@@ -5,7 +5,7 @@ import java.util.Map;
 import com.raygroupintl.parser.TFDelimitedList;
 import com.raygroupintl.parser.TokenFactory;
 
-public class FSRDelimitedList extends FSRBase implements TopTFRule {
+public class FSRDelimitedList extends FSRBase {
 	private FactorySupplyRule element;
 	private FactorySupplyRule delimiter;
 	

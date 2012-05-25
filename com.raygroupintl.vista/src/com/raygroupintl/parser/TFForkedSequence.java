@@ -80,11 +80,6 @@ public class TFForkedSequence extends TokenFactory {
 		}
 		if (this.singleValid) {
 			return this.leader.convert(leading);
-			//if (this.copy != null) {
-			//	return this.copy.convert((TSequence) leading);
-			//} else {
-			//	return leading;
-			//}
 		}
 		throw new SyntaxErrorException();
 	}

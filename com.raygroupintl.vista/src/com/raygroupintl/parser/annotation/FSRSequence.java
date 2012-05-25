@@ -7,7 +7,7 @@ import java.util.Map;
 import com.raygroupintl.parser.TFSequence;
 import com.raygroupintl.parser.TokenFactory;
 
-class FSRSequence extends FSRBase implements TopTFRule {
+class FSRSequence extends FSRBase {
 	private List<FactorySupplyRule> list = new ArrayList<FactorySupplyRule>();
 		
 	public FSRSequence(boolean required) {

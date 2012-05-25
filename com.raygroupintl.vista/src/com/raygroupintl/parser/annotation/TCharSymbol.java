@@ -16,6 +16,8 @@
 
 package com.raygroupintl.parser.annotation;
 
+import java.util.Map;
+
 import com.raygroupintl.charlib.PredicateFactory;
 import com.raygroupintl.parser.TList;
 import com.raygroupintl.parser.TSequence;
@@ -51,16 +53,16 @@ public class TCharSymbol extends TSequence implements RuleSupply {
 	}
 	
 	@Override
-	public FactorySupplyRule getRule(boolean required) {
+	public FactorySupplyRule getRule(RuleSupplyFlag flag, Map<String, RuleSupply> existing) {
 		PredicateFactory pf = new PredicateFactory();
 		update(pf, this.get(0), (TSequence) this.get(1));
 		TList list = (TList) this.get(2);
 		if (list != null) for (Token t : list) {
 			TSequence casted = (TSequence) t;
 			update(pf, casted.get(0), (TSequence) casted.get(1));
-		}
-		
+		}		
+
 		String key = this.getStringValue();
-		return new FSRChar(key, pf.generate(), required);
+		return new FSRChar(key, pf.generate(), flag.toRuleRequiredFlag());
 	}
 }

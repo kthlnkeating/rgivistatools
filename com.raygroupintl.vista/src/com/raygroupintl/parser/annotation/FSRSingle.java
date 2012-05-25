@@ -5,7 +5,7 @@ import java.util.Map;
 import com.raygroupintl.parser.TFBasic;
 import com.raygroupintl.parser.TokenFactory;
 
-public class FSRSingle extends FSRBase implements TopTFRule {
+public class FSRSingle extends FSRBase {
 	private String value;
 	
 	public FSRSingle(String value, boolean required) {

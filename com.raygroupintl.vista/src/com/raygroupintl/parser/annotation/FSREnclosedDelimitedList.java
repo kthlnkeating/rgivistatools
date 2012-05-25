@@ -6,7 +6,7 @@ import com.raygroupintl.parser.TFDelimitedList;
 import com.raygroupintl.parser.TFSequence;
 import com.raygroupintl.parser.TokenFactory;
 
-public class FSREnclosedDelimitedList extends FSRBase implements TopTFRule {
+public class FSREnclosedDelimitedList extends FSRBase {
 	private FactorySupplyRule element;
 	private FactorySupplyRule delimiter;
 	private FactorySupplyRule left;
