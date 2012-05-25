@@ -36,6 +36,7 @@ public abstract class TSymbols extends TSequence implements RuleSupply {
 			for (Token t : list) {
 				RuleSupply rs = (RuleSupply) t;
 				FactorySupplyRule fsr = rs.getRule(RuleSupplyFlag.INNER_REQUIRED, existing);
+				if (fsr == null) return null;
 				result.add(fsr);
 			}
 			return result;

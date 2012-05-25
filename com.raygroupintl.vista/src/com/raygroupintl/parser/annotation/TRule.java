@@ -21,6 +21,7 @@ public class TRule extends TDelimitedList implements RuleSupply {
 			for (Token t : this) {
 				RuleSupply rs = (RuleSupply) t;
 				FactorySupplyRule fsr = rs.getRule(RuleSupplyFlag.INNER_REQUIRED, existing);
+				if (fsr == null) return null;
 				result.add(fsr);
 			}
 			return result;

@@ -37,6 +37,7 @@ public class TChoice extends TDelimitedList implements RuleSupply {
 			for (Token t : this) {
 				RuleSupply r  = (RuleSupply) t;
 				FactorySupplyRule fsr = r.getRule(flag.demoteInner(), existing);
+				if (fsr == null) return null;
 				result.add(fsr);
 			}
 			return result;

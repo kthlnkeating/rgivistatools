@@ -15,6 +15,7 @@ public class TSymbolList extends TSequence implements RuleSupply {
 		RuleSupplyFlag innerFlag = flag.demoteInner();
 		RuleSupply ers = (RuleSupply) this.get(1);
 		FactorySupplyRule e = ers.getRule(innerFlag, existing);
+		if (e == null) return null;
 		TSequence delimleftright = (TSequence) this.get(2);
 		if (e instanceof FSRChar) {
 			if (delimleftright != null) {
@@ -29,6 +30,7 @@ public class TSymbolList extends TSequence implements RuleSupply {
 		} else {
 			RuleSupply drs = (RuleSupply) delimleftright.get(1);
 			FactorySupplyRule d = drs.getRule(RuleSupplyFlag.INNER_REQUIRED, existing);
+			if (d == null) return null;
 			TSequence leftright = (TSequence) delimleftright.get(2);
 			if (leftright == null) {
 				return new FSRDelimitedList(e, d, required);
@@ -38,6 +40,7 @@ public class TSymbolList extends TSequence implements RuleSupply {
 				RuleSupply rrs = (RuleSupply) leftright.get(3);
 				FactorySupplyRule l = lrs.getRule(RuleSupplyFlag.INNER_REQUIRED, existing);
 				FactorySupplyRule r = rrs.getRule(RuleSupplyFlag.INNER_REQUIRED, existing);
+				if ((l == null) || (r == null)) return null;
 				return new FSREnclosedDelimitedList(e, d, l, r, required);
 			}		
 		}
