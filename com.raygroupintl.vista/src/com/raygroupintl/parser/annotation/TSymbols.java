@@ -17,24 +17,16 @@ public abstract class TSymbols extends TSequence implements RuleSupply {
 	@Override
 	public FactorySupplyRule getRule(boolean required) {
 		TList list = (TList) this.get(1);
-
-		Token lastToken = null;
-		int count = 0;
-		for (Token t : list) {
-			lastToken = t;
-			++count;
+		if (list.size() == 1) {
+			return ((RuleSupply) list.get(0)).getRule(this.required);
+		} else {		
+			FSRSequence result = new FSRSequence(this.required);
+			for (Token t : list) {
+				RuleSupply rs = (RuleSupply) t;
+				FactorySupplyRule fsr = rs.getRule(true);
+				result.add(fsr);
+			}
+			return result;
 		}
-		
-		if (count == 1) {
-			return ((RuleSupply) lastToken).getRule(this.required);
-		}
-		
-		FSRSequence result = new FSRSequence(this.required);
-		for (Token t : list) {
-			RuleSupply rs = (RuleSupply) t;
-			FactorySupplyRule fsr = rs.getRule(true);
-			result.add(fsr);
-		}
-		return result;
 	}
 }

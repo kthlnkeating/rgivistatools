@@ -56,6 +56,7 @@ public class Parser {
 		private java.util.List<Triple<TFSequence, List>> enclosedDelimitedLists  = new ArrayList<Triple<TFSequence, List>>();
 		
 		private java.util.List<RuleStore> rules  = new ArrayList<RuleStore>();
+		private Map<String, TopTFRule> topRules  = new HashMap<String, TopTFRule>();
 		
 		private TokenFactory addChoice(String name, Choice choice) {
 			TFChoiceBasic value = new TFChoiceBasic(name);

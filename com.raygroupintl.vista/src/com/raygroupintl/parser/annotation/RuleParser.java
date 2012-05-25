@@ -13,7 +13,7 @@ public class RuleParser {
 				Parser parser = new Parser();
 				this.grammar = parser.parse(RuleGrammar.class, true);
 			} catch (ParseException e) {
-				throw new ParseErrorException("Error in rule grammar.");
+				throw new ParseErrorException("Error in rule grammar: " + e.getMessage());
 			}
 		}
 		Text text = new Text(ruleText);
