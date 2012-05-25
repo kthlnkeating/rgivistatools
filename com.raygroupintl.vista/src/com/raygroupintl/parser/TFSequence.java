@@ -70,13 +70,20 @@ public class TFSequence extends TFBasic {
 			return this.adapter.convert(result.toList());
 		}
 		
-		public TSequence convert(TSequence result) {
-			if ((result == null) || (this.adapter == null)) {
-				return result;
-			}
-			return this.adapter.convert(result.toList());			
+		@Override
+		public Token tokenizeRaw(Text text, AdapterSupply adapterSupply) throws SyntaxErrorException {
+			return this.slave.tokenizeRaw(text, adapterSupply);
 		}
-		
+
+		@Override
+		protected Token convert(Token token) {
+			if ((this.adapter != null) && (token instanceof TSequence)) {
+				return this.adapter.convert(((TSequence) token).toList()); 
+			} else {
+				return token;
+			}
+		}
+
 		@Override
 		public void setTargetType(Class<? extends Token> cls) {
 			this.adapter = getAdapter(cls);
@@ -159,6 +166,7 @@ public class TFSequence extends TFBasic {
 		this.requiredFlags.set(requiredFlags);
 	}
 	
+	@Override
 	public int getSequenceCount() {
 		return this.factories.length;
 	}
@@ -229,7 +237,16 @@ public class TFSequence extends TFBasic {
 		return null;
 	}
 	
-	final TSequence tokenize(Text text, AdapterSupply adapterSupply, int firstSeqIndex, TokenStore foundTokens, boolean noException) throws SyntaxErrorException {
+	@Override
+	public final TSequence tokenizeRaw(Text text, AdapterSupply adapterSupply) throws SyntaxErrorException {
+		if (text.onChar()) {
+			TokenStore foundTokens = new ArrayAsTokenStore(this.factories.length);
+			return this.tokenizeRaw(text, adapterSupply, 0, foundTokens, false);
+		}		
+		return null;
+	}
+	
+	final TokenStore tokenizeCommon(Text text, AdapterSupply adapterSupply, int firstSeqIndex, TokenStore foundTokens, boolean noException) throws SyntaxErrorException {
 		int factoryCount = this.factories.length;
 		for (int i=firstSeqIndex; i<factoryCount; ++i) {
 			TokenFactory factory = this.factories[i];
@@ -253,9 +270,41 @@ public class TFSequence extends TFBasic {
 				}
 			}
 		}
-		return this.getToken(foundTokens, adapterSupply);	
+		for (int i=0; i<foundTokens.size(); ++i) {
+			if (foundTokens.get(i) != null) {
+				return foundTokens;
+			}
+		}		
+		return null;
 	}
 	
+	final TSequence tokenize(Text text, AdapterSupply adapterSupply, int firstSeqIndex, TokenStore foundTokens, boolean noException) throws SyntaxErrorException {
+		TokenStore result = this.tokenizeCommon(text, adapterSupply, firstSeqIndex, foundTokens, noException);
+		if (result == null) {
+			return null;
+		} else {		
+			return this.getToken(result, adapterSupply);	
+		}
+	}
+	
+	final TSequence tokenizeRaw(Text text, AdapterSupply adapterSupply, int firstSeqIndex, TokenStore foundTokens, boolean noException) throws SyntaxErrorException {
+		TokenStore result = this.tokenizeCommon(text, adapterSupply, firstSeqIndex, foundTokens, noException);
+		if (result == null) {
+			return null;
+		} else {		
+			return adapterSupply.getSequenceAdapter().convert(result.toList());	
+		}
+	}
+	
+	@Override
+	protected Token convert(Token token) {
+		if ((this.adapter != null) && (token instanceof TSequence)) {
+			return this.adapter.convert(((TSequence) token).toList()); 
+		} else {
+			return token;
+		}
+	}
+
 	private static SequenceAdapter getAdapter(Class<? extends Token> cls) {
 		final Constructor<? extends Token> constructor = getConstructor(cls, List.class, TSequence.class);
 		return new SequenceAdapter() {			

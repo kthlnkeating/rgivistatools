@@ -7,6 +7,10 @@ public class TChar implements Token {
 		this.value = value;
 	}
 	
+	public char getValue() {
+		return this.value;
+	}
+	
 	@Override
 	public String getStringValue() {
 		return String.valueOf(this.value);

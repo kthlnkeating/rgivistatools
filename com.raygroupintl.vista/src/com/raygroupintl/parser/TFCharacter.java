@@ -53,6 +53,20 @@ public class TFCharacter extends TFBasic {
 	public Token tokenize(Text text, AdapterSupply adapterSupply) {
 		return text.extractToken(this.predicate, this.adapter == null ? adapterSupply.getCharacterAdapter() : this.adapter);
 	}
+	
+	@Override
+	public Token tokenizeRaw(Text text, AdapterSupply adapterSupply) {
+		return text.extractToken(this.predicate, adapterSupply.getCharacterAdapter());
+	}
+	
+	@Override
+	protected Token convert(Token token) {
+		if ((this.adapter != null) && (token instanceof TChar)) {
+			return this.adapter.convert(((TChar) token).getValue()); 
+		} else {
+			return token;
+		}
+	}
 
 	@Override
 	public void setTargetType(Class<? extends Token> cls) {

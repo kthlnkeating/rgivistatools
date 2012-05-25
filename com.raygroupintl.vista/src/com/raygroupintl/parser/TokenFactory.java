@@ -33,9 +33,21 @@ public abstract class TokenFactory {
 		return this;
 	}
 	
+	protected int getSequenceCount() {
+		return 1;
+	}
+	
 	public boolean isInitialized() {
 		return true;
 	}
 	
 	public abstract Token tokenize(Text text, AdapterSupply adapterSupply) throws SyntaxErrorException;
+
+	protected Token convert(Token token) {
+		return token;
+	}
+
+	protected Token tokenizeRaw(Text text, AdapterSupply adapterSupply) throws SyntaxErrorException {
+		return this.tokenize(text, adapterSupply);
+	}
 }

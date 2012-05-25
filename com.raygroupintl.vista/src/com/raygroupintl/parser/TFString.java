@@ -56,6 +56,20 @@ public class TFString extends TFBasic {
 	}
 
 	@Override
+	public Token tokenizeRaw(Text text, AdapterSupply adapterSupply) {
+		return text.extractToken(this.predicate, adapterSupply.getStringAdapter());
+	}
+	
+	@Override
+	protected Token convert(Token token) {
+		if ((this.adapter != null) && (token instanceof TString)) {
+			return this.adapter.convert(((TString) token).getValue()); 
+		} else {
+			return token;
+		}
+	}
+
+	@Override
 	public void setTargetType(Class<? extends Token> cls) {
 		final Constructor<? extends Token> constructor = getConstructor(cls, String.class, TString.class);
 		this.adapter = new StringAdapter() {			
