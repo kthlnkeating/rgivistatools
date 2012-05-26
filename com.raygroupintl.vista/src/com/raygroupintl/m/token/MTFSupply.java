@@ -21,20 +21,12 @@ public class MTFSupply {
 	@CharSpecified(chars={'\''}, single=true)
 	public TokenFactory squote;
 
-	@CharSpecified(chars={'|'}, single=true)
-	public TokenFactory pipe;
-	@CharSpecified(chars={'['}, single=true)
-	public TokenFactory lsqr;
-	@CharSpecified(chars={']'}, single=true)
-	public TokenFactory rsqr;
 	@CharSpecified(chars={'('}, single=true)
 	public TokenFactory lpar;
 	@CharSpecified(chars={')'}, single=true)
 	public TokenFactory rpar;
 	@CharSpecified(chars={'?'}, single=true)
 	public TokenFactory qmark;
-	@CharSpecified(chars={'@'}, single=true)
-	public TokenFactory at;
 	@CharSpecified(chars={'='}, single=true)
 	public TokenFactory eq;
 	@CharSpecified(chars={'^'}, single=true)
@@ -57,33 +49,17 @@ public class MTFSupply {
 	public TokenFactory spaces;
 	@CharSpecified(chars={'$'})
 	public TokenFactory dollar;
-	@CharSpecified(chars={';'})
-	public TokenFactory semicolon;
+
 	
-	@WordSpecified("^$")
-	public TokenFactory caretquest;
-	@WordSpecified("$$")
-	public TokenFactory ddollar;
-	@CharSpecified(chars={'+', '-'})
-	public TokenFactory pm;
-	
-	@CharSpecified(ranges={'a', 'z', 'A', 'Z'}, excludechars={'y', 'Y'})
-	public TokenFactory identxy;
-	@CharSpecified(ranges={'a', 'y', 'A', 'Y'})
-	public TokenFactory identxz;
-	@CharSpecified(chars={'z', 'Z'})
-	public TokenFactory yy;
-	@CharSpecified(chars={'z', 'Z'})
-	public TokenFactory zz;
-	@CharSpecified(ranges={'a', 'x', 'A', 'X'})
+	@Rule("{'a'...'x' + 'A'...'X'}")
 	public TokenFactory paton;
-	@Sequence(value={"yy", "identxy", "yy"}, required="all")
+	@Rule("'y' + 'Y', {'a'...'z' + 'A'...'Z' - 'y' - 'Y'}, 'y' + 'Y'")
 	public TokenFactory patony;
-	@Sequence(value={"zz", "identxz", "zz"}, required="all")
+	@Rule("'z' + 'Z', {'a'...'y' + 'A'...'Y'}, 'z' + 'Z'")
 	public TokenFactory patonz;
 	@Choice({"paton", "patony", "patonz"})
 	public TokenFactory patons;
-	@Sequence(value={"squote", "patons"}, required="or")
+	@Rule("[squote], patons")
 	public TokenFactory patcode;	
 	@Rule("[intlit], ['.'], [intlit]")
 	public TokenFactory repcount;
@@ -128,7 +104,7 @@ public class MTFSupply {
 	public TFOperator operator = new TFOperator("operator");
 	public TokenFactory error = new TFSyntaxError("error", MError.ERR_GENERAL_SYNTAX);
 	
-	@CharSpecified(chars={'+', '-', '\''})
+	@Rule("'+' + '-' + '\\''")
 	public TokenFactory unaryop;
 	
 	@TokenType(TStringLiteral.class)
@@ -159,7 +135,7 @@ public class MTFSupply {
 	@Sequence(value={"lpar", "expr", "rpar"}, required="all")
 	public TokenFactory exprinpar;
 	
-	@Sequence(value={"eq", "expr"}, required="all")
+	@Rule("'=', expr")
 	public TokenFactory eqexpr;
 	
 	@TokenType(TIndirection.class)
@@ -168,29 +144,25 @@ public class MTFSupply {
 	@TokenType(TIndirection.class)
 	@Rule("'@', expratom")
 	public TokenFactory rindirection;
-	
-	
+		
 	@Rule("lvn | gvnall | indirection")
 	public TokenFactory glvn;
 	
-	@Sequence(value={"environment", "name", "exprlistinparan"}, required="oro")
-	public TokenFactory gvn_0;
-	
 	@TokenType(TGlobalNamed.class)
-	@Sequence(value={"caret", "gvn_0"}, required="all")
+	@Rule("'^', ([environment], name, [exprlistinparan])")
 	public TokenFactory gvn;
 	
-	@Sequence(value={"caretquest", "ident", "exprlistinparan"}, required="all")
+	@Rule("\"^$\", ident, exprlistinparan")
 	public TokenFactory gvnssvn;
 
-	@Sequence(value={"ddollar", "extrinsicarg"}, required="all")
+	@Rule("\"$$\", extrinsicarg")
 	public TokenFactory extrinsic;
 	
 	@Sequence(value={"unaryop", "expratom"}, required="all")
 	public TokenFactory unaryexpritem;
 	
 	@TokenType(TGlobalNaked.class)
-	@Sequence(value={"caret", "exprlistinparan"}, required="all")
+	@Rule("'^', exprlistinparan")
 	public TokenFactory gvnnaked;
 	
 	@Sequence(value={"expr", "colon", "expr"}, required="all")
@@ -297,11 +269,11 @@ public class MTFSupply {
 	@Choice({"tabformat", "xtabformat"})
 	public TokenFactory format;
 	
-	@Sequence(value={"glvn", "readcount", "timeout"}, required="roo")
+	@Rule("glvn, [readcount], [timeout]")
 	public TokenFactory cmdrargdef;	
-	@Sequence(value={"asterix", "glvn", "timeout"}, required="rro")
+	@Rule("'*', [glvn], [timeout]")
 	public TokenFactory cmdrargast;	
-	@Sequence(value={"indirection", "timeout"}, required="ro")
+	@Rule("indirection, [timeout]")
 	public TokenFactory cmdrargat;	
 	@Rule("format | strlit | cmdrargast | cmdrargat | cmdrargdef")
 	public TokenFactory cmdrarg;
@@ -445,7 +417,7 @@ public class MTFSupply {
 	public TokenFactory lockee_list;
 	@Choice({"lockee_single", "lockee_list"})
 	public TokenFactory lockee;
-	@Sequence(value={"pm", "lockee", "timeout"}, required="oro")
+	@Rule("['+' + '-'], lockee, [timeout]")
 	public TokenFactory lockarg;
 	@List(value="lockarg", delim="comma")
 	public TokenFactory lockargs;
@@ -496,12 +468,9 @@ public class MTFSupply {
 	public TokenFactory commandend;
 	public TFCommand command = new TFCommand("command", this);
 	
-	@CharSpecified(excludechars={'\r', '\n'})
-	public TokenFactory commentcontent;
 	@TokenType(TComment.class)
-	@Sequence(value={"semicolon", "commentcontent"}, required="ro")
+	@Rule("';', [{- '\\r' - '\\n'}]")
 	public TokenFactory comment;
-	
 	
 	@Rule("command | comment | error")
 	public TokenFactory commandorcomment;
@@ -681,7 +650,7 @@ public class MTFSupply {
 		public TokenFactory ppclass;
 		@Sequence(value={"dot", "name"}, required="all")
 		public TokenFactory classreftail;
-		@List("classreftail")
+		@Rule("{classreftail}")
 		public TokenFactory classreftaillst;
 		@Sequence(value={"name", "classreftaillst"}, required="ro")
 		public TokenFactory classref;
