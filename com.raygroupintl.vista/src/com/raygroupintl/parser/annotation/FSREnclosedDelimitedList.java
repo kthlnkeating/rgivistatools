@@ -5,6 +5,39 @@ import com.raygroupintl.parser.TFSequence;
 import com.raygroupintl.parser.TokenFactory;
 
 public class FSREnclosedDelimitedList extends FSRBase {
+	private static class TokenFactoriesByNamesAndSelf implements TokenFactoriesByName {
+		private TokenFactoriesByName factories;
+		private TokenFactory self;
+		
+		public TokenFactoriesByNamesAndSelf(TokenFactoriesByName factories, TokenFactory self) {
+			this.factories = factories;
+			this.self = self;
+		}
+		
+		@Override
+		public TokenFactory get(String name) {
+			if (self.getName().equals(name)) {
+				return self;
+			} else {
+				return this.factories.get(name);
+			}
+		}
+		
+		@Override
+		public void put(String name, TokenFactory f) {
+			this.factories.put(name, f);
+		}
+		
+		@Override
+		public boolean isInitialized(TokenFactory f) {
+			if (f == this.self) {
+				return true;
+			} else {
+				return f.isInitialized();
+			}
+		}
+	}
+
 	private FactorySupplyRule element;
 	private FactorySupplyRule delimiter;
 	private FactorySupplyRule left;
@@ -21,7 +54,11 @@ public class FSREnclosedDelimitedList extends FSRBase {
 	@Override
 	public TFSequence getFactory(String name, TokenFactoriesByName symbols) {
 		TFSequence result = new TFSequence(name);
-		TokenFactory e = this.element.getFactory(name + ".element", symbols);
+		TokenFactoriesByNamesAndSelf localSymbols = new TokenFactoriesByNamesAndSelf(symbols, result);
+		TokenFactory e = this.element.getFactory(name + ".element", localSymbols);
+		if (e == null) {
+			return null;
+		}
 		TokenFactory d = this.delimiter.getFactory(name + ".delimiter", symbols);
 		TFDelimitedList dl = new TFDelimitedList(name);
 		dl.set(e, d, false);

@@ -16,6 +16,9 @@ public class FSRDelimitedList extends FSRBase {
 	@Override
 	public TFDelimitedList getFactory(String name, TokenFactoriesByName symbols) {
 		TokenFactory element = this.element.getFactory(name + ".element", symbols);
+		if (element == null) {
+			return null;
+		}
 		TokenFactory delimiter = this.delimiter.getFactory(name + ".delimiter", symbols);
 		TFDelimitedList r = new TFDelimitedList(name);
 		r.set(element, delimiter, false);
