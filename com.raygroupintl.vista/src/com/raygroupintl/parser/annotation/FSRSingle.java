@@ -25,20 +25,6 @@ public class FSRSingle extends FSRBase {
 
 	@Override
 	public TFBasic getTopFactory(String name, Map<String, TokenFactory> symbols, boolean asShell) {
-		TokenFactory source = symbols.get(this.value);
-		if (source == null) {
-			if (! asShell) throw new ParseErrorException("Undefined symbol " + this.value + " used in the rule");
-			return null;
-		}
-		if (source instanceof TFBasic) {
-			return ((TFBasic) source).getCopy(name);
-		} else {
-			throw new ParseErrorException("Custom symbol " + this.value + " cannot be used as a top symbol in rules");
-		}
-	}
-		
-	@Override
-	public String getEntryKey() {
-		return this.value;
+		throw new ParseErrorException("Not a top rule.");
 	}
 }

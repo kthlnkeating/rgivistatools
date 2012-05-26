@@ -24,9 +24,4 @@ public class FSRCopy extends FSRBase {
 	public TFBasic getTopFactory(String name, Map<String, TokenFactory> symbols, boolean asShell) {
 		return (TFBasic) this.slave.getTopFactory(this.value, symbols, asShell);
 	}
-		
-	@Override
-	public String getEntryKey() {
-		return this.value;
-	}
 }

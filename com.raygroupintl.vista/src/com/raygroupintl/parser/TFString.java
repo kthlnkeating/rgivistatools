@@ -41,11 +41,6 @@ public class TFString extends TFBasic {
 	}
 
 	@Override
-	public TFBasic getCopy(String name) {
-		return new TFString(name, this.predicate);
-	}
-	
-	@Override
 	public boolean isInitialized() {
 		return true;
 	}

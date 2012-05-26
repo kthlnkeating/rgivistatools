@@ -46,11 +46,6 @@ public class TFDelimitedList extends TFBasic {
 	}
 	
 	@Override
-	public TFBasic getCopy(String name) {
-		return new TFDelimitedList(name, this.effective);
-	}
-
-	@Override
 	public boolean isInitialized() {
 		return this.effective != null;
 	}

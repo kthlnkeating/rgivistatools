@@ -52,69 +52,6 @@ public class TFSequence extends TFBasic {
 		}		
 	}
 	
-	static class TFSequenceCopy extends TFBasic {
-		private SequenceAdapter adapter;
-		private TFSequence slave;
-		
-		private TFSequenceCopy(String name, TFSequence slave) {
-			super(name);
-			this.slave = slave;
-		}
-		
-		@Override
-		public final TSequence tokenize(Text text, AdapterSupply adapterSupply) throws SyntaxErrorException {
-			TSequence result = this.slave.tokenize(text, adapterSupply);
-			if ((result == null) || (this.adapter == null)) {
-				return result;
-			}
-			return this.adapter.convert(result.toList());
-		}
-		
-		@Override
-		public Token tokenizeRaw(Text text, AdapterSupply adapterSupply) throws SyntaxErrorException {
-			return this.slave.tokenizeRaw(text, adapterSupply);
-		}
-
-		@Override
-		protected Token convert(Token token) {
-			if ((this.adapter != null) && (token instanceof TSequence)) {
-				return this.adapter.convert(((TSequence) token).toList()); 
-			} else {
-				return token;
-			}
-		}
-
-		@Override
-		public void setTargetType(Class<? extends Token> cls) {
-			this.adapter = getAdapter(cls);
-		}
-
-		@Override
-		public void copyWoutAdapterFrom(TFBasic rhs) {
-			if (rhs instanceof TFSequenceCopy) {
-				TFSequenceCopy rhsCasted = (TFSequenceCopy) rhs;
-				this.slave = rhsCasted.slave;
-			} else {
-				throw new IllegalArgumentException("Illegal attemp to copy from " + rhs.getClass().getName() + " to " + TFSequenceCopy.class.getName());
-			}
-		}
-
-		@Override
-		public TFBasic getCopy(String name) {
-			return new TFSequenceCopy(name, this.slave);
-		}		
-		
-		@Override
-		public boolean isInitialized() {
-			return this.slave.isInitialized();
-		}	
-		
-		@Override
-		protected TokenFactory getLeadingFactory() {
-			return this.slave;
-		}		
-	}
-		
 	private TokenFactory[] factories = {};
 	private RequiredFlags requiredFlags = new RequiredFlags();
 	private SequenceAdapter adapter;
@@ -143,11 +80,6 @@ public class TFSequence extends TFBasic {
 		} else {
 			throw new IllegalArgumentException("Illegal attemp to copy from " + rhs.getClass().getName() + " to " + TFSequence.class.getName());
 		}
-	}
-
-	@Override
-	public TFBasic getCopy(String name) {
-		return new TFSequenceCopy(name, this);
 	}
 
 	@Override

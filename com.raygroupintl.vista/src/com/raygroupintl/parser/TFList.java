@@ -45,11 +45,6 @@ public final class TFList extends TFBasic {
 	}
 
 	@Override
-	public TFBasic getCopy(String name) {
-		return new TFList(name, this.elementFactory);
-	}
-
-	@Override
 	public boolean isInitialized() {
 		return this.elementFactory != null;
 	}

@@ -47,11 +47,6 @@ public class TFConstant extends TFBasic {
 	}
 	
 	@Override
-	public TFBasic getCopy(String name) {
-		return new TFConstant(name, this.value, this.ignoreCase);
-	}
-	
-	@Override
 	public boolean isInitialized() {
 		return true;
 	}

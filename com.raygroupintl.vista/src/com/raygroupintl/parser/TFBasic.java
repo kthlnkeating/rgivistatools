@@ -28,8 +28,6 @@ public abstract class TFBasic extends TokenFactory {
 	
 	public abstract void copyWoutAdapterFrom(TFBasic rhs);
 	
-	public abstract TFBasic getCopy(String name);
-	
 	public boolean isInitialized() {
 		return false;
 	}

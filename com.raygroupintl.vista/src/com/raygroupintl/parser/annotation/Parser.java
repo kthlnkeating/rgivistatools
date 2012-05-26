@@ -197,9 +197,7 @@ public class Parser {
 					} else {
 						return false;
 					}
-				} else {
-					this.topRules.put(name, new FSRCustom(value, true));
-				}
+				} 
 				if (value != null) {
 					this.symbols.put(name, value);
 				}

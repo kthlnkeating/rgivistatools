@@ -19,16 +19,6 @@ class FSRSequence extends FSRBase {
 	}
 	
 	@Override
-	public boolean isSequence() {
-		return true;
-	}
-	
-	@Override
-	public String getEntryKey() {
-		return this.list.get(0).getEntryKey();
-	}
-		
-	@Override
 	public TFSequence getFactory(String name, Map<String, TokenFactory> symbols) {
 		List<TokenFactory> factories = new ArrayList<TokenFactory>();
 		List<Boolean> flags = new ArrayList<Boolean>();	
