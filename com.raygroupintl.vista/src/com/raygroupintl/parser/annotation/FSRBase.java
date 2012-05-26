@@ -11,4 +11,14 @@ public abstract class FSRBase implements FactorySupplyRule {
 	public boolean getRequired() {
 		return this.required;
 	}
+
+	@Override
+	public boolean isSequence() {
+		return false;
+	}
+	
+	@Override
+	public String getEntryKey() {
+		return null;
+	}
 }

@@ -36,4 +36,9 @@ public class FSRSingle extends FSRBase {
 			throw new ParseErrorException("Custom symbol " + this.value + " cannot be used as a top symbol in rules");
 		}
 	}
+		
+	@Override
+	public String getEntryKey() {
+		return this.value;
+	}
 }

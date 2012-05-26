@@ -128,6 +128,7 @@ public class MTFSupply {
 	
 	public TFOperator operator = new TFOperator("operator");
 	public TokenFactory error = new TFSyntaxError("error", MError.ERR_GENERAL_SYNTAX);
+	
 	@CharSpecified(chars={'+', '-', '\''})
 	public TokenFactory unaryop;
 	

@@ -19,7 +19,17 @@ class FSRSequence extends FSRBase {
 	}
 	
 	@Override
-	public TokenFactory getFactory(String name, Map<String, TokenFactory> symbols) {
+	public boolean isSequence() {
+		return true;
+	}
+	
+	@Override
+	public String getEntryKey() {
+		return this.list.get(0).getEntryKey();
+	}
+		
+	@Override
+	public TFSequence getFactory(String name, Map<String, TokenFactory> symbols) {
 		List<TokenFactory> factories = new ArrayList<TokenFactory>();
 		List<Boolean> flags = new ArrayList<Boolean>();	
 		int index = 0;
@@ -33,8 +43,7 @@ class FSRSequence extends FSRBase {
 			flags.add(b);
 			++index;
 		}
-		if (factories.size() == 0) return null;
-		if (factories.size() == 1) return factories.get(0);
+
 		TFSequence result = new TFSequence(name);
 		
 		int n = factories.size();
@@ -51,13 +60,9 @@ class FSRSequence extends FSRBase {
 	@Override
 	public TokenFactory getTopFactory(String name, Map<String, TokenFactory> symbols, boolean asShell) {
 		if (asShell) {
-			return this.getTopFactoryShell(name, symbols);
+			return new TFSequence(name);
 		} else {
 			return this.getFactory(name, symbols);
 		}
-	}
-	
-	public TokenFactory getTopFactoryShell(String name, Map<String, TokenFactory> symbols) {
-		return new TFSequence(name);
 	}
 }

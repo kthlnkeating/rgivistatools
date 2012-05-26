@@ -29,4 +29,9 @@ public class FSRConst extends FSRBase {
 	public TFBasic getTopFactory(String name, Map<String, TokenFactory> symbols, boolean asShell) {
 		return this.getFactory(name, symbols);
 	}
+	
+	@Override
+	public String getEntryKey() {
+		return "\"" + this.value + "\"";
+	}
 }

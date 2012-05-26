@@ -36,6 +36,12 @@ public class TFForkedSequence extends TokenFactory {
 		this.leader = leader;
 	}
 	
+	public TFForkedSequence(String name, TokenFactory leader, boolean singleValid) {
+		super(name);
+		this.leader = leader;
+		this.singleValid = singleValid;
+	}
+	
 	public void addFollower(TokenFactory follower) {
 		if (follower.getSequenceCount() == 1) {
 			this.singleValid = true;
@@ -50,6 +56,10 @@ public class TFForkedSequence extends TokenFactory {
 		} else {
 			throw new ParseErrorException("Forked sequence only supports objects of kind " + TFSequence.class.getName());
 		}
+	}
+	
+	public void set(List<TFSequence> followers) {
+		this.followers = followers;
 	}
 	
 	@Override

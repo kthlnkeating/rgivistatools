@@ -18,33 +18,88 @@ package com.raygroupintl.parser;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import com.raygroupintl.parser.annotation.AdapterSupply;
 
 public class TFForkableChoice extends TFBasic {
 	private List<TokenFactory> factories = new ArrayList<TokenFactory>();
+	
 	private Map<String, Integer> choiceOrder = new HashMap<String, Integer>();
+	private Map<Integer, List<String>> possibleShared = new HashMap<Integer, List<String>>();
+	private Set<String> restrictedChoices = new HashSet<String>();
+	private Map<Integer, TokenFactory> leadingShared = new HashMap<Integer,TokenFactory>();
 	
 	public TFForkableChoice(String name) {
 		super(name);
 	}
 	
-	public void add(TokenFactory tf) {
-		TokenFactory leading = tf.getLeadingFactory();
-		String name = leading.getName();
-		Integer existing = this.choiceOrder.get(name);
+	private void updateChoicePossibilities(TokenFactory f, Map<String, TokenFactory> symbols, int index) {
+		TokenFactory previous = null;
+		List<String> allForIndex = new ArrayList<String>();
+		while (f != previous) {
+			String name = f.getName();
+			if (! restrictedChoices.contains(name)) {
+				if (symbols.containsKey(name)) {
+					this.choiceOrder.put(name, index);
+					allForIndex.add(name);
+				}
+			}
+			previous = f;
+			f = f.getLeadingFactory();
+		}
+		this.possibleShared.put(index, allForIndex);
+	}
+	
+	private Integer findInChoices(TokenFactory f, Map<String, TokenFactory> symbols) {
+		TokenFactory previous = null;
+		while (f != previous) {
+			String name = f.getName();
+			Integer order = this.choiceOrder.get(name);
+			if (order != null) {
+				//boolean found = false;
+				if (this.possibleShared.containsKey(order)) {
+					for (String r : this.possibleShared.get(order)) {
+						if (! r.equals(name)) {
+							this.choiceOrder.remove(r);
+							this.restrictedChoices.add(r);
+						} //else {
+						//	found = r.equals(name);
+						//}
+					}
+					this.leadingShared.put(order, symbols.get(name));
+					this.possibleShared.remove(order);
+				}
+				return order;
+			}
+			previous = f;
+			f = f.getLeadingFactory();
+		}
+		return null;
+	}
+	
+	
+	public void add(TokenFactory tf, Map<String, TokenFactory> symbols) {
+		//TokenFactory leading = tf.getLeadingFactory();
+		//String name = leading.getName();
+		//Integer existing = this.choiceOrder.get(name);
+		Integer existing = this.findInChoices(tf, symbols);
 		if (existing == null) {
 			int n = this.factories.size();
 			this.factories.add(tf);
-			choiceOrder.put(name, n);
+			this.updateChoicePossibilities(tf, symbols, n);
+			//choiceOrder.put(name, n);
 		} else {
 			int n = existing.intValue();
 			TokenFactory current = this.factories.get(n);
 			if (current instanceof TFForkedSequence) {
 				((TFForkedSequence) current).addFollower(tf);
 			} else {
+				TokenFactory leading = this.leadingShared.get(n);
+				String name = leading.getName();			
 				TFForkedSequence newForked = new TFForkedSequence(this.getName() + "." + name, leading);
 				newForked.addFollower(current);
 				newForked.addFollower(tf);

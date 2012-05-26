@@ -24,4 +24,7 @@ interface FactorySupplyRule {
 	TokenFactory getFactory(String name, Map<String, TokenFactory> symbols);
 	boolean getRequired();
 	TokenFactory getTopFactory(String name, Map<String, TokenFactory> symbols, boolean asShell);
+
+	boolean isSequence();
+	String getEntryKey();
 }
