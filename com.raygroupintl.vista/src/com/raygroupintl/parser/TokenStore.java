@@ -23,8 +23,8 @@ public interface TokenStore {
 	
 	List<Token> toList();
 	
-	Token get(int index);
-	
+	boolean isAllNull();
+
 	int size();
 	
 	boolean hasToken();

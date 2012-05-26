@@ -22,15 +22,26 @@ import java.util.List;
 public class ArrayAsTokenStore implements TokenStore {
 	private List<Token> tokens;
 	int index = 0;
+	int length = 0;
 	
 	public ArrayAsTokenStore(int length) {
-		this.tokens = new ArrayList<Token>(length);
+		this.length = length;
 	}
 	
 	@Override
 	public void addToken(Token token) {
-		this.tokens.add(token);
 		++index;
+		if (token == null) {
+			if (this.tokens != null) {
+				this.tokens.add(token);
+			}
+		} else {
+			if (this.tokens == null) {
+				this.tokens = new ArrayList<Token>(this.length);				
+				for (int i=0; i<index-1; ++i) this.tokens.add(null);
+			}
+			this.tokens.add(token);
+		}
 	}
 	
 	@Override
@@ -39,12 +50,8 @@ public class ArrayAsTokenStore implements TokenStore {
 	}
 	
 	@Override
-	public Token get(int index) {
-		if (index < this.tokens.size()) {
-			return this.tokens.get(index);
-		} else {
-			return null;
-		}
+	public boolean isAllNull() {
+		return this.tokens == null;
 	}
 
 	@Override

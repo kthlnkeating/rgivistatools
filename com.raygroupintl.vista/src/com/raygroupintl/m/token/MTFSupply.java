@@ -20,8 +20,7 @@ public class MTFSupply {
 	public TokenFactory comma;
 	@CharSpecified(chars={'\''}, single=true)
 	public TokenFactory squote;
-	@CharSpecified(chars={'"'}, single=true)
-	public TokenFactory quote;
+
 	@CharSpecified(chars={'|'}, single=true)
 	public TokenFactory pipe;
 	@CharSpecified(chars={'['}, single=true)
@@ -132,13 +131,8 @@ public class MTFSupply {
 	@CharSpecified(chars={'+', '-', '\''})
 	public TokenFactory unaryop;
 	
-	@CharSpecified(excludechars={'\r', '\n', '"'})
-	public TokenFactory quotecontent;
-	@Sequence(value={"quote", "quotecontent", "quote"}, required="ror")
-	public TokenFactory strlitatom;
-	
 	@TokenType(TStringLiteral.class)
-	@Rule("strlitatom, [strlit]")	
+	@Rule("('\"', [{-'\\r' - '\\n' - '\"'}], '\"'), [strlit]")	
 	public TokenFactory strlit;
 	
 	@Sequence(value={"pipe", "expr", "pipe"}, required="all")
@@ -149,15 +143,15 @@ public class MTFSupply {
 	@Choice({"env_0", "env_1"})
 	public TokenFactory environment;
 	
-	@Sequence(value={"qmark", "pattern"}, required="all")
-	public TokenFactory exprtail_s0;
+	@Rule("'?', pattern")
+	public TokenFactory exprtaila;
 	@Rule("\"'?\", pattern")
-	public TokenFactory exprtail_s1;
-	@Sequence(value={"operator", "expratom"}, required="all")
-	public TokenFactory exprtail_s2;
-	@Choice({"exprtail_s0", "exprtail_s1", "exprtail_s2"})
-	public TokenFactory exprtail_s;
-	@List("exprtail_s")
+	public TokenFactory exprtailb;
+	@Rule("operator, expratom")
+	public TokenFactory exprtailc;
+	@Rule("exprtaila | exprtailb | exprtailc")
+	public TokenFactory exprtails;
+	@List("exprtails")
 	public TokenFactory exprtail;
 
 	@List(value="expr", delim="comma")

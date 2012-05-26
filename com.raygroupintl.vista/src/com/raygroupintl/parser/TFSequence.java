@@ -116,10 +116,8 @@ public class TFSequence extends TFBasic {
 		}		
 		if (seqIndex == firstRequired) {
 			if (noException) return ValidateResult.NULL_RESULT;
-			for (int i=0; i<seqIndex; ++i) {
-				if (foundTokens.get(i) != null) {
-					throw new SyntaxErrorException();
-				}
+			if (! foundTokens.isAllNull()) {
+				throw new SyntaxErrorException();
 			}
 			return ValidateResult.NULL_RESULT;
 		}
@@ -147,17 +145,16 @@ public class TFSequence extends TFBasic {
 		}
 	}
 
-	protected TSequence getToken(TokenStore foundTokens, AdapterSupply adapterSupply) {
-		for (int i=0; i<foundTokens.size(); ++i) {
-			if (foundTokens.get(i) != null) {
-				if (this.adapter != null) {
-					return this.adapter.convert(foundTokens.toList());
-				} else {
-					return adapterSupply.getSequenceAdapter().convert(foundTokens.toList());
-				}
+	protected final TSequence getToken(TokenStore foundTokens, AdapterSupply adapterSupply) {
+		if (foundTokens.isAllNull()) {
+			return null;
+		} else {
+			if (this.adapter != null) {
+				return this.adapter.convert(foundTokens.toList());
+			} else {
+				return adapterSupply.getSequenceAdapter().convert(foundTokens.toList());
 			}
 		}		
-		return null;
 	}
 
 	@Override
@@ -202,12 +199,8 @@ public class TFSequence extends TFBasic {
 				}
 			}
 		}
-		for (int i=0; i<foundTokens.size(); ++i) {
-			if (foundTokens.get(i) != null) {
-				return foundTokens;
-			}
-		}		
-		return null;
+		if (foundTokens.isAllNull()) return null;
+		return foundTokens;
 	}
 	
 	final TSequence tokenize(Text text, AdapterSupply adapterSupply, int firstSeqIndex, TokenStore foundTokens, boolean noException) throws SyntaxErrorException {

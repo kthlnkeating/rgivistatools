@@ -36,9 +36,14 @@ public class ListAsTokenStore implements TokenStore {
 	}
 	
 	@Override
-	public Token get(int index) {
-		return this.list.get(index);
+	public boolean isAllNull() {
+		return (this.list == null) || (this.list.size() == 0);
 	}
+
+	//@Override
+	//public Token get(int index) {
+	//	return this.list.get(index);
+	//}
 	
 	@Override
 	public int size() {
