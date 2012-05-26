@@ -1,7 +1,5 @@
 package com.raygroupintl.parser.annotation;
 
-import java.util.Map;
-
 import com.raygroupintl.parser.TFDelimitedList;
 import com.raygroupintl.parser.TFSequence;
 import com.raygroupintl.parser.TokenFactory;
@@ -21,7 +19,7 @@ public class FSREnclosedDelimitedList extends FSRBase {
 	}
 	
 	@Override
-	public TFSequence getFactory(String name, Map<String, TokenFactory> symbols) {
+	public TFSequence getFactory(String name, TokenFactoriesByName symbols) {
 		TFSequence result = new TFSequence(name);
 		TokenFactory e = this.element.getFactory(name + ".element", symbols);
 		TokenFactory d = this.delimiter.getFactory(name + ".delimiter", symbols);
@@ -36,7 +34,7 @@ public class FSREnclosedDelimitedList extends FSRBase {
 	}
 
 	@Override
-	public TFSequence getTopFactory(String name, Map<String, TokenFactory> symbols, boolean asShell) {
+	public TFSequence getTopFactory(String name, TokenFactoriesByName symbols, boolean asShell) {
 		if (! asShell) {
 			return this.getFactory(name, symbols);
 		} else {			

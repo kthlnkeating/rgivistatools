@@ -24,6 +24,7 @@ import java.util.Map;
 import java.util.Set;
 
 import com.raygroupintl.parser.annotation.AdapterSupply;
+import com.raygroupintl.parser.annotation.TokenFactoriesByName;
 
 public class TFForkableChoice extends TFBasic {
 	private List<TokenFactory> factories = new ArrayList<TokenFactory>();
@@ -37,13 +38,13 @@ public class TFForkableChoice extends TFBasic {
 		super(name);
 	}
 	
-	private void updateChoicePossibilities(TokenFactory f, Map<String, TokenFactory> symbols, int index) {
+	private void updateChoicePossibilities(TokenFactory f, TokenFactoriesByName symbols, int index) {
 		TokenFactory previous = null;
 		List<String> allForIndex = new ArrayList<String>();
 		while (f != previous) {
 			String name = f.getName();
 			if (! restrictedChoices.contains(name)) {
-				if (symbols.containsKey(name)) {
+				if (symbols.get(name) != null) {
 					this.choiceOrder.put(name, index);
 					allForIndex.add(name);
 				}
@@ -54,7 +55,7 @@ public class TFForkableChoice extends TFBasic {
 		this.possibleShared.put(index, allForIndex);
 	}
 	
-	private Integer findInChoices(TokenFactory f, Map<String, TokenFactory> symbols) {
+	private Integer findInChoices(TokenFactory f, TokenFactoriesByName symbols) {
 		TokenFactory previous = null;
 		while (f != previous) {
 			String name = f.getName();
@@ -82,16 +83,12 @@ public class TFForkableChoice extends TFBasic {
 	}
 	
 	
-	public void add(TokenFactory tf, Map<String, TokenFactory> symbols) {
-		//TokenFactory leading = tf.getLeadingFactory();
-		//String name = leading.getName();
-		//Integer existing = this.choiceOrder.get(name);
+	public void add(TokenFactory tf, TokenFactoriesByName symbols) {
 		Integer existing = this.findInChoices(tf, symbols);
 		if (existing == null) {
 			int n = this.factories.size();
 			this.factories.add(tf);
 			this.updateChoicePossibilities(tf, symbols, n);
-			//choiceOrder.put(name, n);
 		} else {
 			int n = existing.intValue();
 			TokenFactory current = this.factories.get(n);

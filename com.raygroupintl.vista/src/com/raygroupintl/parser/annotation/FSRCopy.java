@@ -1,7 +1,5 @@
 package com.raygroupintl.parser.annotation;
 
-import java.util.Map;
-
 import com.raygroupintl.parser.TFBasic;
 import com.raygroupintl.parser.TokenFactory;
 
@@ -16,12 +14,12 @@ public class FSRCopy extends FSRBase {
 	}
 	
 	@Override
-	public TokenFactory getFactory(String name, Map<String, TokenFactory> symbols) {
+	public TokenFactory getFactory(String name, TokenFactoriesByName symbols) {
 		return this.slave.getFactory(this.value, symbols);
 	}
 
 	@Override
-	public TFBasic getTopFactory(String name, Map<String, TokenFactory> symbols, boolean asShell) {
+	public TFBasic getTopFactory(String name, TokenFactoriesByName symbols, boolean asShell) {
 		return (TFBasic) this.slave.getTopFactory(this.value, symbols, asShell);
 	}
 }

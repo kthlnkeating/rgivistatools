@@ -2,7 +2,6 @@ package com.raygroupintl.parser.annotation;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 
 import com.raygroupintl.parser.TFBasic;
 import com.raygroupintl.parser.TFForkableChoice;
@@ -20,7 +19,7 @@ public class FSRChoice extends FSRBase {
 	}
 	
 	@Override
-	public TFForkableChoice getFactory(String name, Map<String, TokenFactory> symbols) {
+	public TFForkableChoice getFactory(String name, TokenFactoriesByName symbols) {
 		TFForkableChoice result = new TFForkableChoice(name);
 		for (FactorySupplyRule r : this.list) {
 			TokenFactory f = r.getFactory(name, symbols);
@@ -33,7 +32,7 @@ public class FSRChoice extends FSRBase {
 	}
 
 	@Override
-	public TFBasic getTopFactory(String name, Map<String, TokenFactory> symbols, boolean asShell) {
+	public TFBasic getTopFactory(String name, TokenFactoriesByName symbols, boolean asShell) {
 		if (asShell) {
 			return new TFForkableChoice(name);	
 		} else {

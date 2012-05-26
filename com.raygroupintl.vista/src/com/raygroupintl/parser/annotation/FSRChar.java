@@ -1,7 +1,5 @@
 package com.raygroupintl.parser.annotation;
 
-import java.util.Map;
-
 import com.raygroupintl.charlib.Predicate;
 import com.raygroupintl.parser.TFBasic;
 import com.raygroupintl.parser.TFCharacter;
@@ -29,7 +27,7 @@ public class FSRChar extends FSRBase {
 	}
 	
 	@Override
-	public TFBasic getFactory(String name, Map<String, TokenFactory> symbols) {
+	public TFBasic getFactory(String name, TokenFactoriesByName symbols) {
 		TokenFactory result = symbols.get(this.expr);
 		if (result == null) {
 			if (this.inList) {
@@ -43,7 +41,7 @@ public class FSRChar extends FSRBase {
 	}
 	
 	@Override
-	public TFBasic getTopFactory(String name, Map<String, TokenFactory> symbols, boolean asShell) {
+	public TFBasic getTopFactory(String name, TokenFactoriesByName symbols, boolean asShell) {
 		return this.getFactory(name, symbols);
 	}
 }

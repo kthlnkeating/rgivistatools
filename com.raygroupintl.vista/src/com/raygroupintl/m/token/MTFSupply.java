@@ -138,7 +138,7 @@ public class MTFSupply {
 	public TokenFactory strlitatom;
 	
 	@TokenType(TStringLiteral.class)
-	@Sequence(value={"strlitatom", "strlit"}, required="ro")	
+	@Rule("strlitatom, [strlit]")	
 	public TokenFactory strlit;
 	
 	@Sequence(value={"pipe", "expr", "pipe"}, required="all")
