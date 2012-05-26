@@ -21,12 +21,14 @@ public class FSRChoice extends FSRBase {
 	@Override
 	public TFForkableChoice getFactory(String name, TokenFactoriesByName symbols) {
 		TFForkableChoice result = new TFForkableChoice(name);
+		int index = 0;
 		for (FactorySupplyRule r : this.list) {
-			TokenFactory f = r.getFactory(name, symbols);
+			TokenFactory f = r.getFactory(name + String.valueOf(index), symbols);
 			if (f == null) {
 				return null;
 			}
 			result.add(f, symbols);
+			++index;
 		}
 		return result;
 	}

@@ -85,7 +85,7 @@ public class MTFSupply {
 	public TokenFactory patons;
 	@Sequence(value={"squote", "patons"}, required="or")
 	public TokenFactory patcode;	
-	@Sequence(value={"intlit", "dot", "intlit"})
+	@Rule("[intlit], ['.'], [intlit]")
 	public TokenFactory repcount;
 	@Rule("alternation | patcode | strlit")
 	public TokenFactory patatom_re;
@@ -105,14 +105,14 @@ public class MTFSupply {
 	public TokenFactory ident;
 	
 	@TokenType(TIntLit.class)
-	@CharSpecified(ranges={'0', '9'})
+	@Rule("{'0'...'9'}")
 	public TokenFactory intlit;
 	
 	@TokenType(TLabel.class)
 	@Rule("name | intlit")
 	public TokenFactory label;
 	
-	@Sequence(value={"caret", "environment", "name"}, required="ror")
+	@Rule("caret, [environment], name")
 	public TokenFactory envroutine;
 	
 	@TokenType(TNumLit.class)
@@ -122,7 +122,7 @@ public class MTFSupply {
 	@Rule("intlit, ['.', intlit], ['E', ['+' | '-'], intlit]")
 	public TokenFactory numlitb;
 	
-	@Choice({"numlita", "numlitb"})
+	@Rule("numlita | numlitb")
 	public TokenFactory numlit;
 	
 	public TFOperator operator = new TFOperator("operator");
@@ -135,12 +135,8 @@ public class MTFSupply {
 	@Rule("('\"', [{-'\\r' - '\\n' - '\"'}], '\"'), [strlit]")	
 	public TokenFactory strlit;
 	
-	@Sequence(value={"pipe", "expr", "pipe"}, required="all")
-	public TokenFactory env_0;
-	@List(value="expratom", delim="comma", left="lsqr", right="rsqr")
-	public TokenFactory env_1;
 	@TokenType(TEnvironment.class)
-	@Choice({"env_0", "env_1"})
+	@Rule("('|', expr, '|') | {expratom:',':'[':']'}")
 	public TokenFactory environment;
 	
 	@Rule("'?', pattern")
@@ -454,14 +450,12 @@ public class MTFSupply {
 	@List(value="lockarg", delim="comma")
 	public TokenFactory lockargs;
 	
-	@List(value="lvn", delim="comma", left="lpar", right="rpar")
-	public TokenFactory lvns;
-	@Rule("lvns | indirection | intrinsic | name")
+	@Rule("{lvn:',':'(':')'} | indirection | intrinsic | name")
 	public TokenFactory newarg;
-	@List(value="newarg", delim="comma")
+	@Rule("{newarg:','}")
 	public TokenFactory newargs;
 		
-	@Sequence(value={"dot", "name"}, required="all")
+	@Rule("'.', name")
 	public TokenFactory dname;
 	@Sequence(value={"caret", "name"}, required="all")
 	public TokenFactory cname;
@@ -696,7 +690,7 @@ public class MTFSupply {
 		
 		@WordSpecified(value="$SYSTEM", ignorecase=true)
 		public TokenFactory system;
-		@Sequence(value={"dot", "name"}, required="all")
+		@Rule("'.', name")
 		public TokenFactory method;
 		@List(value="method")
 		public TokenFactory methods;

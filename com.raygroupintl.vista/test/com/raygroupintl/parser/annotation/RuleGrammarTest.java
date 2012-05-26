@@ -250,7 +250,7 @@ public class RuleGrammarTest {
 			Assert.assertNotNull(rule);
 			Assert.assertTrue(rule instanceof TRule);
 			Assert.assertEquals(inputText, rule.getStringValue());
-			TokenFactory f = rule.getRule().getFactory("namea", map);
+			TokenFactory f = rule.getRule().getFactory(name, map);
 			Assert.assertNotNull(f);
 			map.put(name, f);
 			return f;
@@ -296,4 +296,19 @@ public class RuleGrammarTest {
 		testRuleNull(namee, "1bqr"); 
 		testRule(namee, "af+bc", "af"); 
 	}
+	
+	@Test
+	public void testListInChoice() {
+		Map<String, TokenFactory> map = new HashMap<String, TokenFactory>();
+		TokenFactory name = getFactory("{'a'...'z'}", map, "name");
+		TokenFactory number = getFactory("{'0'...'9'}", map, "number");
+		TokenFactory rule = getFactory("{name:',':'(':')'} | number", map, "rule");
+		
+		testRule(name, "rgi");
+		testRule(number, "232");
+		testRule(rule, "(rgi,dc)");
+		testRule(rule, "1235");
+		testRuleNull(rule, "RGI"); 
+		testRuleError(rule, "(rgi,A)", 5);
+	}	
 }
