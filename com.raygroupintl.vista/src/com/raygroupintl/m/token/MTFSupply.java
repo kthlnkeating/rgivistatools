@@ -158,16 +158,16 @@ public class MTFSupply {
 	@Rule("\"$$\", extrinsicarg")
 	public TokenFactory extrinsic;
 	
-	@Sequence(value={"unaryop", "expratom"}, required="all")
+	@Rule("unaryop, expratom")
 	public TokenFactory unaryexpritem;
 	
 	@TokenType(TGlobalNaked.class)
 	@Rule("'^', exprlistinparan")
 	public TokenFactory gvnnaked;
 	
-	@Sequence(value={"expr", "colon", "expr"}, required="all")
-	public TokenFactory dselectarg_e;
-	@List(value="dselectarg_e", delim="comma")
+	@Rule("expr, ':', expr")
+	public TokenFactory dselectarge;
+	@List(value="dselectarge", delim="comma")
 	public TokenFactory dselectarg;
 	
 	@Rule("gvnssvn | gvnnaked | gvn")
