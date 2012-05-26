@@ -136,6 +136,7 @@ public class MTFSupply {
 	public TokenFactory quotecontent;
 	@Sequence(value={"quote", "quotecontent", "quote"}, required="ror")
 	public TokenFactory strlitatom;
+	
 	@TokenType(TStringLiteral.class)
 	@Sequence(value={"strlitatom", "strlit"}, required="ro")	
 	public TokenFactory strlit;

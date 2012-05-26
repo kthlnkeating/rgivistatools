@@ -29,7 +29,18 @@ public class TCharSymbol extends TSequence implements RuleSupply {
 	}
 	
 	private static char getChar(String inQuotes) {
-		return inQuotes.charAt(1);
+		char ch0th = inQuotes.charAt(1);
+		if (ch0th == '\\') {
+			switch (inQuotes.charAt(2)) {
+				case '\'': return '\'';
+				case 'n': return '\n';
+				case 'r': return '\r';
+				case 't': return '\t';
+				default: return ch0th;
+			}
+		} else {
+			return ch0th;
+		}
 	}
 	
 	private static void update(PredicateFactory pf, Token sign, TSequence spec) {

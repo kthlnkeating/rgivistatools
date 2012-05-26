@@ -26,7 +26,8 @@ public class RuleGrammar {
 	
 	@CharSpecified(chars={'\''}, single=true)
 	public TokenFactory squote;
-	@CharSpecified(excludechars={'\''}, single=true)
+	//@CharSpecified(excludechars={'\''}, single=true)
+	@Choice({"escapedsquote", "escapedn", "escapedr", "escapedt", "noquote"})
 	public TokenFactory squoted;
 
 	@CharSpecified(chars={'"'}, single=true)
@@ -42,6 +43,16 @@ public class RuleGrammar {
 	
 	@WordSpecified("...")
 	public TokenFactory ellipsis;
+	@WordSpecified("\\'")
+	public TokenFactory escapedsquote;
+	@WordSpecified("\\n")
+	public TokenFactory escapedn;
+	@WordSpecified("\\r")
+	public TokenFactory escapedr;
+	@WordSpecified("\\t")
+	public TokenFactory escapedt;
+	@CharSpecified(excludechars={'\''}, single=true)
+	public TokenFactory noquote;
 
 	@TokenType(TSymbol.class)
 	@CharSpecified(ranges={'a', 'z'})
