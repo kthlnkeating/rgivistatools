@@ -42,6 +42,8 @@ public class FSREnclosedDelimitedList extends FSRBase {
 	private FactorySupplyRule delimiter;
 	private FactorySupplyRule left;
 	private FactorySupplyRule right;
+	private boolean empty;
+	private boolean none;
 	
 	public FSREnclosedDelimitedList(FactorySupplyRule element, FactorySupplyRule delimiter, FactorySupplyRule left, FactorySupplyRule right, boolean required) {
 		super(required);
@@ -51,6 +53,15 @@ public class FSREnclosedDelimitedList extends FSRBase {
 		this.right = right;
 	}
 	
+	public void setEmptyAllowed(boolean b) {
+		this.empty = b;
+	}
+	
+	
+	public void setNoneAllowed(boolean b) {
+		this.none = b;
+	}
+		
 	@Override
 	public TFSequence getFactory(String name, TokenFactoriesByName symbols) {
 		TFSequence result = new TFSequence(name);
@@ -60,12 +71,12 @@ public class FSREnclosedDelimitedList extends FSRBase {
 			return null;
 		}
 		TokenFactory d = this.delimiter.getFactory(name + ".delimiter", symbols);
-		TFDelimitedList dl = new TFDelimitedList(name);
-		dl.set(e, d, false);
+		TFDelimitedList dl = new TFDelimitedList(name);		
+		dl.set(e, d, this.empty);
 		TokenFactory l = this.left.getFactory(name + ".left", symbols);
 		TokenFactory r = this.right.getFactory(name + ".right", symbols);
 		TokenFactory[] factories = {l, dl, r};
-		boolean[] required = {true, true, true};
+		boolean[] required = {true, ! this.none, true};
 		result.setFactories(factories, required);
 		return result;
 	}

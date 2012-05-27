@@ -43,10 +43,10 @@ public class MTFSupply {
 	@Rule("[intlit], ['.'], [intlit]")
 	public TokenFactory repcount;
 	@Rule("alternation | patcode | strlit")
-	public TokenFactory patatom_re;
-	@Sequence(value={"repcount", "patatom_re"}, required="all")
+	public TokenFactory patatomre;
+	@Rule("repcount, patatomre")
 	public TokenFactory patatom;	
-	@List(value="patatoms", delim="comma", left="lpar", right="rpar")	
+	@Rule("{patatoms:',':'(':')'}")
 	public TokenFactory alternation;	
 	@List(value="patatom")	
 	public TokenFactory patatoms;
@@ -102,7 +102,7 @@ public class MTFSupply {
 	public TokenFactory exprtailc;
 	@Rule("exprtaila | exprtailb | exprtailc")
 	public TokenFactory exprtails;
-	@List("exprtails")
+	@Rule("{exprtails}")
 	public TokenFactory exprtail;
 
 	@Rule("{expr:','}")
@@ -146,7 +146,7 @@ public class MTFSupply {
 	
 	@Rule("expr, ':', expr")
 	public TokenFactory dselectarge;
-	@List(value="dselectarge", delim="comma")
+	@Rule("{dselectarge:','}")
 	public TokenFactory dselectarg;
 	
 	@Rule("gvnssvn | gvnnaked | gvn")
@@ -169,52 +169,52 @@ public class MTFSupply {
 	public TokenFactory expratom;
 
 	@TokenType(TLocal.class)
-	@Sequence(value={"name", "exprlistinparan"}, required="ro")
+	@Rule("name, [exprlistinparan]")
 	public TokenFactory lvn;
 	
 	@Rule("expratom, [exprtail]")
 	public TokenFactory expr;
 	
 	@TokenType(TActualList.class)
-	@List(value="actual", delim="comma", left="lpar", right="rpar", empty=true, none=true)
+	@Rule("{actual:',':'(':')':1:1}")
 	public TokenFactory actuallist;
 
 	@Rule("'=', expr")
 	public TokenFactory deviceparama;
 	@Rule("expr, [deviceparama]")
 	public TokenFactory deviceparam;
-	@List(value="deviceparam", delim="colon", left="lpar", right="rpar", empty=true)
+	@Rule("{deviceparam:':':'(':')':1}")
 	public TokenFactory deviceparamsi;
 	@Rule("deviceparamsi | deviceparam")
 	public TokenFactory deviceparams;
 	
-	@Choice({"indirection", "name"})
+	@Rule("indirection | name")
 	public TokenFactory cmdkexcarg;
-	@List(value="cmdkexcarg", delim="comma", left="lpar", right="rpar")
+	@Rule("{cmdkexcarg:',':'(':')'}")
 	public TokenFactory cmdkexcargs;
 	@Rule("cmdkexcargs | indirection | glvn")
 	public TokenFactory cmdkarg;
-	@List(value="cmdkarg", delim="comma")
+	@Rule("{cmdkarg:','}")
 	public TokenFactory cmdkargs;
 
-	@Sequence(value={"glvn", "eqexpr"}, required="all")
-	public TokenFactory cmdmarg_basic;
-	@Sequence(value={"indirection", "eqexpr"}, required="ro")
-	public TokenFactory cmdmarg_indirect;
-	@Choice({"cmdmarg_indirect", "cmdmarg_basic"})
+	@Rule("glvn, eqexpr")
+	public TokenFactory cmdmargbasic;
+	@Rule("indirection, [eqexpr]")
+	public TokenFactory cmdmargindirect;
+	@Rule("cmdmargindirect | cmdmargbasic")
 	public TokenFactory cmdmarg;
-	@List(value="cmdmarg", delim="comma")
+	@Rule("{cmdmarg:','}")
 	public TokenFactory cmdmargs;
 	
 	@Rule("exprlistinparan | expr")
 	public TokenFactory exprorinlist;
-	@Rule("colon, [deviceparams], [colon], [expr], [colon], [exprorinlist]")
+	@Rule("':', [deviceparams], [':'], [expr], [':'], [exprorinlist]")
 	public TokenFactory cmdoargtail;
 	@Rule("expr, [cmdoargtail]")
 	public TokenFactory cmdoargbasic;
-	@Choice({"indirection", "cmdoargbasic"})
+	@Rule("indirection | cmdoargbasic")
 	public TokenFactory cmdoarg;
-	@List(value="cmdoarg", delim="comma")
+	@Rule("{cmdoarg:','}")
 	public TokenFactory cmdoargs;
 		
 	@Choice({"indirection", "label"})
@@ -254,7 +254,7 @@ public class MTFSupply {
 	public TokenFactory cmdrargat;	
 	@Rule("format | strlit | cmdrargast | cmdrargat | cmdrargdef")
 	public TokenFactory cmdrarg;
-	@List(value="cmdrarg", delim="comma")
+	@Rule("{cmdrarg:','}")
 	public TokenFactory cmdrargs;
 		
 	@Rule("':', expr")
@@ -264,7 +264,7 @@ public class MTFSupply {
 	@Rule("':', expr")
 	public TokenFactory timeout;
 	
-	@List(value="expr", delim="colon", left="lpar", right="rpar", empty=true)
+	@Rule("{expr:':':'(':')':1}")
 	public TokenFactory usedeviceparamlist;
 	@Rule("usedeviceparamlist | expr")
 	public TokenFactory usedeviceparam;
@@ -272,7 +272,7 @@ public class MTFSupply {
 	public TokenFactory colonusedeviceparam;
 	@Rule("expr, [colonusedeviceparam], [colonusedeviceparam]")
 	public TokenFactory cmduarg;
-	@List(value="cmduarg", delim="comma")
+	@Rule("{cmduarg:','}")
 	public TokenFactory cmduargs;
 	
 	@Sequence(value={"label", "lineoffset"}, required="ro")
@@ -319,7 +319,7 @@ public class MTFSupply {
 	@Rule("extdoargument | inddoargument | offsetdoargument | labelcalldoargument | doargument | onlyrsimpledoargument | onlyrdoargument")
 	public TokenFactory doargumentall;
 	
-	@List(value="doargumentall", delim="comma")
+	@Rule("{doargumentall:','}")
 	public TokenFactory doarguments;
 	
 	@TokenType(BasicTokens.MTEnvironmentFanoutRoutine.class)
@@ -349,11 +349,11 @@ public class MTFSupply {
 	@Choice(value={"indirection", "label"})
 	public TokenFactory labelpiece;
 	
-	@Choice(value={"indirection", "intrinsic", "glvn"})
+	@Rule("indirection | intrinsic | glvn")
 	public TokenFactory setlhsbasic;
-	@List(value="setlhsbasic", delim="comma", left="lpar", right="rpar")
+	@Rule("{setlhsbasic:',':'(':')'}")
 	public TokenFactory setlhsbasics;
-	@Choice(value={"setlhsbasics", "setlhsbasic"})
+	@Rule("setlhsbasics | setlhsbasic")
 	public TokenFactory setlhs;
 	
 	@Rule("expr")
@@ -404,11 +404,9 @@ public class MTFSupply {
 	public TokenFactory dname;
 	@Rule("'^', name")
 	public TokenFactory cname;
-	@Sequence(value={"name", "dname", "cname"}, required="roo")
+	@Rule("name, [dname], [cname]")
 	public TokenFactory ampersandtail;
-	@WordSpecified("$&")
-	public TokenFactory dolamp;
-	@Sequence(value={"dolamp", "ampersandtail", "actuallist"}, required="roo")
+	@Rule("\"$&\", [ampersandtail], [actuallist]")
 	public TokenFactory external;
 
 	@Rule("',', expr")
@@ -417,20 +415,20 @@ public class MTFSupply {
 	public TokenFactory dorderarg;
 	
 	@Rule("indirection | expr")
-	public TokenFactory xecutearg_main;
-	@Sequence(value={"xecutearg_main", "postcondition"}, required="ro")
+	public TokenFactory xecuteargmain;
+	@Rule("xecuteargmain, [postcondition]")
 	public TokenFactory xecutearg;
-	@List(value="xecutearg", delim="comma")
+	@Rule("{xecutearg:','}")
 	public TokenFactory xecuteargs;
 
 	@Rule("'/', name, actuallist")
 	public TokenFactory writeargslash;
 	@Rule("format | writeargslash | asterixexpr | indirection | expr")
 	public TokenFactory writearg;
-	@List(value="writearg", delim="comma")
+	@Rule("{writearg:','}")
 	public TokenFactory writeargs;
 	
-	@List(value="name", delim="comma", left="lpar", right="rpar", none=true)
+	@Rule("{name:',':'(':')':0:1}")
 	public TokenFactory lineformal;
 		
 	@Rule("'$', ident")
@@ -618,9 +616,9 @@ public class MTFSupply {
 		@Rule("expratom | classmethod, [exprtail]")
 		public TokenFactory expr;
 		
-		@WordSpecified("##class")
+		@Rule("\"##class\"")
 		public TokenFactory ppclass;
-		@Sequence(value={"dot", "name"}, required="all")
+		@Rule("dot, name")
 		public TokenFactory classreftail;
 		@Rule("{classreftail}")
 		public TokenFactory classreftaillst;
@@ -633,9 +631,9 @@ public class MTFSupply {
 		public TokenFactory system;
 		@Rule("'.', name")
 		public TokenFactory method;
-		@List(value="method")
+		@Rule("{method}")
 		public TokenFactory methods;
-		@Sequence(value={"system", "methods", "actuallist"}, required="ror")
+		@Rule("system, [methods], actuallist")
 		public TokenFactory systemcall;
 		
 		@Rule("label, method, [dolineoffset], [doroutinef], [actuallist], [postcondition]")
@@ -662,7 +660,7 @@ public class MTFSupply {
 		@Rule("expr, ',', {([expr], [':', expr]):','}")
 		public TokenFactory dcasearg;
 	
-		@List(value="actual", delim="comma")
+		@Rule("{actual:','}")
 		public TokenFactory dsystemarg;
 		
 		@Rule("'$', ident, [methods]")

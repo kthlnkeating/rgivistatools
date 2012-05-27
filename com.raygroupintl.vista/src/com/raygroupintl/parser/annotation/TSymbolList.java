@@ -38,10 +38,16 @@ public class TSymbolList extends TSequence implements RuleSupply {
 			else {
 				RuleSupply lrs = (RuleSupply) leftright.get(1);
 				RuleSupply rrs = (RuleSupply) leftright.get(3);
+				Token emptyAllowedToken = leftright.get(5);
+				Token noneAllowedToken = leftright.get(7);
+				
 				FactorySupplyRule l = lrs.getRule(RuleSupplyFlag.INNER_REQUIRED, existing);
 				FactorySupplyRule r = rrs.getRule(RuleSupplyFlag.INNER_REQUIRED, existing);
 				if ((l == null) || (r == null)) return null;
-				return new FSREnclosedDelimitedList(e, d, l, r, required);
+				FSREnclosedDelimitedList result = new FSREnclosedDelimitedList(e, d, l, r, required);
+				if ((emptyAllowedToken != null) && (emptyAllowedToken.getStringValue().equals("1"))) result.setEmptyAllowed(true);
+				if ((noneAllowedToken != null) && (noneAllowedToken.getStringValue().equals("1"))) result.setNoneAllowed(true);
+				return result;
 			}		
 		}
 	}

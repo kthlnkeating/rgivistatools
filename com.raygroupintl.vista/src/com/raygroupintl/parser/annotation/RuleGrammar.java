@@ -26,7 +26,6 @@ public class RuleGrammar {
 	
 	@CharSpecified(chars={'\''}, single=true)
 	public TokenFactory squote;
-	//@CharSpecified(excludechars={'\''}, single=true)
 	@Choice({"escapedsquote", "escapedn", "escapedr", "escapedt", "noquote"})
 	public TokenFactory squoted;
 
@@ -40,6 +39,9 @@ public class RuleGrammar {
 	
 	@CharSpecified(chars={'+', '-'}, single=true)
 	public TokenFactory pm;
+	
+	@CharSpecified(chars={'1', '0'}, single=true)
+	public TokenFactory bool;
 	
 	@WordSpecified("...")
 	public TokenFactory ellipsis;
@@ -119,7 +121,7 @@ public class RuleGrammar {
 	@List(value="symbolchoice", delim="delimiter", left="openrequired", right="closerequired")
 	public TokenFactory requiredsymbols;
 	
-	@Sequence(value={"colon", "anysymbols", "colon", "anysymbols"}, required="all")
+	@Sequence(value={"colon", "anysymbols", "colon", "anysymbols", "colon", "bool", "colon", "bool"}, required="rrrroooo")
 	public TokenFactory leftrightspec;
 	@Sequence(value={"colon", "anysymbols", "leftrightspec"}, required="roo")
 	public TokenFactory delimleftrightspec;
