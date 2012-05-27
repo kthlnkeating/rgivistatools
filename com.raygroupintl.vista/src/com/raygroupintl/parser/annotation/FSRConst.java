@@ -7,8 +7,8 @@ import com.raygroupintl.parser.TokenFactory;
 public class FSRConst extends FSRBase {
 	private String value;
 	
-	public FSRConst(String value, boolean required) {
-		super(required);
+	public FSRConst(String value, RuleSupplyFlag flag) {
+		super(flag);
 		this.value = value;
 	}
 	

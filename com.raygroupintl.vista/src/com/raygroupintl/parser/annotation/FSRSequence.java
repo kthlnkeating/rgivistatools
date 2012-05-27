@@ -43,8 +43,8 @@ class FSRSequence extends FSRBase {
 	private List<FactorySupplyRule> list = new ArrayList<FactorySupplyRule>();
 	private TFSequence factory;	
 	
-	public FSRSequence(String name, boolean required) {
-		super(required);
+	public FSRSequence(String name, RuleSupplyFlag flag) {
+		super(flag);
 		this.factory = new TFSequence(name);
 	}
 	

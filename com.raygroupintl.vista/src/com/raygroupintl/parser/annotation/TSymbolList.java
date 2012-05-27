@@ -26,14 +26,14 @@ public class TSymbolList extends TSequence implements RuleSupply {
 		}
 		boolean required = flag.toRuleRequiredFlag();
 		if (delimleftright == null) {
-			return new FSRList(name, e, required);
+			return new FSRList(name, flag, e);
 		} else {
 			RuleSupply drs = (RuleSupply) delimleftright.get(1);
 			FactorySupplyRule d = drs.getRule(RuleSupplyFlag.INNER_REQUIRED, name + ".delimiter", existing);
 			if (d == null) return null;
 			TSequence leftright = (TSequence) delimleftright.get(2);
 			if (leftright == null) {
-				return new FSRDelimitedList(name, e, d, required);
+				return new FSRDelimitedList(name, flag, e, d);
 			}
 			else {
 				RuleSupply lrs = (RuleSupply) leftright.get(1);
@@ -44,7 +44,7 @@ public class TSymbolList extends TSequence implements RuleSupply {
 				FactorySupplyRule l = lrs.getRule(RuleSupplyFlag.INNER_REQUIRED, name + ".left", existing);
 				FactorySupplyRule r = rrs.getRule(RuleSupplyFlag.INNER_REQUIRED, name + ".right", existing);
 				if ((l == null) || (r == null)) return null;
-				FSREnclosedDelimitedList result = new FSREnclosedDelimitedList(name, e, d, l, r, required);
+				FSREnclosedDelimitedList result = new FSREnclosedDelimitedList(name, flag, e, d, l, r);
 				if ((emptyAllowedToken != null) && (emptyAllowedToken.getStringValue().equals("1"))) result.setEmptyAllowed(true);
 				if ((noneAllowedToken != null) && (noneAllowedToken.getStringValue().equals("1"))) result.setNoneAllowed(true);
 				return result;

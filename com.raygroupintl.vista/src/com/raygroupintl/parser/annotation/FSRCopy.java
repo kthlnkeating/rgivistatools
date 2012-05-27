@@ -7,7 +7,7 @@ public class FSRCopy extends FSRBase {
 	private FactorySupplyRule slave;
 	
 	public FSRCopy(FactorySupplyRule slave) {
-		super(true);
+		super(RuleSupplyFlag.TOP);
 		this.slave = slave;
 	}
 	

@@ -46,8 +46,8 @@ public class FSREnclosedDelimitedList extends FSRBase {
 	private boolean none;
 	private TFSequence factory;
 	
-	public FSREnclosedDelimitedList(String name, FactorySupplyRule element, FactorySupplyRule delimiter, FactorySupplyRule left, FactorySupplyRule right, boolean required) {
-		super(required);
+	public FSREnclosedDelimitedList(String name, RuleSupplyFlag flag, FactorySupplyRule element, FactorySupplyRule delimiter, FactorySupplyRule left, FactorySupplyRule right) {
+		super(flag);
 		this.element = element;
 		this.delimiter = delimiter;
 		this.left = left;

@@ -6,8 +6,8 @@ import com.raygroupintl.parser.TokenFactory;
 public class FSRSingle extends FSRBase {
 	private String value;
 	
-	public FSRSingle(String value, boolean required) {
-		super(required);
+	public FSRSingle(String value, RuleSupplyFlag flag) {
+		super(flag);
 		this.value = value;
 	}
 	

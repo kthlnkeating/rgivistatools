@@ -74,6 +74,6 @@ public class TCharSymbol extends TSequence implements RuleSupply {
 		}		
 
 		String key = this.getStringValue();
-		return new FSRChar(key, pf.generate(), flag.toRuleRequiredFlag());
+		return new FSRChar(key, flag, pf.generate());
 	}
 }

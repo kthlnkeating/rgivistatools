@@ -34,7 +34,7 @@ public class TChoice extends TDelimitedList implements RuleSupply {
 			return r.getRule(flag, name, existing);
 		} else {
 			int index = 0;
-			FSRChoice result = new FSRChoice(name, flag.toRuleRequiredFlag());
+			FSRChoice result = new FSRChoice(name, flag);
 			for (Token t : this) {
 				RuleSupply r  = (RuleSupply) t;
 				FactorySupplyRule fsr = r.getRule(flag.demoteInner(), name + "." + String.valueOf(index), existing);

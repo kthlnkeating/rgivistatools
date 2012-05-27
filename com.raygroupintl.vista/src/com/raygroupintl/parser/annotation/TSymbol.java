@@ -37,7 +37,7 @@ public class TSymbol extends TString implements RuleSupply {
 			}
 		} else {
 			String value = this.getStringValue();
-			return new FSRSingle(value, flag.toRuleRequiredFlag());			
+			return new FSRSingle(value, flag);			
 		}
 	}
 }

@@ -8,8 +8,8 @@ public class FSRDelimitedList extends FSRBase {
 	private FactorySupplyRule delimiter;
 	private TFDelimitedList factory;
 	
-	public FSRDelimitedList(String name, FactorySupplyRule element, FactorySupplyRule delimiter, boolean required) {
-		super(required);
+	public FSRDelimitedList(String name, RuleSupplyFlag flag, FactorySupplyRule element, FactorySupplyRule delimiter) {
+		super(flag);
 		this.element = element;
 		this.delimiter = delimiter;
 		this.factory = new TFDelimitedList(name);

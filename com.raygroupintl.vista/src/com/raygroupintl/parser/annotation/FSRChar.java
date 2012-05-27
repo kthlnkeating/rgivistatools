@@ -11,8 +11,8 @@ public class FSRChar extends FSRBase {
 	private Predicate predicate;
 	private boolean inList;
 	
-	public FSRChar(String expr, Predicate predicate, boolean required) {
-		super(required);
+	public FSRChar(String expr, RuleSupplyFlag flag, Predicate predicate) {
+		super(flag);
 		this.expr = inList ? "{" + expr + "}" : expr;
 		this.predicate = predicate;
 	}

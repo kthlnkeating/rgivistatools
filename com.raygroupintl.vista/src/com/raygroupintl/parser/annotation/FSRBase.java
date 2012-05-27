@@ -5,15 +5,22 @@ import java.util.Map;
 import com.raygroupintl.parser.TokenFactory;
 
 public abstract class FSRBase implements FactorySupplyRule {
-	private boolean required;
+	private RuleSupplyFlag flag;
 	
-	public FSRBase(boolean required) {
-		this.required = required;
+	public FSRBase(RuleSupplyFlag flag) {
+		this.flag = flag;
 	}
 	
 	@Override
 	public boolean getRequired() {
-		return this.required;
+		switch (this.flag) {
+			case INNER_OPTIONAL: 
+				return false;
+			case INNER_REQUIRED: 
+				return true;
+			default:
+				throw new ParseErrorException("Intenal error: attempt to get required flag for a top symbol.");
+		}
 	}
 
 	public final TokenFactory getFactory(Map<String, TokenFactory> symbols) {

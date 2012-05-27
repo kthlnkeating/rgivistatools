@@ -44,8 +44,8 @@ public class FSRChoice extends FSRBase {
 	private List<FactorySupplyRule> list = new ArrayList<FactorySupplyRule>(); 
 	private TFForkableChoice factory;
 	
-	public FSRChoice(String name, boolean required) {
-		super(required);
+	public FSRChoice(String name, RuleSupplyFlag flag) {
+		super(flag);
 		this.factory = new TFForkableChoice(name);
 	}
 	

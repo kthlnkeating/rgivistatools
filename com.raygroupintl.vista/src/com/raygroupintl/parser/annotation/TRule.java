@@ -17,7 +17,7 @@ public class TRule extends TDelimitedList implements RuleSupply {
 		if (this.size() == 1) {
 			return ((RuleSupply) this.get(0)).getRule(flag, name, existing);
 		} else {
-			FSRSequence result = new FSRSequence(name, flag.toRuleRequiredFlag());
+			FSRSequence result = new FSRSequence(name, flag);
 			int index = 0;
 			for (Token t : this) {
 				RuleSupply rs = (RuleSupply) t;

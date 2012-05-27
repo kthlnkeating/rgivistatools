@@ -32,7 +32,7 @@ public abstract class TSymbols extends TSequence implements RuleSupply {
 		if (list.size() == 1) {
 			return ((RuleSupply) list.get(0)).getRule(newFlag, name, existing);
 		} else {		
-			FSRSequence result = new FSRSequence(name, this.required);
+			FSRSequence result = new FSRSequence(name, newFlag);
 			int index = 0;
 			for (Token t : list) {
 				RuleSupply rs = (RuleSupply) t;

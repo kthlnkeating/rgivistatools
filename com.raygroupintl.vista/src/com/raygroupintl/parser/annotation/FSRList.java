@@ -7,8 +7,8 @@ public class FSRList extends FSRBase {
 	private FactorySupplyRule element;
 	private TFList factory;
 	
-	public FSRList(String name, FactorySupplyRule element, boolean required) {
-		super(required);
+	public FSRList(String name, RuleSupplyFlag flag, FactorySupplyRule element) {
+		super(flag);
 		this.element = element;
 		this.factory = new TFList(name);
 	}
