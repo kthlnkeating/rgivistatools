@@ -155,7 +155,7 @@ public class RuleGrammarTest {
 			Assert.assertTrue(rule instanceof TRule);
 			Assert.assertEquals("x, {y:',':'(':')'}, [{a}, [{b:':'}], [c], d], e", rule.getStringValue());
 			Map<String, TokenFactory> map = this.getMap();
-			TokenFactory f = rule.getRule().getFactory("test", map);
+			TokenFactory f = rule.getRule("test").getFactory("test", map);
 			Assert.assertNotNull(f);
 			Assert.assertTrue(f instanceof TFSequence);
 			testRule(f, "x(y)e"); 
@@ -183,7 +183,7 @@ public class RuleGrammarTest {
 			Assert.assertTrue(rule instanceof TRule);
 			Assert.assertEquals("{y:',':'(':')'}, {a}", rule.getStringValue());
 			Map<String, TokenFactory> map = this.getMap();
-			TokenFactory f = rule.getRule().getFactory("test", map);
+			TokenFactory f = rule.getRule("test").getFactory("test", map);
 			Assert.assertNotNull(f);
 			Assert.assertTrue(f instanceof TFSequence);
 			testRule(f, "(y)a"); 
@@ -230,7 +230,7 @@ public class RuleGrammarTest {
 			Assert.assertTrue(rule instanceof TRule);
 			Assert.assertEquals("x, y, [(a, b), [c], d], e", rule.getStringValue());
 			Map<String, TokenFactory> map = this.getMap();
-			TokenFactory f = rule.getRule().getFactory("test", map);
+			TokenFactory f = rule.getRule("test").getFactory("test", map);
 			Assert.assertNotNull(f);
 			Assert.assertTrue(f instanceof TFSequence);
 			testRule(f, "xye"); 
@@ -250,7 +250,7 @@ public class RuleGrammarTest {
 			Assert.assertNotNull(rule);
 			Assert.assertTrue(rule instanceof TRule);
 			Assert.assertEquals(inputText, rule.getStringValue());
-			TokenFactory f = rule.getRule().getFactory(name, map);
+			TokenFactory f = rule.getRule("name").getFactory(name, map);
 			Assert.assertNotNull(f);
 			map.put(name, f);
 			return f;

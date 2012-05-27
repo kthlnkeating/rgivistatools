@@ -27,7 +27,7 @@ public class TConstSymbol extends TSequence implements RuleSupply {
 	}
 	
 	@Override
-	public FactorySupplyRule getRule(RuleSupplyFlag flag, Map<String, RuleSupply> existing) {
+	public FactorySupplyRule getRule(RuleSupplyFlag flag, String name, Map<String, RuleSupply> existing) {
 		String key = this.getStringValue();
 		String value = key.substring(1, key.length()-1);
 		return new FSRConst(value, flag.toRuleRequiredFlag());

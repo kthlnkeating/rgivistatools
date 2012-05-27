@@ -42,9 +42,11 @@ public class FSRChoice extends FSRBase {
 	}
 	
 	private List<FactorySupplyRule> list = new ArrayList<FactorySupplyRule>(); 
+	private TFForkableChoice factory;
 	
-	public FSRChoice(boolean required) {
+	public FSRChoice(String name, boolean required) {
 		super(required);
+		this.factory = new TFForkableChoice(name);
 	}
 	
 	public void add(FactorySupplyRule r) {
@@ -53,6 +55,7 @@ public class FSRChoice extends FSRBase {
 	
 	@Override
 	public TFForkableChoice getFactory(String name, TokenFactoriesByName symbols) {
+		assert name.equals(this.factory.getName());
 		TFForkableChoice result = new TFForkableChoice(name);
 
 		TokenFactoriesByNamesAndSelf localSymbols = new TokenFactoriesByNamesAndSelf(symbols, result);
@@ -66,13 +69,15 @@ public class FSRChoice extends FSRBase {
 			result.add(f, symbols);
 			++index;
 		}
-		return result;
+		
+		this.factory.copyWoutAdapterFrom(result);		
+		return this.factory;
 	}
 
 	@Override
 	public TFBasic getTopFactory(String name, TokenFactoriesByName symbols, boolean asShell) {
 		if (asShell) {
-			return new TFForkableChoice(name);	
+			return this.factory;	
 		} else {
 			return this.getFactory(name, symbols);
 		}

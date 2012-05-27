@@ -64,7 +64,7 @@ public class TCharSymbol extends TSequence implements RuleSupply {
 	}
 	
 	@Override
-	public FactorySupplyRule getRule(RuleSupplyFlag flag, Map<String, RuleSupply> existing) {
+	public FactorySupplyRule getRule(RuleSupplyFlag flag, String name, Map<String, RuleSupply> existing) {
 		PredicateFactory pf = new PredicateFactory();
 		update(pf, this.get(0), (TSequence) this.get(1));
 		TList list = (TList) this.get(2);

@@ -5,19 +5,24 @@ import com.raygroupintl.parser.TokenFactory;
 
 public class FSRList extends FSRBase {
 	private FactorySupplyRule element;
+	private TFList factory;
 	
-	public FSRList(FactorySupplyRule element, boolean required) {
+	public FSRList(String name, FactorySupplyRule element, boolean required) {
 		super(required);
 		this.element = element;
+		this.factory = new TFList(name);
 	}
 	
 	@Override
 	public TFList getFactory(String name, TokenFactoriesByName symbols) {
+		assert name.equals(this.factory.getName());
 		TokenFactory element = this.element.getFactory(name + ".element", symbols);
 		if (element == null) {
 			return null;
 		}
-		return new TFList(name, element);		
+		TFList result = new TFList(name, element);		
+		this.factory.copyWoutAdapterFrom(result);				
+		return this.factory;		
 	}
 
 	@Override
@@ -25,7 +30,7 @@ public class FSRList extends FSRBase {
 		if (! asShell) {
 			return this.getFactory(name, symbols);
 		} else {			
-			return new TFList(name);
+			return this.factory;
 		}
 	}
 }

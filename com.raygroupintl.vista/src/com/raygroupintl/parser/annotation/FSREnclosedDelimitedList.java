@@ -44,13 +44,15 @@ public class FSREnclosedDelimitedList extends FSRBase {
 	private FactorySupplyRule right;
 	private boolean empty;
 	private boolean none;
+	private TFSequence factory;
 	
-	public FSREnclosedDelimitedList(FactorySupplyRule element, FactorySupplyRule delimiter, FactorySupplyRule left, FactorySupplyRule right, boolean required) {
+	public FSREnclosedDelimitedList(String name, FactorySupplyRule element, FactorySupplyRule delimiter, FactorySupplyRule left, FactorySupplyRule right, boolean required) {
 		super(required);
 		this.element = element;
 		this.delimiter = delimiter;
 		this.left = left;
 		this.right = right;
+		this.factory = new TFSequence(name);
 	}
 	
 	public void setEmptyAllowed(boolean b) {
@@ -64,6 +66,7 @@ public class FSREnclosedDelimitedList extends FSRBase {
 		
 	@Override
 	public TFSequence getFactory(String name, TokenFactoriesByName symbols) {
+		assert name.equals(this.factory.getName());
 		TFSequence result = new TFSequence(name);
 		TokenFactoriesByNamesAndSelf localSymbols = new TokenFactoriesByNamesAndSelf(symbols, result);
 		TokenFactory e = this.element.getFactory(name + ".element", localSymbols);
@@ -78,7 +81,9 @@ public class FSREnclosedDelimitedList extends FSRBase {
 		TokenFactory[] factories = {l, dl, r};
 		boolean[] required = {true, ! this.none, true};
 		result.setFactories(factories, required);
-		return result;
+		
+		this.factory.copyWoutAdapterFrom(result);				
+		return this.factory;		
 	}
 
 	@Override
@@ -86,7 +91,7 @@ public class FSREnclosedDelimitedList extends FSRBase {
 		if (! asShell) {
 			return this.getFactory(name, symbols);
 		} else {			
-			return new TFSequence(name);
+			return this.factory;
 		}
 	}
 }

@@ -6,15 +6,18 @@ import com.raygroupintl.parser.TokenFactory;
 public class FSRDelimitedList extends FSRBase {
 	private FactorySupplyRule element;
 	private FactorySupplyRule delimiter;
+	private TFDelimitedList factory;
 	
-	public FSRDelimitedList(FactorySupplyRule element, FactorySupplyRule delimiter, boolean required) {
+	public FSRDelimitedList(String name, FactorySupplyRule element, FactorySupplyRule delimiter, boolean required) {
 		super(required);
 		this.element = element;
 		this.delimiter = delimiter;
+		this.factory = new TFDelimitedList(name);
 	}
 	
 	@Override
 	public TFDelimitedList getFactory(String name, TokenFactoriesByName symbols) {
+		assert name.equals(this.factory.getName());
 		TokenFactory element = this.element.getFactory(name + ".element", symbols);
 		if (element == null) {
 			return null;
@@ -22,7 +25,9 @@ public class FSRDelimitedList extends FSRBase {
 		TokenFactory delimiter = this.delimiter.getFactory(name + ".delimiter", symbols);
 		TFDelimitedList r = new TFDelimitedList(name);
 		r.set(element, delimiter, false);
-		return r;		
+		
+		this.factory.copyWoutAdapterFrom(r);				
+		return this.factory;		
 	}
 
 	@Override
@@ -30,7 +35,7 @@ public class FSRDelimitedList extends FSRBase {
 		if (! asShell) {
 			return this.getFactory(name, symbols);
 		} else {			
-			return new TFDelimitedList(name);
+			return this.factory;
 		}
 	}
 }

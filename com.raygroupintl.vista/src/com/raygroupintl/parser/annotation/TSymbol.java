@@ -26,14 +26,14 @@ public class TSymbol extends TString implements RuleSupply {
 	}
 	
 	@Override
-	public FactorySupplyRule getRule(RuleSupplyFlag flag, Map<String, RuleSupply> existing) {
+	public FactorySupplyRule getRule(RuleSupplyFlag flag, String name, Map<String, RuleSupply> existing) {
 		if (flag == RuleSupplyFlag.TOP) {
 			String value = this.getStringValue();
 			RuleSupply referred = existing.get(value);
 			if (referred == null) {
 				return null;
 			} else {
-				return new FSRCopy(value, referred.getRule(flag, existing));
+				return new FSRCopy(value, referred.getRule(flag, value, existing));
 				//return new FSRSingle(value, flag.toRuleRequiredFlag());
 			}
 		} else {

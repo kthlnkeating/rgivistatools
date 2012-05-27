@@ -28,17 +28,19 @@ public class TChoice extends TDelimitedList implements RuleSupply {
 	}
 	
 	@Override
-	public FactorySupplyRule getRule(RuleSupplyFlag flag, Map<String, RuleSupply> existing) {
+	public FactorySupplyRule getRule(RuleSupplyFlag flag, String name, Map<String, RuleSupply> existing) {
 		if (this.size() == 1) {
 			RuleSupply r = (RuleSupply) this.get(0);
-			return r.getRule(flag, existing);
+			return r.getRule(flag, name, existing);
 		} else {
-			FSRChoice result = new FSRChoice(flag.toRuleRequiredFlag());
+			int index = 0;
+			FSRChoice result = new FSRChoice(name, flag.toRuleRequiredFlag());
 			for (Token t : this) {
 				RuleSupply r  = (RuleSupply) t;
-				FactorySupplyRule fsr = r.getRule(flag.demoteInner(), existing);
+				FactorySupplyRule fsr = r.getRule(flag.demoteInner(), name + "." + String.valueOf(index), existing);
 				if (fsr == null) return null;
 				result.add(fsr);
+				++index;
 			}
 			return result;
 		}

@@ -144,6 +144,9 @@ public class TFTest {
 		TFCommonTest.validCheck(f, adapterSupply, "T1:COND1", TDoArgument.class);
 		TFCommonTest.validCheck(f, adapterSupply, "T2", TDoArgument.class);
 		TFCommonTest.validCheck(f, adapterSupply, "T0", TDoArgument.class);
+		if (m == supplyCache) {
+			TFCommonTest.validCheck(f, adapterSupply, "DecomposeStatus^%SYS.DATABASE(RC,.MSGLIST,0,\"\")", TDoArgument.class);		
+		}
 	}
 
 	@Test

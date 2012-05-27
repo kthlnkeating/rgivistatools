@@ -91,7 +91,7 @@ public class Parser {
 			}
 			FactorySupplyRule topRule = this.topRules.get(name);	
 			if (topRule == null) {
-				topRule = ruleSupply.getRule(RuleSupplyFlag.TOP, this.ruleSupplies);		
+				topRule = ruleSupply.getRule(RuleSupplyFlag.TOP, name, this.ruleSupplies);		
 				this.topRules.put(name, topRule);
 			}
 			if (topRule != null) {
@@ -269,9 +269,9 @@ public class Parser {
 				TFBasic f = (TFBasic) trule.getTopFactory(p.factory.getName(), symbols, false);
 				if (f == null) {
 					remaining.add(p);
-				} else {					
-					p.factory.copyWoutAdapterFrom(f);
-				}
+				} //else {					
+				  //	p.factory.copyWoutAdapterFrom(f);
+				//}
 			}
 		}
 

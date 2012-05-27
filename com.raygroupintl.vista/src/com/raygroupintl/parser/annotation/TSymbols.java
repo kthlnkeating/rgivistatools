@@ -26,18 +26,20 @@ public abstract class TSymbols extends TSequence implements RuleSupply {
 	}
 	
 	@Override
-	public FactorySupplyRule getRule(RuleSupplyFlag flag, Map<String, RuleSupply> existing) {
+	public FactorySupplyRule getRule(RuleSupplyFlag flag, String name, Map<String, RuleSupply> existing) {
 		TList list = (TList) this.get(1);
 		RuleSupplyFlag newFlag = this.convert(flag);
 		if (list.size() == 1) {
-			return ((RuleSupply) list.get(0)).getRule(newFlag, existing);
+			return ((RuleSupply) list.get(0)).getRule(newFlag, name, existing);
 		} else {		
-			FSRSequence result = new FSRSequence(this.required);
+			FSRSequence result = new FSRSequence(name, this.required);
+			int index = 0;
 			for (Token t : list) {
 				RuleSupply rs = (RuleSupply) t;
-				FactorySupplyRule fsr = rs.getRule(RuleSupplyFlag.INNER_REQUIRED, existing);
+				FactorySupplyRule fsr = rs.getRule(RuleSupplyFlag.INNER_REQUIRED, name + "." + String.valueOf(index), existing);
 				if (fsr == null) return null;
 				result.add(fsr);
+				++index;
 			}
 			return result;
 		}

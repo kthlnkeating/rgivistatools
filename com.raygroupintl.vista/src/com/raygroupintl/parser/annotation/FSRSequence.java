@@ -41,9 +41,11 @@ class FSRSequence extends FSRBase {
 	}
 	
 	private List<FactorySupplyRule> list = new ArrayList<FactorySupplyRule>();
-		
-	public FSRSequence(boolean required) {
+	private TFSequence factory;	
+	
+	public FSRSequence(String name, boolean required) {
 		super(required);
+		this.factory = new TFSequence(name);
 	}
 	
 	public void add(FactorySupplyRule r) {
@@ -52,6 +54,7 @@ class FSRSequence extends FSRBase {
 	
 	@Override
 	public TFSequence getFactory(String name, TokenFactoriesByName symbols) {
+		assert name.equals(this.factory.getName());
 		TFSequence result = new TFSequence(name);
 		
 		TokenFactoriesByNamesAndSelf localSymbols = new TokenFactoriesByNamesAndSelf(symbols, result);
@@ -78,13 +81,14 @@ class FSRSequence extends FSRBase {
 			bs[i] = flags.get(i);
 		}		
 		result.setFactories(fs, bs);
-		return result;
+		this.factory.copyWoutAdapterFrom(result);				
+		return this.factory;		
 	}
 
 	@Override
 	public TokenFactory getTopFactory(String name, TokenFactoriesByName symbols, boolean asShell) {
 		if (asShell) {
-			return new TFSequence(name);
+			return this.factory;
 		} else {
 			return this.getFactory(name, symbols);
 		}
