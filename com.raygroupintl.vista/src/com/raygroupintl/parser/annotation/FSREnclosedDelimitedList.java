@@ -65,19 +65,19 @@ public class FSREnclosedDelimitedList extends FSRBase {
 	}
 		
 	@Override
-	public TFSequence getFactory(String name, TokenFactoriesByName symbols) {
-		assert name.equals(this.factory.getName());
+	public TFSequence getFactory(TokenFactoriesByName symbols) {
+		String name = this.factory.getName();
 		TFSequence result = new TFSequence(name);
 		TokenFactoriesByNamesAndSelf localSymbols = new TokenFactoriesByNamesAndSelf(symbols, result);
-		TokenFactory e = this.element.getFactory(name + ".element", localSymbols);
+		TokenFactory e = this.element.getFactory(localSymbols);
 		if (e == null) {
 			return null;
 		}
-		TokenFactory d = this.delimiter.getFactory(name + ".delimiter", symbols);
+		TokenFactory d = this.delimiter.getFactory(symbols);
 		TFDelimitedList dl = new TFDelimitedList(name);		
 		dl.set(e, d, this.empty);
-		TokenFactory l = this.left.getFactory(name + ".left", symbols);
-		TokenFactory r = this.right.getFactory(name + ".right", symbols);
+		TokenFactory l = this.left.getFactory(symbols);
+		TokenFactory r = this.right.getFactory(symbols);
 		TokenFactory[] factories = {l, dl, r};
 		boolean[] required = {true, ! this.none, true};
 		result.setFactories(factories, required);
@@ -87,11 +87,7 @@ public class FSREnclosedDelimitedList extends FSRBase {
 	}
 
 	@Override
-	public TFSequence getTopFactory(String name, TokenFactoriesByName symbols, boolean asShell) {
-		if (! asShell) {
-			return this.getFactory(name, symbols);
-		} else {			
-			return this.factory;
-		}
+	public TFSequence getShellFactory(TokenFactoriesByName symbols) {
+		return this.factory;
 	}
 }

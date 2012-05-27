@@ -53,24 +53,22 @@ class FSRSequence extends FSRBase {
 	}
 	
 	@Override
-	public TFSequence getFactory(String name, TokenFactoriesByName symbols) {
-		assert name.equals(this.factory.getName());
+	public TFSequence getFactory(TokenFactoriesByName symbols) {
+		String name = this.factory.getName();
 		TFSequence result = new TFSequence(name);
 		
 		TokenFactoriesByNamesAndSelf localSymbols = new TokenFactoriesByNamesAndSelf(symbols, result);
 		
 		List<TokenFactory> factories = new ArrayList<TokenFactory>();
 		List<Boolean> flags = new ArrayList<Boolean>();	
-		int index = 0;
 		for (FactorySupplyRule spg : this.list) {
-			TokenFactory f = spg.getFactory(name + "." + String.valueOf(index), localSymbols);
+			TokenFactory f = spg.getFactory(localSymbols);
 			if (f == null) {
 				return null;
 			}
 			boolean b = spg.getRequired();
 			factories.add(f);
 			flags.add(b);
-			++index;
 		}
 
 		int n = factories.size();
@@ -86,11 +84,7 @@ class FSRSequence extends FSRBase {
 	}
 
 	@Override
-	public TokenFactory getTopFactory(String name, TokenFactoriesByName symbols, boolean asShell) {
-		if (asShell) {
-			return this.factory;
-		} else {
-			return this.getFactory(name, symbols);
-		}
+	public TokenFactory getShellFactory(TokenFactoriesByName symbols) {
+		return this.factory;
 	}
 }

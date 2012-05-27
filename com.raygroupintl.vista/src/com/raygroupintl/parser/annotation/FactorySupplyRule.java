@@ -21,9 +21,9 @@ import java.util.Map;
 import com.raygroupintl.parser.TokenFactory;
 
 interface FactorySupplyRule {
-	TokenFactory getFactory(String name, TokenFactoriesByName symbols);
-	TokenFactory getFactory(String name, Map<String, TokenFactory> symbols);
+	TokenFactory getFactory(TokenFactoriesByName symbols);
+	TokenFactory getFactory(Map<String, TokenFactory> symbols);
 	boolean getRequired();
-	TokenFactory getTopFactory(String name, TokenFactoriesByName  symbols, boolean asShell);
-	TokenFactory getTopFactory(String name, Map<String, TokenFactory> symbols, boolean asShell);
+	TokenFactory getShellFactory(TokenFactoriesByName  symbols);
+	TokenFactory getShellFactory(Map<String, TokenFactory> symbols);
 }

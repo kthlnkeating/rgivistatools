@@ -34,11 +34,9 @@ public class Parser {
 	}
 	
 	private static final class RuleStore {
-		public TFBasic factory;
 		public FactorySupplyRule rule;
 		
 		public RuleStore(TFBasic factory, FactorySupplyRule rule) {
-			this.factory = factory;
 			this.rule = rule;
 		}
 	}
@@ -95,7 +93,7 @@ public class Parser {
 				this.topRules.put(name, topRule);
 			}
 			if (topRule != null) {
-				TFBasic value = (TFBasic) topRule.getTopFactory(name, this.symbols, true);
+				TFBasic value = (TFBasic) topRule.getShellFactory(this.symbols);
 				this.rules.add(new RuleStore(value, topRule));
 				return value;		
 			}
@@ -266,12 +264,10 @@ public class Parser {
 		private static void updateRules(java.util.List<RuleStore> list, java.util.List<RuleStore> remaining, Map<String, TokenFactory> symbols) {
 			for (RuleStore p : list) {
 				FactorySupplyRule trule = p.rule;
-				TFBasic f = (TFBasic) trule.getTopFactory(p.factory.getName(), symbols, false);
+				TFBasic f = (TFBasic) trule.getFactory(symbols);
 				if (f == null) {
 					remaining.add(p);
-				} //else {					
-				  //	p.factory.copyWoutAdapterFrom(f);
-				//}
+				} 
 			}
 		}
 

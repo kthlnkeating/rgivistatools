@@ -16,13 +16,13 @@ public class FSRDelimitedList extends FSRBase {
 	}
 	
 	@Override
-	public TFDelimitedList getFactory(String name, TokenFactoriesByName symbols) {
-		assert name.equals(this.factory.getName());
-		TokenFactory element = this.element.getFactory(name + ".element", symbols);
+	public TFDelimitedList getFactory(TokenFactoriesByName symbols) {
+		String name = this.factory.getName();
+		TokenFactory element = this.element.getFactory(symbols);
 		if (element == null) {
 			return null;
 		}
-		TokenFactory delimiter = this.delimiter.getFactory(name + ".delimiter", symbols);
+		TokenFactory delimiter = this.delimiter.getFactory(symbols);
 		TFDelimitedList r = new TFDelimitedList(name);
 		r.set(element, delimiter, false);
 		
@@ -31,11 +31,7 @@ public class FSRDelimitedList extends FSRBase {
 	}
 
 	@Override
-	public TFDelimitedList getTopFactory(String name, TokenFactoriesByName symbols, boolean asShell) {
-		if (! asShell) {
-			return this.getFactory(name, symbols);
-		} else {			
-			return this.factory;
-		}
+	public TFDelimitedList getShellFactory(TokenFactoriesByName symbols) {
+		return this.factory;
 	}
 }

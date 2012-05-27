@@ -27,7 +27,7 @@ public class FSRChar extends FSRBase {
 	}
 	
 	@Override
-	public TFBasic getFactory(String name, TokenFactoriesByName symbols) {
+	public TFBasic getFactory(TokenFactoriesByName symbols) {
 		TokenFactory result = symbols.get(this.expr);
 		if (result == null) {
 			if (this.inList) {
@@ -41,7 +41,7 @@ public class FSRChar extends FSRBase {
 	}
 	
 	@Override
-	public TFBasic getTopFactory(String name, TokenFactoriesByName symbols, boolean asShell) {
-		return this.getFactory(name, symbols);
+	public TFBasic getShellFactory(TokenFactoriesByName symbols) {
+		return this.getFactory(symbols);
 	}
 }

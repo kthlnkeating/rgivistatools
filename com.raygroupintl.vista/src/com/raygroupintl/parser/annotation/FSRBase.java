@@ -16,13 +16,13 @@ public abstract class FSRBase implements FactorySupplyRule {
 		return this.required;
 	}
 
-	public final TokenFactory getFactory(String name, Map<String, TokenFactory> symbols) {
+	public final TokenFactory getFactory(Map<String, TokenFactory> symbols) {
 		TokenFactoriesByName fs = new TokenFactoryMap(symbols);
-		return this.getFactory(name, fs);
+		return this.getFactory(fs);
 	}
 
-	public final TokenFactory getTopFactory(String name, Map<String, TokenFactory> symbols, boolean asShell) {
+	public final TokenFactory getShellFactory(Map<String, TokenFactory> symbols) {
 		TokenFactoriesByName fs = new TokenFactoryMap(symbols);
-		return this.getTopFactory(name, fs, asShell);
+		return this.getShellFactory(fs);
 	}
 }

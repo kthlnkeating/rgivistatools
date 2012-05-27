@@ -14,9 +14,9 @@ public class FSRList extends FSRBase {
 	}
 	
 	@Override
-	public TFList getFactory(String name, TokenFactoriesByName symbols) {
-		assert name.equals(this.factory.getName());
-		TokenFactory element = this.element.getFactory(name + ".element", symbols);
+	public TFList getFactory(TokenFactoriesByName symbols) {
+		String name = this.factory.getName();
+		TokenFactory element = this.element.getFactory(symbols);
 		if (element == null) {
 			return null;
 		}
@@ -26,11 +26,7 @@ public class FSRList extends FSRBase {
 	}
 
 	@Override
-	public TFList getTopFactory(String name, TokenFactoriesByName symbols, boolean asShell) {
-		if (! asShell) {
-			return this.getFactory(name, symbols);
-		} else {			
-			return this.factory;
-		}
+	public TFList getShellFactory(TokenFactoriesByName symbols) {
+		return this.factory;
 	}
 }

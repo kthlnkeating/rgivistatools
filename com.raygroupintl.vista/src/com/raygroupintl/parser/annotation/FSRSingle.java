@@ -12,7 +12,7 @@ public class FSRSingle extends FSRBase {
 	}
 	
 	@Override
-	public TokenFactory getFactory(String name, TokenFactoriesByName symbols) {
+	public TokenFactory getFactory(TokenFactoriesByName symbols) {
 		TokenFactory result = symbols.get(this.value);
 		if (result == null) throw new ParseErrorException("Undefined symbol " + value + " used in the rule");
 		if (! symbols.isInitialized(result)) {
@@ -22,7 +22,7 @@ public class FSRSingle extends FSRBase {
 	}
 
 	@Override
-	public TFBasic getTopFactory(String name, TokenFactoriesByName symbols, boolean asShell) {
+	public TFBasic getShellFactory(TokenFactoriesByName symbols) {
 		throw new ParseErrorException("Not a top rule.");
 	}
 }

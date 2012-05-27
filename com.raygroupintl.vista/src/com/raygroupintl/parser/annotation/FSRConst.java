@@ -13,7 +13,7 @@ public class FSRConst extends FSRBase {
 	}
 	
 	@Override
-	public TFBasic getFactory(String name, TokenFactoriesByName symbols) {
+	public TFBasic getFactory(TokenFactoriesByName symbols) {
 		String key = "\"" + this.value + "\"";
 		TokenFactory result = symbols.get(key);
 		if (result == null) {		
@@ -24,7 +24,7 @@ public class FSRConst extends FSRBase {
 	}
 	
 	@Override
-	public TFBasic getTopFactory(String name, TokenFactoriesByName symbols, boolean asShell) {
-		return this.getFactory(name, symbols);
+	public TFBasic getShellFactory(TokenFactoriesByName symbols) {
+		return this.getFactory(symbols);
 	}
 }
