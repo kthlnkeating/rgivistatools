@@ -61,15 +61,12 @@ public class TFForkableChoice extends TFBasic {
 			String name = f.getName();
 			Integer order = this.choiceOrder.get(name);
 			if (order != null) {
-				//boolean found = false;
 				if (this.possibleShared.containsKey(order)) {
 					for (String r : this.possibleShared.get(order)) {
 						if (! r.equals(name)) {
 							this.choiceOrder.remove(r);
 							this.restrictedChoices.add(r);
-						} //else {
-						//	found = r.equals(name);
-						//}
+						}
 					}
 					this.leadingShared.put(order, symbols.get(name));
 					this.possibleShared.remove(order);

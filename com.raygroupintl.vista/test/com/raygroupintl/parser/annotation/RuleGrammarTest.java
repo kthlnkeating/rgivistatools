@@ -98,7 +98,8 @@ public class RuleGrammarTest {
 	private void updateMap(TokenFactoryMap map, char ch) {
 		Predicate p = new CharPredicate(ch);
 		TokenFactory f = new TFCharacter(String.valueOf(ch), p);
-		map.put(String.valueOf(ch), f);		
+		FSRCustom r = new FSRCustom(f);
+		map.put(String.valueOf(ch), f, r);		
 	}
 	
 	private void testRule(TokenFactory f, String v, String compare) {
@@ -137,7 +138,7 @@ public class RuleGrammarTest {
 	}
 	
 	private TokenFactoryMap getMap() {
-		TokenFactoryMap map = new TokenFactoryMap(new HashMap<String, TokenFactory>());
+		TokenFactoryMap map = new TokenFactoryMap(new HashMap<String, TokenFactory>(), new HashMap<String, FactorySupplyRule>());
 		char[] chs = {'x', 'y', 'a', 'b', 'c', 'd', 'e'};
 		for (char ch : chs) {
 			updateMap(map, ch);
@@ -249,9 +250,10 @@ public class RuleGrammarTest {
 			Assert.assertNotNull(rule);
 			Assert.assertTrue(rule instanceof TRule);
 			Assert.assertEquals(inputText, rule.getStringValue());
-			TokenFactory f = rule.getRule(name).getFactory(map);
+			FactorySupplyRule r =  rule.getRule(name);
+			TokenFactory f = r.getFactory(map);
 			Assert.assertNotNull(f);
-			map.put(name, f);
+			map.put(name, f, r);
 			return f;
 		} catch (SyntaxErrorException se) {
 			fail("Unexpected exception: " + se.getMessage());
@@ -261,7 +263,7 @@ public class RuleGrammarTest {
 	
 	@Test
 	public void testCharSpecified() {
-		TokenFactoryMap map = new TokenFactoryMap(new HashMap<String, TokenFactory>());
+		TokenFactoryMap map = new TokenFactoryMap(new HashMap<String, TokenFactory>(), new HashMap<String, FactorySupplyRule>());
 		TokenFactory namea = getFactory("{'a' + 'c' + 'd'...'f'}", map, "namea");
 		TokenFactory nameb = getFactory("{'a'...'z' - 'd'...'f'}", map, "nameb");
 		TokenFactory namec = getFactory("{'a'...'m' + 'q' - 'd'...'f' - 'i'}", map, "namec");
@@ -298,7 +300,7 @@ public class RuleGrammarTest {
 	
 	@Test
 	public void testListInChoice() {
-		TokenFactoryMap map = new TokenFactoryMap(new HashMap<String, TokenFactory>());
+		TokenFactoryMap map = new TokenFactoryMap(new HashMap<String, TokenFactory>(), new HashMap<String, FactorySupplyRule>());
 		TokenFactory name = getFactory("{'a'...'z'}", map, "name");
 		TokenFactory number = getFactory("{'0'...'9'}", map, "number");
 		TokenFactory rule = getFactory("{name:',':'(':')'} | number", map, "rule");

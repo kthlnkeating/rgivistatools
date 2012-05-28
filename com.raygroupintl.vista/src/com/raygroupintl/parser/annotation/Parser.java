@@ -33,14 +33,6 @@ public class Parser {
 		}
 	}
 	
-	private static final class RuleStore {
-		public FactorySupplyRule rule;
-		
-		public RuleStore(TFBasic factory, FactorySupplyRule rule) {
-			this.rule = rule;
-		}
-	}
-	
 	private static class Store {
 		private static RuleParser ruleParser;
 		
@@ -53,14 +45,14 @@ public class Parser {
 		private java.util.List<Triple<TFDelimitedList, List>> delimitedLists  = new ArrayList<Triple<TFDelimitedList, List>>();
 		private java.util.List<Triple<TFSequence, List>> enclosedDelimitedLists  = new ArrayList<Triple<TFSequence, List>>();
 		
-		private java.util.List<RuleStore> rules  = new ArrayList<RuleStore>();
+		private java.util.List<FactorySupplyRule> rules  = new ArrayList<FactorySupplyRule>();
 		private Map<String, RuleSupply> ruleSupplies  = new HashMap<String, RuleSupply>();
 		private Map<String, FactorySupplyRule> topRules  = new HashMap<String, FactorySupplyRule>();
 		
 		private TokenFactoryMap tfby;
 		
 		public Store() {
-			this.tfby = new TokenFactoryMap(this.symbols);
+			this.tfby = new TokenFactoryMap(this.symbols, this.topRules);
 		}
 		
 		private TokenFactory addChoice(String name, Choice choice) {
@@ -100,7 +92,7 @@ public class Parser {
 			}
 			if (topRule != null) {
 				TFBasic value = (TFBasic) topRule.getShellFactory(this.tfby);
-				this.rules.add(new RuleStore(value, topRule));
+				this.rules.add(topRule);
 				return value;		
 			}
 			return null;
@@ -281,21 +273,20 @@ public class Parser {
 			}
 		}
 	
-		private static void updateRules(java.util.List<RuleStore> list, java.util.List<RuleStore> remaining, TokenFactoryMap tfby) {
-			for (RuleStore p : list) {
-				FactorySupplyRule trule = p.rule;
-				TFBasic f = (TFBasic) trule.getFactory(tfby);
+		private static void updateRules(java.util.List<FactorySupplyRule> list, java.util.List<FactorySupplyRule> remaining, TokenFactoryMap tfby) {
+			for (FactorySupplyRule r : list) {
+				TFBasic f = (TFBasic) r.getFactory(tfby);
 				if (f == null) {
-					remaining.add(p);
+					remaining.add(r);
 				} 
 			}
 		}
 
 		private void updateRules() {
-			java.util.List<RuleStore> remaining = new ArrayList<RuleStore>();
+			java.util.List<FactorySupplyRule> remaining = new ArrayList<FactorySupplyRule>();
 			updateRules(this.rules, remaining, this.tfby);
 			while (remaining.size() > 0) {
-				java.util.List<RuleStore> nextRemaining = new ArrayList<RuleStore>();
+				java.util.List<FactorySupplyRule> nextRemaining = new ArrayList<FactorySupplyRule>();
 				updateRules(remaining, nextRemaining, this.tfby);
 				if (nextRemaining.size() == remaining.size()) {
 					throw new ParseErrorException("There looks to be a circular symbol condition");					

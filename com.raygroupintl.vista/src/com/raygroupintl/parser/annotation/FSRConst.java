@@ -30,13 +30,13 @@ public class FSRConst extends FSRBase {
 		String key = "\"" + this.value + "\"";
 		TokenFactory result = symbols.get(key);
 		if (result == null) {		
-			symbols.put(key, this.factory);
+			symbols.put(key, this.factory, this);
 		}
 		return this.factory;
 	}
 	
 	@Override
 	public TFBasic getShellFactory(TokenFactoriesByName symbols) {
-		return this.getFactory(symbols);
+		return this.factory;
 	}
 }

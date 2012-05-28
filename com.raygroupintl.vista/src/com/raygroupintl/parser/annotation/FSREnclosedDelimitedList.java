@@ -24,8 +24,8 @@ public class FSREnclosedDelimitedList extends FSRBase {
 		}
 		
 		@Override
-		public void put(String name, TokenFactory f) {
-			this.factories.put(name, f);
+		public void put(String name, TokenFactory f, FactorySupplyRule r) {
+			this.factories.put(name, f, r);
 		}
 		
 		@Override

@@ -31,14 +31,14 @@ public class FSRChar extends FSRBase {
 	public TFBasic getFactory(TokenFactoriesByName symbols) {
 		TokenFactory result = symbols.get(this.expr);
 		if (result == null) {
-			symbols.put(this.expr, this.factory);
+			symbols.put(this.expr, this.factory, this);
 		}
 		return this.factory;
 	}
 	
 	@Override
 	public TFBasic getShellFactory(TokenFactoriesByName symbols) {
-		return this.getFactory(symbols);
+		return this.factory;
 	}
 	
 	@Override
