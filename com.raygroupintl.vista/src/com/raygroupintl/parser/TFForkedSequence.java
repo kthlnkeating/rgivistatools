@@ -27,6 +27,19 @@ public class TFForkedSequence extends TokenFactory {
 	private List<TFSequence> followers;
 	private boolean singleValid;
 	
+	public TokenFactory getLeader() {
+		return this.leader;
+	}
+	
+	public List<TFSequence> getFollowers() {
+		return this.followers;
+	}
+	
+	public boolean isSingleValid() {
+		return this.singleValid;
+	}
+	
+	
 	public TFForkedSequence(String name) {
 		super(name);
 	}
@@ -40,6 +53,10 @@ public class TFForkedSequence extends TokenFactory {
 		super(name);
 		this.leader = leader;
 		this.singleValid = singleValid;
+	}
+	
+	public void setFollowers(List<TFSequence> followers) {
+		this.followers = followers;
 	}
 	
 	public void addFollower(TokenFactory follower) {

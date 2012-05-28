@@ -18,13 +18,14 @@ package com.raygroupintl.parser;
 
 import com.raygroupintl.parser.annotation.AdapterSupply;
 
-public abstract class TokenFactory {
+public abstract class TokenFactory implements OrderedName {
 	private String name;
 	
 	protected TokenFactory(String name) {
 		this.name = name;
 	}
 	
+	@Override
 	public String getName() {
 		return this.name;
 	}
@@ -33,7 +34,12 @@ public abstract class TokenFactory {
 		return this;
 	}
 	
-	protected int getSequenceCount() {
+	@Override
+	public TokenFactory getLeading(OrderedNameContainer names) {
+		return this.getLeadingFactory();
+	}
+		
+	public int getSequenceCount() {
 		return 1;
 	}
 	

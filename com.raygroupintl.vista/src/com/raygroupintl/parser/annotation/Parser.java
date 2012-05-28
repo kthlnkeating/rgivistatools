@@ -277,10 +277,11 @@ public class Parser {
 	
 		private static void updateRules(java.util.List<FactorySupplyRule> list, java.util.List<FactorySupplyRule> remaining, RulesMapByName tfby) {
 			for (FactorySupplyRule r : list) {
-				TokenFactory f = r.getFactory(tfby);
-				if (f == null) {
-					remaining.add(r);
-				} 
+				r.update(tfby);
+				//TokenFactory f = r.getFactory(tfby);
+				//if (f == null) {
+				//	remaining.add(r);
+				//} 
 			}
 		}
 

@@ -37,14 +37,8 @@ public class FSREnclosedDelimitedList extends FSRBase {
 	}
 	
 	@Override
-	public FactorySupplyRule getLeadingRule() {
-		return this;
-	}
-	
-	@Override
 	public TFSequence getFactory(RulesByName symbols) {
 		String name = this.factory.getName();
-		TFSequence result = new TFSequence(name);
 		RulesByNameLocal localSymbols = new RulesByNameLocal(symbols, this);
 		TokenFactory e = this.element.getFactory(localSymbols);
 		if (e == null) {
@@ -60,6 +54,26 @@ public class FSREnclosedDelimitedList extends FSRBase {
 		
 		this.factory.setFactories(factories, required);				
 		return this.factory;		
+	}
+
+	@Override
+	public boolean update(RulesByName symbols) {
+		RulesByNameLocal localSymbols = new RulesByNameLocal(symbols, this);
+		String name = this.factory.getName();
+		this.element.update(localSymbols);
+		this.delimiter.update(localSymbols);
+		TokenFactory e = this.element.getTheFactory(localSymbols);
+		TokenFactory d = this.delimiter.getTheFactory(localSymbols);
+		TFDelimitedList dl = new TFDelimitedList(name);		
+		dl.set(e, d, this.empty);
+		this.left.update(localSymbols);
+		this.right.update(localSymbols);
+		TokenFactory l = this.left.getTheFactory(localSymbols);
+		TokenFactory r = this.right.getTheFactory(localSymbols);
+		TokenFactory[] factories = {l, dl, r};
+		boolean[] required = {true, ! this.none, true};	
+		this.factory.setFactories(factories, required);				
+		return true;		
 	}
 
 	@Override

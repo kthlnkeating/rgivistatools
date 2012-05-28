@@ -24,9 +24,4 @@ public class FSRCustom extends FSRBase {
 	public String getName() {
 		return this.factory.getName();
 	}
-
-	@Override
-	public FactorySupplyRule getLeadingRule() {
-		return this;
-	}
 }

@@ -20,11 +20,6 @@ public class FSRConst extends FSRBase {
 	}
 	
 	@Override
-	public FactorySupplyRule getLeadingRule() {
-		return this;
-	}
-	
-	@Override
 	public TFBasic getFactory(RulesByName symbols) {
 		String key = "\"" + this.value + "\"";
 		if (! symbols.hasRule(key)) {

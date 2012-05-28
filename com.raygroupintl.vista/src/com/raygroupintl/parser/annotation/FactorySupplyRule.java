@@ -16,15 +16,19 @@
 
 package com.raygroupintl.parser.annotation;
 
+import com.raygroupintl.parser.OrderedName;
 import com.raygroupintl.parser.TokenFactory;
 
-public interface FactorySupplyRule {
+public interface FactorySupplyRule extends OrderedName {
+	FactorySupplyRule getActualRule(RulesByName symbols);
 	TokenFactory getFactory(RulesByName symbols);
 	boolean getRequired();
 	TokenFactory getShellFactory();
 	
 	String getName();
-	FactorySupplyRule getLeadingRule();
 	
 	FactorySupplyRule formList(String name, RuleSupplyFlag flag, ListInfo info);
+	int getSequenceCount();
+	boolean update(RulesByName symbols);
+	TokenFactory getTheFactory(RulesByName symbols);
 }

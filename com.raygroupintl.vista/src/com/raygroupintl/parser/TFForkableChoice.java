@@ -17,91 +17,47 @@
 package com.raygroupintl.parser;
 
 import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Map;
-import java.util.Set;
 
 import com.raygroupintl.parser.annotation.AdapterSupply;
 import com.raygroupintl.parser.annotation.RulesByName;
 
 public class TFForkableChoice extends TFBasic {
 	private List<TokenFactory> factories = new ArrayList<TokenFactory>();
-	
-	private Map<String, Integer> choiceOrder = new HashMap<String, Integer>();
-	private Map<Integer, List<String>> possibleShared = new HashMap<Integer, List<String>>();
-	private Set<String> restrictedChoices = new HashSet<String>();
-	private Map<Integer, TokenFactory> leadingShared = new HashMap<Integer,TokenFactory>();
+	private ForkAlgorithm algorithm;
 	
 	public TFForkableChoice(String name) {
 		super(name);
+		this.algorithm = new ForkAlgorithm(name);
 	}
 	
-	private void updateChoicePossibilities(TokenFactory f, RulesByName symbols, int index) {
-		TokenFactory previous = null;
-		List<String> allForIndex = new ArrayList<String>();
-		while (f != previous) {
-			String name = f.getName();
-			if (! restrictedChoices.contains(name)) {
-				if (symbols.hasRule(name)) {
-					this.choiceOrder.put(name, index);
-					allForIndex.add(name);
-				}
-			}
-			previous = f;
-			f = f.getLeadingFactory();
-		}
-		this.possibleShared.put(index, allForIndex);
+	public List<TokenFactory> getFactories() {
+		return this.factories;
 	}
 	
-	private Integer findInChoices(TokenFactory f, RulesByName symbols) {
-		TokenFactory previous = null;
-		while (f != previous) {
-			String name = f.getName();
-			Integer order = this.choiceOrder.get(name);
-			if (order != null) {
-				if (this.possibleShared.containsKey(order)) {
-					for (String r : this.possibleShared.get(order)) {
-						if (! r.equals(name)) {
-							this.choiceOrder.remove(r);
-							this.restrictedChoices.add(r);
-						}
-					}
-					TokenFactory tf = symbols.get(name).getShellFactory();
-					this.leadingShared.put(order, tf);
-					this.possibleShared.remove(order);
-				}
-				return order;
-			}
-			previous = f;
-			f = f.getLeadingFactory();
-		}
-		return null;
-	}
-	
-	public void reset() {
+	public void reset(String name) {
 		this.factories = new ArrayList<TokenFactory>();
-		this.choiceOrder = new HashMap<String, Integer>();
-		this.possibleShared = new HashMap<Integer, List<String>>();
-		this.restrictedChoices = new HashSet<String>();
-		this.leadingShared = new HashMap<Integer,TokenFactory>();		
+		this.algorithm = new ForkAlgorithm(name);
+	}
+	
+	public void setFactories(List<TokenFactory> factories) {
+		this.factories = factories;
 	}
 	
 	public void add(TokenFactory tf, RulesByName symbols) {
-		Integer existing = this.findInChoices(tf, symbols);
+		Integer existing = this.algorithm.findInChoices(tf, symbols);
 		if (existing == null) {
 			int n = this.factories.size();
 			this.factories.add(tf);
-			this.updateChoicePossibilities(tf, symbols, n);
+			this.algorithm.updateChoicePossibilities(tf, symbols, n);
 		} else {
 			int n = existing.intValue();
 			TokenFactory current = this.factories.get(n);
 			if (current instanceof TFForkedSequence) {
 				((TFForkedSequence) current).addFollower(tf);
 			} else {
-				TokenFactory leading = this.leadingShared.get(n);
-				String name = leading.getName();			
+				String name = this.algorithm.leadingShared.get(n);
+				TokenFactory leading = symbols.get(name).getShellFactory();
 				TFForkedSequence newForked = new TFForkedSequence(this.getName() + "." + name, leading);
 				newForked.addFollower(current);
 				newForked.addFollower(tf);
@@ -109,7 +65,6 @@ public class TFForkableChoice extends TFBasic {
 			}
 		}
 	}
-	
 	
 	@Override
 	public Token tokenize(Text text, AdapterSupply adapterSupply) throws SyntaxErrorException {

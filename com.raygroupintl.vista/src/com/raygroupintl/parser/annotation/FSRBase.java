@@ -1,5 +1,9 @@
 package com.raygroupintl.parser.annotation;
 
+import com.raygroupintl.parser.OrderedName;
+import com.raygroupintl.parser.OrderedNameContainer;
+import com.raygroupintl.parser.TokenFactory;
+
 public abstract class FSRBase implements FactorySupplyRule {
 	private RuleSupplyFlag flag;
 	
@@ -33,5 +37,30 @@ public abstract class FSRBase implements FactorySupplyRule {
 			result.setNoneAllowed(info.noneAllowed);
 			return result;
 		}		
+	}
+
+	@Override
+	public boolean update(RulesByName symbols) {
+		return true;
+	}
+
+	public TokenFactory getTheFactory(RulesByName symbols) {
+		FactorySupplyRule af = this.getActualRule(symbols);
+		return af.getShellFactory();
+	}
+
+	@Override
+	public OrderedName getLeading(OrderedNameContainer names) {
+		return this;
+	}
+	
+	@Override
+	public FactorySupplyRule getActualRule(RulesByName symbols) {
+		return this;
+	}
+	
+	@Override
+	public int getSequenceCount() {
+		return 1;
 	}
 }

@@ -1,5 +1,6 @@
 package com.raygroupintl.parser.annotation;
 
+import com.raygroupintl.parser.OrderedNameContainer;
 import com.raygroupintl.parser.TFBasic;
 import com.raygroupintl.parser.TokenFactory;
 
@@ -15,11 +16,11 @@ public class FSRCopy extends FSRBase {
 	
 	@Override
 	public String getName() {
-		return this.name;
+		return this.slave.getName();
 	}
 	
 	@Override
-	public FactorySupplyRule getLeadingRule() {
+	public FactorySupplyRule getLeading(OrderedNameContainer names) {
 		return this.slave;
 	}
 	
@@ -32,4 +33,15 @@ public class FSRCopy extends FSRBase {
 	public TFBasic getShellFactory() {
 		return (TFBasic) this.slave.getShellFactory();
 	}
+	
+	@Override
+	public int getSequenceCount() {
+		return this.slave.getSequenceCount();
+	}
+
+	@Override
+	public boolean update(RulesByName symbols) {
+		return this.slave.update(symbols);
+	}
+
 }

@@ -19,11 +19,6 @@ public class FSRList extends FSRBase {
 	}
 	
 	@Override
-	public FactorySupplyRule getLeadingRule() {
-		return this;
-	}
-	
-	@Override
 	public TFList getFactory(RulesByName symbols) {
 		TokenFactory element = this.element.getFactory(symbols);
 		if (element == null) {
@@ -31,6 +26,15 @@ public class FSRList extends FSRBase {
 		}
 		this.factory.setElement(element);				
 		return this.factory;		
+	}
+
+	@Override
+	public boolean update(RulesByName symbols) {
+		RulesByNameLocal localSymbols = new RulesByNameLocal(symbols, this);
+		this.element.update(localSymbols);
+		TokenFactory element = this.element.getTheFactory(localSymbols);
+		this.factory.setElement(element);
+		return true;
 	}
 
 	@Override

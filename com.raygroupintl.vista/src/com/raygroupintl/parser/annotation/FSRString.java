@@ -22,11 +22,6 @@ public class FSRString extends FSRBase {
 	}
 	
 	@Override
-	public FactorySupplyRule getLeadingRule() {
-		return this;
-	}
-	
-	@Override
 	public TFBasic getFactory(RulesByName symbols) {
 		if (! symbols.hasRule(expr)) {
 			symbols.put(this.expr, this);

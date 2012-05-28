@@ -249,6 +249,8 @@ public class TFTest {
 
 	public void testTFGvnAll(MTFSupply m) {
 		TokenFactory f = m.gvnall;
+		TFCommonTest.validCheck(f, adapterSupply, "^(A)");
+		TFCommonTest.validCheck(f, adapterSupply, "^A");
 		TFCommonTest.validCheck(f, adapterSupply, "^PRCA(430,+$G(PRCABN),0)");
 		TFCommonTest.validCheck(f, adapterSupply, "^(430,+$G(PRCABN),0)");
 		TFCommonTest.validCheck(f, adapterSupply, "^$ROUTINE(ROU)");
