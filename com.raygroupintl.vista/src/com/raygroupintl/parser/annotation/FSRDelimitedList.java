@@ -16,6 +16,16 @@ public class FSRDelimitedList extends FSRBase {
 	}
 	
 	@Override
+	public String getName() {
+		return this.factory.getName();
+	}
+	
+	@Override
+	public FactorySupplyRule getLeadingRule() {
+		return this;
+	}
+	
+	@Override
 	public TFDelimitedList getFactory(TokenFactoriesByName symbols) {
 		TokenFactory element = this.element.getFactory(symbols);
 		if (element == null) {

@@ -57,6 +57,12 @@ public class Parser {
 		private Map<String, RuleSupply> ruleSupplies  = new HashMap<String, RuleSupply>();
 		private Map<String, FactorySupplyRule> topRules  = new HashMap<String, FactorySupplyRule>();
 		
+		private TokenFactoryMap tfby;
+		
+		public Store() {
+			this.tfby = new TokenFactoryMap(this.symbols);
+		}
+		
 		private TokenFactory addChoice(String name, Choice choice) {
 			TFChoiceBasic value = new TFChoiceBasic(name);
 			this.choices.add(new Triple<TFChoiceBasic, Choice>(value, choice));
@@ -93,7 +99,7 @@ public class Parser {
 				this.topRules.put(name, topRule);
 			}
 			if (topRule != null) {
-				TFBasic value = (TFBasic) topRule.getShellFactory(this.symbols);
+				TFBasic value = (TFBasic) topRule.getShellFactory(this.tfby);
 				this.rules.add(new RuleStore(value, topRule));
 				return value;		
 			}
@@ -150,9 +156,8 @@ public class Parser {
 			return tf;
 		}
 		
-		private TokenFactory add(Field f)  {
-			String name = f.getName();
-			
+		private TokenFactory addNotRule(Field f) {
+			String name = f.getName();			
 			Choice choice = f.getAnnotation(Choice.class);
 			if (choice != null) {
 				return this.addChoice(name, choice);
@@ -160,10 +165,6 @@ public class Parser {
 			Sequence sequence = f.getAnnotation(Sequence.class);
 			if (sequence != null) {
 				return this.addSequence(name, sequence, f);
-			}			
-			Rule description = f.getAnnotation(Rule.class);
-			if (description != null) {
-				return this.addRule(name, description, f);
 			}			
 			List list = f.getAnnotation(List.class);
 			if (list != null) {
@@ -177,7 +178,23 @@ public class Parser {
 			if (words != null) {
 				return this.addWords(name, words, f);
 			}
-			return null;
+			return null;			
+		}
+		
+		private TokenFactory add(Field f)  {
+			String name = f.getName();
+			
+			Rule description = f.getAnnotation(Rule.class);
+			if (description != null) {
+				return this.addRule(name, description, f);
+			} else {
+				TokenFactory result = this.addNotRule(f);
+				if (result != null) {
+					FSRCustom fsr = new FSRCustom(result);
+					this.topRules.put(name, fsr);
+				}
+				return result;
+			}
 		}
 		
 		private <T> boolean handleField(T target, Field f) throws IllegalAccessException {
@@ -195,7 +212,10 @@ public class Parser {
 					} else {
 						return false;
 					}
-				} 
+				} else {
+					FSRCustom fsr = new FSRCustom(value);
+					this.topRules.put(name, fsr);					
+				}
 				if (value != null) {
 					this.symbols.put(name, value);
 				}
@@ -261,10 +281,10 @@ public class Parser {
 			}
 		}
 	
-		private static void updateRules(java.util.List<RuleStore> list, java.util.List<RuleStore> remaining, Map<String, TokenFactory> symbols) {
+		private static void updateRules(java.util.List<RuleStore> list, java.util.List<RuleStore> remaining, TokenFactoryMap tfby) {
 			for (RuleStore p : list) {
 				FactorySupplyRule trule = p.rule;
-				TFBasic f = (TFBasic) trule.getFactory(symbols);
+				TFBasic f = (TFBasic) trule.getFactory(tfby);
 				if (f == null) {
 					remaining.add(p);
 				} 
@@ -273,10 +293,10 @@ public class Parser {
 
 		private void updateRules() {
 			java.util.List<RuleStore> remaining = new ArrayList<RuleStore>();
-			updateRules(this.rules, remaining, this.symbols);
+			updateRules(this.rules, remaining, this.tfby);
 			while (remaining.size() > 0) {
 				java.util.List<RuleStore> nextRemaining = new ArrayList<RuleStore>();
-				updateRules(remaining, nextRemaining, this.symbols);
+				updateRules(remaining, nextRemaining, this.tfby);
 				if (nextRemaining.size() == remaining.size()) {
 					throw new ParseErrorException("There looks to be a circular symbol condition");					
 				}

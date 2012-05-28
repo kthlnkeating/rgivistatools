@@ -16,14 +16,13 @@
 
 package com.raygroupintl.parser.annotation;
 
-import java.util.Map;
-
 import com.raygroupintl.parser.TokenFactory;
 
 interface FactorySupplyRule {
 	TokenFactory getFactory(TokenFactoriesByName symbols);
-	TokenFactory getFactory(Map<String, TokenFactory> symbols);
 	boolean getRequired();
 	TokenFactory getShellFactory(TokenFactoriesByName  symbols);
-	TokenFactory getShellFactory(Map<String, TokenFactory> symbols);
+	
+	String getName();
+	FactorySupplyRule getLeadingRule();
 }

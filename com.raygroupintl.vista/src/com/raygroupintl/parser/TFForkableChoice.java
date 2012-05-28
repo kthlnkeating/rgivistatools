@@ -134,21 +134,6 @@ public class TFForkableChoice extends TFBasic {
 		//throw new UnsupportedOperationException("setaDAPTER is not implemented for " + TFForkableChoice.class.getName());				
 	}
 	
-	public void copyWoutAdapterFrom(TFBasic rhs) {
-		if (rhs instanceof TFForkableChoice) {
-			TFForkableChoice rhsCasted = (TFForkableChoice) rhs;
-			this.factories = rhsCasted.factories;
-			this.choiceOrder = rhsCasted.choiceOrder;
-		} else {
-			throw new IllegalArgumentException("Illegal attemp to copy from " + rhs.getClass().getName() + " to " + TFForkableChoice.class.getName());
-		}
-		
-	}
-	
-	public TFBasic getCopy(String name) {
-		throw new UnsupportedOperationException("GetCopy is not implemented for " + TFForkableChoice.class.getName());
-	}
-
 	@Override
 	public boolean isInitialized() {
 		if (this.factories.size() > 0) {

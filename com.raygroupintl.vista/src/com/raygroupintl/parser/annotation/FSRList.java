@@ -14,6 +14,16 @@ public class FSRList extends FSRBase {
 	}
 	
 	@Override
+	public String getName() {
+		return this.factory.getName();
+	}
+	
+	@Override
+	public FactorySupplyRule getLeadingRule() {
+		return this;
+	}
+	
+	@Override
 	public TFList getFactory(TokenFactoriesByName symbols) {
 		TokenFactory element = this.element.getFactory(symbols);
 		if (element == null) {

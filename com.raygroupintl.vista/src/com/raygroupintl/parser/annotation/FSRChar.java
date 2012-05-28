@@ -27,6 +27,16 @@ public class FSRChar extends FSRBase {
 	}
 	
 	@Override
+	public String getName() {
+		return this.expr;
+	}
+	
+	@Override
+	public FactorySupplyRule getLeadingRule() {
+		return this;
+	}
+	
+	@Override
 	public TFBasic getFactory(TokenFactoriesByName symbols) {
 		TokenFactory result = symbols.get(this.expr);
 		if (result == null) {

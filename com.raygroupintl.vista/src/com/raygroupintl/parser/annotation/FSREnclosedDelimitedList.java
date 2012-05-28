@@ -65,6 +65,16 @@ public class FSREnclosedDelimitedList extends FSRBase {
 	}
 		
 	@Override
+	public String getName() {
+		return this.factory.getName();
+	}
+	
+	@Override
+	public FactorySupplyRule getLeadingRule() {
+		return this;
+	}
+	
+	@Override
 	public TFSequence getFactory(TokenFactoriesByName symbols) {
 		String name = this.factory.getName();
 		TFSequence result = new TFSequence(name);

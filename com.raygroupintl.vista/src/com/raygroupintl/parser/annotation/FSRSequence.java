@@ -53,6 +53,16 @@ class FSRSequence extends FSRBase {
 	}
 	
 	@Override
+	public String getName() {
+		return this.factory.getName();
+	}
+	
+	@Override
+	public FactorySupplyRule getLeadingRule() {
+		return this;
+	}
+	
+	@Override
 	public TFSequence getFactory(TokenFactoriesByName symbols) {
 		TokenFactoriesByNamesAndSelf localSymbols = new TokenFactoriesByNamesAndSelf(symbols, this.factory);
 		

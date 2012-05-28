@@ -5,10 +5,20 @@ import com.raygroupintl.parser.TokenFactory;
 
 public class FSRSingle extends FSRBase {
 	private String value;
-	
+		
 	public FSRSingle(String value, RuleSupplyFlag flag) {
 		super(flag);
 		this.value = value;
+	}
+	
+	@Override
+	public String getName() {
+		return this.value;
+	}
+	
+	@Override
+	public FactorySupplyRule getLeadingRule() {
+		return this;
 	}
 	
 	@Override

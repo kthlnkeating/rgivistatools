@@ -13,6 +13,16 @@ public class FSRConst extends FSRBase {
 	}
 	
 	@Override
+	public String getName() {
+		return "\"" + this.value + "\"";
+	}
+	
+	@Override
+	public FactorySupplyRule getLeadingRule() {
+		return this;
+	}
+	
+	@Override
 	public TFBasic getFactory(TokenFactoriesByName symbols) {
 		String key = "\"" + this.value + "\"";
 		TokenFactory result = symbols.get(key);
