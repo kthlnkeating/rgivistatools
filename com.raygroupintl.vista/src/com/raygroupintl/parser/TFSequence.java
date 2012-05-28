@@ -72,17 +72,6 @@ public class TFSequence extends TFBasic {
 	}
 				
 	@Override
-	public void copyWoutAdapterFrom(TFBasic rhs) {
-		if (rhs instanceof TFSequence) {
-			TFSequence rhsCasted = (TFSequence) rhs;
-			this.factories = rhsCasted.factories;
-			this.requiredFlags = rhsCasted.requiredFlags;
-		} else {
-			throw new IllegalArgumentException("Illegal attemp to copy from " + rhs.getClass().getName() + " to " + TFSequence.class.getName());
-		}
-	}
-
-	@Override
 	public boolean isInitialized() {
 		return this.factories.length > 0;
 	}

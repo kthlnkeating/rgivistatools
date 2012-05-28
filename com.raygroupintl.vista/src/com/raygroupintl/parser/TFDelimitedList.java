@@ -36,16 +36,6 @@ public class TFDelimitedList extends TFBasic {
 	}
 		
 	@Override
-	public void copyWoutAdapterFrom(TFBasic rhs) {
-		if (rhs instanceof TFDelimitedList) {
-			TFDelimitedList rhsCasted = (TFDelimitedList) rhs;
-			this.effective = rhsCasted.effective;
-		} else {
-			throw new IllegalArgumentException("Illegal attemp to copy from " + rhs.getClass().getName() + " to " + TFDelimitedList.class.getName());
-		}
-	}
-	
-	@Override
 	public boolean isInitialized() {
 		return this.effective != null;
 	}

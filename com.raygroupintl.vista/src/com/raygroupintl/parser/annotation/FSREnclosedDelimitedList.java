@@ -80,9 +80,8 @@ public class FSREnclosedDelimitedList extends FSRBase {
 		TokenFactory r = this.right.getFactory(symbols);
 		TokenFactory[] factories = {l, dl, r};
 		boolean[] required = {true, ! this.none, true};
-		result.setFactories(factories, required);
 		
-		this.factory.copyWoutAdapterFrom(result);				
+		this.factory.setFactories(factories, required);				
 		return this.factory;		
 	}
 

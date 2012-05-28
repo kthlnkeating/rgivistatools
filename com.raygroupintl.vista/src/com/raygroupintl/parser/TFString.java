@@ -31,16 +31,6 @@ public class TFString extends TFBasic {
 	}
 		
 	@Override
-	public void copyWoutAdapterFrom(TFBasic rhs) {
-		if (rhs instanceof TFString) {
-			TFString rhsCasted = (TFString) rhs;
-			this.predicate = rhsCasted.predicate;
-		} else {
-			throw new IllegalArgumentException("Illegal attemp to copy from " + rhs.getClass().getName() + " to " + TFString.class.getName());
-		}
-	}
-
-	@Override
 	public boolean isInitialized() {
 		return true;
 	}

@@ -15,13 +15,11 @@ public class FSRList extends FSRBase {
 	
 	@Override
 	public TFList getFactory(TokenFactoriesByName symbols) {
-		String name = this.factory.getName();
 		TokenFactory element = this.element.getFactory(symbols);
 		if (element == null) {
 			return null;
 		}
-		TFList result = new TFList(name, element);		
-		this.factory.copyWoutAdapterFrom(result);				
+		this.factory.setElement(element);				
 		return this.factory;		
 	}
 

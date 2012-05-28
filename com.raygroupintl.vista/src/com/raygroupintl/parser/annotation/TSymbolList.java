@@ -24,7 +24,6 @@ public class TSymbolList extends TSequence implements RuleSupply {
 			((FSRChar) e).setInList(true);
 			return e;
 		}
-		boolean required = flag.toRuleRequiredFlag();
 		if (delimleftright == null) {
 			return new FSRList(name, flag, e);
 		} else {

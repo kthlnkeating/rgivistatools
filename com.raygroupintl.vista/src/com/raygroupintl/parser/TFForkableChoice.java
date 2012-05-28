@@ -82,6 +82,13 @@ public class TFForkableChoice extends TFBasic {
 		return null;
 	}
 	
+	public void reset() {
+		this.factories = new ArrayList<TokenFactory>();
+		this.choiceOrder = new HashMap<String, Integer>();
+		this.possibleShared = new HashMap<Integer, List<String>>();
+		this.restrictedChoices = new HashSet<String>();
+		this.leadingShared = new HashMap<Integer,TokenFactory>();		
+	}
 	
 	public void add(TokenFactory tf, TokenFactoriesByName symbols) {
 		Integer existing = this.findInChoices(tf, symbols);

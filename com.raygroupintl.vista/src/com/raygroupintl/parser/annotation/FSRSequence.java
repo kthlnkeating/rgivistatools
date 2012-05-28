@@ -54,10 +54,7 @@ class FSRSequence extends FSRBase {
 	
 	@Override
 	public TFSequence getFactory(TokenFactoriesByName symbols) {
-		String name = this.factory.getName();
-		TFSequence result = new TFSequence(name);
-		
-		TokenFactoriesByNamesAndSelf localSymbols = new TokenFactoriesByNamesAndSelf(symbols, result);
+		TokenFactoriesByNamesAndSelf localSymbols = new TokenFactoriesByNamesAndSelf(symbols, this.factory);
 		
 		List<TokenFactory> factories = new ArrayList<TokenFactory>();
 		List<Boolean> flags = new ArrayList<Boolean>();	
@@ -78,8 +75,7 @@ class FSRSequence extends FSRBase {
 			fs[i] = factories.get(i);
 			bs[i] = flags.get(i);
 		}		
-		result.setFactories(fs, bs);
-		this.factory.copyWoutAdapterFrom(result);				
+		this.factory.setFactories(fs, bs);
 		return this.factory;		
 	}
 

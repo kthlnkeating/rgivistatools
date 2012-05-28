@@ -17,16 +17,13 @@ public class FSRDelimitedList extends FSRBase {
 	
 	@Override
 	public TFDelimitedList getFactory(TokenFactoriesByName symbols) {
-		String name = this.factory.getName();
 		TokenFactory element = this.element.getFactory(symbols);
 		if (element == null) {
 			return null;
 		}
 		TokenFactory delimiter = this.delimiter.getFactory(symbols);
-		TFDelimitedList r = new TFDelimitedList(name);
-		r.set(element, delimiter, false);
 		
-		this.factory.copyWoutAdapterFrom(r);				
+		this.factory.set(element, delimiter, false);				
 		return this.factory;		
 	}
 

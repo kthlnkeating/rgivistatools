@@ -55,20 +55,18 @@ public class FSRChoice extends FSRBase {
 	
 	@Override
 	public TFForkableChoice getFactory(TokenFactoriesByName symbols) {
-		String name = this.factory.getName();
-		TFForkableChoice result = new TFForkableChoice(name);
+		this.factory.reset();
 
-		TokenFactoriesByNamesAndSelf localSymbols = new TokenFactoriesByNamesAndSelf(symbols, result);
+		TokenFactoriesByNamesAndSelf localSymbols = new TokenFactoriesByNamesAndSelf(symbols, this.factory);
 			
 		for (FactorySupplyRule r : this.list) {
 			TokenFactory f = r.getFactory(localSymbols);
 			if (f == null) {
 				return null;
 			}
-			result.add(f, symbols);
+			this.factory.add(f, symbols);
 		}
 		
-		this.factory.copyWoutAdapterFrom(result);		
 		return this.factory;
 	}
 

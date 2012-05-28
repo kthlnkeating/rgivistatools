@@ -31,15 +31,6 @@ public class TFCharacter extends TFBasic {
 	}
 	
 	@Override
-	public void copyWoutAdapterFrom(TFBasic rhs) {
-		if (rhs instanceof TFCharacter) {
-			this.predicate = ((TFCharacter) rhs).predicate;
-		} else {
-			throw new IllegalArgumentException("Illegal attemp to copy from " + rhs.getClass().getName() + " to " + TFCharacter.class.getName());
-		}
-	}
-	
-	@Override
 	public boolean isInitialized() {
 		return true;
 	}
