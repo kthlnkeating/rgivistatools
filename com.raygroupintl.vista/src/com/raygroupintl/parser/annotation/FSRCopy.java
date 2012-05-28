@@ -24,12 +24,12 @@ public class FSRCopy extends FSRBase {
 	}
 	
 	@Override
-	public TokenFactory getFactory(TokenFactoriesByName symbols) {
+	public TokenFactory getFactory(RulesByName symbols) {
 		return this.slave.getFactory(symbols);
 	}
 
 	@Override
-	public TFBasic getShellFactory(TokenFactoriesByName symbols) {
-		return (TFBasic) this.slave.getShellFactory(symbols);
+	public TFBasic getShellFactory() {
+		return (TFBasic) this.slave.getShellFactory();
 	}
 }

@@ -24,7 +24,7 @@ import java.util.Map;
 import java.util.Set;
 
 import com.raygroupintl.parser.annotation.AdapterSupply;
-import com.raygroupintl.parser.annotation.TokenFactoriesByName;
+import com.raygroupintl.parser.annotation.RulesByName;
 
 public class TFForkableChoice extends TFBasic {
 	private List<TokenFactory> factories = new ArrayList<TokenFactory>();
@@ -38,13 +38,13 @@ public class TFForkableChoice extends TFBasic {
 		super(name);
 	}
 	
-	private void updateChoicePossibilities(TokenFactory f, TokenFactoriesByName symbols, int index) {
+	private void updateChoicePossibilities(TokenFactory f, RulesByName symbols, int index) {
 		TokenFactory previous = null;
 		List<String> allForIndex = new ArrayList<String>();
 		while (f != previous) {
 			String name = f.getName();
 			if (! restrictedChoices.contains(name)) {
-				if (symbols.get(name) != null) {
+				if (symbols.hasRule(name)) {
 					this.choiceOrder.put(name, index);
 					allForIndex.add(name);
 				}
@@ -55,7 +55,7 @@ public class TFForkableChoice extends TFBasic {
 		this.possibleShared.put(index, allForIndex);
 	}
 	
-	private Integer findInChoices(TokenFactory f, TokenFactoriesByName symbols) {
+	private Integer findInChoices(TokenFactory f, RulesByName symbols) {
 		TokenFactory previous = null;
 		while (f != previous) {
 			String name = f.getName();
@@ -68,7 +68,8 @@ public class TFForkableChoice extends TFBasic {
 							this.restrictedChoices.add(r);
 						}
 					}
-					this.leadingShared.put(order, symbols.get(name));
+					TokenFactory tf = symbols.get(name).getShellFactory();
+					this.leadingShared.put(order, tf);
 					this.possibleShared.remove(order);
 				}
 				return order;
@@ -87,7 +88,7 @@ public class TFForkableChoice extends TFBasic {
 		this.leadingShared = new HashMap<Integer,TokenFactory>();		
 	}
 	
-	public void add(TokenFactory tf, TokenFactoriesByName symbols) {
+	public void add(TokenFactory tf, RulesByName symbols) {
 		Integer existing = this.findInChoices(tf, symbols);
 		if (existing == null) {
 			int n = this.factories.size();

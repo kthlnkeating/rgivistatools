@@ -3,7 +3,6 @@ package com.raygroupintl.parser.annotation;
 import com.raygroupintl.charlib.Predicate;
 import com.raygroupintl.parser.TFBasic;
 import com.raygroupintl.parser.TFString;
-import com.raygroupintl.parser.TokenFactory;
 
 public class FSRString extends FSRBase {
 	private String expr;
@@ -28,16 +27,15 @@ public class FSRString extends FSRBase {
 	}
 	
 	@Override
-	public TFBasic getFactory(TokenFactoriesByName symbols) {
-		TokenFactory result = symbols.get(this.expr);
-		if (result == null) {
-			symbols.put(this.expr, this.factory, this);
+	public TFBasic getFactory(RulesByName symbols) {
+		if (! symbols.hasRule(expr)) {
+			symbols.put(this.expr, this);
 		}
 		return this.factory;
 	}
 	
 	@Override
-	public TFBasic getShellFactory(TokenFactoriesByName symbols) {
+	public TFBasic getShellFactory() {
 		return this.factory;
 	}
 }

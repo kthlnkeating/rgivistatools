@@ -22,17 +22,20 @@ public class FSRSingle extends FSRBase {
 	}
 	
 	@Override
-	public TokenFactory getFactory(TokenFactoriesByName symbols) {
-		TokenFactory result = symbols.get(this.value);
-		if (result == null) throw new ParseErrorException("Undefined symbol " + value + " used in the rule");
-		if (! symbols.isInitialized(result)) {
+	public TokenFactory getFactory(RulesByName symbols) {
+		FactorySupplyRule f = symbols.get(this.value);
+		if (f == null) {
+			throw new ParseErrorException("Undefined symbol " + value + " used in the rule");
+		}
+		TokenFactory result = f.getShellFactory();
+		if (! symbols.isInitialized(this.value)) {
 			return null;
 		}
 		return result;
 	}
 
 	@Override
-	public TFBasic getShellFactory(TokenFactoriesByName symbols) {
+	public TFBasic getShellFactory() {
 		throw new ParseErrorException("Not a top rule.");
 	}
 }

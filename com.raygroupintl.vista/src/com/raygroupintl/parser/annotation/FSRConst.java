@@ -2,7 +2,6 @@ package com.raygroupintl.parser.annotation;
 
 import com.raygroupintl.parser.TFBasic;
 import com.raygroupintl.parser.TFConstant;
-import com.raygroupintl.parser.TokenFactory;
 
 public class FSRConst extends FSRBase {
 	private String value;
@@ -26,17 +25,16 @@ public class FSRConst extends FSRBase {
 	}
 	
 	@Override
-	public TFBasic getFactory(TokenFactoriesByName symbols) {
+	public TFBasic getFactory(RulesByName symbols) {
 		String key = "\"" + this.value + "\"";
-		TokenFactory result = symbols.get(key);
-		if (result == null) {		
-			symbols.put(key, this.factory, this);
+		if (! symbols.hasRule(key)) {
+			symbols.put(key, this);
 		}
 		return this.factory;
 	}
 	
 	@Override
-	public TFBasic getShellFactory(TokenFactoriesByName symbols) {
+	public TFBasic getShellFactory() {
 		return this.factory;
 	}
 }

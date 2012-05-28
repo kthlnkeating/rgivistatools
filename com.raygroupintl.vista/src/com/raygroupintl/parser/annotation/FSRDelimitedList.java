@@ -26,7 +26,7 @@ public class FSRDelimitedList extends FSRBase {
 	}
 	
 	@Override
-	public TFDelimitedList getFactory(TokenFactoriesByName symbols) {
+	public TFDelimitedList getFactory(RulesByName symbols) {
 		TokenFactory element = this.element.getFactory(symbols);
 		if (element == null) {
 			return null;
@@ -38,7 +38,7 @@ public class FSRDelimitedList extends FSRBase {
 	}
 
 	@Override
-	public TFDelimitedList getShellFactory(TokenFactoriesByName symbols) {
+	public TFDelimitedList getShellFactory() {
 		return this.factory;
 	}
 }

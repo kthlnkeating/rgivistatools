@@ -18,10 +18,10 @@ package com.raygroupintl.parser.annotation;
 
 import com.raygroupintl.parser.TokenFactory;
 
-interface FactorySupplyRule {
-	TokenFactory getFactory(TokenFactoriesByName symbols);
+public interface FactorySupplyRule {
+	TokenFactory getFactory(RulesByName symbols);
 	boolean getRequired();
-	TokenFactory getShellFactory(TokenFactoriesByName  symbols);
+	TokenFactory getShellFactory();
 	
 	String getName();
 	FactorySupplyRule getLeadingRule();

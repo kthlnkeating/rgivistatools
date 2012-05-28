@@ -95,11 +95,11 @@ public class RuleGrammarTest {
 		}
 	}
 
-	private void updateMap(TokenFactoryMap map, char ch) {
+	private void updateMap(RulesMapByName map, char ch) {
 		Predicate p = new CharPredicate(ch);
 		TokenFactory f = new TFCharacter(String.valueOf(ch), p);
 		FSRCustom r = new FSRCustom(f);
-		map.put(String.valueOf(ch), f, r);		
+		map.put(String.valueOf(ch), r);		
 	}
 	
 	private void testRule(TokenFactory f, String v, String compare) {
@@ -137,8 +137,8 @@ public class RuleGrammarTest {
 		}
 	}
 	
-	private TokenFactoryMap getMap() {
-		TokenFactoryMap map = new TokenFactoryMap(new HashMap<String, TokenFactory>(), new HashMap<String, FactorySupplyRule>());
+	private RulesMapByName getMap() {
+		RulesMapByName map = new RulesMapByName(new HashMap<String, FactorySupplyRule>());
 		char[] chs = {'x', 'y', 'a', 'b', 'c', 'd', 'e'};
 		for (char ch : chs) {
 			updateMap(map, ch);
@@ -154,7 +154,7 @@ public class RuleGrammarTest {
 			Assert.assertNotNull(rule);
 			Assert.assertTrue(rule instanceof TRule);
 			Assert.assertEquals("x, {y:',':'(':')'}, [{a}, [{b:':'}], [c], d], e", rule.getStringValue());
-			TokenFactoryMap map = this.getMap();
+			RulesMapByName map = this.getMap();
 			TokenFactory f = rule.getRule("test").getFactory( map);
 			Assert.assertNotNull(f);
 			Assert.assertTrue(f instanceof TFSequence);
@@ -182,7 +182,7 @@ public class RuleGrammarTest {
 			Assert.assertNotNull(rule);
 			Assert.assertTrue(rule instanceof TRule);
 			Assert.assertEquals("{y:',':'(':')'}, {a}", rule.getStringValue());
-			TokenFactoryMap map = this.getMap();
+			RulesMapByName map = this.getMap();
 			TokenFactory f = rule.getRule("test").getFactory(map);
 			Assert.assertNotNull(f);
 			Assert.assertTrue(f instanceof TFSequence);
@@ -229,7 +229,7 @@ public class RuleGrammarTest {
 			Assert.assertNotNull(rule);
 			Assert.assertTrue(rule instanceof TRule);
 			Assert.assertEquals("x, y, [(a, b), [c], d], e", rule.getStringValue());
-			TokenFactoryMap map = this.getMap();
+			RulesMapByName map = this.getMap();
 			TokenFactory f = rule.getRule("test").getFactory(map);
 			Assert.assertNotNull(f);
 			Assert.assertTrue(f instanceof TFSequence);
@@ -243,7 +243,7 @@ public class RuleGrammarTest {
 		}
 	}
 	
-	private TokenFactory getFactory(String inputText, TokenFactoryMap map, String name) {
+	private TokenFactory getFactory(String inputText, RulesMapByName map, String name) {
 		try {
 			Text text = new Text(inputText);
 			TRule rule = (TRule) spec.rule.tokenize(text, adapterSupply);
@@ -253,7 +253,7 @@ public class RuleGrammarTest {
 			FactorySupplyRule r =  rule.getRule(name);
 			TokenFactory f = r.getFactory(map);
 			Assert.assertNotNull(f);
-			map.put(name, f, r);
+			map.put(name, r);
 			return f;
 		} catch (SyntaxErrorException se) {
 			fail("Unexpected exception: " + se.getMessage());
@@ -263,7 +263,7 @@ public class RuleGrammarTest {
 	
 	@Test
 	public void testCharSpecified() {
-		TokenFactoryMap map = new TokenFactoryMap(new HashMap<String, TokenFactory>(), new HashMap<String, FactorySupplyRule>());
+		RulesMapByName map = new RulesMapByName(new HashMap<String, FactorySupplyRule>());
 		TokenFactory namea = getFactory("{'a' + 'c' + 'd'...'f'}", map, "namea");
 		TokenFactory nameb = getFactory("{'a'...'z' - 'd'...'f'}", map, "nameb");
 		TokenFactory namec = getFactory("{'a'...'m' + 'q' - 'd'...'f' - 'i'}", map, "namec");
@@ -300,7 +300,7 @@ public class RuleGrammarTest {
 	
 	@Test
 	public void testListInChoice() {
-		TokenFactoryMap map = new TokenFactoryMap(new HashMap<String, TokenFactory>(), new HashMap<String, FactorySupplyRule>());
+		RulesMapByName map = new RulesMapByName(new HashMap<String, FactorySupplyRule>());
 		TokenFactory name = getFactory("{'a'...'z'}", map, "name");
 		TokenFactory number = getFactory("{'0'...'9'}", map, "number");
 		TokenFactory rule = getFactory("{name:',':'(':')'} | number", map, "rule");

@@ -49,10 +49,10 @@ public class Parser {
 		private Map<String, RuleSupply> ruleSupplies  = new HashMap<String, RuleSupply>();
 		private Map<String, FactorySupplyRule> topRules  = new HashMap<String, FactorySupplyRule>();
 		
-		private TokenFactoryMap tfby;
+		private RulesMapByName tfby;
 		
 		public Store() {
-			this.tfby = new TokenFactoryMap(this.symbols, this.topRules);
+			this.tfby = new RulesMapByName(this.topRules);
 		}
 		
 		private TokenFactory addChoice(String name, Choice choice) {
@@ -91,7 +91,7 @@ public class Parser {
 				this.topRules.put(name, topRule);
 			}
 			if (topRule != null) {
-				TFBasic value = (TFBasic) topRule.getShellFactory(this.tfby);
+				TFBasic value = (TFBasic) topRule.getShellFactory();
 				this.rules.add(topRule);
 				return value;		
 			}
@@ -184,6 +184,7 @@ public class Parser {
 				if (result != null) {
 					FSRCustom fsr = new FSRCustom(result);
 					this.topRules.put(name, fsr);
+					this.rules.add(fsr);
 				}
 				return result;
 			}
@@ -206,7 +207,8 @@ public class Parser {
 					}
 				} else {
 					FSRCustom fsr = new FSRCustom(value);
-					this.topRules.put(name, fsr);					
+					this.topRules.put(name, fsr);
+					this.rules.add(fsr);
 				}
 				if (value != null) {
 					this.symbols.put(name, value);
@@ -273,9 +275,9 @@ public class Parser {
 			}
 		}
 	
-		private static void updateRules(java.util.List<FactorySupplyRule> list, java.util.List<FactorySupplyRule> remaining, TokenFactoryMap tfby) {
+		private static void updateRules(java.util.List<FactorySupplyRule> list, java.util.List<FactorySupplyRule> remaining, RulesMapByName tfby) {
 			for (FactorySupplyRule r : list) {
-				TFBasic f = (TFBasic) r.getFactory(tfby);
+				TokenFactory f = r.getFactory(tfby);
 				if (f == null) {
 					remaining.add(r);
 				} 
@@ -383,7 +385,11 @@ public class Parser {
 			T target = cls.newInstance();
 			Store store = new Store();
 			store.add(target);
-			store.symbols.put("end", new TFEnd("end"));
+			TokenFactory end = new TFEnd("end");
+			store.symbols.put("end", end);
+			FactorySupplyRule fsr = new FSRCustom(end);
+			store.rules.add(fsr);
+			store.topRules.put("end", fsr);
 			store.update(cls, ignore);
 			return target;
 		} catch (IllegalAccessException iae) {

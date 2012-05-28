@@ -24,7 +24,7 @@ public class FSRList extends FSRBase {
 	}
 	
 	@Override
-	public TFList getFactory(TokenFactoriesByName symbols) {
+	public TFList getFactory(RulesByName symbols) {
 		TokenFactory element = this.element.getFactory(symbols);
 		if (element == null) {
 			return null;
@@ -34,7 +34,7 @@ public class FSRList extends FSRBase {
 	}
 
 	@Override
-	public TFList getShellFactory(TokenFactoriesByName symbols) {
+	public TFList getShellFactory() {
 		return this.factory;
 	}
 }

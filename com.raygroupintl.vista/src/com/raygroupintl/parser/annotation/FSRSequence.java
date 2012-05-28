@@ -7,39 +7,6 @@ import com.raygroupintl.parser.TFSequence;
 import com.raygroupintl.parser.TokenFactory;
 
 class FSRSequence extends FSRBase {
-	private static class TokenFactoriesByNamesAndSelf implements TokenFactoriesByName {
-		private TokenFactoriesByName factories;
-		private TokenFactory self;
-		
-		public TokenFactoriesByNamesAndSelf(TokenFactoriesByName factories, TokenFactory self) {
-			this.factories = factories;
-			this.self = self;
-		}
-		
-		@Override
-		public TokenFactory get(String name) {
-			if (self.getName().equals(name)) {
-				return self;
-			} else {
-				return this.factories.get(name);
-			}
-		}
-		
-		@Override
-		public void put(String name, TokenFactory f, FactorySupplyRule r) {
-			this.factories.put(name, f, r);
-		}
-		
-		@Override
-		public boolean isInitialized(TokenFactory f) {
-			if (f == this.self) {
-				return true;
-			} else {
-				return f.isInitialized();
-			}
-		}
-	}
-	
 	private List<FactorySupplyRule> list = new ArrayList<FactorySupplyRule>();
 	private TFSequence factory;	
 	
@@ -63,8 +30,8 @@ class FSRSequence extends FSRBase {
 	}
 	
 	@Override
-	public TFSequence getFactory(TokenFactoriesByName symbols) {
-		TokenFactoriesByNamesAndSelf localSymbols = new TokenFactoriesByNamesAndSelf(symbols, this.factory);
+	public TFSequence getFactory(RulesByName symbols) {
+		RulesByNameLocal localSymbols = new RulesByNameLocal(symbols, this);
 		
 		List<TokenFactory> factories = new ArrayList<TokenFactory>();
 		List<Boolean> flags = new ArrayList<Boolean>();	
@@ -90,7 +57,7 @@ class FSRSequence extends FSRBase {
 	}
 
 	@Override
-	public TokenFactory getShellFactory(TokenFactoriesByName symbols) {
+	public TokenFactory getShellFactory() {
 		return this.factory;
 	}
 }

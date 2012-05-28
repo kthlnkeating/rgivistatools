@@ -8,39 +8,6 @@ import com.raygroupintl.parser.TFForkableChoice;
 import com.raygroupintl.parser.TokenFactory;
 
 public class FSRChoice extends FSRBase {
-	private static class TokenFactoriesByNamesAndSelf implements TokenFactoriesByName {
-		private TokenFactoriesByName factories;
-		private TokenFactory self;
-		
-		public TokenFactoriesByNamesAndSelf(TokenFactoriesByName factories, TokenFactory self) {
-			this.factories = factories;
-			this.self = self;
-		}
-		
-		@Override
-		public TokenFactory get(String name) {
-			if (self.getName().equals(name)) {
-				return self;
-			} else {
-				return this.factories.get(name);
-			}
-		}
-		
-		@Override
-		public void put(String name, TokenFactory f, FactorySupplyRule r) {
-			this.factories.put(name, f, r);
-		}
-		
-		@Override
-		public boolean isInitialized(TokenFactory f) {
-			if (f == this.self) {
-				return true;
-			} else {
-				return f.isInitialized();
-			}
-		}
-	}
-	
 	private List<FactorySupplyRule> list = new ArrayList<FactorySupplyRule>(); 
 	private TFForkableChoice factory;
 	
@@ -149,10 +116,10 @@ public class FSRChoice extends FSRBase {
 	}
 	
 	@Override
-	public TFForkableChoice getFactory(TokenFactoriesByName symbols) {
+	public TFForkableChoice getFactory(RulesByName symbols) {
 		this.factory.reset();
 
-		TokenFactoriesByNamesAndSelf localSymbols = new TokenFactoriesByNamesAndSelf(symbols, this.factory);
+		RulesByNameLocal localSymbols = new RulesByNameLocal(symbols, this);
 			
 		for (FactorySupplyRule r : this.list) {
 			TokenFactory f = r.getFactory(localSymbols);
@@ -166,7 +133,7 @@ public class FSRChoice extends FSRBase {
 	}
 
 	@Override
-	public TFBasic getShellFactory(TokenFactoriesByName symbols) {
+	public TFBasic getShellFactory() {
 		return this.factory;	
 	}
 }
