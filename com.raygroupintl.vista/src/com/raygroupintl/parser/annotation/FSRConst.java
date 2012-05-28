@@ -6,10 +6,13 @@ import com.raygroupintl.parser.TokenFactory;
 
 public class FSRConst extends FSRBase {
 	private String value;
+	private TFBasic factory;
 	
 	public FSRConst(String value, RuleSupplyFlag flag) {
 		super(flag);
 		this.value = value;
+		String key = "\"" + this.value + "\"";
+		this.factory = new TFConstant(key, this.value);
 	}
 	
 	@Override
@@ -27,10 +30,9 @@ public class FSRConst extends FSRBase {
 		String key = "\"" + this.value + "\"";
 		TokenFactory result = symbols.get(key);
 		if (result == null) {		
-			result = new TFConstant(key, this.value);
-			symbols.put(key, result);
+			symbols.put(key, this.factory);
 		}
-		return (TFBasic) result;
+		return this.factory;
 	}
 	
 	@Override

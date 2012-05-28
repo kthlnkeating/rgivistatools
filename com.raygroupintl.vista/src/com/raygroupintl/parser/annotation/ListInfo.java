@@ -16,15 +16,11 @@
 
 package com.raygroupintl.parser.annotation;
 
-import com.raygroupintl.parser.TokenFactory;
-
-interface FactorySupplyRule {
-	TokenFactory getFactory(TokenFactoriesByName symbols);
-	boolean getRequired();
-	TokenFactory getShellFactory(TokenFactoriesByName  symbols);
+class ListInfo {
+	FactorySupplyRule delimiter;
+	FactorySupplyRule left;
+	FactorySupplyRule right;
 	
-	String getName();
-	FactorySupplyRule getLeadingRule();
-	
-	FactorySupplyRule formList(String name, RuleSupplyFlag flag, ListInfo info);
+	boolean emptyAllowed;
+	boolean noneAllowed;
 }

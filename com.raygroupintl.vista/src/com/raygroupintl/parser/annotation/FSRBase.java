@@ -18,4 +18,20 @@ public abstract class FSRBase implements FactorySupplyRule {
 				throw new ParseErrorException("Intenal error: attempt to get required flag for a top symbol.");
 		}
 	}
+	
+	@Override
+	public FactorySupplyRule formList(String name, RuleSupplyFlag flag, ListInfo info) {
+		if (info.delimiter == null) {
+			return new FSRList(name, flag, this);
+		}
+		if ((info.left == null) || (info.right == null)) {
+			return new FSRDelimitedList(name, flag, this, info.delimiter);		
+		}
+		{
+			FSREnclosedDelimitedList result = new FSREnclosedDelimitedList(name, flag, this, info.delimiter, info.left, info.right);
+			result.setEmptyAllowed(info.emptyAllowed);
+			result.setNoneAllowed(info.noneAllowed);
+			return result;
+		}		
+	}
 }
