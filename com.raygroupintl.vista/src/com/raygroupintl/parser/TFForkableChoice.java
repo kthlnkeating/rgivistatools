@@ -50,25 +50,6 @@ public class TFForkableChoice extends TFBasic {
 	}
 	
 	public void setTargetType(Class<? extends Token> cls) {
-		//throw new UnsupportedOperationException("setTargetType is not implemented for " + TFForkableChoice.class.getName());		
-	}
-	
-	public void setAdapter(Object adapter) {
-		//throw new UnsupportedOperationException("setaDAPTER is not implemented for " + TFForkableChoice.class.getName());				
-	}
-	
-	@Override
-	public boolean isInitialized() {
-		if (this.factories.size() > 0) {
-			for (TokenFactory f : this.factories) {
-				if (f instanceof TFBasic) {
-					if (! ((TFBasic) f).isInitialized()) return false;
-				}
-			}
-			return true;
-		} else {
-			return false;
-		}
-		
-	}
+		throw new UnsupportedOperationException("Target type is not supported for choice tokens");		
+	}	
 }

@@ -14,32 +14,15 @@
 // limitations under the License.
 //---------------------------------------------------------------------------
 
-package com.raygroupintl.parser;
+package com.raygroupintl.m.parsetree;
 
-import com.raygroupintl.parser.annotation.AdapterSupply;
-
-public abstract class TokenFactory {
-	private String name;
-	
-	protected TokenFactory(String name) {
-		this.name = name;
+public class EnvironmentFanoutRoutine extends AdditionalNodeHolder {
+	public EnvironmentFanoutRoutine(Node node) {
+		super(node);
 	}
 	
-	public String getName() {
-		return this.name;
-	}
-	
-	public int getSequenceCount() {
-		return 1;
-	}
-	
-	public abstract Token tokenize(Text text, AdapterSupply adapterSupply) throws SyntaxErrorException;
-
-	protected Token convert(Token token) {
-		return token;
-	}
-
-	protected Token tokenizeRaw(Text text, AdapterSupply adapterSupply) throws SyntaxErrorException {
-		return this.tokenize(text, adapterSupply);
+	@Override
+	public void accept(Visitor visitor) {
+		visitor.visitEnvironmentFanoutRoutine(this);
 	}
 }

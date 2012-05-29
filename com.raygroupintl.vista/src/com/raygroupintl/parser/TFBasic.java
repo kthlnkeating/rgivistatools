@@ -26,10 +26,6 @@ public abstract class TFBasic extends TokenFactory {
 
 	public abstract void setTargetType(Class<? extends Token> cls);
 	
-	public boolean isInitialized() {
-		return false;
-	}
-	
 	static protected Constructor<? extends Token> getConstructor(Class<? extends Token> cls, Class<?> constructorArgument, Class<? extends Token> targetCls) {
 		try {
 			if (! targetCls.isAssignableFrom(cls)) {

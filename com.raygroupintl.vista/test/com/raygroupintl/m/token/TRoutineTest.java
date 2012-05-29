@@ -2,6 +2,7 @@ package com.raygroupintl.m.token;
 
 import java.io.InputStream;
 import java.util.List;
+import java.util.Map;
 
 import junit.framework.Assert;
 
@@ -9,8 +10,10 @@ import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
+import com.raygroupintl.m.parsetree.Fanout;
 import com.raygroupintl.m.parsetree.Routine;
 import com.raygroupintl.m.parsetree.visitor.ErrorRecorder;
+import com.raygroupintl.m.parsetree.visitor.FanoutRecorder;
 import com.raygroupintl.m.parsetree.visitor.OccuranceRecorder;
 import com.raygroupintl.m.struct.LineLocation;
 import com.raygroupintl.m.struct.MError;
@@ -51,13 +54,6 @@ public class TRoutineTest {
 		ErrorRecorder v = new ErrorRecorder();
 		List<ObjectInRoutine<MError>> result = v.visitErrors(r);
 		return result;
-	}
-	
-	private OccuranceRecorder getOccurances(String fileName, MTFSupply m) {
-		TRoutine token = this.getRoutineToken(fileName, m);
-		Routine r = token.getNode();
-		OccuranceRecorder or = OccuranceRecorder.record(r);
-		return or;
 	}
 	
 	public void testBeautify(MTFSupply m) {
@@ -123,16 +119,55 @@ public class TRoutineTest {
 		testErrTest0(supplyStd95);		
 	}
 	
+	private void checkFanouts(List<Fanout> result, String[] labels, String[] routines) {
+		Assert.assertEquals(routines.length, result.size());
+		int index = 0;
+		for (Fanout fout : result) {
+			if (routines[index] == null) {
+				Assert.assertNull(fout.getRoutineName());
+			} else {
+				Assert.assertEquals(routines[index], fout.getRoutineName());
+			}
+			if (labels[index] == null) {
+				Assert.assertNull(fout.getTag());
+			} else {
+				Assert.assertEquals(labels[index], fout.getTag());				
+			}
+			++index;
+		}
+	}
+	
 	private void testCmdTest0(MTFSupply m) {
 		String fileName = "resource/CMDTEST0.m";
-		OccuranceRecorder or = this.getOccurances(fileName, m);
+		TRoutine token = this.getRoutineToken(fileName, m);
+		Routine r = token.getNode();
+
+		OccuranceRecorder or = OccuranceRecorder.record(r);		
 		Assert.assertEquals(0, or.getErrorNodeCount());
 		Assert.assertEquals(6, or.getDoBlockCount());
 		Assert.assertEquals(21, or.getDoCount());
 		Assert.assertEquals(29, or.getAtomicDoCount());
 		Assert.assertEquals(8, or.getExternalDoCount());
 		Assert.assertEquals(12, or.getIndirectionCount());
-	}
+		
+/*		FanoutRecorder foutr = new FanoutRecorder();
+		Map<LineLocation, List<Fanout>> fanouts = foutr.getFanouts(r);	
+		List<Fanout> do1 = fanouts.get(new LineLocation("DO", 1));
+		this.checkFanouts(do1, new String[]{"L0", "L1", "L2"}, new String[]{"R0", "R1", "R3"});
+		List<Fanout> do3 = fanouts.get(new LineLocation("DO", 3));
+		this.checkFanouts(do3, new String[]{"T0", "T1", "T2"}, new String[]{null, null, null});
+		List<Fanout> do4 = fanouts.get(new LineLocation("DO", 4));
+		this.checkFanouts(do4, new String[]{"T2"}, new String[]{null});
+		List<Fanout> do5 = fanouts.get(new LineLocation("DO", 5));
+		this.checkFanouts(do5, new String[]{"T0", "T1"}, new String[]{null, null});
+		List<Fanout> do9 = fanouts.get(new LineLocation("DO", 9));
+		this.checkFanouts(do9, new String[]{"T5"}, new String[]{"R5"});
+		List<Fanout> do10 = fanouts.get(new LineLocation("DO", 10));
+		this.checkFanouts(do10, new String[]{"2", "3", "7", "T8"}, new String[]{"R6", null, "R6", "R8"});
+		List<Fanout> do13 = fanouts.get(new LineLocation("DO", 13));
+		this.checkFanouts(do13, new String[]{null}, new String[]{"R10"});
+		Assert.assertEquals(15, fanouts.size());
+*/	}
 
 	@Test
 	public void testCmdTest0() {

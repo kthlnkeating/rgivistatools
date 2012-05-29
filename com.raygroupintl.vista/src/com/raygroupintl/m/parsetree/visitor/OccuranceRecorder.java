@@ -88,10 +88,6 @@ public class OccuranceRecorder extends LineLocationMarker {
 			Integer value = map.get(location);
 			count += value;
 		}
-		
-		//for (Integer value : map.values()) {
-		//	count += value;
-		//}
 		return count;
 	}
 

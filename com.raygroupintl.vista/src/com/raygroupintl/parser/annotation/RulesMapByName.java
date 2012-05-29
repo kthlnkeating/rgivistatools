@@ -22,12 +22,6 @@ public class RulesMapByName implements RulesByName {
 	}
 
 	@Override
-	public boolean isInitialized(String name) {
-		FactorySupplyRule r = this.get(name);
-		return (r != null) && (r.getShellFactory().isInitialized());
-	}
-
-	@Override
 	public boolean hasRule(String name) {
 		return this.topRules.get(name) != null;
 	}

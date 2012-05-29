@@ -35,11 +35,6 @@ public class TFDelimitedList extends TFBasic {
 		this.effective = effective;
 	}
 		
-	@Override
-	public boolean isInitialized() {
-		return this.effective != null;
-	}
-
 	private Token getToken(List<Token> tokens, AdapterSupply adapterSupply) {
 		return this.adapter == null ? adapterSupply.getDelimitedListAdapter().convert(tokens) : this.adapter.convert(tokens);
 	}

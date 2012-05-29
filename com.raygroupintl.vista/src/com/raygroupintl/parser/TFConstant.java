@@ -36,11 +36,6 @@ public class TFConstant extends TFBasic {
 	}
 
 	@Override
-	public boolean isInitialized() {
-		return true;
-	}
-	
-	@Override
 	public Token tokenize(Text text, AdapterSupply adapterSupply) {
 		return text.extractToken(this.value, this.adapter == null ? adapterSupply.getStringAdapter() : this.adapter, this.ignoreCase);
 	}

@@ -34,11 +34,6 @@ public final class TFList extends TFBasic {
 		this.elementFactory = elementFactory;
 	}
 	
-	@Override
-	public boolean isInitialized() {
-		return this.elementFactory != null;
-	}
-
 	public void setElement(TokenFactory elementFactory) {
 		this.elementFactory = elementFactory;
 	}

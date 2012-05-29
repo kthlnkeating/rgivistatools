@@ -49,7 +49,6 @@ public class MTFSupply {
 	@Rule("{'0'...'9'}")
 	public TokenFactory intlit;
 	
-	@TokenType(TLabel.class)
 	@Rule("name | intlit")
 	public TokenFactory label;
 	
@@ -76,7 +75,7 @@ public class MTFSupply {
 	@Rule("('\"', [{-'\\r' - '\\n' - '\"'}], '\"'), [strlit]")	
 	public TokenFactory strlit;
 	
-	@TokenType(TEnvironment.class)
+	//@TokenType(TEnvironment.class)
 	@Rule("('|', expr, '|') | {expratom:',':'[':']'}")
 	public TokenFactory environment;
 	
@@ -221,7 +220,6 @@ public class MTFSupply {
 	public TokenFactory gotoargument;
 	@Rule("{gotoargument:','}")
 	public TokenFactory gotoarguments;
-	
 	@Rule("'#', expr")
 	public TokenFactory readcount;
 
@@ -271,27 +269,49 @@ public class MTFSupply {
 	public TokenFactory jobparams;
 	@Rule("{cmdjarg:','}")
 	public TokenFactory cmdjargs;
-	@Rule("[labelpiece], [lineoffset], [doroutinef], [actuallist]")
+	@Rule("[labelpiece], [lineoffset], [doroutineref], [actuallist]")
 	public TokenFactory extrinsicarg;
 	
 	@TokenType(TExtDoArgument.class)
 	@Rule("'&', name, ['.', name], ['^', name], [actuallist], [postcondition]")
 	public TokenFactory extdoargument;
 
+	@TokenType(BasicTokens.MTFanoutLabelA.class)
+	@Rule("name")
+	public TokenFactory fanoutlabela;
+	@TokenType(BasicTokens.MTFanoutLabelB.class)
+	@Rule("intlit")
+	public TokenFactory fanoutlabelb;
+	//@Rule("fanoutlabela | fanoutlabelb")
+	@Rule("label")
+	public TokenFactory fanoutlabel;
+	@TokenType(BasicTokens.MTIndirectFanoutLabel.class)
+	@Rule("rindirection")
+	public TokenFactory indfanoutlabel;
+	@TokenType(BasicTokens.MTEnvironmentFanoutRoutine.class)
+	@Rule("environment, name")
+	public TokenFactory envdoroutine;	
+	@TokenType(BasicTokens.MTFanoutRoutine.class)
+	@Rule("name")
+	public TokenFactory doroutine;
+	@TokenType(BasicTokens.MTIndirectFanoutRoutine.class)
+	@Rule("rindirection")
+	public TokenFactory inddoroutine;
+		
 	@TokenType(TDoArgument.class)	
-	@Rule("rindirection, [dolineoffset], [doroutinef], [postcondition]")
+	@Rule("indfanoutlabel, [dolineoffset], [doroutineref], [postcondition]")
 	public TokenFactory inddoargument;
 
 	@TokenType(TDoArgument.class)	
-	@Rule("label, dolineoffset, [doroutinef], [postcondition]")
+	@Rule("fanoutlabel, dolineoffset, [doroutineref], [postcondition]")
 	public TokenFactory offsetdoargument;
 
 	@TokenType(TDoArgument.class)	
-	@Rule("label, actuallist, [postcondition]")
+	@Rule("fanoutlabel, actuallist, [postcondition]")
 	public TokenFactory labelcalldoargument;
 
 	@TokenType(TDoArgument.class)	
-	@Rule("label, ['^', ((envdoroutine | doroutine) , [actuallist]) | inddoroutine], [postcondition]")
+	@Rule("fanoutlabel, ['^', ((envdoroutine | doroutine) , [actuallist]) | inddoroutine], [postcondition]")
 	public TokenFactory doargument;
 	
 	@TokenType(TDoArgument.class)	
@@ -306,28 +326,16 @@ public class MTFSupply {
 	public TokenFactory doargumentall;
 	
 	@Rule("{doargumentall:','}")
-	public TokenFactory doarguments;
-	
-	@TokenType(BasicTokens.MTEnvironmentFanoutRoutine.class)
-	@Rule("environment, name")
-	public TokenFactory envdoroutine;
-	
-	@TokenType(BasicTokens.MTFanoutRoutine.class)
-	@Rule("name")
-	public TokenFactory doroutine;
+	public TokenFactory doarguments;	
 	
 	@Rule("envdoroutine | doroutine")
 	public TokenFactory noindroutinepostcaret;
-	
-	@TokenType(BasicTokens.MTIndirectFanoutRoutine.class)
-	@Rule("rindirection")
-	public TokenFactory inddoroutine;
 	
 	@Rule("envdoroutine | doroutine | inddoroutine")
 	public TokenFactory doroutinepostcaret;
 	
 	@Rule("'^', doroutinepostcaret")
-	public TokenFactory doroutinef;
+	public TokenFactory doroutineref;
 	
 	@Rule("'+', expr")
 	public TokenFactory dolineoffset;
@@ -622,14 +630,14 @@ public class MTFSupply {
 		@Rule("system, [methods], actuallist")
 		public TokenFactory systemcall;
 		
-		@Rule("label, method, [dolineoffset], [doroutinef], [actuallist], [postcondition]")
+		@Rule("label, method, [dolineoffset], [doroutineref], [actuallist], [postcondition]")
 		public TokenFactory objdoargument;
-		@Rule("classmethod, [dolineoffset], [doroutinef], [actuallist], [postcondition]")
+		@Rule("classmethod, [dolineoffset], [doroutineref], [actuallist], [postcondition]")
 		public TokenFactory clsdoargument;
-		@Rule("systemcall, [dolineoffset], [doroutinef], [actuallist], [postcondition]")
+		@Rule("systemcall, [dolineoffset], [doroutineref], [actuallist], [postcondition]")
 		public TokenFactory sysdoargument;
 		@TokenType(TDoArgument.class)	
-		@Rule("label, ['^', ((envdoroutine | objdoroutine | doroutine) , [actuallist]) | inddoroutine], [postcondition]")
+		@Rule("fanoutlabel, ['^', ((envdoroutine | objdoroutine | doroutine) , [actuallist]) | inddoroutine], [postcondition]")
 		public TokenFactory doargument;
 
 		@Rule("objdoargument | extdoargument | inddoargument | offsetdoargument | labelcalldoargument | doargument | onlyrsimpledoargument | onlyrdoargument | clsdoargument | sysdoargument")

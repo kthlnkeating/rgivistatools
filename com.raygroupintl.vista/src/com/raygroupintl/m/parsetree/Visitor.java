@@ -40,6 +40,26 @@ public class Visitor {
 		this.visitAdditionalNodeHolder(indirection);
 	}
 		
+	protected void visitIndirectFanoutLabel(IndirectFanoutLabel label) {
+		this.visitAdditionalNodeHolder(label);
+	}
+		
+	protected void visitFanoutLabel(FanoutLabel label) {
+		this.visitAdditionalNodeHolder(label);
+	}
+		
+	protected void visitIndirectFanoutRoutine(IndirectFanoutRoutine routine) {
+		this.visitAdditionalNodeHolder(routine);
+	}
+		
+	protected void visitEnvironmentFanoutRoutine(EnvironmentFanoutRoutine routine) {
+		this.visitAdditionalNodeHolder(routine);
+	}
+		
+	protected void visitFanoutRoutine(FanoutRoutine routine) {
+		this.visitAdditionalNodeHolder(routine);
+	}
+		
 	protected void visitAtomicCommand(AtomicCommand atomicCommand) {
 		this.visitAdditionalNodeHolder(atomicCommand);
 	}

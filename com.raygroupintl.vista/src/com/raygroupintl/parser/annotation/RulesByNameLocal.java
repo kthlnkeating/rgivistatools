@@ -26,16 +26,6 @@ class RulesByNameLocal implements RulesByName {
 	}
 	
 	@Override
-	public boolean isInitialized(String name) {
-		if (this.me.getName().equals(name)) {
-			return true;
-		} else {
-			FactorySupplyRule r = this.get(name);
-			return (r != null) && (r.getShellFactory().isInitialized());
-		}
-	}
-	
-	@Override
 	public boolean hasRule(String name) {
 		if (this.me.getName().equals(name)) {
 			return true;

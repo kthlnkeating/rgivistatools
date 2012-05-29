@@ -66,16 +66,6 @@ public class TFSequence extends TFBasic {
 		this.requiredFlags = new RequiredFlags(factories.length);
 	}
 		
-	@Override
-	protected TokenFactory getLeadingFactory() {
-		return this.factories[0];
-	}
-				
-	@Override
-	public boolean isInitialized() {
-		return this.factories.length > 0;
-	}
-	
 	public void setFactories(TokenFactory[] factories, boolean[] requiredFlags) {
 		if (requiredFlags.length != factories.length) throw new IllegalArgumentException();
 		this.factories = factories;

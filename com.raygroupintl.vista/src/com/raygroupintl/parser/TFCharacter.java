@@ -31,11 +31,6 @@ public class TFCharacter extends TFBasic {
 	}
 	
 	@Override
-	public boolean isInitialized() {
-		return true;
-	}
-	
-	@Override
 	public Token tokenize(Text text, AdapterSupply adapterSupply) {
 		return text.extractToken(this.predicate, this.adapter == null ? adapterSupply.getCharacterAdapter() : this.adapter);
 	}
