@@ -20,50 +20,20 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.raygroupintl.parser.annotation.AdapterSupply;
-import com.raygroupintl.parser.annotation.RulesByName;
 
 public class TFForkableChoice extends TFBasic {
 	private List<TokenFactory> factories = new ArrayList<TokenFactory>();
-	private ForkAlgorithm algorithm;
 	
 	public TFForkableChoice(String name) {
 		super(name);
-		this.algorithm = new ForkAlgorithm(name);
 	}
 	
-	public List<TokenFactory> getFactories() {
-		return this.factories;
-	}
-	
-	public void reset(String name) {
+	public void reset() {
 		this.factories = new ArrayList<TokenFactory>();
-		this.algorithm = new ForkAlgorithm(name);
 	}
 	
 	public void setFactories(List<TokenFactory> factories) {
 		this.factories = factories;
-	}
-	
-	public void add(TokenFactory tf, RulesByName symbols) {
-		Integer existing = this.algorithm.findInChoices(tf, symbols);
-		if (existing == null) {
-			int n = this.factories.size();
-			this.factories.add(tf);
-			this.algorithm.updateChoicePossibilities(tf, symbols, n);
-		} else {
-			int n = existing.intValue();
-			TokenFactory current = this.factories.get(n);
-			if (current instanceof TFForkedSequence) {
-				((TFForkedSequence) current).addFollower(tf);
-			} else {
-				String name = this.algorithm.leadingShared.get(n);
-				TokenFactory leading = symbols.get(name).getShellFactory();
-				TFForkedSequence newForked = new TFForkedSequence(this.getName() + "." + name, leading);
-				newForked.addFollower(current);
-				newForked.addFollower(tf);
-				this.factories.set(n, newForked);
-			}
-		}
 	}
 	
 	@Override

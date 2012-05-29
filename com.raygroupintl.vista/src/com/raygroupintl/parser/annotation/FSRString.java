@@ -22,14 +22,6 @@ public class FSRString extends FSRBase {
 	}
 	
 	@Override
-	public TFBasic getFactory(RulesByName symbols) {
-		if (! symbols.hasRule(expr)) {
-			symbols.put(this.expr, this);
-		}
-		return this.factory;
-	}
-	
-	@Override
 	public TFBasic getShellFactory() {
 		return this.factory;
 	}

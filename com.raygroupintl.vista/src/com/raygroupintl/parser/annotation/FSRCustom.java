@@ -11,11 +11,6 @@ public class FSRCustom extends FSRBase {
 	}
 		
 	@Override
-	public TokenFactory getFactory(RulesByName symbols) {
-		return this.factory;
-	}
-
-	@Override
 	public TokenFactory getShellFactory() {
 		return this.factory;
 	}

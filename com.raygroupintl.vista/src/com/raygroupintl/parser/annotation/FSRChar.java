@@ -22,14 +22,6 @@ public class FSRChar extends FSRBase {
 	}
 	
 	@Override
-	public TFBasic getFactory(RulesByName symbols) {
-		if (! symbols.hasRule(expr)) {
-			symbols.put(this.expr, this);
-		}
-		return this.factory;
-	}
-	
-	@Override
 	public boolean update(RulesByName symbols) {
 		if (! symbols.hasRule(expr)) {
 			symbols.put(this.expr, this);

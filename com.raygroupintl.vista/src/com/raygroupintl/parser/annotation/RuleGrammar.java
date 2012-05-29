@@ -77,7 +77,7 @@ public class RuleGrammar {
 	public TokenFactory charsymbolall; 
 
 	@TokenType(TConstSymbol.class)
-	@Sequence(value={"quote", "quoted", "quote"}, required="all")
+	@Sequence(value={"quote", "quoted", "quote", "colon", "bool"}, required="rrroo")
 	public TokenFactory constsymbol; 
 	
 	@Choice({"specifiedsymbol", "charsymbolall", "constsymbol", "optionalsymbols", "requiredsymbols", "list"})

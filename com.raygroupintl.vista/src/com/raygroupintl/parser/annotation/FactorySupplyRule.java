@@ -21,7 +21,6 @@ import com.raygroupintl.parser.TokenFactory;
 
 public interface FactorySupplyRule extends OrderedName {
 	FactorySupplyRule getActualRule(RulesByName symbols);
-	TokenFactory getFactory(RulesByName symbols);
 	boolean getRequired();
 	TokenFactory getShellFactory();
 	

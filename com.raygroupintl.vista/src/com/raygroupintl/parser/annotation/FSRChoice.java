@@ -1,15 +1,10 @@
 package com.raygroupintl.parser.annotation;
 
 import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Map;
-import java.util.Set;
 
 import com.raygroupintl.parser.ForkAlgorithm;
 import com.raygroupintl.parser.OrderedName;
-import com.raygroupintl.parser.OrderedNameContainer;
 import com.raygroupintl.parser.TFBasic;
 import com.raygroupintl.parser.TFForkableChoice;
 import com.raygroupintl.parser.TFForkedSequence;
@@ -45,8 +40,6 @@ public class FSRChoice extends FSRBase {
 		int n = algorithm.list.size();
 		for (int i=0; i<n; ++i) {
 			OrderedName on =algorithm.list.get(i);
-			String name = on.getName();
-
 			if (on instanceof ForkAlgorithm.Forked) {
 				ForkAlgorithm.Forked onf = (ForkAlgorithm.Forked) on;
 				int m = onf.followers.size();
@@ -66,57 +59,8 @@ public class FSRChoice extends FSRBase {
 			}
 		}
 		return result;
-		
-		
-/*		List<TokenFactory> fs = this.factory.getFactories();
-		int n = fs.size();
-				
-		assert(n == algorithm.list.size());
-		for (int i=0; i<n; ++i) {
-			TokenFactory f = fs.get(i);
-			String name = f.getName();
-			OrderedName on =algorithm.list.get(i);
-			assert(name.equals(on.getName()));
-			if (f instanceof TFForkedSequence) {
-				TFForkedSequence ffs = (TFForkedSequence) f;
-				assert(on instanceof ForkAlgorithm.Forked);
-				ForkAlgorithm.Forked onf = (ForkAlgorithm.Forked) on;
-				List<TFSequence> folowers = ffs.getFollowers();
-				int m = folowers.size();
-				assert(m == onf.followers.size());
-				for (int j=0; j<m; ++j) {
-					TFSequence s = folowers.get(j);
-					OrderedName ons = (OrderedName) onf.followers.get(j);
-					assert(s.getName().equals(ons.getName()));
-				}
-				assert(onf.leader.getName().equals(ffs.getLeader().getName()));
-				assert(onf.singleValid == ffs.isSingleValid());
-				
-			}
-		}
-*/	
 	}
 	
-	@Override
-	public TFForkableChoice getFactory(RulesByName symbols) {
-		this.factory.reset(this.getName());
-
-		RulesByNameLocal localSymbols = new RulesByNameLocal(symbols, this);
-			
-		for (FactorySupplyRule r : this.list) {
-			TokenFactory f = r.getFactory(localSymbols);
-			if (f == null) {
-				return null;
-			}
-			this.factory.add(f, symbols);
-		}
-		
-		
-		this.verify(localSymbols);
-		
-		return this.factory;
-	}
-
 	@Override
 	public boolean update(RulesByName symbols) {
 		RulesByNameLocal localSymbols = new RulesByNameLocal(symbols, this);

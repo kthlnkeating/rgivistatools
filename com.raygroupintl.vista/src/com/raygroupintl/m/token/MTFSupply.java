@@ -3,30 +3,16 @@ package com.raygroupintl.m.token;
 import com.raygroupintl.m.struct.MError;
 import com.raygroupintl.parser.TFSyntaxError;
 import com.raygroupintl.parser.TokenFactory;
-import com.raygroupintl.parser.annotation.CharSpecified;
-import com.raygroupintl.parser.annotation.Choice;
 import com.raygroupintl.parser.annotation.Rule;
-import com.raygroupintl.parser.annotation.List;
 import com.raygroupintl.parser.annotation.ParseException;
 import com.raygroupintl.parser.annotation.Parser;
-import com.raygroupintl.parser.annotation.Sequence;
 import com.raygroupintl.parser.annotation.TokenType;
-import com.raygroupintl.parser.annotation.WordSpecified;
 
 public class MTFSupply {
-	@CharSpecified(chars={'.'}, single=true)
-	public TokenFactory dot;
-	@CharSpecified(chars={','}, single=true)
-	public TokenFactory comma;
-
-	@CharSpecified(chars={'('}, single=true)
+	@Rule("'('")
 	public TokenFactory lpar;
-	@CharSpecified(chars={')'}, single=true)
+	@Rule("')'")
 	public TokenFactory rpar;
-	@CharSpecified(chars={'='}, single=true)
-	public TokenFactory eq;
-	@CharSpecified(chars={':'}, single=true)
-	public TokenFactory colon;
 	@Rule("' '")
 	public TokenFactory space;
 	
@@ -36,7 +22,7 @@ public class MTFSupply {
 	public TokenFactory patony;
 	@Rule("'z' + 'Z', {'a'...'y' + 'A'...'Y'}, 'z' + 'Z'")
 	public TokenFactory patonz;
-	@Choice({"paton", "patony", "patonz"})
+	@Rule("paton | patony | patonz")
 	public TokenFactory patons;
 	@Rule("['\\''], patons")
 	public TokenFactory patcode;	
@@ -48,9 +34,9 @@ public class MTFSupply {
 	public TokenFactory patatom;	
 	@Rule("{patatoms:',':'(':')'}")
 	public TokenFactory alternation;	
-	@List(value="patatom")	
+	@Rule("{patatom}")	
 	public TokenFactory patatoms;
-	@Choice({"indirection", "patatoms"})
+	@Rule("indirection | patatoms")
 	public TokenFactory pattern;
 	
 	@Rule("'%' + 'a'...'z' + 'A'...'Z', [{'a'...'z' + 'A'...'Z' + '0'...'9'}]")
@@ -165,7 +151,7 @@ public class MTFSupply {
 	@Rule("numlita | actualda | actualdb | expr")
 	public TokenFactory actual;
 	
-	@Choice({"glvn", "expritem"})
+	@Rule("glvn | expritem")
 	public TokenFactory expratom;
 
 	@TokenType(TLocal.class)
@@ -217,23 +203,23 @@ public class MTFSupply {
 	@Rule("{cmdoarg:','}")
 	public TokenFactory cmdoargs;
 		
-	@Choice({"indirection", "label"})
+	@Rule("indirection | label")
 	public TokenFactory linetagname;
 	@Rule("'+', expr")
 	public TokenFactory lineoffset;
-	@Sequence(value={"linetagname", "lineoffset"})
+	@Rule("[linetagname], [lineoffset]")
 	public TokenFactory tagspec;
-	@Sequence(value={"environment", "name"}, required="or")
+	@Rule("[environment], name")
 	public TokenFactory envname;
-	@Choice(value={"rindirection", "envname"})
+	@Rule("rindirection | envname")
 	public TokenFactory routinespeccc;
 	@Rule("'^', routinespeccc")
 	public TokenFactory routinespec;
-	@Sequence({"tagspec", "routinespec"})
+	@Rule("[tagspec], [routinespec]")
 	public TokenFactory cmdgargmain;
-	@Sequence(value={"cmdgargmain", "postcondition"}, required="ro")
+	@Rule("cmdgargmain, [postcondition]")
 	public TokenFactory gotoargument;
-	@List(value="gotoargument", delim="comma")
+	@Rule("{gotoargument:','}")
 	public TokenFactory gotoarguments;
 	
 	@Rule("'#', expr")
@@ -268,24 +254,24 @@ public class MTFSupply {
 	public TokenFactory usedeviceparamlist;
 	@Rule("usedeviceparamlist | expr")
 	public TokenFactory usedeviceparam;
-	@Sequence(value={"colon", "usedeviceparam"}, required="ro")
+	@Rule("':', [usedeviceparam]")
 	public TokenFactory colonusedeviceparam;
 	@Rule("expr, [colonusedeviceparam], [colonusedeviceparam]")
 	public TokenFactory cmduarg;
 	@Rule("{cmduarg:','}")
 	public TokenFactory cmduargs;
 	
-	@Sequence(value={"label", "lineoffset"}, required="ro")
+	@Rule("label, [lineoffset]")
 	public TokenFactory labelwoffset;
-	@Choice({"rindirection", "labelwoffset"})
-	public TokenFactory entryspec_0;
-	@Sequence(value={"entryspec_0", "routinespec", "actuallist", "colonusedeviceparam", "timeout"}, required="ooooo")
+	@Rule("rindirection | labelwoffset")
+	public TokenFactory entryspeca;
+	@Rule("[entryspeca], [routinespec], [actuallist], [colonusedeviceparam], [timeout]")
 	public TokenFactory cmdjarg;
-	@Sequence(value={"colon", "usedeviceparam"}, required="ro")
+	@Rule("'^', [usedeviceparam]")
 	public TokenFactory jobparams;
-	@List(value="cmdjarg", delim="comma")
+	@Rule("{cmdjarg:','}")
 	public TokenFactory cmdjargs;
-	@Sequence(value={"labelpiece", "lineoffset", "doroutinef", "actuallist"}, required="oooo")
+	@Rule("[labelpiece], [lineoffset], [doroutinef], [actuallist]")
 	public TokenFactory extrinsicarg;
 	
 	@TokenType(TExtDoArgument.class)
@@ -346,7 +332,7 @@ public class MTFSupply {
 	@Rule("'+', expr")
 	public TokenFactory dolineoffset;
 
-	@Choice(value={"indirection", "label"})
+	@Rule("indirection | label")
 	public TokenFactory labelpiece;
 	
 	@Rule("indirection | intrinsic | glvn")
@@ -359,16 +345,16 @@ public class MTFSupply {
 	@Rule("expr")
 	public TokenFactory setrhs;
 	
-	@Sequence(value={"setlhs", "eq", "setrhs"}, required="all")
-	public TokenFactory setarg_direct;
-	@Sequence(value={"indirection", "eq", "setrhs"}, required="roo")
-	public TokenFactory setarg_indirect;
-	@Choice(value={"setarg_indirect", "setarg_direct"})
+	@Rule("setlhs, '=', setrhs")
+	public TokenFactory setargdirect;
+	@Rule("indirection, ['='], [setrhs]")
+	public TokenFactory setargindirect;
+	@Rule("setargindirect | setargdirect")
 	public TokenFactory setarg;
-	@List(value="setarg", delim="comma")
+	@Rule("{setarg:','}")
 	public TokenFactory setargs;
 	
-	@Rule("colon, deviceparams")
+	@Rule("':', deviceparams")
 	public TokenFactory closeargdp;
 	@Rule("expr, [closeargdp]")
 	public TokenFactory closeargdirect;
@@ -603,7 +589,7 @@ public class MTFSupply {
 	
 	
 	public static class CacheSupply extends MTFSupply {
-		@Choice({"glvn", "expritem", "classmethod"})
+		@Rule("glvn | expritem | classmethod")
 		public TokenFactory expratom;
 		
 		@TokenType(TObjectExpr.class)
@@ -618,16 +604,16 @@ public class MTFSupply {
 		
 		@Rule("\"##class\"")
 		public TokenFactory ppclass;
-		@Rule("dot, name")
+		@Rule("'.', name")
 		public TokenFactory classreftail;
 		@Rule("{classreftail}")
 		public TokenFactory classreftaillst;
 		@Rule("name, [classreftaillst]")
 		public TokenFactory classref;
-		@Sequence(value={"ppclass", "lpar", "classref", "rpar", "dot", "name", "actuallist"}, required="all")
+		@Rule("ppclass, '(', classref, ')', '.', name, actuallist")
 		public TokenFactory classmethod;
 		
-		@WordSpecified(value="$SYSTEM", ignorecase=true)
+		@Rule("\"$SYSTEM\":1")
 		public TokenFactory system;
 		@Rule("'.', name")
 		public TokenFactory method;

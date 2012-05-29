@@ -16,11 +16,9 @@
 
 package com.raygroupintl.parser;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import com.raygroupintl.parser.annotation.AdapterSupply;
-import com.raygroupintl.parser.annotation.ParseErrorException;
 
 public class TFForkedSequence extends TokenFactory {
 	private TokenFactory leader;
@@ -57,22 +55,6 @@ public class TFForkedSequence extends TokenFactory {
 	
 	public void setFollowers(List<TFSequence> followers) {
 		this.followers = followers;
-	}
-	
-	public void addFollower(TokenFactory follower) {
-		if (follower.getSequenceCount() == 1) {
-			this.singleValid = true;
-			this.leader = follower;
-			return;
-		}
-		if (follower instanceof TFSequence) {			
-			if (this.followers == null) {
-				this.followers = new ArrayList<TFSequence>();
-			}
-			this.followers.add((TFSequence) follower);
-		} else {
-			throw new ParseErrorException("Forked sequence only supports objects of kind " + TFSequence.class.getName());
-		}
 	}
 	
 	public void set(List<TFSequence> followers) {

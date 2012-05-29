@@ -33,7 +33,7 @@ public class TSymbol extends TString implements RuleSupply {
 			if (referred == null) {
 				return null;
 			} else {
-				return new FSRCopy(name, referred.getRule(flag, value, existing));
+				return new FSRCopy(referred.getRule(flag, value, existing));
 			}
 		} else {
 			return new FSRSingle(value, flag);			

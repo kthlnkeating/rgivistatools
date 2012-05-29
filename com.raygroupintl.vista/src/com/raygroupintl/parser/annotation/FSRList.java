@@ -19,16 +19,6 @@ public class FSRList extends FSRBase {
 	}
 	
 	@Override
-	public TFList getFactory(RulesByName symbols) {
-		TokenFactory element = this.element.getFactory(symbols);
-		if (element == null) {
-			return null;
-		}
-		this.factory.setElement(element);				
-		return this.factory;		
-	}
-
-	@Override
 	public boolean update(RulesByName symbols) {
 		RulesByNameLocal localSymbols = new RulesByNameLocal(symbols, this);
 		this.element.update(localSymbols);

@@ -7,25 +7,16 @@ public class FSRConst extends FSRBase {
 	private String value;
 	private TFBasic factory;
 	
-	public FSRConst(String value, RuleSupplyFlag flag) {
+	public FSRConst(String value, boolean ignoreCase, RuleSupplyFlag flag) {
 		super(flag);
 		this.value = value;
 		String key = "\"" + this.value + "\"";
-		this.factory = new TFConstant(key, this.value);
+		this.factory = new TFConstant(key, this.value, ignoreCase);
 	}
 	
 	@Override
 	public String getName() {
 		return "\"" + this.value + "\"";
-	}
-	
-	@Override
-	public TFBasic getFactory(RulesByName symbols) {
-		String key = "\"" + this.value + "\"";
-		if (! symbols.hasRule(key)) {
-			symbols.put(key, this);
-		}
-		return this.factory;
 	}
 	
 	@Override

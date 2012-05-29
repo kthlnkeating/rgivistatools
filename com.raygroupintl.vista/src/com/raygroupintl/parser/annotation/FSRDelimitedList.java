@@ -1,9 +1,6 @@
 package com.raygroupintl.parser.annotation;
 
-import java.util.List;
-
 import com.raygroupintl.parser.TFDelimitedList;
-import com.raygroupintl.parser.TokenFactory;
 
 public class FSRDelimitedList extends FSRBase {
 	private FactorySupplyRule element;
@@ -22,18 +19,6 @@ public class FSRDelimitedList extends FSRBase {
 		return this.factory.getName();
 	}
 	
-	@Override
-	public TFDelimitedList getFactory(RulesByName symbols) {
-		TokenFactory element = this.element.getFactory(symbols);
-		if (element == null) {
-			return null;
-		}
-		TokenFactory delimiter = this.delimiter.getFactory(symbols);
-		
-		this.factory.set(element, delimiter, false);				
-		return this.factory;		
-	}
-
 	@Override
 	public boolean update(RulesByName symbols) {
 		RulesByNameLocal localSymbols = new RulesByNameLocal(symbols, this);
