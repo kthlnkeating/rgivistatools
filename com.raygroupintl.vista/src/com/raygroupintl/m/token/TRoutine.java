@@ -11,15 +11,11 @@ import java.util.List;
 import com.raygroupintl.m.parsetree.EntryTag;
 import com.raygroupintl.m.parsetree.Line;
 import com.raygroupintl.m.parsetree.Routine;
-import com.raygroupintl.m.struct.Fanout;
-import com.raygroupintl.m.struct.LineLocation;
-import com.raygroupintl.m.struct.RoutineFanouts;
 import com.raygroupintl.parser.Token;
 
 public class TRoutine implements MToken {
 	private String name;
 	private List<TLine> lines = new ArrayList<TLine>();
-	private List<LineLocation> locations;
 	
 	public TRoutine(String name) {
 		this.name = name;
@@ -77,18 +73,6 @@ public class TRoutine implements MToken {
 		}		
 	}
 
-	public RoutineFanouts getFanouts() {
-		RoutineFanouts result = new RoutineFanouts(this.name);
-		List<LineLocation> locations = this.getLineLocations();
-		for (int i=0; i<this.lines.size(); ++i) {
-			TLine line = this.lines.get(i);
-			LineLocation location = locations.get(i);
-			List<Fanout> fanouts = line.getFanouts();
-			result.add(location, fanouts);
-		}		
-		return result;
-	}
-	
 	public void write(Path path) throws IOException {
 		List<String> fileLines = new ArrayList<String>();
 		for (Token line : this.lines) {
@@ -100,30 +84,6 @@ public class TRoutine implements MToken {
 			}
 		}
 		Files.write(path, fileLines, StandardCharsets.UTF_8);
-	}
-	
-	private List<LineLocation> buildLocations() {
-		List<LineLocation> result = new ArrayList<LineLocation>();
-		String lastTag = this.name;
-		int index = 0;
-		for (TLine line : this.lines) {
-			String tag = line.getTag();
-			if (tag != null) {
-				lastTag = tag;
-				index = 0;
-			}
-			LineLocation location = new LineLocation(lastTag, index);
-			result.add(location);
-			++index;
-		}		
-		return result;
-	}
-	
-	private List<LineLocation> getLineLocations() {
-		if ((this.locations == null) || (this.locations.size() != this.lines.size())) {
-			this.locations = this.buildLocations();
-		}
-		return this.locations;
 	}
 	
 	@Override

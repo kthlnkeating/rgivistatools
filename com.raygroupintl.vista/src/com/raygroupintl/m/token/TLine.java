@@ -5,7 +5,6 @@ import java.util.List;
 
 import com.raygroupintl.m.parsetree.Line;
 import com.raygroupintl.m.parsetree.Node;
-import com.raygroupintl.m.struct.Fanout;
 import com.raygroupintl.parser.TList;
 import com.raygroupintl.parser.Token;
 
@@ -43,10 +42,6 @@ public class TLine extends MTSequence {
 		return this.index;
 	}
 	
-	public List<Fanout> getFanouts() {
-		return null;
-	}
-
 	@Override
 	public Line getNode() {
 		Line result = new Line(this.tagName, this.index, this.getLevel());

@@ -4,18 +4,20 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.nio.file.Path;
-import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import com.raygroupintl.m.parsetree.Fanout;
+import com.raygroupintl.m.parsetree.Routine;
 import com.raygroupintl.m.parsetree.visitor.ErrorRecorder;
-import com.raygroupintl.m.struct.Fanout;
+import com.raygroupintl.m.parsetree.visitor.FanoutRecorder;
 import com.raygroupintl.m.struct.LineLocation;
 import com.raygroupintl.m.struct.MError;
 import com.raygroupintl.m.struct.ObjectInRoutine;
-import com.raygroupintl.m.struct.RoutineFanouts;
 import com.raygroupintl.m.token.MTFSupply;
 import com.raygroupintl.m.token.MVersion;
 import com.raygroupintl.m.token.TFRoutine;
@@ -78,24 +80,37 @@ public class MRoutineAnalyzer {
 			fs.addPackage(dir);
 		}		
 		List<Path> paths = fs.getFiles();
-
-		List<RoutineFanouts> fanouts = new ArrayList<RoutineFanouts>();
+		FanoutRecorder fr = new FanoutRecorder();
+		Map<String, Map<LineLocation, List<Fanout>>> allFanouts = new HashMap<String, Map<LineLocation, List<Fanout>>>();
 		for (Path path : paths) {			
 			TRoutine r = topToken.tokenize(path);
-			RoutineFanouts rfo = r.getFanouts();
-			fanouts.add(rfo);
+			Routine node = r.getNode();
+			Map<LineLocation, List<Fanout>> routineFanouts = fr.getFanouts(node);
+			allFanouts.put(node.getKey(), routineFanouts);
 		}
 				
 		String outputFile = options.outputFile;
 		File file = new File(outputFile);
 		FileOutputStream os = new FileOutputStream(file);
 		String eol = TRoutine.getEOL();
-		for (RoutineFanouts rfo : fanouts) {
-			os.write(("Routine Name: " + rfo.getRoutineName() + eol).getBytes());
-			for (LineLocation location : rfo.getFanoutLocations()) {
+		for (String routineName : allFanouts.keySet()) {
+			os.write(("Routine Name: " + routineName + eol).getBytes());
+			Map<LineLocation, List<Fanout>> fanouts = allFanouts.get(routineName);
+			for (LineLocation location : fanouts.keySet()) {
 				os.write(("  Location: " + location.toString() + eol).getBytes());
-				for (Fanout fout : rfo.getFanouts(location)) {
-					os.write(("    "  + fout.getLocation().toString() + "^" + fout.getRoutineName() + eol).getBytes());					
+				List<Fanout> ffouts = fanouts.get(location);
+				for (Fanout fout : ffouts) {
+					String lbl = fout.getTag();
+					String rou = fout.getRoutineName();
+					if (rou != null) {
+						rou = "^" + rou;
+					} else {
+						rou = "";
+					}
+					if (lbl == null) {
+						lbl = "";
+					}					
+					os.write(("    "  + lbl + rou + eol).getBytes());					
 				}
 			}
 			os.write(eol.getBytes());
