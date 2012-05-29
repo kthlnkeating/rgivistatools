@@ -7,8 +7,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-import com.raygroupintl.parser.OrderedName;
-import com.raygroupintl.parser.OrderedNameContainer;
 import com.raygroupintl.parser.TFBasic;
 import com.raygroupintl.parser.TFForkableChoice;
 import com.raygroupintl.parser.TFForkedSequence;
@@ -17,22 +15,28 @@ import com.raygroupintl.parser.TokenFactory;
 
 public class FSRChoice extends FSRBase {
 	private static class ForkAlgorithm {	
-		public static class Forked implements OrderedName {
+		public static class Forked extends FSRBase {
 			public String name;
-			public OrderedName leader;
-			public List<OrderedName> followers = new ArrayList<OrderedName>();
+			public FactorySupplyRule leader;
+			public List<FactorySupplyRule> followers = new ArrayList<FactorySupplyRule>();
 			public boolean singleValid;
 
-			public Forked(String name, OrderedName leader) {
+			public Forked(String name, FactorySupplyRule leader) {
+				super(RuleSupplyFlag.INNER_REQUIRED);
 				this.name = name;
 				this.leader = leader;
+			}
+			
+			@Override
+			public TFBasic getShellFactory() {
+				return null;
 			}
 			
 			public String getName() {
 				return this.name;
 			}
 			
-			public OrderedName getLeading(OrderedNameContainer names) {
+			public FactorySupplyRule getLeading(RulesByName names) {
 				return null;
 			}
 			
@@ -40,7 +44,7 @@ public class FSRChoice extends FSRBase {
 				return 1;
 			}
 			
-			private void addFollower(OrderedName follower) {
+			private void addFollower(FactorySupplyRule follower) {
 				if (follower.getSequenceCount() == 1) {
 					this.singleValid = true;
 					this.leader = follower;
@@ -60,20 +64,20 @@ public class FSRChoice extends FSRBase {
 	 	
 		public String aname;
 		
-		public List<OrderedName> list = new ArrayList<OrderedName>();
+		public List<FactorySupplyRule> list = new ArrayList<FactorySupplyRule>();
 		
 		public Map<String, Integer> choiceOrder = new HashMap<String, Integer>();
 		public Map<Integer, List<String>> possibleShared = new HashMap<Integer, List<String>>();
 		public Set<String> restrictedChoices = new HashSet<String>();
 		public Map<Integer, String> leadingShared = new HashMap<Integer, String>();
 		
-		public void updateChoicePossibilities(OrderedName f, OrderedNameContainer symbols, int index) {
-			OrderedName previous = null;
+		public void updateChoicePossibilities(FactorySupplyRule f, RulesByName symbols, int index) {
+			FactorySupplyRule previous = null;
 			List<String> allForIndex = new ArrayList<String>();
 			while (f != previous) {
 				String name = f.getName();
 				if (! restrictedChoices.contains(name)) {
-					if (symbols.hasName(name)) {
+					if (symbols.hasRule(name)) {
 						this.choiceOrder.put(name, index);
 						allForIndex.add(name);
 					}
@@ -84,8 +88,8 @@ public class FSRChoice extends FSRBase {
 			this.possibleShared.put(index, allForIndex);
 		}
 		
-		public Integer findInChoices(OrderedName f, OrderedNameContainer names) {
-			OrderedName previous = null;
+		public Integer findInChoices(FactorySupplyRule f, RulesByName names) {
+			FactorySupplyRule previous = null;
 			while (f != previous) {
 				String name = f.getName();
 				Integer order = this.choiceOrder.get(name);
@@ -108,7 +112,7 @@ public class FSRChoice extends FSRBase {
 			return null;
 		}
 		
-		public void add(OrderedName tf, OrderedNameContainer symbols) {
+		public void add(FactorySupplyRule tf, RulesByName symbols) {
 			Integer existing = this.findInChoices(tf, symbols);
 			if (existing == null) {
 				int n = this.list.size();
@@ -116,12 +120,12 @@ public class FSRChoice extends FSRBase {
 				this.updateChoicePossibilities(tf, symbols, n);
 			} else {
 				int n = existing.intValue();
-				OrderedName current = this.list.get(n);
+				FactorySupplyRule current = this.list.get(n);
 				if (current instanceof Forked) {
 					((Forked) current).addFollower(tf);
 				} else {
 					String name = this.leadingShared.get(n);
-					OrderedName leading = symbols.getNamed(name);
+					FactorySupplyRule leading = symbols.get(name);
 					Forked newForked = new Forked(this.aname + "." + name, leading);
 					newForked.addFollower(current);
 					newForked.addFollower( tf);
@@ -158,7 +162,7 @@ public class FSRChoice extends FSRBase {
 		}
 		int n = algorithm.list.size();
 		for (int i=0; i<n; ++i) {
-			OrderedName on =algorithm.list.get(i);
+			FactorySupplyRule on =algorithm.list.get(i);
 			if (on instanceof ForkAlgorithm.Forked) {
 				ForkAlgorithm.Forked onf = (ForkAlgorithm.Forked) on;
 				int m = onf.followers.size();

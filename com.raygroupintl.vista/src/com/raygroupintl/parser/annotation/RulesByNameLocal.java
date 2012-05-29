@@ -1,7 +1,5 @@
 package com.raygroupintl.parser.annotation;
 
-import com.raygroupintl.parser.OrderedName;
-
 class RulesByNameLocal implements RulesByName {
 	private RulesByName factories;
 	private FactorySupplyRule me;
@@ -33,14 +31,4 @@ class RulesByNameLocal implements RulesByName {
 			return this.factories.get(name) != null;
 		}
 	}
-	
-	public boolean hasName(String name) {
-		return this.hasRule(name);
-	}
-	
-	@Override
-	public OrderedName getNamed(String name) {
-		return this.get(name);
-	}
-
 }

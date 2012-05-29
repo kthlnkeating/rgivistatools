@@ -2,8 +2,6 @@ package com.raygroupintl.parser.annotation;
 
 import java.util.Map;
 
-import com.raygroupintl.parser.OrderedName;
-
 public class RulesMapByName implements RulesByName {
 	private Map<String, FactorySupplyRule> topRules;
 	
@@ -24,13 +22,5 @@ public class RulesMapByName implements RulesByName {
 	@Override
 	public boolean hasRule(String name) {
 		return this.topRules.get(name) != null;
-	}
-	
-	public boolean hasName(String name) {
-		return this.hasRule(name);
-	}
-	@Override
-	public OrderedName getNamed(String name) {
-		return this.get(name);
 	}
 }

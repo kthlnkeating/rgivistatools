@@ -1,6 +1,5 @@
 package com.raygroupintl.parser.annotation;
 
-import com.raygroupintl.parser.OrderedNameContainer;
 import com.raygroupintl.parser.TFBasic;
 
 public class FSRCopy extends FSRBase {
@@ -17,7 +16,7 @@ public class FSRCopy extends FSRBase {
 	}
 	
 	@Override
-	public FactorySupplyRule getLeading(OrderedNameContainer names) {
+	public FactorySupplyRule getLeading(RulesByName names) {
 		return this.slave;
 	}
 	

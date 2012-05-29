@@ -3,7 +3,6 @@ package com.raygroupintl.parser.annotation;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.raygroupintl.parser.OrderedNameContainer;
 import com.raygroupintl.parser.TFSequence;
 import com.raygroupintl.parser.TokenFactory;
 
@@ -26,7 +25,7 @@ public class FSRSequence extends FSRBase {
 	}
 	
 	@Override
-	public FactorySupplyRule getLeading(OrderedNameContainer names) {
+	public FactorySupplyRule getLeading(RulesByName names) {
 		return this.list.get(0);
 	}
 	

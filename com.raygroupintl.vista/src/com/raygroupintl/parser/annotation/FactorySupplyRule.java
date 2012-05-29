@@ -16,10 +16,9 @@
 
 package com.raygroupintl.parser.annotation;
 
-import com.raygroupintl.parser.OrderedName;
 import com.raygroupintl.parser.TokenFactory;
 
-public interface FactorySupplyRule extends OrderedName {
+public interface FactorySupplyRule {
 	FactorySupplyRule getActualRule(RulesByName symbols);
 	boolean getRequired();
 	TokenFactory getShellFactory();
@@ -30,4 +29,7 @@ public interface FactorySupplyRule extends OrderedName {
 	int getSequenceCount();
 	boolean update(RulesByName symbols);
 	TokenFactory getTheFactory(RulesByName symbols);
+	
+	FactorySupplyRule getLeading(RulesByName names);
+
 }

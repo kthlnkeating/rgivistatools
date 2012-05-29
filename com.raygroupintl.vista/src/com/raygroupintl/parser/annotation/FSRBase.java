@@ -1,7 +1,5 @@
 package com.raygroupintl.parser.annotation;
 
-import com.raygroupintl.parser.OrderedName;
-import com.raygroupintl.parser.OrderedNameContainer;
 import com.raygroupintl.parser.TokenFactory;
 
 public abstract class FSRBase implements FactorySupplyRule {
@@ -50,7 +48,7 @@ public abstract class FSRBase implements FactorySupplyRule {
 	}
 
 	@Override
-	public OrderedName getLeading(OrderedNameContainer names) {
+	public FactorySupplyRule getLeading(RulesByName names) {
 		return this;
 	}
 	

@@ -1,8 +1,6 @@
 package com.raygroupintl.parser.annotation;
 
-import com.raygroupintl.parser.OrderedNameContainer;
-
-public interface RulesByName extends OrderedNameContainer {
+public interface RulesByName  {
 	FactorySupplyRule get(String name);
 	void put(String name, FactorySupplyRule rule);
 	
