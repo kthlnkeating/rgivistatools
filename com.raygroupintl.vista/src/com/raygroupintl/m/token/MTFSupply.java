@@ -282,8 +282,7 @@ public class MTFSupply {
 	@TokenType(BasicTokens.MTFanoutLabelB.class)
 	@Rule("intlit")
 	public TokenFactory fanoutlabelb;
-	//@Rule("fanoutlabela | fanoutlabelb")
-	@Rule("label")
+	@Rule("fanoutlabela | fanoutlabelb")  //@Rule("label")
 	public TokenFactory fanoutlabel;
 	@TokenType(BasicTokens.MTIndirectFanoutLabel.class)
 	@Rule("rindirection")
@@ -630,7 +629,9 @@ public class MTFSupply {
 		@Rule("system, [methods], actuallist")
 		public TokenFactory systemcall;
 		
-		@Rule("label, method, [dolineoffset], [doroutineref], [actuallist], [postcondition]")
+		@Rule("fanoutlabel")
+		public TokenFactory doobjectname;
+		@Rule("fanoutlabel, method, [dolineoffset], [doroutineref], [actuallist], [postcondition]")
 		public TokenFactory objdoargument;
 		@Rule("classmethod, [dolineoffset], [doroutineref], [actuallist], [postcondition]")
 		public TokenFactory clsdoargument;

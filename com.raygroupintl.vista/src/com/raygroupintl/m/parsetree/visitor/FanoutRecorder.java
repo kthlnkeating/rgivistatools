@@ -91,12 +91,14 @@ public class FanoutRecorder extends LineLocationMarker {
 		super.visitAtomicDo(atomicDo);
 		LineLocation location = this.getLastLocation();
 		Fanout fanout = this.getFanout();
-		List<Fanout> fanoutsOnLocation = this.fanouts.get(location);
-		if (fanoutsOnLocation == null) {
-			fanoutsOnLocation = new ArrayList<Fanout>();
-			this.fanouts.put(location, fanoutsOnLocation);
+		if (fanout != null) {
+			List<Fanout> fanoutsOnLocation = this.fanouts.get(location);
+			if (fanoutsOnLocation == null) {
+				fanoutsOnLocation = new ArrayList<Fanout>();
+				this.fanouts.put(location, fanoutsOnLocation);
+			}
+			fanoutsOnLocation.add(fanout);
 		}
-		fanoutsOnLocation.add(fanout);
 	}
 	
 	public Map<LineLocation, List<Fanout>> getFanouts(Routine routine) {

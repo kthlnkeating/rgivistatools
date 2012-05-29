@@ -150,7 +150,7 @@ public class TRoutineTest {
 		Assert.assertEquals(8, or.getExternalDoCount());
 		Assert.assertEquals(12, or.getIndirectionCount());
 		
-/*		FanoutRecorder foutr = new FanoutRecorder();
+		FanoutRecorder foutr = new FanoutRecorder();
 		Map<LineLocation, List<Fanout>> fanouts = foutr.getFanouts(r);	
 		List<Fanout> do1 = fanouts.get(new LineLocation("DO", 1));
 		this.checkFanouts(do1, new String[]{"L0", "L1", "L2"}, new String[]{"R0", "R1", "R3"});
@@ -166,8 +166,13 @@ public class TRoutineTest {
 		this.checkFanouts(do10, new String[]{"2", "3", "7", "T8"}, new String[]{"R6", null, "R6", "R8"});
 		List<Fanout> do13 = fanouts.get(new LineLocation("DO", 13));
 		this.checkFanouts(do13, new String[]{null}, new String[]{"R10"});
-		Assert.assertEquals(15, fanouts.size());
-*/	}
+		Assert.assertEquals(7, fanouts.size());
+		int fanoutCount = 0;
+		for (List<Fanout> lfo : fanouts.values()) {
+			fanoutCount += lfo.size();
+		}
+		Assert.assertEquals(15, fanoutCount);
+}
 
 	@Test
 	public void testCmdTest0() {

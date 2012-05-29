@@ -33,8 +33,7 @@ public class TFCommonTest {
 			return;			
 		}
 	}
-	
-	
+		
 	public static void validTokenCheck(Token t, String v) {
 		Assert.assertEquals(v, t.getStringValue());
 		Assert.assertEquals(v.length(), t.getStringSize());
