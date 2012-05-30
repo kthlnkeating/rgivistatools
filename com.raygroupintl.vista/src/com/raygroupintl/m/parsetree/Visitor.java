@@ -88,11 +88,19 @@ public class Visitor {
 		this.visitAtomicCommand(atomicGoto);
 	}
 	
+	protected void visitExtrinsic(Extrinsic extrinsic) {
+		this.visitAdditionalNodeHolder(extrinsic);
+	}
+
 	protected void visitDo(Do d) {
 		this.visitMultiCommand(d);
 	}
 	
 	protected void visitGoto(Goto g) {
+		this.visitMultiCommand(g);
+	}
+	
+	protected void visitGenericCommand(GenericCommand g) {
 		this.visitMultiCommand(g);
 	}
 	

@@ -152,6 +152,7 @@ public class TRoutineTest {
 		Assert.assertEquals(23, or.getIndirectionCount());
 		Assert.assertEquals(17, or.getGotoCount());
 		Assert.assertEquals(31, or.getAtomicGotoCount());
+		Assert.assertEquals(5, or.getExtrinsicCount());
 		
 		FanoutRecorder foutr = new FanoutRecorder();
 		Map<LineLocation, List<Fanout>> fanouts = foutr.getFanouts(r);	
@@ -162,13 +163,17 @@ public class TRoutineTest {
 		List<Fanout> do4 = fanouts.get(new LineLocation("DO", 4));
 		this.checkFanouts(do4, new String[]{"T2"}, new String[]{null});
 		List<Fanout> do5 = fanouts.get(new LineLocation("DO", 5));
-		this.checkFanouts(do5, new String[]{"T0", "T1"}, new String[]{null, null});
+		this.checkFanouts(do5, new String[]{"T0", "AR", "T1"}, new String[]{null, null, null});
 		List<Fanout> do9 = fanouts.get(new LineLocation("DO", 9));
 		this.checkFanouts(do9, new String[]{"T5"}, new String[]{"R5"});
 		List<Fanout> do10 = fanouts.get(new LineLocation("DO", 10));
 		this.checkFanouts(do10, new String[]{"2", "3", "7", "T8"}, new String[]{"R6", null, "R6", "R8"});
 		List<Fanout> do13 = fanouts.get(new LineLocation("DO", 13));
 		this.checkFanouts(do13, new String[]{null}, new String[]{"R10"});
+		List<Fanout> do15 = fanouts.get(new LineLocation("DO", 15));
+		this.checkFanouts(do15, new String[]{"A"}, new String[]{"X"});
+		List<Fanout> do24 = fanouts.get(new LineLocation("DO", 24));
+		this.checkFanouts(do24, new String[]{"AX"}, new String[]{"RX"});
 		
 		List<Fanout> go1 = fanouts.get(new LineLocation("GOTO", 1));
 		this.checkFanouts(go1, new String[]{"L0", "L1", "L2"}, new String[]{"R0", "R1", "R2"});
@@ -186,13 +191,15 @@ public class TRoutineTest {
 		this.checkFanouts(go13, new String[]{null}, new String[]{"R10"});
 		List<Fanout> go19 = fanouts.get(new LineLocation("GOTO", 19));
 		this.checkFanouts(go19, new String[]{"DE", "ARZ"}, new String[]{"RE", null});
+		List<Fanout> go20 = fanouts.get(new LineLocation("GOTO", 20));
+		this.checkFanouts(go20, new String[]{"DFR", "DF"}, new String[]{"JUH", "GDE"});
 				
-		Assert.assertEquals(15, fanouts.size());
+		Assert.assertEquals(18, fanouts.size());
 		int fanoutCount = 0;
 		for (List<Fanout> lfo : fanouts.values()) {
 			fanoutCount += lfo.size();
 		}
-		Assert.assertEquals(32, fanoutCount);
+		Assert.assertEquals(37, fanoutCount);
 }
 
 	@Test

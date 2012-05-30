@@ -24,6 +24,7 @@ import java.util.Map;
 import com.raygroupintl.m.parsetree.AtomicDo;
 import com.raygroupintl.m.parsetree.AtomicGoto;
 import com.raygroupintl.m.parsetree.EnvironmentFanoutRoutine;
+import com.raygroupintl.m.parsetree.Extrinsic;
 import com.raygroupintl.m.parsetree.Fanout;
 import com.raygroupintl.m.parsetree.FanoutLabel;
 import com.raygroupintl.m.parsetree.FanoutRoutine;
@@ -33,63 +34,66 @@ import com.raygroupintl.m.parsetree.Routine;
 import com.raygroupintl.m.struct.LineLocation;
 
 public class FanoutRecorder extends LineLocationMarker {
+	private static class LastInfo {
+		public IndirectFanoutLabel lastIndirectFanoutLabel;
+		public FanoutLabel lastFanoutLabel;
+		public IndirectFanoutRoutine lastIndirectFanoutRoutine;
+		public FanoutRoutine lastFanoutRoutine;
+		public EnvironmentFanoutRoutine lastEnvironmentFanoutRoutine;
+		
+		private void reset() {
+			this.lastIndirectFanoutLabel = null;
+			this.lastFanoutLabel = null;
+			this.lastIndirectFanoutRoutine = null;
+			this.lastEnvironmentFanoutRoutine = null;
+			this.lastFanoutRoutine = null;		
+		}
+		
+		private Fanout getFanout() {
+			if ((this.lastFanoutLabel == null) && (this.lastFanoutRoutine == null)) {
+				return null;
+			}
+			if ((this.lastIndirectFanoutLabel != null) || (this.lastIndirectFanoutRoutine != null) || this.lastEnvironmentFanoutRoutine != null) {
+				return null;
+			}
+			String label = (this.lastFanoutLabel == null) ? null : this.lastFanoutLabel.getValue();
+			String routine = (this.lastFanoutRoutine == null) ? null : this.lastFanoutRoutine.getName();
+		
+			return new Fanout(routine, label);
+		}
+	}
+		
 	private Map<LineLocation, List<Fanout>> fanouts;
-	
-	private IndirectFanoutLabel lastIndirectFanoutLabel;
-	private FanoutLabel lastFanoutLabel;
-	private IndirectFanoutRoutine lastIndirectFanoutRoutine;
-	private FanoutRoutine lastFanoutRoutine;
-	private EnvironmentFanoutRoutine lastEnvironmentFanoutRoutine;
-	
-	private void reset() {
-		this.lastIndirectFanoutLabel = null;
-		this.lastFanoutLabel = null;
-		this.lastIndirectFanoutRoutine = null;
-		this.lastEnvironmentFanoutRoutine = null;
-		this.lastFanoutRoutine = null;		
-	}
-	
-	private Fanout getFanout() {
-		if ((this.lastFanoutLabel == null) && (this.lastFanoutRoutine == null)) {
-			return null;
-		}
-		if ((this.lastIndirectFanoutLabel != null) || (this.lastIndirectFanoutRoutine != null) || this.lastEnvironmentFanoutRoutine != null) {
-			return null;
-		}
-		String label = (this.lastFanoutLabel == null) ? null : this.lastFanoutLabel.getValue();
-		String routine = (this.lastFanoutRoutine == null) ? null : this.lastFanoutRoutine.getName();
-	
-		return new Fanout(routine, label);
-	}
+	private LastInfo lastInfo = new LastInfo();
 
 	protected void visitIndirectFanoutLabel(IndirectFanoutLabel label) {
-		this.lastIndirectFanoutLabel = label;
+		this.lastInfo.lastIndirectFanoutLabel = label;
 		super.visitIndirectFanoutLabel(label);
 	}
 		
 	protected void visitFanoutLabel(FanoutLabel label) {
-		this.lastFanoutLabel = label;
+		this.lastInfo.lastFanoutLabel = label;
 		super.visitFanoutLabel(label);
 	}
 		
 	protected void visitIndirectFanoutRoutine(IndirectFanoutRoutine routine) {
-		this.lastIndirectFanoutRoutine = routine;
+		this.lastInfo.lastIndirectFanoutRoutine = routine;
 		super.visitIndirectFanoutRoutine(routine);
 	}
 		
 	protected void visitEnvironmentFanoutRoutine(EnvironmentFanoutRoutine routine) {
-		this.lastEnvironmentFanoutRoutine = routine;
+		this.lastInfo.lastEnvironmentFanoutRoutine = routine;
 		super.visitEnvironmentFanoutRoutine(routine);
 	}
 		
 	protected void visitFanoutRoutine(FanoutRoutine routine) {
-		this.lastFanoutRoutine = routine;
+		this.lastInfo.lastFanoutRoutine = routine;
 		super.visitFanoutRoutine(routine);
 	}
 	
 	private void updateFanout() {
 		LineLocation location = this.getLastLocation();
-		Fanout fanout = this.getFanout();
+		Fanout fanout = this.lastInfo.getFanout();
 		if (fanout != null) {
 			List<Fanout> fanoutsOnLocation = this.fanouts.get(location);
 			if (fanoutsOnLocation == null) {
@@ -101,15 +105,23 @@ public class FanoutRecorder extends LineLocationMarker {
 	}
 		
 	protected void visitAtomicDo(AtomicDo atomicDo) {
-		this.reset();
+		this.lastInfo.reset();
 		super.visitAtomicDo(atomicDo);
 		this.updateFanout();
 	}
 	
 	protected void visitAtomicGoto(AtomicGoto atomicGoto) {
-		this.reset();
+		this.lastInfo.reset();
 		super.visitAtomicGoto(atomicGoto);
 		this.updateFanout();
+	}
+	
+	protected void visitExtrinsic(Extrinsic extrinsic) {
+		LastInfo current = this.lastInfo;
+		this.lastInfo = new LastInfo();
+		super.visitExtrinsic(extrinsic);
+		this.updateFanout();
+		this.lastInfo = current;
 	}
 	
 	public Map<LineLocation, List<Fanout>> getFanouts(Routine routine) {

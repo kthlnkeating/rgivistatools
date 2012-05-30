@@ -7,6 +7,7 @@ import com.raygroupintl.m.parsetree.DoBlock;
 import com.raygroupintl.m.parsetree.GenericCommand;
 import com.raygroupintl.m.parsetree.Goto;
 import com.raygroupintl.m.parsetree.Node;
+import com.raygroupintl.parser.TEmpty;
 import com.raygroupintl.parser.TString;
 import com.raygroupintl.parser.Token;
 
@@ -21,6 +22,9 @@ class TCommand {
 			if (nameFollowUp == null) {
 				return null;
 			}
+			if (nameFollowUp.get(2) instanceof TEmpty) {
+				return null;
+			}			
 			MToken argument = (MToken) nameFollowUp.get(2);
 			if ((argument == null) || (argument.getStringSize() == 0)) {
 				return null;
@@ -55,8 +59,11 @@ class TCommand {
 		
 		@Override
 		public Node getNode() {
-			return new GenericCommand(null);
-		}
+			Node postConditionNode = this.getPostConditionNode();
+			Node argumentNode = this.getArgumentNode();
+			GenericCommand result = new GenericCommand(postConditionNode, argumentNode);
+			return result;
+		}	
 	}
 	
 	static class B extends TCommandBase {

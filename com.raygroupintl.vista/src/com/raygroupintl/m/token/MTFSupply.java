@@ -272,8 +272,47 @@ public class MTFSupply {
 	public TokenFactory jobparams;
 	@Rule("{cmdjarg:','}")
 	public TokenFactory cmdjargs;
-	@Rule("[labelpiece], [lineoffset], [doroutineref], [actuallist]")
+	
+	
+	
+	@TokenType(TExtrinsic.class)	
+	@Rule("indfanoutlabel, ['^', ((envfanoutroutine | fanoutroutine) , [actuallist]) | indfanoutroutine]")
+	public TokenFactory indexargument;
+
+	@TokenType(TExtrinsic.class)	
+	@Rule("fanoutlabel, actuallist")
+	public TokenFactory labelcallexargument;
+
+	@TokenType(TExtrinsic.class)	
+	@Rule("fanoutlabel, ['^', ((envfanoutroutine | fanoutroutine) , [actuallist]) | indfanoutroutine]")
+	public TokenFactory exargument;
+	
+	@TokenType(TExtrinsic.class)	
+	@Rule("'^', noindroutinepostcaret, [actuallist]")
+	public TokenFactory onlyrsimpleexargument;
+	
+	@TokenType(TExtrinsic.class)	
+	@Rule("'^', indirection")
+	public TokenFactory onlyrexargument;
+	
+	@Rule("indexargument | labelcallexargument | exargument | onlyrsimpleexargument | onlyrexargument")
 	public TokenFactory extrinsicarg;
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	//@Rule("[labelpiece], [lineoffset], [doroutineref], [actuallist]")
+	//public TokenFactory extrinsicarg;
 	
 	@TokenType(TExtDoArgument.class)
 	@Rule("'&', name, ['.', name], ['^', name], [actuallist], [postcondition]")
@@ -333,6 +372,13 @@ public class MTFSupply {
 	
 	@Rule("{goargumentall:','}")
 	public TokenFactory gotoarguments;	
+	
+	
+	
+	
+	
+	
+	
 	
 	
 	
@@ -684,6 +730,13 @@ public class MTFSupply {
 		public TokenFactory objdoroutine;
 		@Rule("envfanoutroutine | objdoroutine | fanoutroutine | indfanoutroutine")
 		public TokenFactory doroutinepostcaret;
+		
+		@TokenType(TExtrinsic.class)	
+		@Rule("fanoutlabel, ['^', ((envfanoutroutine | objdoroutine | fanoutroutine) , [actuallist]) | indfanoutroutine]")
+		public TokenFactory exargument;
+		
+		
+		
 		
 		@Rule("classmethod | expr")
 		public TokenFactory setrhs;

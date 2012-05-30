@@ -25,6 +25,7 @@ import com.raygroupintl.m.parsetree.Do;
 import com.raygroupintl.m.parsetree.DoBlock;
 import com.raygroupintl.m.parsetree.ErrorNode;
 import com.raygroupintl.m.parsetree.ExternalDo;
+import com.raygroupintl.m.parsetree.Extrinsic;
 import com.raygroupintl.m.parsetree.Goto;
 import com.raygroupintl.m.parsetree.Indirection;
 import com.raygroupintl.m.parsetree.Routine;
@@ -39,6 +40,7 @@ public class OccuranceRecorder extends LineLocationMarker {
 	private Map<LineLocation, Integer> atomicGotoCalls = new HashMap<LineLocation, Integer>();
 	private Map<LineLocation, Integer> doCalls = new HashMap<LineLocation, Integer>();
 	private Map<LineLocation, Integer> gotoCalls = new HashMap<LineLocation, Integer>();
+	private Map<LineLocation, Integer> extrinsics = new HashMap<LineLocation, Integer>();
 
 	private static void increment(Map<LineLocation, Integer> map, LineLocation location) {
 		Integer count = map.get(location);
@@ -84,6 +86,12 @@ public class OccuranceRecorder extends LineLocationMarker {
 		LineLocation location = this.getLastLocation();
 		increment(this.atomicGotoCalls, location);
 		super.visitAtomicGoto(atomicGoto);
+	}
+	
+	protected void visitExtrinsic(Extrinsic extrinsic) {
+		LineLocation location = this.getLastLocation();
+		increment(this.extrinsics, location);
+		super.visitExtrinsic(extrinsic);
 	}
 	
 	protected void visitDo(Do d) {
@@ -139,6 +147,10 @@ public class OccuranceRecorder extends LineLocationMarker {
 		return countAllOn(this.gotoCalls);
 	}
 
+	public int getExtrinsicCount() {
+		return countAllOn(this.extrinsics);
+	}
+
 	private static int countOn(Map<LineLocation, Integer> map, LineLocation location) {
 		Integer count = map.get(location);
 		if (count == null) {
@@ -178,6 +190,10 @@ public class OccuranceRecorder extends LineLocationMarker {
 
 	public int countGotoOn(LineLocation location) {
 		return countOn(this.gotoCalls, location);
+	}
+	
+	public int countExtrinsicOn(LineLocation location) {
+		return countOn(this.extrinsics, location);
 	}
 	
 	public static OccuranceRecorder record(Routine routine) {

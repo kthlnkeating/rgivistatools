@@ -31,7 +31,7 @@ public class TFCommand extends TokenFactorySupply {
 	private static class CommandNameAdapter implements StringAdapter {
 		@Override
 		public Token convert(String value) {
-			return new TString(value);
+			return new MTString(value);
 		}
 	}
 	

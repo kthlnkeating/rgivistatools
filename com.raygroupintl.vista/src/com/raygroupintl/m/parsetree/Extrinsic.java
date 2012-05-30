@@ -14,23 +14,15 @@
 // limitations under the License.
 //---------------------------------------------------------------------------
 
-package com.raygroupintl.m.token;
+package com.raygroupintl.m.parsetree;
 
-import java.util.List;
-
-import com.raygroupintl.m.parsetree.Extrinsic;
-import com.raygroupintl.m.parsetree.Node;
-import com.raygroupintl.parser.Token;
-
-public class TExtrinsic extends MTSequence {
-	public TExtrinsic(List<Token> tokens) {
-		super(tokens);
+public class Extrinsic extends AtomicCommand {
+	public Extrinsic(Node additionalNodes) {
+		super(additionalNodes);
 	}
-
+		
 	@Override
-	public Node getNode() {
-		Node additionalNodes = super.getNode();
-		Extrinsic result = new Extrinsic(additionalNodes);
-		return result;
+	public void accept(Visitor visitor) {
+		visitor.visitExtrinsic(this);
 	}
 }
