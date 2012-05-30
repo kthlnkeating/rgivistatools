@@ -14,15 +14,23 @@
 // limitations under the License.
 //---------------------------------------------------------------------------
 
-package com.raygroupintl.m.parsetree;
+package com.raygroupintl.m.token;
 
-public class AtomicDo extends AtomicCommand {
-	public AtomicDo(Node additionalNodes) {
-		super(additionalNodes);
+import java.util.List;
+
+import com.raygroupintl.m.parsetree.AtomicGoto;
+import com.raygroupintl.m.parsetree.Node;
+import com.raygroupintl.parser.Token;
+
+public class TGotoArgument extends MTSequence {
+	public TGotoArgument(List<Token> tokens) {
+		super(tokens);
 	}
-		
+	
 	@Override
-	public void accept(Visitor visitor) {
-		visitor.visitAtomicDo(this);
+	public Node getNode() {
+		Node additionalNodes = super.getNode();
+		AtomicGoto result = new AtomicGoto(additionalNodes);
+		return result;
 	}
 }

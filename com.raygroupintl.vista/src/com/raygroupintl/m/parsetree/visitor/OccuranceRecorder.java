@@ -20,10 +20,12 @@ import java.util.HashMap;
 import java.util.Map;
 
 import com.raygroupintl.m.parsetree.AtomicDo;
+import com.raygroupintl.m.parsetree.AtomicGoto;
 import com.raygroupintl.m.parsetree.Do;
 import com.raygroupintl.m.parsetree.DoBlock;
 import com.raygroupintl.m.parsetree.ErrorNode;
 import com.raygroupintl.m.parsetree.ExternalDo;
+import com.raygroupintl.m.parsetree.Goto;
 import com.raygroupintl.m.parsetree.Indirection;
 import com.raygroupintl.m.parsetree.Routine;
 import com.raygroupintl.m.struct.LineLocation;
@@ -34,7 +36,9 @@ public class OccuranceRecorder extends LineLocationMarker {
 	private Map<LineLocation, Integer> doBlocks = new HashMap<LineLocation, Integer>();
 	private Map<LineLocation, Integer> externalDoCalls = new HashMap<LineLocation, Integer>();
 	private Map<LineLocation, Integer> atomicDoCalls = new HashMap<LineLocation, Integer>();
+	private Map<LineLocation, Integer> atomicGotoCalls = new HashMap<LineLocation, Integer>();
 	private Map<LineLocation, Integer> doCalls = new HashMap<LineLocation, Integer>();
+	private Map<LineLocation, Integer> gotoCalls = new HashMap<LineLocation, Integer>();
 
 	private static void increment(Map<LineLocation, Integer> map, LineLocation location) {
 		Integer count = map.get(location);
@@ -76,10 +80,22 @@ public class OccuranceRecorder extends LineLocationMarker {
 		super.visitAtomicDo(atomicDo);
 	}
 	
+	protected void visitAtomicGoto(AtomicGoto atomicGoto) {
+		LineLocation location = this.getLastLocation();
+		increment(this.atomicGotoCalls, location);
+		super.visitAtomicGoto(atomicGoto);
+	}
+	
 	protected void visitDo(Do d) {
 		LineLocation location = this.getLastLocation();
 		increment(this.doCalls, location);
 		super.visitDo(d);
+	}	
+	
+	protected void visitGoto(Goto g) {
+		LineLocation location = this.getLastLocation();
+		increment(this.gotoCalls, location);
+		super.visitGoto(g);
 	}	
 	
 	private static int countAllOn(Map<LineLocation, Integer> map) {
@@ -115,6 +131,14 @@ public class OccuranceRecorder extends LineLocationMarker {
 		return countAllOn(this.doCalls);
 	}
 
+	public int getAtomicGotoCount() {
+		return countAllOn(this.atomicGotoCalls);
+	}
+
+	public int getGotoCount() {
+		return countAllOn(this.gotoCalls);
+	}
+
 	private static int countOn(Map<LineLocation, Integer> map, LineLocation location) {
 		Integer count = map.get(location);
 		if (count == null) {
@@ -146,6 +170,14 @@ public class OccuranceRecorder extends LineLocationMarker {
 
 	public int countDoOn(LineLocation location) {
 		return countOn(this.doCalls, location);
+	}
+	
+	public int countAtomicGotoOn(LineLocation location) {
+		return countOn(this.atomicGotoCalls, location);
+	}
+
+	public int countGotoOn(LineLocation location) {
+		return countOn(this.gotoCalls, location);
 	}
 	
 	public static OccuranceRecorder record(Routine routine) {

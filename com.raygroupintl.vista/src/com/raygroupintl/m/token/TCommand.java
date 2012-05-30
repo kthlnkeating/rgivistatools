@@ -5,6 +5,7 @@ import java.util.List;
 import com.raygroupintl.m.parsetree.Do;
 import com.raygroupintl.m.parsetree.DoBlock;
 import com.raygroupintl.m.parsetree.GenericCommand;
+import com.raygroupintl.m.parsetree.Goto;
 import com.raygroupintl.m.parsetree.Node;
 import com.raygroupintl.parser.TString;
 import com.raygroupintl.parser.Token;
@@ -133,7 +134,15 @@ class TCommand {
 		@Override
 		protected String getFullName() {		
 			return "GOTO";
-		}			
+		}	
+		
+		@Override
+		public Node getNode() {
+			Node postConditionNode = this.getPostConditionNode();
+			Node argumentNode = this.getArgumentNode();
+			Goto result = new Goto(postConditionNode, argumentNode);
+			return result;
+		}		
 	}
 
 	static class H extends TCommandBase {

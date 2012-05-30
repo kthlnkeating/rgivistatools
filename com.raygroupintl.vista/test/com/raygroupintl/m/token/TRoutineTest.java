@@ -120,6 +120,7 @@ public class TRoutineTest {
 	}
 	
 	private void checkFanouts(List<Fanout> result, String[] labels, String[] routines) {
+		Assert.assertNotNull(result);
 		Assert.assertEquals(routines.length, result.size());
 		int index = 0;
 		for (Fanout fout : result) {
@@ -144,11 +145,13 @@ public class TRoutineTest {
 
 		OccuranceRecorder or = OccuranceRecorder.record(r);		
 		Assert.assertEquals(0, or.getErrorNodeCount());
-		Assert.assertEquals(6, or.getDoBlockCount());
+		Assert.assertEquals(10, or.getDoBlockCount());
 		Assert.assertEquals(21, or.getDoCount());
 		Assert.assertEquals(29, or.getAtomicDoCount());
 		Assert.assertEquals(8, or.getExternalDoCount());
-		Assert.assertEquals(12, or.getIndirectionCount());
+		Assert.assertEquals(23, or.getIndirectionCount());
+		Assert.assertEquals(17, or.getGotoCount());
+		Assert.assertEquals(31, or.getAtomicGotoCount());
 		
 		FanoutRecorder foutr = new FanoutRecorder();
 		Map<LineLocation, List<Fanout>> fanouts = foutr.getFanouts(r);	
@@ -166,12 +169,30 @@ public class TRoutineTest {
 		this.checkFanouts(do10, new String[]{"2", "3", "7", "T8"}, new String[]{"R6", null, "R6", "R8"});
 		List<Fanout> do13 = fanouts.get(new LineLocation("DO", 13));
 		this.checkFanouts(do13, new String[]{null}, new String[]{"R10"});
-		Assert.assertEquals(7, fanouts.size());
+		
+		List<Fanout> go1 = fanouts.get(new LineLocation("GOTO", 1));
+		this.checkFanouts(go1, new String[]{"L0", "L1", "L2"}, new String[]{"R0", "R1", "R2"});
+		List<Fanout> go3 = fanouts.get(new LineLocation("GOTO", 3));
+		this.checkFanouts(go3, new String[]{"T0", "T1", "T2"}, new String[]{null, null, null});
+		List<Fanout> go4 = fanouts.get(new LineLocation("GOTO", 4));
+		this.checkFanouts(go4, new String[]{"T2"}, new String[]{null});
+		List<Fanout> go5 = fanouts.get(new LineLocation("GOTO", 5));
+		this.checkFanouts(go5, new String[]{"T0", "T1"}, new String[]{null, null});
+		List<Fanout> go9 = fanouts.get(new LineLocation("GOTO", 9));
+		this.checkFanouts(go9, new String[]{"T5"}, new String[]{"R5"});
+		List<Fanout> go10 = fanouts.get(new LineLocation("GOTO", 10));
+		this.checkFanouts(go10, new String[]{"2", "3", "7", "T8"}, new String[]{"R6", null, "R6", "R8"});
+		List<Fanout> go13 = fanouts.get(new LineLocation("GOTO", 13));
+		this.checkFanouts(go13, new String[]{null}, new String[]{"R10"});
+		List<Fanout> go19 = fanouts.get(new LineLocation("GOTO", 19));
+		this.checkFanouts(go19, new String[]{"DE", "ARZ"}, new String[]{"RE", null});
+				
+		Assert.assertEquals(15, fanouts.size());
 		int fanoutCount = 0;
 		for (List<Fanout> lfo : fanouts.values()) {
 			fanoutCount += lfo.size();
 		}
-		Assert.assertEquals(15, fanoutCount);
+		Assert.assertEquals(32, fanoutCount);
 }
 
 	@Test

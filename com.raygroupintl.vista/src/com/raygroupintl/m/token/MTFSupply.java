@@ -75,7 +75,6 @@ public class MTFSupply {
 	@Rule("('\"', [{-'\\r' - '\\n' - '\"'}], '\"'), [strlit]")	
 	public TokenFactory strlit;
 	
-	//@TokenType(TEnvironment.class)
 	@Rule("('|', expr, '|') | {expratom:',':'[':']'}")
 	public TokenFactory environment;
 	
@@ -216,10 +215,14 @@ public class MTFSupply {
 	public TokenFactory routinespec;
 	@Rule("[tagspec], [routinespec]")
 	public TokenFactory cmdgargmain;
-	@Rule("cmdgargmain, [postcondition]")
-	public TokenFactory gotoargument;
-	@Rule("{gotoargument:','}")
-	public TokenFactory gotoarguments;
+	//@Rule("cmdgargmain, [postcondition]")
+	//public TokenFactory gotoargument;
+	//@Rule("{gotoargument:','}")
+	//public TokenFactory gotoarguments;
+	
+	
+	
+	
 	@Rule("'#', expr")
 	public TokenFactory readcount;
 
@@ -282,21 +285,57 @@ public class MTFSupply {
 	@TokenType(BasicTokens.MTFanoutLabelB.class)
 	@Rule("intlit")
 	public TokenFactory fanoutlabelb;
-	@Rule("fanoutlabela | fanoutlabelb")  //@Rule("label")
+	@Rule("fanoutlabela | fanoutlabelb")
 	public TokenFactory fanoutlabel;
 	@TokenType(BasicTokens.MTIndirectFanoutLabel.class)
 	@Rule("rindirection")
 	public TokenFactory indfanoutlabel;
 	@TokenType(BasicTokens.MTEnvironmentFanoutRoutine.class)
 	@Rule("environment, name")
-	public TokenFactory envdoroutine;	
+	public TokenFactory envfanoutroutine;	
 	@TokenType(BasicTokens.MTFanoutRoutine.class)
 	@Rule("name")
-	public TokenFactory doroutine;
+	public TokenFactory fanoutroutine;
 	@TokenType(BasicTokens.MTIndirectFanoutRoutine.class)
 	@Rule("rindirection")
-	public TokenFactory inddoroutine;
-		
+	public TokenFactory indfanoutroutine;
+	@Rule("envfanoutroutine | fanoutroutine")
+	public TokenFactory noindroutinepostcaret;
+	
+	@Rule("envfanoutroutine | fanoutroutine | indfanoutroutine")
+	public TokenFactory goroutinepostcaret;
+	
+	@Rule("'^', goroutinepostcaret")
+	public TokenFactory goroutineref;
+	
+	@TokenType(TGotoArgument.class)	
+	@Rule("indfanoutlabel, [dolineoffset], [goroutineref], [postcondition]")
+	public TokenFactory indgoargument;
+
+	@TokenType(TGotoArgument.class)	
+	@Rule("fanoutlabel, dolineoffset, [goroutineref], [postcondition]")
+	public TokenFactory offsetgoargument;
+
+	@TokenType(TGotoArgument.class)	
+	@Rule("fanoutlabel, ['^', envfanoutroutine | fanoutroutine | indfanoutroutine], [postcondition]")
+	public TokenFactory goargument;
+	
+	@TokenType(TGotoArgument.class)	
+	@Rule("'^', indirection, [postcondition]")
+	public TokenFactory onlyrgoargument;
+	
+	@TokenType(TGotoArgument.class)	
+	@Rule("'^', noindroutinepostcaret, [postcondition]")
+	public TokenFactory onlyrsimplegoargument;
+	
+	@Rule("indgoargument | offsetgoargument | goargument | onlyrsimplegoargument | onlyrgoargument")
+	public TokenFactory goargumentall;
+	
+	@Rule("{goargumentall:','}")
+	public TokenFactory gotoarguments;	
+	
+	
+	
 	@TokenType(TDoArgument.class)	
 	@Rule("indfanoutlabel, [dolineoffset], [doroutineref], [postcondition]")
 	public TokenFactory inddoargument;
@@ -310,7 +349,7 @@ public class MTFSupply {
 	public TokenFactory labelcalldoargument;
 
 	@TokenType(TDoArgument.class)	
-	@Rule("fanoutlabel, ['^', ((envdoroutine | doroutine) , [actuallist]) | inddoroutine], [postcondition]")
+	@Rule("fanoutlabel, ['^', ((envfanoutroutine | fanoutroutine) , [actuallist]) | indfanoutroutine], [postcondition]")
 	public TokenFactory doargument;
 	
 	@TokenType(TDoArgument.class)	
@@ -327,10 +366,7 @@ public class MTFSupply {
 	@Rule("{doargumentall:','}")
 	public TokenFactory doarguments;	
 	
-	@Rule("envdoroutine | doroutine")
-	public TokenFactory noindroutinepostcaret;
-	
-	@Rule("envdoroutine | doroutine | inddoroutine")
+	@Rule("envfanoutroutine | fanoutroutine | indfanoutroutine")
 	public TokenFactory doroutinepostcaret;
 	
 	@Rule("'^', doroutinepostcaret")
@@ -638,7 +674,7 @@ public class MTFSupply {
 		@Rule("systemcall, [dolineoffset], [doroutineref], [actuallist], [postcondition]")
 		public TokenFactory sysdoargument;
 		@TokenType(TDoArgument.class)	
-		@Rule("fanoutlabel, ['^', ((envdoroutine | objdoroutine | doroutine) , [actuallist]) | inddoroutine], [postcondition]")
+		@Rule("fanoutlabel, ['^', ((envfanoutroutine | objdoroutine | fanoutroutine) , [actuallist]) | indfanoutroutine], [postcondition]")
 		public TokenFactory doargument;
 
 		@Rule("objdoargument | extdoargument | inddoargument | offsetdoargument | labelcalldoargument | doargument | onlyrsimpledoargument | onlyrdoargument | clsdoargument | sysdoargument")
@@ -646,7 +682,7 @@ public class MTFSupply {
 		
 		@Rule("name, method")
 		public TokenFactory objdoroutine;
-		@Rule("envdoroutine | objdoroutine | doroutine | inddoroutine")
+		@Rule("envfanoutroutine | objdoroutine | fanoutroutine | indfanoutroutine")
 		public TokenFactory doroutinepostcaret;
 		
 		@Rule("classmethod | expr")

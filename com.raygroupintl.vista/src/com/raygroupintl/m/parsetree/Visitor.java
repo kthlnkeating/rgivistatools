@@ -84,6 +84,10 @@ public class Visitor {
 		this.visitAtomicCommand(atomicDo);
 	}
 	
+	protected void visitAtomicGoto(AtomicGoto atomicGoto) {
+		this.visitAtomicCommand(atomicGoto);
+	}
+	
 	protected void visitDo(Do d) {
 		this.visitMultiCommand(d);
 	}

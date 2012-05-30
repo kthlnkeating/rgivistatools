@@ -22,6 +22,7 @@ import java.util.List;
 import java.util.Map;
 
 import com.raygroupintl.m.parsetree.AtomicDo;
+import com.raygroupintl.m.parsetree.AtomicGoto;
 import com.raygroupintl.m.parsetree.EnvironmentFanoutRoutine;
 import com.raygroupintl.m.parsetree.Fanout;
 import com.raygroupintl.m.parsetree.FanoutLabel;
@@ -85,10 +86,8 @@ public class FanoutRecorder extends LineLocationMarker {
 		this.lastFanoutRoutine = routine;
 		super.visitFanoutRoutine(routine);
 	}
-		
-	protected void visitAtomicDo(AtomicDo atomicDo) {
-		this.reset();
-		super.visitAtomicDo(atomicDo);
+	
+	private void updateFanout() {
 		LineLocation location = this.getLastLocation();
 		Fanout fanout = this.getFanout();
 		if (fanout != null) {
@@ -98,7 +97,19 @@ public class FanoutRecorder extends LineLocationMarker {
 				this.fanouts.put(location, fanoutsOnLocation);
 			}
 			fanoutsOnLocation.add(fanout);
-		}
+		}		
+	}
+		
+	protected void visitAtomicDo(AtomicDo atomicDo) {
+		this.reset();
+		super.visitAtomicDo(atomicDo);
+		this.updateFanout();
+	}
+	
+	protected void visitAtomicGoto(AtomicGoto atomicGoto) {
+		this.reset();
+		super.visitAtomicGoto(atomicGoto);
+		this.updateFanout();
 	}
 	
 	public Map<LineLocation, List<Fanout>> getFanouts(Routine routine) {

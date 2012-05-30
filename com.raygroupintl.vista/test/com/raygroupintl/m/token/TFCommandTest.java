@@ -115,6 +115,7 @@ public class TFCommandTest {
 	}
 
 	private void testGoto(TFCommand f) {
+		testCommand(f, "G LE0^[ENV1,ENV2]RET,L1^|ENV1|RE1,LE2^[ENV3]RE3");
 		testCommand(f, "G:POP H^XUS");
 		testCommand(f, "G:POP H^[ENV]XUS:POP");
 		testCommand(f, "G:POP H+3^[ENV]XUS:POP");
