@@ -47,6 +47,7 @@ public class GrammarTest {
 	
 	@Test
 	public void testNumber() {
+		testCommonNumber("1");
 		testCommonNumber("5.5");
 		testCommonNumber("1.0E-7");
 		testCommonNumber(".5E+7");
@@ -63,5 +64,54 @@ public class GrammarTest {
 		} catch (SyntaxErrorException se) {
 			fail("Unexpected exception: " + se.getMessage());			
 		}				
+	}
+	
+	public void testChoice(TokenFactory f, String v, Class<?> cls, int seqIndex) {
+		try {
+			Text text = new Text(v, 0);
+			Token t = f.tokenize(text, adapterSupply);
+			this.testCommon(v, t);
+			if (seqIndex < 0) {
+				Assert.assertTrue(t.getClass().equals(cls));
+			} else {
+				Token tseq = ((TSequence) t).get(seqIndex);
+				Assert.assertTrue(tseq.getClass().equals(cls));
+			}
+		} catch (SyntaxErrorException se) {
+			fail("Unexpected exception: " + se.getMessage());			
+		}				
+	}
+	
+	public void testChoiceError(TokenFactory f, String v) {
+		try {
+			Text text = new Text(v, 0);
+			f.tokenize(text, adapterSupply);
+			fail("Expected exception did not fire");			
+		} catch (SyntaxErrorException se) {
+		}		
+	}		
+	
+	@Test
+	public void testChoice() {
+		testChoice(grammar.testchoicea, "1", TNumber.class, -1);
+		testChoice(grammar.testchoicea, "a^a", TNameA.class, 0);
+		testChoice(grammar.testchoicea, "a:a", TNameB.class, 0);
+		testChoiceError(grammar.testchoicea, "a");
+		
+		testChoice(grammar.testchoiceb, "1", TNumber.class, -1);
+		testChoice(grammar.testchoiceb, "a^a", TNameA.class, 0);
+		testChoice(grammar.testchoiceb, "a:a", TNameB.class, 0);
+		testChoice(grammar.testchoiceb, "a", TString.class, -1);
+		testChoiceError(grammar.testchoicea, "a1");
+
+		testChoice(grammar.testchoicec, "1", TNumber.class, -1);
+		testChoice(grammar.testchoicec, "a1", TString.class, 0);
+		testChoice(grammar.testchoicec, "a^a", TNameA.class, 0);
+		testChoice(grammar.testchoicec, "a", TString.class, -1);
+
+		testChoice(grammar.testchoiced, "1", TNumber.class, -1);
+		testChoice(grammar.testchoiced, "a1", TString.class, 0);
+		testChoice(grammar.testchoiced, "a^a", TNameA.class, 0);
+		testChoice(grammar.testchoiced, "a", TNameB.class, -1);
 	}
 }

@@ -63,4 +63,8 @@ public class ArrayAsTokenStore implements TokenStore {
 	public boolean hasToken() {
 		return this.index > 0;
 	}
+
+	public void set(int index, Token token) {
+		this.tokens.set(index, token);
+	}
 }

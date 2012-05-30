@@ -228,4 +228,8 @@ public class TFSequence extends TFBasic {
 	public void setTargetType(Class<? extends Token> cls) {
 		this.adapter = getAdapter(cls);
 	}
+	
+	public TokenFactory getFactory(int index) {
+		return this.factories[index];
+	}
 }

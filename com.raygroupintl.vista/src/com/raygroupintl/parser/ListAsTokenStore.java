@@ -54,4 +54,8 @@ public class ListAsTokenStore implements TokenStore {
 	public boolean hasToken() {
 		return this.list != null;
 	}
+	
+	public void set(int index, Token token) {
+		this.list.set(index, token);
+	}
 }

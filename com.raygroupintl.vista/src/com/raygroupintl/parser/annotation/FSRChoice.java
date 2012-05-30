@@ -15,48 +15,6 @@ import com.raygroupintl.parser.TokenFactory;
 
 public class FSRChoice extends FSRBase {
 	private static class ForkAlgorithm {	
-		public static class Forked extends FSRBase {
-			public String name;
-			public FactorySupplyRule leader;
-			public List<FactorySupplyRule> followers = new ArrayList<FactorySupplyRule>();
-			public boolean singleValid;
-
-			public Forked(String name, FactorySupplyRule leader) {
-				super(RuleSupplyFlag.INNER_REQUIRED);
-				this.name = name;
-				this.leader = leader;
-			}
-			
-			@Override
-			public TFBasic getShellFactory() {
-				return null;
-			}
-			
-			public String getName() {
-				return this.name;
-			}
-			
-			public FactorySupplyRule getLeading(RulesByName names) {
-				return null;
-			}
-			
-			public int getSequenceCount() {
-				return 1;
-			}
-			
-			private void addFollower(FactorySupplyRule follower) {
-				if (follower.getSequenceCount() == 1) {
-					this.singleValid = true;
-					this.leader = follower;
-					return;
-				}
-				if ((follower instanceof FSRSequence) || (follower instanceof FSRCopy)) {			
-					this.followers.add(follower);		
-				} else {
-					throw new ParseErrorException("Forked sequence only supports objects of kind " + FSRSequence.class.getName());
-				}
-			}
-		}
 		
 		public ForkAlgorithm(String name) {
 			this.aname = name;
@@ -121,12 +79,12 @@ public class FSRChoice extends FSRBase {
 			} else {
 				int n = existing.intValue();
 				FactorySupplyRule current = this.list.get(n);
-				if (current instanceof Forked) {
-					((Forked) current).addFollower(tf);
+				if (current instanceof FSRForkedSequence) {
+					((FSRForkedSequence) current).addFollower(tf);
 				} else {
 					String name = this.leadingShared.get(n);
 					FactorySupplyRule leading = symbols.get(name);
-					Forked newForked = new Forked(this.aname + "." + name, leading);
+					FSRForkedSequence newForked = new FSRForkedSequence(this.aname + "." + name, leading);
 					newForked.addFollower(current);
 					newForked.addFollower( tf);
 					this.list.set(n, newForked);
@@ -163,8 +121,8 @@ public class FSRChoice extends FSRBase {
 		int n = algorithm.list.size();
 		for (int i=0; i<n; ++i) {
 			FactorySupplyRule on =algorithm.list.get(i);
-			if (on instanceof ForkAlgorithm.Forked) {
-				ForkAlgorithm.Forked onf = (ForkAlgorithm.Forked) on;
+			if (on instanceof FSRForkedSequence) {
+				FSRForkedSequence onf = (FSRForkedSequence) on;
 				int m = onf.followers.size();
 				List<TFSequence> followerFactories = new ArrayList<TFSequence>(m);
 				for (int j=0; j<m; ++j) {

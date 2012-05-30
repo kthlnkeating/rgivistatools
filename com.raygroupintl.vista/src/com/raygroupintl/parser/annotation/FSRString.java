@@ -17,6 +17,14 @@ public class FSRString extends FSRBase {
 	}
 	
 	@Override
+	public boolean update(RulesByName symbols) {
+		if (! symbols.hasRule(expr)) {
+			symbols.put(this.expr, this);
+		}
+		return true;
+	}
+	
+	@Override
 	public String getName() {
 		return this.expr;
 	}

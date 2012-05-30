@@ -28,4 +28,6 @@ public interface TokenStore {
 	int size();
 	
 	boolean hasToken();
+	
+	void set(int index, Token token);
 }

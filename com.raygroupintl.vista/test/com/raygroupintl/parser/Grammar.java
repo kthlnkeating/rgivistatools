@@ -1,35 +1,18 @@
 package com.raygroupintl.parser;
 
 import com.raygroupintl.parser.TokenFactory;
-import com.raygroupintl.parser.annotation.CharSpecified;
-import com.raygroupintl.parser.annotation.Choice;
 import com.raygroupintl.parser.annotation.Rule;
 import com.raygroupintl.parser.annotation.TokenType;
 
 public class Grammar {
 	@TokenType(TIntLit.class)
-	@CharSpecified(ranges={'0', '9'})
+	@Rule("'0'...'9'")
 	public TokenFactory intlit;
 
-	@CharSpecified(chars={'+', '-'})
-	public TokenFactory pm;
-	
-	@CharSpecified(chars={'E'})
-	public TokenFactory e;
-	
-	@CharSpecified(chars={'.'})
-	public TokenFactory dot;
-	
-	@CharSpecified(chars={'+'})
-	public TokenFactory plus;
-	
-	@CharSpecified(chars={'m'})
-	public TokenFactory minus;
-	
-	@CharSpecified(chars={'^'})
+	@Rule("'^'")
 	public TokenFactory caret;
 
-	@CharSpecified(ranges={'a', 'z'})
+	@Rule("{'a'...'z'}")
 	public TokenFactory name;
 
 	@Rule("{name:',':'(':')'}")
@@ -44,7 +27,7 @@ public class Grammar {
 	public TokenFactory object;
 	
 	@TokenType(TNumber.class)
-	@Rule("[pm], ([intlit], [(dot, intlit)]), [e, [pm], intlit]")
+	@Rule("['+' + '-'], ([intlit], ['.', intlit]), ['E', ['+' + '-'], intlit]")
 	public TokenFactory number;
 	
 	@TokenType(TGlobal.class)
@@ -54,9 +37,38 @@ public class Grammar {
 	@Rule("object | local | global | number")
 	public TokenFactory expratom;
 
-	@Choice({"plus", "minus"})
+	@Rule("'+' | 'm'")
 	public TokenFactory operator;
 
 	@Rule("expratom, [{(operator, expratom)}]")
 	public TokenFactory expr;
+	
+	@TokenType(TNameA.class)
+	@Rule("name")
+	public TokenFactory namea;
+
+	@TokenType(TNameB.class)
+	@Rule("name")
+	public TokenFactory nameb;
+	
+	@Rule("namea, '^', name")
+	public TokenFactory nameaseq;
+	
+	@Rule("nameb, ':', name")
+	public TokenFactory namebseq;
+	
+	@Rule("name, intlit")
+	public TokenFactory nameseq;
+	
+	@Rule("caret | number | nameaseq | namebseq")
+	public TokenFactory testchoicea;
+	
+	@Rule("caret | number | name | nameaseq | namebseq")
+	public TokenFactory testchoiceb;
+	
+	@Rule("nameseq | number | name | nameaseq")
+	public TokenFactory testchoicec;
+	
+	@Rule("nameb | number | nameaseq | nameseq")
+	public TokenFactory testchoiced;
 }

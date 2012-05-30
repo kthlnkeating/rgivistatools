@@ -74,6 +74,9 @@ public class TFForkedSequence extends TokenFactory {
 				foundTokens.addToken(leading);
 				Token result = follower.tokenize(text, adapterSupply, 1, foundTokens, true);
 				if (result != null) {
+					TokenFactory f0th = follower.getFactory(0);
+					Token replaced = f0th.convert(leading);
+					foundTokens.set(0, replaced);
 					return result;
 				}
 				text.resetIndex(textIndex);				
