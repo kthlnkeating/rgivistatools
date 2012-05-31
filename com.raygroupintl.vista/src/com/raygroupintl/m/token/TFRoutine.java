@@ -15,7 +15,7 @@ public class TFRoutine {
 	private TokenFactory tfLine;
 	private AdapterSupply mAdapterSupply = new MAdapterSupply();
 	
-	private TFRoutine(MTFSupply supply) {
+	public TFRoutine(MTFSupply supply) {
 		this.tfLine = supply.line;
 	}
 	
@@ -69,7 +69,4 @@ public class TFRoutine {
 		return result;
 	}
 */
-	public static TFRoutine getInstance(MTFSupply supply) {
-		return new TFRoutine(supply);
-	}	
 }

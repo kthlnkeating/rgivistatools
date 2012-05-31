@@ -115,4 +115,8 @@ public class Visitor {
 	protected void visitRoutine(Routine routine) {
 		this.visitBlock(routine);
 	}
+
+	protected void visitRoutinePackage(RoutinePackage routinePackage) {
+		this.visitBlock(routinePackage);
+	}
 }

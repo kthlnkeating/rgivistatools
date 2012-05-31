@@ -26,10 +26,17 @@ import com.raygroupintl.m.struct.LineLocation;
 import com.raygroupintl.m.struct.MError;
 import com.raygroupintl.m.struct.ObjectInRoutine;
 
-public class ErrorRecorder extends LineLocationMarker {
+public class ErrorRecorder extends LocationMarker {
 	private List<ObjectInRoutine<MError>> result;
 	private Set<LineLocation> exemptions;
 	
+	public ErrorRecorder(Set<LineLocation> exemptions) {
+		this.exemptions = exemptions;
+	}
+	
+	public ErrorRecorder() {
+	}
+
 	@Override
 	protected void visitErrorNode(ErrorNode errorNode) {		
 		LineLocation location = this.getLastLocation();
@@ -41,12 +48,7 @@ public class ErrorRecorder extends LineLocationMarker {
 	}
 		
 	public List<ObjectInRoutine<MError>> visitErrors(Routine routine) {
-		return this.visitErrors(routine, null);
-	}
-	
-	public List<ObjectInRoutine<MError>> visitErrors(Routine routine, Set<LineLocation> exemptions) {
 		this.result = new ArrayList<ObjectInRoutine<MError>>();		
-		this.exemptions = exemptions;
 		this.visitRoutine(routine);
 		return this.result;
 	}

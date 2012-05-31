@@ -33,7 +33,7 @@ import com.raygroupintl.m.parsetree.IndirectFanoutRoutine;
 import com.raygroupintl.m.parsetree.Routine;
 import com.raygroupintl.m.struct.LineLocation;
 
-public class FanoutRecorder extends LineLocationMarker {
+public class FanoutRecorder extends LocationMarker {
 	private static class LastInfo {
 		public IndirectFanoutLabel lastIndirectFanoutLabel;
 		public FanoutLabel lastFanoutLabel;

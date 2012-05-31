@@ -29,7 +29,7 @@ public class VistAFOIATest {
 	public void testAll() {
 		try {
 			MTFSupply m = MTFSupply.getInstance(MVersion.CACHE);
-			final TFRoutine tf = TFRoutine.getInstance(m);
+			final TFRoutine tf = new TFRoutine(m);
 			final ErrorExemptions exemptions = ErrorExemptions.getVistAFOIAInstance();
 			List<Path> paths = FileSupply.getAllMFiles();
 			for (Path path : paths) {
@@ -47,10 +47,10 @@ public class VistAFOIATest {
 					Assert.assertEquals("Different: " + msg, line, readLine);
 				}
 				String name = r.getName();
-				ErrorRecorder ev = new ErrorRecorder();
 				if (! exemptions.containsRoutine(name)) {
 					Set<LineLocation> locations = exemptions.getLines(name);
-					List<ObjectInRoutine<MError>> errors = ev.visitErrors(r.getNode(), locations);
+					ErrorRecorder ev = new ErrorRecorder(locations);
+					List<ObjectInRoutine<MError>> errors = ev.visitErrors(r.getNode());
 					Assert.assertEquals(errors.size(), 0);						
 				}	
 			}

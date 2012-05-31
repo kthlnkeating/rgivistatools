@@ -16,35 +16,9 @@
 
 package com.raygroupintl.m.parsetree;
 
-public class Fanout {
-	private String routineName;
-	private String label;
-	
-	public Fanout(String routineName, String label) {
-		this.routineName = routineName;
-		this.label = label;
-	}
-	
-	public String getRoutineName() {
-		return routineName;
-	}
-	
-	public String getTag() {
-		return this.label;
-	}
-	
+public class RoutinePackage extends Block<Routine> {
 	@Override
-	public String toString() {
-		String lbl = this.getTag();
-		String rou = this.getRoutineName();
-		if (rou != null) {
-			rou = "^" + rou;
-		} else {
-			rou = "";
-		}
-		if (lbl == null) {
-			lbl = "";
-		}					
-		return lbl + rou;		
+	public void accept(Visitor visitor) {
+		visitor.visitRoutinePackage(this);
 	}
 }

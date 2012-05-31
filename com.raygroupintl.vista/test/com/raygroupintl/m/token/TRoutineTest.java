@@ -41,7 +41,7 @@ public class TRoutineTest {
 	}
 	
 	private TRoutine getRoutineToken(String fileName, MTFSupply m) {
-		TFRoutine tf = TFRoutine.getInstance(m);
+		TFRoutine tf = new TFRoutine(m);
 		InputStream is = this.getClass().getResourceAsStream(fileName);
 		MRoutineContent content = MRoutineContent.getInstance(fileName.split(".m")[0], is);
 		TRoutine r = tf.tokenize(content);

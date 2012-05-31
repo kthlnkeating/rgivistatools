@@ -17,11 +17,13 @@
 package com.raygroupintl.m.parsetree.visitor;
 
 import com.raygroupintl.m.parsetree.Line;
+import com.raygroupintl.m.parsetree.Routine;
 import com.raygroupintl.m.parsetree.Visitor;
 import com.raygroupintl.m.struct.LineLocation;
 
-class LineLocationMarker extends Visitor {
+class LocationMarker extends Visitor {
 	private LineLocation lastLocation;
+	private String lastRoutineName;
 	
 	@Override
 	protected void visitLine(Line line) {
@@ -33,5 +35,16 @@ class LineLocationMarker extends Visitor {
 
 	protected LineLocation getLastLocation() {
 		return this.lastLocation;
+	}
+
+	@Override
+	protected void visitRoutine(Routine routine) {
+		this.lastRoutineName = routine.getKey();
+		this.lastLocation = null;
+		super.visitRoutine(routine);
+	}
+
+	protected String getLastRoutineName() {
+		return this.lastRoutineName;
 	}
 }

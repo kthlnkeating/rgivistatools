@@ -31,7 +31,7 @@ import com.raygroupintl.m.parsetree.Indirection;
 import com.raygroupintl.m.parsetree.Routine;
 import com.raygroupintl.m.struct.LineLocation;
 
-public class OccuranceRecorder extends LineLocationMarker {
+public class OccuranceRecorder extends LocationMarker {
 	private Map<LineLocation, Integer> errors = new HashMap<LineLocation, Integer>();
 	private Map<LineLocation, Integer> indirection = new HashMap<LineLocation, Integer>();
 	private Map<LineLocation, Integer> doBlocks = new HashMap<LineLocation, Integer>();

@@ -1,10 +1,25 @@
+//---------------------------------------------------------------------------
+// Copyright 2012 Ray Group International
+//
+// Licensed under the Apache License, Version 2.0 (the "License");
+// you may not use this file except in compliance with the License.
+// You may obtain a copy of the License at
+//
+//     http://www.apache.org/licenses/LICENSE-2.0
+//
+// Unless required by applicable law or agreed to in writing, software
+// distributed under the License is distributed on an "AS IS" BASIS,
+// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+// See the License for the specific language governing permissions and
+// limitations under the License.
+//---------------------------------------------------------------------------
+
 package com.raygroupintl.vista.tools;
 
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.nio.file.Path;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -24,8 +39,8 @@ import com.raygroupintl.m.token.TFRoutine;
 import com.raygroupintl.m.token.TRoutine;
 import com.raygroupintl.parser.SyntaxErrorException;
 import com.raygroupintl.vista.repository.FileSupply;
-import com.raygroupintl.vista.repository.PackageInfo;
 import com.raygroupintl.vista.repository.RepositoryInfo;
+import com.raygroupintl.vista.repository.VistaPackage;
 
 public class MRoutineAnalyzer {
 	private final static Logger LOGGER = Logger.getLogger(MRoutineAnalyzer.class.getName());
@@ -36,13 +51,13 @@ public class MRoutineAnalyzer {
 		final FileOutputStream os = new FileOutputStream(file);
 		final String eol = TRoutine.getEOL();
 		List<Path> paths = FileSupply.getAllMFiles();
-		ErrorRecorder ev = new ErrorRecorder();
 		for (Path path : paths) {
 			TRoutine r = tf.tokenize(path);			
 			final String name = r.getName();
 			if (! exemptions.containsRoutine(name)) {
 				Set<LineLocation> locations = exemptions.getLines(name);
-				List<ObjectInRoutine<MError>> errors = ev.visitErrors(r.getNode(), locations);
+				ErrorRecorder ev = new ErrorRecorder(locations);
+				List<ObjectInRoutine<MError>> errors = ev.visitErrors(r.getNode());
 				if (errors.size() > 0) {
 					os.write((eol + eol + r.getName() + eol).getBytes());
 					errorCount += errors.size();
@@ -69,53 +84,39 @@ public class MRoutineAnalyzer {
 		this.writeErrors(topToken, exemptions, outputFile);				
 	}
 
-	
 	public void writeFanout(CLIParams options, TFRoutine topToken) throws IOException, SyntaxErrorException {
-		RepositoryInfo ri = RepositoryInfo.getInstance();
-		
-		FileSupply fs = new FileSupply();
-		for (String packageName : options.packages) {
-			PackageInfo pi = ri.getPackage(packageName);
-			String dir = pi.getDirectoryName();
-			fs.addPackage(dir);
-		}		
-		List<Path> paths = fs.getFiles();
-		FanoutRecorder fr = new FanoutRecorder();
-		Map<String, Map<LineLocation, List<Fanout>>> allFanouts = new HashMap<String, Map<LineLocation, List<Fanout>>>();
-		for (Path path : paths) {			
-			TRoutine r = topToken.tokenize(path);
-			Routine node = r.getNode();
-			Map<LineLocation, List<Fanout>> routineFanouts = fr.getFanouts(node);
-			allFanouts.put(node.getKey(), routineFanouts);
+		RepositoryInfo ri = RepositoryInfo.getInstance(topToken);
+		List<VistaPackage> packages = null; 
+		if (options.packages.size() == 0) {
+			packages = ri.getAllPackages();
+		} else {
+			packages = ri.getPackages(options.packages);
 		}
 				
 		String outputFile = options.outputFile;
 		File file = new File(outputFile);
 		FileOutputStream os = new FileOutputStream(file);
 		String eol = TRoutine.getEOL();
-		for (String routineName : allFanouts.keySet()) {
-			os.write(("Routine Name: " + routineName + eol).getBytes());
-			Map<LineLocation, List<Fanout>> fanouts = allFanouts.get(routineName);
-			for (LineLocation location : fanouts.keySet()) {
-				os.write(("  Location: " + location.toString() + eol).getBytes());
-				List<Fanout> ffouts = fanouts.get(location);
-				for (Fanout fout : ffouts) {
-					String lbl = fout.getTag();
-					String rou = fout.getRoutineName();
-					if (rou != null) {
-						rou = "^" + rou;
-					} else {
-						rou = "";
-					}
-					if (lbl == null) {
-						lbl = "";
-					}					
-					os.write(("    "  + lbl + rou + eol).getBytes());					
+		for (VistaPackage p : packages) {
+			List<Path> paths = p.getRoutineFilePaths();
+			FanoutRecorder fr = new FanoutRecorder();
+			for (Path path : paths) {			
+				TRoutine r = topToken.tokenize(path);
+				Routine node = r.getNode();
+				Map<LineLocation, List<Fanout>> fanouts = fr.getFanouts(node);
+				os.write(("Routine Name: " + r.getName() + eol).getBytes());
+				for (LineLocation location : fanouts.keySet()) {
+					os.write(("  Location: " + location.toString() + eol).getBytes());
+					List<Fanout> ffouts = fanouts.get(location);
+					for (Fanout fout : ffouts) {
+						os.write(("    "  + fout.toString() + eol).getBytes());					
 				}
+				os.write(eol.getBytes());
+				}
+				os.write(eol.getBytes());
 			}
-			os.write(eol.getBytes());
 		}
-		os.write(eol.getBytes());
+		os.close();
 	}
 	
 	public static void main(String[] args) {
@@ -125,7 +126,7 @@ public class MRoutineAnalyzer {
 
 			MRoutineAnalyzer m = new MRoutineAnalyzer();
 			MTFSupply supply = MTFSupply.getInstance(MVersion.CACHE);
-			TFRoutine tf = TFRoutine.getInstance(supply);
+			TFRoutine tf = new TFRoutine(supply);
 			String at = options.analysisType;
 			if (at.equalsIgnoreCase("error")) {
 				m.writeErrors(options, tf);

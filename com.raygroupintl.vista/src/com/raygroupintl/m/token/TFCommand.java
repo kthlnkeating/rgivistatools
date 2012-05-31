@@ -11,7 +11,6 @@ import com.raygroupintl.parser.SyntaxErrorException;
 import com.raygroupintl.parser.TEmpty;
 import com.raygroupintl.parser.TFEmptyVerified;
 import com.raygroupintl.parser.TFSequence;
-import com.raygroupintl.parser.TString;
 import com.raygroupintl.parser.Text;
 import com.raygroupintl.parser.Token;
 import com.raygroupintl.parser.TokenFactory;
