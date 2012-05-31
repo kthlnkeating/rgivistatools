@@ -21,15 +21,13 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.nio.file.Path;
 import java.util.List;
-import java.util.Map;
 import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import com.raygroupintl.m.parsetree.Fanout;
-import com.raygroupintl.m.parsetree.Routine;
+import com.raygroupintl.m.parsetree.RoutinePackage;
 import com.raygroupintl.m.parsetree.visitor.ErrorRecorder;
-import com.raygroupintl.m.parsetree.visitor.FanoutRecorder;
+import com.raygroupintl.m.parsetree.visitor.FanoutWriter;
 import com.raygroupintl.m.struct.LineLocation;
 import com.raygroupintl.m.struct.MError;
 import com.raygroupintl.m.struct.ObjectInRoutine;
@@ -40,7 +38,6 @@ import com.raygroupintl.m.token.TRoutine;
 import com.raygroupintl.parser.SyntaxErrorException;
 import com.raygroupintl.vista.repository.FileSupply;
 import com.raygroupintl.vista.repository.RepositoryInfo;
-import com.raygroupintl.vista.repository.VistaPackage;
 
 public class MRoutineAnalyzer {
 	private final static Logger LOGGER = Logger.getLogger(MRoutineAnalyzer.class.getName());
@@ -86,7 +83,7 @@ public class MRoutineAnalyzer {
 
 	public void writeFanout(CLIParams options, TFRoutine topToken) throws IOException, SyntaxErrorException {
 		RepositoryInfo ri = RepositoryInfo.getInstance(topToken);
-		List<VistaPackage> packages = null; 
+		List<RoutinePackage> packages = null; 
 		if (options.packages.size() == 0) {
 			packages = ri.getAllPackages();
 		} else {
@@ -94,29 +91,8 @@ public class MRoutineAnalyzer {
 		}
 				
 		String outputFile = options.outputFile;
-		File file = new File(outputFile);
-		FileOutputStream os = new FileOutputStream(file);
-		String eol = TRoutine.getEOL();
-		for (VistaPackage p : packages) {
-			List<Path> paths = p.getRoutineFilePaths();
-			FanoutRecorder fr = new FanoutRecorder();
-			for (Path path : paths) {			
-				TRoutine r = topToken.tokenize(path);
-				Routine node = r.getNode();
-				Map<LineLocation, List<Fanout>> fanouts = fr.getFanouts(node);
-				os.write(("Routine Name: " + r.getName() + eol).getBytes());
-				for (LineLocation location : fanouts.keySet()) {
-					os.write(("  Location: " + location.toString() + eol).getBytes());
-					List<Fanout> ffouts = fanouts.get(location);
-					for (Fanout fout : ffouts) {
-						os.write(("    "  + fout.toString() + eol).getBytes());					
-				}
-				os.write(eol.getBytes());
-				}
-				os.write(eol.getBytes());
-			}
-		}
-		os.close();
+		FanoutWriter fow = new FanoutWriter();
+		fow.write(outputFile, packages);
 	}
 	
 	public static void main(String[] args) {

@@ -30,6 +30,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import com.raygroupintl.m.parsetree.Routine;
+import com.raygroupintl.m.parsetree.RoutinePackage;
 import com.raygroupintl.m.token.TFRoutine;
 import com.raygroupintl.m.token.TRoutine;
 import com.raygroupintl.parser.SyntaxErrorException;
@@ -101,8 +102,8 @@ public class RepositoryInfo {
 		return this.packagesByName.get(packageName);
 	}
 	
-	public List<VistaPackage> getPackages(List<String> packageNames) {
-		List<VistaPackage> result = new ArrayList<VistaPackage>(packageNames.size());
+	public List<RoutinePackage> getPackages(List<String> packageNames) {
+		List<RoutinePackage> result = new ArrayList<RoutinePackage>(packageNames.size());
 		for (String name : packageNames) {
 			VistaPackage p = this.getPackage(name);
 			result.add(p);
@@ -110,9 +111,9 @@ public class RepositoryInfo {
 		return result;
 	}
 	
-	public List<VistaPackage> getAllPackages() {
+	public List<RoutinePackage> getAllPackages() {
 		Collection<VistaPackage> pis = this.packagesByPrefix.values();
-		List<VistaPackage> result = new ArrayList<VistaPackage>(pis.size());
+		List<RoutinePackage> result = new ArrayList<RoutinePackage>(pis.size());
 		for (VistaPackage pi : pis) {
 			result.add(pi);
 		}

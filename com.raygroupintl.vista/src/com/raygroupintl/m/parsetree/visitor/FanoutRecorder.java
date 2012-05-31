@@ -124,8 +124,16 @@ public class FanoutRecorder extends LocationMarker {
 		this.lastInfo = current;
 	}
 	
-	public Map<LineLocation, List<Fanout>> getFanouts(Routine routine) {
+	public void visitRoutine(Routine routine) {
 		this.fanouts = new HashMap<LineLocation, List<Fanout>>();
+		super.visitRoutine(routine);
+	}
+
+	public Map<LineLocation, List<Fanout>> getRoutineFanouts() {
+		return this.fanouts;
+	}
+	
+	public Map<LineLocation, List<Fanout>> getFanouts(Routine routine) {
 		this.visitRoutine(routine);
 		return this.fanouts;
 	}

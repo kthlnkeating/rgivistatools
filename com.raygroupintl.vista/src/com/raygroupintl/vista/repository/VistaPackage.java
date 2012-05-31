@@ -53,6 +53,7 @@ public abstract class VistaPackage extends RoutinePackage {
 		this.directoryName = directoryName;
 	}
 	
+	@Override
 	public String getPackageName() {
 		return this.packageName;
 	}
