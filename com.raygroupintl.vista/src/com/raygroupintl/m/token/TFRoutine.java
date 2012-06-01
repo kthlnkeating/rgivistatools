@@ -55,18 +55,4 @@ public class TFRoutine {
 		TRoutine r = this.tokenize(content);
 		return r;
 	}
-		
-/*	public TRoutine tokenize(String name, String line, int fromIndex) throws SyntaxErrorException {
-		int endIndex = line.length();
-		int index = fromIndex;
-		TRoutine result = new TRoutine(name);
-		while (index < endIndex) {
-			TLine tokens = (TLine) this.tfLine.tokenize(line, index);
-			index += tokens == null ? 0 : tokens.getStringSize();
-			result.add(tokens);						
-		}
-		
-		return result;
-	}
-*/
 }

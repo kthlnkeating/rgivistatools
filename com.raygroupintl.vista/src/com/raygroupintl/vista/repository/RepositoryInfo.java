@@ -30,7 +30,6 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import com.raygroupintl.m.parsetree.Routine;
-import com.raygroupintl.m.parsetree.RoutinePackage;
 import com.raygroupintl.m.token.TFRoutine;
 import com.raygroupintl.m.token.TRoutine;
 import com.raygroupintl.parser.SyntaxErrorException;
@@ -38,9 +37,13 @@ import com.raygroupintl.parser.SyntaxErrorException;
 public class RepositoryInfo {
 	private final static Logger LOGGER = Logger.getLogger(RepositoryInfo.class.getName());
 
-	private class PackageInRepository extends VistaPackage {
-		public PackageInRepository(String packageName, String directoryName) {
+	public static class PackageInRepository extends VistaPackage {
+		public TFRoutine tokenizer;
+		private List<Routine> nodes;
+
+		public PackageInRepository(String packageName, String directoryName, TFRoutine tokenizer) {
 			super(packageName, directoryName);
+			this.tokenizer = tokenizer;
 		}
 		
 		@Override
@@ -54,17 +57,20 @@ public class RepositoryInfo {
 			return path;			
 		}
 		
-		@Override
+		//@Override
 		public List<Routine> getNodes() {
-			List<Routine> current = this.getNodes();
-			if (current == null) {
+			//List<Routine> current = super.getCurrentNodes();
+			if (this.nodes == null) {
+				this.nodes = new ArrayList<Routine>();
 				try {
 					List<Path> paths = this.getRoutineFilePaths();
 					for (Path path : paths) {
 						try {
-							TRoutine tr = RepositoryInfo.this.tokenizer.tokenize(path);
+							//LOGGER.info("ROUTINE: " + path.toString());
+							TRoutine tr = this.tokenizer.tokenize(path);
 							Routine node = tr.getNode();
-							this.add(node);
+							this.nodes.add(node);
+							//this.add(node);
 						} catch (SyntaxErrorException ex) {
 							LOGGER.log(Level.SEVERE, "Syntax error found in routine: " + path.toString());
 						} 
@@ -73,20 +79,32 @@ public class RepositoryInfo {
 					LOGGER.log(Level.SEVERE, "IO error for package: " + this.getPackageName());
 				}				
 			}
-			return current;
+			return this.nodes;
+			//return super.getNodes();
+		}
+		
+		//@Override
+		public boolean contains(String routineName) {
+			List<String> prefixes = this.getPrefixes();
+			for (String prefix : prefixes) {
+				if (routineName.startsWith(prefix)) {
+					return true;
+				}
+			}
+			return false;
 		}		
 	}
 	
-	private List<VistaPackage> packages = new ArrayList<VistaPackage>();
-	private Map<String, VistaPackage> packagesByName = new HashMap<String, VistaPackage>();
-	private TreeMap<String, VistaPackage> packagesByPrefix = new TreeMap<String, VistaPackage>();
+	private List<PackageInRepository> packages = new ArrayList<PackageInRepository>();
+	private Map<String, PackageInRepository> packagesByName = new HashMap<String, PackageInRepository>();
+	private TreeMap<String, PackageInRepository> packagesByPrefix = new TreeMap<String, PackageInRepository>();
 	private TFRoutine tokenizer;	
 	
 	private RepositoryInfo(TFRoutine tokenizer) {
 		this.tokenizer = tokenizer;
 	}
 	
-	private void addPackage(VistaPackage packageInfo) {
+	private void addPackage(PackageInRepository packageInfo) {
 		this.packages.add(packageInfo);
 		this.packagesByName.put(packageInfo.getPackageName(), packageInfo);
 		for (String prefix : packageInfo.getPrefixes()) {
@@ -98,23 +116,23 @@ public class RepositoryInfo {
 		return System.getenv("VistA-FOIA");
 	}
 	
-	public VistaPackage getPackage(String packageName) {
+	public PackageInRepository getPackage(String packageName) {
 		return this.packagesByName.get(packageName);
 	}
 	
-	public List<RoutinePackage> getPackages(List<String> packageNames) {
-		List<RoutinePackage> result = new ArrayList<RoutinePackage>(packageNames.size());
+	public List<PackageInRepository> getPackages(List<String> packageNames) {
+		List<PackageInRepository> result = new ArrayList<PackageInRepository>(packageNames.size());
 		for (String name : packageNames) {
-			VistaPackage p = this.getPackage(name);
+			PackageInRepository p = this.getPackage(name);
 			result.add(p);
 		}
 		return result;
 	}
 	
-	public List<RoutinePackage> getAllPackages() {
-		Collection<VistaPackage> pis = this.packagesByPrefix.values();
-		List<RoutinePackage> result = new ArrayList<RoutinePackage>(pis.size());
-		for (VistaPackage pi : pis) {
+	public List<PackageInRepository> getAllPackages() {
+		Collection<PackageInRepository> pis = this.packagesByPrefix.values();
+		List<PackageInRepository> result = new ArrayList<PackageInRepository>(pis.size());
+		for (PackageInRepository pi : pis) {
 			result.add(pi);
 		}
 		return result;
@@ -147,21 +165,21 @@ public class RepositoryInfo {
 			result = pi;
 		}
 		if (result == null) {
-			result = new PackageInRepository("UNCATEGORIZED", "Uncategorized");
+			result = new PackageInRepository("UNCATEGORIZED", "Uncategorized", this.tokenizer);
 		}
 		return result;
 	}
 	
 	public static RepositoryInfo getInstance(Scanner scanner, TFRoutine tf) throws IOException {
 		RepositoryInfo r = new RepositoryInfo(tf);
-		VistaPackage packageInfo = null;
+		PackageInRepository packageInfo = null;
 		scanner.nextLine();
 		while (scanner.hasNextLine()) {
 			String line = scanner.nextLine();
 			String[] pieces = line.split(",");
 			int n = pieces.length;
 			if (pieces[0].length() > 0) {
-				packageInfo = r.new PackageInRepository(pieces[0], pieces[1]);
+				packageInfo = new PackageInRepository(pieces[0], pieces[1], tf);
 				if ((n > 2) && (pieces[2].length() > 0)) {
 					packageInfo.addPrefix(pieces[2]);
 				}

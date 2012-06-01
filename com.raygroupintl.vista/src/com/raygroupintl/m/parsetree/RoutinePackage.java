@@ -22,5 +22,7 @@ public abstract class RoutinePackage extends Block<Routine> {
 		visitor.visitRoutinePackage(this);
 	}
 	
+	public abstract boolean contains(String routineName);
+	
 	public abstract String getPackageName();
 }

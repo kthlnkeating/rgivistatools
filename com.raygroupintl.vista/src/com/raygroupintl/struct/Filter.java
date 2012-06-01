@@ -14,31 +14,8 @@
 // limitations under the License.
 //---------------------------------------------------------------------------
 
-package com.raygroupintl.m.parsetree;
+package com.raygroupintl.struct;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-
-public abstract class Block<T extends Node> implements Node {
-	private List<T> nodes;
-
-	public void add(T node) {
-		if (this.nodes == null) {
-			this.nodes = new ArrayList<T>();
-		}
-		this.nodes.add(node);
-	}
-	
-	protected List<T> getCurrentNodes() {
-		return this.nodes;
-	}
-	
-	public List<T> getNodes() {
-		if (this.nodes == null) {
-			return Collections.emptyList();
-		} else {
-			return Collections.unmodifiableList(this.nodes);
-		}
-	}
+public interface Filter<T> {
+	boolean isValid(T input);
 }

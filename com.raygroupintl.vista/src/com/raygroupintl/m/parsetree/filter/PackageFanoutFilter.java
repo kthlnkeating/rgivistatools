@@ -14,31 +14,25 @@
 // limitations under the License.
 //---------------------------------------------------------------------------
 
-package com.raygroupintl.m.parsetree;
+package com.raygroupintl.m.parsetree.filter;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
+import com.raygroupintl.m.parsetree.Fanout;
+import com.raygroupintl.struct.Filter;
+import com.raygroupintl.vista.repository.RepositoryInfo;
 
-public abstract class Block<T extends Node> implements Node {
-	private List<T> nodes;
-
-	public void add(T node) {
-		if (this.nodes == null) {
-			this.nodes = new ArrayList<T>();
-		}
-		this.nodes.add(node);
+public class PackageFanoutFilter  implements Filter<Fanout> {
+	private RepositoryInfo.PackageInRepository routinePackage;
+	
+	public PackageFanoutFilter(RepositoryInfo.PackageInRepository routinePackage) {
+		this.routinePackage = routinePackage;
 	}
 	
-	protected List<T> getCurrentNodes() {
-		return this.nodes;
-	}
-	
-	public List<T> getNodes() {
-		if (this.nodes == null) {
-			return Collections.emptyList();
-		} else {
-			return Collections.unmodifiableList(this.nodes);
+	@Override
+	public boolean isValid(Fanout input) {
+		if (input != null) {
+			String routineName = input.getRoutineName();
+			return ! this.routinePackage.contains(routineName);
 		}
-	}
+		return false;
+	}	
 }

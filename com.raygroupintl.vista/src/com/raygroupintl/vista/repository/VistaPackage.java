@@ -22,9 +22,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-import com.raygroupintl.m.parsetree.RoutinePackage;
-
-public abstract class VistaPackage extends RoutinePackage {
+public abstract class VistaPackage {   //extends RoutinePackage {
 	public static class FileInfo {
 		private String number;
 		private String name;
@@ -53,7 +51,7 @@ public abstract class VistaPackage extends RoutinePackage {
 		this.directoryName = directoryName;
 	}
 	
-	@Override
+	//@Override
 	public String getPackageName() {
 		return this.packageName;
 	}

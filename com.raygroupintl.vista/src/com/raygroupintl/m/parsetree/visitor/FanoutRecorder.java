@@ -32,6 +32,7 @@ import com.raygroupintl.m.parsetree.IndirectFanoutLabel;
 import com.raygroupintl.m.parsetree.IndirectFanoutRoutine;
 import com.raygroupintl.m.parsetree.Routine;
 import com.raygroupintl.m.struct.LineLocation;
+import com.raygroupintl.struct.Filter;
 
 public class FanoutRecorder extends LocationMarker {
 	private static class LastInfo {
@@ -65,6 +66,7 @@ public class FanoutRecorder extends LocationMarker {
 		
 	private Map<LineLocation, List<Fanout>> fanouts;
 	private LastInfo lastInfo = new LastInfo();
+	private Filter<Fanout> filter;
 
 	protected void visitIndirectFanoutLabel(IndirectFanoutLabel label) {
 		this.lastInfo.lastIndirectFanoutLabel = label;
@@ -92,9 +94,12 @@ public class FanoutRecorder extends LocationMarker {
 	}
 	
 	private void updateFanout() {
-		LineLocation location = this.getLastLocation();
 		Fanout fanout = this.lastInfo.getFanout();
 		if (fanout != null) {
+			if (this.filter != null) {
+				if (! this.filter.isValid(fanout)) return;
+			}			
+			LineLocation location = this.getLastLocation();
 			List<Fanout> fanoutsOnLocation = this.fanouts.get(location);
 			if (fanoutsOnLocation == null) {
 				fanoutsOnLocation = new ArrayList<Fanout>();
@@ -131,6 +136,10 @@ public class FanoutRecorder extends LocationMarker {
 
 	public Map<LineLocation, List<Fanout>> getRoutineFanouts() {
 		return this.fanouts;
+	}
+	
+	public void setFilter(Filter<Fanout> filter) {
+		this.filter = filter;
 	}
 	
 	public Map<LineLocation, List<Fanout>> getFanouts(Routine routine) {

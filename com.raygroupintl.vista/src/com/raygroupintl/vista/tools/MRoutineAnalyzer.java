@@ -25,7 +25,6 @@ import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import com.raygroupintl.m.parsetree.RoutinePackage;
 import com.raygroupintl.m.parsetree.visitor.ErrorRecorder;
 import com.raygroupintl.m.parsetree.visitor.FanoutWriter;
 import com.raygroupintl.m.struct.LineLocation;
@@ -83,7 +82,7 @@ public class MRoutineAnalyzer {
 
 	public void writeFanout(CLIParams options, TFRoutine topToken) throws IOException, SyntaxErrorException {
 		RepositoryInfo ri = RepositoryInfo.getInstance(topToken);
-		List<RoutinePackage> packages = null; 
+		List<RepositoryInfo.PackageInRepository> packages = null; 
 		if (options.packages.size() == 0) {
 			packages = ri.getAllPackages();
 		} else {
