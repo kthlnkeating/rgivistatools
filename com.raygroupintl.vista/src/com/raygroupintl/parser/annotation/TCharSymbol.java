@@ -44,8 +44,8 @@ public class TCharSymbol extends TSequence implements RuleSupply {
 	}
 	
 	private static void update(PredicateFactory pf, Token sign, TSequence spec) {
-		boolean exclude = (sign != null) && (sign.getStringValue().charAt(0) == '-');
-		char ch = getChar(spec.get(0).getStringValue());
+		boolean exclude = (sign != null) && (sign.toValue().charAt(0) == '-');
+		char ch = getChar(spec.get(0).toValue().toString());
 		Token tRangeBound = spec.get(1);
 		if (tRangeBound == null) {
 			if (exclude) {
@@ -54,7 +54,7 @@ public class TCharSymbol extends TSequence implements RuleSupply {
 				pf.addChar(ch);
 			}
 		} else {			
-			char chOther = getChar(((TSequence) tRangeBound).get(1).getStringValue());
+			char chOther = getChar(((TSequence) tRangeBound).get(1).toValue().toString());
 			if (exclude) {
 				pf.removeRange(ch, chOther);
 			} else {
@@ -73,7 +73,7 @@ public class TCharSymbol extends TSequence implements RuleSupply {
 			update(pf, casted.get(0), (TSequence) casted.get(1));
 		}		
 
-		String key = this.getStringValue();
+		String key = this.toValue().toString();
 		return new FSRChar(key, flag, pf.generate());
 	}
 }

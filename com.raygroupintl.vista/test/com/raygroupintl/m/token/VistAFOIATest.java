@@ -42,7 +42,7 @@ public class VistAFOIATest {
 				for (int i=0; i<count; ++i) {
 					String line = lines.get(i);
 					TLine result = results.get(i);
-					String readLine = result.getStringValue();
+					String readLine = result.toValue().toString();
 					String msg = path.getFileName().toString() + " Line " +  String.valueOf(i);
 					Assert.assertEquals("Different: " + msg, line, readLine);
 				}

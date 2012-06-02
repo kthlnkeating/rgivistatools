@@ -18,15 +18,16 @@ package com.raygroupintl.m.token;
 
 import com.raygroupintl.m.parsetree.IntegerLiteral;
 import com.raygroupintl.m.parsetree.Node;
+import com.raygroupintl.parser.StringPiece;
 
 public class TIntLit extends MTString {
-	public TIntLit(String value) {
+	public TIntLit(StringPiece value) {
 		super(value);
 	}
 	
 	@Override
 	public Node getNode() {
-		String value = this.getStringValue();
+		String value = this.toValue().toString();
 		return new IntegerLiteral(value);
 	}	
 }

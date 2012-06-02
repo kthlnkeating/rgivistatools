@@ -20,9 +20,9 @@ public class RuleParser {
 		try {
 			AdapterSupply adapterSupply = new DefaultAdapterSupply();
 			TRule t = (TRule) this.grammar.rule.tokenize(text, adapterSupply);
-			if (t.getStringSize() != ruleText.length()) {
-				int errorLocation = t.getStringSize();
-				String msg = "Error in rule " + name + " at position " + String.valueOf(errorLocation);		
+			int tLength = t.toValue().length();
+			if (tLength != ruleText.length()) {
+				String msg = "Error in rule " + name + " at position " + String.valueOf(tLength);		
 				throw new ParseErrorException(msg);					
 			}
 			return t;

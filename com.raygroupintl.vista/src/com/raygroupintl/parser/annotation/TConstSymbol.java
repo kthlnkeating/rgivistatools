@@ -28,9 +28,9 @@ public class TConstSymbol extends TSequence implements RuleSupply {
 	
 	@Override
 	public FactorySupplyRule getRule(RuleSupplyFlag flag, String name, Map<String, RuleSupply> existing) {
-		String value = this.get(1).getStringValue();
+		String value = this.get(1).toValue().toString();
 		Token tIgnoreCase = this.get(4);
-		boolean ignoreCase = (tIgnoreCase != null) && (tIgnoreCase.getStringValue().equals("1"));
+		boolean ignoreCase = (tIgnoreCase != null) && (tIgnoreCase.toValue().toString().equals("1"));
 		FSRConst result = new FSRConst(value, ignoreCase, flag);
 		return result;
 	}

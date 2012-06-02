@@ -24,21 +24,17 @@ public class TList implements Token, Iterable<Token> {
 	}
 
 	@Override
-	public String getStringValue() {
-		StringBuilder sb = new StringBuilder();
-		for (Token token : this.tokens) {
-			sb.append(token.getStringValue());
-		}
-		return sb.toString();
+	public StringPiece toValue() {	
+		StringPiece result = new StringPiece();
+		for (Token t : this.tokens) if (t != null) {
+			result.add(t.toValue());
+		}		
+		return result;
 	}
 
 	@Override
-	public int getStringSize() {
-		int result = 0;
-		for (Token token : this.tokens) {
-			result += token.getStringSize();
-		}
-		return result;
+	public List<Token> toList() {	
+		return this.tokens;
 	}
 
 	@Override

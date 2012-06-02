@@ -46,7 +46,7 @@ public class TFLineTest {
 		try {
 			Text text = new Text(line);
 			Token t = f.tokenize(text, adapterSupply);
-			String r = t.getStringValue();
+			String r = t.toValue().toString();
 			Assert.assertEquals(line, r);	
 			TList commands = (TList) ((TSequence) t).get(4);
 			boolean found = false;
@@ -61,7 +61,7 @@ public class TFLineTest {
 			return t;
 		} catch(SyntaxErrorException e) {
 			Token t = TFRoutine.recoverFromError(line, e);
-			String r = t.getStringValue();
+			String r = t.toValue().toString();
 			Assert.assertEquals(line, r);
 			Assert.assertFalse(errorAsWell);
 			return null;
@@ -72,7 +72,7 @@ public class TFLineTest {
 		try {
 			Text text = new Text(line);
 			Token t = f.tokenize(text, adapterSupply);
-			String r = t.getStringValue();
+			String r = t.toValue().toString();
 			Assert.assertEquals(line, r);	
 			TList commands = (TList) ((TSequence) t).get(4);
 			Token error = commands.get(errorCommand);
@@ -141,7 +141,7 @@ public class TFLineTest {
 		Token l = lineTest(f, " S @A=\"S\"  S @H@(0)=3");
 		l.beautify();
 		String expected = " SET @A=\"S\"  SET @H@(0)=3";
-		String actual = l.getStringValue();
+		String actual = l.toValue().toString();
 		Assert.assertEquals(expected, actual);
 	}
 

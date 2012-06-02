@@ -50,7 +50,7 @@ public class RuleGrammarTest {
 			Token symbol = spec.symbol.tokenize(text, adapterSupply);
 			Assert.assertNotNull(symbol);
 			Assert.assertTrue(symbol instanceof TSymbol);
-			Assert.assertEquals("token", symbol.getStringValue());
+			Assert.assertEquals("token", symbol.toValue().toString());
 		} catch (SyntaxErrorException se) {
 			fail("Unexpected exception: " + se.getMessage());			
 		}
@@ -63,7 +63,7 @@ public class RuleGrammarTest {
 			Token optionalSymbols = spec.optionalsymbols.tokenize(text, adapterSupply);
 			Assert.assertNotNull(optionalSymbols);
 			Assert.assertTrue(optionalSymbols instanceof TOptionalSymbols);
-			Assert.assertEquals("[a, b, ([c], [d])]", optionalSymbols.getStringValue());
+			Assert.assertEquals("[a, b, ([c], [d])]", optionalSymbols.toValue().toString());
 		} catch (SyntaxErrorException se) {
 			fail("Unexpected exception: " + se.getMessage());			
 		}
@@ -76,7 +76,7 @@ public class RuleGrammarTest {
 			Token requiredSymbols = spec.requiredsymbols.tokenize(text, adapterSupply);
 			Assert.assertNotNull(requiredSymbols);
 			Assert.assertTrue(requiredSymbols instanceof TRequiredSymbols);
-			Assert.assertEquals("([a, b], [c], [d])", requiredSymbols.getStringValue());
+			Assert.assertEquals("([a, b], [c], [d])", requiredSymbols.toValue().toString());
 		} catch (SyntaxErrorException se) {
 			fail("Unexpected exception: " + se.getMessage());			
 		}
@@ -89,7 +89,7 @@ public class RuleGrammarTest {
 			Token constSymbol = spec.constsymbol.tokenize(text, adapterSupply);
 			Assert.assertNotNull(constSymbol);
 			Assert.assertTrue(constSymbol instanceof TConstSymbol);
-			Assert.assertEquals("\"@(\"", constSymbol.getStringValue());
+			Assert.assertEquals("\"@(\"", constSymbol.toValue().toString());
 		} catch (SyntaxErrorException se) {
 			fail("Unexpected exception: " + se.getMessage());			
 		}
@@ -107,7 +107,7 @@ public class RuleGrammarTest {
 			Text text = new Text(v);
 			Token result = f.tokenize(text, adapterSupply);
 			Assert.assertNotNull(result);
-			Assert.assertEquals(compare, result.getStringValue());
+			Assert.assertEquals(compare, result.toValue().toString());
 		} catch (SyntaxErrorException se) {
 			fail("Unexpected exception: " + se.getMessage());			
 		}
@@ -153,7 +153,7 @@ public class RuleGrammarTest {
 			TRule rule = (TRule) spec.rule.tokenize(text, adapterSupply);
 			Assert.assertNotNull(rule);
 			Assert.assertTrue(rule instanceof TRule);
-			Assert.assertEquals("x, {y:',':'(':')'}, [{a}, [{b:':'}], [c], d], e", rule.getStringValue());
+			Assert.assertEquals("x, {y:',':'(':')'}, [{a}, [{b:':'}], [c], d], e", rule.toValue().toString());
 			RulesMapByName map = this.getMap();
 			FactorySupplyRule r = rule.getRule("test");
 			r.update(map);
@@ -183,7 +183,7 @@ public class RuleGrammarTest {
 			TRule rule = (TRule) spec.rule.tokenize(text, adapterSupply);
 			Assert.assertNotNull(rule);
 			Assert.assertTrue(rule instanceof TRule);
-			Assert.assertEquals("{y:',':'(':')'}, {a}", rule.getStringValue());
+			Assert.assertEquals("{y:',':'(':')'}, {a}", rule.toValue().toString());
 			RulesMapByName map = this.getMap();
 			FactorySupplyRule r = rule.getRule("test");
 			r.update(map);
@@ -206,7 +206,7 @@ public class RuleGrammarTest {
 			TRule rule = (TRule) spec.rule.tokenize(text, adapterSupply);
 			Assert.assertNotNull(rule);
 			Assert.assertTrue(rule instanceof TRule);
-			Assert.assertEquals("intlit, ['.', intlit], ['E', ['+' | '-'], intlit]", rule.getStringValue());
+			Assert.assertEquals("intlit, ['.', intlit], ['E', ['+' | '-'], intlit]", rule.toValue().toString());
 		} catch (SyntaxErrorException se) {
 			fail("Unexpected exception: " + se.getMessage());			
 		}
@@ -219,7 +219,7 @@ public class RuleGrammarTest {
 			TRule rule = (TRule) spec.rule.tokenize(text, adapterSupply);
 			Assert.assertNotNull(rule);
 			Assert.assertTrue(rule instanceof TRule);
-			Assert.assertEquals("'+' | '-'", rule.getStringValue());
+			Assert.assertEquals("'+' | '-'", rule.toValue().toString());
 		} catch (SyntaxErrorException se) {
 			fail("Unexpected exception: " + se.getMessage());			
 		}
@@ -232,7 +232,7 @@ public class RuleGrammarTest {
 			TRule rule = (TRule) spec.rule.tokenize(text, adapterSupply);
 			Assert.assertNotNull(rule);
 			Assert.assertTrue(rule instanceof TRule);
-			Assert.assertEquals("x, y, [(a, b), [c], d], e", rule.getStringValue());
+			Assert.assertEquals("x, y, [(a, b), [c], d], e", rule.toValue().toString());
 			RulesMapByName map = this.getMap();
 			FactorySupplyRule r = rule.getRule("test");
 			r.update(map);
@@ -255,7 +255,7 @@ public class RuleGrammarTest {
 			TRule rule = (TRule) spec.rule.tokenize(text, adapterSupply);
 			Assert.assertNotNull(rule);
 			Assert.assertTrue(rule instanceof TRule);
-			Assert.assertEquals(inputText, rule.getStringValue());
+			Assert.assertEquals(inputText, rule.toValue().toString());
 			FactorySupplyRule r =  rule.getRule(name);
 			r.update(map);
 			TokenFactory f = r.getTheFactory(map);

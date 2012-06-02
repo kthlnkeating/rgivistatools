@@ -69,11 +69,11 @@ public class TRoutineTest {
 		Assert.assertEquals( originalLines.size(), resultLines.size());
 		Assert.assertEquals(sourceLines.size(), resultLines.size());
 		for (int i=1; i<n; ++i) {
-			String sourceLineValue = sourceLines.get(i).getStringValue();
-			String resultLineValue = resultLines.get(i).getStringValue();
+			String sourceLineValue = sourceLines.get(i).toValue().toString();
+			String resultLineValue = resultLines.get(i).toValue().toString();
 			Assert.assertEquals(sourceLineValue, resultLineValue);
 			if ((i > 4) && (i < 12)) {
-				Assert.assertFalse(sourceLineValue.equals(originalLines.get(i).getStringValue()));				
+				Assert.assertFalse(sourceLineValue.equals(originalLines.get(i).toValue().toString()));				
 			}
 		}
 	}

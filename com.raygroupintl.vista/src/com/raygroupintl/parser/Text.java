@@ -56,26 +56,27 @@ public class Text {
 			if (ignoreCase) {
 				String piece = this.text.substring(this.index, this.index+value.length());
 				if (piece.equalsIgnoreCase(value)) {
+					StringPiece v = new StringPiece(this.text, this.index, this.index+value.length());
 					this.index += value.length();
-					return adapter.convert(piece);
+					return adapter.convert(v);
 				}
 			} else {
 				if (this.text.startsWith(value, this.index)) {
-					String piece = this.text.substring(this.index, this.index+value.length());
+					StringPiece v = new StringPiece(this.text, this.index, this.index+value.length());
 					this.index += value.length();
-					return adapter.convert(piece);
+					return adapter.convert(v);
 				}
 			}
 		}
 		return null;	
 	}
 	
-	Token extractToken(Predicate predicate, CharacterAdapter adapter) {
+	Token extractChar(Predicate predicate, StringAdapter adapter) {
 		if (this.index < this.text.length()) {
 			char ch = this.text.charAt(this.index);
 			if (predicate.check(ch)) {
 				++this.index;
-				return adapter.convert(ch);
+				return adapter.convert(new StringPiece(this.text, this.index-1, this.index));
 			}
 		}
 		return null;		
@@ -89,20 +90,20 @@ public class Text {
 				if (fromIndex == this.index) {
 					return null;
 				} else {
-					return adapter.convert(this.text.substring(fromIndex, this.index));
+					return adapter.convert(new StringPiece(this.text, fromIndex, this.index));
 				}
 			}
 			++this.index;
 		}
 		if (fromIndex < this.text.length()) {
-			return adapter.convert(this.text.substring(fromIndex, this.index));			
+			return adapter.convert(new StringPiece(this.text, fromIndex, this.index));			
 		} else {
 			return null;
 		}
 	}
 	
 	public Token extractToken(int length, StringAdapter adapter) {
-		Token result = adapter.convert(this.text.substring(this.index, this.index+length));
+		Token result = adapter.convert(new StringPiece(this.text, this.index, this.index+length));
 		this.index += length;
 		return result;
 	}
@@ -116,10 +117,10 @@ public class Text {
 					char ch1st = this.getChar();
 					if ((ch1st == '\n') || (ch1st == '\r')) {
 						++this.index;
-						return new TString(this.text.substring(this.index-2, this.index));
+						return new TString(this.text, this.index-2, this.index);
 					}
 				}
-				return new TString(this.text.substring(this.index-1, this.index));
+				return new TString(this.text, this.index-1, this.index);
 			}
 		}
 		return null;		

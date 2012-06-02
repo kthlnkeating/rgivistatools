@@ -18,16 +18,17 @@ package com.raygroupintl.parser.annotation;
 
 import java.util.Map;
 
+import com.raygroupintl.parser.StringPiece;
 import com.raygroupintl.parser.TString;
 
 public class TSymbol extends TString implements RuleSupply {
-	public TSymbol(String value) {
+	public TSymbol(StringPiece value) {
 		super(value);
 	}
 	
 	@Override
 	public FactorySupplyRule getRule(RuleSupplyFlag flag, String name, Map<String, RuleSupply> existing) {
-		String value = this.getStringValue();
+		String value = this.toValue().toString();
 		if (flag == RuleSupplyFlag.TOP) {
 			RuleSupply referred = existing.get(value);
 			if (referred == null) {

@@ -17,5 +17,5 @@
 package com.raygroupintl.parser;
 
 public interface StringAdapter {
-	Token convert(String value);
+	Token convert(StringPiece value);
 }

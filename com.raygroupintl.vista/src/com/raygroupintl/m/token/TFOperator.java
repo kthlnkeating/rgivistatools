@@ -4,6 +4,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import com.raygroupintl.parser.StringAdapter;
+import com.raygroupintl.parser.StringPiece;
 import com.raygroupintl.parser.Text;
 import com.raygroupintl.parser.Token;
 import com.raygroupintl.parser.TokenFactory;
@@ -12,7 +13,7 @@ import com.raygroupintl.parser.annotation.AdapterSupply;
 public class TFOperator extends TokenFactory {
 	private static class OperatorAdapter implements StringAdapter {
 		@Override
-		public Token convert(String value) {
+		public Token convert(StringPiece value) {
 			return new TOperator(value);
 		}		
 	}

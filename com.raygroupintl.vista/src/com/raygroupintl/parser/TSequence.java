@@ -15,20 +15,11 @@ public class TSequence implements Token, Iterable<Token> {
 	}
 
 	@Override
-	public String getStringValue() {	
-		String result = "";
+	public StringPiece toValue() {	
+		StringPiece result = new StringPiece();
 		for (Token t : this.tokens) if (t != null) {
-			result += t.getStringValue();
+			result.add(t.toValue());
 		}		
-		return result;
-	}
-
-	@Override
-	public int getStringSize() {
-		int result = 0;
-		for (Token t : this.tokens) if (t != null) {
-			result +=  t.getStringSize();
-		}
 		return result;
 	}
 
@@ -56,6 +47,7 @@ public class TSequence implements Token, Iterable<Token> {
 		return this.tokens.iterator();
 	}
 	
+	@Override
 	public List<Token> toList() {
 		return this.tokens;
 	}

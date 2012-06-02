@@ -32,7 +32,7 @@ public class GrammarTest {
 
 	private void testCommon(String v, Token t) {
 		Assert.assertNotNull(t);
-		Assert.assertEquals(v, t.getStringValue());
+		Assert.assertEquals(v, t.toValue().toString());
 	}
 	
 	private void testCommonNumber(String v) {

@@ -1,7 +1,7 @@
 package com.raygroupintl.parser;
 
-public class TIntLit extends TChar {
-	public TIntLit(char ch) {
+public class TIntLit extends TString {
+	public TIntLit(StringPiece ch) {
 		super(ch);
 	}
 }

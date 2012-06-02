@@ -7,6 +7,7 @@ import com.raygroupintl.m.parsetree.DoBlock;
 import com.raygroupintl.m.parsetree.GenericCommand;
 import com.raygroupintl.m.parsetree.Goto;
 import com.raygroupintl.m.parsetree.Node;
+import com.raygroupintl.parser.StringPiece;
 import com.raygroupintl.parser.TEmpty;
 import com.raygroupintl.parser.TString;
 import com.raygroupintl.parser.Token;
@@ -26,7 +27,7 @@ class TCommand {
 				return null;
 			}			
 			MToken argument = (MToken) nameFollowUp.get(2);
-			if ((argument == null) || (argument.getStringSize() == 0)) {
+			if ((argument == null) || (argument.toValue().length() == 0)) {
 				return null;
 			} else {				
 				return argument.getNode();
@@ -52,7 +53,7 @@ class TCommand {
 		@Override
 		public void beautify() {
 			TString n = (TString) this.get(0);
-			String newName = this.getFullName();
+			StringPiece newName = new StringPiece(getFullName());
 			n.setValue(newName);
 			super.beautify();
 		}
@@ -375,7 +376,7 @@ class TCommand {
 		
 		@Override
 		protected String getFullName() {		
-			return this.getStringValue();
+			return this.toValue().toString();
 		}					
 	}
 }

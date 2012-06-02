@@ -21,7 +21,7 @@ public class TLine extends MTSequence {
 		if (tag == null) {
 			return null;
 		} else {
-			return tag.getStringValue();
+			return tag.toValue().toString();
 		}
 	}
 	

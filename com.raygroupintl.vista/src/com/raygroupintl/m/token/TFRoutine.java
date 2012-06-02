@@ -5,6 +5,7 @@ import java.nio.file.Path;
 import java.util.Arrays;
 
 import com.raygroupintl.m.struct.MRoutineContent;
+import com.raygroupintl.parser.StringPiece;
 import com.raygroupintl.parser.SyntaxErrorException;
 import com.raygroupintl.parser.Text;
 import com.raygroupintl.parser.Token;
@@ -20,7 +21,7 @@ public class TFRoutine {
 	}
 	
 	public static TLine recoverFromError(String line, SyntaxErrorException e) {
-		Token error = new TSyntaxError(0, line, 0);
+		Token error = new TSyntaxError(0, new StringPiece(line), 0);
 		Token[] lineResult = {error, null, null, null, null};
 		return new TLine(Arrays.asList(lineResult));
 	}

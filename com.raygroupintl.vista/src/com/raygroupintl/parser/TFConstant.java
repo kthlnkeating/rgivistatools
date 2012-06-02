@@ -48,7 +48,7 @@ public class TFConstant extends TFBasic {
 	@Override
 	protected Token convert(Token token) {
 		if ((this.adapter != null) && (token instanceof TString)) {
-			return this.adapter.convert(((TString) token).getValue()); 
+			return this.adapter.convert(token.toValue()); 
 		} else {
 			return token;
 		}
@@ -56,10 +56,10 @@ public class TFConstant extends TFBasic {
 
 	@Override
 	public void setTargetType(Class<? extends Token> cls) {
-		final Constructor<? extends Token> constructor = getConstructor(cls, String.class, TString.class);
+		final Constructor<? extends Token> constructor = getConstructor(cls, StringPiece.class, TString.class);
 		this.adapter = new StringAdapter() {			
 			@Override
-			public Token convert(String value) {
+			public Token convert(StringPiece value) {
 				try{
 					return (Token) constructor.newInstance(value);
 				} catch (Exception e) {	

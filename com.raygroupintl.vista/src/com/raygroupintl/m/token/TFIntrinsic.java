@@ -136,7 +136,7 @@ public class TFIntrinsic extends TokenFactorySupply {
 	
 	@Override
 	public TokenFactory getNextTokenFactory(Token token) throws SyntaxErrorException {
-		String name = token.getStringValue();
+		String name = token.toValue().toString();
 		int length = name.length();
 		if (name.charAt(length-1) =='(') {
 			String base =name.substring(1, length-1);

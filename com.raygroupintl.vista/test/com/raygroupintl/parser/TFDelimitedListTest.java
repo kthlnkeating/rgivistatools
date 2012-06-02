@@ -36,8 +36,8 @@ public class TFDelimitedListTest {
 	}
 
 	public static void validTokenCheck(Token t, String v) {
-		Assert.assertEquals(v, t.getStringValue());
-		Assert.assertEquals(v.length(), t.getStringSize());		
+		Assert.assertEquals(v, t.toValue().toString());
+		Assert.assertEquals(v.length(), t.toValue().length());		
 	}
 	
 	public static void validCheckBasic(TFDelimitedList f, String v, String expected, String[] iteratorResults) {

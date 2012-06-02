@@ -28,9 +28,9 @@ public class TSymbolList extends TSequence implements RuleSupply {
 			RuleSupply rightSpec = (RuleSupply) otherSpec.get(3);
 			result.right = rightSpec.getRule(RuleSupplyFlag.INNER_REQUIRED, name + ".right", existing);
 			Token emptyAllowedSpec = otherSpec.get(5);
-			result.emptyAllowed = (emptyAllowedSpec != null) && (emptyAllowedSpec.getStringValue().equals("1"));
+			result.emptyAllowed = (emptyAllowedSpec != null) && (emptyAllowedSpec.toValue().toString().equals("1"));
 			Token noneAllowedSpec = otherSpec.get(7);
-			result.noneAllowed = (noneAllowedSpec != null) && (noneAllowedSpec.getStringValue().equals("1"));
+			result.noneAllowed = (noneAllowedSpec != null) && (noneAllowedSpec.toValue().toString().equals("1"));
 			if ((result.left == null) || (result.right == null)) {
 				return null;
 			}

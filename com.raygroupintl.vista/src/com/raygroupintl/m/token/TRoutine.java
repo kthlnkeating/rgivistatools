@@ -11,6 +11,7 @@ import java.util.List;
 import com.raygroupintl.m.parsetree.EntryTag;
 import com.raygroupintl.m.parsetree.Line;
 import com.raygroupintl.m.parsetree.Routine;
+import com.raygroupintl.parser.StringPiece;
 import com.raygroupintl.parser.Token;
 
 public class TRoutine implements MToken {
@@ -34,19 +35,21 @@ public class TRoutine implements MToken {
 	}
 	
 	@Override
-	public String getStringValue() {
-		StringBuilder sb = new StringBuilder();
+	public StringPiece toValue() {
+		StringPiece result = new StringPiece();
 		for (TLine line : this.lines) {
-			sb.append(line.getStringValue());
-			//sb.append('\n');
+			result.add(line.toValue());
 		}
-		return sb.toString();
+		return result;
 	}
 	
 	@Override
-	public int getStringSize() {
-		String v = this.getStringValue();
-		return v.length();
+	public List<Token> toList() {
+		List<Token> result = new ArrayList<Token>();
+		for (TLine line : this.lines) {
+			result.add(line);
+		}
+		return result;
 	}
 	
 	@Override
@@ -67,7 +70,7 @@ public class TRoutine implements MToken {
 	public void write(OutputStream os) throws IOException {
 		String seperator = getEOL();
 		for (TLine line : this.lines) {
-			String lineAsString = line.getStringValue(); 
+			String lineAsString = line.toValue().toString(); 
 			os.write(lineAsString.getBytes());
 			os.write(seperator.getBytes());
 		}		
@@ -79,7 +82,7 @@ public class TRoutine implements MToken {
 			if (line == null) {
 				fileLines.add("");
 			} else {
-				String fileLine = line.getStringValue();
+				String fileLine = line.toValue().toString();
 				fileLines.add(fileLine);
 			}
 		}

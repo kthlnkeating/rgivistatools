@@ -1,8 +1,12 @@
 package com.raygroupintl.m.token;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import com.raygroupintl.m.parsetree.ErrorNode;
 import com.raygroupintl.m.struct.MError;
 import com.raygroupintl.parser.StringAdapter;
+import com.raygroupintl.parser.StringPiece;
 import com.raygroupintl.parser.Token;
 
 public class TSyntaxError implements MToken {	
@@ -16,16 +20,16 @@ public class TSyntaxError implements MToken {
 		}		
 	
 		@Override
-		public Token convert(String value) {
+		public Token convert(StringPiece value) {
 			return new TSyntaxError(this.errorCode, value, this.errorIndex);
 		}
 	}
 	
 	private int errorCode = MError.ERR_GENERAL_SYNTAX;
-	private String errorText;
+	private StringPiece errorText;
 	private int errorIndex;
 	
-	public TSyntaxError(int errorCode, String errorText, int errorIndex) {
+	public TSyntaxError(int errorCode, StringPiece errorText, int errorIndex) {
 		this.errorCode = errorCode;
 		this.errorText = errorText;
 		this.errorIndex = errorIndex;
@@ -36,13 +40,15 @@ public class TSyntaxError implements MToken {
 	}
 	
 	@Override
-	public String getStringValue() {
+	public StringPiece toValue() {
 		return this.errorText;
 	}
 
 	@Override
-	public int getStringSize() {
-		return this.errorText.length();
+	public List<Token> toList() {	
+		List<Token> result = new ArrayList<Token>();
+		result.add(this);	
+		return result;
 	}
 
 	@Override

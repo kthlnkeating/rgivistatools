@@ -24,6 +24,7 @@ import com.raygroupintl.m.parsetree.FanoutRoutine;
 import com.raygroupintl.m.parsetree.IndirectFanoutLabel;
 import com.raygroupintl.m.parsetree.IndirectFanoutRoutine;
 import com.raygroupintl.m.parsetree.Node;
+import com.raygroupintl.parser.StringPiece;
 import com.raygroupintl.parser.Token;
 
 public class BasicTokens {
@@ -35,21 +36,21 @@ public class BasicTokens {
 		@Override
 		public Node getNode() {
 			Node addlNode = super.getNode();
-			String value = this.getStringValue();
+			String value = this.toValue().toString();
 			return new FanoutLabel(value, addlNode);
 		}		
 	}
 	
 	public static class MTFanoutLabelB extends MTString {
-		public MTFanoutLabelB(String value) {
+		public MTFanoutLabelB(StringPiece value) {
 			super(value);
 		}
 		
 		@Override
 		public Node getNode() {
 			Node addlNode = super.getNode();
-			String value = this.getValue();
-			return new FanoutLabel(value, addlNode);
+			StringPiece value = this.toValue();
+			return new FanoutLabel(value.toString(), addlNode);
 		}		
 	}
 	
@@ -78,7 +79,7 @@ public class BasicTokens {
 		
 		@Override
 		public Node getNode() {
-			String name = this.getStringValue();
+			String name = this.toValue().toString();
 			Node addlNode = super.getNode();
 			return new FanoutRoutine(name, addlNode);
 		}		

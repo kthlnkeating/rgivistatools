@@ -23,7 +23,7 @@ import com.raygroupintl.parser.annotation.AdapterSupply;
 
 public class TFCharacter extends TFBasic {
 	private Predicate predicate;
-	private CharacterAdapter adapter;
+	private StringAdapter adapter;
 	
 	public TFCharacter(String name, Predicate predicate) {
 		super(name);
@@ -32,18 +32,18 @@ public class TFCharacter extends TFBasic {
 	
 	@Override
 	public Token tokenize(Text text, AdapterSupply adapterSupply) {
-		return text.extractToken(this.predicate, this.adapter == null ? adapterSupply.getCharacterAdapter() : this.adapter);
+		return text.extractChar(this.predicate, this.adapter == null ? adapterSupply.getStringAdapter() : this.adapter);
 	}
 	
 	@Override
 	public Token tokenizeRaw(Text text, AdapterSupply adapterSupply) {
-		return text.extractToken(this.predicate, adapterSupply.getCharacterAdapter());
+		return text.extractChar(this.predicate, adapterSupply.getStringAdapter());
 	}
 	
 	@Override
 	protected Token convert(Token token) {
-		if ((this.adapter != null) && (token instanceof TChar)) {
-			return this.adapter.convert(((TChar) token).getValue()); 
+		if ((this.adapter != null) && (token instanceof TString)) {
+			return this.adapter.convert(token.toValue()); 
 		} else {
 			return token;
 		}
@@ -51,10 +51,10 @@ public class TFCharacter extends TFBasic {
 
 	@Override
 	public void setTargetType(Class<? extends Token> cls) {
-		final Constructor<? extends Token> constructor = getConstructor(cls, char.class, TChar.class);
-		this.adapter = new CharacterAdapter() {			
+		final Constructor<? extends Token> constructor = getConstructor(cls, StringPiece.class, TString.class);
+		this.adapter = new StringAdapter() {			
 			@Override
-			public Token convert(char ch) {
+			public Token convert(StringPiece ch) {
 				try{
 					return (Token) constructor.newInstance(ch);
 				} catch (Exception e) {	

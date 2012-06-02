@@ -1,27 +1,32 @@
 package com.raygroupintl.parser;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class TString implements Token {
-	private String value;
+	private StringPiece value;
 		
-	public TString(String value) {
+	public TString(StringPiece value) {
 		this.value = value;
 	}
 	
-	protected String getValue() {
+	public TString(String data, int beginIndex, int endIndex) {
+		this.value = new StringPiece(data, beginIndex, endIndex);
+	}
+	
+	@Override
+	public StringPiece toValue() {
 		return this.value;
 	}
 	
 	@Override
-	public String getStringValue() {
-		return this.value;
+	public List<Token> toList() {	
+		List<Token> result = new ArrayList<Token>();
+		result.add(this);	
+		return result;
 	}
-	
-	@Override
-	public int getStringSize() {
-		return this.value.length();
-	}
-	
-	public void setValue(String value) {
+
+	public void setValue(StringPiece value) {
 		this.value = value;
 	}
 
