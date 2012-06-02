@@ -82,10 +82,6 @@ public class TFSequence extends TFBasic {
 		return this.factories.length;
 	}
 	
-	protected ValidateResult validateNext(int seqIndex, TokenStore foundTokens, Token nextToken, boolean noException) throws SyntaxErrorException {
-		return ValidateResult.CONTINUE;
-	}
-
 	protected ValidateResult validateNull(int seqIndex, TokenStore foundTokens, boolean noException) throws SyntaxErrorException {
 		int firstRequired = this.requiredFlags.getFirstRequiredIndex();
 		int lastRequired = this.requiredFlags.getLastRequiredIndex();
@@ -116,14 +112,6 @@ public class TFSequence extends TFBasic {
 		return true;
 	}
 	
-	private ValidateResult validate(int seqIndex,TokenStore foundTokens, Token nextToken, boolean noException) throws SyntaxErrorException {
-		if (nextToken == null) {
-			return this.validateNull(seqIndex, foundTokens, noException);
-		} else {
-			return this.validateNext(seqIndex, foundTokens, nextToken, noException);			
-		}
-	}
-
 	protected final TSequence getToken(TokenStore foundTokens, AdapterSupply adapterSupply) {
 		if (foundTokens.isAllNull()) {
 			return null;
@@ -165,10 +153,12 @@ public class TFSequence extends TFBasic {
 				if (noException) return null;
 				throw e;
 			}
-				
-			ValidateResult vr = this.validate(i, foundTokens, token, noException);
-			if (vr == ValidateResult.BREAK) break;
-			if (vr == ValidateResult.NULL_RESULT) return null;
+			
+			if (token == null) {
+				ValidateResult vr = this.validateNull(i, foundTokens, noException);
+				if (vr == ValidateResult.BREAK) break;
+				if (vr == ValidateResult.NULL_RESULT) return null;
+			}
 
 			foundTokens.addToken(token);
 			if (token != null) {				

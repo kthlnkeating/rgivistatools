@@ -61,30 +61,39 @@ public class TFForkedSequence extends TokenFactory {
 		this.followers = followers;
 	}
 	
+	private int getMaxSequenceCount() {
+		int result = 0;
+		for (TFSequence follower : this.followers) {
+			int count = follower.getSequenceCount();
+			if (count > result) return result;
+		}
+		return result;
+	}
+	
 	@Override
 	public Token tokenize(Text text, AdapterSupply adapterSupply) throws SyntaxErrorException {
 		Token leading = this.leader.tokenizeRaw(text, adapterSupply);
 		if (leading == null) {
 			return null;
 		}
+		ArrayAsTokenStore foundTokens = new ArrayAsTokenStore(this.getMaxSequenceCount());
+		foundTokens.addToken(leading);
 		if (text.onChar()) {
 			int textIndex = text.getIndex();
 			for (TFSequence follower : this.followers) {
-				TokenStore foundTokens = new ArrayAsTokenStore(follower.getSequenceCount());
-				foundTokens.addToken(leading);
+				foundTokens.resetIndex(1);
 				Token result = follower.tokenize(text, adapterSupply, 1, foundTokens, true);
 				if (result != null) {
 					TokenFactory f0th = follower.getFactory(0);
 					Token replaced = f0th.convert(leading);
 					foundTokens.set(0, replaced);
+					foundTokens.setLength(follower.getSequenceCount());
 					return result;
 				}
 				text.resetIndex(textIndex);				
 			}
 		} else {
 			for (TFSequence follower : this.followers) {
-				TokenStore foundTokens = new ArrayAsTokenStore(follower.getSequenceCount());
-				foundTokens.addToken(leading);
 				if (follower.validateEnd(0, foundTokens, true)) {
 					return follower.getToken(foundTokens, adapterSupply);
 				}

@@ -18,7 +18,7 @@ package com.raygroupintl.m.token;
 
 import java.util.List;
 
-import com.raygroupintl.m.parsetree.IgnorableNode;
+import com.raygroupintl.m.parsetree.Node;
 import com.raygroupintl.parser.Token;
 
 public class TComment extends MTSequence {
@@ -27,8 +27,8 @@ public class TComment extends MTSequence {
 	}
 	
 	@Override
-	public IgnorableNode getNode() {
-		return new IgnorableNode();
+	public Node getNode() {
+		return null;
 	}
 }
 

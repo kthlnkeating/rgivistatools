@@ -49,6 +49,13 @@ public class ArrayAsTokenStore implements TokenStore {
 		return this.tokens;
 	}
 	
+	public void setLength(int length) {
+		this.length = length;
+		for (int i = this.index; index<tokens.size(); ++index) {
+			this.tokens.set(i, null);
+		}				
+	}
+	
 	@Override
 	public boolean isAllNull() {
 		return this.tokens == null;
