@@ -27,6 +27,10 @@ public class MTList extends TList implements MToken {
 		super(tokens);
 	}
 
+	public MTList() {
+		super();
+	}
+
 	@Override
 	public Nodes getNode() {
 		return NodeUtilities.getNodes(this);

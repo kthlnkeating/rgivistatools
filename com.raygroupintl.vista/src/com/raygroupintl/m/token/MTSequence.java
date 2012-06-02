@@ -27,6 +27,14 @@ public class MTSequence extends TSequence implements MToken {
 		super(tokens);
 	}
 
+	public MTSequence(Token token) {
+		super(token.toList());
+	}
+
+	public MTSequence(int length) {
+		super(length);
+	}
+	
 	@Override
 	public Node getNode() {
 		return NodeUtilities.getNodes(this);

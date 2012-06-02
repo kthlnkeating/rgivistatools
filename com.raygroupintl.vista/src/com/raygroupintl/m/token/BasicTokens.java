@@ -16,8 +16,6 @@
 
 package com.raygroupintl.m.token;
 
-import java.util.List;
-
 import com.raygroupintl.m.parsetree.EnvironmentFanoutRoutine;
 import com.raygroupintl.m.parsetree.FanoutLabel;
 import com.raygroupintl.m.parsetree.FanoutRoutine;
@@ -29,8 +27,8 @@ import com.raygroupintl.parser.Token;
 
 public class BasicTokens {
 	public static class MTFanoutLabelA extends MTSequence {
-		public MTFanoutLabelA(List<Token> tokens) {
-			super(tokens);
+		public MTFanoutLabelA(Token token) {
+			super(token);
 		}
 		
 		@Override
@@ -55,8 +53,8 @@ public class BasicTokens {
 	}
 	
 	public static class MTIndirectFanoutLabel extends TIndirection {
-		public MTIndirectFanoutLabel(List<Token> tokens) {
-			super(tokens);
+		public MTIndirectFanoutLabel(Token token) {
+			super(token);
 		}
 		
 		@Override
@@ -67,14 +65,14 @@ public class BasicTokens {
 	}
 	
 	public static class MTFanoutTagOffset extends MTSequence {
-		public MTFanoutTagOffset(List<Token> tokens) {
-			super(tokens);
+		public MTFanoutTagOffset(Token token) {
+			super(token);
 		}
 	}
 	
 	public static class MTFanoutRoutine extends MTSequence {
-		public MTFanoutRoutine(List<Token> tokens) {
-			super(tokens);
+		public MTFanoutRoutine(Token token) {
+			super(token);
 		}
 		
 		@Override
@@ -86,8 +84,8 @@ public class BasicTokens {
 	}
 	
 	public static class MTIndirectFanoutRoutine extends TIndirection {
-		public MTIndirectFanoutRoutine(List<Token> tokens) {
-			super(tokens);
+		public MTIndirectFanoutRoutine(Token token) {
+			super(token);
 		}
 	
 		@Override
@@ -98,8 +96,8 @@ public class BasicTokens {
 	}
 	
 	public static class MTEnvironmentFanoutRoutine extends MTSequence {
-		public MTEnvironmentFanoutRoutine(List<Token> tokens) {
-			super(tokens);
+		public MTEnvironmentFanoutRoutine(Token token) {
+			super(token);
 		}
 		
 		@Override

@@ -16,8 +16,6 @@
 
 package com.raygroupintl.parser;
 
-import java.util.List;
-
 public interface SequenceAdapter {
-	TSequence convert(List<Token> tokens);
+	TSequence convert(Token token);
 }

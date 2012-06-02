@@ -27,6 +27,10 @@ public class MTDelimitedList extends TDelimitedList implements MToken {
 		super(tokens);
 	}
 
+	public MTDelimitedList() {
+		super();
+	}
+
 	@Override
 	public Node getNode() {
 		return NodeUtilities.getNodes(this);

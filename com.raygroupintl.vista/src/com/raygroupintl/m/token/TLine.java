@@ -1,7 +1,6 @@
 package com.raygroupintl.m.token;
 
 import java.util.Iterator;
-import java.util.List;
 
 import com.raygroupintl.m.parsetree.Line;
 import com.raygroupintl.m.parsetree.Node;
@@ -12,8 +11,8 @@ public class TLine extends MTSequence {
 	String tagName = "";
 	int index = 0;
 
-	public TLine(List<Token> tokens) {
-		super(tokens);
+	public TLine(Token token) {
+		super(token);
 	}
 
 	public String getTag() {

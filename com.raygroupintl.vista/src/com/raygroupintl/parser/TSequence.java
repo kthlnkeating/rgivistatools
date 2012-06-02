@@ -38,6 +38,12 @@ public class TSequence implements Token, TokenStore, Iterable<Token> {
 		this.length = token.length;
 	}
 	
+	public TSequence(Token token) {
+		this.tokens = token.toList();
+		this.index = tokens.size();
+		this.length = tokens.size();
+	}
+	
 	public TSequence(int length) {
 		this.length = length;
 	}

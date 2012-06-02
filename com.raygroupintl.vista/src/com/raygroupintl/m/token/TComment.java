@@ -16,14 +16,12 @@
 
 package com.raygroupintl.m.token;
 
-import java.util.List;
-
 import com.raygroupintl.m.parsetree.Node;
 import com.raygroupintl.parser.Token;
 
 public class TComment extends MTSequence {
-	public TComment(List<Token> tokens) {
-		super(tokens);
+	public TComment(Token token) {
+		super(token);
 	}
 	
 	@Override

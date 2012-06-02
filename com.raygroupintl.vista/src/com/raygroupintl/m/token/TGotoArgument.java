@@ -16,15 +16,13 @@
 
 package com.raygroupintl.m.token;
 
-import java.util.List;
-
 import com.raygroupintl.m.parsetree.AtomicGoto;
 import com.raygroupintl.m.parsetree.Node;
 import com.raygroupintl.parser.Token;
 
 public class TGotoArgument extends MTSequence {
-	public TGotoArgument(List<Token> tokens) {
-		super(tokens);
+	public TGotoArgument(Token token) {
+		super(token);
 	}
 	
 	@Override

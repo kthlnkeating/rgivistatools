@@ -6,8 +6,8 @@ import com.raygroupintl.parser.TSequence;
 import com.raygroupintl.parser.Token;
 
 public class TSymbolList extends TSequence implements RuleSupply {
-	public TSymbolList(java.util.List<Token> tokens) {
-		super(tokens);
+	public TSymbolList(Token token) {
+		super(token);
 	}
 	
 	private ListInfo getListInfo(String name, Map<String, RuleSupply> existing) {

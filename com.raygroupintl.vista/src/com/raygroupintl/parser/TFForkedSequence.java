@@ -76,7 +76,7 @@ public class TFForkedSequence extends TokenFactory {
 		if (leading == null) {
 			return null;
 		}
-		TSequence foundTokens = new TSequence(this.getMaxSequenceCount());
+		TSequence foundTokens = adapterSupply.newSequence(this.getMaxSequenceCount());
 		foundTokens.addToken(leading);
 		if (text.onChar()) {
 			int textIndex = text.getIndex();
@@ -95,7 +95,7 @@ public class TFForkedSequence extends TokenFactory {
 		} else {
 			for (TFSequence follower : this.followers) {
 				if (follower.validateEnd(0, foundTokens, true)) {
-					return follower.getToken(foundTokens, adapterSupply);
+					return follower.getToken(foundTokens);
 				}
 			}
 		}

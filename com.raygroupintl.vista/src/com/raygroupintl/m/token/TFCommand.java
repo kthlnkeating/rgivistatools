@@ -1,8 +1,6 @@
 package com.raygroupintl.m.token;
 
-import java.util.Arrays;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 import com.raygroupintl.m.struct.MError;
@@ -12,11 +10,11 @@ import com.raygroupintl.parser.SyntaxErrorException;
 import com.raygroupintl.parser.TEmpty;
 import com.raygroupintl.parser.TFEmptyVerified;
 import com.raygroupintl.parser.TFSequence;
+import com.raygroupintl.parser.TSequence;
 import com.raygroupintl.parser.Text;
 import com.raygroupintl.parser.Token;
 import com.raygroupintl.parser.TokenFactory;
 import com.raygroupintl.parser.TokenFactorySupply;
-import com.raygroupintl.parser.TokenStore;
 import com.raygroupintl.parser.annotation.AdapterSupply;
 
 public class TFCommand extends TokenFactorySupply {
@@ -78,7 +76,7 @@ public class TFCommand extends TokenFactorySupply {
 			return this.argumentFactory;
 		}
 
-		public abstract Token getToken(List<Token> tokens);
+		public abstract Token getToken(Token token);
 	}
 		
 	private static class TBCommandSpec extends TCommandSpec {
@@ -86,8 +84,8 @@ public class TFCommand extends TokenFactorySupply {
 			super(value, supply.expr);
 		}
 	
-		public Token getToken(List<Token> tokens) {
-			return new TCommand.B(tokens);
+		public Token getToken(Token token) {
+			return new TCommand.B(token);
 		}
 	}
 	
@@ -96,8 +94,8 @@ public class TFCommand extends TokenFactorySupply {
 			super(value, supply.closearg);
 		}
 	
-		public Token getToken(List<Token> tokens) {
-			return new TCommand.C(tokens);
+		public Token getToken(Token token) {
+			return new TCommand.C(token);
 		}
 	}
 	
@@ -106,8 +104,8 @@ public class TFCommand extends TokenFactorySupply {
 			super(value, supply.doarguments);
 		}
 	
-		public Token getToken(List<Token> tokens) {
-			return new TCommand.D(tokens);
+		public Token getToken(Token token) {
+			return new TCommand.D(token);
 		}
 	}
 	
@@ -116,8 +114,8 @@ public class TFCommand extends TokenFactorySupply {
 			super(value, TF_EMPTY);
 		}
 	
-		public Token getToken(List<Token> tokens) {
-			return new TCommand.E(tokens);
+		public Token getToken(Token token) {
+			return new TCommand.E(token);
 		}
 	}
 
@@ -126,8 +124,8 @@ public class TFCommand extends TokenFactorySupply {
 			super(value, supply.forarg);
 		}
 	
-		public Token getToken(List<Token> tokens) {
-			return new TCommand.F(tokens);
+		public Token getToken(Token token) {
+			return new TCommand.F(token);
 		}
 	}
 
@@ -136,8 +134,8 @@ public class TFCommand extends TokenFactorySupply {
 			super(value, supply.gotoarguments);
 		}
 	
-		public Token getToken(List<Token> tokens) {
-			return new TCommand.G(tokens);
+		public Token getToken(Token token) {
+			return new TCommand.G(token);
 		}
 	}
 
@@ -146,8 +144,8 @@ public class TFCommand extends TokenFactorySupply {
 			super(value, supply.expr);
 		}
 	
-		public Token getToken(List<Token> tokens) {
-			return new TCommand.H(tokens);
+		public Token getToken(Token token) {
+			return new TCommand.H(token);
 		}
 	}
 
@@ -156,8 +154,8 @@ public class TFCommand extends TokenFactorySupply {
 			super(value, supply.exprlist);
 		}
 	
-		public Token getToken(List<Token> tokens) {
-			return new TCommand.I(tokens);
+		public Token getToken(Token token) {
+			return new TCommand.I(token);
 		}
 	}
 
@@ -166,8 +164,8 @@ public class TFCommand extends TokenFactorySupply {
 			super(value, supply.cmdjargs);
 		}
 	
-		public Token getToken(List<Token> tokens) {
-			return new TCommand.J(tokens);
+		public Token getToken(Token token) {
+			return new TCommand.J(token);
 		}
 	}
 
@@ -176,8 +174,8 @@ public class TFCommand extends TokenFactorySupply {
 			super(value, supply.cmdkargs);
 		}
 	
-		public Token getToken(List<Token> tokens) {
-			return new TCommand.K(tokens);
+		public Token getToken(Token token) {
+			return new TCommand.K(token);
 		}
 	}
 
@@ -186,8 +184,8 @@ public class TFCommand extends TokenFactorySupply {
 			super(value, supply.lockargs);
 		}
 	
-		public Token getToken(List<Token> tokens) {
-			return new TCommand.L(tokens);
+		public Token getToken(Token token) {
+			return new TCommand.L(token);
 		}
 	}
 
@@ -196,8 +194,8 @@ public class TFCommand extends TokenFactorySupply {
 			super(value, supply.cmdmargs);
 		}
 	
-		public Token getToken(List<Token> tokens) {
-			return new TCommand.M(tokens);
+		public Token getToken(Token token) {
+			return new TCommand.M(token);
 		}
 	}
 
@@ -206,8 +204,8 @@ public class TFCommand extends TokenFactorySupply {
 			super(value, supply.newargs);
 		}
 	
-		public Token getToken(List<Token> tokens) {
-			return new TCommand.N(tokens);
+		public Token getToken(Token token) {
+			return new TCommand.N(token);
 		}
 	}
 
@@ -216,8 +214,8 @@ public class TFCommand extends TokenFactorySupply {
 			super(value, supply.cmdoargs);
 		}
 	
-		public Token getToken(List<Token> tokens) {
-			return new TCommand.O(tokens);
+		public Token getToken(Token token) {
+			return new TCommand.O(token);
 		}
 	}
 
@@ -226,8 +224,8 @@ public class TFCommand extends TokenFactorySupply {
 			super(value, supply.expr);
 		}
 	
-		public Token getToken(List<Token> tokens) {
-			return new TCommand.Q(tokens);
+		public Token getToken(Token token) {
+			return new TCommand.Q(token);
 		}
 	}
 
@@ -236,8 +234,8 @@ public class TFCommand extends TokenFactorySupply {
 			super(value, supply.cmdrargs);
 		}
 	
-		public Token getToken(List<Token> tokens) {
-			return new TCommand.R(tokens);
+		public Token getToken(Token token) {
+			return new TCommand.R(token);
 		}
 	}
 
@@ -246,8 +244,8 @@ public class TFCommand extends TokenFactorySupply {
 			super(value, supply.setargs);
 		}
 	
-		public Token getToken(List<Token> tokens) {
-			return new TCommand.S(tokens);
+		public Token getToken(Token token) {
+			return new TCommand.S(token);
 		}
 	}
 
@@ -256,8 +254,8 @@ public class TFCommand extends TokenFactorySupply {
 			super(value, TF_EMPTY);
 		}
 	
-		public Token getToken(List<Token> tokens) {
-			return new TCommand.TC(tokens);
+		public Token getToken(Token token) {
+			return new TCommand.TC(token);
 		}
 	}
 
@@ -266,8 +264,8 @@ public class TFCommand extends TokenFactorySupply {
 			super(value, TF_EMPTY);
 		}
 	
-		public Token getToken(List<Token> tokens) {
-			return new TCommand.TR(tokens);
+		public Token getToken(Token token) {
+			return new TCommand.TR(token);
 		}
 	}
 
@@ -276,8 +274,8 @@ public class TFCommand extends TokenFactorySupply {
 			super(value, TF_EMPTY);
 		}
 	
-		public Token getToken(List<Token> tokens) {
-			return new TCommand.TRO(tokens);
+		public Token getToken(Token token) {
+			return new TCommand.TRO(token);
 		}
 	}
 
@@ -286,8 +284,8 @@ public class TFCommand extends TokenFactorySupply {
 			super(value, TF_EMPTY);
 		}
 	
-		public Token getToken(List<Token> tokens) {
-			return new TCommand.TS(tokens);
+		public Token getToken(Token token) {
+			return new TCommand.TS(token);
 		}
 	}
 
@@ -296,8 +294,8 @@ public class TFCommand extends TokenFactorySupply {
 			super(value, supply.cmduargs);
 		}
 	
-		public Token getToken(List<Token> tokens) {
-			return new TCommand.U(tokens);
+		public Token getToken(Token token) {
+			return new TCommand.U(token);
 		}
 	}
 
@@ -306,8 +304,8 @@ public class TFCommand extends TokenFactorySupply {
 			super(value, supply.writeargs);
 		}
 	
-		public Token getToken(List<Token> tokens) {
-			return new TCommand.W(tokens);
+		public Token getToken(Token token) {
+			return new TCommand.W(token);
 		}
 	}
 
@@ -316,8 +314,8 @@ public class TFCommand extends TokenFactorySupply {
 			super(value, new TFGenericArgument("vargument"));
 		}
 		
-		public Token getToken(List<Token> tokens) {
-			return new TCommand.V(tokens);
+		public Token getToken(Token token) {
+			return new TCommand.V(token);
 		}
 	}
 
@@ -326,8 +324,8 @@ public class TFCommand extends TokenFactorySupply {
 			super(value, supply.xecuteargs);
 		}
 	
-		public Token getToken(List<Token> tokens) {
-			return new TCommand.X(tokens);
+		public Token getToken(Token token) {
+			return new TCommand.X(token);
 		}
 	}
 
@@ -336,8 +334,8 @@ public class TFCommand extends TokenFactorySupply {
 			super(value, new TFGenericArgument("genericargument"));
 		}
 	
-		public Token getToken(List<Token> tokens) {
-			return new TCommand.Generic(tokens);
+		public Token getToken(Token token) {
+			return new TCommand.Generic(token);
 		}
 	}
 	
@@ -594,7 +592,7 @@ public class TFCommand extends TokenFactorySupply {
 		}
 		
 		@Override
-		protected ValidateResult validateNull(int seqIndex, TokenStore foundTokens, boolean noException) throws SyntaxErrorException {
+		protected ValidateResult validateNull(int seqIndex, TSequence foundTokens, boolean noException) throws SyntaxErrorException {
 			if (seqIndex == 3) {
 				if (noException) return ValidateResult.NULL_RESULT;
 				throw new SyntaxErrorException(MError.ERR_GENERAL_SYNTAX);				
@@ -661,6 +659,9 @@ public class TFCommand extends TokenFactorySupply {
 		StringPiece cmdName = supplyToken.toValue();
 		TCSFactory tcs = this.commandSpecs.get(cmdName.toString().toUpperCase());
 		TCommandSpec spec = tcs.get(cmdName);
-		return spec.getToken(Arrays.asList(new Token[]{supplyToken, nextToken}));
+		MTSequence result = new MTSequence(2);
+		result.addToken(supplyToken);
+		result.addToken(nextToken);
+		return spec.getToken(result);
 	}
 }

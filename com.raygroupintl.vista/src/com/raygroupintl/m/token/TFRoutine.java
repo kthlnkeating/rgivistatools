@@ -2,7 +2,6 @@ package com.raygroupintl.m.token;
 
 import java.io.IOException;
 import java.nio.file.Path;
-import java.util.Arrays;
 
 import com.raygroupintl.m.struct.MRoutineContent;
 import com.raygroupintl.parser.StringPiece;
@@ -22,8 +21,10 @@ public class TFRoutine {
 	
 	public static TLine recoverFromError(String line, SyntaxErrorException e) {
 		Token error = new TSyntaxError(0, new StringPiece(line), 0);
-		Token[] lineResult = {error, null, null, null, null};
-		return new TLine(Arrays.asList(lineResult));
+		MTSequence result = new MTSequence(5);
+		result.addToken(error);
+		for (int i=0; i<4; ++i) result.addToken(null);
+		return new TLine(result);
 	}
 	
 	public TRoutine tokenize(MRoutineContent content) {

@@ -22,8 +22,8 @@ import com.raygroupintl.parser.TSequence;
 import com.raygroupintl.parser.Token;
 
 public class TConstSymbol extends TSequence implements RuleSupply {
-	public TConstSymbol(java.util.List<Token> tokens) {
-		super(tokens);
+	public TConstSymbol(Token token) {
+		super(token);
 	}
 	
 	@Override

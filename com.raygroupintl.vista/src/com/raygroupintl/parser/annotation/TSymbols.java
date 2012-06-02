@@ -1,6 +1,5 @@
 package com.raygroupintl.parser.annotation;
 
-import java.util.List;
 import java.util.Map;
 
 import com.raygroupintl.parser.TList;
@@ -10,8 +9,8 @@ import com.raygroupintl.parser.Token;
 public abstract class TSymbols extends TSequence implements RuleSupply {
 	private boolean required;
 	
-	public TSymbols(List<Token> tokens, boolean required) {
-		super(tokens);
+	public TSymbols(Token token, boolean required) {
+		super(token);
 		this.required = required;
 	}
 

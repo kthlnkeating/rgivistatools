@@ -44,8 +44,8 @@ public class DefaultAdapterSupply implements AdapterSupply {
 		if (this.sequenceAdapter == null) {
 			this.sequenceAdapter = new SequenceAdapter() {				
 				@Override
-				public TSequence convert(List<Token> tokens) {
-					return new TSequence(tokens);
+				public TSequence convert(Token token) {
+					return new TSequence(token);
 				}
 			};
 		}
@@ -92,8 +92,8 @@ public class DefaultAdapterSupply implements AdapterSupply {
 
 		result.put(TFSequence.class, new SequenceAdapter() {			
 			@Override
-			public TSequence convert(List<Token> tokens) {
-				return new TSequence(tokens);
+			public TSequence convert(Token token) {
+				return new TSequence(token);
 			}
 		});
 				
@@ -126,4 +126,17 @@ public class DefaultAdapterSupply implements AdapterSupply {
 		}
 		return result;
 	}
+	
+	public TSequence newSequence(int length) {
+		return new TSequence(length);
+	}
+	
+	public TList newList() {
+		return new TList();
+	}
+	
+	public TDelimitedList newDelimitedList() {
+		return new TDelimitedList();
+	}
+
 }

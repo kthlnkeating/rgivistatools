@@ -1,7 +1,5 @@
 package com.raygroupintl.m.token;
 
-import java.util.List;
-
 import com.raygroupintl.m.struct.MNameWithMnemonic;
 import com.raygroupintl.parser.Token;
 
@@ -19,7 +17,7 @@ public class TSsvn extends MTSequence {
 		SSVS.update("W", "WINDOW"); 	
 	}
 	
-	public TSsvn(List<Token> tokens) {
-		super(tokens);
+	public TSsvn(Token token) {
+		super(token);
 	}		
 }

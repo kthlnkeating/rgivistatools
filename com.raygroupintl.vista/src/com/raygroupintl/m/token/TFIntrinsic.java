@@ -1,29 +1,27 @@
 package com.raygroupintl.m.token;
 
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 import com.raygroupintl.m.struct.MError;
 import com.raygroupintl.m.struct.MNameWithMnemonic;
 import com.raygroupintl.parser.SyntaxErrorException;
 import com.raygroupintl.parser.TFSequence;
+import com.raygroupintl.parser.TSequence;
 import com.raygroupintl.parser.Token;
 import com.raygroupintl.parser.TokenFactory;
 import com.raygroupintl.parser.TokenFactorySupply;
-import com.raygroupintl.parser.TokenStore;
 
 public class TFIntrinsic extends TokenFactorySupply {		
 	public static class TIntrinsicVariable extends MTSequence {
-		public TIntrinsicVariable(List<Token> tokens) {
-			super(tokens);
+		public TIntrinsicVariable(Token token) {
+			super(token);
 		}
 	}
 
 	private static class TIntrinsicFunction extends MTSequence {
-		private TIntrinsicFunction(List<Token> tokens) {
-			super(tokens);
+		private TIntrinsicFunction(Token token) {
+			super(token);
 		}
 	}
 	
@@ -117,7 +115,7 @@ public class TFIntrinsic extends TokenFactorySupply {
 		}
 */
 		@Override
-		protected ValidateResult validateNull(int seqIndex, TokenStore foundTokens, boolean noException) throws SyntaxErrorException {
+		protected ValidateResult validateNull(int seqIndex, TSequence foundTokens, boolean noException) throws SyntaxErrorException {
 			if (seqIndex == 0 && this.nullAllowed) {
 				return ValidateResult.CONTINUE;
 			}
@@ -164,9 +162,9 @@ public class TFIntrinsic extends TokenFactorySupply {
 
 	@Override
 	public Token getToken(Token supplyToken, Token nextToken) {
-		List<Token> result = new ArrayList<Token>();
-		result.add(supplyToken);
-		result.add(nextToken);
+		MTSequence result = new MTSequence(2);
+		result.addToken(supplyToken);
+		result.addToken(nextToken);
 		return new TIntrinsicFunction(result);
 	}
 
