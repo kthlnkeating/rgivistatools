@@ -16,15 +16,14 @@
 
 package com.raygroupintl.parser.annotation;
 
-import java.util.List;
 import java.util.Map;
 
 import com.raygroupintl.parser.TDelimitedList;
 import com.raygroupintl.parser.Token;
 
 public class TChoice extends TDelimitedList implements RuleSupply {
-	public TChoice(List<Token> tokens) {
-		super(tokens);
+	public TChoice(Token token) {
+		super(token);
 	}
 	
 	@Override

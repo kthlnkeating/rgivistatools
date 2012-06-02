@@ -17,7 +17,6 @@
 package com.raygroupintl.parser;
 
 import java.lang.reflect.Constructor;
-import java.util.List;
 
 import com.raygroupintl.parser.annotation.AdapterSupply;
 

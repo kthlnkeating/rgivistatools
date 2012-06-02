@@ -39,6 +39,10 @@ public class TDelimitedList extends TList {
 		}		
 	}
 
+	public TDelimitedList(Token token) {
+		super(token);
+	}
+
 	public TDelimitedList(List<Token> tokens) {
 		super(tokens);
 	}

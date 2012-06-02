@@ -70,8 +70,8 @@ public class DefaultAdapterSupply implements AdapterSupply {
 		if (this.delimitedListAdapter == null) {
 			this.delimitedListAdapter = new DelimitedListAdapter() {				
 				@Override
-				public Token convert(List<Token> tokens) {
-					return new TDelimitedList(tokens);
+				public TDelimitedList convert(Token token) {
+					return new TDelimitedList(token);
 				}
 			};
 		}
@@ -107,8 +107,8 @@ public class DefaultAdapterSupply implements AdapterSupply {
 				
 		result.put(TFDelimitedList.class, new DelimitedListAdapter() {			
 			@Override
-			public Token convert(List<Token> tokens) {
-				return new TDelimitedList(tokens);
+			public TDelimitedList convert(Token token) {
+				return new TDelimitedList(token);
 			}
 		});
 	
@@ -135,8 +135,8 @@ public class DefaultAdapterSupply implements AdapterSupply {
 		return new TList();
 	}
 	
-	public TDelimitedList newDelimitedList() {
-		return new TDelimitedList();
+	public TDelimitedList newDelimitedList(List<Token> tokens) {
+		return new TDelimitedList(tokens);
 	}
 
 }

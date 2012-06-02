@@ -72,8 +72,8 @@ public class MAdapterSupply implements AdapterSupply {
 		if (this.delimitedListAdapter == null) {
 			this.delimitedListAdapter = new DelimitedListAdapter() {				
 				@Override
-				public Token convert(List<Token> tokens) {
-					return new MTDelimitedList(tokens);
+				public TDelimitedList convert(Token token) {
+					return new MTDelimitedList(token);
 				}
 			};
 		}
@@ -109,8 +109,8 @@ public class MAdapterSupply implements AdapterSupply {
 				
 		result.put(TFDelimitedList.class, new DelimitedListAdapter() {			
 			@Override
-			public Token convert(List<Token> tokens) {
-				return new MTDelimitedList(tokens);
+			public TDelimitedList convert(Token token) {
+				return new MTDelimitedList(token);
 			}
 		});
 	
@@ -137,7 +137,7 @@ public class MAdapterSupply implements AdapterSupply {
 		return new MTList();
 	}
 	
-	public TDelimitedList newDelimitedList() {
-		return new MTDelimitedList();
+	public TDelimitedList newDelimitedList(List<Token> tokens) {
+		return new MTDelimitedList(tokens);
 	}
 }

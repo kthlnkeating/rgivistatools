@@ -16,8 +16,6 @@
 
 package com.raygroupintl.parser;
 
-import java.util.List;
-
 public interface DelimitedListAdapter {
-	Token convert(List<Token> tokens);
+	TDelimitedList convert(Token token);
 }

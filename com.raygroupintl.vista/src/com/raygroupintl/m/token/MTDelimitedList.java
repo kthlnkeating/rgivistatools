@@ -23,6 +23,10 @@ import com.raygroupintl.parser.TDelimitedList;
 import com.raygroupintl.parser.Token;
 
 public class MTDelimitedList extends TDelimitedList implements MToken {
+	public MTDelimitedList(Token token) {
+		super(token);
+	}
+
 	public MTDelimitedList(List<Token> tokens) {
 		super(tokens);
 	}

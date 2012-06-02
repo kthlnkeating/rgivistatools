@@ -1,5 +1,7 @@
 package com.raygroupintl.parser.annotation;
 
+import java.util.List;
+
 import com.raygroupintl.parser.DelimitedListAdapter;
 import com.raygroupintl.parser.ListAdapter;
 import com.raygroupintl.parser.SequenceAdapter;
@@ -7,6 +9,7 @@ import com.raygroupintl.parser.StringAdapter;
 import com.raygroupintl.parser.TDelimitedList;
 import com.raygroupintl.parser.TList;
 import com.raygroupintl.parser.TSequence;
+import com.raygroupintl.parser.Token;
 import com.raygroupintl.parser.TokenFactory;
 
 public interface AdapterSupply {
@@ -19,5 +22,5 @@ public interface AdapterSupply {
 	
 	TSequence newSequence(int length);
 	TList newList();
-	TDelimitedList newDelimitedList();
+	TDelimitedList newDelimitedList(List<Token> tokens);
 }

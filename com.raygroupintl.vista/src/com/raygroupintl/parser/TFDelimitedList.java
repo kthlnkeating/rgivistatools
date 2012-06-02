@@ -35,10 +35,6 @@ public class TFDelimitedList extends TFBasic {
 		this.effective = effective;
 	}
 		
-	private Token getToken(List<Token> tokens, AdapterSupply adapterSupply) {
-		return this.adapter == null ? adapterSupply.getDelimitedListAdapter().convert(tokens) : this.adapter.convert(tokens);
-	}
-	
 	private TokenFactory getLeadingFactory(TokenFactory element, TokenFactory delimiter, boolean emptyAllowed) {
 		if (emptyAllowed) {
 			String elementName = this.getName() + "." + element.getName();
@@ -65,11 +61,11 @@ public class TFDelimitedList extends TFBasic {
 		this.set(element, delimiter, false);
 	}
 
-	private List<Token> tokenizeCommon(Text text, AdapterSupply adapterSupply) throws SyntaxErrorException {
+	private TDelimitedList tokenizeCommon(Text text, AdapterSupply adapterSupply) throws SyntaxErrorException {
 		if (this.effective == null) {
 			throw new IllegalStateException("TFDelimitedList.set needs to be called before TFDelimitedList.tokenize");
 		} else {
-			TSequence internalResult = (TSequence) this.effective.tokenize(text, adapterSupply);
+			TSequence internalResult = this.effective.tokenize(text, adapterSupply);
 			if (internalResult == null) {
 				return null;
 			} else {
@@ -77,54 +73,40 @@ public class TFDelimitedList extends TFBasic {
 				Token tailTokens = internalResult.get(1);
 				if (tailTokens == null) {
 					Token[] tmpResult = {leadingToken};
-					return Arrays.asList(tmpResult);	
+					List<Token> list = Arrays.asList(tmpResult);
+					return adapterSupply.newDelimitedList(list);
 				} else {		
-					TList result = (TList) tailTokens;
-					List<Token> list = result.toList();
+					List<Token> list = tailTokens.toList();
 					list.add(0, leadingToken);
-					return list;
+					return adapterSupply.newDelimitedList(list);
 				}
 			}
 		}
 	}
 	
 	@Override
-	public Token tokenize(Text text, AdapterSupply adapterSupply) throws SyntaxErrorException {
-		List<Token> rawResult = this.tokenizeCommon(text, adapterSupply);
-		if (rawResult == null) {
-			return null;
+	public TDelimitedList tokenize(Text text, AdapterSupply adapterSupply) throws SyntaxErrorException {
+		TDelimitedList rawResult = this.tokenizeCommon(text, adapterSupply);
+		if ((rawResult == null) || (this.adapter == null)) {
+			return rawResult;
 		} else {
-			return this.getToken(rawResult, adapterSupply);	
+			return this.adapter.convert(rawResult);
 		}
 	}
 
 	@Override
 	public Token tokenizeRaw(Text text, AdapterSupply adapterSupply) throws SyntaxErrorException {
-		List<Token> rawResult = this.tokenizeCommon(text, adapterSupply);
-		if (rawResult == null) {
-			return null;
-		} else {
-			return adapterSupply.getDelimitedListAdapter().convert(rawResult);	
-		}
+		return this.tokenizeCommon(text, adapterSupply);
 	}
 	
 	@Override
-	protected Token convert(Token token) {
-		if ((this.adapter != null) && (token instanceof TDelimitedList)) {
-			return this.adapter.convert(((TDelimitedList) token).toList()); 
-		} else {
-			return token;
-		}
-	}
-
-	@Override
 	public void setTargetType(Class<? extends Token> cls) {
-		final Constructor<? extends Token> constructor = getConstructor(cls, List.class, TDelimitedList.class);
+		final Constructor<? extends Token> constructor = getConstructor(cls, Token.class, TDelimitedList.class);
 		this.adapter = new DelimitedListAdapter() {			
 			@Override
-			public Token convert(List<Token> tokens) {
+			public TDelimitedList convert(Token token) {
 				try{
-					return (Token) constructor.newInstance(tokens);
+					return (TDelimitedList) constructor.newInstance(token);
 				} catch (Exception e) {	
 					return null;
 				}

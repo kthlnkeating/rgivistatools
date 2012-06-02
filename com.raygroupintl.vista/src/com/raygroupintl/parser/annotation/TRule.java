@@ -1,14 +1,13 @@
 package com.raygroupintl.parser.annotation;
 
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 import com.raygroupintl.parser.TDelimitedList;
 import com.raygroupintl.parser.Token;
 
 public class TRule extends TDelimitedList implements RuleSupply {
-	public TRule(List<Token> token) {
+	public TRule(Token token) {
 		super(token);
 	}
 	
