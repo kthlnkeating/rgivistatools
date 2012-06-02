@@ -80,7 +80,7 @@ public class TFDelimitedList extends TFBasic {
 					return Arrays.asList(tmpResult);	
 				} else {		
 					TList result = (TList) tailTokens;
-					List<Token> list = result.getList();
+					List<Token> list = result.toList();
 					list.add(0, leadingToken);
 					return list;
 				}
@@ -111,7 +111,7 @@ public class TFDelimitedList extends TFBasic {
 	@Override
 	protected Token convert(Token token) {
 		if ((this.adapter != null) && (token instanceof TDelimitedList)) {
-			return this.adapter.convert(((TDelimitedList) token).getList()); 
+			return this.adapter.convert(((TDelimitedList) token).toList()); 
 		} else {
 			return token;
 		}

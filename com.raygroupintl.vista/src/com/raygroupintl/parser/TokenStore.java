@@ -18,7 +18,7 @@ package com.raygroupintl.parser;
 
 import java.util.List;
 
-public interface TokenStore {
+public interface TokenStore extends Token {
 	void addToken(Token token);
 	
 	List<Token> toList();

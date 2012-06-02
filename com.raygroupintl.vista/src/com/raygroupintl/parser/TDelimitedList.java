@@ -39,17 +39,13 @@ public class TDelimitedList extends TList {
 		}		
 	}
 
-	public TDelimitedList(Token token) {
-		super(token);
-	}
-
 	public TDelimitedList(List<Token> tokens) {
 		super(tokens);
 	}
 
 	@Override
 	public Iterator<Token> iterator() {
-		return new TDelimitedListIterator(this.getList().iterator());
+		return new TDelimitedListIterator(super.iterator());
 	}
 }
 

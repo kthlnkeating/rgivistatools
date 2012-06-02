@@ -127,7 +127,7 @@ public class TFSequence extends TFBasic {
 	@Override
 	public final TSequence tokenize(Text text, AdapterSupply adapterSupply) throws SyntaxErrorException {
 		if (text.onChar()) {
-			TokenStore foundTokens = new ArrayAsTokenStore(this.factories.length);
+			TokenStore foundTokens = new TSequence(this.factories.length);
 			return this.tokenize(text, adapterSupply, 0, foundTokens, false);
 		}		
 		return null;
@@ -136,7 +136,7 @@ public class TFSequence extends TFBasic {
 	@Override
 	public final TSequence tokenizeRaw(Text text, AdapterSupply adapterSupply) throws SyntaxErrorException {
 		if (text.onChar()) {
-			TokenStore foundTokens = new ArrayAsTokenStore(this.factories.length);
+			TokenStore foundTokens = new TSequence(this.factories.length);
 			return this.tokenizeRaw(text, adapterSupply, 0, foundTokens, false);
 		}		
 		return null;

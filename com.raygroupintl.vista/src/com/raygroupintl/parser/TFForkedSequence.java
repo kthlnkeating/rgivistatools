@@ -76,7 +76,7 @@ public class TFForkedSequence extends TokenFactory {
 		if (leading == null) {
 			return null;
 		}
-		ArrayAsTokenStore foundTokens = new ArrayAsTokenStore(this.getMaxSequenceCount());
+		TSequence foundTokens = new TSequence(this.getMaxSequenceCount());
 		foundTokens.addToken(leading);
 		if (text.onChar()) {
 			int textIndex = text.getIndex();

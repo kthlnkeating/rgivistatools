@@ -46,7 +46,7 @@ public final class TFList extends TFBasic {
 		if (elementFactory == null) throw new IllegalStateException("TFList.setElementFactory needs to be called before TFList.tokenize");
 		
 		if (text.onChar()) {
-			ListAsTokenStore list = new ListAsTokenStore();
+			TokenStore list = new TList();
 			while (text.onChar()) {
 				Token token = null;
 				try {
@@ -91,7 +91,7 @@ public final class TFList extends TFBasic {
 	@Override
 	protected Token convert(Token token) {
 		if ((this.adapter != null) && (token instanceof TList)) {
-			return this.adapter.convert(((TList) token).getList()); 
+			return this.adapter.convert(((TList) token).toList()); 
 		} else {
 			return token;
 		}
