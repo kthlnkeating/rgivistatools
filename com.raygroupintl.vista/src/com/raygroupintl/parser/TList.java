@@ -31,6 +31,10 @@ public class TList implements Token, TokenStore, Iterable<Token> {
 		this.tokens = tokens;
 	}
 
+	public TList(Token token) {
+		this.tokens = token.toList();
+	}
+
 	@Override
 	public void addToken(Token token) {
 		if (this.tokens == null) {

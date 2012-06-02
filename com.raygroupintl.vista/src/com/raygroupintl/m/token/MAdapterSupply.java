@@ -59,8 +59,8 @@ public class MAdapterSupply implements AdapterSupply {
 		if (this.listAdapter == null) {
 			this.listAdapter = new ListAdapter() {				
 				@Override
-				public Token convert(List<Token> tokens) {
-					return new MTList(tokens);
+				public Token convert(Token token) {
+					return new MTList(token);
 				}
 			};
 		}
@@ -102,8 +102,8 @@ public class MAdapterSupply implements AdapterSupply {
 
 		result.put(TFList.class, new ListAdapter() {			
 			@Override
-			public Token convert(List<Token> tokens) {
-				return new MTList(tokens);
+			public Token convert(Token token) {
+				return new MTList(token);
 			}
 		});
 				

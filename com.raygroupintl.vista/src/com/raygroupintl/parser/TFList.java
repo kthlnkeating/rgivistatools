@@ -38,15 +38,11 @@ public final class TFList extends TFBasic {
 		this.elementFactory = elementFactory;
 	}
 		
-	private Token getToken(List<Token> list, AdapterSupply adapterSupply) {
-		return this.adapter == null ? adapterSupply.getListAdapter().convert(list) : this.adapter.convert(list);
-	}
-
-	public List<Token> tokenizeCommon(Text text, AdapterSupply adapterSupply) throws SyntaxErrorException {
+	public TList tokenizeCommon(Text text, AdapterSupply adapterSupply) throws SyntaxErrorException {
 		if (elementFactory == null) throw new IllegalStateException("TFList.setElementFactory needs to be called before TFList.tokenize");
 		
 		if (text.onChar()) {
-			TokenStore list = new TList();
+			TList list = adapterSupply.newList();
 			while (text.onChar()) {
 				Token token = null;
 				try {
@@ -56,42 +52,46 @@ public final class TFList extends TFBasic {
 				}
 				if (token == null) {
 					if (list.hasToken()) {
-						return list.toList();
+						return list;
 					} else {
 						return null;
 					}
 				}
 				list.addToken(token);	
 			}
-			return list.toList();
+			return list;
 		}
 		return null;
 	}
 	
 	@Override
 	public Token tokenize(Text text, AdapterSupply adapterSupply) throws SyntaxErrorException {
-		List<Token> rawResult = this.tokenizeCommon(text, adapterSupply);
+		TList rawResult = this.tokenizeCommon(text, adapterSupply);
 		if (rawResult == null) {
 			return null;
 		} else {
-			return this.getToken(rawResult, adapterSupply);	
+			if (this.adapter == null) {
+				return rawResult;
+			} else {
+				return this.adapter.convert(rawResult);
+			}
 		}
 	}
 
 	@Override
-	public Token tokenizeRaw(Text text, AdapterSupply adapterSupply) throws SyntaxErrorException {
-		List<Token> rawResult = this.tokenizeCommon(text, adapterSupply);
+	public TList tokenizeRaw(Text text, AdapterSupply adapterSupply) throws SyntaxErrorException {
+		TList rawResult = this.tokenizeCommon(text, adapterSupply);
 		if (rawResult == null) {
 			return null;
 		} else {
-			return adapterSupply.getListAdapter().convert(rawResult);	
+			return rawResult;	
 		}
 	}
 
 	@Override
 	protected Token convert(Token token) {
-		if ((this.adapter != null) && (token instanceof TList)) {
-			return this.adapter.convert(((TList) token).toList()); 
+		if (this.adapter != null) {
+			return this.adapter.convert(token); 
 		} else {
 			return token;
 		}
@@ -99,12 +99,12 @@ public final class TFList extends TFBasic {
 
 	@Override
 	public void setTargetType(Class<? extends Token> cls) {
-		final Constructor<? extends Token> constructor = getConstructor(cls, List.class, TList.class);
+		final Constructor<? extends Token> constructor = getConstructor(cls, Token.class, TList.class);
 		this.adapter = new ListAdapter() {			
 			@Override
-			public Token convert(List<Token> tokens) {
+			public Token convert(Token token) {
 				try{
-					return (Token) constructor.newInstance(tokens);
+					return (Token) constructor.newInstance(token);
 				} catch (Exception e) {	
 					return null;
 				}

@@ -16,15 +16,13 @@
 
 package com.raygroupintl.m.token;
 
-import java.util.List;
-
 import com.raygroupintl.m.parsetree.Nodes;
 import com.raygroupintl.parser.TList;
 import com.raygroupintl.parser.Token;
 
 public class MTList extends TList implements MToken {
-	public MTList(List<Token> tokens) {
-		super(tokens);
+	public MTList(Token token) {
+		super(token);
 	}
 
 	public MTList() {

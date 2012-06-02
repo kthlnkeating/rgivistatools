@@ -57,8 +57,8 @@ public class DefaultAdapterSupply implements AdapterSupply {
 		if (this.listAdapter == null) {
 			this.listAdapter = new ListAdapter() {				
 				@Override
-				public Token convert(List<Token> tokens) {
-					return new TList(tokens);
+				public Token convert(Token token) {
+					return new TList(token);
 				}
 			};
 		}
@@ -100,8 +100,8 @@ public class DefaultAdapterSupply implements AdapterSupply {
 
 		result.put(TFList.class, new ListAdapter() {			
 			@Override
-			public Token convert(List<Token> tokens) {
-				return new TList(tokens);
+			public Token convert(Token token) {
+				return new TList(token);
 			}
 		});
 				

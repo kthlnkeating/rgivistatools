@@ -16,8 +16,6 @@
 
 package com.raygroupintl.parser;
 
-import java.util.List;
-
 public interface ListAdapter {
-	Token convert(List<Token> tokens);
+	Token convert(Token token);
 }
