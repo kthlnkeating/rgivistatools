@@ -36,6 +36,10 @@ public class StringPiece {
 		this.endIndex = endIndex;
 	}
 	
+	public StringPiece(StringPiece rhs) {
+		this.set(rhs);
+	}
+	
 	@Override
 	public String toString() {
 		if (data == null) {
@@ -45,6 +49,18 @@ public class StringPiece {
 		}
 	}
 
+	public void set(StringPiece rhs) {	
+		this.data = rhs.data;
+		this.beginIndex = rhs.beginIndex;
+		this.endIndex = rhs.endIndex;
+	}
+	
+	public void set(String data, int beginIndex, int endIndex) {	
+		this.data = data;
+		this.beginIndex = beginIndex;
+		this.endIndex = endIndex;
+	}
+	
 	public int length() {
 		return this.endIndex - this.beginIndex;
 	}

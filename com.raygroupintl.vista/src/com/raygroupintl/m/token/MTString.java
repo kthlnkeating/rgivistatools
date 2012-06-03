@@ -22,6 +22,10 @@ import com.raygroupintl.parser.StringPiece;
 import com.raygroupintl.parser.TString;
 
 public class MTString extends TString implements MToken {
+	public MTString() {
+		super();
+	}
+	
 	public MTString(StringPiece value) {
 		super(value);
 	}

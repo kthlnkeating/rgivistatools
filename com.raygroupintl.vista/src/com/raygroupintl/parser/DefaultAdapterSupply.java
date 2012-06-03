@@ -59,14 +59,22 @@ public class DefaultAdapterSupply implements AdapterSupply {
 		return result;
 	}
 	
+	@Override
+	public TString newString() {
+		return new TString();
+	}
+	
+	@Override
 	public TSequence newSequence(int length) {
 		return new TSequence(length);
 	}
 	
+	@Override
 	public TList newList() {
 		return new TList();
 	}
 	
+	@Override
 	public TDelimitedList newDelimitedList(List<Token> tokens) {
 		return new TDelimitedList(tokens);
 	}

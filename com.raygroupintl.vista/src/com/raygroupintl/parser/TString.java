@@ -3,20 +3,22 @@ package com.raygroupintl.parser;
 import java.util.ArrayList;
 import java.util.List;
 
-public class TString implements Token {
-	private StringPiece value;
-		
+public class TString extends StringPiece implements Token {
+	public TString() {
+		super();
+	}
+
 	public TString(StringPiece value) {
-		this.value = value;
+		super(value);
 	}
 	
 	public TString(String data, int beginIndex, int endIndex) {
-		this.value = new StringPiece(data, beginIndex, endIndex);
+		super(data, beginIndex, endIndex);
 	}
 	
 	@Override
 	public StringPiece toValue() {
-		return this.value;
+		return this;
 	}
 	
 	@Override
@@ -27,7 +29,7 @@ public class TString implements Token {
 	}
 
 	public void setValue(StringPiece value) {
-		this.value = value;
+		super.set(value);
 	}
 
 	@Override

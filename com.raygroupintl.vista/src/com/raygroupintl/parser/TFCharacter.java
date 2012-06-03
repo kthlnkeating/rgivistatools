@@ -32,6 +32,7 @@ public class TFCharacter extends TFBasic {
 	
 	@Override
 	public Token tokenize(Text text, AdapterSupply adapterSupply) {
+		
 		return text.extractChar(this.predicate, this.adapter == null ? adapterSupply.getStringAdapter() : this.adapter);
 	}
 	
