@@ -12,7 +12,7 @@ import org.junit.Test;
 
 import com.raygroupintl.charlib.CharPredicate;
 import com.raygroupintl.charlib.Predicate;
-import com.raygroupintl.parser.DefaultAdapterSupply;
+import com.raygroupintl.parser.DefaultObjectSupply;
 import com.raygroupintl.parser.SyntaxErrorException;
 import com.raygroupintl.parser.TFCharacter;
 import com.raygroupintl.parser.TFSequence;
@@ -28,26 +28,26 @@ import com.raygroupintl.parser.annotation.TSymbol;
 
 public class RuleGrammarTest {
 	private static RuleGrammar spec;
-	private static AdapterSupply adapterSupply;
+	private static ObjectSupply objectSupply;
 	
 	@BeforeClass
 	public static void setUpBeforeClass() throws Exception {
 		Parser parser = new Parser();
 		spec = parser.parse(RuleGrammar.class);
-		adapterSupply = new DefaultAdapterSupply();
+		objectSupply = new DefaultObjectSupply();
 	}
 
 	@AfterClass
 	public static void tearDownAfterClass() throws Exception {
 		spec = null;
-		adapterSupply = null;
+		objectSupply = null;
 	}
 
 	@Test
 	public void testSymbol() {
 		try {
 			Text text = new Text("token");
-			Token symbol = spec.symbol.tokenize(text, adapterSupply);
+			Token symbol = spec.symbol.tokenize(text, objectSupply);
 			Assert.assertNotNull(symbol);
 			Assert.assertTrue(symbol instanceof TSymbol);
 			Assert.assertEquals("token", symbol.toValue().toString());
@@ -60,7 +60,7 @@ public class RuleGrammarTest {
 	public void testOptionalSymbols() {
 		try {
 			Text text = new Text("[a, b, ([c], [d])]");
-			Token optionalSymbols = spec.optionalsymbols.tokenize(text, adapterSupply);
+			Token optionalSymbols = spec.optionalsymbols.tokenize(text, objectSupply);
 			Assert.assertNotNull(optionalSymbols);
 			Assert.assertTrue(optionalSymbols instanceof TOptionalSymbols);
 			Assert.assertEquals("[a, b, ([c], [d])]", optionalSymbols.toValue().toString());
@@ -73,7 +73,7 @@ public class RuleGrammarTest {
 	public void testRequiredSymbols() {
 		try {
 			Text text = new Text("([a, b], [c], [d])");
-			Token requiredSymbols = spec.requiredsymbols.tokenize(text, adapterSupply);
+			Token requiredSymbols = spec.requiredsymbols.tokenize(text, objectSupply);
 			Assert.assertNotNull(requiredSymbols);
 			Assert.assertTrue(requiredSymbols instanceof TRequiredSymbols);
 			Assert.assertEquals("([a, b], [c], [d])", requiredSymbols.toValue().toString());
@@ -86,7 +86,7 @@ public class RuleGrammarTest {
 	public void testConstSymbols() {
 		try {
 			Text text = new Text("\"@(\"");
-			Token constSymbol = spec.constsymbol.tokenize(text, adapterSupply);
+			Token constSymbol = spec.constsymbol.tokenize(text, objectSupply);
 			Assert.assertNotNull(constSymbol);
 			Assert.assertTrue(constSymbol instanceof TConstSymbol);
 			Assert.assertEquals("\"@(\"", constSymbol.toValue().toString());
@@ -105,7 +105,7 @@ public class RuleGrammarTest {
 	private void testRule(TokenFactory f, String v, String compare) {
 		try {
 			Text text = new Text(v);
-			Token result = f.tokenize(text, adapterSupply);
+			Token result = f.tokenize(text, objectSupply);
 			Assert.assertNotNull(result);
 			Assert.assertEquals(compare, result.toValue().toString());
 		} catch (SyntaxErrorException se) {
@@ -120,7 +120,7 @@ public class RuleGrammarTest {
 	private void testRuleError(TokenFactory f, String v, int location) {
 		Text text = new Text(v);
 		try {
-			f.tokenize(text, adapterSupply);
+			f.tokenize(text, objectSupply);
 			fail("Expected exception did not fire");			
 		} catch (SyntaxErrorException se) {
 			Assert.assertEquals(location, text.getIndex());
@@ -130,7 +130,7 @@ public class RuleGrammarTest {
 	private void testRuleNull(TokenFactory f, String v) {
 		try {
 			Text text = new Text(v);
-			Token result = f.tokenize(text, adapterSupply);
+			Token result = f.tokenize(text, objectSupply);
 			Assert.assertNull(result);
 		} catch (SyntaxErrorException se) {
 			fail("Unexpected exception: " + se.getMessage());			
@@ -150,7 +150,7 @@ public class RuleGrammarTest {
 	public void testList() {
 		try {
 			Text text = new Text("x, {y:',':'(':')'}, [{a}, [{b:':'}], [c], d], e");
-			TRule rule = (TRule) spec.rule.tokenize(text, adapterSupply);
+			TRule rule = (TRule) spec.rule.tokenize(text, objectSupply);
 			Assert.assertNotNull(rule);
 			Assert.assertTrue(rule instanceof TRule);
 			Assert.assertEquals("x, {y:',':'(':')'}, [{a}, [{b:':'}], [c], d], e", rule.toValue().toString());
@@ -180,7 +180,7 @@ public class RuleGrammarTest {
 	public void testList0() {
 		try {
 			Text text = new Text("{y:',':'(':')'}, {a}");
-			TRule rule = (TRule) spec.rule.tokenize(text, adapterSupply);
+			TRule rule = (TRule) spec.rule.tokenize(text, objectSupply);
 			Assert.assertNotNull(rule);
 			Assert.assertTrue(rule instanceof TRule);
 			Assert.assertEquals("{y:',':'(':')'}, {a}", rule.toValue().toString());
@@ -203,7 +203,7 @@ public class RuleGrammarTest {
 	public void testChar() {
 		try {
 			Text text = new Text("intlit, ['.', intlit], ['E', ['+' | '-'], intlit]");
-			TRule rule = (TRule) spec.rule.tokenize(text, adapterSupply);
+			TRule rule = (TRule) spec.rule.tokenize(text, objectSupply);
 			Assert.assertNotNull(rule);
 			Assert.assertTrue(rule instanceof TRule);
 			Assert.assertEquals("intlit, ['.', intlit], ['E', ['+' | '-'], intlit]", rule.toValue().toString());
@@ -216,7 +216,7 @@ public class RuleGrammarTest {
 	public void testChar0() {
 		try {
 			Text text = new Text("'+' | '-'");
-			TRule rule = (TRule) spec.rule.tokenize(text, adapterSupply);
+			TRule rule = (TRule) spec.rule.tokenize(text, objectSupply);
 			Assert.assertNotNull(rule);
 			Assert.assertTrue(rule instanceof TRule);
 			Assert.assertEquals("'+' | '-'", rule.toValue().toString());
@@ -229,7 +229,7 @@ public class RuleGrammarTest {
 	public void testSequence() {
 		try {
 			Text text = new Text("x, y, [(a, b), [c], d], e");
-			TRule rule = (TRule) spec.rule.tokenize(text, adapterSupply);
+			TRule rule = (TRule) spec.rule.tokenize(text, objectSupply);
 			Assert.assertNotNull(rule);
 			Assert.assertTrue(rule instanceof TRule);
 			Assert.assertEquals("x, y, [(a, b), [c], d], e", rule.toValue().toString());
@@ -252,7 +252,7 @@ public class RuleGrammarTest {
 	private TokenFactory getFactory(String inputText, RulesMapByName map, String name) {
 		try {
 			Text text = new Text(inputText);
-			TRule rule = (TRule) spec.rule.tokenize(text, adapterSupply);
+			TRule rule = (TRule) spec.rule.tokenize(text, objectSupply);
 			Assert.assertNotNull(rule);
 			Assert.assertTrue(rule instanceof TRule);
 			Assert.assertEquals(inputText, rule.toValue().toString());

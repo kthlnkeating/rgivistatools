@@ -8,7 +8,7 @@ public class TDelimitedList extends TList {
 	private static class TDelimitedListIterator implements Iterator<Token> {
 		private Iterator<Token> iterator;
 		boolean firstNextCall = true;
-		
+				
 		public TDelimitedListIterator(Iterator<Token> iterator) {
 			this.iterator = iterator;
 		}

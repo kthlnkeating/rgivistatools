@@ -1,7 +1,7 @@
 package com.raygroupintl.parser;
 
 import com.raygroupintl.charlib.Predicate;
-import com.raygroupintl.parser.annotation.AdapterSupply;
+import com.raygroupintl.parser.annotation.ObjectSupply;
 
 public class Text {
 	private String text;
@@ -52,19 +52,19 @@ public class Text {
 		return this.index;
 	}
 	
-	TString extractToken(String value, AdapterSupply adapterSupply, boolean ignoreCase) {
+	TString extractToken(String value, ObjectSupply objectSupply, boolean ignoreCase) {
 		if (this.text.length() >= this.index + value.length()) {
 			if (ignoreCase) {
 				String piece = this.text.substring(this.index, this.index+value.length());
 				if (piece.equalsIgnoreCase(value)) {
-					TString result = adapterSupply.newString();
+					TString result = objectSupply.newString();
 					result.set(this.text, this.index, this.index+value.length());
 					this.index += value.length();
 					return result;
 				}
 			} else {
 				if (this.text.startsWith(value, this.index)) {
-					TString result = adapterSupply.newString();
+					TString result = objectSupply.newString();
 					result.set(this.text, this.index, this.index+value.length());
 					this.index += value.length();
 					return result;
@@ -74,12 +74,12 @@ public class Text {
 		return null;	
 	}
 	
-	TString extractChar(Predicate predicate, AdapterSupply adapterSupply) {
+	TString extractChar(Predicate predicate, ObjectSupply objectSupply) {
 		if (this.index < this.text.length()) {
 			char ch = this.text.charAt(this.index);
 			if (predicate.check(ch)) {
 				++this.index;
-				TString result = adapterSupply.newString();
+				TString result = objectSupply.newString();
 				result.set(this.text, this.index-1, this.index);
 				return result;
 			}
@@ -87,7 +87,7 @@ public class Text {
 		return null;		
 	}
 	
-	TString extractToken(Predicate predicate, AdapterSupply adapterSupply) {
+	TString extractToken(Predicate predicate, ObjectSupply objectSupply) {
 		int fromIndex = this.index;
 		while (this.onChar()) {
 			char ch = this.getChar();
@@ -95,7 +95,7 @@ public class Text {
 				if (fromIndex == this.index) {
 					return null;
 				} else {
-					TString result = adapterSupply.newString();
+					TString result = objectSupply.newString();
 					result.set(this.text, fromIndex, this.index);
 					return result;
 				}
@@ -103,7 +103,7 @@ public class Text {
 			++this.index;
 		}
 		if (fromIndex < this.text.length()) {
-			TString result = adapterSupply.newString();
+			TString result = objectSupply.newString();
 			result.set(this.text, fromIndex, this.index);			
 			return result;
 		} else {
@@ -111,8 +111,8 @@ public class Text {
 		}
 	}
 	
-	public TString extractToken(int length,  AdapterSupply adapterSupply) {
-		TString result = adapterSupply.newString();
+	public TString extractToken(int length,  ObjectSupply objectSupply) {
+		TString result = objectSupply.newString();
 		result.set(this.text, this.index, this.index+length);
 		this.index += length;
 		return result;

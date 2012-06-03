@@ -20,11 +20,35 @@ import java.lang.reflect.Constructor;
 import java.lang.reflect.Modifier;
 
 public abstract class TFBasic extends TokenFactory {
+	private Adapter adapter;
+
 	public TFBasic(String name) {
 		super(name);
 	}
 
-	public abstract void setTargetType(Class<? extends Token> cls);
+	
+	@Override
+	protected Token convert(Token token) {
+		if ((this.adapter != null) && (token != null)) {
+			return this.adapter.convert(token); 
+		} else {
+			return token;
+		}
+	}
+
+	public void setTargetType(Class<? extends Token> cls) {
+		final Constructor<? extends Token> constructor = getConstructor(cls, Token.class, Token.class);
+		this.adapter = new Adapter() {			
+			@Override
+			public Token convert(Token ch) {
+				try{
+					return constructor.newInstance(ch);
+				} catch (Exception e) {	
+					return null;
+				}
+			}
+		};
+	}
 	
 	static protected Constructor<? extends Token> getConstructor(Class<? extends Token> cls, Class<?> constructorArgument, Class<? extends Token> targetCls) {
 		try {

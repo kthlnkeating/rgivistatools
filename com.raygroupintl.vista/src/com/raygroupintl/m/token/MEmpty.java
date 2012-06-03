@@ -14,32 +14,14 @@
 // limitations under the License.
 //---------------------------------------------------------------------------
 
-package com.raygroupintl.parser;
+package com.raygroupintl.m.token;
 
-import com.raygroupintl.parser.annotation.ObjectSupply;
+import com.raygroupintl.m.parsetree.Node;
+import com.raygroupintl.parser.TEmpty;
 
-public class TFEmptyVerified extends TokenFactory {
-	private char ch;
-	
-	public TFEmptyVerified(String name, char ch) {
-		super(name);
-		this.ch = ch;
-	}
-	
-	protected boolean isExpected(char ch) {
-		return this.ch == ch;		
-	}
-		
+public class MEmpty extends TEmpty implements MToken {
 	@Override
-	public Token tokenize(Text text, ObjectSupply objectSupply) throws SyntaxErrorException {
-		if (text.onChar()) {
-			char ch = text.getChar();
-			if (this.isExpected(ch)) {
-				return objectSupply.newEmpty();
-			} else {
-				throw new SyntaxErrorException();
-			}
-		}
+	public Node getNode() {
 		return null;
 	}
 }

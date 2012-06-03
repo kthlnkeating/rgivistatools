@@ -20,19 +20,19 @@ import com.raygroupintl.parser.TFString;
 import com.raygroupintl.parser.Text;
 import com.raygroupintl.parser.Token;
 import com.raygroupintl.parser.TokenFactory;
-import com.raygroupintl.parser.annotation.AdapterSupply;
+import com.raygroupintl.parser.annotation.ObjectSupply;
 
 public class TFDelimitedListTest {
-	private static AdapterSupply adapterSupply;
+	private static ObjectSupply objectSupply;
 	
 	@BeforeClass
 	public static void setUpBeforeClass() throws Exception {
-		adapterSupply = new DefaultAdapterSupply();
+		objectSupply = new DefaultObjectSupply();
 	}
 
 	@AfterClass
 	public static void tearDownAfterClass() throws Exception {
-		adapterSupply = null;
+		objectSupply = null;
 	}
 
 	public static void validTokenCheck(Token t, String v) {
@@ -43,7 +43,7 @@ public class TFDelimitedListTest {
 	public static void validCheckBasic(TFDelimitedList f, String v, String expected, String[] iteratorResults) {
 		Text text = new Text(v);
 		try {
-			TDelimitedList t = (TDelimitedList) f.tokenize(text, adapterSupply);
+			TDelimitedList t = (TDelimitedList) f.tokenize(text, objectSupply);
 			validTokenCheck(t, expected);
 			int index = 0;
 			Iterator<Token> it = null;
@@ -66,7 +66,7 @@ public class TFDelimitedListTest {
 	public static void errorCheck(TFDelimitedList f, String v, int errorLocation) {
 		Text text = new Text(v);
 		try {
-			f.tokenize(text, adapterSupply);
+			f.tokenize(text, objectSupply);
 			fail("Expected exception did not fire.");							
 		} catch (SyntaxErrorException e) {
 			Assert.assertEquals(errorLocation, text.getIndex());
@@ -76,7 +76,7 @@ public class TFDelimitedListTest {
 	public static void nullCheck(TFDelimitedList f, String v) {
 		Text text = new Text(v);
 		try {
-			Token t = f.tokenize(text, adapterSupply);
+			Token t = f.tokenize(text, objectSupply);
 			Assert.assertNull(t);
 		} catch(SyntaxErrorException e) {
 			fail("Unexpected exception: " + e.getMessage());
@@ -90,7 +90,7 @@ public class TFDelimitedListTest {
 		
 		TFDelimitedList dl = new TFDelimitedList("dl");
 		try {
-			dl.tokenize(new Text("a"), adapterSupply);
+			dl.tokenize(new Text("a"), objectSupply);
 			fail("Expected exception did not fire.");							
 		} catch (IllegalStateException e) {
 		} catch (SyntaxErrorException se) {

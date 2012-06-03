@@ -20,6 +20,7 @@ import java.util.List;
 
 import com.raygroupintl.m.parsetree.Node;
 import com.raygroupintl.parser.TDelimitedList;
+import com.raygroupintl.parser.TEmpty;
 import com.raygroupintl.parser.Token;
 
 public class MTDelimitedList extends TDelimitedList implements MToken {
@@ -31,8 +32,8 @@ public class MTDelimitedList extends TDelimitedList implements MToken {
 		super(tokens);
 	}
 
-	public MTDelimitedList() {
-		super();
+	public MTDelimitedList(TEmpty empty) {
+		super(empty);
 	}
 
 	@Override

@@ -4,9 +4,9 @@ import java.util.List;
 
 import com.raygroupintl.parser.TSequence;
 import com.raygroupintl.parser.Token;
-import com.raygroupintl.parser.annotation.AdapterSupply;
+import com.raygroupintl.parser.annotation.ObjectSupply;
 
-public class DefaultAdapterSupply implements AdapterSupply {
+public class DefaultObjectSupply implements ObjectSupply {
 	@Override
 	public TString newString() {
 		return new TString();
@@ -26,5 +26,9 @@ public class DefaultAdapterSupply implements AdapterSupply {
 	public TDelimitedList newDelimitedList(List<Token> tokens) {
 		return new TDelimitedList(tokens);
 	}
-
+	
+	@Override
+	public TEmpty newEmpty() {
+		return new TEmpty();
+	}
 }

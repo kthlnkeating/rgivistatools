@@ -16,15 +16,13 @@
 
 package com.raygroupintl.parser;
 
-import java.lang.reflect.Constructor;
 import java.util.Arrays;
 import java.util.List;
 
-import com.raygroupintl.parser.annotation.AdapterSupply;
+import com.raygroupintl.parser.annotation.ObjectSupply;
 
 public class TFDelimitedList extends TFBasic {
 	private TFSequence effective;	
-	private Adapter adapter;
 	
 	public TFDelimitedList(String name) {
 		super(name);
@@ -61,11 +59,11 @@ public class TFDelimitedList extends TFBasic {
 		this.set(element, delimiter, false);
 	}
 
-	private TDelimitedList tokenizeCommon(Text text, AdapterSupply adapterSupply) throws SyntaxErrorException {
+	private TDelimitedList tokenizeCommon(Text text, ObjectSupply objectSupply) throws SyntaxErrorException {
 		if (this.effective == null) {
 			throw new IllegalStateException("TFDelimitedList.set needs to be called before TFDelimitedList.tokenize");
 		} else {
-			TSequence internalResult = this.effective.tokenizeRaw(text, adapterSupply);
+			TSequence internalResult = this.effective.tokenizeRaw(text, objectSupply);
 			if (internalResult == null) {
 				return null;
 			} else {
@@ -74,43 +72,24 @@ public class TFDelimitedList extends TFBasic {
 				if (tailTokens == null) {
 					Token[] tmpResult = {leadingToken};
 					List<Token> list = Arrays.asList(tmpResult);
-					return adapterSupply.newDelimitedList(list);
+					return objectSupply.newDelimitedList(list);
 				} else {		
 					List<Token> list = tailTokens.toList();
 					list.add(0, leadingToken);
-					return adapterSupply.newDelimitedList(list);
+					return objectSupply.newDelimitedList(list);
 				}
 			}
 		}
 	}
 	
 	@Override
-	public Token tokenize(Text text, AdapterSupply adapterSupply) throws SyntaxErrorException {
-		TDelimitedList rawResult = this.tokenizeCommon(text, adapterSupply);
-		if ((rawResult == null) || (this.adapter == null)) {
-			return rawResult;
-		} else {
-			return this.adapter.convert(rawResult);
-		}
+	public Token tokenize(Text text, ObjectSupply objectSupply) throws SyntaxErrorException {
+		TDelimitedList rawResult = this.tokenizeCommon(text, objectSupply);
+		return this.convert(rawResult);
 	}
 
 	@Override
-	public Token tokenizeRaw(Text text, AdapterSupply adapterSupply) throws SyntaxErrorException {
-		return this.tokenizeCommon(text, adapterSupply);
-	}
-	
-	@Override
-	public void setTargetType(Class<? extends Token> cls) {
-		final Constructor<? extends Token> constructor = getConstructor(cls, Token.class, Token.class);
-		this.adapter = new Adapter() {			
-			@Override
-			public Token convert(Token token) {
-				try{
-					return constructor.newInstance(token);
-				} catch (Exception e) {	
-					return null;
-				}
-			}
-		};
+	public Token tokenizeRaw(Text text, ObjectSupply objectSupply) throws SyntaxErrorException {
+		return this.tokenizeCommon(text, objectSupply);
 	}
 }

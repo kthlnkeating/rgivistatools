@@ -7,7 +7,7 @@ import com.raygroupintl.parser.TString;
 import com.raygroupintl.parser.Text;
 import com.raygroupintl.parser.Token;
 import com.raygroupintl.parser.TokenFactory;
-import com.raygroupintl.parser.annotation.AdapterSupply;
+import com.raygroupintl.parser.annotation.ObjectSupply;
 
 public class TFOperator extends TokenFactory {
 	private static class OperatorBranch {
@@ -41,7 +41,7 @@ public class TFOperator extends TokenFactory {
 	}
 		
 	@Override
-	public Token tokenize(Text text, AdapterSupply adapterSupply) {
+	public Token tokenize(Text text, ObjectSupply objectSupply) {
 		if (text.onChar()) {
 			char ch = text.getChar();	
 			OperatorBranch branch = this.operators.get(ch);
@@ -55,7 +55,7 @@ public class TFOperator extends TokenFactory {
 					++index;
 				}
 				if (branch.validEnd) {
-					TString t = text.extractToken(index, adapterSupply);
+					TString t = text.extractToken(index, objectSupply);
 					return new TOperator(t);
 				}				
 			}

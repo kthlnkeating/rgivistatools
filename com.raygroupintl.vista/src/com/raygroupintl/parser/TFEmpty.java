@@ -16,7 +16,7 @@
 
 package com.raygroupintl.parser;
 
-import com.raygroupintl.parser.annotation.AdapterSupply;
+import com.raygroupintl.parser.annotation.ObjectSupply;
 
 public class TFEmpty extends TokenFactory {
 	private TokenFactory expected;
@@ -31,15 +31,15 @@ public class TFEmpty extends TokenFactory {
 	}
 	
 	@Override
-	public Token tokenize(Text text, AdapterSupply adapterSupply) throws SyntaxErrorException {
+	public Token tokenize(Text text, ObjectSupply objectSupply) throws SyntaxErrorException {
 		if (text.onChar()) {
 			if (this.expected == null) {
-				return new TEmpty();
+				return objectSupply.newEmpty();
 			} else {
 				Text textCopy = text.getCopy();
-				Token t = this.expected.tokenize(textCopy, adapterSupply);
+				Token t = this.expected.tokenize(textCopy, objectSupply);
 				if (t != null)  {
-					return new TEmpty();
+					return objectSupply.newEmpty();
 				}
 			}
 		}

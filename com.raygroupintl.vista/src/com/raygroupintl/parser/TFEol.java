@@ -16,7 +16,7 @@
 
 package com.raygroupintl.parser;
 
-import com.raygroupintl.parser.annotation.AdapterSupply;
+import com.raygroupintl.parser.annotation.ObjectSupply;
 
 public class TFEol extends TokenFactory {
 	public TFEol(String name) {
@@ -24,7 +24,7 @@ public class TFEol extends TokenFactory {
 	}
 	
 	@Override
-	public Token tokenize(Text text, AdapterSupply adapterSupply) {
+	public Token tokenize(Text text, ObjectSupply objectSupply) {
 		return text.extractEOLToken();
 	}
 }

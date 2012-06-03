@@ -3,10 +3,11 @@ package com.raygroupintl.m.token;
 import java.util.List;
 
 import com.raygroupintl.parser.TDelimitedList;
+import com.raygroupintl.parser.TEmpty;
 import com.raygroupintl.parser.Token;
-import com.raygroupintl.parser.annotation.AdapterSupply;
+import com.raygroupintl.parser.annotation.ObjectSupply;
 
-public class MAdapterSupply implements AdapterSupply {
+public class MObjectSupply implements ObjectSupply {
 	@Override
 	public MTString newString() {
 		return new MTString();
@@ -25,5 +26,10 @@ public class MAdapterSupply implements AdapterSupply {
 	@Override
 	public TDelimitedList newDelimitedList(List<Token> tokens) {
 		return new MTDelimitedList(tokens);
+	}
+	
+	@Override
+	public TEmpty newEmpty() {
+		return new MEmpty();
 	}
 }

@@ -19,7 +19,7 @@ package com.raygroupintl.parser;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.raygroupintl.parser.annotation.AdapterSupply;
+import com.raygroupintl.parser.annotation.ObjectSupply;
 
 public class TFForkableChoice extends TFBasic {
 	private List<TokenFactory> factories = new ArrayList<TokenFactory>();
@@ -37,10 +37,10 @@ public class TFForkableChoice extends TFBasic {
 	}
 	
 	@Override
-	public Token tokenize(Text text, AdapterSupply adapterSupply) throws SyntaxErrorException {
+	public Token tokenize(Text text, ObjectSupply objectSupply) throws SyntaxErrorException {
 		if (text.onChar()) {
 			for (TokenFactory f : this.factories) {
-				Token result = f.tokenize(text, adapterSupply);
+				Token result = f.tokenize(text, objectSupply);
 				if (result != null) {
 					return result;
 				}

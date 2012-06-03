@@ -16,14 +16,11 @@
 
 package com.raygroupintl.parser;
 
-import java.lang.reflect.Constructor;
-
 import com.raygroupintl.charlib.Predicate;
-import com.raygroupintl.parser.annotation.AdapterSupply;
+import com.raygroupintl.parser.annotation.ObjectSupply;
 
 public class TFString extends TFBasic {
 	private Predicate predicate;
-	private Adapter adapter;
 	
 	public TFString(String name, Predicate predicate) {
 		super(name);
@@ -31,37 +28,13 @@ public class TFString extends TFBasic {
 	}
 		
 	@Override
-	public Token tokenize(Text text, AdapterSupply adapterSupply) {
-		Token result = this.tokenizeRaw(text, adapterSupply);
+	public Token tokenize(Text text, ObjectSupply objectSupply) {
+		Token result = this.tokenizeRaw(text, objectSupply);
 		return this.convert(result);
 	}
 
 	@Override
-	public TString tokenizeRaw(Text text, AdapterSupply adapterSupply) {
-		return text.extractToken(this.predicate, adapterSupply);
-	}
-	
-	@Override
-	protected Token convert(Token token) {
-		if ((this.adapter != null) && (token != null)) {
-			return this.adapter.convert(token); 
-		} else {
-			return token;
-		}
-	}
-
-	@Override
-	public void setTargetType(Class<? extends Token> cls) {
-		final Constructor<? extends Token> constructor = getConstructor(cls, Token.class, Token.class);
-		this.adapter = new Adapter() {			
-			@Override
-			public Token convert(Token value) {
-				try{
-					return (Token) constructor.newInstance(value);
-				} catch (Exception e) {	
-					return null;
-				}
-			}
-		};
+	public TString tokenizeRaw(Text text, ObjectSupply objectSupply) {
+		return text.extractToken(this.predicate, objectSupply);
 	}
 }

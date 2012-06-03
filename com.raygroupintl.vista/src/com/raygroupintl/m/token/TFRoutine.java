@@ -9,11 +9,11 @@ import com.raygroupintl.parser.SyntaxErrorException;
 import com.raygroupintl.parser.Text;
 import com.raygroupintl.parser.Token;
 import com.raygroupintl.parser.TokenFactory;
-import com.raygroupintl.parser.annotation.AdapterSupply;
+import com.raygroupintl.parser.annotation.ObjectSupply;
 
 public class TFRoutine {
 	private TokenFactory tfLine;
-	private AdapterSupply mAdapterSupply = new MAdapterSupply();
+	private ObjectSupply mAdapterSupply = new MObjectSupply();
 	
 	public TFRoutine(MTFSupply supply) {
 		this.tfLine = supply.line;

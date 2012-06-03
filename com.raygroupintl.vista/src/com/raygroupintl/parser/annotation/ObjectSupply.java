@@ -14,32 +14,21 @@
 // limitations under the License.
 //---------------------------------------------------------------------------
 
-package com.raygroupintl.parser;
+package com.raygroupintl.parser.annotation;
 
-import com.raygroupintl.parser.annotation.ObjectSupply;
+import java.util.List;
 
-public class TFEmptyVerified extends TokenFactory {
-	private char ch;
-	
-	public TFEmptyVerified(String name, char ch) {
-		super(name);
-		this.ch = ch;
-	}
-	
-	protected boolean isExpected(char ch) {
-		return this.ch == ch;		
-	}
-		
-	@Override
-	public Token tokenize(Text text, ObjectSupply objectSupply) throws SyntaxErrorException {
-		if (text.onChar()) {
-			char ch = text.getChar();
-			if (this.isExpected(ch)) {
-				return objectSupply.newEmpty();
-			} else {
-				throw new SyntaxErrorException();
-			}
-		}
-		return null;
-	}
+import com.raygroupintl.parser.TDelimitedList;
+import com.raygroupintl.parser.TEmpty;
+import com.raygroupintl.parser.TList;
+import com.raygroupintl.parser.TSequence;
+import com.raygroupintl.parser.TString;
+import com.raygroupintl.parser.Token;
+
+public interface ObjectSupply {
+	TString newString();
+	TSequence newSequence(int length);
+	TList newList();
+	TDelimitedList newDelimitedList(List<Token> tokens);
+	TEmpty newEmpty();
 }

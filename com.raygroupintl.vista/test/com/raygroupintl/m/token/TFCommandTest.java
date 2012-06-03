@@ -14,12 +14,12 @@ import com.raygroupintl.parser.SyntaxErrorException;
 import com.raygroupintl.parser.Text;
 import com.raygroupintl.parser.Token;
 import com.raygroupintl.parser.TokenFactory;
-import com.raygroupintl.parser.annotation.AdapterSupply;
+import com.raygroupintl.parser.annotation.ObjectSupply;
 
 public class TFCommandTest {	
 	private static TFCommand fStd95;
 	private static TFCommand fCache;
-	private static AdapterSupply adapterSupply;
+	private static ObjectSupply objectSupply;
 	
 	@BeforeClass
 	public static void setUpBeforeClass() throws Exception {
@@ -29,7 +29,7 @@ public class TFCommandTest {
 		MTFSupply tfsCache = MTFSupply.getInstance(MVersion.CACHE);
 		fCache =  tfsCache.command;
 		
-		adapterSupply = new MAdapterSupply();
+		objectSupply = new MObjectSupply();
 	}
 
 	@AfterClass
@@ -37,13 +37,13 @@ public class TFCommandTest {
 	public static void tearDownAfterClass() throws Exception {
 		fStd95 = null;
 		fCache = null;
-		adapterSupply = null;
+		objectSupply = null;
 	}
 		
 	private void testCommand(TokenFactory f, String v, boolean error) {
 		try {
 			Text text = new Text(v);
-			Token t = f.tokenize(text, adapterSupply);
+			Token t = f.tokenize(text, objectSupply);
 			if (error) {
 				Assert.assertTrue(t instanceof TSyntaxError);
 			} else {

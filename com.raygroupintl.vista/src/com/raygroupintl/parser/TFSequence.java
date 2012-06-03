@@ -1,8 +1,6 @@
 package com.raygroupintl.parser;
 
-import java.lang.reflect.Constructor;
-
-import com.raygroupintl.parser.annotation.AdapterSupply;
+import com.raygroupintl.parser.annotation.ObjectSupply;
 
 public class TFSequence extends TFBasic {
 	public enum ValidateResult {
@@ -53,7 +51,6 @@ public class TFSequence extends TFBasic {
 	
 	private TokenFactory[] factories = {};
 	private RequiredFlags requiredFlags = new RequiredFlags();
-	private Adapter adapter;
 	
 	public TFSequence(String name) {		
 		super(name);
@@ -112,27 +109,27 @@ public class TFSequence extends TFBasic {
 	}
 	
 	@Override
-	public final Token tokenize(Text text, AdapterSupply adapterSupply) throws SyntaxErrorException {
-		TSequence result = this.tokenizeRaw(text, adapterSupply);
+	public final Token tokenize(Text text, ObjectSupply objectSupply) throws SyntaxErrorException {
+		TSequence result = this.tokenizeRaw(text, objectSupply);
 		return this.convert(result);
 	}
 	
 	@Override
-	public final TSequence tokenizeRaw(Text text, AdapterSupply adapterSupply) throws SyntaxErrorException {
+	public final TSequence tokenizeRaw(Text text, ObjectSupply objectSupply) throws SyntaxErrorException {
 		if (text.onChar()) {
-			TSequence foundTokens = adapterSupply.newSequence(this.factories.length);
-			return this.tokenizeCommon(text, adapterSupply, 0, foundTokens, false);
+			TSequence foundTokens = objectSupply.newSequence(this.factories.length);
+			return this.tokenizeCommon(text, objectSupply, 0, foundTokens, false);
 		}		
 		return null;
 	}
 	
-	final TSequence tokenizeCommon(Text text, AdapterSupply adapterSupply, int firstSeqIndex, TSequence foundTokens, boolean noException) throws SyntaxErrorException {
+	final TSequence tokenizeCommon(Text text, ObjectSupply objectSupply, int firstSeqIndex, TSequence foundTokens, boolean noException) throws SyntaxErrorException {
 		int factoryCount = this.factories.length;
 		for (int i=firstSeqIndex; i<factoryCount; ++i) {
 			TokenFactory factory = this.factories[i];
 			Token token = null;
 			try {
-				token = factory.tokenize(text, adapterSupply);				
+				token = factory.tokenize(text, objectSupply);				
 			} catch (SyntaxErrorException e) {
 				if (noException) return null;
 				throw e;
@@ -154,35 +151,6 @@ public class TFSequence extends TFBasic {
 		}
 		if (foundTokens.isAllNull()) return null;
 		return foundTokens;
-	}
-	
-	@Override
-	protected Token convert(Token token) {
-		if ((this.adapter != null) && (token != null)) {
-			return this.adapter.convert(token); 
-		} else {
-			return token;
-		}
-	}
-
-	private static Adapter getAdapter(Class<? extends Token> cls) {
-		final Constructor<? extends Token> constructor = getConstructor(cls, Token.class, Token.class);
-		return new Adapter() {			
-			@Override
-			public Token convert(Token token) {
-				try{
-					return constructor.newInstance(token);
-				} catch (Exception e) {	
-					return null;
-				}
-			}
-		};
-		
-	}
-		
-	@Override
-	public void setTargetType(Class<? extends Token> cls) {
-		this.adapter = getAdapter(cls);
 	}
 	
 	public TokenFactory getFactory(int index) {

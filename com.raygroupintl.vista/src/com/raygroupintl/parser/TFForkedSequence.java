@@ -18,7 +18,7 @@ package com.raygroupintl.parser;
 
 import java.util.List;
 
-import com.raygroupintl.parser.annotation.AdapterSupply;
+import com.raygroupintl.parser.annotation.ObjectSupply;
 
 public class TFForkedSequence extends TokenFactory {
 	private TokenFactory leader;
@@ -71,18 +71,18 @@ public class TFForkedSequence extends TokenFactory {
 	}
 	
 	@Override
-	public Token tokenize(Text text, AdapterSupply adapterSupply) throws SyntaxErrorException {
-		Token leading = this.leader.tokenizeRaw(text, adapterSupply);
+	public Token tokenize(Text text, ObjectSupply objectSupply) throws SyntaxErrorException {
+		Token leading = this.leader.tokenizeRaw(text, objectSupply);
 		if (leading == null) {
 			return null;
 		}
-		TSequence foundTokens = adapterSupply.newSequence(this.getMaxSequenceCount());
+		TSequence foundTokens = objectSupply.newSequence(this.getMaxSequenceCount());
 		foundTokens.addToken(leading);
 		if (text.onChar()) {
 			int textIndex = text.getIndex();
 			for (TFSequence follower : this.followers) {
 				foundTokens.resetIndex(1);
-				Token result = follower.tokenizeCommon(text, adapterSupply, 1, foundTokens, true);
+				Token result = follower.tokenizeCommon(text, objectSupply, 1, foundTokens, true);
 				if (result != null) {
 					TokenFactory f0th = follower.getFactory(0);
 					Token replaced = f0th.convert(leading);

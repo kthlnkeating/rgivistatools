@@ -15,7 +15,7 @@ import com.raygroupintl.parser.Text;
 import com.raygroupintl.parser.Token;
 import com.raygroupintl.parser.TokenFactory;
 import com.raygroupintl.parser.TokenFactorySupply;
-import com.raygroupintl.parser.annotation.AdapterSupply;
+import com.raygroupintl.parser.annotation.ObjectSupply;
 
 public class TFCommand extends TokenFactorySupply {
 	private Map<String, TCSFactory> commandSpecs = new HashMap<String, TCSFactory>();
@@ -32,7 +32,7 @@ public class TFCommand extends TokenFactorySupply {
 		}
 		
 		@Override
-		public Token tokenize(Text text, AdapterSupply adapterSupply) {
+		public Token tokenize(Text text, ObjectSupply objectSupply) {
 			int index = 0;
 			boolean inQuotes = false;
 			while (text.onChar(index)) {
@@ -48,14 +48,14 @@ public class TFCommand extends TokenFactorySupply {
 				++index;
 			}
 			if (index > 0) {
-				return text.extractToken(index, adapterSupply);
+				return text.extractToken(index, objectSupply);
 			} else {
-				return new TEmpty();
+				return new MEmpty();
 			}
 		}
 	}
 
-	private static final TFEmptyVerified TF_EMPTY = TFEmptyVerified.getInstance("commandempty", ' ');
+	private static final TFEmptyVerified TF_EMPTY = new TFEmptyVerified("commandempty", ' ');
 	
 	private static abstract class TCommandSpec extends MTString {
 		private TokenFactory argumentFactory;
@@ -604,8 +604,8 @@ public class TFCommand extends TokenFactorySupply {
 		}
 		
 		@Override
-		public Token tokenize(Text text, AdapterSupply adapterSupply) throws SyntaxErrorException {
-			Token token = this.slave.tokenize(text, adapterSupply);
+		public Token tokenize(Text text, ObjectSupply objectSupply) throws SyntaxErrorException {
+			Token token = this.slave.tokenize(text, objectSupply);
 			if (token == null) {
 				return null;
 			} else {
@@ -632,14 +632,14 @@ public class TFCommand extends TokenFactorySupply {
 
 		
 	@Override
-	public Token tokenize(Text text, AdapterSupply adapterSupply) {
+	public Token tokenize(Text text, ObjectSupply objectSupply) {
 		Text textCopy = text.getCopy();
 		try {
-			return super.tokenize(text, adapterSupply);
+			return super.tokenize(text, objectSupply);
 		} catch (SyntaxErrorException e) {
 			int errorIndex = text.getIndex();
 			int lengthToEOL = textCopy.findEOL();
-			TString t = textCopy.extractToken(lengthToEOL, adapterSupply);
+			TString t = textCopy.extractToken(lengthToEOL, objectSupply);
 			text.copyFrom(textCopy);
 			return new TSyntaxError(e.getCode(), t, errorIndex);
 		}

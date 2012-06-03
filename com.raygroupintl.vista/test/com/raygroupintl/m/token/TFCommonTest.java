@@ -6,17 +6,19 @@ import junit.framework.Assert;
 
 import com.raygroupintl.m.struct.MError;
 import com.raygroupintl.parser.SyntaxErrorException;
+import com.raygroupintl.parser.TEmpty;
 import com.raygroupintl.parser.TList;
 import com.raygroupintl.parser.TSequence;
 import com.raygroupintl.parser.TString;
 import com.raygroupintl.parser.Text;
 import com.raygroupintl.parser.Token;
 import com.raygroupintl.parser.TokenFactory;
-import com.raygroupintl.parser.annotation.AdapterSupply;
+import com.raygroupintl.parser.annotation.ObjectSupply;
 
 public class TFCommonTest {
 	private static void checkObjectType(Token t) {
 		if (t instanceof TString) return;
+		if (t instanceof TEmpty) return;
 		Assert.assertTrue(t instanceof MToken);
 		if (t instanceof TSequence) {
 			for (Token r : (TSequence) t) {
@@ -35,16 +37,16 @@ public class TFCommonTest {
 	public static void validTokenCheck(Token t, String v) {
 		Assert.assertEquals(v, t.toValue().toString());
 		Assert.assertEquals(v.length(), t.toValue().length());
-		//checkObjectType(t);
+		checkObjectType(t);
 	}
 	
-	static Token validCheck(TokenFactory f, AdapterSupply adapterSupply, String v, boolean checkWithSpace) {
+	static Token validCheck(TokenFactory f, ObjectSupply objectSupply, String v, boolean checkWithSpace) {
 		try {
 			Text text = new Text(v);
-			Token t = f.tokenize(text, adapterSupply);
+			Token t = f.tokenize(text, objectSupply);
 			validTokenCheck(t, v);
 			if (checkWithSpace) {
-				validCheck(f, adapterSupply, v + " ", v);
+				validCheck(f, objectSupply, v + " ", v);
 			}
 			return t;
 		} catch(SyntaxErrorException e) {
@@ -53,35 +55,35 @@ public class TFCommonTest {
 		}
 	}
 
-	static Token validCheck(TokenFactory f, AdapterSupply adapterSupply, String v) {
-		return validCheck(f, adapterSupply, v, true);
+	static Token validCheck(TokenFactory f, ObjectSupply objectSupply, String v) {
+		return validCheck(f, objectSupply, v, true);
 	}
 
-	static Token validCheck(TokenFactory f, AdapterSupply adapterSupply, String v, Class<? extends Token> cls) {
-		Token t = validCheck(f, adapterSupply, v, true);
+	static Token validCheck(TokenFactory f, ObjectSupply objectSupply, String v, Class<? extends Token> cls) {
+		Token t = validCheck(f, objectSupply, v, true);
 		Assert.assertNotNull(t);
 		Assert.assertTrue(t.getClass().equals(cls));
 		return t;
 	}
 
-	static void nullCheck(TokenFactory f, AdapterSupply adapterSupply, String v) {
+	static void nullCheck(TokenFactory f, ObjectSupply objectSupply, String v) {
 		try {
 			Text text = new Text(v);
-			Token t = f.tokenize(text, adapterSupply);
+			Token t = f.tokenize(text, objectSupply);
 			Assert.assertNull(t);
 		} catch(SyntaxErrorException e) {
 			fail("Unexpected exception.");
 		}
 	}
 	
-	static void validCheckNS(TokenFactory f, AdapterSupply adapterSupply, String v) {
-		validCheck(f, adapterSupply, v, false);
+	static void validCheckNS(TokenFactory f, ObjectSupply objectSupply, String v) {
+		validCheck(f, objectSupply, v, false);
 	}
 
-	static void auxErrorCheck(TokenFactory f, AdapterSupply adapterSupply, String v, int errorCode, int location) {
+	static void auxErrorCheck(TokenFactory f, ObjectSupply objectSupply, String v, int errorCode, int location) {
 		Text text = new Text(v);
 		try {
-			f.tokenize(text, adapterSupply);
+			f.tokenize(text, objectSupply);
 			fail("Expected exception did not fire.");
 		} catch(SyntaxErrorException e) {
 			int actualLocation = text.getIndex();
@@ -90,17 +92,17 @@ public class TFCommonTest {
 		}
 	}
 
-	static void errorCheck(TokenFactory f, AdapterSupply adapterSupply, String v, int errorCode, int location) {
-		auxErrorCheck(f, adapterSupply, v, errorCode, location);
+	static void errorCheck(TokenFactory f, ObjectSupply objectSupply, String v, int errorCode, int location) {
+		auxErrorCheck(f, objectSupply, v, errorCode, location);
 		if (v.length() > location) {
-			auxErrorCheck(f, adapterSupply, v + " ", errorCode, location);
+			auxErrorCheck(f, objectSupply, v + " ", errorCode, location);
 		}
 	}
 	
-	static void validCheck(TokenFactory f, AdapterSupply adapterSupply, String v, String compare) {
+	static void validCheck(TokenFactory f, ObjectSupply objectSupply, String v, String compare) {
 		try {
 			Text text = new Text(v);
-			Token t = f.tokenize(text, adapterSupply);
+			Token t = f.tokenize(text, objectSupply);
 			validTokenCheck(t, compare);
 		} catch(SyntaxErrorException e) {
 			fail("Exception: " + e.getMessage());			

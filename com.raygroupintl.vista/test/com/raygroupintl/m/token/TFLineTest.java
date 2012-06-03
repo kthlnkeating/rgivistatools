@@ -17,12 +17,12 @@ import com.raygroupintl.parser.TSequence;
 import com.raygroupintl.parser.Text;
 import com.raygroupintl.parser.Token;
 import com.raygroupintl.parser.TokenFactory;
-import com.raygroupintl.parser.annotation.AdapterSupply;
+import com.raygroupintl.parser.annotation.ObjectSupply;
 
 public class TFLineTest {
 	private static TokenFactory fStd95;
 	private static TokenFactory fCache;
-	private static AdapterSupply adapterSupply;
+	private static ObjectSupply objectSupply;
 	
 	@BeforeClass
 	public static void setUpBeforeClass() throws Exception {
@@ -32,20 +32,20 @@ public class TFLineTest {
 		MTFSupply tfsCache = MTFSupply.getInstance(MVersion.CACHE);
 		fCache = tfsCache.line;
 		
-		adapterSupply = new MAdapterSupply();
+		objectSupply = new MObjectSupply();
 	}
 
 	@AfterClass
 	public static void tearDownAfterClass() throws Exception {
 		fStd95 = null;
 		fCache = null;
-		adapterSupply = null;
+		objectSupply = null;
 	}
 		
 	private Token lineTest(TokenFactory f, String line, boolean errorAsWell) {
 		try {
 			Text text = new Text(line);
-			Token t = f.tokenize(text, adapterSupply);
+			Token t = f.tokenize(text, objectSupply);
 			String r = t.toValue().toString();
 			Assert.assertEquals(line, r);	
 			TList commands = (TList) ((TSequence) t).get(4);
@@ -71,7 +71,7 @@ public class TFLineTest {
 	private void lineTest(TokenFactory f, String line, int errorCommand, int errorLocation) {
 		try {
 			Text text = new Text(line);
-			Token t = f.tokenize(text, adapterSupply);
+			Token t = f.tokenize(text, objectSupply);
 			String r = t.toValue().toString();
 			Assert.assertEquals(line, r);	
 			TList commands = (TList) ((TSequence) t).get(4);

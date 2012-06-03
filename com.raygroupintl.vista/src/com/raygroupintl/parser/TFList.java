@@ -16,13 +16,10 @@
 
 package com.raygroupintl.parser;
 
-import java.lang.reflect.Constructor;
-
-import com.raygroupintl.parser.annotation.AdapterSupply;
+import com.raygroupintl.parser.annotation.ObjectSupply;
 
 public final class TFList extends TFBasic {
 	private TokenFactory elementFactory;
-	private Adapter adapter;
 	
 	public TFList(String name) {
 		super(name);
@@ -37,15 +34,15 @@ public final class TFList extends TFBasic {
 		this.elementFactory = elementFactory;
 	}
 		
-	public TList tokenizeCommon(Text text, AdapterSupply adapterSupply) throws SyntaxErrorException {
+	public TList tokenizeCommon(Text text, ObjectSupply objectSupply) throws SyntaxErrorException {
 		if (elementFactory == null) throw new IllegalStateException("TFList.setElementFactory needs to be called before TFList.tokenize");
 		
 		if (text.onChar()) {
-			TList list = adapterSupply.newList();
+			TList list = objectSupply.newList();
 			while (text.onChar()) {
 				Token token = null;
 				try {
-					token = this.elementFactory.tokenize(text, adapterSupply);
+					token = this.elementFactory.tokenize(text, objectSupply);
 				} catch (SyntaxErrorException e) {
 					throw e;
 				}
@@ -64,50 +61,18 @@ public final class TFList extends TFBasic {
 	}
 	
 	@Override
-	public Token tokenize(Text text, AdapterSupply adapterSupply) throws SyntaxErrorException {
-		TList rawResult = this.tokenizeCommon(text, adapterSupply);
-		if (rawResult == null) {
-			return null;
-		} else {
-			if (this.adapter == null) {
-				return rawResult;
-			} else {
-				return this.adapter.convert(rawResult);
-			}
-		}
+	public Token tokenize(Text text, ObjectSupply objectSupply) throws SyntaxErrorException {
+		TList rawResult = this.tokenizeCommon(text, objectSupply);
+		return this.convert(rawResult);
 	}
 
 	@Override
-	public TList tokenizeRaw(Text text, AdapterSupply adapterSupply) throws SyntaxErrorException {
-		TList rawResult = this.tokenizeCommon(text, adapterSupply);
+	public TList tokenizeRaw(Text text, ObjectSupply objectSupply) throws SyntaxErrorException {
+		TList rawResult = this.tokenizeCommon(text, objectSupply);
 		if (rawResult == null) {
 			return null;
 		} else {
 			return rawResult;	
 		}
-	}
-
-	@Override
-	protected Token convert(Token token) {
-		if (this.adapter != null) {
-			return this.adapter.convert(token); 
-		} else {
-			return token;
-		}
-	}
-
-	@Override
-	public void setTargetType(Class<? extends Token> cls) {
-		final Constructor<? extends Token> constructor = getConstructor(cls, Token.class, TList.class);
-		this.adapter = new Adapter() {			
-			@Override
-			public Token convert(Token token) {
-				try{
-					return (Token) constructor.newInstance(token);
-				} catch (Exception e) {	
-					return null;
-				}
-			}
-		};
 	}
 }

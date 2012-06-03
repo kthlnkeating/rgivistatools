@@ -1,6 +1,6 @@
 package com.raygroupintl.parser;
 
-import com.raygroupintl.parser.annotation.AdapterSupply;
+import com.raygroupintl.parser.annotation.ObjectSupply;
 
 public final class TFSyntaxError extends TokenFactory {
 	private int code;
@@ -11,7 +11,7 @@ public final class TFSyntaxError extends TokenFactory {
 	}
 		
 	@Override
-	public Token tokenize(Text text, AdapterSupply adapterSupply) throws SyntaxErrorException {
+	public Token tokenize(Text text, ObjectSupply objectSupply) throws SyntaxErrorException {
 		throw new SyntaxErrorException(this.code);
 	}
 }

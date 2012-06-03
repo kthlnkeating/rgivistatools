@@ -10,24 +10,24 @@ import org.junit.Test;
 import com.raygroupintl.parser.SyntaxErrorException;
 import com.raygroupintl.parser.Text;
 import com.raygroupintl.parser.Token;
-import com.raygroupintl.parser.annotation.AdapterSupply;
+import com.raygroupintl.parser.annotation.ObjectSupply;
 import com.raygroupintl.parser.annotation.Parser;
 
 public class GrammarTest {
 	private static Grammar grammar;
-	private static AdapterSupply adapterSupply;
+	private static ObjectSupply objectSupply;
 	
 	@BeforeClass
 	public static void setUpBeforeClass() throws Exception {
 		Parser parser = new Parser();
 		grammar = parser.parse(Grammar.class);
-		adapterSupply = new DefaultAdapterSupply();
+		objectSupply = new DefaultObjectSupply();
 	}
 
 	@AfterClass
 	public static void tearDownAfterClass() throws Exception {
 		grammar = null;
-		adapterSupply = null;
+		objectSupply = null;
 	}
 
 	private void testCommon(String v, Token t) {
@@ -38,7 +38,7 @@ public class GrammarTest {
 	private void testCommonNumber(String v) {
 		try {
 			Text text = new Text(v, 0);
-			Token number = grammar.number.tokenize(text, adapterSupply);
+			Token number = grammar.number.tokenize(text, objectSupply);
 			Assert.assertTrue(number instanceof TNumber);
 		} catch (SyntaxErrorException se) {
 			fail("Unexpected exception: " + se.getMessage());			
@@ -59,7 +59,7 @@ public class GrammarTest {
 		try {
 			String v = "a+b.r";
 			Text text = new Text(v);
-			Token expr = grammar.expr.tokenize(text, adapterSupply);
+			Token expr = grammar.expr.tokenize(text, objectSupply);
 			testCommon(v, expr);
 		} catch (SyntaxErrorException se) {
 			fail("Unexpected exception: " + se.getMessage());			
@@ -69,7 +69,7 @@ public class GrammarTest {
 	public void testChoice(TokenFactory f, String v, Class<?> cls, int seqIndex) {
 		try {
 			Text text = new Text(v, 0);
-			Token t = f.tokenize(text, adapterSupply);
+			Token t = f.tokenize(text, objectSupply);
 			this.testCommon(v, t);
 			if (seqIndex < 0) {
 				Assert.assertTrue(t.getClass().equals(cls));
@@ -85,7 +85,7 @@ public class GrammarTest {
 	public void testChoiceError(TokenFactory f, String v) {
 		try {
 			Text text = new Text(v, 0);
-			f.tokenize(text, adapterSupply);
+			f.tokenize(text, objectSupply);
 			fail("Expected exception did not fire");			
 		} catch (SyntaxErrorException se) {
 		}		
