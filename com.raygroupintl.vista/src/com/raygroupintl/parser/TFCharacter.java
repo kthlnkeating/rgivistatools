@@ -32,18 +32,18 @@ public class TFCharacter extends TFBasic {
 	
 	@Override
 	public Token tokenize(Text text, AdapterSupply adapterSupply) {
-		
-		return text.extractChar(this.predicate, this.adapter == null ? adapterSupply.getStringAdapter() : this.adapter);
+		Token result = this.tokenizeRaw(text, adapterSupply);
+		return this.convert(result);
 	}
 	
 	@Override
-	public Token tokenizeRaw(Text text, AdapterSupply adapterSupply) {
-		return text.extractChar(this.predicate, adapterSupply.getStringAdapter());
+	public TString tokenizeRaw(Text text, AdapterSupply adapterSupply) {
+		return text.extractChar(this.predicate, adapterSupply);
 	}
 	
 	@Override
 	protected Token convert(Token token) {
-		if ((this.adapter != null) && (token instanceof TString)) {
+		if ((this.adapter != null) && (token != null)) {
 			return this.adapter.convert(token.toValue()); 
 		} else {
 			return token;

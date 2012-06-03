@@ -5,6 +5,7 @@ import java.util.Map;
 
 import com.raygroupintl.parser.StringAdapter;
 import com.raygroupintl.parser.StringPiece;
+import com.raygroupintl.parser.TString;
 import com.raygroupintl.parser.Text;
 import com.raygroupintl.parser.Token;
 import com.raygroupintl.parser.TokenFactory;
@@ -63,7 +64,8 @@ public class TFOperator extends TokenFactory {
 					++index;
 				}
 				if (branch.validEnd) {
-					return text.extractToken(index, new OperatorAdapter());
+					TString t = text.extractToken(index, adapterSupply);
+					return (new OperatorAdapter()).convert(t);
 				}				
 			}
 		}

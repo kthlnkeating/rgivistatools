@@ -4,13 +4,13 @@ import java.util.HashMap;
 import java.util.Map;
 
 import com.raygroupintl.m.struct.MError;
-import com.raygroupintl.parser.StringAdapter;
 import com.raygroupintl.parser.StringPiece;
 import com.raygroupintl.parser.SyntaxErrorException;
 import com.raygroupintl.parser.TEmpty;
 import com.raygroupintl.parser.TFEmptyVerified;
 import com.raygroupintl.parser.TFSequence;
 import com.raygroupintl.parser.TSequence;
+import com.raygroupintl.parser.TString;
 import com.raygroupintl.parser.Text;
 import com.raygroupintl.parser.Token;
 import com.raygroupintl.parser.TokenFactory;
@@ -24,13 +24,6 @@ public class TFCommand extends TokenFactorySupply {
 	public TFCommand(String name, MTFSupply supply) {
 		super(name);
 		this.supply = supply;
-	}
-	
-	private static class CommandNameAdapter implements StringAdapter {
-		@Override
-		public Token convert(StringPiece value) {
-			return new MTString(value);
-		}
 	}
 	
 	private static class TFGenericArgument extends TokenFactory {
@@ -55,7 +48,7 @@ public class TFCommand extends TokenFactorySupply {
 				++index;
 			}
 			if (index > 0) {
-				return text.extractToken(index, new CommandNameAdapter());
+				return text.extractToken(index, adapterSupply);
 			} else {
 				return new TEmpty();
 			}
@@ -645,11 +638,10 @@ public class TFCommand extends TokenFactorySupply {
 			return super.tokenize(text, adapterSupply);
 		} catch (SyntaxErrorException e) {
 			int errorIndex = text.getIndex();
-			TSyntaxError.Adapter adapter = new TSyntaxError.Adapter(e.getCode(), errorIndex);
 			int lengthToEOL = textCopy.findEOL();
-			Token t = textCopy.extractToken(lengthToEOL, adapter);
+			TString t = textCopy.extractToken(lengthToEOL, adapterSupply);
 			text.copyFrom(textCopy);
-			return t;
+			return new TSyntaxError(e.getCode(), t, errorIndex);
 		}
 	}
 	

@@ -1,6 +1,7 @@
 package com.raygroupintl.parser;
 
 import com.raygroupintl.charlib.Predicate;
+import com.raygroupintl.parser.annotation.AdapterSupply;
 
 public class Text {
 	private String text;
@@ -71,18 +72,20 @@ public class Text {
 		return null;	
 	}
 	
-	Token extractChar(Predicate predicate, StringAdapter adapter) {
+	TString extractChar(Predicate predicate, AdapterSupply adapterSupply) {
 		if (this.index < this.text.length()) {
 			char ch = this.text.charAt(this.index);
 			if (predicate.check(ch)) {
 				++this.index;
-				return adapter.convert(new StringPiece(this.text, this.index-1, this.index));
+				TString result = adapterSupply.newString();
+				result.set(this.text, this.index-1, this.index);
+				return result;
 			}
 		}
 		return null;		
 	}
 	
-	Token extractToken(Predicate predicate, StringAdapter adapter) {
+	TString extractToken(Predicate predicate, AdapterSupply adapterSupply) {
 		int fromIndex = this.index;
 		while (this.onChar()) {
 			char ch = this.getChar();
@@ -90,25 +93,30 @@ public class Text {
 				if (fromIndex == this.index) {
 					return null;
 				} else {
-					return adapter.convert(new StringPiece(this.text, fromIndex, this.index));
+					TString result = adapterSupply.newString();
+					result.set(this.text, fromIndex, this.index);
+					return result;
 				}
 			}
 			++this.index;
 		}
 		if (fromIndex < this.text.length()) {
-			return adapter.convert(new StringPiece(this.text, fromIndex, this.index));			
+			TString result = adapterSupply.newString();
+			result.set(this.text, fromIndex, this.index);			
+			return result;
 		} else {
 			return null;
 		}
 	}
 	
-	public Token extractToken(int length, StringAdapter adapter) {
-		Token result = adapter.convert(new StringPiece(this.text, this.index, this.index+length));
+	public TString extractToken(int length,  AdapterSupply adapterSupply) {
+		TString result = adapterSupply.newString();
+		result.set(this.text, this.index, this.index+length);
 		this.index += length;
 		return result;
 	}
 	
-	Token extractEOLToken() {
+	TString extractEOLToken() {
 		if (this.onChar()) {
 			char ch0th = this.getChar();
 			if ((ch0th == '\n') || (ch0th == '\r')) {
