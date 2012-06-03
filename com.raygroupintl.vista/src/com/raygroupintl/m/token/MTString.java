@@ -20,6 +20,7 @@ import com.raygroupintl.m.parsetree.IgnorableNode;
 import com.raygroupintl.m.parsetree.Node;
 import com.raygroupintl.parser.StringPiece;
 import com.raygroupintl.parser.TString;
+import com.raygroupintl.parser.Token;
 
 public class MTString extends TString implements MToken {
 	public MTString() {
@@ -28,6 +29,10 @@ public class MTString extends TString implements MToken {
 	
 	public MTString(StringPiece value) {
 		super(value);
+	}
+	
+	public MTString(Token token) {
+		super(token);
 	}
 	
 	@Override

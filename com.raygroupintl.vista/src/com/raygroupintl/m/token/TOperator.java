@@ -1,9 +1,9 @@
 package com.raygroupintl.m.token;
 
-import com.raygroupintl.parser.StringPiece;
+import com.raygroupintl.parser.Token;
 
 public class TOperator extends MTString {
-	public TOperator(StringPiece value) {
-		super(value);
+	public TOperator(Token token) {
+		super(token);
 	}
 }

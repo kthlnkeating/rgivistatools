@@ -3,8 +3,6 @@ package com.raygroupintl.m.token;
 import java.util.HashMap;
 import java.util.Map;
 
-import com.raygroupintl.parser.StringAdapter;
-import com.raygroupintl.parser.StringPiece;
 import com.raygroupintl.parser.TString;
 import com.raygroupintl.parser.Text;
 import com.raygroupintl.parser.Token;
@@ -12,13 +10,6 @@ import com.raygroupintl.parser.TokenFactory;
 import com.raygroupintl.parser.annotation.AdapterSupply;
 
 public class TFOperator extends TokenFactory {
-	private static class OperatorAdapter implements StringAdapter {
-		@Override
-		public Token convert(StringPiece value) {
-			return new TOperator(value);
-		}		
-	}
-		
 	private static class OperatorBranch {
 		public Map<Character, OperatorBranch> nextBranch = new HashMap<Character, OperatorBranch>();
 		public boolean validEnd;
@@ -65,7 +56,7 @@ public class TFOperator extends TokenFactory {
 				}
 				if (branch.validEnd) {
 					TString t = text.extractToken(index, adapterSupply);
-					return (new OperatorAdapter()).convert(t);
+					return new TOperator(t);
 				}				
 			}
 		}

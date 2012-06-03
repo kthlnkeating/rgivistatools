@@ -40,7 +40,7 @@ public class BasicTokens {
 	}
 	
 	public static class MTFanoutLabelB extends MTString {
-		public MTFanoutLabelB(StringPiece value) {
+		public MTFanoutLabelB(Token value) {
 			super(value);
 		}
 		

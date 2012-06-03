@@ -18,11 +18,11 @@ package com.raygroupintl.m.token;
 
 import com.raygroupintl.m.parsetree.IntegerLiteral;
 import com.raygroupintl.m.parsetree.Node;
-import com.raygroupintl.parser.StringPiece;
+import com.raygroupintl.parser.Token;
 
 public class TIntLit extends MTString {
-	public TIntLit(StringPiece value) {
-		super(value);
+	public TIntLit(Token token) {
+		super(token);
 	}
 	
 	@Override

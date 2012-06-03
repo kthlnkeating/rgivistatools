@@ -158,7 +158,7 @@ public class TFSequence extends TFBasic {
 	
 	@Override
 	protected Token convert(Token token) {
-		if ((this.adapter != null) && (token instanceof TSequence)) {
+		if ((this.adapter != null) && (token != null)) {
 			return this.adapter.convert(token); 
 		} else {
 			return token;

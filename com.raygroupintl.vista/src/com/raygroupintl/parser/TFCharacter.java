@@ -23,7 +23,7 @@ import com.raygroupintl.parser.annotation.AdapterSupply;
 
 public class TFCharacter extends TFBasic {
 	private Predicate predicate;
-	private StringAdapter adapter;
+	private Adapter adapter;
 	
 	public TFCharacter(String name, Predicate predicate) {
 		super(name);
@@ -44,7 +44,7 @@ public class TFCharacter extends TFBasic {
 	@Override
 	protected Token convert(Token token) {
 		if ((this.adapter != null) && (token != null)) {
-			return this.adapter.convert(token.toValue()); 
+			return this.adapter.convert(token); 
 		} else {
 			return token;
 		}
@@ -52,12 +52,12 @@ public class TFCharacter extends TFBasic {
 
 	@Override
 	public void setTargetType(Class<? extends Token> cls) {
-		final Constructor<? extends Token> constructor = getConstructor(cls, StringPiece.class, TString.class);
-		this.adapter = new StringAdapter() {			
+		final Constructor<? extends Token> constructor = getConstructor(cls, Token.class, Token.class);
+		this.adapter = new Adapter() {			
 			@Override
-			public Token convert(StringPiece ch) {
+			public Token convert(Token ch) {
 				try{
-					return (Token) constructor.newInstance(ch);
+					return constructor.newInstance(ch);
 				} catch (Exception e) {	
 					return null;
 				}

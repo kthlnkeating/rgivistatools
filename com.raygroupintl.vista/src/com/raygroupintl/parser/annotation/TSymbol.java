@@ -18,12 +18,12 @@ package com.raygroupintl.parser.annotation;
 
 import java.util.Map;
 
-import com.raygroupintl.parser.StringPiece;
 import com.raygroupintl.parser.TString;
+import com.raygroupintl.parser.Token;
 
 public class TSymbol extends TString implements RuleSupply {
-	public TSymbol(StringPiece value) {
-		super(value);
+	public TSymbol(Token token) {
+		super(token);
 	}
 	
 	@Override

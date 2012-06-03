@@ -12,6 +12,10 @@ public class TString extends StringPiece implements Token {
 		super(value);
 	}
 	
+	public TString(Token token) {
+		super(token.toValue());
+	}
+	
 	public TString(String data, int beginIndex, int endIndex) {
 		super(data, beginIndex, endIndex);
 	}

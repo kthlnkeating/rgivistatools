@@ -23,7 +23,7 @@ import com.raygroupintl.parser.annotation.AdapterSupply;
 public class TFConstant extends TFBasic {
 	private String value;
 	private boolean ignoreCase;
-	private StringAdapter adapter;
+	private Adapter adapter;
 	
 	public TFConstant(String name, String value) {
 		this(name, value, false);
@@ -49,7 +49,7 @@ public class TFConstant extends TFBasic {
 	@Override
 	protected Token convert(Token token) {
 		if ((this.adapter != null) && (token != null)) {
-			return this.adapter.convert(token.toValue()); 
+			return this.adapter.convert(token); 
 		} else {
 			return token;
 		}
@@ -57,12 +57,12 @@ public class TFConstant extends TFBasic {
 
 	@Override
 	public void setTargetType(Class<? extends Token> cls) {
-		final Constructor<? extends Token> constructor = getConstructor(cls, StringPiece.class, TString.class);
-		this.adapter = new StringAdapter() {			
+		final Constructor<? extends Token> constructor = getConstructor(cls, Token.class, Token.class);
+		this.adapter = new Adapter() {			
 			@Override
-			public Token convert(StringPiece value) {
+			public Token convert(Token value) {
 				try{
-					return (Token) constructor.newInstance(value);
+					return constructor.newInstance(value);
 				} catch (Exception e) {	
 					return null;
 				}
