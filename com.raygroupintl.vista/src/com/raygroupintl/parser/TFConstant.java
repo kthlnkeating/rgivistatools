@@ -37,17 +37,18 @@ public class TFConstant extends TFBasic {
 
 	@Override
 	public Token tokenize(Text text, AdapterSupply adapterSupply) {
-		return text.extractToken(this.value, this.adapter == null ? adapterSupply.getStringAdapter() : this.adapter, this.ignoreCase);
+		Token result = this.tokenizeRaw(text, adapterSupply);
+		return this.convert(result);
 	}
 
 	@Override
-	public Token tokenizeRaw(Text text, AdapterSupply adapterSupply) {
-		return text.extractToken(this.value, adapterSupply.getStringAdapter(), this.ignoreCase);
+	public TString tokenizeRaw(Text text, AdapterSupply adapterSupply) {
+		return text.extractToken(this.value, adapterSupply, this.ignoreCase);
 	}
 	
 	@Override
 	protected Token convert(Token token) {
-		if ((this.adapter != null) && (token instanceof TString)) {
+		if ((this.adapter != null) && (token != null)) {
 			return this.adapter.convert(token.toValue()); 
 		} else {
 			return token;

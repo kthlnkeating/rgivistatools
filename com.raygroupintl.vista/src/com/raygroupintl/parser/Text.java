@@ -52,20 +52,22 @@ public class Text {
 		return this.index;
 	}
 	
-	Token extractToken(String value, StringAdapter adapter, boolean ignoreCase) {
+	TString extractToken(String value, AdapterSupply adapterSupply, boolean ignoreCase) {
 		if (this.text.length() >= this.index + value.length()) {
 			if (ignoreCase) {
 				String piece = this.text.substring(this.index, this.index+value.length());
 				if (piece.equalsIgnoreCase(value)) {
-					StringPiece v = new StringPiece(this.text, this.index, this.index+value.length());
+					TString result = adapterSupply.newString();
+					result.set(this.text, this.index, this.index+value.length());
 					this.index += value.length();
-					return adapter.convert(v);
+					return result;
 				}
 			} else {
 				if (this.text.startsWith(value, this.index)) {
-					StringPiece v = new StringPiece(this.text, this.index, this.index+value.length());
+					TString result = adapterSupply.newString();
+					result.set(this.text, this.index, this.index+value.length());
 					this.index += value.length();
-					return adapter.convert(v);
+					return result;
 				}
 			}
 		}
