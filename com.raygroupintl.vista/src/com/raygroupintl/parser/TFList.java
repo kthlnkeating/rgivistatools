@@ -22,7 +22,7 @@ import com.raygroupintl.parser.annotation.AdapterSupply;
 
 public final class TFList extends TFBasic {
 	private TokenFactory elementFactory;
-	private ListAdapter adapter;
+	private Adapter adapter;
 	
 	public TFList(String name) {
 		super(name);
@@ -99,7 +99,7 @@ public final class TFList extends TFBasic {
 	@Override
 	public void setTargetType(Class<? extends Token> cls) {
 		final Constructor<? extends Token> constructor = getConstructor(cls, Token.class, TList.class);
-		this.adapter = new ListAdapter() {			
+		this.adapter = new Adapter() {			
 			@Override
 			public Token convert(Token token) {
 				try{

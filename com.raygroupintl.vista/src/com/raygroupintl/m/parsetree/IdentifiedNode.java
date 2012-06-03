@@ -14,8 +14,8 @@
 // limitations under the License.
 //---------------------------------------------------------------------------
 
-package com.raygroupintl.parser;
+package com.raygroupintl.m.parsetree;
 
-public interface DelimitedListAdapter {
-	TDelimitedList convert(Token token);
+public interface IdentifiedNode extends Node {
+	String getIdentifier();
 }

@@ -14,8 +14,24 @@
 // limitations under the License.
 //---------------------------------------------------------------------------
 
-package com.raygroupintl.parser;
+package com.raygroupintl.m.token;
 
-public interface ListAdapter {
-	Token convert(Token token);
+import com.raygroupintl.m.parsetree.IdentifiedNode;
+import com.raygroupintl.m.parsetree.Node;
+import com.raygroupintl.parser.StringPiece;
+
+public abstract class MIdentifier extends MTString implements IdentifiedNode {
+	public MIdentifier(StringPiece piece) {
+		super(piece);
+	}
+	
+	@Override
+	public Node getNode() {
+		return this;
+	}
+	
+	@Override
+	public String getIdentifier() {
+		return this.toValue().toString();
+	}
 }

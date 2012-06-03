@@ -24,7 +24,7 @@ import com.raygroupintl.parser.annotation.AdapterSupply;
 
 public class TFDelimitedList extends TFBasic {
 	private TFSequence effective;	
-	private DelimitedListAdapter adapter;
+	private Adapter adapter;
 	
 	public TFDelimitedList(String name) {
 		super(name);
@@ -65,7 +65,7 @@ public class TFDelimitedList extends TFBasic {
 		if (this.effective == null) {
 			throw new IllegalStateException("TFDelimitedList.set needs to be called before TFDelimitedList.tokenize");
 		} else {
-			TSequence internalResult = this.effective.tokenize(text, adapterSupply);
+			TSequence internalResult = this.effective.tokenizeRaw(text, adapterSupply);
 			if (internalResult == null) {
 				return null;
 			} else {
@@ -85,7 +85,7 @@ public class TFDelimitedList extends TFBasic {
 	}
 	
 	@Override
-	public TDelimitedList tokenize(Text text, AdapterSupply adapterSupply) throws SyntaxErrorException {
+	public Token tokenize(Text text, AdapterSupply adapterSupply) throws SyntaxErrorException {
 		TDelimitedList rawResult = this.tokenizeCommon(text, adapterSupply);
 		if ((rawResult == null) || (this.adapter == null)) {
 			return rawResult;
@@ -101,12 +101,12 @@ public class TFDelimitedList extends TFBasic {
 	
 	@Override
 	public void setTargetType(Class<? extends Token> cls) {
-		final Constructor<? extends Token> constructor = getConstructor(cls, Token.class, TDelimitedList.class);
-		this.adapter = new DelimitedListAdapter() {			
+		final Constructor<? extends Token> constructor = getConstructor(cls, Token.class, Token.class);
+		this.adapter = new Adapter() {			
 			@Override
-			public TDelimitedList convert(Token token) {
+			public Token convert(Token token) {
 				try{
-					return (TDelimitedList) constructor.newInstance(token);
+					return constructor.newInstance(token);
 				} catch (Exception e) {	
 					return null;
 				}
