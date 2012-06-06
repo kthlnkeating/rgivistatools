@@ -1,6 +1,6 @@
 package com.raygroupintl.parser.annotation;
 
-import com.raygroupintl.parser.TFBasic;
+import com.raygroupintl.parser.TokenFactory;
 
 public class FSRCopy extends FSRBase {
 	private FactorySupplyRule slave;
@@ -21,8 +21,8 @@ public class FSRCopy extends FSRBase {
 	}
 	
 	@Override
-	public TFBasic getShellFactory() {
-		return (TFBasic) this.slave.getShellFactory();
+	public TokenFactory getShellFactory() {
+		return this.slave.getShellFactory();
 	}
 	
 	@Override

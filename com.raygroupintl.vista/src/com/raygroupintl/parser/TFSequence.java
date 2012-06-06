@@ -2,7 +2,7 @@ package com.raygroupintl.parser;
 
 import com.raygroupintl.parser.annotation.ObjectSupply;
 
-public class TFSequence extends TFBasic {
+public class TFSequence extends TokenFactory {
 	public enum ValidateResult {
 		CONTINUE, BREAK, NULL_RESULT
 	}

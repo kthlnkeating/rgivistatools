@@ -19,7 +19,7 @@ package com.raygroupintl.parser;
 import com.raygroupintl.charlib.Predicate;
 import com.raygroupintl.parser.annotation.ObjectSupply;
 
-public class TFString extends TFBasic {
+public class TFString extends TokenFactory {
 	private Predicate predicate;
 	
 	public TFString(String name, Predicate predicate) {

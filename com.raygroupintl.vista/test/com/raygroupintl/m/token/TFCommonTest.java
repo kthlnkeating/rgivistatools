@@ -6,10 +6,8 @@ import junit.framework.Assert;
 
 import com.raygroupintl.m.struct.MError;
 import com.raygroupintl.parser.SyntaxErrorException;
-import com.raygroupintl.parser.TEmpty;
 import com.raygroupintl.parser.TList;
 import com.raygroupintl.parser.TSequence;
-import com.raygroupintl.parser.TString;
 import com.raygroupintl.parser.Text;
 import com.raygroupintl.parser.Token;
 import com.raygroupintl.parser.TokenFactory;
@@ -17,8 +15,6 @@ import com.raygroupintl.parser.annotation.ObjectSupply;
 
 public class TFCommonTest {
 	private static void checkObjectType(Token t) {
-		if (t instanceof TString) return;
-		if (t instanceof TEmpty) return;
 		Assert.assertTrue(t instanceof MToken);
 		if (t instanceof TSequence) {
 			for (Token r : (TSequence) t) {

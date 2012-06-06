@@ -7,7 +7,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-import com.raygroupintl.parser.TFBasic;
 import com.raygroupintl.parser.TFForkableChoice;
 import com.raygroupintl.parser.TFForkedSequence;
 import com.raygroupintl.parser.TFSequence;
@@ -154,7 +153,7 @@ public class FSRChoice extends FSRBase {
 	}
 
 	@Override
-	public TFBasic getShellFactory() {
+	public TokenFactory getShellFactory() {
 		return this.factory;	
 	}
 }

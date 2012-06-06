@@ -1,6 +1,6 @@
 package com.raygroupintl.parser.annotation;
 
-import com.raygroupintl.parser.TFBasic;
+import com.raygroupintl.parser.TokenFactory;
 
 public class FSRSingle extends FSRBase {
 	private String value;
@@ -30,7 +30,7 @@ public class FSRSingle extends FSRBase {
 	}
 	
 	@Override
-	public TFBasic getShellFactory() {
+	public TokenFactory getShellFactory() {
 		throw new ParseErrorException("Not a top rule.");
 	}
 }

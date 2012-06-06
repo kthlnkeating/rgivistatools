@@ -21,7 +21,7 @@ import java.util.List;
 
 import com.raygroupintl.parser.annotation.ObjectSupply;
 
-public class TFForkableChoice extends TFBasic {
+public class TFForkableChoice extends TokenFactory {
 	private List<TokenFactory> factories = new ArrayList<TokenFactory>();
 	
 	public TFForkableChoice(String name) {

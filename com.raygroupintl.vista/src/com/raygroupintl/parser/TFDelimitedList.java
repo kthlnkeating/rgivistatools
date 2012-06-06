@@ -21,7 +21,7 @@ import java.util.List;
 
 import com.raygroupintl.parser.annotation.ObjectSupply;
 
-public class TFDelimitedList extends TFBasic {
+public class TFDelimitedList extends TokenFactory {
 	private TFSequence effective;	
 	
 	public TFDelimitedList(String name) {

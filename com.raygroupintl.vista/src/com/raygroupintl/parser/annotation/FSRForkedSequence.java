@@ -3,7 +3,7 @@ package com.raygroupintl.parser.annotation;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.raygroupintl.parser.TFBasic;
+import com.raygroupintl.parser.TokenFactory;
 
 public class FSRForkedSequence extends FSRBase {
 	public String name;
@@ -18,7 +18,7 @@ public class FSRForkedSequence extends FSRBase {
 	}
 	
 	@Override
-	public TFBasic getShellFactory() {
+	public TokenFactory getShellFactory() {
 		return null;
 	}
 	

@@ -1,13 +1,13 @@
 package com.raygroupintl.parser.annotation;
 
 import com.raygroupintl.charlib.Predicate;
-import com.raygroupintl.parser.TFBasic;
 import com.raygroupintl.parser.TFString;
+import com.raygroupintl.parser.TokenFactory;
 
 public class FSRString extends FSRBase {
 	private String expr;
 	private Predicate predicate;
-	private TFBasic factory;
+	private TokenFactory factory;
 	
 	public FSRString(String expr, RuleSupplyFlag flag, Predicate predicate) {
 		super(flag);
@@ -30,7 +30,7 @@ public class FSRString extends FSRBase {
 	}
 	
 	@Override
-	public TFBasic getShellFactory() {
+	public TokenFactory getShellFactory() {
 		return this.factory;
 	}
 }

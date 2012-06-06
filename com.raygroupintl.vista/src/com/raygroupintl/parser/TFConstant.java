@@ -18,7 +18,7 @@ package com.raygroupintl.parser;
 
 import com.raygroupintl.parser.annotation.ObjectSupply;
 
-public class TFConstant extends TFBasic {
+public class TFConstant extends TokenFactory {
 	private String value;
 	private boolean ignoreCase;
 	

@@ -1,11 +1,11 @@
 package com.raygroupintl.parser.annotation;
 
-import com.raygroupintl.parser.TFBasic;
 import com.raygroupintl.parser.TFConstant;
+import com.raygroupintl.parser.TokenFactory;
 
 public class FSRConst extends FSRBase {
 	private String value;
-	private TFBasic factory;
+	private TokenFactory factory;
 	
 	public FSRConst(String value, boolean ignoreCase, RuleSupplyFlag flag) {
 		super(flag);
@@ -20,7 +20,7 @@ public class FSRConst extends FSRBase {
 	}
 	
 	@Override
-	public TFBasic getShellFactory() {
+	public TokenFactory getShellFactory() {
 		return this.factory;
 	}
 }

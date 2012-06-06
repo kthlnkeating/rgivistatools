@@ -11,7 +11,6 @@ import java.util.Set;
 
 import com.raygroupintl.charlib.Predicate;
 import com.raygroupintl.charlib.PredicateFactory;
-import com.raygroupintl.parser.TFBasic;
 import com.raygroupintl.parser.TFCharacter;
 import com.raygroupintl.parser.TFChoiceBasic;
 import com.raygroupintl.parser.TFConstant;
@@ -61,7 +60,7 @@ public class Parser {
 			return value;			
 		}
 		
-		private void updateAdapter(Field f, TFBasic target)  {
+		private void updateAdapter(Field f, TokenFactory target)  {
 			TokenType tokenType = f.getAnnotation(TokenType.class);
 			if (tokenType != null) {
 				target.setTargetType(tokenType.value());
@@ -91,7 +90,7 @@ public class Parser {
 				this.topRules.put(name, topRule);
 			}
 			if (topRule != null) {
-				TFBasic value = (TFBasic) topRule.getShellFactory();
+				TokenFactory value = topRule.getShellFactory();
 				this.rules.add(topRule);
 				return value;		
 			}
@@ -198,9 +197,7 @@ public class Parser {
 				if (value == null) {
 					value = this.add(f);
 					if (value != null) {
-						if (value instanceof TFBasic) {
-							this.updateAdapter(f, (TFBasic) value);
-						}								
+						this.updateAdapter(f, value);
 						f.set(target, value);
 					} else {
 						return false;

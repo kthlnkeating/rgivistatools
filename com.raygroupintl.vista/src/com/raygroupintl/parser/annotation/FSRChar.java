@@ -1,8 +1,8 @@
 package com.raygroupintl.parser.annotation;
 
 import com.raygroupintl.charlib.Predicate;
-import com.raygroupintl.parser.TFBasic;
 import com.raygroupintl.parser.TFCharacter;
+import com.raygroupintl.parser.TokenFactory;
 
 public class FSRChar extends FSRBase {
 	private String expr;
@@ -30,7 +30,7 @@ public class FSRChar extends FSRBase {
 	}
 	
 	@Override
-	public TFBasic getShellFactory() {
+	public TokenFactory getShellFactory() {
 		return this.factory;
 	}
 	
