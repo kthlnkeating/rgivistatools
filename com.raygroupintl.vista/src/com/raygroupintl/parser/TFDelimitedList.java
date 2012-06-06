@@ -46,7 +46,7 @@ public class TFDelimitedList extends TFBasic {
 	public void set(TokenFactory element, TokenFactory delimiter, boolean emptyAllowed) {
 		TokenFactory leadingElement = this.getLeadingFactory(element, delimiter, emptyAllowed);
 		String tailElementName = this.getName() + "." + "tailelement";
-		TFSequence tailElement = new TFSequence(tailElementName, delimiter, element);
+		TFSequence tailElement = new TFSequence(tailElementName, delimiter, emptyAllowed ? leadingElement : element);
 		tailElement.setRequiredFlags(true, !emptyAllowed);
 		String tailListName = this.getName() + "." + "taillist";
 		TokenFactory tail = new TFList(tailListName, tailElement);
@@ -76,6 +76,14 @@ public class TFDelimitedList extends TFBasic {
 				} else {		
 					List<Token> list = tailTokens.toList();
 					list.add(0, leadingToken);
+					int lastIndex = list.size() - 1;
+					List<Token> lastToken = list.get(lastIndex).toList();
+					if ((lastToken.size() < 2) || (lastToken.get(1) == null)) {
+						TSequence newLast = objectSupply.newSequence(2);
+						newLast.addToken(lastToken.get(0));
+						newLast.addToken(objectSupply.newEmpty());
+						list.set(lastIndex, newLast);
+					}
 					return objectSupply.newDelimitedList(list);
 				}
 			}

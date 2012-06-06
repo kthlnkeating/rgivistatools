@@ -6,7 +6,6 @@ import java.util.Map;
 import com.raygroupintl.m.struct.MError;
 import com.raygroupintl.parser.StringPiece;
 import com.raygroupintl.parser.SyntaxErrorException;
-import com.raygroupintl.parser.TEmpty;
 import com.raygroupintl.parser.TFEmptyVerified;
 import com.raygroupintl.parser.TFSequence;
 import com.raygroupintl.parser.TSequence;

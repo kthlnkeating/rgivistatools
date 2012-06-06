@@ -26,9 +26,6 @@ public class TDelimitedList extends TList {
 			} else {
 				TSequence fullResult = (TSequence) this.iterator.next();
 				Token result = fullResult.get(1);
-				if (result == null) {
-					result = new TEmpty();
-				}
 				return result;
 			}
 		}
