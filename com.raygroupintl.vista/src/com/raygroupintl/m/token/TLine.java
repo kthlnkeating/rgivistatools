@@ -48,10 +48,8 @@ public class TLine extends MTSequence {
 		if (cmds != null) {
 			for (Iterator<Token> it = cmds.iterator(); it.hasNext();) {
 				Token t = it.next();
-				if (t instanceof MToken) {
-					Node node = ((MToken) t).getNode();
-					if (node != null) result.add(node);
-				}
+				Node node = ((MToken) t).getNode();
+				if (node != null) result.add(node);
 			}
 		}
 		return result;

@@ -16,7 +16,6 @@
 
 package com.raygroupintl.m.token;
 
-import com.raygroupintl.m.parsetree.IgnorableNode;
 import com.raygroupintl.m.parsetree.Node;
 import com.raygroupintl.parser.StringPiece;
 import com.raygroupintl.parser.TString;
@@ -37,6 +36,6 @@ public class MTString extends TString implements MToken {
 	
 	@Override
 	public Node getNode() {
-		return new IgnorableNode();
+		return null;
 	}
 }

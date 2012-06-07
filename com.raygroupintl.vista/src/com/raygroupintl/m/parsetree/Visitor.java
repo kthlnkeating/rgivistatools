@@ -33,7 +33,9 @@ public class Visitor {
 	
 	private void visitAdditionalNodeHolder(AdditionalNodeHolder nodeHolder) {
 		Node addlNode = nodeHolder.getAdditionalNode();
-		addlNode.accept(this);
+		if (addlNode != null) {
+			addlNode.accept(this);
+		}
 	}
 	
 	protected void visitIndirection(Indirection indirection) {
