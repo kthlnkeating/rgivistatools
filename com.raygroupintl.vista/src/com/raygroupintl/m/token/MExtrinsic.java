@@ -16,19 +16,19 @@
 
 package com.raygroupintl.m.token;
 
-import com.raygroupintl.m.parsetree.AtomicDo;
+import com.raygroupintl.m.parsetree.Extrinsic;
 import com.raygroupintl.m.parsetree.Node;
 import com.raygroupintl.parser.Token;
 
-public class TDoArgument extends MTSequence {
-	public TDoArgument(Token token) {
+public class MExtrinsic extends MSequence {
+	public MExtrinsic(Token token) {
 		super(token);
 	}
-	
+
 	@Override
 	public Node getNode() {
 		Node additionalNodes = super.getNode();
-		AtomicDo result = new AtomicDo(additionalNodes);
+		Extrinsic result = new Extrinsic(additionalNodes);
 		return result;
 	}
 }

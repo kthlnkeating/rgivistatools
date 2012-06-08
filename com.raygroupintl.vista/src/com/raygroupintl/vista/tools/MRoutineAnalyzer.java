@@ -33,7 +33,7 @@ import com.raygroupintl.m.struct.ObjectInRoutine;
 import com.raygroupintl.m.token.MTFSupply;
 import com.raygroupintl.m.token.MVersion;
 import com.raygroupintl.m.token.TFRoutine;
-import com.raygroupintl.m.token.TRoutine;
+import com.raygroupintl.m.token.MRoutine;
 import com.raygroupintl.parser.SyntaxErrorException;
 import com.raygroupintl.vista.repository.FileSupply;
 import com.raygroupintl.vista.repository.RepositoryInfo;
@@ -45,10 +45,10 @@ public class MRoutineAnalyzer {
 		int errorCount = 0;
 		final File file = new File(outputPath);
 		final FileOutputStream os = new FileOutputStream(file);
-		final String eol = TRoutine.getEOL();
+		final String eol = MRoutine.getEOL();
 		List<Path> paths = FileSupply.getAllMFiles();
 		for (Path path : paths) {
-			TRoutine r = tf.tokenize(path);			
+			MRoutine r = tf.tokenize(path);			
 			final String name = r.getName();
 			if (! exemptions.containsRoutine(name)) {
 				Set<LineLocation> locations = exemptions.getLines(name);

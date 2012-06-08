@@ -4,8 +4,8 @@ import com.raygroupintl.m.parsetree.ExternalDo;
 import com.raygroupintl.m.parsetree.Node;
 import com.raygroupintl.parser.Token;
 
-public class TExtDoArgument extends MTSequence {
-	public TExtDoArgument(Token token) {
+public class MExtDoArgument extends MSequence {
+	public MExtDoArgument(Token token) {
 		super(token);
 	}
 	

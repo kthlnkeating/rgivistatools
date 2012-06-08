@@ -14,19 +14,22 @@
 // limitations under the License.
 //---------------------------------------------------------------------------
 
-package com.raygroupintl.m.parsetree;
+package com.raygroupintl.m.token;
 
-import com.raygroupintl.struct.IterableSingle;
+import com.raygroupintl.m.parsetree.Indirection;
+import com.raygroupintl.m.parsetree.Node;
+import com.raygroupintl.m.parsetree.Nodes;
+import com.raygroupintl.parser.Token;
 
-public class UnaryOperator extends Nodes {
-	private IterableSingle<Node> nodes;
-
-	public UnaryOperator(Nodes nodes) {
-		this.nodes = new IterableSingle<Node>(nodes);
+public class MIndirection extends MSequence {
+	public MIndirection(Token token) {
+		super(token);
 	}
 	
 	@Override
-	public Iterable<Node> getNodes() {
-		return this.nodes;
-	}	
+	public Node getNode() {
+		Nodes nodes = NodeUtilities.getNodes(this);
+		Indirection result = new Indirection(nodes);
+		return result;
+	}
 }

@@ -26,7 +26,7 @@ import com.raygroupintl.parser.StringPiece;
 import com.raygroupintl.parser.Token;
 
 public class BasicTokens {
-	public static class MTFanoutLabelA extends MTSequence {
+	public static class MTFanoutLabelA extends MSequence {
 		public MTFanoutLabelA(Token token) {
 			super(token);
 		}
@@ -39,7 +39,7 @@ public class BasicTokens {
 		}		
 	}
 	
-	public static class MTFanoutLabelB extends MTString {
+	public static class MTFanoutLabelB extends MString {
 		public MTFanoutLabelB(Token value) {
 			super(value);
 		}
@@ -52,7 +52,7 @@ public class BasicTokens {
 		}		
 	}
 	
-	public static class MTIndirectFanoutLabel extends TIndirection {
+	public static class MTIndirectFanoutLabel extends MIndirection {
 		public MTIndirectFanoutLabel(Token token) {
 			super(token);
 		}
@@ -64,13 +64,13 @@ public class BasicTokens {
 		}		
 	}
 	
-	public static class MTFanoutTagOffset extends MTSequence {
+	public static class MTFanoutTagOffset extends MSequence {
 		public MTFanoutTagOffset(Token token) {
 			super(token);
 		}
 	}
 	
-	public static class MTFanoutRoutine extends MTSequence {
+	public static class MTFanoutRoutine extends MSequence {
 		public MTFanoutRoutine(Token token) {
 			super(token);
 		}
@@ -83,7 +83,7 @@ public class BasicTokens {
 		}		
 	}
 	
-	public static class MTIndirectFanoutRoutine extends TIndirection {
+	public static class MTIndirectFanoutRoutine extends MIndirection {
 		public MTIndirectFanoutRoutine(Token token) {
 			super(token);
 		}
@@ -95,7 +95,7 @@ public class BasicTokens {
 		}		
 	}
 	
-	public static class MTEnvironmentFanoutRoutine extends MTSequence {
+	public static class MTEnvironmentFanoutRoutine extends MSequence {
 		public MTEnvironmentFanoutRoutine(Token token) {
 			super(token);
 		}

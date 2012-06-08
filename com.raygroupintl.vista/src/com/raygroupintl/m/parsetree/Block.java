@@ -30,10 +30,6 @@ public abstract class Block<T extends Node> implements Node {
 		this.nodes.add(node);
 	}
 	
-	protected List<T> getCurrentNodes() {
-		return this.nodes;
-	}
-	
 	public List<T> getNodes() {
 		if (this.nodes == null) {
 			return Collections.emptyList();

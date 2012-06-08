@@ -20,7 +20,7 @@ import com.raygroupintl.m.parsetree.IdentifiedNode;
 import com.raygroupintl.m.parsetree.Node;
 import com.raygroupintl.parser.StringPiece;
 
-public abstract class MIdentifier extends MTString implements IdentifiedNode {
+public abstract class MIdentifier extends MString implements IdentifiedNode {
 	public MIdentifier(StringPiece piece) {
 		super(piece);
 	}

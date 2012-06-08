@@ -2,8 +2,8 @@ package com.raygroupintl.m.token;
 
 import com.raygroupintl.parser.Token;
 
-public class TGlobalNamed extends MTSequence {
-	public TGlobalNamed(Token token) {
+public class MNumLit extends MSequence {
+	public MNumLit(Token token) {
 		super(token);
 	}
 }

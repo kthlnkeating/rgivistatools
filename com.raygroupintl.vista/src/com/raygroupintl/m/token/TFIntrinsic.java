@@ -13,13 +13,13 @@ import com.raygroupintl.parser.TokenFactory;
 import com.raygroupintl.parser.TokenFactorySupply;
 
 public class TFIntrinsic extends TokenFactorySupply {		
-	public static class TIntrinsicVariable extends MTSequence {
+	public static class TIntrinsicVariable extends MSequence {
 		public TIntrinsicVariable(Token token) {
 			super(token);
 		}
 	}
 
-	private static class TIntrinsicFunction extends MTSequence {
+	private static class TIntrinsicFunction extends MSequence {
 		private TIntrinsicFunction(Token token) {
 			super(token);
 		}
@@ -162,7 +162,7 @@ public class TFIntrinsic extends TokenFactorySupply {
 
 	@Override
 	public Token getToken(Token supplyToken, Token nextToken) {
-		MTSequence result = new MTSequence(2);
+		MSequence result = new MSequence(2);
 		result.addToken(supplyToken);
 		result.addToken(nextToken);
 		return new TIntrinsicFunction(result);

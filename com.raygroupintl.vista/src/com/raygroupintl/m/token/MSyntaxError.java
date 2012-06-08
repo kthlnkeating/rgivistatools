@@ -8,12 +8,12 @@ import com.raygroupintl.m.struct.MError;
 import com.raygroupintl.parser.StringPiece;
 import com.raygroupintl.parser.Token;
 
-public class TSyntaxError implements MToken {	
+public class MSyntaxError implements MToken {	
 	private int errorCode = MError.ERR_GENERAL_SYNTAX;
 	private StringPiece errorText;
 	private int errorIndex;
 	
-	public TSyntaxError(int errorCode, StringPiece errorText, int errorIndex) {
+	public MSyntaxError(int errorCode, StringPiece errorText, int errorIndex) {
 		this.errorCode = errorCode;
 		this.errorText = errorText;
 		this.errorIndex = errorIndex;

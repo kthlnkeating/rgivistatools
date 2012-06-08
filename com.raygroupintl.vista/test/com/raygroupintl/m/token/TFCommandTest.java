@@ -45,9 +45,9 @@ public class TFCommandTest {
 			Text text = new Text(v);
 			Token t = f.tokenize(text, objectSupply);
 			if (error) {
-				Assert.assertTrue(t instanceof TSyntaxError);
+				Assert.assertTrue(t instanceof MSyntaxError);
 			} else {
-				Assert.assertFalse(t instanceof TSyntaxError);				
+				Assert.assertFalse(t instanceof MSyntaxError);				
 			}
 			TFCommonTest.validTokenCheck(t, v);
 		} catch(SyntaxErrorException e) {

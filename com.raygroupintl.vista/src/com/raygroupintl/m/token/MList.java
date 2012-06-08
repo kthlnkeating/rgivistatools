@@ -16,17 +16,21 @@
 
 package com.raygroupintl.m.token;
 
-import com.raygroupintl.m.parsetree.Node;
+import com.raygroupintl.m.parsetree.Nodes;
+import com.raygroupintl.parser.TList;
 import com.raygroupintl.parser.Token;
 
-public class TComment extends MTSequence {
-	public TComment(Token token) {
+public class MList extends TList implements MToken {
+	public MList(Token token) {
 		super(token);
 	}
-	
+
+	public MList() {
+		super();
+	}
+
 	@Override
-	public Node getNode() {
-		return null;
+	public Nodes getNode() {
+		return NodeUtilities.getNodes(this);
 	}
 }
-

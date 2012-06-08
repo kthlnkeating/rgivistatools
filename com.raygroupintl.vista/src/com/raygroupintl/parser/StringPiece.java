@@ -84,6 +84,14 @@ public class StringPiece {
 		}
 	}
 	
+	public int count(char ch) {
+		int result = 0;
+		for (int i=this.beginIndex; i<this.endIndex; ++i) {
+			if (this.data.charAt(i) == ch) ++result;
+		}
+		return result;
+	}
+	
 	public void add(StringPiece addlPiece) {
 		if (addlPiece.data != null) {
 			if ((this.data != addlPiece.data) || (this.endIndex != addlPiece.beginIndex)) {

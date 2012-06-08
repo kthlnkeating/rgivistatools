@@ -16,19 +16,18 @@
 
 package com.raygroupintl.m.token;
 
-import com.raygroupintl.m.parsetree.AtomicGoto;
+import com.raygroupintl.m.parsetree.IntegerLiteral;
 import com.raygroupintl.m.parsetree.Node;
 import com.raygroupintl.parser.Token;
 
-public class TGotoArgument extends MTSequence {
-	public TGotoArgument(Token token) {
+public class MIntLit extends MString {
+	public MIntLit(Token token) {
 		super(token);
 	}
 	
 	@Override
 	public Node getNode() {
-		Node additionalNodes = super.getNode();
-		AtomicGoto result = new AtomicGoto(additionalNodes);
-		return result;
-	}
+		String value = this.toValue().toString();
+		return new IntegerLiteral(value);
+	}	
 }

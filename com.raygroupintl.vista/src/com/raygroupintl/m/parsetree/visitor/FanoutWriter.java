@@ -32,7 +32,7 @@ import com.raygroupintl.m.parsetree.Routine;
 import com.raygroupintl.m.parsetree.filter.LocalFanoutFilter;
 import com.raygroupintl.m.parsetree.filter.PackageFanoutFilter;
 import com.raygroupintl.m.struct.LineLocation;
-import com.raygroupintl.m.token.TRoutine;
+import com.raygroupintl.m.token.MRoutine;
 import com.raygroupintl.parser.SyntaxErrorException;
 import com.raygroupintl.struct.AndFilter;
 import com.raygroupintl.struct.Filter;
@@ -42,7 +42,7 @@ public class FanoutWriter  {
 	private final static Logger LOGGER = Logger.getLogger(FanoutWriter.class.getName());
 
 	private FileOutputStream os;
-	private String eol = TRoutine.getEOL();
+	private String eol = MRoutine.getEOL();
 	private int packageCount;
 	private Filter<Fanout> filter;
 	
@@ -61,7 +61,7 @@ public class FanoutWriter  {
 				List<Path> paths = routinePackage.getRoutineFilePaths();
 				for (Path path : paths) {
 					try {
-						TRoutine tr = routinePackage.tokenizer.tokenize(path);
+						MRoutine tr = routinePackage.tokenizer.tokenize(path);
 						Routine node = tr.getNode();
 						this.visitRoutine(node, existing);
 					} catch (SyntaxErrorException ex) {

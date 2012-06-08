@@ -141,11 +141,11 @@ public class TFTest {
 	
 	public void testTFDoArgument(MTFSupply m) {
 		TokenFactory f = m.doargument;
-		TFCommonTest.validCheck(f, objectSupply, "T1:COND1", TDoArgument.class);
-		TFCommonTest.validCheck(f, objectSupply, "T2", TDoArgument.class);
-		TFCommonTest.validCheck(f, objectSupply, "T0", TDoArgument.class);
+		TFCommonTest.validCheck(f, objectSupply, "T1:COND1", MDoArgument.class);
+		TFCommonTest.validCheck(f, objectSupply, "T2", MDoArgument.class);
+		TFCommonTest.validCheck(f, objectSupply, "T0", MDoArgument.class);
 		if (m == supplyCache) {
-			TFCommonTest.validCheck(f, objectSupply, "DecomposeStatus^%SYS.DATABASE(RC,.MSGLIST,0,\"\")", TDoArgument.class);		
+			TFCommonTest.validCheck(f, objectSupply, "DecomposeStatus^%SYS.DATABASE(RC,.MSGLIST,0,\"\")", MDoArgument.class);		
 		}
 	}
 
@@ -157,12 +157,12 @@ public class TFTest {
 	
 	public void testTFDoArguments(MTFSupply m) {
 		TokenFactory f = m.doarguments;
-		Token t = TFCommonTest.validCheck(f, objectSupply, "T0,T1:COND1,T2", MTDelimitedList.class);
+		Token t = TFCommonTest.validCheck(f, objectSupply, "T0,T1:COND1,T2", MDelimitedList.class);
 		Assert.assertNotNull(t);
-		MTDelimitedList dl = (MTDelimitedList) t;
+		MDelimitedList dl = (MDelimitedList) t;
 		for (Token lt : dl) {
 			Assert.assertNotNull(lt);
-			Assert.assertTrue(lt instanceof TDoArgument);
+			Assert.assertTrue(lt instanceof MDoArgument);
 		}
 	}
 

@@ -16,28 +16,17 @@
 
 package com.raygroupintl.m.token;
 
-import java.util.List;
-
 import com.raygroupintl.m.parsetree.Node;
-import com.raygroupintl.parser.TDelimitedList;
-import com.raygroupintl.parser.TEmpty;
 import com.raygroupintl.parser.Token;
 
-public class MTDelimitedList extends TDelimitedList implements MToken {
-	public MTDelimitedList(Token token) {
+public class MComment extends MSequence {
+	public MComment(Token token) {
 		super(token);
 	}
-
-	public MTDelimitedList(List<Token> tokens) {
-		super(tokens);
-	}
-
-	public MTDelimitedList(TEmpty empty) {
-		super(empty);
-	}
-
+	
 	@Override
 	public Node getNode() {
-		return NodeUtilities.getNodes(this);
+		return null;
 	}
 }
+

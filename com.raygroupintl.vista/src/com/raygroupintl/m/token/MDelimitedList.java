@@ -16,19 +16,28 @@
 
 package com.raygroupintl.m.token;
 
-import com.raygroupintl.m.parsetree.Extrinsic;
+import java.util.List;
+
 import com.raygroupintl.m.parsetree.Node;
+import com.raygroupintl.parser.TDelimitedList;
+import com.raygroupintl.parser.TEmpty;
 import com.raygroupintl.parser.Token;
 
-public class TExtrinsic extends MTSequence {
-	public TExtrinsic(Token token) {
+public class MDelimitedList extends TDelimitedList implements MToken {
+	public MDelimitedList(Token token) {
 		super(token);
+	}
+
+	public MDelimitedList(List<Token> tokens) {
+		super(tokens);
+	}
+
+	public MDelimitedList(TEmpty empty) {
+		super(empty);
 	}
 
 	@Override
 	public Node getNode() {
-		Node additionalNodes = super.getNode();
-		Extrinsic result = new Extrinsic(additionalNodes);
-		return result;
+		return NodeUtilities.getNodes(this);
 	}
 }

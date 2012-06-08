@@ -6,10 +6,6 @@ import java.util.List;
 public class NodeList extends Nodes {
 	List<Node> nodes = new ArrayList<Node>();
 
-	public NodeList() {
-		this(5);
-	}
-	
 	public NodeList(int size) {
 		this.nodes = new ArrayList<Node>(size);	
 	}
@@ -19,7 +15,7 @@ public class NodeList extends Nodes {
 	}
 	
 	@Override
-	public Iterable<Node> getNodes() {
+	public List<Node> getNodes() {
 		return this.nodes;
 	}
 }

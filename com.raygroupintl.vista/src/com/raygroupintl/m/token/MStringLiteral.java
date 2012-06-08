@@ -2,8 +2,8 @@ package com.raygroupintl.m.token;
 
 import com.raygroupintl.parser.Token;
 
-public class TStringLiteral extends MTSequence {
-	public TStringLiteral(Token token) {
+public class MStringLiteral extends MSequence {
+	public MStringLiteral(Token token) {
 		super(token);
 	}
 }

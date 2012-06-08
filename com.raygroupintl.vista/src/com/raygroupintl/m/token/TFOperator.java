@@ -56,7 +56,7 @@ public class TFOperator extends TokenFactory {
 				}
 				if (branch.validEnd) {
 					TString t = text.extractToken(index, objectSupply);
-					return new TOperator(t);
+					return new MOperator(t);
 				}				
 			}
 		}

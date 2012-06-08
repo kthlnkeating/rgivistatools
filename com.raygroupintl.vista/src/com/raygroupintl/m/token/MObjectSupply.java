@@ -9,23 +9,23 @@ import com.raygroupintl.parser.annotation.ObjectSupply;
 
 public class MObjectSupply implements ObjectSupply {
 	@Override
-	public MTString newString() {
-		return new MTString();
+	public MString newString() {
+		return new MString();
 	}
 	
 	@Override
-	public MTSequence newSequence(int length) {
-		return new MTSequence(length);
+	public MSequence newSequence(int length) {
+		return new MSequence(length);
 	}
 	
 	@Override
-	public MTList newList() {
-		return new MTList();
+	public MList newList() {
+		return new MList();
 	}
 	
 	@Override
 	public TDelimitedList newDelimitedList(List<Token> tokens) {
-		return new MTDelimitedList(tokens);
+		return new MDelimitedList(tokens);
 	}
 	
 	@Override

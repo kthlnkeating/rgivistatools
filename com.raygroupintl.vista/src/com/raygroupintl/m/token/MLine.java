@@ -4,14 +4,15 @@ import java.util.Iterator;
 
 import com.raygroupintl.m.parsetree.Line;
 import com.raygroupintl.m.parsetree.Node;
+import com.raygroupintl.parser.StringPiece;
 import com.raygroupintl.parser.TList;
 import com.raygroupintl.parser.Token;
 
-public class TLine extends MTSequence {
+public class MLine extends MSequence {
 	String tagName = "";
 	int index = 0;
 
-	public TLine(Token token) {
+	public MLine(Token token) {
 		super(token);
 	}
 
@@ -25,7 +26,13 @@ public class TLine extends MTSequence {
 	}
 	
 	public int getLevel() {
-		return 0;
+		int level = 0;
+		Token levelToken = this.get(3);
+		if (levelToken != null) {
+			StringPiece levelTokenValue = levelToken.toValue();
+			return levelTokenValue.count('.');
+		}		
+		return level;
 	}
 
 	public void setIdentifier(String tagName, int index) {

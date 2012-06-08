@@ -31,7 +31,7 @@ import java.util.logging.Logger;
 
 import com.raygroupintl.m.parsetree.Routine;
 import com.raygroupintl.m.token.TFRoutine;
-import com.raygroupintl.m.token.TRoutine;
+import com.raygroupintl.m.token.MRoutine;
 import com.raygroupintl.parser.SyntaxErrorException;
 
 public class RepositoryInfo {
@@ -67,7 +67,7 @@ public class RepositoryInfo {
 					for (Path path : paths) {
 						try {
 							//LOGGER.info("ROUTINE: " + path.toString());
-							TRoutine tr = this.tokenizer.tokenize(path);
+							MRoutine tr = this.tokenizer.tokenize(path);
 							Routine node = tr.getNode();
 							this.nodes.add(node);
 							//this.add(node);

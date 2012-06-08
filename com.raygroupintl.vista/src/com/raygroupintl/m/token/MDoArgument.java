@@ -16,27 +16,19 @@
 
 package com.raygroupintl.m.token;
 
-import java.util.List;
-
+import com.raygroupintl.m.parsetree.AtomicDo;
 import com.raygroupintl.m.parsetree.Node;
-import com.raygroupintl.parser.TSequence;
 import com.raygroupintl.parser.Token;
 
-public class MTSequence extends TSequence implements MToken {
-	public MTSequence(List<Token> tokens) {
-		super(tokens);
-	}
-
-	public MTSequence(Token token) {
-		super(token.toList());
-	}
-
-	public MTSequence(int length) {
-		super(length);
+public class MDoArgument extends MSequence {
+	public MDoArgument(Token token) {
+		super(token);
 	}
 	
 	@Override
 	public Node getNode() {
-		return NodeUtilities.getNodes(this);
+		Node additionalNodes = super.getNode();
+		AtomicDo result = new AtomicDo(additionalNodes);
+		return result;
 	}
 }

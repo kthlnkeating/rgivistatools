@@ -16,18 +16,27 @@
 
 package com.raygroupintl.m.token;
 
-import com.raygroupintl.m.parsetree.IntegerLiteral;
+import java.util.List;
+
 import com.raygroupintl.m.parsetree.Node;
+import com.raygroupintl.parser.TSequence;
 import com.raygroupintl.parser.Token;
 
-public class TIntLit extends MTString {
-	public TIntLit(Token token) {
-		super(token);
+public class MSequence extends TSequence implements MToken {
+	public MSequence(List<Token> tokens) {
+		super(tokens);
+	}
+
+	public MSequence(Token token) {
+		super(token.toList());
+	}
+
+	public MSequence(int length) {
+		super(length);
 	}
 	
 	@Override
 	public Node getNode() {
-		String value = this.toValue().toString();
-		return new IntegerLiteral(value);
-	}	
+		return NodeUtilities.getNodes(this);
+	}
 }

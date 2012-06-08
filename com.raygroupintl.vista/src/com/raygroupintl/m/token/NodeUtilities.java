@@ -23,7 +23,7 @@ import com.raygroupintl.parser.Token;
 
 class NodeUtilities {
 	static Nodes getNodes(Iterable<Token> iterable) {
-		NodeList result = new NodeList();
+		NodeList result = new NodeList(5);
 		for (Token t : iterable) {
 			if ((t != null) && (t instanceof MToken)) {
 				MToken mt = (MToken) t;

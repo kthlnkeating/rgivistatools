@@ -16,20 +16,19 @@
 
 package com.raygroupintl.m.token;
 
-import com.raygroupintl.m.parsetree.Indirection;
+import com.raygroupintl.m.parsetree.AtomicGoto;
 import com.raygroupintl.m.parsetree.Node;
-import com.raygroupintl.m.parsetree.Nodes;
 import com.raygroupintl.parser.Token;
 
-public class TIndirection extends MTSequence {
-	public TIndirection(Token token) {
+public class MGotoArgument extends MSequence {
+	public MGotoArgument(Token token) {
 		super(token);
 	}
 	
 	@Override
 	public Node getNode() {
-		Nodes nodes = NodeUtilities.getNodes(this);
-		Indirection result = new Indirection(nodes);
+		Node additionalNodes = super.getNode();
+		AtomicGoto result = new AtomicGoto(additionalNodes);
 		return result;
 	}
 }

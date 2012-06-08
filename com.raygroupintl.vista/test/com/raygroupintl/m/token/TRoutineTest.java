@@ -21,8 +21,8 @@ import com.raygroupintl.m.struct.ObjectInRoutine;
 import com.raygroupintl.m.struct.MRoutineContent;
 import com.raygroupintl.m.token.MVersion;
 import com.raygroupintl.m.token.TFRoutine;
-import com.raygroupintl.m.token.TLine;
-import com.raygroupintl.m.token.TRoutine;
+import com.raygroupintl.m.token.MLine;
+import com.raygroupintl.m.token.MRoutine;
 
 public class TRoutineTest {
 	private static MTFSupply supplyStd95;
@@ -40,16 +40,16 @@ public class TRoutineTest {
 		supplyCache = null;
 	}
 	
-	private TRoutine getRoutineToken(String fileName, MTFSupply m) {
+	private MRoutine getRoutineToken(String fileName, MTFSupply m) {
 		TFRoutine tf = new TFRoutine(m);
 		InputStream is = this.getClass().getResourceAsStream(fileName);
 		MRoutineContent content = MRoutineContent.getInstance(fileName.split(".m")[0], is);
-		TRoutine r = tf.tokenize(content);
+		MRoutine r = tf.tokenize(content);
 		return r;
 	}
 	
 	private List<ObjectInRoutine<MError>> getErrors(String fileName, MTFSupply m) {
-		TRoutine token = this.getRoutineToken(fileName, m);
+		MRoutine token = this.getRoutineToken(fileName, m);
 		Routine r = token.getNode();
 		ErrorRecorder v = new ErrorRecorder();
 		List<ObjectInRoutine<MError>> result = v.visitErrors(r);
@@ -57,14 +57,14 @@ public class TRoutineTest {
 	}
 	
 	public void testBeautify(MTFSupply m) {
-		TRoutine original = this.getRoutineToken("resource/BEAT0SRC.m", m);
-		TRoutine source = this.getRoutineToken("resource/BEAT0SRC.m", m);
-		TRoutine result = this.getRoutineToken("resource/BEAT0RST.m", m);
+		MRoutine original = this.getRoutineToken("resource/BEAT0SRC.m", m);
+		MRoutine source = this.getRoutineToken("resource/BEAT0SRC.m", m);
+		MRoutine result = this.getRoutineToken("resource/BEAT0RST.m", m);
 		
 		source.beautify();
-		List<TLine> originalLines = original.asList();
-		List<TLine> sourceLines = source.asList();
-		List<TLine> resultLines = result.asList();
+		List<MLine> originalLines = original.asList();
+		List<MLine> sourceLines = source.asList();
+		List<MLine> resultLines = result.asList();
 		int n = resultLines.size();
 		Assert.assertEquals( originalLines.size(), resultLines.size());
 		Assert.assertEquals(sourceLines.size(), resultLines.size());
@@ -140,7 +140,7 @@ public class TRoutineTest {
 	
 	private void testCmdTest0(MTFSupply m) {
 		String fileName = "resource/CMDTEST0.m";
-		TRoutine token = this.getRoutineToken(fileName, m);
+		MRoutine token = this.getRoutineToken(fileName, m);
 		Routine r = token.getNode();
 
 		OccuranceRecorder or = OccuranceRecorder.record(r);		

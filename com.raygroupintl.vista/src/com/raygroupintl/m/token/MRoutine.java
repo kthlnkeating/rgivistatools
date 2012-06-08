@@ -14,11 +14,11 @@ import com.raygroupintl.m.parsetree.Routine;
 import com.raygroupintl.parser.StringPiece;
 import com.raygroupintl.parser.Token;
 
-public class TRoutine implements MToken {
+public class MRoutine implements MToken {
 	private String name;
-	private List<TLine> lines = new ArrayList<TLine>();
+	private List<MLine> lines = new ArrayList<MLine>();
 	
-	public TRoutine(String name) {
+	public MRoutine(String name) {
 		this.name = name;
 	}
 	
@@ -26,18 +26,18 @@ public class TRoutine implements MToken {
 		return this.name;
 	}
 	
-	public void add(TLine line) {
+	public void add(MLine line) {
 		this.lines.add(line);
 	}
 	
-	public List<TLine> asList() {
+	public List<MLine> asList() {
 		return this.lines;
 	}
 	
 	@Override
 	public StringPiece toValue() {
 		StringPiece result = new StringPiece();
-		for (TLine line : this.lines) {
+		for (MLine line : this.lines) {
 			result.add(line.toValue());
 		}
 		return result;
@@ -46,7 +46,7 @@ public class TRoutine implements MToken {
 	@Override
 	public List<Token> toList() {
 		List<Token> result = new ArrayList<Token>();
-		for (TLine line : this.lines) {
+		for (MLine line : this.lines) {
 			result.add(line);
 		}
 		return result;
@@ -54,7 +54,7 @@ public class TRoutine implements MToken {
 	
 	@Override
 	public void beautify() {		
-		for (TLine line : this.lines) {
+		for (MLine line : this.lines) {
 			line.beautify();
 		}	
 	}
@@ -69,7 +69,7 @@ public class TRoutine implements MToken {
 
 	public void write(OutputStream os) throws IOException {
 		String seperator = getEOL();
-		for (TLine line : this.lines) {
+		for (MLine line : this.lines) {
 			String lineAsString = line.toValue().toString(); 
 			os.write(lineAsString.getBytes());
 			os.write(seperator.getBytes());
@@ -94,7 +94,7 @@ public class TRoutine implements MToken {
 		Routine routineNode = new Routine(this.name);
 		EntryTag entryTagNode = null;
 		int index = 0;
-		for (TLine line : this.lines) {
+		for (MLine line : this.lines) {
 			Line lineNode = line.getNode();
 			String tag = line.getTag();
 			if ((tag != null) || (entryTagNode == null)) {

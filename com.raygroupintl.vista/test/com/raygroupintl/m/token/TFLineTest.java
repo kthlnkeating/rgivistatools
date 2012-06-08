@@ -52,7 +52,7 @@ public class TFLineTest {
 			boolean found = false;
 			for (Iterator<Token> it=commands.iterator(); it.hasNext();) {
 				Token errorCandidate = it.next();
-				if (errorCandidate instanceof TSyntaxError) {
+				if (errorCandidate instanceof MSyntaxError) {
 					found = true;
 					break;
 				}
@@ -76,8 +76,8 @@ public class TFLineTest {
 			Assert.assertEquals(line, r);	
 			TList commands = (TList) ((TSequence) t).get(4);
 			Token error = commands.get(errorCommand);
-			Assert.assertTrue(error instanceof TSyntaxError);
-			Assert.assertEquals(errorLocation, ((TSyntaxError) error).getErrorIndex());
+			Assert.assertTrue(error instanceof MSyntaxError);
+			Assert.assertEquals(errorLocation, ((MSyntaxError) error).getErrorIndex());
 		} catch (SyntaxErrorException e) {
 			Assert.fail("Unexpected exception.");
 		}

@@ -3,7 +3,7 @@ package com.raygroupintl.m.token;
 import com.raygroupintl.m.struct.MNameWithMnemonic;
 import com.raygroupintl.parser.Token;
 
-public class TSsvn extends MTSequence {
+public class MSsvn extends MSequence {
 	private static final MNameWithMnemonic.Map SSVS = new MNameWithMnemonic.Map();
 	static {
 		SSVS.update("D", "DEVICE"); 	
@@ -17,7 +17,7 @@ public class TSsvn extends MTSequence {
 		SSVS.update("W", "WINDOW"); 	
 	}
 	
-	public TSsvn(Token token) {
+	public MSsvn(Token token) {
 		super(token);
 	}		
 }

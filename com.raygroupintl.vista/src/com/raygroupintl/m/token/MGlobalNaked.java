@@ -2,8 +2,8 @@ package com.raygroupintl.m.token;
 
 import com.raygroupintl.parser.Token;
 
-public class TObjectExpr extends MTSequence {
-	public TObjectExpr(Token token) {
+public class MGlobalNaked extends MSequence {
+	public MGlobalNaked(Token token) {
 		super(token);
 	}
 }

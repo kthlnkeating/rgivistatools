@@ -19,24 +19,24 @@ public class TFRoutine {
 		this.tfLine = supply.line;
 	}
 	
-	public static TLine recoverFromError(String line, SyntaxErrorException e) {
-		Token error = new TSyntaxError(0, new StringPiece(line), 0);
-		MTSequence result = new MTSequence(5);
+	public static MLine recoverFromError(String line, SyntaxErrorException e) {
+		Token error = new MSyntaxError(0, new StringPiece(line), 0);
+		MSequence result = new MSequence(5);
 		result.addToken(error);
 		for (int i=0; i<4; ++i) result.addToken(null);
-		return new TLine(result);
+		return new MLine(result);
 	}
 	
-	public TRoutine tokenize(MRoutineContent content) {
+	public MRoutine tokenize(MRoutineContent content) {
 		String name = content.getName();
-		TRoutine result = new TRoutine(name);
+		MRoutine result = new MRoutine(name);
 		int index = 0;
 		String tagName = "";
 		for (String line : content.getLines()) {
-			TLine tokens = null;
+			MLine tokens = null;
 			try {
 				Text text = new Text(line);
-				tokens = (TLine) this.tfLine.tokenize(text, this.mAdapterSupply);
+				tokens = (MLine) this.tfLine.tokenize(text, this.mAdapterSupply);
 			} catch (SyntaxErrorException e) {
 				tokens = recoverFromError(line, e);
 			}
@@ -52,9 +52,9 @@ public class TFRoutine {
 		return result;
 	}
 	
-	public TRoutine tokenize(Path path) throws IOException,  SyntaxErrorException {
+	public MRoutine tokenize(Path path) throws IOException,  SyntaxErrorException {
 		MRoutineContent content = MRoutineContent.getInstance(path);					
-		TRoutine r = this.tokenize(content);
+		MRoutine r = this.tokenize(content);
 		return r;
 	}
 }

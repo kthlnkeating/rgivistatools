@@ -16,8 +16,8 @@ import com.raygroupintl.m.struct.ObjectInRoutine;
 import com.raygroupintl.m.struct.MRoutineContent;
 import com.raygroupintl.m.token.MVersion;
 import com.raygroupintl.m.token.TFRoutine;
-import com.raygroupintl.m.token.TLine;
-import com.raygroupintl.m.token.TRoutine;
+import com.raygroupintl.m.token.MLine;
+import com.raygroupintl.m.token.MRoutine;
 import com.raygroupintl.parser.annotation.ParseException;
 import com.raygroupintl.vista.repository.FileSupply;
 import com.raygroupintl.vista.tools.ErrorExemptions;
@@ -34,14 +34,14 @@ public class VistAFOIATest {
 			List<Path> paths = FileSupply.getAllMFiles();
 			for (Path path : paths) {
 				MRoutineContent content = MRoutineContent.getInstance(path); 
-				TRoutine r = tf.tokenize(content);
+				MRoutine r = tf.tokenize(content);
 				List<String> lines = content.getLines();
-				List<TLine> results = r.asList();
+				List<MLine> results = r.asList();
 				int count = results.size();
 				Assert.assertEquals(lines.size(), count);
 				for (int i=0; i<count; ++i) {
 					String line = lines.get(i);
-					TLine result = results.get(i);
+					MLine result = results.get(i);
 					String readLine = result.toValue().toString();
 					String msg = path.getFileName().toString() + " Line " +  String.valueOf(i);
 					Assert.assertEquals("Different: " + msg, line, readLine);

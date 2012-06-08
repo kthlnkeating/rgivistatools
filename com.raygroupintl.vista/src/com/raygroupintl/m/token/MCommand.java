@@ -10,14 +10,14 @@ import com.raygroupintl.parser.TEmpty;
 import com.raygroupintl.parser.TString;
 import com.raygroupintl.parser.Token;
 
-class TCommand {
-	private static abstract class TCommandBase extends MTSequence {
+class MCommand {
+	private static abstract class TCommandBase extends MSequence {
 		public TCommandBase(Token token) {
 			super(token);
 		}
 		
 		protected Node getArgumentNode() {
-			MTSequence nameFollowUp = (MTSequence) this.get(1);
+			MSequence nameFollowUp = (MSequence) this.get(1);
 			if (nameFollowUp == null) {
 				return null;
 			}
@@ -33,11 +33,11 @@ class TCommand {
 		}
 	
 		protected Node getPostConditionNode() {
-			MTSequence nameFollowUp = (MTSequence) this.get(1);
+			MSequence nameFollowUp = (MSequence) this.get(1);
 			if (nameFollowUp == null) {
 				return null;
 			}
-			MTSequence postConditionWithColon = (MTSequence) nameFollowUp.get(0);
+			MSequence postConditionWithColon = (MSequence) nameFollowUp.get(0);
 			if (postConditionWithColon == null) {
 				return null;
 			} else {

@@ -45,7 +45,7 @@ public class MTFSupply {
 	@Rule("{'a'...'z' + 'A'...'Z'}")
 	public TokenFactory ident;
 	
-	@TokenType(TIntLit.class)
+	@TokenType(MIntLit.class)
 	@Rule("{'0'...'9'}")
 	public TokenFactory intlit;
 	
@@ -55,10 +55,10 @@ public class MTFSupply {
 	@Rule("'^', [environment], name")
 	public TokenFactory envroutine;
 	
-	@TokenType(TNumLit.class)
+	@TokenType(MNumLit.class)
 	@Rule("'.', intlit, ['E', ['+' | '-'], intlit]")
 	public TokenFactory numlita;
-	@TokenType(TNumLit.class)
+	@TokenType(MNumLit.class)
 	@Rule("intlit, ['.', intlit], ['E', ['+' | '-'], intlit]")
 	public TokenFactory numlitb;
 	
@@ -71,7 +71,7 @@ public class MTFSupply {
 	@Rule("'+' + '-' + '\\''")
 	public TokenFactory unaryop;
 	
-	@TokenType(TStringLiteral.class)
+	@TokenType(MStringLiteral.class)
 	@Rule("('\"', [{-'\\r' - '\\n' - '\"'}], '\"'), [strlit]")	
 	public TokenFactory strlit;
 	
@@ -101,17 +101,17 @@ public class MTFSupply {
 	@Rule("'=', expr")
 	public TokenFactory eqexpr;
 	
-	@TokenType(TIndirection.class)
+	@TokenType(MIndirection.class)
 	@Rule("'@', expratom, [\"@(\", exprlist, ')']")
 	public TokenFactory indirection;
-	@TokenType(TIndirection.class)
+	@TokenType(MIndirection.class)
 	@Rule("'@', expratom")
 	public TokenFactory rindirection;
 		
 	@Rule("lvn | gvnall | indirection")
 	public TokenFactory glvn;
 	
-	@TokenType(TGlobalNamed.class)
+	@TokenType(MGlobalNamed.class)
 	@Rule("'^', ([environment], name, [exprlistinparan])")
 	public TokenFactory gvn;
 	
@@ -124,7 +124,7 @@ public class MTFSupply {
 	@Rule("unaryop, expratom")
 	public TokenFactory unaryexpritem;
 	
-	@TokenType(TGlobalNaked.class)
+	@TokenType(MGlobalNaked.class)
 	@Rule("'^', exprlistinparan")
 	public TokenFactory gvnnaked;
 	
@@ -152,14 +152,14 @@ public class MTFSupply {
 	@Rule("glvn | expritem")
 	public TokenFactory expratom;
 
-	@TokenType(TLocal.class)
+	@TokenType(MLocal.class)
 	@Rule("name, [exprlistinparan]")
 	public TokenFactory lvn;
 	
 	@Rule("expratom, [exprtail]")
 	public TokenFactory expr;
 	
-	@TokenType(TActualList.class)
+	@TokenType(MActualList.class)
 	@Rule("{actual:',':'(':')':1:1}")
 	public TokenFactory actuallist;
 
@@ -275,23 +275,23 @@ public class MTFSupply {
 	
 	
 	
-	@TokenType(TExtrinsic.class)	
+	@TokenType(MExtrinsic.class)	
 	@Rule("indfanoutlabel, ['^', ((envfanoutroutine | fanoutroutine) , [actuallist]) | indfanoutroutine]")
 	public TokenFactory indexargument;
 
-	@TokenType(TExtrinsic.class)	
+	@TokenType(MExtrinsic.class)	
 	@Rule("fanoutlabel, actuallist")
 	public TokenFactory labelcallexargument;
 
-	@TokenType(TExtrinsic.class)	
+	@TokenType(MExtrinsic.class)	
 	@Rule("fanoutlabel, ['^', ((envfanoutroutine | fanoutroutine) , [actuallist]) | indfanoutroutine]")
 	public TokenFactory exargument;
 	
-	@TokenType(TExtrinsic.class)	
+	@TokenType(MExtrinsic.class)	
 	@Rule("'^', noindroutinepostcaret, [actuallist]")
 	public TokenFactory onlyrsimpleexargument;
 	
-	@TokenType(TExtrinsic.class)	
+	@TokenType(MExtrinsic.class)	
 	@Rule("'^', indirection")
 	public TokenFactory onlyrexargument;
 	
@@ -314,7 +314,7 @@ public class MTFSupply {
 	//@Rule("[labelpiece], [lineoffset], [doroutineref], [actuallist]")
 	//public TokenFactory extrinsicarg;
 	
-	@TokenType(TExtDoArgument.class)
+	@TokenType(MExtDoArgument.class)
 	@Rule("'&', name, ['.', name], ['^', name], [actuallist], [postcondition]")
 	public TokenFactory extdoargument;
 
@@ -347,23 +347,23 @@ public class MTFSupply {
 	@Rule("'^', goroutinepostcaret")
 	public TokenFactory goroutineref;
 	
-	@TokenType(TGotoArgument.class)	
+	@TokenType(MGotoArgument.class)	
 	@Rule("indfanoutlabel, [dolineoffset], [goroutineref], [postcondition]")
 	public TokenFactory indgoargument;
 
-	@TokenType(TGotoArgument.class)	
+	@TokenType(MGotoArgument.class)	
 	@Rule("fanoutlabel, dolineoffset, [goroutineref], [postcondition]")
 	public TokenFactory offsetgoargument;
 
-	@TokenType(TGotoArgument.class)	
+	@TokenType(MGotoArgument.class)	
 	@Rule("fanoutlabel, ['^', envfanoutroutine | fanoutroutine | indfanoutroutine], [postcondition]")
 	public TokenFactory goargument;
 	
-	@TokenType(TGotoArgument.class)	
+	@TokenType(MGotoArgument.class)	
 	@Rule("'^', indirection, [postcondition]")
 	public TokenFactory onlyrgoargument;
 	
-	@TokenType(TGotoArgument.class)	
+	@TokenType(MGotoArgument.class)	
 	@Rule("'^', noindroutinepostcaret, [postcondition]")
 	public TokenFactory onlyrsimplegoargument;
 	
@@ -382,27 +382,27 @@ public class MTFSupply {
 	
 	
 	
-	@TokenType(TDoArgument.class)	
+	@TokenType(MDoArgument.class)	
 	@Rule("indfanoutlabel, [dolineoffset], [doroutineref], [postcondition]")
 	public TokenFactory inddoargument;
 
-	@TokenType(TDoArgument.class)	
+	@TokenType(MDoArgument.class)	
 	@Rule("fanoutlabel, dolineoffset, [doroutineref], [postcondition]")
 	public TokenFactory offsetdoargument;
 
-	@TokenType(TDoArgument.class)	
+	@TokenType(MDoArgument.class)	
 	@Rule("fanoutlabel, actuallist, [postcondition]")
 	public TokenFactory labelcalldoargument;
 
-	@TokenType(TDoArgument.class)	
+	@TokenType(MDoArgument.class)	
 	@Rule("fanoutlabel, ['^', ((envfanoutroutine | fanoutroutine) , [actuallist]) | indfanoutroutine], [postcondition]")
 	public TokenFactory doargument;
 	
-	@TokenType(TDoArgument.class)	
+	@TokenType(MDoArgument.class)	
 	@Rule("'^', noindroutinepostcaret, [actuallist], [postcondition]")
 	public TokenFactory onlyrsimpledoargument;
 	
-	@TokenType(TDoArgument.class)	
+	@TokenType(MDoArgument.class)	
 	@Rule("'^', indirection, [postcondition]")
 	public TokenFactory onlyrdoargument;
 	
@@ -514,7 +514,7 @@ public class MTFSupply {
 	
 	public TFCommand command = new TFCommand("command", this);
 	
-	@TokenType(TComment.class)
+	@TokenType(MComment.class)
 	@Rule("';', [{- '\\r' - '\\n'}]")
 	public TokenFactory comment;
 	
@@ -527,7 +527,7 @@ public class MTFSupply {
 	@Rule("{' ' + '.'}")
 	public TokenFactory level;
 	
-	@TokenType(TLine.class)
+	@TokenType(MLine.class)
 	@Rule("[label], [lineformal], [ls], [level], [commandorcommentlist]")
 	public TokenFactory line;
 	
@@ -681,7 +681,7 @@ public class MTFSupply {
 		@Rule("glvn | expritem | classmethod")
 		public TokenFactory expratom;
 		
-		@TokenType(TObjectExpr.class)
+		@TokenType(MObjectExpr.class)
 		@Rule("name, '.', {name:'.'}, [actuallist]")
 		public TokenFactory objectexpr;
 		
@@ -719,7 +719,7 @@ public class MTFSupply {
 		public TokenFactory clsdoargument;
 		@Rule("systemcall, [dolineoffset], [doroutineref], [actuallist], [postcondition]")
 		public TokenFactory sysdoargument;
-		@TokenType(TDoArgument.class)	
+		@TokenType(MDoArgument.class)	
 		@Rule("fanoutlabel, ['^', ((envfanoutroutine | objdoroutine | fanoutroutine) , [actuallist]) | indfanoutroutine], [postcondition]")
 		public TokenFactory doargument;
 
@@ -731,7 +731,7 @@ public class MTFSupply {
 		@Rule("envfanoutroutine | objdoroutine | fanoutroutine | indfanoutroutine")
 		public TokenFactory doroutinepostcaret;
 		
-		@TokenType(TExtrinsic.class)	
+		@TokenType(MExtrinsic.class)	
 		@Rule("fanoutlabel, ['^', ((envfanoutroutine | objdoroutine | fanoutroutine) , [actuallist]) | indfanoutroutine]")
 		public TokenFactory exargument;
 		

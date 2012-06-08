@@ -21,16 +21,16 @@ import com.raygroupintl.parser.StringPiece;
 import com.raygroupintl.parser.TString;
 import com.raygroupintl.parser.Token;
 
-public class MTString extends TString implements MToken {
-	public MTString() {
+public class MString extends TString implements MToken {
+	public MString() {
 		super();
 	}
 	
-	public MTString(StringPiece value) {
+	public MString(StringPiece value) {
 		super(value);
 	}
 	
-	public MTString(Token token) {
+	public MString(Token token) {
 		super(token);
 	}
 	
