@@ -1,12 +1,6 @@
 package com.raygroupintl.m.parsetree;
 
 public class Visitor {
-	private <T extends Node> void visitBlock(Block<T> block) {
-		for (T node : block.getNodes()) {
-			node.accept(this);
-		}
-	}
-
 	protected void visitErrorNode(ErrorNode error) {		
 	}
 	
@@ -14,8 +8,8 @@ public class Visitor {
 	}
 	
 	
-	protected void visitNodes(Nodes compoundExpression) {
-		for (Node node : compoundExpression.getNodes()) {
+	protected void visitNodes(Nodes nodes) {
+		for (Node node : nodes.getNodes()) {
 			node.accept(this);
 		}
 	}
@@ -67,7 +61,7 @@ public class Visitor {
 	}
 	
 	protected void visitForBlock(ForBlock forBlock) {
-		this.visitBlock(forBlock);
+		this.visitNodes(forBlock);
 	}
 	
 	protected void visitDoBlock(DoBlock doBlock) {
@@ -75,7 +69,7 @@ public class Visitor {
 		if (postCondition != null) {
 			postCondition.accept(this);
 		}
-		this.visitBlock(doBlock);
+		this.visitNodes(doBlock);
 	}
 	
 	protected void visitExternalDo(ExternalDo externalDo) {
@@ -107,18 +101,18 @@ public class Visitor {
 	}
 	
 	protected void visitLine(Line line) {
-		this.visitBlock(line);
+		this.visitNodes(line);
 	}
 	
 	protected void visitEntryTag(EntryTag entry) {
-		this.visitBlock(entry);
+		this.visitNodes(entry);
 	}
 		
 	protected void visitRoutine(Routine routine) {
-		this.visitBlock(routine);
+		this.visitNodes(routine);
 	}
 
 	protected void visitRoutinePackage(RoutinePackage routinePackage) {
-		this.visitBlock(routinePackage);
+		this.visitNodes(routinePackage);
 	}
 }

@@ -16,7 +16,7 @@
 
 package com.raygroupintl.m.parsetree;
 
-public class Routine extends Block<EntryTag> {
+public class Routine extends NodeList {
 	private String name;
 	
 	public Routine(String name) {

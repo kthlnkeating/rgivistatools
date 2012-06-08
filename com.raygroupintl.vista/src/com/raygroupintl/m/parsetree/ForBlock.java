@@ -1,6 +1,6 @@
 package com.raygroupintl.m.parsetree;
 
-public class ForBlock extends Block<Node> {
+public class ForBlock extends NodeList {
 	public ForBlock() {		
 	}
 

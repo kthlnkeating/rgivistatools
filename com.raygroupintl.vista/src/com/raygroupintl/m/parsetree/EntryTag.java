@@ -16,7 +16,7 @@
 
 package com.raygroupintl.m.parsetree;
 
-public class EntryTag extends Block<Line> {
+public class EntryTag extends NodeList {
 	private String name;
 	private String routineName;
 	private int index;

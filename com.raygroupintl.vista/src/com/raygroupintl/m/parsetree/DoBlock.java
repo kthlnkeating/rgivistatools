@@ -1,6 +1,6 @@
 package com.raygroupintl.m.parsetree;
 
-public class DoBlock extends Block<Line> {
+public class DoBlock extends NodeList {
 	private Node postCondition;
 	
 	public DoBlock(Node postCondition) {

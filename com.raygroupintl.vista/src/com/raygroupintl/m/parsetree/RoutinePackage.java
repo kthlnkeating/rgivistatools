@@ -16,7 +16,7 @@
 
 package com.raygroupintl.m.parsetree;
 
-public abstract class RoutinePackage extends Block<Routine> {
+public abstract class RoutinePackage extends NodeList {
 	@Override
 	public void accept(Visitor visitor) {
 		visitor.visitRoutinePackage(this);

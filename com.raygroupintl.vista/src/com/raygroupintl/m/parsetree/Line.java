@@ -16,7 +16,7 @@
 
 package com.raygroupintl.m.parsetree;
 
-public class Line extends Block<Node> {
+public class Line extends NodeList {
 	private String tag;
 	private int index;
 	private int level;

@@ -20,17 +20,18 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-public abstract class Block<T extends Node> implements Node {
-	private List<T> nodes;
+public final class Block extends Nodes {
+	private List<Node> nodes;
 
-	public void add(T node) {
+	public void add(Node node) {
 		if (this.nodes == null) {
-			this.nodes = new ArrayList<T>();
+			this.nodes = new ArrayList<Node>();
 		}
 		this.nodes.add(node);
 	}
 	
-	public List<T> getNodes() {
+	@Override
+	public List<Node> getNodes() {
 		if (this.nodes == null) {
 			return Collections.emptyList();
 		} else {
