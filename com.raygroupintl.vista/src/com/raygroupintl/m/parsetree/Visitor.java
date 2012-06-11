@@ -8,7 +8,7 @@ public class Visitor {
 	}
 	
 	
-	protected void visitNodes(Nodes nodes) {
+	protected <T extends Node> void visitNodes(Nodes<T> nodes) {
 		for (Node node : nodes.getNodes()) {
 			node.accept(this);
 		}
@@ -64,14 +64,6 @@ public class Visitor {
 		this.visitNodes(forBlock);
 	}
 	
-	protected void visitDoBlock(DoBlock doBlock) {
-		Node postCondition = doBlock.getPostCondition();
-		if (postCondition != null) {
-			postCondition.accept(this);
-		}
-		this.visitNodes(doBlock);
-	}
-	
 	protected void visitExternalDo(ExternalDo externalDo) {
 		this.visitAtomicCommand(externalDo);
 	}
@@ -104,12 +96,28 @@ public class Visitor {
 		this.visitNodes(line);
 	}
 	
-	protected void visitEntryTag(EntryTag entry) {
+	protected void visitBlock(EntryList block) {
+		this.visitNodes(block);		
+	}
+	
+	protected void visitDoBlock(DoBlock doBlock) {
+		Node postCondition = doBlock.getPostCondition();
+		if (postCondition != null) {
+			postCondition.accept(this);
+		}
+		EntryList entryList = doBlock.getEntryList();
+		if (entryList != null) {			
+			this.visitNodes(entryList);
+		}
+	}
+	
+	protected void visitEntryTag(Entry entry) {
 		this.visitNodes(entry);
 	}
 		
 	protected void visitRoutine(Routine routine) {
-		this.visitNodes(routine);
+		EntryList entryList = routine.getEntryList();
+		this.visitNodes(entryList);
 	}
 
 	protected void visitRoutinePackage(RoutinePackage routinePackage) {

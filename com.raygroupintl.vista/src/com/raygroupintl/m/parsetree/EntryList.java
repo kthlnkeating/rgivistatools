@@ -16,36 +16,5 @@
 
 package com.raygroupintl.m.parsetree;
 
-public class EntryTag extends NodeList {
-	private String name;
-	private String routineName;
-	private int index;
-	private String[] parameters;
-	
-	public EntryTag(String name, String routineName, int index) {
-		this.name = name;
-		this.routineName = routineName;
-		this.index = index;
-	}
-	
-	public EntryTag(String tagName, String[] parameters) {
-		this.parameters = parameters;
-	}
-		
-	public String getKey() {
-		return this.name + '^' + this.routineName + ',' + String.valueOf(this.index);
-	}
-	
-	public int getParameterCount() {
-		return this.parameters.length;
-	}
-	
-	public String getParameter(int index) {
-		return this.parameters[index];
-	}
-
-	@Override
-	public void accept(Visitor visitor) {
-		visitor.visitEntryTag(this);
-	}
+public class EntryList extends NodeList<Entry> {
 }

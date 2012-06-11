@@ -18,7 +18,7 @@ package com.raygroupintl.m.parsetree;
 
 import com.raygroupintl.m.struct.MError;
 
-public class ErrorNode implements Node {
+public class ErrorNode extends TerminalNode {
 	private int errorCode;
 	
 	public ErrorNode(int errorCode) {

@@ -13,6 +13,7 @@ TAG1 ;
  N A,B,C
  S A=1,B=1,C=1
  F I=1:1 D ADD:A>5,SUB:A>10 D  Q:A>20  G TAG1
+ . S A=1
  G TAG3:A=3,@("TAG"_B):C'>3,@A^@B
  D @C^@B,@B
  Q

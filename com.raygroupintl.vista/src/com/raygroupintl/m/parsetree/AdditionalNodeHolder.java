@@ -10,4 +10,9 @@ abstract class AdditionalNodeHolder implements Node {
 	public Node getAdditionalNode() {
 		return this.additionalNode;
 	}
+	
+	@Override
+	public boolean setEntryList(EntryList entryList) {
+		return false;
+	}	
 }

@@ -90,6 +90,15 @@ public class ErrorExemptions {
 		r.addLine("PSSHTTP", "PEPSPOST", 26);
 		r.addLine("PSSHTTP", "PEPSPOST", 34);
 		r.addRoutine("PSORELD1");
+		r.addRoutine("HLUCM001");// Do block
+		r.addRoutine("ZISG3");
+		r.addRoutine("ZOSVKSOE");
+		r.addRoutine("DGRUGMFU");
+		r.addRoutine("SPNRPC4");
+		r.addRoutine("MUSMCR1");
+		//r.addRoutine("GMRAPT");  // Do block
+		//r.addRoutine("OOPSGUI3");
+		//r.addRoutine("IBDF10A");
 		return r;
 	}
 }

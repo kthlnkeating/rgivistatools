@@ -1,6 +1,6 @@
 package com.raygroupintl.m.parsetree;
 
-public class IntegerLiteral implements Node {
+public class IntegerLiteral extends TerminalNode {
 	private String value;
 	
 	public IntegerLiteral(String value) {

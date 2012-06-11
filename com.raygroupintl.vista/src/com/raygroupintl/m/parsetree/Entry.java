@@ -16,8 +16,36 @@
 
 package com.raygroupintl.m.parsetree;
 
-public class IgnorableNode extends TerminalNode {
+public class Entry extends NodeList<Node> {
+	private String name;
+	private String routineName;
+	private int index;
+	private String[] parameters;
+	
+	public Entry(String name, String routineName, int index) {
+		this.name = name;
+		this.routineName = routineName;
+		this.index = index;
+	}
+	
+	public Entry(String tagName, String[] parameters) {
+		this.parameters = parameters;
+	}
+		
+	public String getKey() {
+		return this.name + '^' + this.routineName + ',' + String.valueOf(this.index);
+	}
+	
+	public int getParameterCount() {
+		return this.parameters.length;
+	}
+	
+	public String getParameter(int index) {
+		return this.parameters[index];
+	}
+
 	@Override
 	public void accept(Visitor visitor) {
+		visitor.visitEntryTag(this);
 	}
 }

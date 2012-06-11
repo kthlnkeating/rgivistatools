@@ -16,7 +16,7 @@
 
 package com.raygroupintl.m.parsetree;
 
-public class Line extends NodeList {
+public class Line extends NodeList<Node> {
 	private String tag;
 	private int index;
 	private int level;
@@ -43,4 +43,14 @@ public class Line extends NodeList {
 	public void accept(Visitor visitor) {
 		visitor.visitLine(this);
 	}
+	
+	@Override
+	public boolean setEntryList(EntryList entryList) {
+		boolean result = false;
+		for (Node node : this.getNodes()) {
+			boolean nodeResult = node.setEntryList(entryList);
+			result = result || nodeResult; 					
+		}
+		return result;
+	}	
 }

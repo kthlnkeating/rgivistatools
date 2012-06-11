@@ -20,6 +20,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 
+import com.raygroupintl.m.parsetree.EntryList;
+import com.raygroupintl.m.parsetree.DoBlock;
 import com.raygroupintl.m.parsetree.ErrorNode;
 import com.raygroupintl.m.parsetree.Routine;
 import com.raygroupintl.m.struct.LineLocation;
@@ -29,6 +31,17 @@ import com.raygroupintl.m.struct.ObjectInRoutine;
 public class ErrorRecorder extends LocationMarker {
 	private List<ObjectInRoutine<MError>> result;
 	private Set<LineLocation> exemptions;
+	private boolean onlyFatal;
+	
+	private void addError(MError error) {
+		if ((! this.onlyFatal) || (error.isFatal())) {
+			LineLocation location = this.getLastLocation();
+			if ((this.exemptions == null) || (! this.exemptions.contains(location))) {
+				ObjectInRoutine<MError> element = new ObjectInRoutine<MError>(error, location);  
+				this.result.add(element);
+			}
+		}
+	}
 	
 	public ErrorRecorder(Set<LineLocation> exemptions) {
 		this.exemptions = exemptions;
@@ -36,20 +49,29 @@ public class ErrorRecorder extends LocationMarker {
 	
 	public ErrorRecorder() {
 	}
+	
+	public void setOnlyFatal(boolean b) {
+		this.onlyFatal = b;
+	}
 
 	@Override
 	protected void visitErrorNode(ErrorNode errorNode) {		
-		LineLocation location = this.getLastLocation();
-		if ((this.exemptions == null) || (! this.exemptions.contains(location))) {
-			MError error = errorNode.getError();
-			ObjectInRoutine<MError> element = new ObjectInRoutine<MError>(error, location);  
-			this.result.add(element);
-		}
+		MError error = errorNode.getError();
+		this.addError(error);
 	}
 		
+	protected void visitDoBlock(DoBlock doBlock) {
+		EntryList block = doBlock.getEntryList();
+		if (block == null) {
+			MError error = new MError(MError.ERR_NO_DO_BLOCK);
+			this.addError(error);
+		}
+		super.visitDoBlock(doBlock);
+	}
+	
 	public List<ObjectInRoutine<MError>> visitErrors(Routine routine) {
 		this.result = new ArrayList<ObjectInRoutine<MError>>();		
-		this.visitRoutine(routine);
+		routine.accept(this);
 		return this.result;
 	}
 }

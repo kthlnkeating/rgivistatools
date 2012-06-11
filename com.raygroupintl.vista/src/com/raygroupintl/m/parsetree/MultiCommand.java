@@ -32,4 +32,9 @@ public abstract class MultiCommand implements Node {
 	public Node getArgument() {
 		return this.argument;
 	}
+	
+	@Override
+	public boolean setEntryList(EntryList entryList) {
+		return false;
+	}	
 }

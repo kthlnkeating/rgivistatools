@@ -198,7 +198,7 @@ public class OccuranceRecorder extends LocationMarker {
 	
 	public static OccuranceRecorder record(Routine routine) {
 		OccuranceRecorder result = new OccuranceRecorder();
-		result.visitRoutine(routine);
+		routine.accept(result);
 		return result;
 	}
 }

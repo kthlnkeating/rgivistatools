@@ -16,19 +16,50 @@
 
 package com.raygroupintl.m.parsetree;
 
-public class Routine extends NodeList {
+public class Routine implements Node {
 	private String name;
+	private EntryList entryList;
+	private ErrorNode errorNode;
 	
 	public Routine(String name) {
 		this.name = name;
 	}
 	
+	public Routine(String name, ErrorNode errorNode) {
+		this.name = name;
+		this.errorNode = errorNode;
+	}
+	
 	public String getKey() {
 		return this.name;
 	}
-
+	
+	public EntryList getEntryList() {
+		return this.entryList;
+	}
+	
+	public ErrorNode getErrorNode() {
+		return this.errorNode;
+	}
+	
 	@Override
 	public void accept(Visitor visitor) {
+		if (this.errorNode != null) {
+			visitor.visitErrorNode(this.errorNode);
+			if (this.errorNode.getError().isFatal()) {
+				return;
+			}
+		}
 		visitor.visitRoutine(this);
+	}
+	
+	@Override
+	public boolean setEntryList(EntryList entryList) {
+		this.entryList = entryList;
+		return true;
+	}
+	
+	public void setErrorNode(ErrorNode errorNode) {
+		this.errorNode = errorNode;
 	}
 }

@@ -16,6 +16,7 @@
 
 package com.raygroupintl.m.token;
 
+import com.raygroupintl.m.parsetree.Node;
 import com.raygroupintl.m.parsetree.Nodes;
 import com.raygroupintl.parser.TList;
 import com.raygroupintl.parser.Token;
@@ -30,7 +31,7 @@ public class MList extends TList implements MToken {
 	}
 
 	@Override
-	public Nodes getNode() {
+	public Nodes<Node> getNode() {
 		return NodeUtilities.getNodes(this);
 	}
 }

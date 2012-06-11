@@ -83,7 +83,7 @@ public class FanoutWriter  {
 		try {
 			FanoutRecorder forer = new FanoutRecorder();
 			forer.setFilter(this.filter);
-			forer.visitRoutine(routine);
+			routine.accept(forer);
 			Map<LineLocation, List<Fanout>> fanouts = forer.getRoutineFanouts();
 			for (List<Fanout> fouts : fanouts.values()) {	
 				for (Fanout fout : fouts) {

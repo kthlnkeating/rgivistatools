@@ -26,7 +26,10 @@ public class MError {
 	public static final int ERR_UNMATCHED_QUOTATION = 6;
 	public static final int ERR_GENERAL_SYNTAX = 21;
 	public static final int ERR_NULL_LINE = 42;
+	public static final int ERR_BLOCK_STRUCTURE = 51;
 	
+	public static final int ERR_NO_LINES = 800;
+	public static final int ERR_NO_DO_BLOCK = 801;
 	public static final int ERR_UNKNOWN_INTRINSIC_VARIABLE = 1000;
 	public static final int ERR_UNKNOWN_INTRINSIC_FUNCTION = 1001;
 	
@@ -101,7 +104,7 @@ public class MError {
 		CODES.put(48, new CodeDetail(Severity.FATAL, "Missing argument to a command post-conditional."));
 		CODES.put(49, new CodeDetail(Severity.FATAL, "Command missing an argument."));
 		CODES.put(50, new CodeDetail(Severity.STANDARD, "Extended reference."));
-		CODES.put(51, new CodeDetail(Severity.FATAL, "Block structure mismatch."));
+		CODES.put(ERR_BLOCK_STRUCTURE, new CodeDetail(Severity.FATAL, "Block structure mismatch."));
 		CODES.put(52, new CodeDetail(Severity.FATAL, "Reference to routine '^|'. That isn't in this UCI."));
 		CODES.put(53, new CodeDetail(Severity.FATAL, "Bad Number."));
 		CODES.put(54, new CodeDetail(Severity.STANDARD, "Access to SSVN's restricted to Kernel."));
@@ -115,6 +118,8 @@ public class MError {
 		CODES.put(62, new CodeDetail(Severity.STANDARD, "First line of routine violates the SAC."));
 		CODES.put(63, new CodeDetail(Severity.FATAL, "GO or DO mismatch from block structure (M45).	}"));
 
+		CODES.put(ERR_NO_LINES, new CodeDetail(Severity.FATAL, "No lines in the routine."));
+		CODES.put(ERR_NO_DO_BLOCK, new CodeDetail(Severity.WARNING, "Empty do block."));
 		CODES.put(ERR_UNKNOWN_INTRINSIC_VARIABLE, new CodeDetail(Severity.FATAL, "Unknown intrinsic variable."));
 		CODES.put(ERR_UNKNOWN_INTRINSIC_FUNCTION, new CodeDetail(Severity.FATAL, "Unknown intrinsic function."));
 

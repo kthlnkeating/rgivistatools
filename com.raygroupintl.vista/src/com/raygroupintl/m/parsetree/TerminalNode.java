@@ -16,26 +16,9 @@
 
 package com.raygroupintl.m.parsetree;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-
-public final class Block extends Nodes {
-	private List<Node> nodes;
-
-	public void add(Node node) {
-		if (this.nodes == null) {
-			this.nodes = new ArrayList<Node>();
-		}
-		this.nodes.add(node);
-	}
-	
+abstract class TerminalNode implements Node {
 	@Override
-	public List<Node> getNodes() {
-		if (this.nodes == null) {
-			return Collections.emptyList();
-		} else {
-			return Collections.unmodifiableList(this.nodes);
-		}
+	public boolean setEntryList(EntryList entryList) {
+		return false;
 	}
 }
