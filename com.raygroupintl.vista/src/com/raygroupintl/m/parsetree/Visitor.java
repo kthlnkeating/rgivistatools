@@ -46,6 +46,13 @@ public class Visitor {
 		this.visitNodeWithSubscripts(global);
 	}
 	
+	protected void visitIntrinsicFunction(IntrinsicFunction intrinsicFunction) {
+		Node arguments = intrinsicFunction.getArguments();
+		if (arguments != null) {
+			arguments.accept(this);
+		}
+	}
+	
 	protected void visitActualList(ActualList actualList) {
 		this.visitNodes(actualList);
 	}
