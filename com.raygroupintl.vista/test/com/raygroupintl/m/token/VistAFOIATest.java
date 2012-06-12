@@ -9,6 +9,7 @@ import java.util.Set;
 
 import org.junit.Test;
 
+import com.raygroupintl.m.parsetree.NodeList;
 import com.raygroupintl.m.parsetree.Routine;
 import com.raygroupintl.m.parsetree.visitor.ErrorRecorder;
 import com.raygroupintl.m.struct.LineLocation;
@@ -57,6 +58,9 @@ public class VistAFOIATest {
 					Assert.assertEquals(errors.size(), 0);						
 				}	
 			}
+			System.out.print("\nAllocated: ");System.out.print(NodeList.allocated);
+			System.out.print("\nAdded    : ");System.out.print(NodeList.added);
+			
 		} catch (ParseException e) {
 			fail("Exception: " + e.getMessage());			
 		} catch (IOException e) {

@@ -31,7 +31,7 @@ public class MString extends TString implements MToken {
 	}
 	
 	public MString(Token token) {
-		super(token);
+		super(token.toValue());
 	}
 	
 	@Override

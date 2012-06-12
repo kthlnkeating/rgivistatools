@@ -16,22 +16,24 @@
 
 package com.raygroupintl.m.token;
 
-import com.raygroupintl.m.parsetree.IdentifiedNode;
-import com.raygroupintl.m.parsetree.Node;
-import com.raygroupintl.parser.StringPiece;
+import com.raygroupintl.parser.Token;
 
-public abstract class MIdentifier extends MString implements IdentifiedNode {
-	public MIdentifier(StringPiece piece) {
-		super(piece);
+public class StringTokens {
+	public static class MName extends MString {
+		public MName(Token token) {
+			super(token);
+		}
 	}
-	
-	@Override
-	public Node getNode() {
-		return this;
+
+	public static class MIdent extends MString {
+		public MIdent(Token token) {
+			super(token);
+		}
 	}
-	
-	@Override
-	public String getIdentifier() {
-		return this.toValue().toString();
+
+	public static class PatAtoms extends MString {
+		public PatAtoms(Token token) {
+			super(token);
+		}
 	}
 }

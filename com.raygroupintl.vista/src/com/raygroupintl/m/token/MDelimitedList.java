@@ -38,6 +38,6 @@ public class MDelimitedList extends TDelimitedList implements MToken {
 
 	@Override
 	public Node getNode() {
-		return NodeUtilities.getNodes(this);
+		return NodeUtilities.getNodes(this, this.size());
 	}
 }

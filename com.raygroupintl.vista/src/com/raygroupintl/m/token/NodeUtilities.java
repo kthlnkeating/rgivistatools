@@ -22,8 +22,8 @@ import com.raygroupintl.m.parsetree.Nodes;
 import com.raygroupintl.parser.Token;
 
 class NodeUtilities {
-	static Nodes<Node> getNodes(Iterable<Token> iterable) {
-		NodeList<Node> result = new NodeList<Node>(5);
+	static Nodes<Node> getNodes(Iterable<Token> iterable, int size) {
+		NodeList<Node> result = new NodeList<Node>(size);
 		for (Token t : iterable) {
 			if ((t != null) && (t instanceof MToken)) {
 				MToken mt = (MToken) t;

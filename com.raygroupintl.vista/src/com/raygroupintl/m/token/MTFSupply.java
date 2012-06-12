@@ -34,14 +34,17 @@ public class MTFSupply {
 	public TokenFactory patatom;	
 	@Rule("{patatoms:',':'(':')'}")
 	public TokenFactory alternation;	
+	@TokenType(StringTokens.PatAtoms.class)	
 	@Rule("{patatom}")	
 	public TokenFactory patatoms;
 	@Rule("indirection | patatoms")
 	public TokenFactory pattern;
 	
+	@TokenType(StringTokens.MName.class)
 	@Rule("'%' + 'a'...'z' + 'A'...'Z', [{'a'...'z' + 'A'...'Z' + '0'...'9'}]")
 	public TokenFactory name;	
 	
+	@TokenType(StringTokens.MIdent.class)
 	@Rule("{'a'...'z' + 'A'...'Z'}")
 	public TokenFactory ident;
 	
@@ -215,13 +218,7 @@ public class MTFSupply {
 	public TokenFactory routinespec;
 	@Rule("[tagspec], [routinespec]")
 	public TokenFactory cmdgargmain;
-	//@Rule("cmdgargmain, [postcondition]")
-	//public TokenFactory gotoargument;
-	//@Rule("{gotoargument:','}")
-	//public TokenFactory gotoarguments;
-	
-	
-	
+
 	
 	@Rule("'#', expr")
 	public TokenFactory readcount;
@@ -298,21 +295,6 @@ public class MTFSupply {
 	@Rule("indexargument | labelcallexargument | exargument | onlyrsimpleexargument | onlyrexargument")
 	public TokenFactory extrinsicarg;
 	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	//@Rule("[labelpiece], [lineoffset], [doroutineref], [actuallist]")
-	//public TokenFactory extrinsicarg;
 	
 	@TokenType(MExtDoArgument.class)
 	@Rule("'&', name, ['.', name], ['^', name], [actuallist], [postcondition]")

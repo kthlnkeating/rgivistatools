@@ -14,29 +14,33 @@
 // limitations under the License.
 //---------------------------------------------------------------------------
 
-package com.raygroupintl.m.token;
+package com.raygroupintl.m.parsetree;
 
-import java.util.List;
+import com.raygroupintl.parser.StringPiece;
 
-import com.raygroupintl.m.parsetree.Node;
-import com.raygroupintl.parser.TSequence;
-import com.raygroupintl.parser.Token;
-
-public class MSequence extends TSequence implements MToken {
-	public MSequence(List<Token> tokens) {
-		super(tokens);
+public abstract class NodeWithSubscripts implements Node {
+	private StringPiece name;
+	private NodeList<Node> subsripts;
+	
+	public NodeWithSubscripts(StringPiece name) {
+		this.name = name;
 	}
-
-	public MSequence(Token token) {
-		super(token.toList());
+	
+	public NodeWithSubscripts(StringPiece name, NodeList<Node> subscripts) {
+		this.name = name;
+		this.subsripts = subscripts;
 	}
-
-	public MSequence(int length) {
-		super(length);
+		
+	public StringPiece getName() {
+		return this.name;
+	}
+	
+	public Nodes<Node> getSubscripts() {
+		return this.subsripts;
 	}
 	
 	@Override
-	public Node getNode() {
-		return NodeUtilities.getNodes(this, this.size());
-	}
+	public boolean setEntryList(EntryList entryList) {
+		return false;
+	}	
 }

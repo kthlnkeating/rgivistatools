@@ -32,6 +32,6 @@ public class MList extends TList implements MToken {
 
 	@Override
 	public Nodes<Node> getNode() {
-		return NodeUtilities.getNodes(this);
+		return NodeUtilities.getNodes(this, this.size());
 	}
 }

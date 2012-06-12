@@ -21,19 +21,29 @@ import java.util.Collections;
 import java.util.List;
 
 public class NodeList<T extends Node> extends Nodes<T> {
-	List<T> nodes = new ArrayList<T>();
-
+	private List<T> nodes = new ArrayList<T>();
+	public static int allocated;
+	public static int added;
+	
 	public NodeList() {		
 	}
 	
 	public NodeList(int size) {
 		this.nodes = new ArrayList<T>(size);	
+		allocated += size;
 	}
 
+	public void reset(int size) {
+		this.nodes = new ArrayList<T>(size);
+		allocated += size;
+	}
+	
 	public void add(T node) {
 		if (this.nodes == null) {
 			this.nodes = new ArrayList<T>();
+			allocated += 10;
 		}
+		added += 1;
 		this.nodes.add(node);
 	}
 	

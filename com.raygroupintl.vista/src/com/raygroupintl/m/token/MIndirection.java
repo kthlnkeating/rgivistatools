@@ -28,7 +28,7 @@ public class MIndirection extends MSequence {
 	
 	@Override
 	public Node getNode() {
-		Nodes<Node> nodes = NodeUtilities.getNodes(this);
+		Nodes<Node> nodes = NodeUtilities.getNodes(this, this.size());
 		Indirection result = new Indirection(nodes);
 		return result;
 	}

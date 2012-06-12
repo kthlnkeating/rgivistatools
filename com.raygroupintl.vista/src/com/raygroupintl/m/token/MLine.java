@@ -53,10 +53,18 @@ public class MLine extends MSequence {
 		Line result = new Line(this.tagName, this.index, this.getLevel());
 		TList cmds = (TList) this.get(4);
 		if (cmds != null) {
+			boolean noneAdded = true;
+			result.reset(cmds.size());
 			for (Iterator<Token> it = cmds.iterator(); it.hasNext();) {
 				Token t = it.next();
 				Node node = ((MToken) t).getNode();
-				if (node != null) result.add(node);
+				if (node != null) {
+					noneAdded = false;
+					result.add(node);
+				}
+			}
+			if (noneAdded) {
+				result = new Line(this.tagName, this.index, this.getLevel());
 			}
 		}
 		return result;

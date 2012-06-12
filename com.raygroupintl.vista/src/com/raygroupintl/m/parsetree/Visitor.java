@@ -6,11 +6,10 @@ public class Visitor {
 	
 	protected void visitIntegerLiteral(IntegerLiteral literal) {		
 	}
-	
-	
+		
 	protected <T extends Node> void visitNodes(Nodes<T> nodes) {
 		for (Node node : nodes.getNodes()) {
-			node.accept(this);
+			if (node != null) node.accept(this);
 		}
 	}
 	
@@ -30,6 +29,25 @@ public class Visitor {
 		if (addlNode != null) {
 			addlNode.accept(this);
 		}
+	}
+	
+	protected void visitNodeWithSubscripts(NodeWithSubscripts node) {
+		Nodes<Node> subscripts = node.getSubscripts();
+		if (subscripts != null) {
+			this.visitNodes(subscripts);
+		}		
+	}
+	
+	protected void visitLocal(Local local) {
+		this.visitNodeWithSubscripts(local);
+	}
+	
+	protected void visitGlobal(Global global) {
+		this.visitNodeWithSubscripts(global);
+	}
+	
+	protected void visitActualList(ActualList actualList) {
+		this.visitNodes(actualList);
 	}
 	
 	protected void visitIndirection(Indirection indirection) {
