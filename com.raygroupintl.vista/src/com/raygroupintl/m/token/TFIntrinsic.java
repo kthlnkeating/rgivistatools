@@ -1,6 +1,7 @@
 package com.raygroupintl.m.token;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import com.raygroupintl.m.struct.MError;
@@ -27,14 +28,26 @@ public class TFIntrinsic extends TokenFactorySupply {
 	
 	private static class FunctionInfo {
 		private TokenFactory argumentFactory;
+		private String mnemonic;
+		private String name;
 		private int minNumArguments;
 		//private int maxNumArguments;
 		
-		public FunctionInfo(TokenFactory argumentFactory, int minNumArguments, int maxNumArguments) {
+		public FunctionInfo(String mnemonic, String name, TokenFactory argumentFactory, int minNumArguments, int maxNumArguments) {
+			this.mnemonic = mnemonic;
+			this.name = name;
 			this.argumentFactory = argumentFactory;
 			this.minNumArguments = minNumArguments;
 			//this.maxNumArguments = maxNumArguments;
 		}		
+
+		public String getMnemonic() {
+			return this.mnemonic;
+		}
+		
+		public String getName() {
+			return this.name;
+		}
 
 		public int getMinNumArguments() {
 			return this.minNumArguments;
@@ -50,7 +63,6 @@ public class TFIntrinsic extends TokenFactorySupply {
 	}
 
 	private MNameWithMnemonic.Map variables = new MNameWithMnemonic.Map();
-	private MNameWithMnemonic.Map functions;
 	private Map<String, FunctionInfo> function_infos;
 	private MTFSupply supply;
 	
@@ -69,15 +81,14 @@ public class TFIntrinsic extends TokenFactorySupply {
 	}
 	
 	public FunctionInfo addFunction(TokenFactory argumentFactory, String mnemonic, String name, int minNumArguments, int maxNumArguments) {
-		FunctionInfo fi = new FunctionInfo(argumentFactory, minNumArguments, maxNumArguments);
-		if (this.functions == null) {
-			this.functions = new MNameWithMnemonic.Map();	
-		}		
-		this.functions.update(mnemonic, name);
+		FunctionInfo fi = new FunctionInfo(mnemonic, name, argumentFactory, minNumArguments, maxNumArguments);
 		if (this.function_infos == null) {
 			this.function_infos = new HashMap<String, FunctionInfo>();	
 		}
 		this.function_infos.put(mnemonic, fi);
+		if (! mnemonic.equals(name)) {
+			this.function_infos.put(name, fi);
+		}
 		return fi;
 	}
 		
@@ -91,29 +102,12 @@ public class TFIntrinsic extends TokenFactorySupply {
 
 	private class TFIntrinsicRest extends TFSequence {	
 		private boolean nullAllowed;
-		//private FunctionInfo info;
 		
 		public TFIntrinsicRest(FunctionInfo info, boolean nullAllowed, String name, TokenFactory... factories) {
 			super(name, factories);
 			this.nullAllowed = nullAllowed;
-			//this.info = info;
 		}
 		
-/*		@Override
-		protected ValidateResult validateNext(int seqIndex, TokenStore foundTokens, Token nextToken) throws SyntaxErrorException {
-			if (seqIndex == 0) {
-				TList list = (TList) nextToken;
-				int n = list.size();
-				if (n < this.info.getMinNumArguments()) {
-					throw new SyntaxErrorException(MError.ERR_UNKNOWN_INTRINSIC_FUNCTION, foundTokens);				
-				}
-				if (n > this.info.getMaxNumArguments()) {
-					throw new SyntaxErrorException(MError.ERR_UNKNOWN_INTRINSIC_FUNCTION, foundTokens);				
-				}
-			}
-			return ValidateResult.CONTINUE;
-		}
-*/
 		@Override
 		protected ValidateResult validateNull(int seqIndex, TSequence foundTokens, boolean noException) throws SyntaxErrorException {
 			if (seqIndex == 0 && this.nullAllowed) {
@@ -134,25 +128,21 @@ public class TFIntrinsic extends TokenFactorySupply {
 	
 	@Override
 	public TokenFactory getNextTokenFactory(Token token) throws SyntaxErrorException {
-		String name = token.toValue().toString();
-		int length = name.length();
-		if (name.charAt(length-1) =='(') {
-			String base =name.substring(1, length-1);
-			String[] mna = base.split("\\.");
-			String mn = mna[0].toUpperCase();			
-			MNameWithMnemonic mName = TFIntrinsic.this.functions.get(mn);
-			if (mName == null) {
+		List<Token> nameNLPar = token.toList();
+		List<Token> nameTokens = nameNLPar.get(0).toList();
+		String name = nameTokens.get(1).toValue().toString();
+		if ((nameNLPar.size() > 1) && (nameNLPar.get(1) != null)) {
+			String mn = name.toUpperCase();			
+			FunctionInfo info = TFIntrinsic.this.function_infos.get(mn);
+			if (info == null) {
 				throw new SyntaxErrorException(MError.ERR_UNKNOWN_INTRINSIC_FUNCTION);
 			}
-			String mnemonic = mName.getMnemonic();
-			FunctionInfo info = TFIntrinsic.this.function_infos.get(mnemonic);
 			TokenFactory argumentFactory = info.getArgumentFactory();
 			TFSequence result = new TFIntrinsicRest(info, info.getMinNumArguments() == 0, "instrinsic.name", argumentFactory, this.supply.rpar);
 			result.setRequiredFlags(info.getMinNumArguments() > 0, true);
 			return result;
 		} else {
-			String base =name.substring(1);
-			MNameWithMnemonic mName = TFIntrinsic.this.variables.get(base);
+			MNameWithMnemonic mName = TFIntrinsic.this.variables.get(name);
 			if (mName == null) {
 				throw new SyntaxErrorException(MError.ERR_UNKNOWN_INTRINSIC_VARIABLE);
 			}
@@ -167,5 +157,4 @@ public class TFIntrinsic extends TokenFactorySupply {
 		result.addToken(nextToken);
 		return new TIntrinsicFunction(result);
 	}
-
 }
