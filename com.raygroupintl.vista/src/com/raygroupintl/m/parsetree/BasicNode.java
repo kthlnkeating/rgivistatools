@@ -16,20 +16,9 @@
 
 package com.raygroupintl.m.parsetree;
 
-public abstract class MultiCommand extends BasicNode {
-	private Node postCondition;
-	private Node argument;
-	
-	public MultiCommand(Node postCondition, Node argument) {
-		this.postCondition = postCondition;
-		this.argument = argument;
-	}
-
-	public Node getPostCondition() {
-		return this.postCondition;
-	}
-	
-	public Node getArgument() {
-		return this.argument;
+public abstract class BasicNode implements Node {
+	@Override
+	public boolean setEntryList(EntryList entryList) {
+		return false;
 	}
 }

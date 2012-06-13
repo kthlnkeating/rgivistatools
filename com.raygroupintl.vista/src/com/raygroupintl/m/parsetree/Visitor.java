@@ -101,6 +101,13 @@ public class Visitor {
 		this.visitAtomicCommand(atomicGoto);
 	}
 	
+	protected void visitAtomicSet(AtomicSet atomicSet) {
+		atomicSet.acceptSubNodes(this);
+	}
+	
+	protected void visitAtomicNew(AtomicNew atomicNew) {
+	}
+	
 	protected void visitExtrinsic(Extrinsic extrinsic) {
 		this.visitAdditionalNodeHolder(extrinsic);
 	}

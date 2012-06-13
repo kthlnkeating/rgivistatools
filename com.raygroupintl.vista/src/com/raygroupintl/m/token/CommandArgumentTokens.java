@@ -14,22 +14,23 @@
 // limitations under the License.
 //---------------------------------------------------------------------------
 
-package com.raygroupintl.m.parsetree;
+package com.raygroupintl.m.token;
 
-public abstract class MultiCommand extends BasicNode {
-	private Node postCondition;
-	private Node argument;
-	
-	public MultiCommand(Node postCondition, Node argument) {
-		this.postCondition = postCondition;
-		this.argument = argument;
-	}
+import com.raygroupintl.m.parsetree.AtomicNew;
+import com.raygroupintl.m.parsetree.Node;
+import com.raygroupintl.m.token.StringTokens.MName;
+import com.raygroupintl.parser.Token;
 
-	public Node getPostCondition() {
-		return this.postCondition;
-	}
-	
-	public Node getArgument() {
-		return this.argument;
+public class CommandArgumentTokens {
+	public static class MNewedLocal extends MName {
+		public MNewedLocal(Token token) {
+			super(token);
+		}
+		
+		@Override
+		public Node getNode() {
+			String name = this.toString();
+			return new AtomicNew(name);
+		}		
 	}
 }

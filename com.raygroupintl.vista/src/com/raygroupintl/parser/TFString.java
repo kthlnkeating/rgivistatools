@@ -29,12 +29,12 @@ public class TFString extends TokenFactory {
 		
 	@Override
 	public Token tokenize(Text text, ObjectSupply objectSupply) {
-		Token result = this.tokenizeRaw(text, objectSupply);
+		Token result = this.tokenizeOnly(text, objectSupply);
 		return this.convert(result);
 	}
 
 	@Override
-	public TString tokenizeRaw(Text text, ObjectSupply objectSupply) {
+	public TString tokenizeOnly(Text text, ObjectSupply objectSupply) {
 		return text.extractToken(this.predicate, objectSupply);
 	}
 }

@@ -67,7 +67,7 @@ public final class TFList extends TokenFactory {
 	}
 
 	@Override
-	public TList tokenizeRaw(Text text, ObjectSupply objectSupply) throws SyntaxErrorException {
+	public TList tokenizeOnly(Text text, ObjectSupply objectSupply) throws SyntaxErrorException {
 		TList rawResult = this.tokenizeCommon(text, objectSupply);
 		if (rawResult == null) {
 			return null;

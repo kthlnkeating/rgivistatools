@@ -72,7 +72,7 @@ public class TFForkedSequence extends TokenFactory {
 	
 	@Override
 	public Token tokenize(Text text, ObjectSupply objectSupply) throws SyntaxErrorException {
-		Token leading = this.leader.tokenizeRaw(text, objectSupply);
+		Token leading = this.leader.tokenizeOnly(text, objectSupply);
 		if (leading == null) {
 			return null;
 		}

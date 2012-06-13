@@ -63,7 +63,7 @@ public class TFDelimitedList extends TokenFactory {
 		if (this.effective == null) {
 			throw new IllegalStateException("TFDelimitedList.set needs to be called before TFDelimitedList.tokenize");
 		} else {
-			TSequence internalResult = this.effective.tokenizeRaw(text, objectSupply);
+			TSequence internalResult = this.effective.tokenizeOnly(text, objectSupply);
 			if (internalResult == null) {
 				return null;
 			} else {
@@ -97,7 +97,7 @@ public class TFDelimitedList extends TokenFactory {
 	}
 
 	@Override
-	public Token tokenizeRaw(Text text, ObjectSupply objectSupply) throws SyntaxErrorException {
+	public Token tokenizeOnly(Text text, ObjectSupply objectSupply) throws SyntaxErrorException {
 		return this.tokenizeCommon(text, objectSupply);
 	}
 }

@@ -16,20 +16,22 @@
 
 package com.raygroupintl.m.parsetree;
 
-public abstract class MultiCommand extends BasicNode {
-	private Node postCondition;
-	private Node argument;
+public class AtomicSet extends BasicNode {
+	private NodeList<Node> lhss;
+	private Node rhs;
 	
-	public MultiCommand(Node postCondition, Node argument) {
-		this.postCondition = postCondition;
-		this.argument = argument;
-	}
-
-	public Node getPostCondition() {
-		return this.postCondition;
+	public AtomicSet(NodeList<Node> lhss, Node rhs) {
+		this.lhss = lhss;
+		this.rhs = rhs;
 	}
 	
-	public Node getArgument() {
-		return this.argument;
+	public void acceptSubNodes(Visitor visitor) {
+		this.rhs.accept(visitor);
+		this.lhss.accept(visitor);
 	}
+	
+	@Override
+	public void accept(Visitor visitor) {
+		visitor.visitAtomicSet(this);
+	}	
 }

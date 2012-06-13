@@ -403,10 +403,7 @@ public class MTFSupply {
 	@Rule("'+', expr")
 	public TokenFactory dolineoffset;
 
-	@Rule("indirection | label")
-	public TokenFactory labelpiece;
-	
-	@Rule("indirection | intrinsic | glvn")
+	@Rule("intrinsic | glvn")
 	public TokenFactory setlhsbasic;
 	@Rule("{setlhsbasic:',':'(':')'}")
 	public TokenFactory setlhsbasics;
@@ -452,7 +449,11 @@ public class MTFSupply {
 	@Rule("{lockarg:','}")
 	public TokenFactory lockargs;
 	
-	@Rule("{lvn:',':'(':')'} | indirection | intrinsic | name")
+	@TokenType(CommandArgumentTokens.MNewedLocal.class)
+	@Rule("name")
+	public TokenFactory newedlocal;
+	
+	@Rule("{lvn:',':'(':')'} | rindirection | intrinsicname | newedlocal")
 	public TokenFactory newarg;
 	@Rule("{newarg:','}")
 	public TokenFactory newargs;

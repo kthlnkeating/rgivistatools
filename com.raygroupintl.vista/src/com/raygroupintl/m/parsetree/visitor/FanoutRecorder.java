@@ -145,6 +145,5 @@ public class FanoutRecorder extends LocationMarker {
 	public Map<LineLocation, List<Fanout>> getFanouts(Routine routine) {
 		routine.accept(this);
 		return this.fanouts;
-	}
-		
+	}		
 }

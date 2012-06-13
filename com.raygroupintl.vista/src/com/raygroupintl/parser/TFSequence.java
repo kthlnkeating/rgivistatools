@@ -110,12 +110,12 @@ public class TFSequence extends TokenFactory {
 	
 	@Override
 	public final Token tokenize(Text text, ObjectSupply objectSupply) throws SyntaxErrorException {
-		TSequence result = this.tokenizeRaw(text, objectSupply);
+		TSequence result = this.tokenizeOnly(text, objectSupply);
 		return this.convert(result);
 	}
 	
 	@Override
-	public final TSequence tokenizeRaw(Text text, ObjectSupply objectSupply) throws SyntaxErrorException {
+	public final TSequence tokenizeOnly(Text text, ObjectSupply objectSupply) throws SyntaxErrorException {
 		if (text.onChar()) {
 			TSequence foundTokens = objectSupply.newSequence(this.factories.length);
 			return this.tokenizeCommon(text, objectSupply, 0, foundTokens, false);

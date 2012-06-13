@@ -39,7 +39,7 @@ public abstract class TokenFactory {
 	
 	public abstract Token tokenize(Text text, ObjectSupply objectSupply) throws SyntaxErrorException;
 
-	protected Token convert(Token token) {
+	protected final Token convert(Token token) {
 		if ((this.adapter != null) && (token != null)) {
 			return this.adapter.convert(token); 
 		} else {
@@ -47,7 +47,7 @@ public abstract class TokenFactory {
 		}
 	}
 
-	protected Token tokenizeRaw(Text text, ObjectSupply objectSupply) throws SyntaxErrorException {
+	protected Token tokenizeOnly(Text text, ObjectSupply objectSupply) throws SyntaxErrorException {
 		return this.tokenize(text, objectSupply);
 	}
 	
