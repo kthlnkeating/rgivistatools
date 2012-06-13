@@ -71,7 +71,7 @@ public class TFForkedSequence extends TokenFactory {
 	}
 	
 	@Override
-	public Token tokenize(Text text, ObjectSupply objectSupply) throws SyntaxErrorException {
+	public Token tokenizeOnly(Text text, ObjectSupply objectSupply) throws SyntaxErrorException {
 		Token leading = this.leader.tokenizeOnly(text, objectSupply);
 		if (leading == null) {
 			return null;

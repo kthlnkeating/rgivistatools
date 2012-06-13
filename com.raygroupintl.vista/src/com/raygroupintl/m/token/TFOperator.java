@@ -41,7 +41,7 @@ public class TFOperator extends TokenFactory {
 	}
 		
 	@Override
-	public Token tokenize(Text text, ObjectSupply objectSupply) {
+	public Token tokenizeOnly(Text text, ObjectSupply objectSupply) {
 		if (text.onChar()) {
 			char ch = text.getChar();	
 			OperatorBranch branch = this.operators.get(ch);

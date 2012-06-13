@@ -14,7 +14,7 @@ public abstract class TokenFactorySupply extends TokenFactory {
 	public abstract Token getToken(Token supplyToken, Token nextToken);
 	
 	@Override
-	public Token tokenize(Text text, ObjectSupply objectSupply) throws SyntaxErrorException {
+	public Token tokenizeOnly(Text text, ObjectSupply objectSupply) throws SyntaxErrorException {
 		TokenFactory supplyFactory = getSupplyTokenFactory();
 		Token token = supplyFactory.tokenize(text, objectSupply);
 		if (token == null) {

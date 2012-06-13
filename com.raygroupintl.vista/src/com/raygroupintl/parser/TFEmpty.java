@@ -31,7 +31,7 @@ public class TFEmpty extends TokenFactory {
 	}
 	
 	@Override
-	public Token tokenize(Text text, ObjectSupply objectSupply) throws SyntaxErrorException {
+	public Token tokenizeOnly(Text text, ObjectSupply objectSupply) throws SyntaxErrorException {
 		if (text.onChar()) {
 			if (this.expected == null) {
 				return objectSupply.newEmpty();

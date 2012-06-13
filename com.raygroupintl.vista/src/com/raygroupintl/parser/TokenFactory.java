@@ -37,8 +37,11 @@ public abstract class TokenFactory {
 		return 1;
 	}
 	
-	public abstract Token tokenize(Text text, ObjectSupply objectSupply) throws SyntaxErrorException;
-
+	public final Token tokenize(Text text, ObjectSupply objectSupply) throws SyntaxErrorException {
+		Token result = this.tokenizeOnly(text, objectSupply);
+		return this.convert(result);
+	}
+	
 	protected final Token convert(Token token) {
 		if ((this.adapter != null) && (token != null)) {
 			return this.adapter.convert(token); 
@@ -47,9 +50,7 @@ public abstract class TokenFactory {
 		}
 	}
 
-	protected Token tokenizeOnly(Text text, ObjectSupply objectSupply) throws SyntaxErrorException {
-		return this.tokenize(text, objectSupply);
-	}
+	protected abstract Token tokenizeOnly(Text text, ObjectSupply objectSupply) throws SyntaxErrorException;
 	
 	public void setTargetType(Class<? extends Token> cls) {
 		final Constructor<? extends Token> constructor = getConstructor(cls, Token.class, Token.class);

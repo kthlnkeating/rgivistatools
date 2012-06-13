@@ -37,7 +37,7 @@ public class TFForkableChoice extends TokenFactory {
 	}
 	
 	@Override
-	public Token tokenize(Text text, ObjectSupply objectSupply) throws SyntaxErrorException {
+	public Token tokenizeOnly(Text text, ObjectSupply objectSupply) throws SyntaxErrorException {
 		if (text.onChar()) {
 			for (TokenFactory f : this.factories) {
 				Token result = f.tokenize(text, objectSupply);

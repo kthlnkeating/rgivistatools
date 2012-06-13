@@ -59,7 +59,8 @@ public class TFDelimitedList extends TokenFactory {
 		this.set(element, delimiter, false);
 	}
 
-	private TDelimitedList tokenizeCommon(Text text, ObjectSupply objectSupply) throws SyntaxErrorException {
+	@Override
+	protected TDelimitedList tokenizeOnly(Text text, ObjectSupply objectSupply) throws SyntaxErrorException {
 		if (this.effective == null) {
 			throw new IllegalStateException("TFDelimitedList.set needs to be called before TFDelimitedList.tokenize");
 		} else {
@@ -88,16 +89,5 @@ public class TFDelimitedList extends TokenFactory {
 				}
 			}
 		}
-	}
-	
-	@Override
-	public Token tokenize(Text text, ObjectSupply objectSupply) throws SyntaxErrorException {
-		TDelimitedList rawResult = this.tokenizeCommon(text, objectSupply);
-		return this.convert(rawResult);
-	}
-
-	@Override
-	public Token tokenizeOnly(Text text, ObjectSupply objectSupply) throws SyntaxErrorException {
-		return this.tokenizeCommon(text, objectSupply);
 	}
 }

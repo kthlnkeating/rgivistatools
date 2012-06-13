@@ -33,12 +33,6 @@ public class TFConstant extends TokenFactory {
 	}
 
 	@Override
-	public Token tokenize(Text text, ObjectSupply objectSupply) {
-		Token result = this.tokenizeOnly(text, objectSupply);
-		return this.convert(result);
-	}
-
-	@Override
 	public TString tokenizeOnly(Text text, ObjectSupply objectSupply) {
 		return text.extractToken(this.value, objectSupply, this.ignoreCase);
 	}
