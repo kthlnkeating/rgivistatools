@@ -75,10 +75,12 @@ public class Visitor {
 		this.visitAdditionalNodeHolder(atomicCommand);
 	}
 	
-	protected void visitForBlock(ForBlock forBlock) {
-		this.visitNodes(forBlock);
+	
+	protected void visitForLoop(ForLoop forLoop) {
+		forLoop.acceptSubNodes(this);
 	}
 	
+
 	protected void visitExternalDo(ExternalDo externalDo) {
 		this.visitAtomicCommand(externalDo);
 	}

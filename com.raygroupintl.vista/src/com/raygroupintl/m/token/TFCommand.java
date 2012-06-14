@@ -117,7 +117,8 @@ public class TFCommand extends TokenFactorySupply {
 		}
 	
 		public Token getToken(Token token) {
-			return new CmdTokens.F(token);
+			return new MForCmd(token);
+			//return new CmdTokens.F(token);
 		}
 	}
 

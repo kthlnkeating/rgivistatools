@@ -63,17 +63,6 @@ class CmdTokens {
 		}			
 	}
 
-	static class F extends MCommand {
-		public F(Token token) {
-			super(token);
-		}		
-		
-		@Override
-		protected String getFullName() {		
-			return "FOR";
-		}			
-	}
-
 	static class G extends MCommand {
 		public G(Token token) {
 			super(token);

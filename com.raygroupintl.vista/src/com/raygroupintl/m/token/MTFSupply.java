@@ -412,9 +412,7 @@ public class MTFSupply {
 	@Rule("{closearg:','}")
 	public TokenFactory closeargs;
 	
-	@Rule("':', expr")
-	public TokenFactory cexpr;
-	@Rule("expr, [cexpr], [cexpr]")
+	@Rule("expr, [':', expr], [':', expr]")
 	public TokenFactory forrhs;
 	@Rule("{forrhs:','}")
 	public TokenFactory forrhss;

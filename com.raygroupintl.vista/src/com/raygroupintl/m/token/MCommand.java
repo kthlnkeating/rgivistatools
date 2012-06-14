@@ -1,12 +1,3 @@
-package com.raygroupintl.m.token;
-
-import com.raygroupintl.m.parsetree.GenericCommand;
-import com.raygroupintl.m.parsetree.Node;
-import com.raygroupintl.parser.StringPiece;
-import com.raygroupintl.parser.TEmpty;
-import com.raygroupintl.parser.TString;
-import com.raygroupintl.parser.Token;
-
 //---------------------------------------------------------------------------
 //Copyright 2012 Ray Group International
 //
@@ -23,7 +14,14 @@ import com.raygroupintl.parser.Token;
 //limitations under the License.
 //---------------------------------------------------------------------------
 
-public abstract class MCommand extends MSequence {
+package com.raygroupintl.m.token;
+
+import com.raygroupintl.m.parsetree.GenericCommand;
+import com.raygroupintl.m.parsetree.Node;
+import com.raygroupintl.parser.TEmpty;
+import com.raygroupintl.parser.Token;
+
+public abstract class MCommand extends MCommandBase {
 	public MCommand(Token token) {
 		super(token);
 	}
@@ -58,20 +56,10 @@ public abstract class MCommand extends MSequence {
 		}
 	}
 
-	protected abstract String getFullName();
-
 	protected Node getNode(Node postConditionNode, Node argumentNode) {
 		return new GenericCommand(postConditionNode, argumentNode);	
 	}
 	
-	@Override
-	public void beautify() {
-		TString n = (TString) this.get(0);
-		StringPiece newName = new StringPiece(getFullName());
-		n.setValue(newName);
-		super.beautify();
-	}
-			
 	@Override
 	public Node getNode() {
 		Node postConditionNode = this.getPostConditionNode();
