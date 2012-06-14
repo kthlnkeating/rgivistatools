@@ -31,26 +31,27 @@ public class Visitor {
 		}
 	}
 	
-	protected void visitNodeWithSubscripts(NodeWithSubscripts node) {
-		Nodes<Node> subscripts = node.getSubscripts();
-		if (subscripts != null) {
-			this.visitNodes(subscripts);
-		}		
-	}
-	
 	protected void visitLocal(Local local) {
-		this.visitNodeWithSubscripts(local);
+		local.acceptSubNodes(this);
 	}
 	
 	protected void visitGlobal(Global global) {
-		this.visitNodeWithSubscripts(global);
+		global.acceptSubNodes(this);
+	}
+	
+	protected void visitNakedGlobal(NakedGlobal global) {
+		global.acceptSubNodes(this);
+	}
+	
+	protected void visitSSVN(StructuredSystemVariable ssvn) {
+		ssvn.acceptSubNodes(this);
 	}
 	
 	protected void visitIntrinsicFunction(IntrinsicFunction intrinsicFunction) {
-		Node arguments = intrinsicFunction.getArguments();
-		if (arguments != null) {
-			arguments.accept(this);
-		}
+		intrinsicFunction.acceptSubNodes(this);
+	}
+	
+	protected void visitIntrinsicVariable(IntrinsicVariable intrinsicVariable) {
 	}
 	
 	protected void visitActualList(ActualList actualList) {
@@ -101,9 +102,25 @@ public class Visitor {
 		this.visitAtomicCommand(atomicGoto);
 	}
 	
-	protected void visitAtomicSet(AtomicSet atomicSet) {
+
+	
+	protected void visitIndirectAtomicSet(SetCmdNodes.IndirectAtomicSet indirectAtomicSet) {
+		indirectAtomicSet.acceptSubNodes(this);
+	}
+	
+	protected void visitMultiAtomicSet(SetCmdNodes.MultiAtomicSet multiAtomicSet) {
+		multiAtomicSet.acceptSubNodes(this);
+	}
+	
+	protected void visitAtomicSet(SetCmdNodes.AtomicSet atomicSet) {
 		atomicSet.acceptSubNodes(this);
 	}
+	
+	protected void visitSet(SetCmdNodes.SetCmd setCmd) {
+		this.visitMultiCommand(setCmd);
+	}
+	
+	
 	
 	protected void visitAtomicNew(AtomicNew atomicNew) {
 	}

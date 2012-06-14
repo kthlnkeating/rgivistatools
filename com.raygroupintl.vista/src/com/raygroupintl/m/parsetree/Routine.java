@@ -16,7 +16,7 @@
 
 package com.raygroupintl.m.parsetree;
 
-public class Routine implements Node {
+public class Routine extends BasicNode {
 	private String name;
 	private EntryList entryList;
 	private ErrorNode errorNode;

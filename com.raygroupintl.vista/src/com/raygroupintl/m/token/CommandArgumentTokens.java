@@ -33,4 +33,18 @@ public class CommandArgumentTokens {
 			return new AtomicNew(name);
 		}		
 	}
+	
+	public static class MIndirectSetArgument extends MSequence {
+		public MIndirectSetArgument(Token token) {
+			super(token);
+		}
+		
+		@Override
+		public Node getNode() {
+			Token lhs = this.get(0);
+			Token rhs = this.get(2);
+			return null;
+			//return new IndirectAtomicSet(lsh, rhs);
+		}
+	}
 }

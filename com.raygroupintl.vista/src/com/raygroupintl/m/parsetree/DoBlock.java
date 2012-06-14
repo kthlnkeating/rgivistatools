@@ -16,7 +16,7 @@
 
 package com.raygroupintl.m.parsetree;
 
-public class DoBlock implements Node {
+public class DoBlock extends BasicNode {
 	private Node postCondition;
 	private EntryList entryList;
 	

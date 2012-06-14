@@ -16,9 +16,5 @@
 
 package com.raygroupintl.m.parsetree;
 
-abstract class TerminalNode implements Node {
-	@Override
-	public boolean setEntryList(EntryList entryList) {
-		return false;
-	}
+abstract class TerminalNode extends BasicNode {
 }

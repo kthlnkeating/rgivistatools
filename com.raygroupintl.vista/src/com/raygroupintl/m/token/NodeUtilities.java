@@ -19,6 +19,7 @@ package com.raygroupintl.m.token;
 import com.raygroupintl.m.parsetree.Node;
 import com.raygroupintl.m.parsetree.NodeList;
 import com.raygroupintl.m.parsetree.Nodes;
+import com.raygroupintl.parser.TList;
 import com.raygroupintl.parser.Token;
 
 class NodeUtilities {
@@ -35,4 +36,15 @@ class NodeUtilities {
 		}
 		return result;		
 	}
+	
+	static NodeList<Node> getSubscriptNodes(Token subscriptToken) {
+		TList subscripts = (TList) subscriptToken.toList().get(1);
+		int size = subscripts.size();
+		NodeList<Node> nodes = new NodeList<>(size);
+		for (Token t : subscripts) {
+			Node node = ((MToken) t).getNode();
+			nodes.add(node);
+		}
+		return nodes;
+	}	
 }

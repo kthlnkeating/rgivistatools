@@ -16,36 +16,32 @@
 
 package com.raygroupintl.m.token;
 
+import com.raygroupintl.m.parsetree.Global;
 import com.raygroupintl.m.parsetree.Node;
 import com.raygroupintl.m.parsetree.NodeList;
-import com.raygroupintl.m.parsetree.StructuredSystemVariable;
-import com.raygroupintl.m.struct.MNameWithMnemonic;
 import com.raygroupintl.parser.StringPiece;
+import com.raygroupintl.parser.TSequence;
 import com.raygroupintl.parser.Token;
 
-public class MSsvn extends MSequence {
-	private static final MNameWithMnemonic.Map SSVS = new MNameWithMnemonic.Map();
-	static {
-		SSVS.update("D", "DEVICE"); 	
-		SSVS.update("DI", "DISPLAY"); 	
-		SSVS.update("E", "EVENT"); 	
-		SSVS.update("G", "GLOBAL"); 	
-		SSVS.update("J", "JOB"); 	
-		SSVS.update("L", "LOCK"); 	
-		SSVS.update("R", "ROUTINE"); 	
-		SSVS.update("S", "SYSTEM"); 	
-		SSVS.update("W", "WINDOW"); 	
-	}
-	
-	public MSsvn(Token token) {
+public class MGlobal extends MSequence {
+	public MGlobal(Token token) {
 		super(token);
 	}
-	
+
 	@Override
 	public Node getNode() {
-		StringPiece name = this.get(1).toValue();
-		Token subsripts = this.get(2);
-		NodeList<Node> nodes = NodeUtilities.getSubscriptNodes(subsripts);
-		return new StructuredSystemVariable(name, nodes);
+		TSequence actual = (TSequence) this.get(1);
+		if (actual.get(0) != null) {
+			return NodeUtilities.getNodes(actual, actual.size());
+		} else {
+			StringPiece name = actual.get(1).toValue();
+			Token subsripts = actual.get(2);
+			if (subsripts == null) {
+				return new Global(name);
+			} else {
+				NodeList<Node> nodes = NodeUtilities.getSubscriptNodes(subsripts);
+				return new Global(name, nodes);
+			}
+		}
 	}
 }

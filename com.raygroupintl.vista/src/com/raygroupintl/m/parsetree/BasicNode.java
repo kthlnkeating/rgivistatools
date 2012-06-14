@@ -18,6 +18,15 @@ package com.raygroupintl.m.parsetree;
 
 public abstract class BasicNode implements Node {
 	@Override
+	public void acceptPreAssignment(Visitor visitor) {
+		this.accept(visitor);
+	}
+
+	@Override
+	public void acceptPostAssignment(Visitor visitor) {
+	}
+
+	@Override
 	public boolean setEntryList(EntryList entryList) {
 		return false;
 	}

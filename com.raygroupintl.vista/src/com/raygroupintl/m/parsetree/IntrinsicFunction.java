@@ -16,7 +16,7 @@
 
 package com.raygroupintl.m.parsetree;
 
-public class IntrinsicFunction implements Node {
+public class IntrinsicFunction extends BasicNode {
 	private String name;
 	private Node arguments;
 	
@@ -33,13 +33,14 @@ public class IntrinsicFunction implements Node {
 		return this.arguments;
 	}
 	
+	public void acceptSubNodes(Visitor visitor) {
+		if (this.arguments != null) {
+			this.arguments.accept(visitor);
+		}
+	}
+
 	@Override
 	public void accept(Visitor visitor) {
 		visitor.visitIntrinsicFunction(this);
 	}
-	
-	@Override
-	public boolean setEntryList(EntryList entryList) {
-		return false;
-	}	
 }

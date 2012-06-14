@@ -16,36 +16,20 @@
 
 package com.raygroupintl.m.token;
 
+import com.raygroupintl.m.parsetree.NakedGlobal;
 import com.raygroupintl.m.parsetree.Node;
 import com.raygroupintl.m.parsetree.NodeList;
-import com.raygroupintl.m.parsetree.StructuredSystemVariable;
-import com.raygroupintl.m.struct.MNameWithMnemonic;
-import com.raygroupintl.parser.StringPiece;
 import com.raygroupintl.parser.Token;
 
-public class MSsvn extends MSequence {
-	private static final MNameWithMnemonic.Map SSVS = new MNameWithMnemonic.Map();
-	static {
-		SSVS.update("D", "DEVICE"); 	
-		SSVS.update("DI", "DISPLAY"); 	
-		SSVS.update("E", "EVENT"); 	
-		SSVS.update("G", "GLOBAL"); 	
-		SSVS.update("J", "JOB"); 	
-		SSVS.update("L", "LOCK"); 	
-		SSVS.update("R", "ROUTINE"); 	
-		SSVS.update("S", "SYSTEM"); 	
-		SSVS.update("W", "WINDOW"); 	
-	}
-	
-	public MSsvn(Token token) {
+public class MNakedGlobal extends MSequence {
+	public MNakedGlobal(Token token) {
 		super(token);
 	}
-	
+
 	@Override
 	public Node getNode() {
-		StringPiece name = this.get(1).toValue();
-		Token subsripts = this.get(2);
+		Token subsripts = this.get(1);
 		NodeList<Node> nodes = NodeUtilities.getSubscriptNodes(subsripts);
-		return new StructuredSystemVariable(name, nodes);
+		return new NakedGlobal(nodes);
 	}
 }

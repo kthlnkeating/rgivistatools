@@ -16,11 +16,15 @@
 
 package com.raygroupintl.m.parsetree;
 
-public interface Node {
-	void accept(Visitor visitor);
-	
-	void acceptPreAssignment(Visitor visitor);
-	void acceptPostAssignment(Visitor visitor);
-	
-	boolean setEntryList(EntryList entryList);
+import com.raygroupintl.parser.StringPiece;
+
+public class StructuredSystemVariable extends NodeWithSubscripts {
+	public StructuredSystemVariable(StringPiece name, NodeList<Node> subscripts) {
+		super(name, subscripts);
+	}
+
+	@Override
+	public void accept(Visitor visitor) {
+		visitor.visitSSVN(this);
+	}
 }

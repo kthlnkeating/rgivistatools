@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.Map;
 
 import com.raygroupintl.m.parsetree.IntrinsicFunction;
+import com.raygroupintl.m.parsetree.IntrinsicVariable;
 import com.raygroupintl.m.parsetree.Node;
 import com.raygroupintl.m.struct.MError;
 import com.raygroupintl.m.struct.MNameWithMnemonic;
@@ -24,7 +25,8 @@ public class TFIntrinsic extends TokenFactorySupply {
 		
 		@Override
 		public Node getNode() {
-			return null;
+			StringPiece name = this.get(0).toList().get(1).toValue();
+			return new IntrinsicVariable(name.toString());
 		}
 	}
 

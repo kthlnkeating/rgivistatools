@@ -16,7 +16,7 @@
 
 package com.raygroupintl.m.parsetree;
 
-public abstract class Nodes<T extends Node> implements Node {
+public abstract class Nodes<T extends Node> extends BasicNode {
 	public abstract Iterable<T> getNodes();
 
 	@Override

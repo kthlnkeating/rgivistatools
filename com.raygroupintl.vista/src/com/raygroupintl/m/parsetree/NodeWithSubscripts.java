@@ -18,7 +18,7 @@ package com.raygroupintl.m.parsetree;
 
 import com.raygroupintl.parser.StringPiece;
 
-public abstract class NodeWithSubscripts implements Node {
+abstract class NodeWithSubscripts extends BasicNode {
 	private StringPiece name;
 	private NodeList<Node> subsripts;
 	
@@ -39,8 +39,10 @@ public abstract class NodeWithSubscripts implements Node {
 		return this.subsripts;
 	}
 	
-	@Override
-	public boolean setEntryList(EntryList entryList) {
-		return false;
-	}	
+	public void acceptSubNodes(Visitor visitor) {
+		Nodes<Node> subscripts = this.getSubscripts();
+		if (subscripts != null) {
+			subscripts.accept(visitor);
+		}				
+	}
 }

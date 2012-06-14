@@ -16,11 +16,19 @@
 
 package com.raygroupintl.m.parsetree;
 
-public interface Node {
-	void accept(Visitor visitor);
+public class NakedGlobal extends BasicNode {
+	private NodeList<Node> subscripts;
 	
-	void acceptPreAssignment(Visitor visitor);
-	void acceptPostAssignment(Visitor visitor);
+	public NakedGlobal(NodeList<Node> subscripts) {
+		this.subscripts = subscripts;
+	}
+
+	public void acceptSubNodes(Visitor visitor) {
+		this.subscripts.accept(visitor);
+	}
 	
-	boolean setEntryList(EntryList entryList);
+	@Override
+	public void accept(Visitor visitor) {
+		visitor.visitNakedGlobal(this);
+	}
 }

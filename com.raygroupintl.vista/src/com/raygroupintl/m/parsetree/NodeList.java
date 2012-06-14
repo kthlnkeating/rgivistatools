@@ -65,9 +65,4 @@ public class NodeList<T extends Node> extends Nodes<T> {
 			return Collections.unmodifiableList(this.nodes);
 		}
 	}
-	
-	@Override
-	public boolean setEntryList(EntryList entryList) {
-		return false;
-	}	
 }

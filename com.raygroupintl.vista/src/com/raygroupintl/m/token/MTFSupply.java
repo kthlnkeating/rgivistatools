@@ -114,10 +114,11 @@ public class MTFSupply {
 	@Rule("lvn | gvnall | indirection")
 	public TokenFactory glvn;
 	
-	@TokenType(MGlobalNamed.class)
+	@TokenType(MGlobal.class)
 	@Rule("'^', ([environment], name, [exprlistinparan])")
 	public TokenFactory gvn;
 	
+	@TokenType(MSsvn.class)
 	@Rule("\"^$\", ident, exprlistinparan")
 	public TokenFactory gvnssvn;
 
@@ -127,7 +128,7 @@ public class MTFSupply {
 	@Rule("unaryop, expratom")
 	public TokenFactory unaryexpritem;
 	
-	@TokenType(MGlobalNaked.class)
+	@TokenType(MNakedGlobal.class)
 	@Rule("'^', exprlistinparan")
 	public TokenFactory gvnnaked;
 	
@@ -417,6 +418,8 @@ public class MTFSupply {
 	public TokenFactory setargdirect;
 	@Rule("indirection, ['='], [setrhs]")
 	public TokenFactory setargindirect;
+	
+	
 	@Rule("setargindirect | setargdirect")
 	public TokenFactory setarg;
 	@Rule("{setarg:','}")

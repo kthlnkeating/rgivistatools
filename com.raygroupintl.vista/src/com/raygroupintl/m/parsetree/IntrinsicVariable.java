@@ -16,22 +16,19 @@
 
 package com.raygroupintl.m.parsetree;
 
-public class AtomicSet extends BasicNode {
-	private NodeList<Node> lhss;
-	private Node rhs;
+public class IntrinsicVariable extends BasicNode {
+	private String name;
 	
-	public AtomicSet(NodeList<Node> lhss, Node rhs) {
-		this.lhss = lhss;
-		this.rhs = rhs;
+	public IntrinsicVariable(String name) {
+		this.name = name;
 	}
 	
-	public void acceptSubNodes(Visitor visitor) {
-		this.rhs.accept(visitor);
-		this.lhss.accept(visitor);
+	public String getName() {
+		return this.name;
 	}
 	
 	@Override
 	public void accept(Visitor visitor) {
-		visitor.visitAtomicSet(this);
-	}	
+		visitor.visitIntrinsicVariable(this);
+	}
 }
