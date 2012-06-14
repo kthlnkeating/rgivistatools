@@ -34,7 +34,7 @@ public class SetCmdNodes {
 		}			
 	}	
 
-	public class AtomicSet extends BasicNode {
+	public static class AtomicSet extends BasicNode {
 		private Node lhs;
 		private Node rhs;
 		
@@ -55,11 +55,11 @@ public class SetCmdNodes {
 		}	
 	}
 		
-	public class MultiAtomicSet extends BasicNode {
-		private NodeList<Node> lhss;
+	public static class MultiAtomicSet extends BasicNode {
+		private Nodes<Node> lhss;
 		private Node rhs;
 		
-		public MultiAtomicSet(NodeList<Node> lhss, Node rhs) {
+		public MultiAtomicSet(Nodes<Node> lhss, Node rhs) {
 			this.lhss = lhss;
 			this.rhs = rhs;
 		}
@@ -80,7 +80,7 @@ public class SetCmdNodes {
 		}	
 	}
 	
-	public class SetCmd extends MultiCommand {
+	public static class SetCmd extends MultiCommand {
 		public SetCmd(Node postCondition, Node argument) {
 			super(postCondition, argument);
 		}

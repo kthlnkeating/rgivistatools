@@ -407,20 +407,19 @@ public class MTFSupply {
 	@Rule("intrinsic | glvn")
 	public TokenFactory setlhsbasic;
 	@Rule("{setlhsbasic:',':'(':')'}")
-	public TokenFactory setlhsbasics;
-	@Rule("setlhsbasics | setlhsbasic")
-	public TokenFactory setlhs;
-	
+	public TokenFactory setlhsbasics;	
 	@Rule("expr")
 	public TokenFactory setrhs;
-	
-	@Rule("setlhs, '=', setrhs")
-	public TokenFactory setargdirect;
+	@TokenType(SetCmdTokens.MSingleAtomicSetCmd.class)
+	@Rule("setlhsbasic, '=', setrhs")
+	public TokenFactory setargsingle;
+	@TokenType(SetCmdTokens.MMultiAtomicSetCmd.class)
+	@Rule("setlhsbasics, '=', setrhs")
+	public TokenFactory setargmulti;
+	@TokenType(SetCmdTokens.MSingleAtomicSetCmd.class)
 	@Rule("indirection, ['='], [setrhs]")
 	public TokenFactory setargindirect;
-	
-	
-	@Rule("setargindirect | setargdirect")
+	@Rule("setargindirect | setargmulti | setargsingle")
 	public TokenFactory setarg;
 	@Rule("{setarg:','}")
 	public TokenFactory setargs;

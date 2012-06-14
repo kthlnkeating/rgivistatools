@@ -77,7 +77,7 @@ public class TFCommand extends TokenFactorySupply {
 		}
 	
 		public Token getToken(Token token) {
-			return new MCommand.B(token);
+			return new CmdTokens.B(token);
 		}
 	}
 	
@@ -87,7 +87,7 @@ public class TFCommand extends TokenFactorySupply {
 		}
 	
 		public Token getToken(Token token) {
-			return new MCommand.C(token);
+			return new CmdTokens.C(token);
 		}
 	}
 	
@@ -97,7 +97,7 @@ public class TFCommand extends TokenFactorySupply {
 		}
 	
 		public Token getToken(Token token) {
-			return new MCommand.D(token);
+			return new CmdTokens.D(token);
 		}
 	}
 	
@@ -107,7 +107,7 @@ public class TFCommand extends TokenFactorySupply {
 		}
 	
 		public Token getToken(Token token) {
-			return new MCommand.E(token);
+			return new CmdTokens.E(token);
 		}
 	}
 
@@ -117,7 +117,7 @@ public class TFCommand extends TokenFactorySupply {
 		}
 	
 		public Token getToken(Token token) {
-			return new MCommand.F(token);
+			return new CmdTokens.F(token);
 		}
 	}
 
@@ -127,7 +127,7 @@ public class TFCommand extends TokenFactorySupply {
 		}
 	
 		public Token getToken(Token token) {
-			return new MCommand.G(token);
+			return new CmdTokens.G(token);
 		}
 	}
 
@@ -137,7 +137,7 @@ public class TFCommand extends TokenFactorySupply {
 		}
 	
 		public Token getToken(Token token) {
-			return new MCommand.H(token);
+			return new CmdTokens.H(token);
 		}
 	}
 
@@ -147,7 +147,7 @@ public class TFCommand extends TokenFactorySupply {
 		}
 	
 		public Token getToken(Token token) {
-			return new MCommand.I(token);
+			return new CmdTokens.I(token);
 		}
 	}
 
@@ -157,7 +157,7 @@ public class TFCommand extends TokenFactorySupply {
 		}
 	
 		public Token getToken(Token token) {
-			return new MCommand.J(token);
+			return new CmdTokens.J(token);
 		}
 	}
 
@@ -167,7 +167,7 @@ public class TFCommand extends TokenFactorySupply {
 		}
 	
 		public Token getToken(Token token) {
-			return new MCommand.K(token);
+			return new CmdTokens.K(token);
 		}
 	}
 
@@ -177,7 +177,7 @@ public class TFCommand extends TokenFactorySupply {
 		}
 	
 		public Token getToken(Token token) {
-			return new MCommand.L(token);
+			return new CmdTokens.L(token);
 		}
 	}
 
@@ -187,7 +187,7 @@ public class TFCommand extends TokenFactorySupply {
 		}
 	
 		public Token getToken(Token token) {
-			return new MCommand.M(token);
+			return new CmdTokens.M(token);
 		}
 	}
 
@@ -197,7 +197,7 @@ public class TFCommand extends TokenFactorySupply {
 		}
 	
 		public Token getToken(Token token) {
-			return new MCommand.N(token);
+			return new CmdTokens.N(token);
 		}
 	}
 
@@ -207,7 +207,7 @@ public class TFCommand extends TokenFactorySupply {
 		}
 	
 		public Token getToken(Token token) {
-			return new MCommand.O(token);
+			return new CmdTokens.O(token);
 		}
 	}
 
@@ -217,7 +217,7 @@ public class TFCommand extends TokenFactorySupply {
 		}
 	
 		public Token getToken(Token token) {
-			return new MCommand.Q(token);
+			return new CmdTokens.Q(token);
 		}
 	}
 
@@ -227,7 +227,7 @@ public class TFCommand extends TokenFactorySupply {
 		}
 	
 		public Token getToken(Token token) {
-			return new MCommand.R(token);
+			return new CmdTokens.R(token);
 		}
 	}
 
@@ -237,7 +237,7 @@ public class TFCommand extends TokenFactorySupply {
 		}
 	
 		public Token getToken(Token token) {
-			return new MCommand.S(token);
+			return new SetCmdTokens.MSetCmd(token);
 		}
 	}
 
@@ -247,7 +247,7 @@ public class TFCommand extends TokenFactorySupply {
 		}
 	
 		public Token getToken(Token token) {
-			return new MCommand.TC(token);
+			return new CmdTokens.TC(token);
 		}
 	}
 
@@ -257,7 +257,7 @@ public class TFCommand extends TokenFactorySupply {
 		}
 	
 		public Token getToken(Token token) {
-			return new MCommand.TR(token);
+			return new CmdTokens.TR(token);
 		}
 	}
 
@@ -267,7 +267,7 @@ public class TFCommand extends TokenFactorySupply {
 		}
 	
 		public Token getToken(Token token) {
-			return new MCommand.TRO(token);
+			return new CmdTokens.TRO(token);
 		}
 	}
 
@@ -277,7 +277,7 @@ public class TFCommand extends TokenFactorySupply {
 		}
 	
 		public Token getToken(Token token) {
-			return new MCommand.TS(token);
+			return new CmdTokens.TS(token);
 		}
 	}
 
@@ -287,7 +287,7 @@ public class TFCommand extends TokenFactorySupply {
 		}
 	
 		public Token getToken(Token token) {
-			return new MCommand.U(token);
+			return new CmdTokens.U(token);
 		}
 	}
 
@@ -297,7 +297,7 @@ public class TFCommand extends TokenFactorySupply {
 		}
 	
 		public Token getToken(Token token) {
-			return new MCommand.W(token);
+			return new CmdTokens.W(token);
 		}
 	}
 
@@ -307,7 +307,7 @@ public class TFCommand extends TokenFactorySupply {
 		}
 		
 		public Token getToken(Token token) {
-			return new MCommand.V(token);
+			return new CmdTokens.V(token);
 		}
 	}
 
@@ -317,7 +317,7 @@ public class TFCommand extends TokenFactorySupply {
 		}
 	
 		public Token getToken(Token token) {
-			return new MCommand.X(token);
+			return new CmdTokens.X(token);
 		}
 	}
 
@@ -327,7 +327,7 @@ public class TFCommand extends TokenFactorySupply {
 		}
 	
 		public Token getToken(Token token) {
-			return new MCommand.Generic(token);
+			return new CmdTokens.Generic(token);
 		}
 	}
 	
