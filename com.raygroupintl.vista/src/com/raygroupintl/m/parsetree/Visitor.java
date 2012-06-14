@@ -109,8 +109,20 @@ public class Visitor {
 		setCmd.acceptSubNodes(this);
 	}
 	
+		
+	protected void visitIndirectAtomicMerge(MergeCmdNodes.IndirectAtomicMerge indirectAtomicMerge) {
+		indirectAtomicMerge.acceptSubNodes(this);
+	}
 	
+	protected void visitAtomicMerge(MergeCmdNodes.AtomicMerge atomicMerge) {
+		atomicMerge.acceptSubNodes(this);
+	}
 	
+	protected void visitMerge(MergeCmdNodes.MergeCmd mergeCmd) {
+		mergeCmd.acceptSubNodes(this);
+	}
+	
+		
 	protected void visitAtomicNew(NewCmdNodes.AtomicNew atomicNew) {
 		atomicNew.acceptSubNodes(this);
 	}

@@ -183,11 +183,11 @@ public class TFCommand extends TokenFactorySupply {
 
 	private static class TMCommandSpec extends TCommandSpec {
 		private TMCommandSpec(StringPiece value, MTFSupply supply) {
-			super(value, supply.cmdmargs);
+			super(value, supply.mergeargs);
 		}
 	
 		public Token getToken(Token token) {
-			return new CmdTokens.M(token);
+			return new MergeCmdTokens.MMergeCmd(token);
 		}
 	}
 

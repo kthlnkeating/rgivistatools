@@ -138,17 +138,6 @@ class CmdTokens {
 		}			
 	}
 
-	static class M extends MCommand {
-		public M(Token token) {
-			super(token);
-		}		
-		
-		@Override
-		protected String getFullName() {		
-			return "MERGE";
-		}			
-	}
-
 	static class O extends MCommand {
 		public O(Token token) {
 			super(token);

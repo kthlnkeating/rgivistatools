@@ -101,9 +101,6 @@ public class MTFSupply {
 	@Rule("'(', expr, ')'")
 	public TokenFactory exprinpar;
 	
-	@Rule("'=', expr")
-	public TokenFactory eqexpr;
-	
 	@TokenType(MIndirection.class)
 	@Rule("'@', expratom, [\"@(\", exprlist, ')']")
 	public TokenFactory indirection;
@@ -175,15 +172,6 @@ public class MTFSupply {
 	public TokenFactory deviceparamsi;
 	@Rule("deviceparamsi | deviceparam")
 	public TokenFactory deviceparams;
-	
-	@Rule("glvn, eqexpr")
-	public TokenFactory cmdmargbasic;
-	@Rule("indirection, [eqexpr]")
-	public TokenFactory cmdmargindirect;
-	@Rule("cmdmargindirect | cmdmargbasic")
-	public TokenFactory cmdmarg;
-	@Rule("{cmdmarg:','}")
-	public TokenFactory cmdmargs;
 	
 	@Rule("exprlistinparan | expr")
 	public TokenFactory exprorinlist;
@@ -474,6 +462,17 @@ public class MTFSupply {
 	@Rule("{killarg:','}")
 	public TokenFactory killargs;
 
+	@TokenType(MergeCmdTokens.MAtomicMergeCmd.class)
+	@Rule("glvn, '=', glvn")
+	public TokenFactory mergeargdirect;
+	@TokenType(MergeCmdTokens.MAtomicMergeCmd.class)
+	@Rule("indirection, ['=', glvn]")
+	public TokenFactory mergeargindirect;
+	@Rule("mergeargindirect | mergeargdirect")
+	public TokenFactory mergearg;
+	@Rule("{mergearg:','}")
+	public TokenFactory mergeargs;
+	
 	@Rule("'.', name")
 	public TokenFactory dname;
 	@Rule("'^', name")

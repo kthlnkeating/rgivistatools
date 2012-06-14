@@ -28,5 +28,8 @@ public interface Node {
 	void acceptExclusiveKill(Visitor visitor);
 	void acceptKill(Visitor visitor);
 
+	void acceptPreMerge(Visitor visitor);
+	void acceptPostMerge(Visitor visitor);
+	
 	boolean setEntryList(EntryList entryList);
 }

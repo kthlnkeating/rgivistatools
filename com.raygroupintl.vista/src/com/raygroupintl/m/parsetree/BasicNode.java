@@ -50,4 +50,13 @@ public abstract class BasicNode implements Node {
 	public void acceptKill(Visitor visitor) {
 		this.accept(visitor);
 	}
+
+	@Override
+	public void acceptPreMerge(Visitor visitor) {
+		this.accept(visitor);
+	}
+
+	@Override
+	public void acceptPostMerge(Visitor visitor) {
+	}
 }
