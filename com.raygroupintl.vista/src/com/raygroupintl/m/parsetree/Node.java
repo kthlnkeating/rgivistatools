@@ -22,5 +22,8 @@ public interface Node {
 	void acceptPreAssignment(Visitor visitor);
 	void acceptPostAssignment(Visitor visitor);
 	
+	void acceptExclusiveNew(Visitor visitor);
+	void acceptNew(Visitor visitor);
+	
 	boolean setEntryList(EntryList entryList);
 }

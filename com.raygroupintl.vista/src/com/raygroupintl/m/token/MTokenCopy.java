@@ -16,21 +16,42 @@
 
 package com.raygroupintl.m.token;
 
-import com.raygroupintl.m.parsetree.AtomicNew;
+import java.util.ArrayList;
+import java.util.List;
+
 import com.raygroupintl.m.parsetree.Node;
-import com.raygroupintl.m.token.StringTokens.MName;
+import com.raygroupintl.parser.StringPiece;
 import com.raygroupintl.parser.Token;
 
-public class CommandArgumentTokens {
-	public static class MNewedLocal extends MName {
-		public MNewedLocal(Token token) {
-			super(token);
-		}
-		
-		@Override
-		public Node getNode() {
-			String name = this.toString();
-			return new AtomicNew(name);
-		}		
+public abstract class MTokenCopy implements MToken {
+	private MToken actual;
+	
+	public MTokenCopy(Token token) {
+		this.actual = (MToken) token;
+	}
+
+	protected abstract Node getNode(Node subNode);
+
+	@Override
+	public StringPiece toValue() {
+		return this.actual.toValue();
+	}
+	
+	@Override
+	public List<Token> toList() {	
+		List<Token> result = new ArrayList<Token>();
+		result.add(this);	
+		return result;
+	}
+
+	@Override
+	public void beautify() {		
+	}	
+	
+	
+	@Override
+	public Node getNode() {
+		Node node = this.actual.getNode();
+		return this.getNode(node);		
 	}
 }

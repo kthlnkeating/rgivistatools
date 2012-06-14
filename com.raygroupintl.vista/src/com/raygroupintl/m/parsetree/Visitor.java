@@ -13,17 +13,6 @@ public class Visitor {
 		}
 	}
 	
-	private void visitMultiCommand(MultiCommand command) {
-		Node postCondition = command.getPostCondition();
-		if (postCondition != null) {
-			postCondition.accept(this);
-		}
-		Node argument = command.getArgument();
-		if (argument != null) {
-			argument.accept(this);
-		}
-	}
-	
 	private void visitAdditionalNodeHolder(AdditionalNodeHolder nodeHolder) {
 		Node addlNode = nodeHolder.getAdditionalNode();
 		if (addlNode != null) {
@@ -117,28 +106,42 @@ public class Visitor {
 	}
 	
 	protected void visitSet(SetCmdNodes.SetCmd setCmd) {
-		this.visitMultiCommand(setCmd);
+		setCmd.acceptSubNodes(this);
 	}
 	
 	
 	
-	protected void visitAtomicNew(AtomicNew atomicNew) {
+	protected void visitAtomicNew(NewCmdNodes.AtomicNew atomicNew) {
+		atomicNew.acceptSubNodes(this);
 	}
+	
+	protected void visitAllNewCmd(NewCmdNodes.AllNewCmd atomicNew) {
+		atomicNew.acceptSubNodes(this);
+	}
+	
+	protected void visitExclusiveAtomicNew(NewCmdNodes.ExclusiveAtomicNew atomicNew) {
+		atomicNew.acceptSubNodes(this);
+	}
+	
+	protected void visitNew(NewCmdNodes.NewCmd newCmd) {
+		newCmd.acceptSubNodes(this);
+	}
+	
 	
 	protected void visitExtrinsic(Extrinsic extrinsic) {
 		this.visitAdditionalNodeHolder(extrinsic);
 	}
 
 	protected void visitDo(Do d) {
-		this.visitMultiCommand(d);
+		d.acceptSubNodes(this);
 	}
 	
 	protected void visitGoto(Goto g) {
-		this.visitMultiCommand(g);
+		g.acceptSubNodes(this);
 	}
 	
 	protected void visitGenericCommand(GenericCommand g) {
-		this.visitMultiCommand(g);
+		g.acceptSubNodes(this);
 	}
 	
 	protected void visitLine(Line line) {

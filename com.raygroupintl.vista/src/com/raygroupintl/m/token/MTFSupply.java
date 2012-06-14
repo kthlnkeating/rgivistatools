@@ -451,11 +451,18 @@ public class MTFSupply {
 	@Rule("{lockarg:','}")
 	public TokenFactory lockargs;
 	
-	@TokenType(CommandArgumentTokens.MNewedLocal.class)
+	@TokenType(NewCmdTokens.MNewedLocal.class)
 	@Rule("name")
 	public TokenFactory newedlocal;
-	
-	@Rule("{lvn:',':'(':')'} | rindirection | intrinsicname | newedlocal")
+	@Rule("rindirection | newedlocal")
+	public TokenFactory exclusivenewsingle;
+	@TokenType(NewCmdTokens.MExclusiveAtomicNewCmd.class)	
+	@Rule("{exclusivenewsingle:',':'(':')'}")
+	public TokenFactory exclusivenew;
+	@TokenType(NewCmdTokens.MAtomicNewCmd.class)	
+	@Rule("rindirection | intrinsicname | newedlocal")
+	public TokenFactory normalnew;	
+	@Rule("exclusivenew | normalnew")
 	public TokenFactory newarg;
 	@Rule("{newarg:','}")
 	public TokenFactory newargs;

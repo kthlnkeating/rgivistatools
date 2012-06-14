@@ -30,4 +30,14 @@ public abstract class BasicNode implements Node {
 	public boolean setEntryList(EntryList entryList) {
 		return false;
 	}
+
+	@Override
+	public void acceptExclusiveNew(Visitor visitor) {
+		this.accept(visitor);		
+	}
+	
+	@Override
+	public void acceptNew(Visitor visitor) {
+		this.accept(visitor);
+	}
 }

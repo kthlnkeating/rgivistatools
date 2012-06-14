@@ -48,8 +48,4 @@ public class TFForkableChoice extends TokenFactory {
 		}
 		return null;
 	}
-	
-	public void setTargetType(Class<? extends Token> cls) {
-		throw new UnsupportedOperationException("Target type is not supported for choice tokens");		
-	}	
 }
