@@ -24,7 +24,8 @@ public class TDelimitedList extends TList {
 				this.firstNextCall = false;
 				return this.iterator.next();
 			} else {
-				TSequence fullResult = (TSequence) this.iterator.next();
+				Token rawFullResult = this.iterator.next();
+				TSequence fullResult = (TSequence) rawFullResult;
 				Token result = fullResult.get(1);
 				return result;
 			}

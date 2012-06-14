@@ -163,11 +163,11 @@ public class TFCommand extends TokenFactorySupply {
 
 	private static class TKCommandSpec extends TCommandSpec {
 		private TKCommandSpec(StringPiece value, MTFSupply supply) {
-			super(value, supply.cmdkargs);
+			super(value, supply.killargs);
 		}
 	
 		public Token getToken(Token token) {
-			return new CmdTokens.K(token);
+			return new KillCmdTokens.MKillCmd(token);
 		}
 	}
 

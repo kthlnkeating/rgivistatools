@@ -40,4 +40,14 @@ public abstract class BasicNode implements Node {
 	public void acceptNew(Visitor visitor) {
 		this.accept(visitor);
 	}
+	
+	@Override
+	public void acceptExclusiveKill(Visitor visitor) {
+		this.accept(visitor);		
+	}
+	
+	@Override
+	public void acceptKill(Visitor visitor) {
+		this.accept(visitor);
+	}
 }

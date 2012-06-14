@@ -176,15 +176,6 @@ public class MTFSupply {
 	@Rule("deviceparamsi | deviceparam")
 	public TokenFactory deviceparams;
 	
-	@Rule("indirection | name")
-	public TokenFactory cmdkexcarg;
-	@Rule("{cmdkexcarg:',':'(':')'}")
-	public TokenFactory cmdkexcargs;
-	@Rule("cmdkexcargs | indirection | glvn")
-	public TokenFactory cmdkarg;
-	@Rule("{cmdkarg:','}")
-	public TokenFactory cmdkargs;
-
 	@Rule("glvn, eqexpr")
 	public TokenFactory cmdmargbasic;
 	@Rule("indirection, [eqexpr]")
@@ -467,6 +458,22 @@ public class MTFSupply {
 	@Rule("{newarg:','}")
 	public TokenFactory newargs;
 		
+	@TokenType(KillCmdTokens.MKilledLocal.class)
+	@Rule("name")
+	public TokenFactory killedlocal;
+	@Rule("rindirection | killedlocal")
+	public TokenFactory exclusivekillsingle;
+	@TokenType(KillCmdTokens.MExclusiveAtomicKillCmd.class)	
+	@Rule("{exclusivekillsingle:',':'(':')'}")
+	public TokenFactory exclusivekill;
+	@TokenType(KillCmdTokens.MAtomicKillCmd.class)	
+	@Rule("glvn")
+	public TokenFactory normalkill;		
+	@Rule("exclusivekill | normalkill")
+	public TokenFactory killarg;
+	@Rule("{killarg:','}")
+	public TokenFactory killargs;
+
 	@Rule("'.', name")
 	public TokenFactory dname;
 	@Rule("'^', name")

@@ -17,34 +17,34 @@
 package com.raygroupintl.m.token;
 
 import com.raygroupintl.m.parsetree.Local;
-import com.raygroupintl.m.parsetree.NewCmdNodes;
+import com.raygroupintl.m.parsetree.KillCmdNodes;
 import com.raygroupintl.m.parsetree.Node;
 import com.raygroupintl.m.parsetree.Nodes;
 import com.raygroupintl.parser.Token;
 
-public final class NewCmdTokens {
-	public static final class MNewCmd extends MCommand {
-		public MNewCmd(Token token) {
+public final class KillCmdTokens {
+	public static final class MKillCmd extends MCommand {
+		public MKillCmd(Token token) {
 			super(token);
 		}		
 		
 		@Override
 		protected String getFullName() {		
-			return "NEW";
+			return "KILL";
 		}
 		
 		@Override
 		protected Node getNode(Node postConditionNode, Node argumentNode) {
 			if (argumentNode == null) {
-				return new NewCmdNodes.AllNewCmd(postConditionNode);
+				return new KillCmdNodes.AllKillCmd(postConditionNode);
 			} else {
-				return new NewCmdNodes.NewCmd(postConditionNode, argumentNode);				
+				return new KillCmdNodes.KillCmd(postConditionNode, argumentNode);				
 			}
 		}
 	}
 	
-	public static final class MExclusiveAtomicNewCmd extends MSequence {
-		public  MExclusiveAtomicNewCmd(Token token) {
+	public static final class MExclusiveAtomicKillCmd extends MSequence {
+		public  MExclusiveAtomicKillCmd(Token token) {
 			super(token);
 		}
 		
@@ -52,23 +52,23 @@ public final class NewCmdTokens {
 		public Node getNode() {
 			MDelimitedList list = (MDelimitedList) this.get(1);
 			Nodes<Node> nodes = NodeUtilities.getNodes(list, list.size());
-			return new NewCmdNodes.ExclusiveAtomicNew(nodes);
+			return new KillCmdNodes.ExclusiveAtomicKill(nodes);
 		}		
 	}
 
-	public static final class MAtomicNewCmd extends MTokenCopy {
-		public MAtomicNewCmd(Token token) {
+	public static final class MAtomicKillCmd extends MTokenCopy {
+		public MAtomicKillCmd(Token token) {
 			super(token);
 		}
 		
 		@Override
 		public Node getNode(Node subNode) {
-			return new NewCmdNodes.AtomicNew(subNode);
+			return new KillCmdNodes.AtomicKill(subNode);
 		}		
 	}
 	
-	public static final class MNewedLocal extends MString {
-		public MNewedLocal(Token token) {
+	public static final class MKilledLocal extends MString {
+		public MKilledLocal(Token token) {
 			super(token);
 		}
 

@@ -25,5 +25,8 @@ public interface Node {
 	void acceptExclusiveNew(Visitor visitor);
 	void acceptNew(Visitor visitor);
 	
+	void acceptExclusiveKill(Visitor visitor);
+	void acceptKill(Visitor visitor);
+
 	boolean setEntryList(EntryList entryList);
 }

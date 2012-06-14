@@ -128,6 +128,23 @@ public class Visitor {
 	}
 	
 	
+	protected void visitAtomicKill(KillCmdNodes.AtomicKill atomicKill) {
+		atomicKill.acceptSubNodes(this);
+	}
+	
+	protected void visitAllKillCmd(KillCmdNodes.AllKillCmd atomicKill) {
+		atomicKill.acceptSubNodes(this);
+	}
+	
+	protected void visitExclusiveAtomicKill(KillCmdNodes.ExclusiveAtomicKill atomicKill) {
+		atomicKill.acceptSubNodes(this);
+	}
+	
+	protected void visitKill(KillCmdNodes.KillCmd killCmd) {
+		killCmd.acceptSubNodes(this);
+	}
+	
+	
 	protected void visitExtrinsic(Extrinsic extrinsic) {
 		this.visitAdditionalNodeHolder(extrinsic);
 	}
