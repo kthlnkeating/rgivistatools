@@ -21,7 +21,6 @@ import java.util.List;
 
 import com.raygroupintl.m.parsetree.ForLoop;
 import com.raygroupintl.m.parsetree.Node;
-import com.raygroupintl.parser.TEmpty;
 import com.raygroupintl.parser.TList;
 import com.raygroupintl.parser.Token;
 
@@ -34,21 +33,6 @@ public class MForCmd extends MCommandBase {
 	protected String getFullName() {		
 		return "FOR";
 	}			
-
-	protected MToken getArgument() {
-		MSequence nameFollowUp = (MSequence) this.get(1);
-		if (nameFollowUp == null) {
-			return null;
-		}
-		if (nameFollowUp.get(2) instanceof TEmpty) {
-			return null;
-		}			
-		MToken argument = (MToken) nameFollowUp.get(2);
-		if ((argument == null) || (argument.toValue().length() == 0)) {
-			return null;
-		}
-		return argument;
-	}
 
 	@Override
 	public Node getNode() {

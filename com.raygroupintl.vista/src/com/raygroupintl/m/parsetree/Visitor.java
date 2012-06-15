@@ -112,6 +112,21 @@ public class Visitor {
 	}
 	
 		
+	protected void visitQuit(QuitCmd quitCmd) {
+		quitCmd.acceptSubNodes(this);
+	}
+
+	
+	protected void visitIf(IfCmd ifCmd) {
+		ifCmd.acceptSubNodes(this);
+	}
+
+	
+	protected void visitElse(ElseCmd elseCmd) {
+		elseCmd.acceptSubNodes(this);
+	}
+
+	
 	protected void visitIndirectAtomicMerge(MergeCmdNodes.IndirectAtomicMerge indirectAtomicMerge) {
 		indirectAtomicMerge.acceptSubNodes(this);
 	}

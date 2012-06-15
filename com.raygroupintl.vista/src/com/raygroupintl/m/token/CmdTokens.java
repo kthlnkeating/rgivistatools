@@ -2,8 +2,13 @@ package com.raygroupintl.m.token;
 
 import com.raygroupintl.m.parsetree.Do;
 import com.raygroupintl.m.parsetree.DoBlock;
+import com.raygroupintl.m.parsetree.ElseCmd;
 import com.raygroupintl.m.parsetree.Goto;
+import com.raygroupintl.m.parsetree.IfCmd;
 import com.raygroupintl.m.parsetree.Node;
+import com.raygroupintl.m.parsetree.Nodes;
+import com.raygroupintl.m.parsetree.QuitCmd;
+import com.raygroupintl.parser.TList;
 import com.raygroupintl.parser.Token;
 
 class CmdTokens {
@@ -52,7 +57,7 @@ class CmdTokens {
 		}
 	}
 
-	static class E extends MCommand {
+	static class E extends MCommandBase {
 		public E(Token token) {
 			super(token);
 		}		
@@ -60,6 +65,11 @@ class CmdTokens {
 		@Override
 		protected String getFullName() {		
 			return "ELSE";
+		}			
+		
+		@Override
+		public Node getNode() {
+			return new ElseCmd();
 		}			
 	}
 
@@ -94,7 +104,7 @@ class CmdTokens {
 		}			
 	}
 
-	static class I extends MCommand {
+	static class I extends MCommandBase {
 		public I(Token token) {
 			super(token);
 		}		
@@ -102,6 +112,17 @@ class CmdTokens {
 		@Override
 		protected String getFullName() {		
 			return "IF";
+		}			
+
+		@Override
+		public Node getNode() {
+			TList argument = (TList) this.getArgument();
+			if (argument != null) {
+				Nodes<Node> node = NodeUtilities.getNodes(argument, argument.size());
+				return new IfCmd(node);
+			} else {
+				return new IfCmd();
+			}
 		}			
 	}
 
@@ -148,6 +169,10 @@ class CmdTokens {
 		protected String getFullName() {		
 			return "QUIT";
 		}			
+
+		protected Node getNode(Node postConditionNode, Node argumentNode) {
+			return new QuitCmd(postConditionNode, argumentNode);	
+		}
 	}
 
 	static class R extends MCommand {
