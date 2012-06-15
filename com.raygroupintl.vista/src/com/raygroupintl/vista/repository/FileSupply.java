@@ -17,7 +17,7 @@ public class FileSupply {
 		private List<Path> store = new ArrayList<Path>();
 		
 		@Override
-		public FileVisitResult visitFile(Path path, BasicFileAttributes attr) throws IOException {
+		public FileVisitResult visitFile(Path path, BasicFileAttributes attr) {
 			if (attr.isRegularFile()) {
 				Path leaf = path.getFileName();
 				if (leaf != null) {

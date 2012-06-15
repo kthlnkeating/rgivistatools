@@ -85,17 +85,19 @@ public class FanoutWriter  {
 			forer.setFilter(this.filter);
 			routine.accept(forer);
 			Map<LineLocation, List<Fanout>> fanouts = forer.getRoutineFanouts();
-			for (List<Fanout> fouts : fanouts.values()) {	
-				for (Fanout fout : fouts) {
-					String info = fout.toString();
-					if (existing.contains(info)) {
-						continue;
+			if (fanouts != null) {
+				for (List<Fanout> fouts : fanouts.values()) {	
+					for (Fanout fout : fouts) {
+						String info = fout.toString();
+						if (existing.contains(info)) {
+							continue;
+						}
+						existing.add(info);
+						info += " (" + routine.getKey() + ")";
+						this.os.write(("    "  + info + this.eol).getBytes());
 					}
-					existing.add(info);
-					info += " (" + routine.getKey() + ")";
-					this.os.write(("    "  + info + this.eol).getBytes());
 				}
-			}	
+			}
 		} catch (IOException ex) {
 			LOGGER.log(Level.SEVERE, "Unable to write");
 		}

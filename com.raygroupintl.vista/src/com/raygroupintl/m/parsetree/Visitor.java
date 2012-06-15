@@ -219,6 +219,6 @@ public class Visitor {
 	}
 
 	protected void visitRoutinePackage(RoutinePackage routinePackage) {
-		this.visitNodes(routinePackage);
+
 	}
 }

@@ -26,20 +26,12 @@ import java.util.List;
 import java.util.Map;
 import java.util.Scanner;
 import java.util.TreeMap;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
-import com.raygroupintl.m.parsetree.Routine;
 import com.raygroupintl.m.token.TFRoutine;
-import com.raygroupintl.m.token.MRoutine;
-import com.raygroupintl.parser.SyntaxErrorException;
 
 public class RepositoryInfo {
-	private final static Logger LOGGER = Logger.getLogger(RepositoryInfo.class.getName());
-
 	public static class PackageInRepository extends VistaPackage {
 		public TFRoutine tokenizer;
-		private List<Routine> nodes;
 
 		public PackageInRepository(String packageName, String directoryName, TFRoutine tokenizer) {
 			super(packageName, directoryName);
@@ -57,33 +49,6 @@ public class RepositoryInfo {
 			return path;			
 		}
 		
-		//@Override
-		public List<Routine> getNodes() {
-			//List<Routine> current = super.getCurrentNodes();
-			if (this.nodes == null) {
-				this.nodes = new ArrayList<Routine>();
-				try {
-					List<Path> paths = this.getRoutineFilePaths();
-					for (Path path : paths) {
-						try {
-							//LOGGER.info("ROUTINE: " + path.toString());
-							MRoutine tr = this.tokenizer.tokenize(path);
-							Routine node = tr.getNode();
-							this.nodes.add(node);
-							//this.add(node);
-						} catch (SyntaxErrorException ex) {
-							LOGGER.log(Level.SEVERE, "Syntax error found in routine: " + path.toString());
-						} 
-					}
-				} catch (IOException ioex) {
-					LOGGER.log(Level.SEVERE, "IO error for package: " + this.getPackageName());
-				}				
-			}
-			return this.nodes;
-			//return super.getNodes();
-		}
-		
-		//@Override
 		public boolean contains(String routineName) {
 			List<String> prefixes = this.getPrefixes();
 			for (String prefix : prefixes) {
