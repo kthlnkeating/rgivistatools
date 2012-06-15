@@ -21,7 +21,7 @@ import java.util.Collections;
 import java.util.List;
 
 public class NodeList<T extends Node> extends Nodes<T> {
-	private List<T> nodes = new ArrayList<T>();
+	private List<T> nodes;
 	public static int allocated;
 	public static int added;
 	
@@ -63,6 +63,31 @@ public class NodeList<T extends Node> extends Nodes<T> {
 			return Collections.emptyList();
 		} else {
 			return Collections.unmodifiableList(this.nodes);
+		}
+	}
+	
+	public NodeList<T> copy() {
+		NodeList<T> result = new NodeList<T>();
+		if (this.nodes != null) {
+			result.nodes = new ArrayList<T>(this.nodes.size());
+			for (T node : this.nodes) {
+				result.nodes.add(node);
+			}
+		}
+		return result;
+	}
+	
+	public void clear() {
+		if (this.nodes != null) {
+			this.nodes.clear();
+		}
+	}
+	
+	public int size() {
+		if (this.nodes == null) {
+			return 0;
+		} else {
+			return this.nodes.size();
 		}
 	}
 }

@@ -4,6 +4,8 @@ import java.util.Iterator;
 
 import com.raygroupintl.m.parsetree.Line;
 import com.raygroupintl.m.parsetree.Node;
+import com.raygroupintl.m.parsetree.NodeList;
+import com.raygroupintl.m.parsetree.ParentNode;
 import com.raygroupintl.parser.StringPiece;
 import com.raygroupintl.parser.TList;
 import com.raygroupintl.parser.Token;
@@ -51,20 +53,20 @@ public class MLine extends MSequence {
 	@Override
 	public Line getNode() {
 		Line result = new Line(this.tagName, this.index, this.getLevel());
+		ParentNode currentParent = result;
 		TList cmds = (TList) this.get(4);
 		if (cmds != null) {
-			boolean noneAdded = true;
-			result.reset(cmds.size());
+			NodeList<Node> nodes = null;
 			for (Iterator<Token> it = cmds.iterator(); it.hasNext();) {
 				Token t = it.next();
 				Node node = ((MToken) t).getNode();
 				if (node != null) {
-					noneAdded = false;
-					result.add(node);
+					if (nodes == null) nodes = new NodeList<Node>(cmds.size());
+					currentParent = node.addSelf(currentParent, nodes);
 				}
 			}
-			if (noneAdded) {
-				result = new Line(this.tagName, this.index, this.getLevel());
+			if ((nodes != null) && (nodes.size() > 0)) {
+				currentParent.setNodes(nodes.copy());
 			}
 		}
 		return result;

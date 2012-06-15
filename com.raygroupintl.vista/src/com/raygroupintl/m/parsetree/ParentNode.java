@@ -16,31 +16,36 @@
 
 package com.raygroupintl.m.parsetree;
 
-public class Line extends ParentNode {
-	private String tag;
-	private int index;
-	private int level;
-		
-	public Line(String tag, int index, int level) {
-		this.tag = tag;
-		this.index = index;
-		this.level = level;
-	}
+public abstract class ParentNode extends BasicNode {
+	protected Nodes<Node> nodes;
 
-	public String getTag() {
-		return this.tag;
+	public void setNodes(Nodes<Node> nodes) {
+		this.nodes = nodes;
 	}
 	
-	public int getIndex() {
-		return this.index;
+	public void acceptSubNodes(Visitor visitor) {
+		if (this.nodes != null) for (Node node : this.nodes.getNodes()) {
+			if (node != null) {
+				node.accept(visitor);
+			}
+		}
 	}
-
-	public int getLevel() {
-		return this.level;
-	}
-
+		
 	@Override
-	public void accept(Visitor visitor) {
-		visitor.visitLine(this);
+	public boolean setEntryList(EntryList entryList) {
+		boolean result = false;
+		if (this.nodes != null) for (Node node : this.nodes.getNodes()) {
+			boolean nodeResult = node.setEntryList(entryList);
+			result = result || nodeResult; 					
+		}
+		return result;
+	}
+	
+	@Override
+	public ParentNode addSelf(ParentNode current, NodeList<Node> nodes) {
+		nodes.add(this);
+		current.setNodes(nodes.copy());
+		nodes.clear();
+		return this;
 	}
 }

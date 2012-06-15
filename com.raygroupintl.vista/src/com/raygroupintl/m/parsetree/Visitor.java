@@ -176,7 +176,7 @@ public class Visitor {
 	}
 	
 	protected void visitLine(Line line) {
-		this.visitNodes(line);
+		line.acceptSubNodes(this);
 	}
 	
 	protected void visitBlock(EntryList block) {

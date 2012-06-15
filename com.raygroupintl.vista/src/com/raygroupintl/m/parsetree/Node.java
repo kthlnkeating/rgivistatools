@@ -31,5 +31,7 @@ public interface Node {
 	void acceptPreMerge(Visitor visitor);
 	void acceptPostMerge(Visitor visitor);
 	
+	ParentNode addSelf(ParentNode current, NodeList<Node> nodes);
+	
 	boolean setEntryList(EntryList entryList);
 }

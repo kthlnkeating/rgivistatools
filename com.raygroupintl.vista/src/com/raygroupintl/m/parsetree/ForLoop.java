@@ -18,10 +18,9 @@ package com.raygroupintl.m.parsetree;
 
 import java.util.List;
 
-public class ForLoop extends BasicNode {
+public class ForLoop extends ParentNode {
 	private Node lhs;
 	private List<Node[]> rhss;
-	private Nodes<Node> loopNodes;
 		
 	public ForLoop() {		
 	}
@@ -31,10 +30,7 @@ public class ForLoop extends BasicNode {
 		this.rhss = rhss;
 	}
 
-	public void setLoopNodes(Nodes<Node> loopNodes) {
-		this.loopNodes = loopNodes;
-	}
-	
+	@Override
 	public void acceptSubNodes(Visitor visitor) {
 		if (this.lhs != null) {
 			this.lhs.acceptPreAssignment(visitor);
@@ -45,11 +41,7 @@ public class ForLoop extends BasicNode {
 			}
 			this.lhs.acceptPostAssignment(visitor);
 		}
-		if (this.loopNodes != null) {
-			for (Node node : this.loopNodes.getNodes()) {
-				node.accept(visitor);
-			}
-		}
+		super.acceptSubNodes(visitor);
 	}
 	
 	@Override

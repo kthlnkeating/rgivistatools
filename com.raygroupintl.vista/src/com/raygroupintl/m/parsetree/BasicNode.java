@@ -59,4 +59,10 @@ public abstract class BasicNode implements Node {
 	@Override
 	public void acceptPostMerge(Visitor visitor) {
 	}
+
+	@Override
+	public ParentNode addSelf(ParentNode current, NodeList<Node> nodes) {
+		nodes.add(this);
+		return current;
+	}
 }
