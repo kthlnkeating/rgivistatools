@@ -19,6 +19,11 @@ package com.raygroupintl.m.parsetree;
 import java.nio.file.Path;
 import java.util.List;
 
+import com.raygroupintl.m.parsetree.filter.LocalFanoutFilter;
+import com.raygroupintl.m.parsetree.filter.PackageFanoutFilter;
+import com.raygroupintl.struct.AndFilter;
+import com.raygroupintl.struct.Filter;
+
 public abstract class RoutinePackage extends BasicNode {
 	public void acceptSubNodes(Visitor visitor) {
 		RoutineFactory rf = this.getRoutineFactory();
@@ -35,6 +40,13 @@ public abstract class RoutinePackage extends BasicNode {
 	public abstract RoutineFactory getRoutineFactory();
 	
 	public abstract String getPackageName();
+	
+	public Filter<Fanout> getPackageFanoutFilter() {
+		Filter<Fanout> localFilter = new LocalFanoutFilter();
+		Filter<Fanout> packageFilter = new PackageFanoutFilter(this);
+		Filter<Fanout> overallFilter = new AndFilter<Fanout>(localFilter, packageFilter);
+		return overallFilter;
+	}
 	
 	@Override
 	public void accept(Visitor visitor) {

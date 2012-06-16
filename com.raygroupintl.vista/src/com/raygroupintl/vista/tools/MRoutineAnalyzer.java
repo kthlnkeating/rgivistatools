@@ -23,6 +23,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import com.raygroupintl.m.parsetree.ErrorNode;
+import com.raygroupintl.m.parsetree.FileWrapper;
 import com.raygroupintl.m.parsetree.Node;
 import com.raygroupintl.m.parsetree.NodeList;
 import com.raygroupintl.m.parsetree.Routine;
@@ -103,10 +104,10 @@ public class MRoutineAnalyzer {
 		}
 		
 		String outputFile = options.outputFile;
-		FanoutWriter fow = new FanoutWriter(outputFile);
+		FileWrapper fr = new FileWrapper(outputFile);
+		FanoutWriter fow = new FanoutWriter(fr);
 		RoutinePackages packageNodes = new RoutinePackages(nodes);
 		packageNodes.accept(fow);
-		//fow.write(outputFile);
 	}
 	
 	public static void main(String[] args) {
