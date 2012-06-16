@@ -14,25 +14,22 @@
 // limitations under the License.
 //---------------------------------------------------------------------------
 
-package com.raygroupintl.m.parsetree.filter;
+package com.raygroupintl.vista.repository;
 
-import com.raygroupintl.m.parsetree.Fanout;
-import com.raygroupintl.struct.Filter;
-import com.raygroupintl.vista.repository.VistaPackage;
+import com.raygroupintl.m.parsetree.Routine;
 
-public class PackageFanoutFilter  implements Filter<Fanout> {
-	private VistaPackage routinePackage;
-	
-	public PackageFanoutFilter(VistaPackage routinePackage) {
-		this.routinePackage = routinePackage;
+public abstract class RepositoryVisitor {
+	protected abstract void visitRoutine(Routine routine);
+
+	protected void visitError() {
+		
 	}
-	
-	@Override
-	public boolean isValid(Fanout input) {
-		if (input != null) {
-			String routineName = input.getRoutineName();
-			return ! this.routinePackage.contains(routineName);
-		}
-		return false;
-	}	
+
+	protected void visitVistaPackage(VistaPackage routinePackage) {
+		routinePackage.acceptSubNodes(this);
+	}
+
+	protected void visitRoutinePackages(VistaPackages routinePackages) {
+		routinePackages.acceptSubNodes(this);
+	}
 }

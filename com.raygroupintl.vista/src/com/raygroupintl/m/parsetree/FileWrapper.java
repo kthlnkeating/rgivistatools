@@ -22,7 +22,7 @@ import java.io.IOException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import com.raygroupintl.m.parsetree.visitor.FanoutWriter;
+import com.raygroupintl.vista.repository.visitor.FanoutWriter;
 
 public class FileWrapper {
 	private final static Logger LOGGER = Logger.getLogger(FanoutWriter.class.getName());

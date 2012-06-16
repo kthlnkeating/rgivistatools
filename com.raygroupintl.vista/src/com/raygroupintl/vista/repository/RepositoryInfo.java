@@ -27,54 +27,18 @@ import java.util.Map;
 import java.util.Scanner;
 import java.util.TreeMap;
 
-import com.raygroupintl.m.parsetree.RoutineFactory;
 
 public class RepositoryInfo {
-	public static class PackageInRepository extends VistaPackage {
-		public RoutineFactory rf;
-
-		public PackageInRepository(String packageName, String directoryName, RoutineFactory rf) {
-			super(packageName, directoryName);
-			this.rf = rf;
-		}
-		
-		@Override
-		public RoutineFactory getRoutineFactory() {
-			return this.rf;
-		}
-		
-		@Override
-		public Path getPath() {
-			String vistaFOIARoot = RepositoryInfo.getLocation();
-			if (vistaFOIARoot == null) {
-				vistaFOIARoot = "";
-			}
-			String dir = this.getDirectoryName();
-			Path path = Paths.get(vistaFOIARoot, "Packages", dir);
-			return path;			
-		}
-		
-		public boolean contains(String routineName) {
-			List<String> prefixes = this.getPrefixes();
-			for (String prefix : prefixes) {
-				if (routineName.startsWith(prefix)) {
-					return true;
-				}
-			}
-			return false;
-		}		
-	}
-	
-	private List<PackageInRepository> packages = new ArrayList<PackageInRepository>();
-	private Map<String, PackageInRepository> packagesByName = new HashMap<String, PackageInRepository>();
-	private TreeMap<String, PackageInRepository> packagesByPrefix = new TreeMap<String, PackageInRepository>();
+	private List<VistaPackage> packages = new ArrayList<VistaPackage>();
+	private Map<String, VistaPackage> packagesByName = new HashMap<String, VistaPackage>();
+	private TreeMap<String, VistaPackage> packagesByPrefix = new TreeMap<String, VistaPackage>();
 	private RoutineFactory rf;	
 	
 	private RepositoryInfo(RoutineFactory rf) {
 		this.rf = rf;
 	}
 	
-	private void addPackage(PackageInRepository packageInfo) {
+	private void addPackage(VistaPackage packageInfo) {
 		this.packages.add(packageInfo);
 		this.packagesByName.put(packageInfo.getPackageName(), packageInfo);
 		for (String prefix : packageInfo.getPrefixes()) {
@@ -86,23 +50,23 @@ public class RepositoryInfo {
 		return System.getenv("VistA-FOIA");
 	}
 	
-	public PackageInRepository getPackage(String packageName) {
+	public VistaPackage getPackage(String packageName) {
 		return this.packagesByName.get(packageName);
 	}
 	
-	public List<PackageInRepository> getPackages(List<String> packageNames) {
-		List<PackageInRepository> result = new ArrayList<PackageInRepository>(packageNames.size());
+	public List<VistaPackage> getPackages(List<String> packageNames) {
+		List<VistaPackage> result = new ArrayList<VistaPackage>(packageNames.size());
 		for (String name : packageNames) {
-			PackageInRepository p = this.getPackage(name);
+			VistaPackage p = this.getPackage(name);
 			result.add(p);
 		}
 		return result;
 	}
 	
-	public List<PackageInRepository> getAllPackages() {
-		Collection<PackageInRepository> pis = this.packagesByPrefix.values();
-		List<PackageInRepository> result = new ArrayList<PackageInRepository>(pis.size());
-		for (PackageInRepository pi : pis) {
+	public List<VistaPackage> getAllPackages() {
+		Collection<VistaPackage> pis = this.packagesByPrefix.values();
+		List<VistaPackage> result = new ArrayList<VistaPackage>(pis.size());
+		for (VistaPackage pi : pis) {
 			result.add(pi);
 		}
 		return result;
@@ -135,21 +99,21 @@ public class RepositoryInfo {
 			result = pi;
 		}
 		if (result == null) {
-			result = new PackageInRepository("UNCATEGORIZED", "Uncategorized", this.rf);
+			result = new VistaPackage("UNCATEGORIZED", "Uncategorized", this.rf);
 		}
 		return result;
 	}
 	
 	public static RepositoryInfo getInstance(Scanner scanner, RoutineFactory rf) throws IOException {
 		RepositoryInfo r = new RepositoryInfo(rf);
-		PackageInRepository packageInfo = null;
+		VistaPackage packageInfo = null;
 		scanner.nextLine();
 		while (scanner.hasNextLine()) {
 			String line = scanner.nextLine();
 			String[] pieces = line.split(",");
 			int n = pieces.length;
 			if (pieces[0].length() > 0) {
-				packageInfo = new PackageInRepository(pieces[0], pieces[1], rf);
+				packageInfo = new VistaPackage(pieces[0], pieces[1], rf);
 				if ((n > 2) && (pieces[2].length() > 0)) {
 					packageInfo.addPrefix(pieces[2]);
 				}

@@ -24,9 +24,14 @@ import java.util.Set;
 import com.raygroupintl.m.parsetree.Fanout;
 import com.raygroupintl.m.parsetree.Routine;
 import com.raygroupintl.m.struct.LineLocation;
+import com.raygroupintl.struct.Filter;
 
 public class FanInRecorder extends FanoutRecorder {
 	private Set<Fanout> fanins = new HashSet<>();
+	
+	public FanInRecorder(Filter<Fanout> filter) {
+		super(filter);
+	}
 
 	protected void visitRoutine(Routine routine) {
 		super.visitRoutine(routine);

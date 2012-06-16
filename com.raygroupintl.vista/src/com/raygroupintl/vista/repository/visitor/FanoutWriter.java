@@ -14,7 +14,7 @@
 // limitations under the License.
 //---------------------------------------------------------------------------
 
-package com.raygroupintl.m.parsetree.visitor;
+package com.raygroupintl.vista.repository.visitor;
 
 import java.util.HashSet;
 import java.util.List;
@@ -24,22 +24,27 @@ import java.util.Set;
 import com.raygroupintl.m.parsetree.Fanout;
 import com.raygroupintl.m.parsetree.FileWrapper;
 import com.raygroupintl.m.parsetree.Routine;
-import com.raygroupintl.m.parsetree.RoutinePackage;
-import com.raygroupintl.m.parsetree.RoutinePackages;
+import com.raygroupintl.m.parsetree.visitor.FanoutRecorder;
 import com.raygroupintl.m.struct.LineLocation;
+import com.raygroupintl.vista.repository.RepositoryVisitor;
+import com.raygroupintl.vista.repository.VistaPackages;
+import com.raygroupintl.vista.repository.VistaPackage;
 
-public class FanoutWriter extends FanoutRecorder {
+public class FanoutWriter extends RepositoryVisitor {
 	private FileWrapper fileWrapper;
 	private int packageCount;
 	private Set<Fanout> packageExisting;
+	private FanoutRecorder recorder;
 	
 	public FanoutWriter(FileWrapper fileWrapper) {
 		this.fileWrapper = fileWrapper;
 	}
 		
-	protected void visitRoutinePackage(RoutinePackage routinePackage) {
+	@Override
+	protected void visitVistaPackage(VistaPackage routinePackage) {
 		++this.packageCount;
 		this.packageExisting = new HashSet<Fanout>();
+		this.recorder = new FanoutRecorder(routinePackage.getPackageFanoutFilter());
 		
 		this.fileWrapper.write("--------------------------------------------------------------");
 		this.fileWrapper.writeEOL();
@@ -47,7 +52,7 @@ public class FanoutWriter extends FanoutRecorder {
 		this.fileWrapper.write(String.valueOf(this.packageCount) + ". " + routinePackage.getPackageName());
 		this.fileWrapper.writeEOL();
 
-		super.visitRoutinePackage(routinePackage);
+		super.visitVistaPackage(routinePackage);
 		
 		this.fileWrapper.write("--------------------------------------------------------------");
 		this.fileWrapper.writeEOL();
@@ -55,8 +60,8 @@ public class FanoutWriter extends FanoutRecorder {
 	}
 
 	public void visitRoutine(Routine routine) {
-		super.visitRoutine(routine);
-		Map<LineLocation, List<Fanout>> fanouts = this.getRoutineFanouts();
+		routine.accept(this.recorder);
+		Map<LineLocation, List<Fanout>> fanouts = this.recorder.getRoutineFanouts();
 		if (fanouts != null) {
 			Set<Fanout> result = new HashSet<Fanout>();
 			for (List<Fanout> fs : fanouts.values()) {
@@ -76,7 +81,7 @@ public class FanoutWriter extends FanoutRecorder {
 		}
 	}
 	
-	protected void visitRoutinePackages(RoutinePackages rps) {
+	protected void visitRoutinePackages(VistaPackages rps) {
 		if (this.fileWrapper.start()) {
 			rps.acceptSubNodes(this);
 			this.fileWrapper.stop();

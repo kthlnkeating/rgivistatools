@@ -14,11 +14,29 @@
 // limitations under the License.
 //---------------------------------------------------------------------------
 
-package com.raygroupintl.m.parsetree;
+package com.raygroupintl.vista.repository;
 
-import java.nio.file.Path;
+import java.util.List;
 
-public interface RoutineFactory {
-	String getName(Path path);
-	Node getNode(Path path);
+import com.raygroupintl.m.parsetree.RepositoryNode;
+
+public class VistaPackages implements RepositoryNode {
+	private List<VistaPackage> packages;
+	
+	public VistaPackages(List<VistaPackage> packages) {
+		this.packages = packages;
+	}
+	
+	public void acceptSubNodes(RepositoryVisitor visitor) {
+		if (this.packages != null) {
+			for (VistaPackage p : this.packages) {
+				p.accept(visitor);
+			}
+		}
+	}
+	
+	@Override
+	public void accept(RepositoryVisitor visitor) {
+		visitor.visitRoutinePackages(this);
+	}
 }

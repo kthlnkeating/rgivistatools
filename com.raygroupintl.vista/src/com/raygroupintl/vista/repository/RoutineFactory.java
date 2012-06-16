@@ -14,25 +14,12 @@
 // limitations under the License.
 //---------------------------------------------------------------------------
 
-package com.raygroupintl.m.parsetree;
+package com.raygroupintl.vista.repository;
 
-public class RoutinePackages extends BasicNode {
-	private Nodes<RoutinePackage> packages;
-	
-	public RoutinePackages(Nodes<RoutinePackage> packages) {
-		this.packages = packages;
-	}
-	
-	public void acceptSubNodes(Visitor visitor) {
-		if (this.packages != null) {
-			for (RoutinePackage p : this.packages.getNodes()) {
-				p.accept(visitor);
-			}
-		}
-	}
-	
-	@Override
-	public void accept(Visitor visitor) {
-		visitor.visitRoutinePackages(this);
-	}
+import java.nio.file.Path;
+
+import com.raygroupintl.m.parsetree.Node;
+
+public interface RoutineFactory {
+	Node getNode(Path path);
 }

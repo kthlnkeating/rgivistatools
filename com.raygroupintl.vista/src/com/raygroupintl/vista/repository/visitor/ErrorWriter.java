@@ -14,34 +14,39 @@
 // limitations under the License.
 //---------------------------------------------------------------------------
 
-package com.raygroupintl.m.parsetree.visitor;
+package com.raygroupintl.vista.repository.visitor;
 
 import java.util.List;
 
 import com.raygroupintl.m.parsetree.FileWrapper;
 import com.raygroupintl.m.parsetree.Routine;
-import com.raygroupintl.m.parsetree.RoutinePackage;
-import com.raygroupintl.m.parsetree.RoutinePackages;
+import com.raygroupintl.m.parsetree.visitor.ErrorRecorder;
 import com.raygroupintl.m.struct.LineLocation;
 import com.raygroupintl.m.struct.MError;
 import com.raygroupintl.m.struct.ObjectInRoutine;
+import com.raygroupintl.vista.repository.RepositoryVisitor;
+import com.raygroupintl.vista.repository.VistaPackages;
+import com.raygroupintl.vista.repository.VistaPackage;
 import com.raygroupintl.vista.tools.ErrorExemptions;
 
-public class ErrorWriter extends ErrorRecorder {
+public class ErrorWriter extends RepositoryVisitor {
 	private FileWrapper fileWrapper;
 	private int errorCount;
 	private int packageCount;
+	private ErrorRecorder errorRecorder;
 	
 	public ErrorWriter(ErrorExemptions exemptions, FileWrapper fileWrapper) {
-		super(exemptions);
+		this.errorRecorder = new ErrorRecorder(exemptions);
 		this.fileWrapper = fileWrapper;
 	}
 	
 	public ErrorWriter(FileWrapper fileWrapper) {
+		this.errorRecorder = new ErrorRecorder();
 		this.fileWrapper = fileWrapper;
 	}
 
-	protected void visitRoutinePackage(RoutinePackage routinePackage) {
+	@Override
+	protected void visitVistaPackage(VistaPackage routinePackage) {
 		++this.packageCount;
 		
 		this.fileWrapper.write("--------------------------------------------------------------");
@@ -50,7 +55,7 @@ public class ErrorWriter extends ErrorRecorder {
 		this.fileWrapper.write(String.valueOf(this.packageCount) + ". " + routinePackage.getPackageName());
 		this.fileWrapper.writeEOL();
 
-		super.visitRoutinePackage(routinePackage);
+		super.visitVistaPackage(routinePackage);
 		
 		this.fileWrapper.write("--------------------------------------------------------------");
 		this.fileWrapper.writeEOL();
@@ -59,8 +64,8 @@ public class ErrorWriter extends ErrorRecorder {
 
 	@Override
 	protected void visitRoutine(Routine routine) {
-		super.visitRoutine(routine);
-		List<ObjectInRoutine<MError>> errors = this.getLastErrors();
+		routine.accept(this.errorRecorder);
+		List<ObjectInRoutine<MError>> errors = this.errorRecorder.getLastErrors();
 		if (errors.size() > 0) {
 			this.fileWrapper.writeEOL();
 			this.fileWrapper.writeEOL();
@@ -85,7 +90,7 @@ public class ErrorWriter extends ErrorRecorder {
 		}		
 	}
 	
-	protected void visitRoutinePackages(RoutinePackages rps) {
+	protected void visitRoutinePackages(VistaPackages rps) {
 		if (this.fileWrapper.start()) {
 			rps.acceptSubNodes(this);
 			this.fileWrapper.writeEOL();

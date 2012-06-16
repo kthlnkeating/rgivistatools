@@ -17,13 +17,22 @@
 package com.raygroupintl.vista.repository;
 
 import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-import com.raygroupintl.m.parsetree.RoutinePackage;
+import com.raygroupintl.m.parsetree.Fanout;
+import com.raygroupintl.m.parsetree.Node;
+import com.raygroupintl.m.parsetree.RepositoryNode;
+import com.raygroupintl.m.parsetree.Routine;
+import com.raygroupintl.m.parsetree.filter.LocalFanoutFilter;
+import com.raygroupintl.m.parsetree.filter.PackageFanoutFilter;
+import com.raygroupintl.struct.AndFilter;
+import com.raygroupintl.struct.Filter;
 
-public abstract class VistaPackage extends RoutinePackage {
+
+public class VistaPackage  implements RepositoryNode {
 	public static class FileInfo {
 		private String number;
 		private String name;
@@ -46,13 +55,26 @@ public abstract class VistaPackage extends RoutinePackage {
 	private String directoryName;
 	private List<String> prefixes;
 	private List<FileInfo> files;
+	public RoutineFactory rf;
 	
-	public VistaPackage(String packageName, String directoryName) {
+	public VistaPackage(String packageName, String directoryName, RoutineFactory rf) {
 		this.packageName = packageName;
 		this.directoryName = directoryName;
+		this.rf = rf;
 	}
 	
-	//@Override
+	public void acceptSubNodes(RepositoryVisitor visitor) {
+		RoutineFactory rf = this.getRoutineFactory();
+		for (Path path : this.getPaths()) {
+			Node node = rf.getNode(path);
+			if (node instanceof Routine) {
+				visitor.visitRoutine((Routine) node);
+			} else {
+				visitor.visitError();
+			}
+		}
+	}
+	
 	public String getPackageName() {
 		return this.packageName;
 	}
@@ -108,9 +130,26 @@ public abstract class VistaPackage extends RoutinePackage {
 		return result;
 	}
 	
-	public abstract Path getPath();
+	public Path getPath() {
+		String vistaFOIARoot = RepositoryInfo.getLocation();
+		if (vistaFOIARoot == null) {
+			vistaFOIARoot = "";
+		}
+		String dir = this.getDirectoryName();
+		Path path = Paths.get(vistaFOIARoot, "Packages", dir);
+		return path;			
+	}
 	
-	@Override
+	public boolean contains(String routineName) {
+		List<String> prefixes = this.getPrefixes();
+		for (String prefix : prefixes) {
+			if (routineName.startsWith(prefix)) {
+				return true;
+			}
+		}
+		return false;
+	}		
+	
 	public List<Path> getPaths() {
 		try {
 			Path packagePath = this.getPath();
@@ -122,4 +161,21 @@ public abstract class VistaPackage extends RoutinePackage {
 			return Collections.emptyList();
 		}
 	}
+	
+	public RoutineFactory getRoutineFactory() {
+		return this.rf;
+	}
+	
+	public Filter<Fanout> getPackageFanoutFilter() {
+		Filter<Fanout> localFilter = new LocalFanoutFilter();
+		Filter<Fanout> packageFilter = new PackageFanoutFilter(this);
+		Filter<Fanout> overallFilter = new AndFilter<Fanout>(localFilter, packageFilter);
+		return overallFilter;
+	}
+	
+	@Override
+	public void accept(RepositoryVisitor visitor) {
+		visitor.visitVistaPackage(this);
+	}
+
 }

@@ -25,13 +25,7 @@ import java.util.logging.Logger;
 import com.raygroupintl.m.parsetree.ErrorNode;
 import com.raygroupintl.m.parsetree.FileWrapper;
 import com.raygroupintl.m.parsetree.Node;
-import com.raygroupintl.m.parsetree.NodeList;
 import com.raygroupintl.m.parsetree.Routine;
-import com.raygroupintl.m.parsetree.RoutineFactory;
-import com.raygroupintl.m.parsetree.RoutinePackage;
-import com.raygroupintl.m.parsetree.RoutinePackages;
-import com.raygroupintl.m.parsetree.visitor.ErrorWriter;
-import com.raygroupintl.m.parsetree.visitor.FanoutWriter;
 import com.raygroupintl.m.struct.MError;
 import com.raygroupintl.m.token.MTFSupply;
 import com.raygroupintl.m.token.MVersion;
@@ -40,6 +34,11 @@ import com.raygroupintl.m.token.MRoutine;
 import com.raygroupintl.parser.SyntaxErrorException;
 import com.raygroupintl.parser.annotation.ParseException;
 import com.raygroupintl.vista.repository.RepositoryInfo;
+import com.raygroupintl.vista.repository.RoutineFactory;
+import com.raygroupintl.vista.repository.VistaPackages;
+import com.raygroupintl.vista.repository.VistaPackage;
+import com.raygroupintl.vista.repository.visitor.ErrorWriter;
+import com.raygroupintl.vista.repository.visitor.FanoutWriter;
 
 public class MRoutineAnalyzer {
 	private final static Logger LOGGER = Logger.getLogger(MRoutineAnalyzer.class.getName());
@@ -49,13 +48,6 @@ public class MRoutineAnalyzer {
 		
 		public MRARoutineFactory(TFRoutine tokenFactory) {
 			this.tokenFactory = tokenFactory;
-		}
-		
-		@Override
-		public String getName(Path path) {
-			String fileName = path.getFileName().toString();
-			String name = fileName.split(".m")[0];
-			return name;
 		}
 		
 		@Override
@@ -83,19 +75,15 @@ public class MRoutineAnalyzer {
 		}
 	}
 	
-	private RoutinePackages getRoutinePackages(CLIParams options, RoutineFactory rf)  throws IOException, SyntaxErrorException {
+	private VistaPackages getRoutinePackages(CLIParams options, RoutineFactory rf)  throws IOException, SyntaxErrorException {
 		RepositoryInfo ri = RepositoryInfo.getInstance(rf);
-		List<RepositoryInfo.PackageInRepository> packages = null; 
+		List<VistaPackage> packages = null; 
 		if (options.packages.size() == 0) {
 			packages = ri.getAllPackages();
 		} else {
 			packages = ri.getPackages(options.packages);
 		}
-		NodeList<RoutinePackage> nodes = new NodeList<>(packages.size());
-		for (RepositoryInfo.PackageInRepository p : packages) {
-			nodes.add(p);
-		}
-		RoutinePackages packageNodes = new RoutinePackages(nodes);
+		VistaPackages packageNodes = new VistaPackages(packages);
 		return packageNodes;		
 	}
 	
@@ -106,7 +94,7 @@ public class MRoutineAnalyzer {
 
 			MRoutineAnalyzer m = new MRoutineAnalyzer();
 			MRARoutineFactory rf = MRARoutineFactory.getInstance(MVersion.CACHE);
-			RoutinePackages packageNodes = m.getRoutinePackages(options, rf);
+			VistaPackages packageNodes = m.getRoutinePackages(options, rf);
 			String outputFile = options.outputFile;
 			FileWrapper fr = new FileWrapper(outputFile);
 			String at = options.analysisType;
