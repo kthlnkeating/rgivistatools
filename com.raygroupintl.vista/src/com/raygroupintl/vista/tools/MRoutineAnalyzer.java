@@ -85,9 +85,10 @@ public class MRoutineAnalyzer {
 	
 	public void writeErrors(CLIParams options, RoutineFactory rf) throws IOException, SyntaxErrorException {		
 		String outputFile = options.outputFile; 
+		FileWrapper fr = new FileWrapper(outputFile);
 		ErrorExemptions exemptions = ErrorExemptions.getVistAFOIAInstance();
-		ErrorWriter ew = new ErrorWriter(exemptions);
-		ew.write(outputFile, rf);
+		ErrorWriter ew = new ErrorWriter(exemptions, fr);
+		ew.write(rf);
 	}
 
 	public void writeFanout(CLIParams options, RoutineFactory rf) throws IOException, SyntaxErrorException {

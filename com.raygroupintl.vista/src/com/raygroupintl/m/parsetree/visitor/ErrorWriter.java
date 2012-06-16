@@ -16,35 +16,34 @@
 
 package com.raygroupintl.m.parsetree.visitor;
 
-import java.io.File;
-import java.io.FileOutputStream;
 import java.io.IOException;
 import java.nio.file.Path;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import com.raygroupintl.m.parsetree.FileWrapper;
 import com.raygroupintl.m.parsetree.Routine;
 import com.raygroupintl.m.parsetree.RoutineFactory;
 import com.raygroupintl.m.struct.LineLocation;
 import com.raygroupintl.m.struct.MError;
 import com.raygroupintl.m.struct.ObjectInRoutine;
-import com.raygroupintl.m.token.MRoutine;
 import com.raygroupintl.vista.repository.FileSupply;
 import com.raygroupintl.vista.tools.ErrorExemptions;
 
 public class ErrorWriter extends ErrorRecorder {
 	private final static Logger LOGGER = Logger.getLogger(ErrorWriter.class.getName());
 	
-	private FileOutputStream os;
-	private String eol;
+	private FileWrapper fileWrapper;
 	private int errorCount;
 	
-	public ErrorWriter(ErrorExemptions exemptions) {
+	public ErrorWriter(ErrorExemptions exemptions, FileWrapper fileWrapper) {
 		super(exemptions);
+		this.fileWrapper = fileWrapper;
 	}
 	
-	public ErrorWriter() {
+	public ErrorWriter(FileWrapper fileWrapper) {
+		this.fileWrapper = fileWrapper;
 	}
 
 	@Override
@@ -52,41 +51,46 @@ public class ErrorWriter extends ErrorRecorder {
 		super.visitRoutine(routine);
 		List<ObjectInRoutine<MError>> errors = this.getLastErrors();
 		if (errors.size() > 0) {
-			try {
-				this.os.write((this.eol + this.eol + routine.getKey() + eol).getBytes());
-				LineLocation lastLocation = new LineLocation("", 0);
-				for (ObjectInRoutine<MError> error: errors) {
-					lastLocation = error.getLocation();
-					if (lastLocation == null) {
-						os.write(("  Structural error"  + eol).getBytes());							
-					} else {
-						String offset = (lastLocation.getOffset() == 0 ? "" : '+' + String.valueOf(lastLocation.getOffset()));
-						os.write(("  " + lastLocation.getTag() + offset + eol).getBytes());
-					} 
-					os.write(("    " + error.getObject().getText() + eol).getBytes());
-				}
-			} catch (IOException e) {
-				LOGGER.log(Level.SEVERE, "Unable to write to output file.");							
+			this.fileWrapper.writeEOL();
+			this.fileWrapper.writeEOL();
+			this.fileWrapper.write(routine.getKey());
+			this.fileWrapper.writeEOL();
+
+			LineLocation lastLocation = new LineLocation("", 0);
+			for (ObjectInRoutine<MError> error: errors) {
+				lastLocation = error.getLocation();
+				if (lastLocation == null) {
+					this.fileWrapper.write("  Structural error");							
+					this.fileWrapper.writeEOL();
+				} else {
+					String offset = (lastLocation.getOffset() == 0 ? "" : '+' + String.valueOf(lastLocation.getOffset()));
+					this.fileWrapper.write("  " + lastLocation.getTag() + offset);
+					this.fileWrapper.writeEOL();
+				} 
+				this.fileWrapper.write("    " + error.getObject().getText());
+				this.fileWrapper.writeEOL();
 			}
 			this.errorCount += errors.size();
 		}		
 	}
 	
-	public void write(String outputFileName, RoutineFactory rf) {
+	public void write(RoutineFactory rf) {
 		try {
-			File file = new File(outputFileName);
-			this.os = new FileOutputStream(file);
-			this.eol = MRoutine.getEOL();
+			this.fileWrapper.start();
+			this.fileWrapper.writeEOL();
 			this.errorCount = 0;
 			List<Path> paths = FileSupply.getAllMFiles();
 			for (Path path : paths) {
 				Routine routine = (Routine) rf.getNode(path);
 				routine.accept(this);
 			}
-			this.os.write((this.eol + this.eol + "Number Errors: " + String.valueOf(this.errorCount) + this.eol).getBytes());			
-			this.os.close();
+			this.fileWrapper.writeEOL();
+			this.fileWrapper.writeEOL();
+			this.fileWrapper.write("Number Errors: " + String.valueOf(this.errorCount));			
+			this.fileWrapper.writeEOL();
+			this.fileWrapper.stop();
 		} catch (IOException e) {
-			LOGGER.log(Level.SEVERE, "Unable to open file " + outputFileName + ".");			
+			LOGGER.log(Level.SEVERE, "Unable to open file.");			
 		}
 	}
 	
