@@ -38,6 +38,7 @@ import com.raygroupintl.vista.repository.RoutineFactory;
 import com.raygroupintl.vista.repository.VistaPackages;
 import com.raygroupintl.vista.repository.VistaPackage;
 import com.raygroupintl.vista.repository.visitor.ErrorWriter;
+import com.raygroupintl.vista.repository.visitor.FaninWriter;
 import com.raygroupintl.vista.repository.visitor.FanoutWriter;
 
 public class MRoutineAnalyzer {
@@ -75,8 +76,7 @@ public class MRoutineAnalyzer {
 		}
 	}
 	
-	private VistaPackages getRoutinePackages(CLIParams options, RoutineFactory rf)  throws IOException, SyntaxErrorException {
-		RepositoryInfo ri = RepositoryInfo.getInstance(rf);
+	private VistaPackages getRoutinePackages(CLIParams options, RepositoryInfo ri)  throws IOException, SyntaxErrorException {
 		List<VistaPackage> packages = null; 
 		if (options.packages.size() == 0) {
 			packages = ri.getAllPackages();
@@ -94,7 +94,8 @@ public class MRoutineAnalyzer {
 
 			MRoutineAnalyzer m = new MRoutineAnalyzer();
 			MRARoutineFactory rf = MRARoutineFactory.getInstance(MVersion.CACHE);
-			VistaPackages packageNodes = m.getRoutinePackages(options, rf);
+			RepositoryInfo ri = RepositoryInfo.getInstance(rf);
+			VistaPackages packageNodes = m.getRoutinePackages(options, ri);
 			String outputFile = options.outputFile;
 			FileWrapper fr = new FileWrapper(outputFile);
 			String at = options.analysisType;
@@ -107,6 +108,11 @@ public class MRoutineAnalyzer {
 			if (at.equalsIgnoreCase("fanout")) {
 				FanoutWriter fow = new FanoutWriter(fr);
 				packageNodes.accept(fow);
+				return;
+			}
+			if (at.equalsIgnoreCase("fanin")) {
+				FaninWriter fiw = new FaninWriter(ri, fr);
+				packageNodes.accept(fiw);
 				return;
 			}
 			LOGGER.log(Level.SEVERE, "Unknown analysis type " + at);

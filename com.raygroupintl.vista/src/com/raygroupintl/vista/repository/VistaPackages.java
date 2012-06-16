@@ -35,6 +35,10 @@ public class VistaPackages implements RepositoryNode {
 		}
 	}
 	
+	public List<VistaPackage> getPackages() {
+		return this.packages;
+	}
+	
 	@Override
 	public void accept(RepositoryVisitor visitor) {
 		visitor.visitRoutinePackages(this);
