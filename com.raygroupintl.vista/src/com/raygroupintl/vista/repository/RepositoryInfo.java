@@ -27,15 +27,20 @@ import java.util.Map;
 import java.util.Scanner;
 import java.util.TreeMap;
 
-import com.raygroupintl.m.token.TFRoutine;
+import com.raygroupintl.m.parsetree.RoutineFactory;
 
 public class RepositoryInfo {
 	public static class PackageInRepository extends VistaPackage {
-		public TFRoutine tokenizer;
+		public RoutineFactory rf;
 
-		public PackageInRepository(String packageName, String directoryName, TFRoutine tokenizer) {
+		public PackageInRepository(String packageName, String directoryName, RoutineFactory rf) {
 			super(packageName, directoryName);
-			this.tokenizer = tokenizer;
+			this.rf = rf;
+		}
+		
+		@Override
+		public RoutineFactory getRoutineFactory() {
+			return this.rf;
 		}
 		
 		@Override
@@ -63,10 +68,10 @@ public class RepositoryInfo {
 	private List<PackageInRepository> packages = new ArrayList<PackageInRepository>();
 	private Map<String, PackageInRepository> packagesByName = new HashMap<String, PackageInRepository>();
 	private TreeMap<String, PackageInRepository> packagesByPrefix = new TreeMap<String, PackageInRepository>();
-	private TFRoutine tokenizer;	
+	private RoutineFactory rf;	
 	
-	private RepositoryInfo(TFRoutine tokenizer) {
-		this.tokenizer = tokenizer;
+	private RepositoryInfo(RoutineFactory rf) {
+		this.rf = rf;
 	}
 	
 	private void addPackage(PackageInRepository packageInfo) {
@@ -130,13 +135,13 @@ public class RepositoryInfo {
 			result = pi;
 		}
 		if (result == null) {
-			result = new PackageInRepository("UNCATEGORIZED", "Uncategorized", this.tokenizer);
+			result = new PackageInRepository("UNCATEGORIZED", "Uncategorized", this.rf);
 		}
 		return result;
 	}
 	
-	public static RepositoryInfo getInstance(Scanner scanner, TFRoutine tf) throws IOException {
-		RepositoryInfo r = new RepositoryInfo(tf);
+	public static RepositoryInfo getInstance(Scanner scanner, RoutineFactory rf) throws IOException {
+		RepositoryInfo r = new RepositoryInfo(rf);
 		PackageInRepository packageInfo = null;
 		scanner.nextLine();
 		while (scanner.hasNextLine()) {
@@ -144,7 +149,7 @@ public class RepositoryInfo {
 			String[] pieces = line.split(",");
 			int n = pieces.length;
 			if (pieces[0].length() > 0) {
-				packageInfo = new PackageInRepository(pieces[0], pieces[1], tf);
+				packageInfo = new PackageInRepository(pieces[0], pieces[1], rf);
 				if ((n > 2) && (pieces[2].length() > 0)) {
 					packageInfo.addPrefix(pieces[2]);
 				}
@@ -157,16 +162,16 @@ public class RepositoryInfo {
 		return r;		
 	}
 	
-	public static RepositoryInfo getInstance(String root, TFRoutine tf) throws IOException {
+	public static RepositoryInfo getInstance(String root, RoutineFactory rf) throws IOException {
 		Path path = Paths.get(root, "Packages.csv");
 		Scanner scanner = new Scanner(path);
-		RepositoryInfo r = getInstance(scanner, tf);
+		RepositoryInfo r = getInstance(scanner, rf);
 		scanner.close();
 		return r;
 	}
 
-	public static RepositoryInfo getInstance(TFRoutine tf) throws IOException {
+	public static RepositoryInfo getInstance(RoutineFactory rf) throws IOException {
 		String root = RepositoryInfo.getLocation();
-		return getInstance(root, tf);
+		return getInstance(root, rf);
 	}
 }

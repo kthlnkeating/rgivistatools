@@ -16,13 +16,28 @@
 
 package com.raygroupintl.m.parsetree;
 
-public abstract class RoutinePackage implements Node {
-	@Override
-	public void accept(Visitor visitor) {
-		visitor.visitRoutinePackage(this);
+import java.nio.file.Path;
+import java.util.List;
+
+public abstract class RoutinePackage extends BasicNode {
+	public void acceptSubNodes(Visitor visitor) {
+		RoutineFactory rf = this.getRoutineFactory();
+		for (Path path : this.getPaths()) {
+			Node node = rf.getNode(path);
+			node.accept(visitor);
+		}
 	}
 	
 	public abstract boolean contains(String routineName);
 	
+	public abstract List<Path> getPaths();
+	
+	public abstract RoutineFactory getRoutineFactory();
+	
 	public abstract String getPackageName();
+	
+	@Override
+	public void accept(Visitor visitor) {
+		visitor.visitRoutinePackage(this);
+	}
 }

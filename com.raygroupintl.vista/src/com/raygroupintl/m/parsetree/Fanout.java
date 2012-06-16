@@ -34,6 +34,22 @@ public class Fanout {
 	}
 	
 	@Override
+	public boolean equals(Object rhs) {
+		if ((rhs != null) && (rhs instanceof Fanout)) {	
+			String lhsString = this.toString();
+			String rhsString = rhs.toString();
+			return lhsString.equals(rhsString);
+		}
+		return false;
+	}
+	
+	@Override
+	public int hashCode() {
+		int result = this.toString().hashCode(); 
+		return result;
+	}
+	
+	@Override
 	public String toString() {
 		String lbl = this.getTag();
 		String rou = this.getRoutineName();

@@ -1,5 +1,3 @@
-package com.raygroupintl.vista.repository;
-
 //---------------------------------------------------------------------------
 // Copyright 2012 Ray Group International
 //
@@ -16,13 +14,16 @@ package com.raygroupintl.vista.repository;
 // limitations under the License.
 //---------------------------------------------------------------------------
 
-import java.io.IOException;
+package com.raygroupintl.vista.repository;
+
 import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-public abstract class VistaPackage {   //extends RoutinePackage {
+import com.raygroupintl.m.parsetree.RoutinePackage;
+
+public abstract class VistaPackage extends RoutinePackage {
 	public static class FileInfo {
 		private String number;
 		private String name;
@@ -109,11 +110,16 @@ public abstract class VistaPackage {   //extends RoutinePackage {
 	
 	public abstract Path getPath();
 	
-	public List<Path> getRoutineFilePaths() throws IOException {
-		Path packagePath = this.getPath();
-		FileSupply fs = new FileSupply();
-		fs.addPath(packagePath);
-		List<Path> paths = fs.getFiles();
-		return paths;		
+	@Override
+	public List<Path> getPaths() {
+		try {
+			Path packagePath = this.getPath();
+			FileSupply fs = new FileSupply();
+			fs.addPath(packagePath);
+			List<Path> paths = fs.getFiles();
+			return paths;		
+		} catch (Exception ex) {
+			return Collections.emptyList();
+		}
 	}
 }

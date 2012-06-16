@@ -24,8 +24,11 @@ import java.util.logging.Logger;
 
 import com.raygroupintl.m.parsetree.ErrorNode;
 import com.raygroupintl.m.parsetree.Node;
+import com.raygroupintl.m.parsetree.NodeList;
 import com.raygroupintl.m.parsetree.Routine;
 import com.raygroupintl.m.parsetree.RoutineFactory;
+import com.raygroupintl.m.parsetree.RoutinePackage;
+import com.raygroupintl.m.parsetree.RoutinePackages;
 import com.raygroupintl.m.parsetree.visitor.ErrorWriter;
 import com.raygroupintl.m.parsetree.visitor.FanoutWriter;
 import com.raygroupintl.m.struct.MError;
@@ -40,7 +43,7 @@ import com.raygroupintl.vista.repository.RepositoryInfo;
 public class MRoutineAnalyzer {
 	private final static Logger LOGGER = Logger.getLogger(MRoutineAnalyzer.class.getName());
 
-	private static class MRARoutineFactory implements RoutineFactory {
+	public static class MRARoutineFactory implements RoutineFactory {
 		private TFRoutine tokenFactory;
 		
 		public MRARoutineFactory(TFRoutine tokenFactory) {
@@ -86,18 +89,24 @@ public class MRoutineAnalyzer {
 		ew.write(outputFile, rf);
 	}
 
-	public void writeFanout(CLIParams options, TFRoutine topToken) throws IOException, SyntaxErrorException {
-		RepositoryInfo ri = RepositoryInfo.getInstance(topToken);
+	public void writeFanout(CLIParams options, RoutineFactory rf) throws IOException, SyntaxErrorException {
+		RepositoryInfo ri = RepositoryInfo.getInstance(rf);
 		List<RepositoryInfo.PackageInRepository> packages = null; 
 		if (options.packages.size() == 0) {
 			packages = ri.getAllPackages();
 		} else {
 			packages = ri.getPackages(options.packages);
 		}
-				
+		NodeList<RoutinePackage> nodes = new NodeList<>(packages.size());
+		for (RepositoryInfo.PackageInRepository p : packages) {
+			nodes.add(p);
+		}
+		
 		String outputFile = options.outputFile;
-		FanoutWriter fow = new FanoutWriter();
-		fow.write(outputFile, packages);
+		FanoutWriter fow = new FanoutWriter(outputFile);
+		RoutinePackages packageNodes = new RoutinePackages(nodes);
+		packageNodes.accept(fow);
+		//fow.write(outputFile);
 	}
 	
 	public static void main(String[] args) {
@@ -113,10 +122,8 @@ public class MRoutineAnalyzer {
 				return;
 			}
 			if (at.equalsIgnoreCase("fanout")) {
-				//MRARoutineFactory rf = MRARoutineFactory.getInstance(MVersion.CACHE);
-				MTFSupply supply = MTFSupply.getInstance(MVersion.CACHE);
-				TFRoutine tf = new TFRoutine(supply);
-				m.writeFanout(options, tf);
+				MRARoutineFactory rf = MRARoutineFactory.getInstance(MVersion.CACHE);
+				m.writeFanout(options, rf);
 				return;
 			}
 			LOGGER.log(Level.SEVERE, "Unknown analysis type " + at);

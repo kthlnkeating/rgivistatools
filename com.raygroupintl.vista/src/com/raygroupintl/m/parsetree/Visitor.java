@@ -218,6 +218,10 @@ public class Visitor {
 	}
 
 	protected void visitRoutinePackage(RoutinePackage routinePackage) {
+		routinePackage.acceptSubNodes(this);
+	}
 
+	protected void visitRoutinePackages(RoutinePackages routinePackages) {
+		routinePackages.acceptSubNodes(this);
 	}
 }

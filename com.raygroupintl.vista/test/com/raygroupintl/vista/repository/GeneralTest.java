@@ -8,13 +8,11 @@ import org.junit.Assert;
 
 import org.junit.Test;
 
-import com.raygroupintl.m.token.MTFSupply;
 import com.raygroupintl.m.token.MVersion;
-import com.raygroupintl.m.token.TFRoutine;
-import com.raygroupintl.parser.annotation.ParseException;
 import com.raygroupintl.vista.repository.FileSupply;
 import com.raygroupintl.vista.repository.VistaPackage;
 import com.raygroupintl.vista.repository.RepositoryInfo;
+import com.raygroupintl.vista.tools.MRoutineAnalyzer;
 
 public class GeneralTest {
 	@Test
@@ -23,9 +21,8 @@ public class GeneralTest {
 		Assert.assertTrue("No location for repository root is specified.", (root != null) && (root.length() > 0));
 
 		try {
-			MTFSupply supply = MTFSupply.getInstance(MVersion.CACHE);
-			TFRoutine tf = new TFRoutine(supply);
-			RepositoryInfo ri = RepositoryInfo.getInstance(root, tf);
+			MRoutineAnalyzer.MRARoutineFactory rf = MRoutineAnalyzer.MRARoutineFactory.getInstance(MVersion.CACHE);
+			RepositoryInfo ri = RepositoryInfo.getInstance(root, rf);
 			VistaPackage pi = ri.getPackage("PROBLEM LIST");
 			Assert.assertNotNull(pi);
 			Path packagePath = ri.getPackagePath("PROBLEM LIST");			
@@ -38,7 +35,7 @@ public class GeneralTest {
 				VistaPackage pib = ri.getPackageFromRoutineName(fileName);
 				Assert.assertEquals(pi, pib);
 			}			
-		} catch (IOException | ParseException e) {
+		} catch (IOException e) {
 			Assert.fail("IO Exception.  Repository info file likely inexistent.");
 		}
 	}

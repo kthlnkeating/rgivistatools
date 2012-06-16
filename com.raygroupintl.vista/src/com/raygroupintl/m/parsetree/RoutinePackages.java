@@ -14,25 +14,25 @@
 // limitations under the License.
 //---------------------------------------------------------------------------
 
-package com.raygroupintl.m.parsetree.filter;
+package com.raygroupintl.m.parsetree;
 
-import com.raygroupintl.m.parsetree.Fanout;
-import com.raygroupintl.m.parsetree.RoutinePackage;
-import com.raygroupintl.struct.Filter;
-
-public class PackageFanoutFilter  implements Filter<Fanout> {
-	private RoutinePackage routinePackage;
+public class RoutinePackages extends BasicNode {
+	private Nodes<RoutinePackage> packages;
 	
-	public PackageFanoutFilter(RoutinePackage routinePackage) {
-		this.routinePackage = routinePackage;
+	public RoutinePackages(Nodes<RoutinePackage> packages) {
+		this.packages = packages;
+	}
+	
+	public void acceptSubNodes(Visitor visitor) {
+		if (this.packages != null) {
+			for (RoutinePackage p : this.packages.getNodes()) {
+				p.accept(visitor);
+			}
+		}
 	}
 	
 	@Override
-	public boolean isValid(Fanout input) {
-		if (input != null) {
-			String routineName = input.getRoutineName();
-			return ! this.routinePackage.contains(routineName);
-		}
-		return false;
-	}	
+	public void accept(Visitor visitor) {
+		visitor.visitRoutinePackages(this);
+	}
 }
