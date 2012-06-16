@@ -16,68 +16,74 @@
 
 package com.raygroupintl.vista.tools;
 
-import java.io.File;
-import java.io.FileOutputStream;
 import java.io.IOException;
 import java.nio.file.Path;
 import java.util.List;
-import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import com.raygroupintl.m.parsetree.visitor.ErrorRecorder;
+import com.raygroupintl.m.parsetree.ErrorNode;
+import com.raygroupintl.m.parsetree.Node;
+import com.raygroupintl.m.parsetree.Routine;
+import com.raygroupintl.m.parsetree.RoutineFactory;
+import com.raygroupintl.m.parsetree.visitor.ErrorWriter;
 import com.raygroupintl.m.parsetree.visitor.FanoutWriter;
-import com.raygroupintl.m.struct.LineLocation;
 import com.raygroupintl.m.struct.MError;
-import com.raygroupintl.m.struct.ObjectInRoutine;
 import com.raygroupintl.m.token.MTFSupply;
 import com.raygroupintl.m.token.MVersion;
 import com.raygroupintl.m.token.TFRoutine;
 import com.raygroupintl.m.token.MRoutine;
 import com.raygroupintl.parser.SyntaxErrorException;
-import com.raygroupintl.vista.repository.FileSupply;
+import com.raygroupintl.parser.annotation.ParseException;
 import com.raygroupintl.vista.repository.RepositoryInfo;
 
 public class MRoutineAnalyzer {
 	private final static Logger LOGGER = Logger.getLogger(MRoutineAnalyzer.class.getName());
 
-	public void writeErrors(final TFRoutine tf, final ErrorExemptions exemptions, String outputPath) throws IOException, SyntaxErrorException {
-		int errorCount = 0;
-		final File file = new File(outputPath);
-		final FileOutputStream os = new FileOutputStream(file);
-		final String eol = MRoutine.getEOL();
-		List<Path> paths = FileSupply.getAllMFiles();
-		for (Path path : paths) {
-			MRoutine r = tf.tokenize(path);			
-			final String name = r.getName();
-			if (! exemptions.containsRoutine(name)) {
-				Set<LineLocation> locations = exemptions.getLines(name);
-				ErrorRecorder ev = new ErrorRecorder(locations);
-				List<ObjectInRoutine<MError>> errors = ev.visitErrors(r.getNode());
-				if (errors.size() > 0) {
-					os.write((eol + eol + r.getName() + eol).getBytes());
-					errorCount += errors.size();
-					LineLocation lastLocation = new LineLocation("", 0);
-					for (ObjectInRoutine<MError> error: errors) {
-						if (! error.getLocation().equals(lastLocation)) {
-							lastLocation = error.getLocation();
-							String offset = (lastLocation.getOffset() == 0 ? "" : '+' + String.valueOf(lastLocation.getOffset()));
-							os.write(("  " + lastLocation.getTag() + offset + eol).getBytes());
-						}
-						os.write(("    " + error.getObject().getText() + eol).getBytes());
-					}
-					errorCount += errors.size();
-				}
-			}			
+	private static class MRARoutineFactory implements RoutineFactory {
+		private TFRoutine tokenFactory;
+		
+		public MRARoutineFactory(TFRoutine tokenFactory) {
+			this.tokenFactory = tokenFactory;
 		}
-		os.write((eol + eol + "Number Errors: " + String.valueOf(errorCount) + eol).getBytes());
-		os.close();
+		
+		@Override
+		public String getName(Path path) {
+			String fileName = path.getFileName().toString();
+			String name = fileName.split(".m")[0];
+			return name;
+		}
+		
+		@Override
+		public Node getNode(Path path) {
+			try {
+				MRoutine mr = this.tokenFactory.tokenize(path);
+				Routine node = mr.getNode();
+				return node;
+			} catch (SyntaxErrorException e) {
+				return new ErrorNode(MError.ERR_BLOCK_STRUCTURE);
+			} catch (IOException e) {
+				return new ErrorNode(MError.ERR_ROUTINE_PATH);
+			}
+		}	
+		
+		public static MRARoutineFactory getInstance(MVersion version) {
+			try {
+				MTFSupply supply = MTFSupply.getInstance(version);
+				TFRoutine tf = new TFRoutine(supply);
+				return new MRARoutineFactory(tf);
+			} catch (ParseException e) {
+				LOGGER.log(Level.SEVERE, "Unable to load M parser definitions.");
+				return null;
+			}
+		}
 	}
 	
-	public void writeErrors(CLIParams options, TFRoutine topToken) throws IOException, SyntaxErrorException {		
+	public void writeErrors(CLIParams options, RoutineFactory rf) throws IOException, SyntaxErrorException {		
 		String outputFile = options.outputFile; 
 		ErrorExemptions exemptions = ErrorExemptions.getVistAFOIAInstance();
-		this.writeErrors(topToken, exemptions, outputFile);				
+		ErrorWriter ew = new ErrorWriter(exemptions);
+		ew.write(outputFile, rf);
 	}
 
 	public void writeFanout(CLIParams options, TFRoutine topToken) throws IOException, SyntaxErrorException {
@@ -100,14 +106,16 @@ public class MRoutineAnalyzer {
 			if (options == null) return;
 
 			MRoutineAnalyzer m = new MRoutineAnalyzer();
-			MTFSupply supply = MTFSupply.getInstance(MVersion.CACHE);
-			TFRoutine tf = new TFRoutine(supply);
 			String at = options.analysisType;
 			if (at.equalsIgnoreCase("error")) {
-				m.writeErrors(options, tf);
+				MRARoutineFactory rf = MRARoutineFactory.getInstance(MVersion.CACHE);
+				m.writeErrors(options, rf);
 				return;
 			}
 			if (at.equalsIgnoreCase("fanout")) {
+				//MRARoutineFactory rf = MRARoutineFactory.getInstance(MVersion.CACHE);
+				MTFSupply supply = MTFSupply.getInstance(MVersion.CACHE);
+				TFRoutine tf = new TFRoutine(supply);
 				m.writeFanout(options, tf);
 				return;
 			}

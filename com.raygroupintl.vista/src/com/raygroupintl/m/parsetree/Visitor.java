@@ -214,8 +214,7 @@ public class Visitor {
 	}
 		
 	protected void visitRoutine(Routine routine) {
-		EntryList entryList = routine.getEntryList();
-		this.visitNodes(entryList);
+		routine.acceptSubNodes(this);
 	}
 
 	protected void visitRoutinePackage(RoutinePackage routinePackage) {

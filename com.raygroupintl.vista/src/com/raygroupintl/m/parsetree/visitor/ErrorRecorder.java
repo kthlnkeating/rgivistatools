@@ -27,23 +27,15 @@ import com.raygroupintl.m.parsetree.Routine;
 import com.raygroupintl.m.struct.LineLocation;
 import com.raygroupintl.m.struct.MError;
 import com.raygroupintl.m.struct.ObjectInRoutine;
+import com.raygroupintl.vista.tools.ErrorExemptions;
 
 public class ErrorRecorder extends LocationMarker {
 	private List<ObjectInRoutine<MError>> result;
-	private Set<LineLocation> exemptions;
+	private ErrorExemptions exemptions;
+	private Set<LineLocation> lineExemptions;
 	private boolean onlyFatal;
 	
-	private void addError(MError error) {
-		if ((! this.onlyFatal) || (error.isFatal())) {
-			LineLocation location = this.getLastLocation();
-			if ((this.exemptions == null) || (! this.exemptions.contains(location))) {
-				ObjectInRoutine<MError> element = new ObjectInRoutine<MError>(error, location);  
-				this.result.add(element);
-			}
-		}
-	}
-	
-	public ErrorRecorder(Set<LineLocation> exemptions) {
+	public ErrorRecorder(ErrorExemptions exemptions) {
 		this.exemptions = exemptions;
 	}
 	
@@ -54,6 +46,16 @@ public class ErrorRecorder extends LocationMarker {
 		this.onlyFatal = b;
 	}
 
+	private void addError(MError error) {
+		if ((! this.onlyFatal) || (error.isFatal())) {
+			LineLocation location = this.getLastLocation();
+			if ((this.lineExemptions == null) || (! this.lineExemptions.contains(location))) {
+				ObjectInRoutine<MError> element = new ObjectInRoutine<MError>(error, location);  
+				this.result.add(element);
+			}
+		}
+	}
+	
 	@Override
 	protected void visitErrorNode(ErrorNode errorNode) {		
 		MError error = errorNode.getError();
@@ -69,8 +71,23 @@ public class ErrorRecorder extends LocationMarker {
 		super.visitDoBlock(doBlock);
 	}
 	
+	@Override
+	protected void visitRoutine(Routine routine) {
+		this.result = new ArrayList<ObjectInRoutine<MError>>();
+		String name = routine.getKey();
+		if (this.exemptions == null) {
+			super.visitRoutine(routine);			
+		} else if (! this.exemptions.containsRoutine(name)) {			
+			this.lineExemptions = this.exemptions.getLines(name);
+			super.visitRoutine(routine);
+		} 
+	}
+	
+	public List<ObjectInRoutine<MError>> getLastErrors() {
+		return this.result;
+	}
+	
 	public List<ObjectInRoutine<MError>> visitErrors(Routine routine) {
-		this.result = new ArrayList<ObjectInRoutine<MError>>();		
 		routine.accept(this);
 		return this.result;
 	}

@@ -5,14 +5,12 @@ import static org.junit.Assert.fail;
 import java.io.IOException;
 import java.nio.file.Path;
 import java.util.List;
-import java.util.Set;
 
 import org.junit.Test;
 
 import com.raygroupintl.m.parsetree.NodeList;
 import com.raygroupintl.m.parsetree.Routine;
 import com.raygroupintl.m.parsetree.visitor.ErrorRecorder;
-import com.raygroupintl.m.struct.LineLocation;
 import com.raygroupintl.m.struct.MError;
 import com.raygroupintl.m.struct.ObjectInRoutine;
 import com.raygroupintl.m.struct.MRoutineContent;
@@ -48,15 +46,11 @@ public class VistAFOIATest {
 					String msg = path.getFileName().toString() + " Line " +  String.valueOf(i);
 					Assert.assertEquals("Different: " + msg, line, readLine);
 				}
-				String name = r.getName();
-				if (! exemptions.containsRoutine(name)) {
-					Set<LineLocation> locations = exemptions.getLines(name);
-					ErrorRecorder ev = new ErrorRecorder(locations);
-					ev.setOnlyFatal(true);
-					Routine routine = r.getNode();
-					List<ObjectInRoutine<MError>> errors = ev.visitErrors(routine);
-					Assert.assertEquals(errors.size(), 0);						
-				}	
+				ErrorRecorder ev = new ErrorRecorder(exemptions);
+				ev.setOnlyFatal(true);
+				Routine routine = r.getNode();
+				List<ObjectInRoutine<MError>> errors = ev.visitErrors(routine);
+				Assert.assertEquals(errors.size(), 0);						
 			}
 			System.out.print("\nAllocated: ");System.out.print(NodeList.allocated);
 			System.out.print("\nAdded    : ");System.out.print(NodeList.added);

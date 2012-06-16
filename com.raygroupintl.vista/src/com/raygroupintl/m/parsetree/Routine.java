@@ -42,14 +42,20 @@ public class Routine extends BasicNode {
 		return this.errorNode;
 	}
 	
-	@Override
-	public void accept(Visitor visitor) {
+	public void acceptSubNodes(Visitor visitor) {
 		if (this.errorNode != null) {
-			visitor.visitErrorNode(this.errorNode);
+			this.errorNode.accept(visitor);
 			if (this.errorNode.getError().isFatal()) {
 				return;
 			}
 		}
+		if (this.entryList != null) {
+			this.entryList.accept(visitor);
+		}
+	}
+	
+	@Override
+	public void accept(Visitor visitor) {
 		visitor.visitRoutine(this);
 	}
 	
