@@ -83,15 +83,7 @@ public class MRoutineAnalyzer {
 		}
 	}
 	
-	public void writeErrors(CLIParams options, RoutineFactory rf) throws IOException, SyntaxErrorException {		
-		String outputFile = options.outputFile; 
-		FileWrapper fr = new FileWrapper(outputFile);
-		ErrorExemptions exemptions = ErrorExemptions.getVistAFOIAInstance();
-		ErrorWriter ew = new ErrorWriter(exemptions, fr);
-		ew.write(rf);
-	}
-
-	public void writeFanout(CLIParams options, RoutineFactory rf) throws IOException, SyntaxErrorException {
+	private RoutinePackages getRoutinePackages(CLIParams options, RoutineFactory rf)  throws IOException, SyntaxErrorException {
 		RepositoryInfo ri = RepositoryInfo.getInstance(rf);
 		List<RepositoryInfo.PackageInRepository> packages = null; 
 		if (options.packages.size() == 0) {
@@ -103,12 +95,8 @@ public class MRoutineAnalyzer {
 		for (RepositoryInfo.PackageInRepository p : packages) {
 			nodes.add(p);
 		}
-		
-		String outputFile = options.outputFile;
-		FileWrapper fr = new FileWrapper(outputFile);
-		FanoutWriter fow = new FanoutWriter(fr);
 		RoutinePackages packageNodes = new RoutinePackages(nodes);
-		packageNodes.accept(fow);
+		return packageNodes;		
 	}
 	
 	public static void main(String[] args) {
@@ -117,15 +105,20 @@ public class MRoutineAnalyzer {
 			if (options == null) return;
 
 			MRoutineAnalyzer m = new MRoutineAnalyzer();
+			MRARoutineFactory rf = MRARoutineFactory.getInstance(MVersion.CACHE);
+			RoutinePackages packageNodes = m.getRoutinePackages(options, rf);
+			String outputFile = options.outputFile;
+			FileWrapper fr = new FileWrapper(outputFile);
 			String at = options.analysisType;
 			if (at.equalsIgnoreCase("error")) {
-				MRARoutineFactory rf = MRARoutineFactory.getInstance(MVersion.CACHE);
-				m.writeErrors(options, rf);
+				ErrorExemptions exemptions = ErrorExemptions.getVistAFOIAInstance();
+				ErrorWriter ew = new ErrorWriter(exemptions, fr);
+				packageNodes.accept(ew);
 				return;
 			}
 			if (at.equalsIgnoreCase("fanout")) {
-				MRARoutineFactory rf = MRARoutineFactory.getInstance(MVersion.CACHE);
-				m.writeFanout(options, rf);
+				FanoutWriter fow = new FanoutWriter(fr);
+				packageNodes.accept(fow);
 				return;
 			}
 			LOGGER.log(Level.SEVERE, "Unknown analysis type " + at);

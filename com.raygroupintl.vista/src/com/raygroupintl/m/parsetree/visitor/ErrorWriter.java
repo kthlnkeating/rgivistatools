@@ -16,26 +16,21 @@
 
 package com.raygroupintl.m.parsetree.visitor;
 
-import java.io.IOException;
-import java.nio.file.Path;
 import java.util.List;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 import com.raygroupintl.m.parsetree.FileWrapper;
 import com.raygroupintl.m.parsetree.Routine;
-import com.raygroupintl.m.parsetree.RoutineFactory;
+import com.raygroupintl.m.parsetree.RoutinePackage;
+import com.raygroupintl.m.parsetree.RoutinePackages;
 import com.raygroupintl.m.struct.LineLocation;
 import com.raygroupintl.m.struct.MError;
 import com.raygroupintl.m.struct.ObjectInRoutine;
-import com.raygroupintl.vista.repository.FileSupply;
 import com.raygroupintl.vista.tools.ErrorExemptions;
 
 public class ErrorWriter extends ErrorRecorder {
-	private final static Logger LOGGER = Logger.getLogger(ErrorWriter.class.getName());
-	
 	private FileWrapper fileWrapper;
 	private int errorCount;
+	private int packageCount;
 	
 	public ErrorWriter(ErrorExemptions exemptions, FileWrapper fileWrapper) {
 		super(exemptions);
@@ -44,6 +39,22 @@ public class ErrorWriter extends ErrorRecorder {
 	
 	public ErrorWriter(FileWrapper fileWrapper) {
 		this.fileWrapper = fileWrapper;
+	}
+
+	protected void visitRoutinePackage(RoutinePackage routinePackage) {
+		++this.packageCount;
+		
+		this.fileWrapper.write("--------------------------------------------------------------");
+		this.fileWrapper.writeEOL();
+		this.fileWrapper.writeEOL();
+		this.fileWrapper.write(String.valueOf(this.packageCount) + ". " + routinePackage.getPackageName());
+		this.fileWrapper.writeEOL();
+
+		super.visitRoutinePackage(routinePackage);
+		
+		this.fileWrapper.write("--------------------------------------------------------------");
+		this.fileWrapper.writeEOL();
+		this.fileWrapper.writeEOL();
 	}
 
 	@Override
@@ -74,24 +85,14 @@ public class ErrorWriter extends ErrorRecorder {
 		}		
 	}
 	
-	public void write(RoutineFactory rf) {
-		try {
-			this.fileWrapper.start();
-			this.fileWrapper.writeEOL();
-			this.errorCount = 0;
-			List<Path> paths = FileSupply.getAllMFiles();
-			for (Path path : paths) {
-				Routine routine = (Routine) rf.getNode(path);
-				routine.accept(this);
-			}
+	protected void visitRoutinePackages(RoutinePackages rps) {
+		if (this.fileWrapper.start()) {
+			rps.acceptSubNodes(this);
 			this.fileWrapper.writeEOL();
 			this.fileWrapper.writeEOL();
 			this.fileWrapper.write("Number Errors: " + String.valueOf(this.errorCount));			
 			this.fileWrapper.writeEOL();
 			this.fileWrapper.stop();
-		} catch (IOException e) {
-			LOGGER.log(Level.SEVERE, "Unable to open file.");			
 		}
 	}
-	
 }
