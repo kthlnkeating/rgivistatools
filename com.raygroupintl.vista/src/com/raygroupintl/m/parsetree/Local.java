@@ -31,4 +31,43 @@ public class Local extends NodeWithSubscripts {
 	public void accept(Visitor visitor) {
 		visitor.visitLocal(this);
 	}
+
+	@Override
+	public void acceptPreAssignment(Visitor visitor) {
+		this.acceptSubNodes(visitor);
+	}
+
+	@Override
+	public void acceptPostAssignment(Visitor visitor) {
+		visitor.assignLocal(this);
+	}
+	
+	@Override
+	public void acceptExclusiveNew(Visitor visitor) {
+	}
+	
+	@Override
+	public void acceptNew(Visitor visitor) {
+		visitor.newLocal(this);
+	}
+	
+	@Override
+	public void acceptExclusiveKill(Visitor visitor) {
+	}
+	
+	@Override
+	public void acceptKill(Visitor visitor) {
+		this.acceptSubNodes(visitor);
+		visitor.killLocal(this);
+	}
+
+	@Override
+	public void acceptPreMerge(Visitor visitor) {
+		this.acceptSubNodes(visitor);
+	}
+
+	@Override
+	public void acceptPostMerge(Visitor visitor) {
+		visitor.assignLocal(this);
+	}
 }

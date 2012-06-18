@@ -19,8 +19,18 @@ package com.raygroupintl.m.parsetree;
 public abstract class Nodes<T extends Node> extends BasicNode {
 	public abstract Iterable<T> getNodes();
 
+	private void acceptElements(Visitor visitor) {
+		for (Node node : this.getNodes()) {
+			if (node != null) node.accept(visitor);
+		}		
+	}
+ 	
+	public void acceptSubNodes(Visitor visitor) {
+		this.acceptElements(visitor);
+	}
+	
 	@Override
 	public void accept(Visitor visitor) {
-		visitor.visitNodes(this);
+		this.acceptElements(visitor);
 	}
 }

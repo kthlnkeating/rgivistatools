@@ -23,12 +23,6 @@ public class Visitor {
 	protected void visitIntegerLiteral(IntegerLiteral literal) {		
 	}
 		
-	protected <T extends Node> void visitNodes(Nodes<T> nodes) {
-		for (Node node : nodes.getNodes()) {
-			if (node != null) node.accept(this);
-		}
-	}
-	
 	private void visitAdditionalNodeHolder(AdditionalNodeHolder nodeHolder) {
 		Node addlNode = nodeHolder.getAdditionalNode();
 		if (addlNode != null) {
@@ -36,9 +30,19 @@ public class Visitor {
 		}
 	}
 	
+	protected void assignLocal(Local local) {		
+	}
+	
+	protected void killLocal(Local local) {		
+	}
+	
+	protected void newLocal(Local local) {		
+	}
+	
 	protected void visitLocal(Local local) {
 		local.acceptSubNodes(this);
 	}
+	
 	
 	protected void visitGlobal(Global global) {
 		global.acceptSubNodes(this);
@@ -60,7 +64,7 @@ public class Visitor {
 	}
 	
 	protected void visitActualList(ActualList actualList) {
-		this.visitNodes(actualList);
+		actualList.acceptSubNodes(this);
 	}
 	
 	protected void visitIndirection(Indirection indirection) {
@@ -210,23 +214,12 @@ public class Visitor {
 		line.acceptSubNodes(this);
 	}
 	
-	protected void visitBlock(EntryList block) {
-		this.visitNodes(block);		
-	}
-	
 	protected void visitDoBlock(DoBlock doBlock) {
-		Node postCondition = doBlock.getPostCondition();
-		if (postCondition != null) {
-			postCondition.accept(this);
-		}
-		EntryList entryList = doBlock.getEntryList();
-		if (entryList != null) {			
-			this.visitNodes(entryList);
-		}
+		doBlock.acceptSubNodes(this);
 	}
 	
-	protected void visitEntryTag(Entry entry) {
-		this.visitNodes(entry);
+	protected void visitEntry(Entry entry) {
+		entry.acceptSubNodes(this);
 	}
 		
 	protected void visitRoutine(Routine routine) {

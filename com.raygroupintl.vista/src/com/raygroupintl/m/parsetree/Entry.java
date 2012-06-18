@@ -46,6 +46,6 @@ public class Entry extends NodeList<Node> {
 
 	@Override
 	public void accept(Visitor visitor) {
-		visitor.visitEntryTag(this);
+		visitor.visitEntry(this);
 	}
 }
