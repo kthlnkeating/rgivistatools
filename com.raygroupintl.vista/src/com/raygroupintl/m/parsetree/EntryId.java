@@ -16,11 +16,11 @@
 
 package com.raygroupintl.m.parsetree;
 
-public class Fanout {
+public class EntryId {
 	private String routineName;
 	private String label;
 	
-	public Fanout(String routineName, String label) {
+	public EntryId(String routineName, String label) {
 		this.routineName = routineName;
 		this.label = label;
 	}
@@ -35,7 +35,7 @@ public class Fanout {
 	
 	@Override
 	public boolean equals(Object rhs) {
-		if ((rhs != null) && (rhs instanceof Fanout)) {	
+		if ((rhs != null) && (rhs instanceof EntryId)) {	
 			String lhsString = this.toString();
 			String rhsString = rhs.toString();
 			return lhsString.equals(rhsString);

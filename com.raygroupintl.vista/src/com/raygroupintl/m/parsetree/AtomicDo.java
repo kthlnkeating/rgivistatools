@@ -17,10 +17,17 @@
 package com.raygroupintl.m.parsetree;
 
 public class AtomicDo extends AtomicCommand {
-	public AtomicDo(Node additionalNodes) {
+	private boolean postConditional;
+	
+	public AtomicDo(Node additionalNodes, boolean postConditional) {
 		super(additionalNodes);
+		this.postConditional = postConditional;
 	}
-		
+
+	public boolean getPostConditional() {
+		return this.postConditional;
+	}
+	
 	@Override
 	public void accept(Visitor visitor) {
 		visitor.visitAtomicDo(this);

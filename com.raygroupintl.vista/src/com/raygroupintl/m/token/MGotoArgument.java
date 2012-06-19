@@ -27,8 +27,10 @@ public class MGotoArgument extends MSequence {
 	
 	@Override
 	public Node getNode() {
+		Token lastToken = this.get(this.size()-1);
+		boolean postConditional = (lastToken != null) && (lastToken instanceof BasicTokens.MPostCondition);
 		Node additionalNodes = super.getNode();
-		AtomicGoto result = new AtomicGoto(additionalNodes);
+		AtomicGoto result = new AtomicGoto(additionalNodes, postConditional);
 		return result;
 	}
 }

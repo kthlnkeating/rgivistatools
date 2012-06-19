@@ -30,7 +30,7 @@ public class Routine extends BasicNode {
 		this.errorNode = errorNode;
 	}
 	
-	public String getKey() {
+	public String getName() {
 		return this.name;
 	}
 	

@@ -16,12 +16,12 @@
 
 package com.raygroupintl.m.parsetree.filter;
 
-import com.raygroupintl.m.parsetree.Fanout;
+import com.raygroupintl.m.parsetree.EntryId;
 import com.raygroupintl.struct.Filter;
 
-public class LocalFanoutFilter implements Filter<Fanout> {
+public class LocalFanoutFilter implements Filter<EntryId> {
 	@Override
-	public boolean isValid(Fanout input) {
+	public boolean isValid(EntryId input) {
 		if (input != null) {
 			return input.getRoutineName() != null;
 		}

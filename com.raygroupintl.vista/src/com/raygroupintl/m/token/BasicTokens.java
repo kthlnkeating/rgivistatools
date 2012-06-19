@@ -22,6 +22,7 @@ import com.raygroupintl.m.parsetree.FanoutRoutine;
 import com.raygroupintl.m.parsetree.IndirectFanoutLabel;
 import com.raygroupintl.m.parsetree.IndirectFanoutRoutine;
 import com.raygroupintl.m.parsetree.Node;
+import com.raygroupintl.m.parsetree.PostConditional;
 import com.raygroupintl.parser.StringPiece;
 import com.raygroupintl.parser.Token;
 
@@ -104,6 +105,18 @@ public class BasicTokens {
 		public Node getNode() {
 			Node addlNode = super.getNode();
 			return new EnvironmentFanoutRoutine(addlNode);
+		}		
+	}
+
+	public static class MPostCondition extends MSequence {
+		public MPostCondition(Token token) {
+			super(token);
+		}
+		
+		@Override
+		public Node getNode() {
+			Node addlNode = ((MToken) this.get(1)).getNode();
+			return new PostConditional(addlNode);
 		}		
 	}
 }

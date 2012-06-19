@@ -39,7 +39,7 @@ class LocationMarker extends Visitor {
 
 	@Override
 	protected void visitRoutine(Routine routine) {
-		this.lastRoutineName = routine.getKey();
+		this.lastRoutineName = routine.getName();
 		this.lastLocation = null;
 		super.visitRoutine(routine);
 	}

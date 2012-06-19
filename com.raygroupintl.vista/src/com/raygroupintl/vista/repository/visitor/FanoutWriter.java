@@ -21,7 +21,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-import com.raygroupintl.m.parsetree.Fanout;
+import com.raygroupintl.m.parsetree.EntryId;
 import com.raygroupintl.m.parsetree.FileWrapper;
 import com.raygroupintl.m.parsetree.Routine;
 import com.raygroupintl.m.parsetree.visitor.FanoutRecorder;
@@ -33,7 +33,7 @@ import com.raygroupintl.vista.repository.VistaPackage;
 public class FanoutWriter extends RepositoryVisitor {
 	private FileWrapper fileWrapper;
 	private int packageCount;
-	private Set<Fanout> packageExisting;
+	private Set<EntryId> packageExisting;
 	private FanoutRecorder recorder;
 	
 	public FanoutWriter(FileWrapper fileWrapper) {
@@ -43,7 +43,7 @@ public class FanoutWriter extends RepositoryVisitor {
 	@Override
 	protected void visitVistaPackage(VistaPackage routinePackage) {
 		++this.packageCount;
-		this.packageExisting = new HashSet<Fanout>();
+		this.packageExisting = new HashSet<EntryId>();
 		this.recorder = new FanoutRecorder(routinePackage.getPackageFanoutFilter());
 		
 		this.fileWrapper.write("--------------------------------------------------------------");
@@ -61,20 +61,20 @@ public class FanoutWriter extends RepositoryVisitor {
 
 	public void visitRoutine(Routine routine) {
 		routine.accept(this.recorder);
-		Map<LineLocation, List<Fanout>> fanouts = this.recorder.getRoutineFanouts();
+		Map<LineLocation, List<EntryId>> fanouts = this.recorder.getRoutineFanouts();
 		if (fanouts != null) {
-			Set<Fanout> result = new HashSet<Fanout>();
-			for (List<Fanout> fs : fanouts.values()) {
-				for (Fanout f : fs) {			
+			Set<EntryId> result = new HashSet<EntryId>();
+			for (List<EntryId> fs : fanouts.values()) {
+				for (EntryId f : fs) {			
 					if (! this.packageExisting.contains(f)) {
 						result.add(f);
 						this.packageExisting.add(f);
 					}
 				}
 			}
-			for (Fanout fout : result) {
+			for (EntryId fout : result) {
 				String info = fout.toString();
-				info += " (" + routine.getKey() + ")";
+				info += " (" + routine.getName() + ")";
 				this.fileWrapper.write(info);
 				this.fileWrapper.writeEOL();
 			}

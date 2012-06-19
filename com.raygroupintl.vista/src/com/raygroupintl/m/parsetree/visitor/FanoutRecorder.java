@@ -23,11 +23,13 @@ import java.util.Map;
 
 import com.raygroupintl.m.parsetree.AtomicDo;
 import com.raygroupintl.m.parsetree.AtomicGoto;
+import com.raygroupintl.m.parsetree.Do;
 import com.raygroupintl.m.parsetree.EnvironmentFanoutRoutine;
 import com.raygroupintl.m.parsetree.Extrinsic;
-import com.raygroupintl.m.parsetree.Fanout;
+import com.raygroupintl.m.parsetree.EntryId;
 import com.raygroupintl.m.parsetree.FanoutLabel;
 import com.raygroupintl.m.parsetree.FanoutRoutine;
+import com.raygroupintl.m.parsetree.Goto;
 import com.raygroupintl.m.parsetree.IndirectFanoutLabel;
 import com.raygroupintl.m.parsetree.IndirectFanoutRoutine;
 import com.raygroupintl.m.parsetree.Routine;
@@ -50,7 +52,7 @@ public class FanoutRecorder extends LocationMarker {
 			this.lastFanoutRoutine = null;		
 		}
 		
-		private Fanout getFanout() {
+		private EntryId getFanout() {
 			if ((this.lastFanoutLabel == null) && (this.lastFanoutRoutine == null)) {
 				return null;
 			}
@@ -60,18 +62,19 @@ public class FanoutRecorder extends LocationMarker {
 			String label = (this.lastFanoutLabel == null) ? null : this.lastFanoutLabel.getValue();
 			String routine = (this.lastFanoutRoutine == null) ? null : this.lastFanoutRoutine.getName();
 		
-			return new Fanout(routine, label);
+			return new EntryId(routine, label);
 		}
 	}
 		
-	private Map<LineLocation, List<Fanout>> fanouts;
+	private Map<LineLocation, List<EntryId>> fanouts;
 	private LastInfo lastInfo = new LastInfo();
-	private Filter<Fanout> filter;
+	private Filter<EntryId> filter;
+	private boolean conditional;
 
 	public FanoutRecorder() {
 	}
 	
-	public FanoutRecorder(Filter<Fanout> filter) {
+	public FanoutRecorder(Filter<EntryId> filter) {
 		this.filter = filter;
 	}
 	
@@ -100,16 +103,20 @@ public class FanoutRecorder extends LocationMarker {
 		super.visitFanoutRoutine(routine);
 	}
 	
-	private void updateFanout() {
-		Fanout fanout = this.lastInfo.getFanout();
+	protected EntryId getLastFanout() {
+		return this.lastInfo.getFanout();
+	}
+	
+	protected void updateFanout(boolean isGoto, boolean conditional) {
+		EntryId fanout = this.lastInfo.getFanout();
 		if (fanout != null) {
 			if (this.filter != null) {
 				if (! this.filter.isValid(fanout)) return;
 			}			
 			LineLocation location = this.getLastLocation();
-			List<Fanout> fanoutsOnLocation = this.fanouts.get(location);
+			List<EntryId> fanoutsOnLocation = this.fanouts.get(location);
 			if (fanoutsOnLocation == null) {
-				fanoutsOnLocation = new ArrayList<Fanout>();
+				fanoutsOnLocation = new ArrayList<EntryId>();
 				this.fanouts.put(location, fanoutsOnLocation);
 			}
 			fanoutsOnLocation.add(fanout);
@@ -119,37 +126,53 @@ public class FanoutRecorder extends LocationMarker {
 	protected void visitAtomicDo(AtomicDo atomicDo) {
 		this.lastInfo.reset();
 		super.visitAtomicDo(atomicDo);
-		this.updateFanout();
+		boolean b = this.conditional || atomicDo.getPostConditional();
+		this.updateFanout(false, b);
 	}
 	
 	protected void visitAtomicGoto(AtomicGoto atomicGoto) {
 		this.lastInfo.reset();
 		super.visitAtomicGoto(atomicGoto);
-		this.updateFanout();
+		boolean b = this.conditional || atomicGoto.getPostConditional();
+		this.updateFanout(true, b);
 	}
 	
 	protected void visitExtrinsic(Extrinsic extrinsic) {
 		LastInfo current = this.lastInfo;
 		this.lastInfo = new LastInfo();
 		super.visitExtrinsic(extrinsic);
-		this.updateFanout();
+		this.updateFanout(false, false);
 		this.lastInfo = current;
 	}
 	
+	@Override
+	protected void visitDo(Do d) {
+		this.conditional = d.getPostCondition() != null;
+		d.acceptSubNodes(this);
+		this.conditional = false;
+	}
+	
+	@Override
+	protected void visitGoto(Goto g) {
+		this.conditional = g.getPostCondition() != null;
+		g.acceptSubNodes(this);
+		this.conditional = false;		
+	}
+
 	protected void visitRoutine(Routine routine) {
-		this.fanouts = new HashMap<LineLocation, List<Fanout>>();
+		this.fanouts = new HashMap<LineLocation, List<EntryId>>();
 		super.visitRoutine(routine);
 	}
 
-	public Map<LineLocation, List<Fanout>> getRoutineFanouts() {
+	public Map<LineLocation, List<EntryId>> getRoutineFanouts() {
 		return this.fanouts;
 	}
 	
-	public void setFilter(Filter<Fanout> filter) {
+	public void setFilter(Filter<EntryId> filter) {
 		this.filter = filter;
 	}
 	
-	public Map<LineLocation, List<Fanout>> getFanouts(Routine routine) {
+	public Map<LineLocation, List<EntryId>> getFanouts(Routine routine) {
 		routine.accept(this);
 		return this.fanouts;
 	}		

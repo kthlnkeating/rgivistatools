@@ -21,19 +21,19 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-import com.raygroupintl.m.parsetree.Fanout;
+import com.raygroupintl.m.parsetree.EntryId;
 import com.raygroupintl.m.parsetree.Routine;
 import com.raygroupintl.m.struct.LineLocation;
 
 public class FanInRecorder extends FanoutRecorder {
-	private Set<Fanout> fanins = new HashSet<>();
+	private Set<EntryId> fanins = new HashSet<>();
 	
 	protected void visitRoutine(Routine routine) {
 		super.visitRoutine(routine);
-		Map<LineLocation, List<Fanout>> fanouts = this.getRoutineFanouts();
+		Map<LineLocation, List<EntryId>> fanouts = this.getRoutineFanouts();
 		if (fanouts != null) {
-			for (List<Fanout> fs : fanouts.values()) {
-				for (Fanout f : fs) {
+			for (List<EntryId> fs : fanouts.values()) {
+				for (EntryId f : fs) {
 					this.fanins.add(f);
 				}		
 			}
@@ -44,7 +44,7 @@ public class FanInRecorder extends FanoutRecorder {
 		this.fanins = new HashSet<>();
 	}
 	
-	public Set<Fanout> getFanIns() {
+	public Set<EntryId> getFanIns() {
 		return this.fanins;
 	}
 }

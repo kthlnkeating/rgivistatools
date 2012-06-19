@@ -69,7 +69,7 @@ public class ErrorWriter extends RepositoryVisitor {
 		if (errors.size() > 0) {
 			this.fileWrapper.writeEOL();
 			this.fileWrapper.writeEOL();
-			this.fileWrapper.write(routine.getKey());
+			this.fileWrapper.write(routine.getName());
 			this.fileWrapper.writeEOL();
 
 			LineLocation lastLocation = new LineLocation("", 0);

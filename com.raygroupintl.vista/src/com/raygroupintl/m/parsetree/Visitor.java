@@ -30,6 +30,10 @@ public class Visitor {
 		}
 	}
 	
+	protected void visitPostConditional(PostConditional pc) {
+		this.visitAdditionalNodeHolder(pc);
+	}
+	
 	protected void assignLocal(Local local) {		
 	}
 	
@@ -214,14 +218,14 @@ public class Visitor {
 		line.acceptSubNodes(this);
 	}
 	
-	protected void visitDoBlock(DoBlock doBlock) {
-		doBlock.acceptSubNodes(this);
-	}
-	
 	protected void visitEntry(Entry entry) {
 		entry.acceptSubNodes(this);
 	}
 		
+	protected void visitDoBlock(DoBlock doBlock) {
+		doBlock.acceptSubNodes(this);
+	}
+	
 	protected void visitRoutine(Routine routine) {
 		routine.acceptSubNodes(this);
 	}

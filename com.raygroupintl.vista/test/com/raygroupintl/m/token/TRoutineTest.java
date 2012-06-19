@@ -10,7 +10,7 @@ import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
-import com.raygroupintl.m.parsetree.Fanout;
+import com.raygroupintl.m.parsetree.EntryId;
 import com.raygroupintl.m.parsetree.Routine;
 import com.raygroupintl.m.parsetree.visitor.ErrorRecorder;
 import com.raygroupintl.m.parsetree.visitor.FanoutRecorder;
@@ -119,11 +119,11 @@ public class TRoutineTest {
 		testErrTest0(supplyStd95);		
 	}
 	
-	private void checkFanouts(List<Fanout> result, String[] labels, String[] routines) {
+	private void checkFanouts(List<EntryId> result, String[] labels, String[] routines) {
 		Assert.assertNotNull(result);
 		Assert.assertEquals(routines.length, result.size());
 		int index = 0;
-		for (Fanout fout : result) {
+		for (EntryId fout : result) {
 			if (routines[index] == null) {
 				Assert.assertNull(fout.getRoutineName());
 			} else {
@@ -155,48 +155,48 @@ public class TRoutineTest {
 		Assert.assertEquals(5, or.getExtrinsicCount());
 		
 		FanoutRecorder foutr = new FanoutRecorder();
-		Map<LineLocation, List<Fanout>> fanouts = foutr.getFanouts(r);	
-		List<Fanout> do1 = fanouts.get(new LineLocation("DO", 1));
+		Map<LineLocation, List<EntryId>> fanouts = foutr.getFanouts(r);	
+		List<EntryId> do1 = fanouts.get(new LineLocation("DO", 1));
 		this.checkFanouts(do1, new String[]{"L0", "L1", "L2"}, new String[]{"R0", "R1", "R3"});
-		List<Fanout> do3 = fanouts.get(new LineLocation("DO", 3));
+		List<EntryId> do3 = fanouts.get(new LineLocation("DO", 3));
 		this.checkFanouts(do3, new String[]{"T0", "T1", "T2"}, new String[]{null, null, null});
-		List<Fanout> do4 = fanouts.get(new LineLocation("DO", 4));
+		List<EntryId> do4 = fanouts.get(new LineLocation("DO", 4));
 		this.checkFanouts(do4, new String[]{"T2"}, new String[]{null});
-		List<Fanout> do5 = fanouts.get(new LineLocation("DO", 5));
+		List<EntryId> do5 = fanouts.get(new LineLocation("DO", 5));
 		this.checkFanouts(do5, new String[]{"T0", "AR", "T1"}, new String[]{null, null, null});
-		List<Fanout> do9 = fanouts.get(new LineLocation("DO", 9));
+		List<EntryId> do9 = fanouts.get(new LineLocation("DO", 9));
 		this.checkFanouts(do9, new String[]{"T5"}, new String[]{"R5"});
-		List<Fanout> do10 = fanouts.get(new LineLocation("DO", 10));
+		List<EntryId> do10 = fanouts.get(new LineLocation("DO", 10));
 		this.checkFanouts(do10, new String[]{"2", "3", "7", "T8"}, new String[]{"R6", null, "R6", "R8"});
-		List<Fanout> do13 = fanouts.get(new LineLocation("DO", 13));
+		List<EntryId> do13 = fanouts.get(new LineLocation("DO", 13));
 		this.checkFanouts(do13, new String[]{null}, new String[]{"R10"});
-		List<Fanout> do15 = fanouts.get(new LineLocation("DO", 15));
+		List<EntryId> do15 = fanouts.get(new LineLocation("DO", 15));
 		this.checkFanouts(do15, new String[]{"A"}, new String[]{"X"});
-		List<Fanout> do24 = fanouts.get(new LineLocation("DO", 24));
+		List<EntryId> do24 = fanouts.get(new LineLocation("DO", 24));
 		this.checkFanouts(do24, new String[]{"AX"}, new String[]{"RX"});
 		
-		List<Fanout> go1 = fanouts.get(new LineLocation("GOTO", 1));
+		List<EntryId> go1 = fanouts.get(new LineLocation("GOTO", 1));
 		this.checkFanouts(go1, new String[]{"L0", "L1", "L2"}, new String[]{"R0", "R1", "R2"});
-		List<Fanout> go3 = fanouts.get(new LineLocation("GOTO", 3));
+		List<EntryId> go3 = fanouts.get(new LineLocation("GOTO", 3));
 		this.checkFanouts(go3, new String[]{"T0", "T1", "T2"}, new String[]{null, null, null});
-		List<Fanout> go4 = fanouts.get(new LineLocation("GOTO", 4));
+		List<EntryId> go4 = fanouts.get(new LineLocation("GOTO", 4));
 		this.checkFanouts(go4, new String[]{"T2"}, new String[]{null});
-		List<Fanout> go5 = fanouts.get(new LineLocation("GOTO", 5));
+		List<EntryId> go5 = fanouts.get(new LineLocation("GOTO", 5));
 		this.checkFanouts(go5, new String[]{"T0", "T1"}, new String[]{null, null});
-		List<Fanout> go9 = fanouts.get(new LineLocation("GOTO", 9));
+		List<EntryId> go9 = fanouts.get(new LineLocation("GOTO", 9));
 		this.checkFanouts(go9, new String[]{"T5"}, new String[]{"R5"});
-		List<Fanout> go10 = fanouts.get(new LineLocation("GOTO", 10));
+		List<EntryId> go10 = fanouts.get(new LineLocation("GOTO", 10));
 		this.checkFanouts(go10, new String[]{"2", "3", "7", "T8"}, new String[]{"R6", null, "R6", "R8"});
-		List<Fanout> go13 = fanouts.get(new LineLocation("GOTO", 13));
+		List<EntryId> go13 = fanouts.get(new LineLocation("GOTO", 13));
 		this.checkFanouts(go13, new String[]{null}, new String[]{"R10"});
-		List<Fanout> go19 = fanouts.get(new LineLocation("GOTO", 19));
+		List<EntryId> go19 = fanouts.get(new LineLocation("GOTO", 19));
 		this.checkFanouts(go19, new String[]{"DE", "ARZ"}, new String[]{"RE", null});
-		List<Fanout> go20 = fanouts.get(new LineLocation("GOTO", 20));
+		List<EntryId> go20 = fanouts.get(new LineLocation("GOTO", 20));
 		this.checkFanouts(go20, new String[]{"DFR", "DF"}, new String[]{"JUH", "GDE"});
 				
 		Assert.assertEquals(18, fanouts.size());
 		int fanoutCount = 0;
-		for (List<Fanout> lfo : fanouts.values()) {
+		for (List<EntryId> lfo : fanouts.values()) {
 			fanoutCount += lfo.size();
 		}
 		Assert.assertEquals(37, fanoutCount);

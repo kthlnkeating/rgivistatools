@@ -220,7 +220,8 @@ public class MTFSupply {
 	public TokenFactory cmdrarg;
 	@Rule("{cmdrarg:','}")
 	public TokenFactory cmdrargs;
-		
+	
+	@TokenType(BasicTokens.MPostCondition.class)
 	@Rule("':', expr")
 	public TokenFactory postcondition;
 	@Rule("'*', expr")
@@ -334,15 +335,6 @@ public class MTFSupply {
 	
 	@Rule("{goargumentall:','}")
 	public TokenFactory gotoarguments;	
-	
-	
-	
-	
-	
-	
-	
-	
-	
 	
 	@TokenType(MDoArgument.class)	
 	@Rule("indfanoutlabel, [dolineoffset], [doroutineref], [postcondition]")

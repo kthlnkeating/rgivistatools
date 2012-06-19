@@ -16,11 +16,11 @@
 
 package com.raygroupintl.m.parsetree.filter;
 
-import com.raygroupintl.m.parsetree.Fanout;
+import com.raygroupintl.m.parsetree.EntryId;
 import com.raygroupintl.struct.Filter;
 import com.raygroupintl.vista.repository.VistaPackage;
 
-public class PackageFanoutFilter  implements Filter<Fanout> {
+public class PackageFanoutFilter  implements Filter<EntryId> {
 	private VistaPackage routinePackage;
 	
 	public PackageFanoutFilter(VistaPackage routinePackage) {
@@ -28,7 +28,7 @@ public class PackageFanoutFilter  implements Filter<Fanout> {
 	}
 	
 	@Override
-	public boolean isValid(Fanout input) {
+	public boolean isValid(EntryId input) {
 		if (input != null) {
 			String routineName = input.getRoutineName();
 			return ! this.routinePackage.contains(routineName);

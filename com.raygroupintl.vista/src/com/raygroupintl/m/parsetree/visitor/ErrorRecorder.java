@@ -74,7 +74,7 @@ public class ErrorRecorder extends LocationMarker {
 	@Override
 	protected void visitRoutine(Routine routine) {
 		this.result = new ArrayList<ObjectInRoutine<MError>>();
-		String name = routine.getKey();
+		String name = routine.getName();
 		if (this.exemptions == null) {
 			super.visitRoutine(routine);			
 		} else if (! this.exemptions.containsRoutine(name)) {			

@@ -19,7 +19,7 @@ package com.raygroupintl.vista.repository.visitor;
 import java.util.List;
 import java.util.Set;
 
-import com.raygroupintl.m.parsetree.Fanout;
+import com.raygroupintl.m.parsetree.EntryId;
 import com.raygroupintl.m.parsetree.FileWrapper;
 import com.raygroupintl.m.parsetree.Routine;
 import com.raygroupintl.m.parsetree.visitor.FanInRecorder;
@@ -41,7 +41,7 @@ public class FaninWriter extends RepositoryVisitor {
 		
 	@Override
 	protected void visitVistaPackage(VistaPackage routinePackage) {
-		Filter<Fanout> filter = routinePackage.getPackageFanoutFilter();
+		Filter<EntryId> filter = routinePackage.getPackageFanoutFilter();
 		this.faninRecorder.setFilter(filter);
 		super.visitVistaPackage(routinePackage);
 	}
@@ -56,9 +56,9 @@ public class FaninWriter extends RepositoryVisitor {
 		for (VistaPackage p : packages) {
 			p.accept(this);
 		}
-		Set<Fanout> fanins = this.faninRecorder.getFanIns();
+		Set<EntryId> fanins = this.faninRecorder.getFanIns();
 		if (this.fileWrapper.start()) {
-			for (Fanout f : fanins) {
+			for (EntryId f : fanins) {
 				this.fileWrapper.write(f.toString());
 				this.fileWrapper.writeEOL();
 			}

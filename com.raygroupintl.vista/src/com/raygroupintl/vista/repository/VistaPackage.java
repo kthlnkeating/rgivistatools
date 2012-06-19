@@ -22,7 +22,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-import com.raygroupintl.m.parsetree.Fanout;
+import com.raygroupintl.m.parsetree.EntryId;
 import com.raygroupintl.m.parsetree.Node;
 import com.raygroupintl.m.parsetree.RepositoryNode;
 import com.raygroupintl.m.parsetree.Routine;
@@ -166,10 +166,10 @@ public class VistaPackage  implements RepositoryNode {
 		return this.rf;
 	}
 	
-	public Filter<Fanout> getPackageFanoutFilter() {
-		Filter<Fanout> localFilter = new LocalFanoutFilter();
-		Filter<Fanout> packageFilter = new PackageFanoutFilter(this);
-		Filter<Fanout> overallFilter = new AndFilter<Fanout>(localFilter, packageFilter);
+	public Filter<EntryId> getPackageFanoutFilter() {
+		Filter<EntryId> localFilter = new LocalFanoutFilter();
+		Filter<EntryId> packageFilter = new PackageFanoutFilter(this);
+		Filter<EntryId> overallFilter = new AndFilter<EntryId>(localFilter, packageFilter);
 		return overallFilter;
 	}
 	
