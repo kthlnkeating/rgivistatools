@@ -32,13 +32,21 @@ public class DoBlock extends BasicNode {
 		return this.entryList;
 	}
 	
-	public void acceptSubNodes(Visitor visitor) {
+	public void acceptPostCondition(Visitor visitor) {
 		if (this.postCondition != null) {
 			this.postCondition.accept(visitor);
-		}
+		}		
+	}
+	
+	public void acceptEntryList(Visitor visitor) {
 		if (this.entryList != null) {			
 			this.entryList.accept(visitor);
-		}		
+		}				
+	}
+	
+	public void acceptSubNodes(Visitor visitor) {
+		this.acceptPostCondition(visitor);
+		this.acceptEntryList(visitor);
 	}
 	
 	@Override

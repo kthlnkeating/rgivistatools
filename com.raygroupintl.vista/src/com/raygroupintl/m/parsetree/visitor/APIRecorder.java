@@ -40,14 +40,10 @@ public class APIRecorder extends FanoutRecorder {
 	public static class IndexedFanout {
 		private int index;
 		private EntryId fanout;
-		private boolean isGoto;
-		private boolean isConditional;
 		
-		public IndexedFanout(int index, EntryId fanout, boolean isGoto, boolean isConditional) {
+		public IndexedFanout(int index, EntryId fanout) {
 			this.index = index;
 			this.fanout = fanout;
-			this.isGoto = isGoto;
-			this.isConditional = isConditional;
 		}
 		
 		public int getIndex() {
@@ -100,10 +96,13 @@ public class APIRecorder extends FanoutRecorder {
 			}
 		}
 
-		public void addFanout(int index, EntryId fanout, boolean isGoto, boolean isConditional) {
+		public void addFanout(int index, EntryId fanout, boolean shouldClose) {
 			if (! this.closed) {
-				IndexedFanout ifo = new IndexedFanout(index, fanout, isGoto, isConditional);
+				IndexedFanout ifo = new IndexedFanout(index, fanout);
 				this.fanouts.add(ifo);
+				if (shouldClose) {
+					this.close();
+				}
 			}
 		}	
 		
@@ -162,7 +161,8 @@ public class APIRecorder extends FanoutRecorder {
 		}
 	}
 	
-	public static class Blocks extends HashMap<String, Block> {		
+	public static class Blocks extends HashMap<String, Block> {
+		private static final long serialVersionUID = 1L;		
 	}
 	
 	private Blocks currentBlocks;
@@ -170,7 +170,6 @@ public class APIRecorder extends FanoutRecorder {
 	private Block currentBlock;
 	private Block firstInCurrentBlocks;
 	
-	private String lastRoutineName;
 	private int index;
 	
 	private int underCondition;
@@ -178,8 +177,6 @@ public class APIRecorder extends FanoutRecorder {
 	
 	private void reset() {
 		this.currentBlocks = null;
-		this.lastRoutineName = null;
-		this.currentBlock = null;
 		this.firstInCurrentBlocks = null;
 		this.index = 0;		
 		this.underCondition = 0;
@@ -214,12 +211,9 @@ public class APIRecorder extends FanoutRecorder {
 	protected void updateFanout(boolean isGoto, boolean conditional) {
 		EntryId fanout = this.getLastFanout();
 		if (fanout != null) {
-			String entryTag = fanout.getTag();
-			String routineName = fanout.getRoutineName();
-			if ((routineName != null) && (! routineName.equals(this.lastRoutineName))) {
-				++index;
-				//this.lastEntryAPIHelper.addFanout(index, fanout);
-			}
+			++this.index;
+			boolean shouldClose = isGoto && (! conditional) || (this.underCondition < 1);
+			this.currentBlock.addFanout(index, fanout, shouldClose);
 		}		
 	}
 		
@@ -266,7 +260,7 @@ public class APIRecorder extends FanoutRecorder {
 			}
 			this.currentBlocks.put(tag, this.currentBlock);
 			EntryId defaultGoto = new EntryId(null, tag);
-			lastBlock.addFanout(this.index, defaultGoto, true, false);
+			lastBlock.addFanout(this.index, defaultGoto, true);
 		}
 		++this.index;
 		String[] params = entry.getParameters();
@@ -280,23 +274,27 @@ public class APIRecorder extends FanoutRecorder {
 	}
 			
 	protected void visitDoBlock(DoBlock doBlock) {
+		doBlock.acceptPostCondition(this);
 		Blocks lastBlocks = this.currentBlocks;
 		Block lastBlock = this.currentBlock;
 		this.currentBlock = null;
 		this.currentBlocks = new Blocks();
-		super.visitDoBlock(doBlock);
+		doBlock.acceptEntryList(this);
 		this.currentBlocks = lastBlocks;
 		this.currentBlock = lastBlock;
 		String tag = ":" + String.valueOf(this.index);
 		EntryId defaultDo = new EntryId(null, tag);		
-		lastBlock.addFanout(this.index, defaultDo, false, false);
+		lastBlock.addFanout(this.index, defaultDo, false);
 		this.currentBlocks.put(tag, this.firstInCurrentBlocks);
+	}
+	
+	public Blocks getBlocks() {
+		return this.currentBlocks;
 	}
 	
 	protected void visitRoutine(Routine routine) {
 		this.reset();
 		this.currentBlocks = new Blocks();
-		this.lastRoutineName = routine.getName();
 		super.visitRoutine(routine);
 	}
 }

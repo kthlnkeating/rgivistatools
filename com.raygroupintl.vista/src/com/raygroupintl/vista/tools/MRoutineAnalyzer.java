@@ -37,6 +37,7 @@ import com.raygroupintl.vista.repository.RepositoryInfo;
 import com.raygroupintl.vista.repository.RoutineFactory;
 import com.raygroupintl.vista.repository.VistaPackages;
 import com.raygroupintl.vista.repository.VistaPackage;
+import com.raygroupintl.vista.repository.visitor.APIOverallRecorder;
 import com.raygroupintl.vista.repository.visitor.ErrorWriter;
 import com.raygroupintl.vista.repository.visitor.FaninWriter;
 import com.raygroupintl.vista.repository.visitor.FanoutWriter;
@@ -113,6 +114,11 @@ public class MRoutineAnalyzer {
 			if (at.equalsIgnoreCase("fanin")) {
 				FaninWriter fiw = new FaninWriter(ri, fr);
 				packageNodes.accept(fiw);
+				return;
+			}
+			if (at.equalsIgnoreCase("api")) {
+				APIOverallRecorder api = new APIOverallRecorder();
+				packageNodes.accept(api);
 				return;
 			}
 			LOGGER.log(Level.SEVERE, "Unknown analysis type " + at);
