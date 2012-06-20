@@ -82,6 +82,12 @@ public class APIRecorder extends FanoutRecorder {
 			return this.index;
 		}
 		
+		public void addNewed(int index, String name) {
+			if (! this.closed) {
+				this.newedLocals.put(name, index);
+			}
+		}		
+		
 		public void addNewed(int index, Local local) {
 			if (! this.closed) {
 				this.newedLocals.put(local.getName().toString(), index);
@@ -259,8 +265,18 @@ public class APIRecorder extends FanoutRecorder {
 				tag = ":" + String.valueOf(this.index);
 			}
 			this.currentBlocks.put(tag, this.currentBlock);
+			EntryId defaultGoto = new EntryId(null, tag);
+			lastBlock.addFanout(this.index, defaultGoto, true, false);
+		}
+		++this.index;
+		String[] params = entry.getParameters();
+		if (params != null) {
+			for (String param : params) {
+				this.currentBlock.addNewed(this.index, param);
+			}
 		}
 		super.visitEntry(entry);
+		
 	}
 			
 	protected void visitDoBlock(DoBlock doBlock) {
@@ -270,6 +286,11 @@ public class APIRecorder extends FanoutRecorder {
 		this.currentBlocks = new Blocks();
 		super.visitDoBlock(doBlock);
 		this.currentBlocks = lastBlocks;
+		this.currentBlock = lastBlock;
+		String tag = ":" + String.valueOf(this.index);
+		EntryId defaultDo = new EntryId(null, tag);		
+		lastBlock.addFanout(this.index, defaultDo, false, false);
+		this.currentBlocks.put(tag, this.firstInCurrentBlocks);
 	}
 	
 	protected void visitRoutine(Routine routine) {

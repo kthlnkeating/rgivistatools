@@ -22,26 +22,19 @@ public class Entry extends NodeList<Node> {
 	private int index;
 	private String[] parameters;
 	
-	public Entry(String name, String routineName, int index) {
+	public Entry(String name, String routineName, int index, String[] parameters) {
 		this.name = name;
 		this.routineName = routineName;
 		this.index = index;
-	}
-	
-	public Entry(String tagName, String[] parameters) {
 		this.parameters = parameters;
 	}
-		
+	
 	public String getKey() {
 		return this.name + '^' + this.routineName + ',' + String.valueOf(this.index);
 	}
 	
-	public int getParameterCount() {
-		return this.parameters.length;
-	}
-	
-	public String getParameter(int index) {
-		return this.parameters[index];
+	public String[] getParameters() {
+		return this.parameters;
 	}
 
 	@Override
