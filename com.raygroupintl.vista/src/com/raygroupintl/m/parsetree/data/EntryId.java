@@ -14,7 +14,7 @@
 // limitations under the License.
 //---------------------------------------------------------------------------
 
-package com.raygroupintl.m.parsetree;
+package com.raygroupintl.m.parsetree.data;
 
 public class EntryId {
 	private String routineName;
@@ -31,6 +31,14 @@ public class EntryId {
 	
 	public String getTag() {
 		return this.label;
+	}
+	
+	public String getLabelOrDefault() {
+		if (this.label == null) {
+			return this.routineName;
+		} else {
+			return this.label;
+		}
 	}
 	
 	@Override

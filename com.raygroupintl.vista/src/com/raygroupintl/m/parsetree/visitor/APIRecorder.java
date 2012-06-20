@@ -16,159 +16,25 @@
 
 package com.raygroupintl.m.parsetree.visitor;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-
 import com.raygroupintl.m.parsetree.DoBlock;
 import com.raygroupintl.m.parsetree.ElseCmd;
 import com.raygroupintl.m.parsetree.Entry;
-import com.raygroupintl.m.parsetree.EntryId;
 import com.raygroupintl.m.parsetree.ForLoop;
 import com.raygroupintl.m.parsetree.IfCmd;
 import com.raygroupintl.m.parsetree.Local;
 import com.raygroupintl.m.parsetree.QuitCmd;
 import com.raygroupintl.m.parsetree.Routine;
+import com.raygroupintl.m.parsetree.data.Block;
+import com.raygroupintl.m.parsetree.data.Blocks;
+import com.raygroupintl.m.parsetree.data.EntryId;
 
 public class APIRecorder extends FanoutRecorder {
-	private final static Logger LOGGER = Logger.getLogger(APIRecorder.class.getName());
-
-	public static class IndexedFanout {
-		private int index;
-		private EntryId fanout;
-		
-		public IndexedFanout(int index, EntryId fanout) {
-			this.index = index;
-			this.fanout = fanout;
-		}
-		
-		public int getIndex() {
-			return this.index;
-		}
-		
-		public EntryId getFanout() {
-			return this.fanout;
-		}
-	}
-		
-	public static class Block {
-		private Map<String, Integer> newedLocals = new HashMap<String, Integer>();
-		private Map<String, Integer> usedLocals = new HashMap<String, Integer>();
-
-		private List<IndexedFanout> fanouts = new ArrayList<IndexedFanout>();
-		private Blocks siblings;
-				
-		private int index;
-		private boolean closed;
-		
-		public Block(int index, Blocks siblings) {
-			this.index = index;
-			this.siblings = siblings;
-		}
-		
-		public void close() {
-			this.closed = true;
-		}
-		
-		public int getIndex() {
-			return this.index;
-		}
-		
-		public void addNewed(int index, String name) {
-			if (! this.closed) {
-				this.newedLocals.put(name, index);
-			}
-		}		
-		
-		public void addNewed(int index, Local local) {
-			if (! this.closed) {
-				this.newedLocals.put(local.getName().toString(), index);
-			}
-		}		
-		
-		public void addUsed(int index, Local local) {
-			if (! this.closed) {
-				this.usedLocals.put(local.getName().toString(), index);
-			}
-		}
-
-		public void addFanout(int index, EntryId fanout, boolean shouldClose) {
-			if (! this.closed) {
-				IndexedFanout ifo = new IndexedFanout(index, fanout);
-				this.fanouts.add(ifo);
-				if (shouldClose) {
-					this.close();
-				}
-			}
-		}	
-		
-		public boolean isNewed(Local local) {
-			return this.newedLocals.containsKey(local.getName().toString());
-		}
-		
-		public boolean isUsed(Local local) {
-			return this.usedLocals.containsKey(local.getName().toString());
-		}
-		
-		private void mergeUsed(Set<String> current, Set<String> source, int sourceIndex) {
-			for (String name : source) {
-				Integer index = this.newedLocals.get(name);
-				if (index == null) {
-					this.usedLocals.put(name, sourceIndex);
-				} else if (index.intValue() > sourceIndex) {
-					this.usedLocals.put(name, sourceIndex);
-				}
-			}
-		}
-		
-		public Set<String> getUseds(Map<String, Blocks> overallMap) {
-			Set<String> result = this.usedLocals.keySet();
-			for (IndexedFanout ifout : this.fanouts) {
-				EntryId fout = ifout.getFanout();
-				String routineName = fout.getRoutineName();
-				String tagName = fout.getTag();					
-				if (tagName == null) {
-					tagName = routineName;
-				}
-				if (routineName == null) {
-					Block tagBlock = this.siblings.get(tagName);
-					if (tagBlock == null) {
-						LOGGER.log(Level.SEVERE, "Unable to find information about tag " + tagName);
-						continue;
-					}
-					Set<String> blockUsed = tagBlock.getUseds(overallMap);
-					this.mergeUsed(result, blockUsed, tagBlock.getIndex());
-				} else {
-					Blocks routineBlocks = overallMap.get(routineName);
-					if (routineBlocks == null) {
-						LOGGER.log(Level.SEVERE, "Unable to find information about routine " + routineName);
-						continue;
-					}
-					Block tagBlock = routineBlocks.get(tagName);
-					if (tagBlock == null) {
-						LOGGER.log(Level.SEVERE, "Unable to find information about tag " + fout.toString());
-						continue;
-					}
-					Set<String> blockUsed = tagBlock.getUseds(overallMap);
-					this.mergeUsed(result, blockUsed, tagBlock.getIndex());
-				}				 
-			}
-			return result;
-		}
-	}
-	
-	public static class Blocks extends HashMap<String, Block> {
-		private static final long serialVersionUID = 1L;		
-	}
-	
 	private Blocks currentBlocks;
 	
 	private Block currentBlock;
 	private Block firstInCurrentBlocks;
+	private String currentRoutineName;
+	private int inDoBlock;
 	
 	private int index;
 	
@@ -178,6 +44,7 @@ public class APIRecorder extends FanoutRecorder {
 	private void reset() {
 		this.currentBlocks = null;
 		this.firstInCurrentBlocks = null;
+		this.currentRoutineName = null;
 		this.index = 0;		
 		this.underCondition = 0;
 		this.underFor = 0;		
@@ -243,18 +110,30 @@ public class APIRecorder extends FanoutRecorder {
 		--this.underCondition;
 	}
 
+	private EntryId getEntryId(String tag) {
+		if ((tag == null) || tag.isEmpty()) {
+			if (this.inDoBlock > 0) {
+				return new EntryId(this.currentRoutineName, ":" + String.valueOf(this.index));
+			} else {
+				return new EntryId(this.currentRoutineName, this.currentRoutineName);
+			}
+		} else {
+			return new EntryId(this.currentRoutineName, tag);
+		}
+	}
+	
 	protected void visitEntry(Entry entry) {
 		Block lastBlock = this.currentBlock;
 		++this.index;
-		this.currentBlock = new Block(this.index, this.currentBlocks);
+		String tag = entry.getKey();
+		EntryId entryId = this.getEntryId(tag);		
+		this.currentBlock = new Block(this.index, entryId, this.currentBlocks);
 		if (lastBlock == null) {
 			this.firstInCurrentBlocks = this.currentBlock;
-			String tag = entry.getKey();
 			if ((tag != null) && (! tag.isEmpty())) {
 				this.currentBlocks.put(tag, this.currentBlock);
 			}
 		} else {
-			String tag = entry.getKey();
 			if ((tag == null) || tag.isEmpty()) {
 				tag = ":" + String.valueOf(this.index);
 			}
@@ -274,6 +153,7 @@ public class APIRecorder extends FanoutRecorder {
 	}
 			
 	protected void visitDoBlock(DoBlock doBlock) {
+		++this.inDoBlock;
 		doBlock.acceptPostCondition(this);
 		Blocks lastBlocks = this.currentBlocks;
 		Block lastBlock = this.currentBlock;
@@ -286,6 +166,7 @@ public class APIRecorder extends FanoutRecorder {
 		EntryId defaultDo = new EntryId(null, tag);		
 		lastBlock.addFanout(this.index, defaultDo, false);
 		this.currentBlocks.put(tag, this.firstInCurrentBlocks);
+		--this.inDoBlock;
 	}
 	
 	public Blocks getBlocks() {
@@ -295,6 +176,7 @@ public class APIRecorder extends FanoutRecorder {
 	protected void visitRoutine(Routine routine) {
 		this.reset();
 		this.currentBlocks = new Blocks();
+		this.currentRoutineName = routine.getName();
 		super.visitRoutine(routine);
 	}
 }

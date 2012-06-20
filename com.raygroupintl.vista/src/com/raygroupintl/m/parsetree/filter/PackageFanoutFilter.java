@@ -16,7 +16,7 @@
 
 package com.raygroupintl.m.parsetree.filter;
 
-import com.raygroupintl.m.parsetree.EntryId;
+import com.raygroupintl.m.parsetree.data.EntryId;
 import com.raygroupintl.struct.Filter;
 import com.raygroupintl.vista.repository.VistaPackage;
 

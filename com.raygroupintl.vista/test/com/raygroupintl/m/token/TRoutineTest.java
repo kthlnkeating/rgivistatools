@@ -10,8 +10,8 @@ import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
-import com.raygroupintl.m.parsetree.EntryId;
 import com.raygroupintl.m.parsetree.Routine;
+import com.raygroupintl.m.parsetree.data.EntryId;
 import com.raygroupintl.m.parsetree.visitor.ErrorRecorder;
 import com.raygroupintl.m.parsetree.visitor.FanoutRecorder;
 import com.raygroupintl.m.parsetree.visitor.OccuranceRecorder;

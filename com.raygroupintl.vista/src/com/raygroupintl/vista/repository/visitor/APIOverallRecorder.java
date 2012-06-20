@@ -21,6 +21,7 @@ import java.util.Map;
 import java.util.logging.Logger;
 
 import com.raygroupintl.m.parsetree.Routine;
+import com.raygroupintl.m.parsetree.data.Blocks;
 import com.raygroupintl.m.parsetree.visitor.APIRecorder;
 import com.raygroupintl.vista.repository.RepositoryVisitor;
 import com.raygroupintl.vista.repository.VistaPackages;
@@ -32,7 +33,7 @@ public class APIOverallRecorder extends RepositoryVisitor {
 
 	private int packageCount;
 	private APIRecorder recorder;
-	private Map<String, APIRecorder.Blocks> blocksMap = new HashMap<String, APIRecorder.Blocks>();
+	private Map<String, Blocks> blocksMap = new HashMap<String, Blocks>();
 	
 	@Override
 	protected void visitVistaPackage(VistaPackage routinePackage) {
@@ -43,7 +44,7 @@ public class APIOverallRecorder extends RepositoryVisitor {
 
 	public void visitRoutine(Routine routine) {
 		routine.accept(this.recorder);
-		APIRecorder.Blocks blocks = this.recorder.getBlocks();
+		Blocks blocks = this.recorder.getBlocks();
 		this.blocksMap.put(routine.getName(), blocks);
 	}
 	
@@ -52,7 +53,7 @@ public class APIOverallRecorder extends RepositoryVisitor {
 		rps.acceptSubNodes(this);
 	}
 	
-	public Map<String, APIRecorder.Blocks> getBlocks() {
+	public Map<String, Blocks> getBlocks() {
 		return this.blocksMap;
 	}
 }

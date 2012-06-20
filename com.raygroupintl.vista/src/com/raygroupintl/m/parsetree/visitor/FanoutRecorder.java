@@ -26,13 +26,13 @@ import com.raygroupintl.m.parsetree.AtomicGoto;
 import com.raygroupintl.m.parsetree.Do;
 import com.raygroupintl.m.parsetree.EnvironmentFanoutRoutine;
 import com.raygroupintl.m.parsetree.Extrinsic;
-import com.raygroupintl.m.parsetree.EntryId;
 import com.raygroupintl.m.parsetree.FanoutLabel;
 import com.raygroupintl.m.parsetree.FanoutRoutine;
 import com.raygroupintl.m.parsetree.Goto;
 import com.raygroupintl.m.parsetree.IndirectFanoutLabel;
 import com.raygroupintl.m.parsetree.IndirectFanoutRoutine;
 import com.raygroupintl.m.parsetree.Routine;
+import com.raygroupintl.m.parsetree.data.EntryId;
 import com.raygroupintl.m.struct.LineLocation;
 import com.raygroupintl.struct.Filter;
 

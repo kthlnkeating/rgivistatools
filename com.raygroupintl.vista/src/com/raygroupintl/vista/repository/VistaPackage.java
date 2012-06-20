@@ -22,10 +22,10 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-import com.raygroupintl.m.parsetree.EntryId;
 import com.raygroupintl.m.parsetree.Node;
 import com.raygroupintl.m.parsetree.RepositoryNode;
 import com.raygroupintl.m.parsetree.Routine;
+import com.raygroupintl.m.parsetree.data.EntryId;
 import com.raygroupintl.m.parsetree.filter.LocalFanoutFilter;
 import com.raygroupintl.m.parsetree.filter.PackageFanoutFilter;
 import com.raygroupintl.struct.AndFilter;

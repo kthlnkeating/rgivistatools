@@ -14,17 +14,10 @@
 // limitations under the License.
 //---------------------------------------------------------------------------
 
-package com.raygroupintl.m.parsetree.filter;
+package com.raygroupintl.m.parsetree.data;
 
-import com.raygroupintl.m.parsetree.data.EntryId;
-import com.raygroupintl.struct.Filter;
+import java.util.HashMap;
 
-public class LocalFanoutFilter implements Filter<EntryId> {
-	@Override
-	public boolean isValid(EntryId input) {
-		if (input != null) {
-			return input.getRoutineName() != null;
-		}
-		return false;
-	}
+public class Blocks extends HashMap<String, Block> {
+	private static final long serialVersionUID = 1L;		
 }

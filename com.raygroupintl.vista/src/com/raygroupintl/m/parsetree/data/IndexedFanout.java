@@ -14,17 +14,26 @@
 // limitations under the License.
 //---------------------------------------------------------------------------
 
-package com.raygroupintl.m.parsetree.filter;
+package com.raygroupintl.m.parsetree.data;
 
-import com.raygroupintl.m.parsetree.data.EntryId;
-import com.raygroupintl.struct.Filter;
 
-public class LocalFanoutFilter implements Filter<EntryId> {
-	@Override
-	public boolean isValid(EntryId input) {
-		if (input != null) {
-			return input.getRoutineName() != null;
-		}
-		return false;
+public class IndexedFanout {
+	private int index;
+	private EntryId fanout;
+		
+	public IndexedFanout(int index, EntryId fanout) {
+		this.index = index;
+		this.fanout = fanout;
+	}
+		
+	public int getIndex() {
+		return this.index;
+	}
+		
+	public EntryId getFanout() {
+		return this.fanout;
 	}
 }
+		
+
+	
