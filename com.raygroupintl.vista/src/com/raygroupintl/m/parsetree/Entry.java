@@ -33,6 +33,10 @@ public class Entry extends NodeList<Node> {
 		return this.name + '^' + this.routineName + ',' + String.valueOf(this.index);
 	}
 	
+	public String getName() {
+		return this.name;
+	}
+	
 	public String[] getParameters() {
 		return this.parameters;
 	}

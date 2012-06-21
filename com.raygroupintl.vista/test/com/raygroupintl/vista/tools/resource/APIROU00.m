@@ -1,14 +1,46 @@
-BEAT0RST ;ALB/CJM - AICS LIST CLINIC SETUP ; JUL 20,1993
- ;;3.0;AUTOMATED INFO COLLECTION SYS;;APR 24, 1997
+APIROU00 ;AU - API TEST ; JUN 18,2012
+ ;;3.0;TESTING;;JUN 18,2012
  ;
-SETUPS ; -- Lists forms/reports defined in print manager clinic setup
+ Q
  ;
-% NEW CLINIC,SETUP,NODE,COND,INTRFACE,PAGE,IBQUIT,IBHDT,X,Y,FORM,REPORT,NAME,VAUTD,DIVIS,NEWDIV,CNT,MULTI
- WRITE !!,"AICS Print Manager Clinic Setup Report",!!
- SET IBQUIT=0
- DO DIVIS GOTO:IBQUIT EXIT
- DO DEVICE GOTO:IBQUIT EXIT
- DO DQ
- GOTO EXIT
- QUIT
+FACT(N) ;
+ N R
+ S R=1
+ F I=1:1:N S R=R*I
+ Q R
  ;
+SUM(N) ;
+ S R=0
+ F I=1:1:M S R=R+I
+ Q R
+ ;
+SUMFACT(N,M)
+ N I
+ F  D  Q:I>3
+ . N R
+ . S R=$$FACT(I)+$$SUM(I)
+ . S I=I+1
+ . S P=R
+ Q S
+ ;
+STORE(A) ;
+ N I
+ F I=1:1:10 D
+ . S A("F")=$$FACT(I)
+ . S D=4
+ . S A(D)=4
+ Q:K>3
+ S R=1
+ Q
+ ;
+STOREG ;
+ N I
+ F I=1:1:10 D
+ . S A("F")=$$FACT(I)
+ . S D=4
+ . S A(D)=4
+ Q:K>3
+ S R=1
+ Q
+ ;
+ 

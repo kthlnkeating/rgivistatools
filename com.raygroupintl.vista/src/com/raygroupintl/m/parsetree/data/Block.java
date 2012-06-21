@@ -69,7 +69,10 @@ public class Block {
 	
 	public void addUsed(int index, Local local) {
 		if (! this.closed) {
-			this.usedLocals.put(local.getName().toString(), index);
+			String label = local.getName().toString();
+			if ((! this.usedLocals.containsKey(label)) && (! this.newedLocals.containsKey(label))) {
+				this.usedLocals.put(label, index);
+			}
 		}
 	}
 

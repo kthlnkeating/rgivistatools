@@ -125,7 +125,7 @@ public class APIRecorder extends FanoutRecorder {
 	protected void visitEntry(Entry entry) {
 		Block lastBlock = this.currentBlock;
 		++this.index;
-		String tag = entry.getKey();
+		String tag = entry.getName();
 		EntryId entryId = this.getEntryId(tag);		
 		this.currentBlock = new Block(this.index, entryId, this.currentBlocks);
 		if (lastBlock == null) {
@@ -159,6 +159,7 @@ public class APIRecorder extends FanoutRecorder {
 		Block lastBlock = this.currentBlock;
 		this.currentBlock = null;
 		this.currentBlocks = new Blocks();
+		this.currentBlocks.putAll(lastBlocks);
 		doBlock.acceptEntryList(this);
 		this.currentBlocks = lastBlocks;
 		this.currentBlock = lastBlock;
