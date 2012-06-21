@@ -103,6 +103,8 @@ public class MRoutineAnalyzer {
 		result.add(eid2);
 		EntryId eid3 = new EntryId("LRPXAPIU", "ABDN");
 		result.add(eid3);
+		EntryId eid4 = new EntryId("SCDXPOV", "EN");
+		result.add(eid4);
 		return result;
 	}
 	
