@@ -1,5 +1,6 @@
 package com.raygroupintl.m.token;
 
+import java.util.Arrays;
 import java.util.Iterator;
 
 import junit.framework.Assert;
@@ -86,7 +87,31 @@ public class TFLineTest {
 	private Token lineTest(TokenFactory f, String line) {
 		return lineTest(f, line, true);
 	}
+	
+	private void lineParameterTest(TokenFactory f, String line, String[] expectedParams) {
+		try {
+			Text text = new Text(line);
+			MLine t = (MLine) f.tokenize(text, objectSupply);
+			String[] params = t.getParameters();
+			Assert.assertEquals(params.length, expectedParams.length);
+			Arrays.sort(params);
+			Arrays.sort(expectedParams);
+			for (int i=0; i<params.length; ++i) {
+				Assert.assertEquals(params[i], expectedParams[i]);
+			}
+		} catch (SyntaxErrorException e) {
+			Assert.fail("Unexpected exception.");			
+		}
+	}
 
+	@Test
+	public void testParams() {
+		testBasic(fCache, true);
+		testBasic(fStd95, false);
+		lineParameterTest(fCache, "TAG(A,B,C) ;", new String[]{"A", "B", "C"});
+		lineParameterTest(fStd95, "TAG(A,B,C) ;", new String[]{"A", "B", "C"});
+	}
+	
 	public void testBasic(TokenFactory f, boolean cache) {
 		lineTest(f, " S A=A+1  F  S B=$O(^F(B)) Q:B=\"\"   S ^F(B,A)=5");
 		lineTest(f, " S $E(A)=J+1 Q:B=\"\"\"YYY\"\"\"  Q:B=\"\"\"XXX\"\"\"");

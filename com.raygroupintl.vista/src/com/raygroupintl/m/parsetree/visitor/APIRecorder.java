@@ -51,10 +51,8 @@ public class APIRecorder extends FanoutRecorder {
 	}
 	
 	private void addUsed(Local local) {
-		if (! this.currentBlock.isUsed(local)) {		
-			++index;
-			this.currentBlock.addUsed(index, local);
-		}	
+		++this.index;
+		this.currentBlock.addUsed(index, local);
 	}
 	
 	protected void assignLocal(Local local) {
@@ -66,7 +64,8 @@ public class APIRecorder extends FanoutRecorder {
 	}
 	
 	protected void newLocal(Local local) {
-		this.addUsed(local);
+		++this.index;
+		this.currentBlock.addNewed(this.index, local);
 	}
 	
 	protected void visitLocal(Local local) {
@@ -79,7 +78,7 @@ public class APIRecorder extends FanoutRecorder {
 		EntryId fanout = this.getLastFanout();
 		if (fanout != null) {
 			++this.index;
-			boolean shouldClose = isGoto && (! conditional) || (this.underCondition < 1);
+			boolean shouldClose = isGoto && (! conditional) && (this.underCondition < 1);
 			this.currentBlock.addFanout(index, fanout, shouldClose);
 		}		
 	}

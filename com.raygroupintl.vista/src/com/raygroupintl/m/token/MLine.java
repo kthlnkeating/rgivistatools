@@ -1,7 +1,6 @@
 package com.raygroupintl.m.token;
 
 import java.util.Iterator;
-import java.util.List;
 
 import com.raygroupintl.m.parsetree.Line;
 import com.raygroupintl.m.parsetree.Node;
@@ -33,12 +32,14 @@ public class MLine extends MSequence {
 		if (paramsTokenWPars != null) {
 			Token paramTokens = paramsTokenWPars.toList().get(1);
 			if (paramTokens != null) {
-				List<Token> resultAsList = paramTokens.toList();
+				TList resultAsList = (TList) paramTokens;
 				int length = resultAsList.size();
 				if (length > 0) {
 					String[] result = new String[resultAsList.size()];
-					for (int i=0; i<length; ++i) {
-						result[i] = resultAsList.get(i).toValue().toString();
+					int i=0;
+					for (Token t : resultAsList) {
+						result[i] = t.toValue().toString();
+						++i;
 					}
 					return result;
 				}

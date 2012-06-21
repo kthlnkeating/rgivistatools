@@ -63,7 +63,10 @@ public class Block {
 	
 	public void addNewed(int index, Local local) {
 		if (! this.closed) {
-			this.newedLocals.put(local.getName().toString(), index);
+			String label = local.getName().toString();
+			if (! this.newedLocals.containsKey(label)) {
+				this.newedLocals.put(label, index);
+			}
 		}
 	}		
 	
@@ -123,7 +126,7 @@ public class Block {
 					continue;
 				}
 				Set<String> blockUsed = tagBlock.getUseds(overallMap, alreadyVisited);
-				if (blockUsed != null) this.mergeUsed(result, blockUsed, tagBlock.getIndex());
+				if (blockUsed != null) this.mergeUsed(result, blockUsed, ifout.getIndex());
 			} else {
 				Blocks routineBlocks = overallMap.get(routineName);
 				if (routineBlocks == null) {
@@ -136,7 +139,7 @@ public class Block {
 					continue;
 				}
 				Set<String> blockUsed = tagBlock.getUseds(overallMap, alreadyVisited);
-				if (blockUsed != null) this.mergeUsed(result, blockUsed, tagBlock.getIndex());
+				if (blockUsed != null) this.mergeUsed(result, blockUsed, ifout.getIndex());
 			}				 
 		}
 		return result;

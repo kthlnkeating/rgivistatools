@@ -46,6 +46,17 @@ public class APITest {
 		return r.getNode();
 	}
 	
+	private void usedTest(Map<String, Blocks> blocksMap, String routineName, String tag, String[] expectedUsed) {
+		Blocks rbs = blocksMap.get(routineName);
+		Block lb = rbs.get(tag);
+		Set<EntryId> entryIdTrack = new HashSet<EntryId>();
+		Set<String> inputs = lb.getUseds(blocksMap, entryIdTrack);
+		Assert.assertEquals(expectedUsed.length, inputs.size());
+		for (String expectedInput : expectedUsed) {
+			Assert.assertTrue(inputs.contains(expectedInput));			
+		}		
+	}
+	
 	@Test
 	public void testError() {
 		String[] fileNames = {"resource/APIROU00.m", "resource/APIROU01.m"};
@@ -70,15 +81,12 @@ public class APITest {
 			Blocks blocks = recorder.getBlocks();
 			blocksMap.put(routines[i].getName(), blocks);
 		}
-		Blocks rbs = blocksMap.get("APIROU01");
-		Block lb = rbs.get("STORE");
-		Set<EntryId> entryIdTrack = new HashSet<EntryId>();
-		Set<String> inputs = lb.getUseds(blocksMap, entryIdTrack);
-		Assert.assertEquals(3, inputs.size());
-		String[] expectedInputs = {"D", "K", "R"};
-		for (String expectedInput : expectedInputs) {
-			Assert.assertTrue(inputs.contains(expectedInput));
-			
-		}
+		this.usedTest(blocksMap, "APIROU00", "FACT", new String[]{"I"});
+		this.usedTest(blocksMap, "APIROU00", "SUM", new String[]{"R", "I", "M"});
+		this.usedTest(blocksMap, "APIROU00", "SUMFACT", new String[]{"P", "S"});
+		this.usedTest(blocksMap, "APIROU00", "STORE", new String[]{"D", "K", "R"});
+		this.usedTest(blocksMap, "APIROU00", "STOREG", new String[]{"A", "D", "K", "R"});
+		this.usedTest(blocksMap, "APIROU01", "SUMFACT", new String[]{"P", "S"});
+		this.usedTest(blocksMap, "APIROU01", "STORE", new String[]{"D", "K", "R"});
 	}
 }
