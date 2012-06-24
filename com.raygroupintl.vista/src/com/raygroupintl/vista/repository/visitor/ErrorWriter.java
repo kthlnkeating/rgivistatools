@@ -18,12 +18,12 @@ package com.raygroupintl.vista.repository.visitor;
 
 import java.util.List;
 
-import com.raygroupintl.m.parsetree.FileWrapper;
 import com.raygroupintl.m.parsetree.Routine;
 import com.raygroupintl.m.parsetree.visitor.ErrorRecorder;
 import com.raygroupintl.m.struct.LineLocation;
 import com.raygroupintl.m.struct.MError;
 import com.raygroupintl.m.struct.ObjectInRoutine;
+import com.raygroupintl.output.FileWrapper;
 import com.raygroupintl.vista.repository.RepositoryVisitor;
 import com.raygroupintl.vista.repository.VistaPackages;
 import com.raygroupintl.vista.repository.VistaPackage;

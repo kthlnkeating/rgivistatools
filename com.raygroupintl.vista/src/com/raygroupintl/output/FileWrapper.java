@@ -14,7 +14,7 @@
 // limitations under the License.
 //---------------------------------------------------------------------------
 
-package com.raygroupintl.m.parsetree;
+package com.raygroupintl.output;
 
 import java.io.File;
 import java.io.FileOutputStream;
@@ -30,7 +30,7 @@ public class FileWrapper {
 	private String outputFileName;
 
 	private FileOutputStream os;
-	private String eol = FileWrapper.getEOL();
+	private String eol = Utility.getEOL();
 
 	public FileWrapper(String outputFileName) {
 		this.outputFileName = outputFileName;
@@ -76,13 +76,5 @@ public class FileWrapper {
 	
 	public boolean writeEOL() {
 		return this.write(this.eol);
-	}
-	 
-	private static String getEOL() {
-		String eol = System.getProperty("line.separator");
-		if (eol == null) {
-			eol = "\n";
-		}
-		return eol;		
 	}
 }

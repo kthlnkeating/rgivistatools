@@ -25,7 +25,6 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import com.raygroupintl.m.parsetree.ErrorNode;
-import com.raygroupintl.m.parsetree.FileWrapper;
 import com.raygroupintl.m.parsetree.Node;
 import com.raygroupintl.m.parsetree.Routine;
 import com.raygroupintl.m.parsetree.data.Blocks;
@@ -35,6 +34,7 @@ import com.raygroupintl.m.token.MTFSupply;
 import com.raygroupintl.m.token.MVersion;
 import com.raygroupintl.m.token.TFRoutine;
 import com.raygroupintl.m.token.MRoutine;
+import com.raygroupintl.output.FileWrapper;
 import com.raygroupintl.parser.SyntaxErrorException;
 import com.raygroupintl.parser.annotation.ParseException;
 import com.raygroupintl.vista.repository.RepositoryInfo;

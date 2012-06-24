@@ -21,10 +21,11 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-import com.raygroupintl.m.parsetree.FileWrapper;
 import com.raygroupintl.m.parsetree.data.Block;
 import com.raygroupintl.m.parsetree.data.Blocks;
 import com.raygroupintl.m.parsetree.data.EntryId;
+import com.raygroupintl.output.FileWrapper;
+import com.raygroupintl.output.TerminalFormatter;
 import com.raygroupintl.vista.repository.RepositoryInfo;
 
 public class APIWriter {
@@ -40,6 +41,8 @@ public class APIWriter {
 		
 	public void write(List<EntryId> entryIds) {
 		if (this.fileWrapper.start()) {
+			TerminalFormatter f = new TerminalFormatter();
+			f.setTab(12);
 			for (EntryId entryId : entryIds) {				
 				String routineName = entryId.getRoutineName();
 				this.fileWrapper.write("Routine: " + routineName);
@@ -56,13 +59,12 @@ public class APIWriter {
 						this.fileWrapper.writeEOL();						
 					} else {
 						Set<EntryId> entryIfTrack = new HashSet<EntryId>();
-						Set<String> inputs = lb.getUseds(this.routineBlocks, entryIfTrack);
-						this.fileWrapper.write("  " + "INPUT");
-						this.fileWrapper.writeEOL();
+						Set<String> inputs = lb.getUseds(this.routineBlocks, entryIfTrack);						
+						this.fileWrapper.write(f.startList("INPUT"));
 						for (String input : inputs) {
-							this.fileWrapper.write(input);
-							this.fileWrapper.writeEOL();
+							this.fileWrapper.write(f.addToList(input));
 						}
+						this.fileWrapper.writeEOL();
 					}
 				}				
 				this.fileWrapper.writeEOL();

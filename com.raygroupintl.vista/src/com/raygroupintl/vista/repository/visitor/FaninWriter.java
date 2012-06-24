@@ -19,10 +19,10 @@ package com.raygroupintl.vista.repository.visitor;
 import java.util.List;
 import java.util.Set;
 
-import com.raygroupintl.m.parsetree.FileWrapper;
 import com.raygroupintl.m.parsetree.Routine;
 import com.raygroupintl.m.parsetree.data.EntryId;
 import com.raygroupintl.m.parsetree.visitor.FanInRecorder;
+import com.raygroupintl.output.FileWrapper;
 import com.raygroupintl.struct.Filter;
 import com.raygroupintl.vista.repository.RepositoryInfo;
 import com.raygroupintl.vista.repository.RepositoryVisitor;
