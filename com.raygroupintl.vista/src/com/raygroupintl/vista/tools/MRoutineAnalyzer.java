@@ -18,7 +18,6 @@ package com.raygroupintl.vista.tools;
 
 import java.io.IOException;
 import java.nio.file.Path;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.logging.Level;
@@ -28,7 +27,6 @@ import com.raygroupintl.m.parsetree.ErrorNode;
 import com.raygroupintl.m.parsetree.Node;
 import com.raygroupintl.m.parsetree.Routine;
 import com.raygroupintl.m.parsetree.data.Blocks;
-import com.raygroupintl.m.parsetree.data.EntryId;
 import com.raygroupintl.m.struct.MError;
 import com.raygroupintl.m.token.MTFSupply;
 import com.raygroupintl.m.token.MVersion;
@@ -93,21 +91,6 @@ public class MRoutineAnalyzer {
 		return packageNodes;		
 	}
 	
-	private static List<EntryId> getEntryIds() {
-		List<EntryId> result = new ArrayList<EntryId>();
-		EntryId eid0 = new EntryId("SCDXMSG2", "LATEACT");
-		result.add(eid0);
-		EntryId eid1 = new EntryId("DGUTL3", "GETSHAD");
-		result.add(eid1);
-		EntryId eid2 = new EntryId("SCDXUTL", "FMDATE");
-		result.add(eid2);
-		EntryId eid3 = new EntryId("LRPXAPIU", "ABDN");
-		result.add(eid3);
-		EntryId eid4 = new EntryId("SCDXPOV", "EN");
-		result.add(eid4);
-		return result;
-	}
-	
 	public static void main(String[] args) {
 		try {
 			CLIParams options = CLIParams.getInstance(args);
@@ -140,9 +123,8 @@ public class MRoutineAnalyzer {
 				APIOverallRecorder api = new APIOverallRecorder();
 				packageNodes.accept(api);
 				Map<String, Blocks> blocks = api.getBlocks();
-				APIWriter apiw = new APIWriter(ri, fr, blocks);
-				List<EntryId> entryIds = getEntryIds();
-				apiw.write(entryIds);
+				APIWriter apiw = new APIWriter(fr, blocks);
+				apiw.write(options.inputFile);
 				return;
 			}
 			LOGGER.log(Level.SEVERE, "Unknown analysis type " + at);

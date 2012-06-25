@@ -34,6 +34,9 @@ public class CLIParams {
 	@CLIParameter(names={"-o", "--output"})
 	public String outputFile;
 	 
+	@CLIParameter(names={"-i", "--input"})
+	public String inputFile;
+	 
 	@CLIParameter(names={"-t", "--type"})
 	public String analysisType = "error";
 	
@@ -51,6 +54,12 @@ public class CLIParams {
 		if (this.outputFile == null) {
 			CLIParams.logError("No output file is specified.");
 			return false;
+		}
+		if (this.analysisType.equals("api")) {
+			if (this.inputFile == null) {
+				CLIParams.logError("No input file is specified.");
+				return false;				
+			}
 		}
 		return true;
 	}
