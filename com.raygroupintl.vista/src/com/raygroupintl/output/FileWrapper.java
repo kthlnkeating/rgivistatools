@@ -74,6 +74,13 @@ public class FileWrapper {
 		return false;
 	}
 	
+	public boolean writeEOL(String data) {
+		if (this.write(data)) {
+			return this.write(this.eol);
+		}
+		return false;
+	}
+
 	public boolean writeEOL() {
 		return this.write(this.eol);
 	}

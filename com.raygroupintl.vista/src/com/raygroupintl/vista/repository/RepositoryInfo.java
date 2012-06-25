@@ -89,14 +89,13 @@ public class RepositoryInfo {
 	
 	public VistaPackage getPackageFromRoutineName(String routineName) {
 		VistaPackage result = null;
-		int n = routineName.length();
-		for (int i=0; i<n; ++i) {
+		int n = java.lang.Math.min(routineName.length(), 4);
+		for (int i=1; i<=n; ++i) {
 			String prefix = routineName.substring(0, i);
 			VistaPackage pi = this.packagesByPrefix.get(prefix);
-			if ((pi == null) && (result != null)) {
-				return result;
+			if (pi != null) {
+				result = pi;
 			}
-			result = pi;
 		}
 		if (result == null) {
 			result = new VistaPackage("UNCATEGORIZED", "Uncategorized", this.rf);

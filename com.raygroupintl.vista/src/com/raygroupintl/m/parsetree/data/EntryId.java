@@ -16,7 +16,7 @@
 
 package com.raygroupintl.m.parsetree.data;
 
-public class EntryId {
+public class EntryId implements Comparable<EntryId> {
 	private String routineName;
 	private String label;
 	
@@ -70,5 +70,29 @@ public class EntryId {
 			lbl = "";
 		}					
 		return lbl + rou;		
+	}
+
+	private int compareLabels(String lhs, String rhs) {
+		if (lhs == null) {
+			if (rhs == null) return 0;
+			return 1;
+		}
+		if (rhs == null) return -1;
+		return lhs.compareTo(rhs);
+	}
+	
+	@Override
+	public int compareTo(EntryId rhs) {
+		if (rhs.routineName == null) {
+			if (this.routineName != null) return -1;
+			return compareLabels(this.label, rhs.label);
+		}
+		if (this.routineName == null) return 1;
+		int result = this.routineName.compareTo(rhs.routineName);
+		if (result == 0) {
+			return compareLabels(this.label, rhs.label);
+		} else {
+			return result;
+		}
 	}
 }

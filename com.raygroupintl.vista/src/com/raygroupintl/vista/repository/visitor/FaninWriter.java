@@ -16,7 +16,11 @@
 
 package com.raygroupintl.vista.repository.visitor;
 
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
 import com.raygroupintl.m.parsetree.Routine;
@@ -57,10 +61,28 @@ public class FaninWriter extends RepositoryVisitor {
 			p.accept(this);
 		}
 		Set<EntryId> fanins = this.faninRecorder.getFanIns();
+		Map<String, List<EntryId>> faninsByPackage = new HashMap<String, List<EntryId>>();
+		for (VistaPackage p : packages) {
+			String name = p.getPackageName();
+			faninsByPackage.put(name, new ArrayList<EntryId>());
+		}
+		faninsByPackage.put("UNCATEGORIZED", new ArrayList<EntryId>());
+		for (EntryId f : fanins) {
+			String routineName = f.getRoutineName();
+			VistaPackage p = this.repositoryInfo.getPackageFromRoutineName(routineName);
+			String packageName = p.getPackageName();
+			List<EntryId> entryIds = faninsByPackage.get(packageName);
+			entryIds.add(f);
+		}
 		if (this.fileWrapper.start()) {
-			for (EntryId f : fanins) {
-				this.fileWrapper.write(f.toString());
-				this.fileWrapper.writeEOL();
+			for (VistaPackage p : packages) {
+				String name = p.getPackageName();
+				this.fileWrapper.writeEOL(name + ":");
+				List<EntryId> fs = faninsByPackage.get(name);
+				Collections.sort(fs);
+				for (EntryId f : fs) {
+					this.fileWrapper.writeEOL(f.toString());
+				}
 			}
 			this.fileWrapper.stop();
 		}
