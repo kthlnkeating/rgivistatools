@@ -36,9 +36,8 @@ public class TerminalFormatter {
 		return new String(spaces);		
 	}
 	
-	public String startList(String title) {
+	private String getTitle(String title) {
 		int length = title.length();
-		this.listIndex = 0;
 		if (this.tab + 2 < length) {
 			this.column = length;
 			return title;
@@ -48,6 +47,18 @@ public class TerminalFormatter {
 			this.column = result.length();
 			return result;
 		}
+		
+	}
+	
+	public String startList(String title) {
+		this.listIndex = 0;
+		return this.getTitle(title);
+	}
+	
+	public String titled(String title, String msg) {
+		String result = this.getTitle(title);
+		result += msg;
+		return result;
 	}
 	
 	public String addToList(String listElement) {

@@ -44,18 +44,16 @@ public class APIWriter {
 	private void write(EntryId entryId) {
 		this.tf.setTab(12);
 		String routineName = entryId.getRoutineName();
-		this.fileWrapper.write("Routine: " + routineName);
+		this.fileWrapper.write(" " + entryId.toString());
 		this.fileWrapper.writeEOL();
 		Blocks rbs = this.routineBlocks.get(routineName);
 		if (rbs == null) {
-			this.fileWrapper.write("  " + "ERROR: No routine API information is found for " + routineName);
-			this.fileWrapper.writeEOL();
+			this.fileWrapper.writeEOL(this.tf.titled("ERROR", "Routine " + routineName + " is missing."));
 		} else {
 			String label = entryId.getLabelOrDefault();
 			Block lb = rbs.get(label);
 			if (lb == null) {
-				this.fileWrapper.write("  " + "ERROR: No entry API information is found for " + entryId.toString());
-				this.fileWrapper.writeEOL();						
+				this.fileWrapper.writeEOL(this.tf.titled("ERROR", "Tag " + entryId.toString() + " is missing."));
 			} else {
 				Set<EntryId> entryIfTrack = new HashSet<EntryId>();
 				Set<String> inputs = lb.getUseds(this.routineBlocks, entryIfTrack);						
