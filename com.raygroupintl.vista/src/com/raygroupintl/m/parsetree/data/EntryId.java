@@ -17,6 +17,11 @@
 package com.raygroupintl.m.parsetree.data;
 
 public class EntryId implements Comparable<EntryId> {
+	public enum StringFormat {
+		SF_SINGLE_LABEL,
+		SF_SINGLE_ROUTINE;
+	}
+	
 	private String routineName;
 	private String label;
 	
@@ -94,5 +99,26 @@ public class EntryId implements Comparable<EntryId> {
 		} else {
 			return result;
 		}
+	}
+	
+	public static EntryId getInstance(String tag, StringFormat format) {
+		if (tag != null) {
+			String[] pieces = tag.split("\\^");
+			if ((pieces != null) && (pieces.length > 0) && (pieces.length < 3)) {
+				if (pieces.length > 1) {
+					String label = pieces[0];
+					String routine = pieces[1];
+					return new EntryId(routine, label);
+				} else {
+					switch (format) {
+					case SF_SINGLE_ROUTINE:
+						return new EntryId(pieces[0], null);
+					default:
+						return new EntryId(null, pieces[0]);
+					}
+				}
+			}
+		}
+		return null;
 	}
 }

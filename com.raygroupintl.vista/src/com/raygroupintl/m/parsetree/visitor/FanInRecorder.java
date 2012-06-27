@@ -16,6 +16,7 @@
 
 package com.raygroupintl.m.parsetree.visitor;
 
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
@@ -26,7 +27,8 @@ import com.raygroupintl.m.parsetree.data.EntryId;
 import com.raygroupintl.m.struct.LineLocation;
 
 public class FanInRecorder extends FanoutRecorder {
-	private Set<EntryId> fanins = new HashSet<>();
+	private Map<EntryId, Set<String>> fanins = new HashMap<EntryId, Set<String>>();
+	private String currentPackageName = "UNCATEGORIZED";
 	
 	protected void visitRoutine(Routine routine) {
 		super.visitRoutine(routine);
@@ -34,17 +36,22 @@ public class FanInRecorder extends FanoutRecorder {
 		if (fanouts != null) {
 			for (List<EntryId> fs : fanouts.values()) {
 				for (EntryId f : fs) {
-					this.fanins.add(f);
+					Set<String> current = this.fanins.get(f);
+					if (current == null) {
+						current =  new HashSet<String>();
+						this.fanins.put(f, current);
+					}
+					current.add(this.currentPackageName);
 				}		
 			}
 		}
 	}
 	
-	public void reset() {
-		this.fanins = new HashSet<>();
+	public void setCurrentPackageName(String currentPackageName) {
+		this.currentPackageName = currentPackageName;
 	}
 	
-	public Set<EntryId> getFanIns() {
+	public Map<EntryId, Set<String>> getFanIns() {
 		return this.fanins;
 	}
 }

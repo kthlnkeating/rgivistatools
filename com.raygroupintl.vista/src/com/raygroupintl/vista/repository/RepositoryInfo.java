@@ -27,8 +27,49 @@ import java.util.Map;
 import java.util.Scanner;
 import java.util.TreeMap;
 
+import com.raygroupintl.m.parsetree.data.EntryId;
+import com.raygroupintl.m.parsetree.data.EntryIdWithSource;
+import com.raygroupintl.m.parsetree.data.EntryId.StringFormat;
+import com.raygroupintl.stringlib.DigitFilter;
+import com.raygroupintl.struct.Filter;
+import com.raygroupintl.struct.Transformer;
+
 
 public class RepositoryInfo {
+	private static class OptionFilter implements Filter<MGlobalNode> {
+		private DigitFilter digitFilter = new DigitFilter();
+		
+		@Override
+		public boolean isValid(MGlobalNode input) {
+			if (this.digitFilter.isValid(input.getName())) {			
+				MGlobalNode node0 = input.getNode("0");
+				if (node0 != null) {
+					String type = node0.getValuePiece(3);
+					if ((type != null) && (type.equals("R"))) {
+						MGlobalNode node25 = input.getNode("25");
+						return node25 != null;
+					}				
+				}
+			}
+			return false;
+		}
+	}
+		
+	private static class OptionTransformer implements Transformer<MGlobalNode, EntryIdWithSource> {
+		@Override 
+		public EntryIdWithSource transform(MGlobalNode node) {
+			MGlobalNode node25 = node.getNode("25");
+			String value = node25.getValue().split("\\(")[0];
+			EntryId entryId = EntryId.getInstance(value, StringFormat.SF_SINGLE_ROUTINE);
+			if ((entryId != null) && (entryId.getRoutineName() != null)) {
+				MGlobalNode node0 = node.getNode("0");
+				String source = node0.getValuePiece(0);
+				return new EntryIdWithSource(entryId, source);
+			}
+			return null;
+		}			
+	}
+	
 	private List<VistaPackage> packages = new ArrayList<VistaPackage>();
 	private Map<String, VistaPackage> packagesByName = new HashMap<String, VistaPackage>();
 	private TreeMap<String, VistaPackage> packagesByPrefix = new TreeMap<String, VistaPackage>();
@@ -100,6 +141,16 @@ public class RepositoryInfo {
 		if (result == null) {
 			result = new VistaPackage("UNCATEGORIZED", "Uncategorized", this.rf);
 		}
+		return result;
+	}
+	
+	public List<EntryIdWithSource> getOptionEntryPoints() {
+		String root = RepositoryInfo.getLocation();
+		Path path = Paths.get(root, "Packages", "Kernel", "Globals", "19+OPTION.zwr");
+		MGlobalNode rootNode = new MGlobalNode();
+		rootNode.read(path);
+		MGlobalNode node = rootNode.getNode("DIC","19");
+		List<EntryIdWithSource> result = node.getValues(new OptionFilter(), new OptionTransformer());
 		return result;
 	}
 	

@@ -18,42 +18,73 @@ package com.raygroupintl.vista.repository;
 
 import java.io.IOException;
 import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Scanner;
-import java.util.Set;
-import java.util.TreeMap;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import com.raygroupintl.stringlib.MComparator;
 import com.raygroupintl.struct.Filter;
 import com.raygroupintl.struct.Transformer;
 
 public class MGlobalNode {
+	private static class NodeComparator implements Comparator<MGlobalNode> {
+		private MComparator nameComparator = new MComparator();
+		
+		@Override
+		public int compare(MGlobalNode o1, MGlobalNode o2) {
+			String n1 = o1.getName();
+			String n2 = o2.getName();
+			return nameComparator.compare(n1, n2);
+		}
+	}
+	
 	private final static Logger LOGGER = Logger.getLogger(MGlobalNode.class.getName());
 
 	private String name;
 	private String value;
-	private Map<String, MGlobalNode> subScripts;
+	private Map<String, MGlobalNode> subNodes;
+	
+	private NodeComparator nodeComparator = new NodeComparator();
 
+	public MGlobalNode() {
+	}
+	
 	public MGlobalNode(String name) {
 		this.name = name;
 	}
 	
 	public String getName() {
-		return this.name;
+		return this.name == null ? "" : this.name;
 	}
 	
 	public MGlobalNode getNode(String... subscripts) {
 		MGlobalNode valueHolder = this;
-		for (int i=0; i<subscripts.length-1; ++i) {
-			if (valueHolder.subScripts == null) return null;
-			valueHolder = valueHolder.subScripts.get(subscripts[i]);
+		for (int i=0; i<subscripts.length; ++i) {
+			if (valueHolder.subNodes == null) return null;
+			valueHolder = valueHolder.subNodes.get(subscripts[i]);
 			if (valueHolder == null) return null;
 		}
 		return valueHolder;
+	}
+	
+	public String getValuePiece(int index) {
+		if (this.value != null) {
+			String[] pieces = this.value.split("\\^");
+			if (index < pieces.length) {
+				return pieces[index];
+			}
+		}
+		return null;
+	}
+	
+	public String getValue() {
+		return this.value;
 	}
 	
 	public String getValue(String... subscripts) {
@@ -65,15 +96,22 @@ public class MGlobalNode {
 		}
 	}
 	
-	public <T> List<T> getValues(Filter<String> keyFilter, Transformer<String, T> transformer) {
+	public <T> List<T> getValues(Filter<MGlobalNode> filter, Transformer<MGlobalNode, T> transformer) {
 		List<T> result = null;
-		if (this.subScripts != null) {
-			Set<String> names = this.subScripts.keySet();
-			for (String name : names) {
-				if (keyFilter.isValid(name)) {
-					MGlobalNode subNode = this.subScripts.get(name);
-					String value = subNode.value;
-					T transformedValue = transformer.transform(value);
+		if (this.subNodes != null) {
+			List<MGlobalNode> validNodes = null;
+			for (MGlobalNode node : this.subNodes.values()) {
+				if (filter.isValid(node)) {
+					if (validNodes == null) {
+						validNodes = new ArrayList<MGlobalNode>();
+					}
+					validNodes.add(node);
+				}
+			}
+			if (validNodes != null) {
+				Collections.sort(validNodes, this.nodeComparator);
+				for (MGlobalNode subNode : validNodes) {
+					T transformedValue = transformer.transform(subNode);
 					if (transformedValue != null) {
 						if (result == null) {
 							result = new ArrayList<T>();
@@ -81,7 +119,7 @@ public class MGlobalNode {
 						result.add(transformedValue);
 					}
 				}
-			}			
+			}
 		}
 		return result;
 	}
@@ -90,13 +128,13 @@ public class MGlobalNode {
 		MGlobalNode valueHolder = this;
 		for (int i=0; i<values.length-1; ++i) {
 			String value = values[i];
-			if (valueHolder.subScripts == null) {
-				valueHolder.subScripts = new TreeMap<String, MGlobalNode>();
+			if (valueHolder.subNodes == null) {
+				valueHolder.subNodes = new HashMap<String, MGlobalNode>();
 			}
-			MGlobalNode nextValueHolder = valueHolder.subScripts.get(value);
+			MGlobalNode nextValueHolder = valueHolder.subNodes.get(value);
 			if (nextValueHolder == null) {
 				nextValueHolder = new MGlobalNode(value);
-				valueHolder.subScripts.put(value, nextValueHolder);
+				valueHolder.subNodes.put(value, nextValueHolder);
 			}
 			valueHolder = nextValueHolder;
 		}
@@ -104,8 +142,12 @@ public class MGlobalNode {
 	}
 	
 	private String getWithNoQuote(String value) {
-		if (value.charAt(0) == '"') {
-			return value.substring(0, value.length()-1);
+		if ((! value.isEmpty()) && (value.charAt(0) == '"')) {
+			if (value.length() < 2) {
+				return "";
+			} else {
+				return value.substring(1, value.length()-1);
+			}
 		} else {
 			return value;
 		}
@@ -122,9 +164,8 @@ public class MGlobalNode {
 		this.setValue(fullValues);
 	}
 	
-	public void read(String fileName) {
+	public void read(Path path) {
 		try {
-			Path path = Paths.get(fileName);
 			Scanner scanner = new Scanner(path);
 			while (scanner.hasNextLine()) {
 				String line = scanner.nextLine();
@@ -132,7 +173,7 @@ public class MGlobalNode {
 					String[] nodesAndValue = line.split("=");
 					String node = nodesAndValue[0];
 					String value = nodesAndValue[1];
-					String[] nameAndIndices = node.split("(");
+					String[] nameAndIndices = node.split("\\(");
 					String name = nameAndIndices[0].substring(1);
 					String indicesWithComma = nameAndIndices[1].substring(0, nameAndIndices[1].length()-1);
 					String[] indices = indicesWithComma.split(",");
@@ -141,7 +182,7 @@ public class MGlobalNode {
 			}
 			scanner.close();
 		} catch (IOException exception) {
-			LOGGER.log(Level.SEVERE, "Unable to read global node from file " + fileName);
+			LOGGER.log(Level.SEVERE, "Unable to read global node from file " + path.toString());
 		}
 	}
 }

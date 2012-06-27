@@ -19,8 +19,8 @@ package com.raygroupintl.vista.repository.visitor;
 import java.io.IOException;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.Arrays;
 import java.util.HashSet;
-import java.util.List;
 import java.util.Map;
 import java.util.Scanner;
 import java.util.Set;
@@ -41,11 +41,34 @@ public class APIWriter {
 		this.routineBlocks = routineBlocks;
 	}
 
-	private void write(EntryId entryId) {
-		this.tf.setTab(12);
+	private void write(String[] linePieces, int pieceIndex, String title) {
+		this.fileWrapper.write(this.tf.startList(title));
+		boolean has = false;
+		if (linePieces.length > pieceIndex) {
+			String piece = linePieces[pieceIndex];
+			if ((piece != null) && (! piece.isEmpty())) {
+				String[] sources = piece.split("\\,");
+				Arrays.sort(sources);
+ 			    for (String source : sources) {
+					this.fileWrapper.write(this.tf.addToList(source));
+					has = true;
+				}
+			}
+		}
+		if (! has) {
+			this.fileWrapper.write(this.tf.addToList("--"));			
+		}
+		this.fileWrapper.writeEOL();		
+	}
+		
+	private void write(EntryId entryId, String[] linePieces) {
 		String routineName = entryId.getRoutineName();
-		this.fileWrapper.write(" " + entryId.toString());
-		this.fileWrapper.writeEOL();
+		this.fileWrapper.writeEOL(" " + entryId.toString());
+		this.tf.setTab(19);
+		this.write(linePieces, 1, "CALLING PACKAGES");
+		this.write(linePieces, 3, "CALLING RPC'S");
+		this.write(linePieces, 2, "CALLING OPTIONS");
+		this.tf.setTab(12);
 		Blocks rbs = this.routineBlocks.get(routineName);
 		if (rbs == null) {
 			this.fileWrapper.writeEOL(this.tf.titled("ERROR", "Routine " + routineName + " is missing."));
@@ -84,12 +107,13 @@ public class APIWriter {
 					this.fileWrapper.writeEOL(String.valueOf(packageCount) + ". PACKAGE NAME: " + name);
 					this.fileWrapper.writeEOL();
 				} else {
-					String[] pieces = line.split("\\^");
+					String[] linePieces = line.split("\\|");
+					String[] pieces = linePieces[0].split("\\^");
 					if ((pieces != null) && (pieces.length > 0)) {
 						String label = pieces[0];
 						String routineName = pieces.length > 1 ? pieces[1] : null;
 						EntryId entryId = new EntryId(routineName, label);
-						this.write(entryId);
+						this.write(entryId, linePieces);
 					}
 				}
 			}		
@@ -106,15 +130,6 @@ public class APIWriter {
 	public void write(String fanInFileName) {
 		if (this.fileWrapper.start()) {
 			this.auxWrite(fanInFileName);
-			this.fileWrapper.stop();
-		}
-	}
-
-	public void write(List<EntryId> entryIds) {
-		if (this.fileWrapper.start()) {
-			for (EntryId entryId : entryIds) {	
-				this.write(entryId);
-			}			
 			this.fileWrapper.stop();
 		}
 	}
