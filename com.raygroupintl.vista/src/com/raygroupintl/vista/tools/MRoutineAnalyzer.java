@@ -18,6 +18,7 @@ package com.raygroupintl.vista.tools;
 
 import java.io.IOException;
 import java.nio.file.Path;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.logging.Level;
@@ -48,6 +49,79 @@ import com.raygroupintl.vista.repository.visitor.FanoutWriter;
 public class MRoutineAnalyzer {
 	private final static Logger LOGGER = Logger.getLogger(MRoutineAnalyzer.class.getName());
 
+	private static Map<String, String> replacementRoutines = new HashMap<String, String>();
+	static {
+		replacementRoutines.put("%ZOSV", "ZOSVONT");
+		replacementRoutines.put("%ZIS4", "ZIS4ONT");
+		replacementRoutines.put("%ZISF", "ZISFONT");
+		replacementRoutines.put("%ZISH", "ZISHONT");
+		replacementRoutines.put("%XUCI", "ZISHONT");
+
+		replacementRoutines.put("%ZISTCPS", "ZISTCPS");
+		replacementRoutines.put("%ZTMDCL", "ZTMDCL");
+		
+		replacementRoutines.put("%ZOSVKR", "ZOSVKRO");
+		replacementRoutines.put("%ZOSVKSE", "ZOSVKSOE");
+		replacementRoutines.put("%ZOSVKSS", "ZOSVKSOS");
+		replacementRoutines.put("%ZOSVKSD", "ZOSVKSD");
+
+		replacementRoutines.put("%ZTLOAD", "ZTLOAD");
+		replacementRoutines.put("%ZTLOAD1", "ZTLOAD1");
+		replacementRoutines.put("%ZTLOAD2", "ZTLOAD2");
+		replacementRoutines.put("%ZTLOAD3", "ZTLOAD3");
+		replacementRoutines.put("%ZTLOAD4", "ZTLOAD4");
+		replacementRoutines.put("%ZTLOAD5", "ZTLOAD5");
+		replacementRoutines.put("%ZTLOAD6", "ZTLOAD6");
+		replacementRoutines.put("%ZTLOAD7", "ZTLOAD7");
+		
+		replacementRoutines.put("%ZTM", "ZTM");
+		replacementRoutines.put("%ZTM0", "ZTM0");
+		replacementRoutines.put("%ZTM1", "ZTM1");
+		replacementRoutines.put("%ZTM2", "ZTM2");
+		replacementRoutines.put("%ZTM3", "ZTM3");
+		replacementRoutines.put("%ZTM4", "ZTM4");
+		replacementRoutines.put("%ZTM5", "ZTM5");
+		replacementRoutines.put("%ZTM6", "ZTM6");
+		
+		replacementRoutines.put("%ZTMS", "ZTMS");
+		replacementRoutines.put("%ZTMS0", "ZTMS0");
+		replacementRoutines.put("%ZTMS1", "ZTMS1");
+		replacementRoutines.put("%ZTMS2", "ZTMS2");
+		replacementRoutines.put("%ZTMS3", "ZTMS3");
+		replacementRoutines.put("%ZTMS4", "ZTMS4");
+		replacementRoutines.put("%ZTMS5", "ZTMS5");
+		replacementRoutines.put("%ZTMS7", "ZTMS7");
+		replacementRoutines.put("%ZTMSH", "ZTMSH");
+
+		replacementRoutines.put("%DT", "DIDT");
+		replacementRoutines.put("%DTC", "DIDTC");
+		replacementRoutines.put("%RCR", "DIRCR");
+
+		replacementRoutines.put("%ZTER", "ZTER");
+		replacementRoutines.put("%ZTER1", "ZTER1");
+
+		replacementRoutines.put("%ZTPP", "ZTPP");
+		replacementRoutines.put("%ZTP1", "ZTP1");
+		replacementRoutines.put("%ZTPTCH", "ZTPTCH");
+		replacementRoutines.put("%ZTRDE", "ZTRDE");
+		replacementRoutines.put("%ZTMOVE", "ZTMOVE");
+		
+		replacementRoutines.put("%ZIS", "ZIS");
+		replacementRoutines.put("%ZIS1", "ZIS1");
+		replacementRoutines.put("%ZIS2", "ZIS2");
+		replacementRoutines.put("%ZIS3", "ZIS3");
+		replacementRoutines.put("%ZIS5", "ZIS5");
+		replacementRoutines.put("%ZIS6", "ZIS6");
+		replacementRoutines.put("%ZIS7", "ZIS7");
+		replacementRoutines.put("%ZISC", "ZISC");
+		replacementRoutines.put("%ZISP", "ZISP");
+		replacementRoutines.put("%ZISS", "ZISS");
+		replacementRoutines.put("%ZISS1", "ZISS1");
+		replacementRoutines.put("%ZISS2", "ZISS2");
+		replacementRoutines.put("%ZISTCP", "ZISTCP");
+		replacementRoutines.put("%ZISUTL", "ZISUTL");
+	}
+	
 	public static class MRARoutineFactory implements RoutineFactory {
 		private TFRoutine tokenFactory;
 		
@@ -123,7 +197,7 @@ public class MRoutineAnalyzer {
 				APIOverallRecorder api = new APIOverallRecorder();
 				packageNodes.accept(api);
 				Map<String, Blocks> blocks = api.getBlocks();
-				APIWriter apiw = new APIWriter(fr, blocks);
+				APIWriter apiw = new APIWriter(fr, blocks, replacementRoutines);
 				//apiw.writeEntry("ADD^ABSV88B");
 				apiw.write(options.inputFile);
 				return;

@@ -27,10 +27,12 @@ import com.raygroupintl.m.token.TFRoutine;
 
 public class APITest {
 	private static MTFSupply supply;
+	private static Map<String, String> replacement = new HashMap<String, String>();
 	
 	@BeforeClass
 	public static void setUpBeforeClass() throws Exception {
 		supply = MTFSupply.getInstance(MVersion.CACHE);
+		replacement.put("%DTC", "APIROU02");
 	}
 
 	@AfterClass
@@ -51,7 +53,7 @@ public class APITest {
 		Blocks rbs = blocksMap.get(routineName);
 		Block lb = rbs.get(tag);
 		Set<EntryId> entryIdTrack = new HashSet<EntryId>();
-		APIData apiData = lb.getAPIData(blocksMap, entryIdTrack);
+		APIData apiData = lb.getAPIData(blocksMap, entryIdTrack, replacement);
 		Set<String> inputs = new HashSet<String>(apiData.getInputs());
 		Assert.assertEquals(expectedInputs.length, inputs.size());
 		for (String expectedInput : expectedInputs) {
@@ -66,7 +68,7 @@ public class APITest {
 	
 	@Test
 	public void testError() {
-		String[] fileNames = {"resource/APIROU00.m", "resource/APIROU01.m"};
+		String[] fileNames = {"resource/APIROU00.m", "resource/APIROU01.m", "resource/APIROU02.m"};
 		Routine[] routines = new Routine[fileNames.length];
 		{
 			int i = 0;
@@ -93,6 +95,8 @@ public class APITest {
 		this.usedTest(blocksMap, "APIROU00", "SUMFACT", new String[]{"S"}, new String[]{"P"});
 		this.usedTest(blocksMap, "APIROU00", "STORE", new String[]{"D", "K"}, new String[]{"D", "R"});
 		this.usedTest(blocksMap, "APIROU00", "STOREG", new String[]{"K", "D"}, new String[]{"A", "D", "R"});
+		this.usedTest(blocksMap, "APIROU00", "TOOTHER", new String[]{"I"}, new String[]{"I", "M"});
+		this.usedTest(blocksMap, "APIROU00", "TONONE", new String[]{"A", "D", "ME"}, new String[]{"A", "D", "NE", "HR"});
 		this.usedTest(blocksMap, "APIROU00", "ZZ", new String[]{"A", "D"}, new String[]{"A", "D"});
 		this.usedTest(blocksMap, "APIROU01", "SUMFACT", new String[]{"S"}, new String[]{"P"});
 		this.usedTest(blocksMap, "APIROU01", "STORE", new String[]{"D", "K"}, new String[]{"D", "R"});

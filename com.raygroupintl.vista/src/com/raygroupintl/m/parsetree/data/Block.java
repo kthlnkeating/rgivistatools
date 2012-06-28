@@ -18,6 +18,7 @@ package com.raygroupintl.m.parsetree.data;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -29,6 +30,7 @@ import com.raygroupintl.m.parsetree.visitor.APIRecorder;
 
 public class Block {
 	private final static Logger LOGGER = Logger.getLogger(APIRecorder.class.getName());
+	private static Set<EntryId> reported = new HashSet<EntryId>();
 
 	private int index;
 	private EntryId entryId;
@@ -121,7 +123,7 @@ public class Block {
 		return this.inputLocals.containsKey(name) || this.outputLocals.containsKey(name);
 	}
 	
-	public APIData getAPIData(Map<String, Blocks> overallMap, Set<EntryId> alreadyVisited) {
+	public APIData getAPIData(Map<String, Blocks> overallMap, Set<EntryId> alreadyVisited, Map<String, String> replacedRoutines) {
 		if (alreadyVisited.contains(this.entryId)) return null;
 		APIData result = new APIData(this.inputLocals.keySet(), this.outputLocals.keySet());
 		alreadyVisited.add(this.entryId);
@@ -135,23 +137,58 @@ public class Block {
 			if (routineName == null) {
 				Block tagBlock = this.siblings.get(tagName);
 				if (tagBlock == null) {
-					LOGGER.log(Level.SEVERE, "Unable to find information about tag " + tagName + " in " + this.entryId.getRoutineName());
-					continue;
+					String inRoutineName = this.entryId.getRoutineName();
+					if (inRoutineName != null) {
+						String replacement = replacedRoutines.get(tagName);
+						if ((replacement != null) && (replacement.equals(inRoutineName))) {
+							tagBlock = this.siblings.get(replacement);
+						}
+					}
+					if (tagBlock == null) {
+						if (! reported.contains(fout)) {						
+							LOGGER.log(Level.SEVERE, "Unable to find information about tag " + tagName + " in " + this.entryId.getRoutineName());
+							reported.add(fout);
+						}
+						continue;
+					}
 				}
-				APIData blockUsed = tagBlock.getAPIData(overallMap, alreadyVisited);
+				APIData blockUsed = tagBlock.getAPIData(overallMap, alreadyVisited, replacedRoutines);
 				if (blockUsed != null) result.merge(blockUsed, ifout.getIndex(), this.newedLocals);
 			} else {
 				Blocks routineBlocks = overallMap.get(routineName);
+				String originalTagName = tagName;
 				if (routineBlocks == null) {
-					LOGGER.log(Level.SEVERE, "Unable to find information about routine " + routineName);
-					continue;
+					if (replacedRoutines != null) {
+						String replacement = replacedRoutines.get(routineName);
+						if (replacement != null) {
+							routineBlocks = overallMap.get(replacement);
+							if (tagName.equals(routineName)) {
+								tagName = replacement;
+							}
+						}
+					}
+					if (routineBlocks == null) {					
+						if (! reported.contains(fout)) {
+							LOGGER.log(Level.SEVERE, "Unable to find information about routine " + routineName);
+							reported.add(fout);
+						}
+						continue;
+					}
 				}
 				Block tagBlock = routineBlocks.get(tagName);
 				if (tagBlock == null) {
-					LOGGER.log(Level.SEVERE, "Unable to find information about tag " + fout.toString() + " in " + routineName);
-					continue;
+					if (! originalTagName.equals(tagName)) {
+						tagBlock = routineBlocks.get(originalTagName);
+					}
+					if (tagBlock == null) {
+						if (! reported.contains(fout)) {
+							LOGGER.log(Level.SEVERE, "Unable to find information about tag " + fout.toString() + " in " + routineName);
+							reported.add(fout);
+						}
+						continue;
+					}
 				}
-				APIData blockUsed = tagBlock.getAPIData(overallMap, alreadyVisited);
+				APIData blockUsed = tagBlock.getAPIData(overallMap, alreadyVisited, replacedRoutines);
 				if (blockUsed != null) result.merge(blockUsed, ifout.getIndex(), this.newedLocals);
 			}				 
 		}

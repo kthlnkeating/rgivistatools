@@ -43,6 +43,11 @@ STOREG ;
  S R=1
  Q
  ;
+TOOTHER
+ D FACT^%DTC(5) Q 
+TONONE
+ D ^%DTC 
+ ;
 ZZ S A=A+1
  S D=D+1
  

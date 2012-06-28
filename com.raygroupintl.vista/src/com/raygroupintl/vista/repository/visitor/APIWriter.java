@@ -36,10 +36,12 @@ public class APIWriter {
 	private FileWrapper fileWrapper;
 	private Map<String, Blocks> routineBlocks;
 	private TerminalFormatter tf = new TerminalFormatter();
+	private Map<String, String> replacementRoutines;
 	
-	public APIWriter(FileWrapper fileWrapper, Map<String, Blocks> routineBlocks) {
+	public APIWriter(FileWrapper fileWrapper, Map<String, Blocks> routineBlocks, Map<String, String> replacementRoutines) {
 		this.fileWrapper = fileWrapper;
 		this.routineBlocks = routineBlocks;
+		this.replacementRoutines = replacementRoutines;
 	}
 
 	private void write(String[] linePieces, int pieceIndex, String title) {
@@ -92,7 +94,7 @@ public class APIWriter {
 
 				
 				Set<EntryId> entryIfTrack = new HashSet<EntryId>();
-				APIData apiData = lb.getAPIData(this.routineBlocks, entryIfTrack);						
+				APIData apiData = lb.getAPIData(this.routineBlocks, entryIfTrack, this.replacementRoutines);						
 				this.fileWrapper.write(this.tf.startList("INPUT"));
 				for (String input : apiData.getInputs()) {
 					this.fileWrapper.write(this.tf.addToList(input));
