@@ -24,3 +24,15 @@ STORE(A) ;
  S R=1
  Q
  ;
+LOOP(NUM) ;
+ F I=1:1:NUM D
+ . F J=1:1:NUM D
+ . . I A S B=$$SUMFACT(2,3)
+ . . S D=$$SUMFACT(4,1)
+ . . D LATER(J)
+ Q
+ ; 
+LATER(N) ;
+ W C
+ Q
+ ; 

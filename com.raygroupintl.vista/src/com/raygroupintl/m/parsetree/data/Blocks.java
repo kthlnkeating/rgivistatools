@@ -17,7 +17,38 @@
 package com.raygroupintl.m.parsetree.data;
 
 import java.util.HashMap;
+import java.util.Map;
 
-public class Blocks extends HashMap<String, Block> {
-	private static final long serialVersionUID = 1L;		
+public class Blocks {
+	private Map<String, Block> blocks = new HashMap<String, Block>();
+	private Block firstBlock;
+	private Blocks parent;
+	
+	public Blocks() {		
+	}
+	
+	public Blocks(Blocks parent) {
+		this.parent = parent;
+	}
+	
+	public Block get(String name) {
+		Block result = this.blocks.get(name);
+		if ((result == null) && (this.parent != null)) {
+			return this.parent.get(name);
+		} else {
+			return result;
+		}
+	}
+	
+	public void put(String name, Block block) {
+		this.blocks.put(name, block);
+	}
+	
+	public void setFirst(Block block) {
+		this.firstBlock = block;
+	}
+	
+	public Block getFirstBlock() {
+		return this.firstBlock;
+	}
 }

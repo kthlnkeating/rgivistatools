@@ -25,6 +25,7 @@ import java.util.Map;
 import java.util.Scanner;
 import java.util.Set;
 
+import com.raygroupintl.m.parsetree.data.APIData;
 import com.raygroupintl.m.parsetree.data.Block;
 import com.raygroupintl.m.parsetree.data.Blocks;
 import com.raygroupintl.m.parsetree.data.EntryId;
@@ -64,10 +65,10 @@ public class APIWriter {
 	private void write(EntryId entryId, String[] linePieces) {
 		String routineName = entryId.getRoutineName();
 		this.fileWrapper.writeEOL(" " + entryId.toString());
-		this.tf.setTab(19);
-		this.write(linePieces, 1, "CALLING PACKAGES");
-		this.write(linePieces, 3, "CALLING RPC'S");
-		this.write(linePieces, 2, "CALLING OPTIONS");
+		this.tf.setTab(21);
+		this.write(linePieces, 1, "CALLING PACKAGES ");
+		this.write(linePieces, 3, "CALLING RPC's    ");
+		this.write(linePieces, 2, "CALLING OPTIONS  ");
 		this.tf.setTab(12);
 		Blocks rbs = this.routineBlocks.get(routineName);
 		if (rbs == null) {
@@ -78,11 +79,28 @@ public class APIWriter {
 			if (lb == null) {
 				this.fileWrapper.writeEOL(this.tf.titled("ERROR", "Tag " + entryId.toString() + " is missing."));
 			} else {
+				String[] formals = lb.getFormals();
+				this.fileWrapper.write(this.tf.startList("FORMAL"));
+				if ((formals == null) || (formals.length == 0)) {
+					this.fileWrapper.write("--");
+				} else {
+					for (String formal : formals) {
+						this.fileWrapper.write(this.tf.addToList(formal));					
+					}
+				}
+				this.fileWrapper.writeEOL();
+
+				
 				Set<EntryId> entryIfTrack = new HashSet<EntryId>();
-				Set<String> inputs = lb.getUseds(this.routineBlocks, entryIfTrack);						
+				APIData apiData = lb.getAPIData(this.routineBlocks, entryIfTrack);						
 				this.fileWrapper.write(this.tf.startList("INPUT"));
-				for (String input : inputs) {
+				for (String input : apiData.getInputs()) {
 					this.fileWrapper.write(this.tf.addToList(input));
+				}
+				this.fileWrapper.writeEOL();
+				this.fileWrapper.write(this.tf.startList("OUTPUT"));
+				for (String output : apiData.getOutputs()) {
+					this.fileWrapper.write(this.tf.addToList(output));
 				}
 				this.fileWrapper.writeEOL();
 			}
@@ -127,6 +145,15 @@ public class APIWriter {
 		}
 	}
 		
+	public void writeEntry(String entryIdValue) {
+		if (this.fileWrapper.start()) {
+			EntryId entryId = EntryId.getInstance(entryIdValue);
+			String[] input = new String[]{entryIdValue, "", "", ""};
+			this.write(entryId, input);
+			this.fileWrapper.stop();
+		}
+	}
+
 	public void write(String fanInFileName) {
 		if (this.fileWrapper.start()) {
 			this.auxWrite(fanInFileName);

@@ -121,4 +121,8 @@ public class EntryId implements Comparable<EntryId> {
 		}
 		return null;
 	}
+
+	public static EntryId getInstance(String tag) {
+		return getInstance(tag, StringFormat.SF_SINGLE_LABEL);
+	}
 }

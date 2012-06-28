@@ -124,6 +124,7 @@ public class MRoutineAnalyzer {
 				packageNodes.accept(api);
 				Map<String, Blocks> blocks = api.getBlocks();
 				APIWriter apiw = new APIWriter(fr, blocks);
+				//apiw.writeEntry("ADD^ABSV88B");
 				apiw.write(options.inputFile);
 				return;
 			}

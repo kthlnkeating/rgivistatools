@@ -18,7 +18,6 @@ package com.raygroupintl.m.parsetree.data;
 
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -35,8 +34,10 @@ public class Block {
 	private EntryId entryId;
 	private Blocks siblings;
 	
+	private String[] formals;
 	private Map<String, Integer> newedLocals = new HashMap<String, Integer>();
-	private Map<String, Integer> usedLocals = new HashMap<String, Integer>();
+	private Map<String, Integer> inputLocals = new HashMap<String, Integer>();
+	private Map<String, Integer> outputLocals = new HashMap<String, Integer>();
 
 	private List<IndexedFanout> fanouts = new ArrayList<IndexedFanout>();
 	private boolean closed;
@@ -55,11 +56,16 @@ public class Block {
 		return this.index;
 	}
 	
-	public void addNewed(int index, String name) {
-		if (! this.closed) {
-			this.newedLocals.put(name, index);
+	public void setFormals(String[] formals) {
+		this.formals = formals;		
+		if (formals != null) for (String formal : formals) {
+			this.newedLocals.put(formal, this.index);
 		}
-	}		
+	}
+	
+	public String[] getFormals() {
+		return this.formals;
+	}
 	
 	public void addNewed(int index, Local local) {
 		if (! this.closed) {
@@ -70,11 +76,20 @@ public class Block {
 		}
 	}		
 	
-	public void addUsed(int index, Local local) {
+	public void addInput(int index, Local local) {
 		if (! this.closed) {
 			String label = local.getName().toString();
-			if ((! this.usedLocals.containsKey(label)) && (! this.newedLocals.containsKey(label))) {
-				this.usedLocals.put(label, index);
+			if ((! this.inputLocals.containsKey(label)) && (! this.newedLocals.containsKey(label))) {
+				this.inputLocals.put(label, index);
+			}
+		}
+	}
+
+	public void addOutput(int index, Local local) {
+		if (! this.closed) {
+			String label = local.getName().toString();
+			if ((! this.outputLocals.containsKey(label)) && (! this.newedLocals.containsKey(label))) {
+				this.outputLocals.put(label, index);
 			}
 		}
 	}
@@ -93,24 +108,22 @@ public class Block {
 		return this.newedLocals.containsKey(local.getName().toString());
 	}
 	
+	public boolean isInput(Local local) {
+		return this.inputLocals.containsKey(local.getName().toString());
+	}
+	
+	public boolean isOutput(Local local) {
+		return this.outputLocals.containsKey(local.getName().toString());
+	}
+	
 	public boolean isUsed(Local local) {
-		return this.usedLocals.containsKey(local.getName().toString());
+		String name = local.getName().toString();
+		return this.inputLocals.containsKey(name) || this.outputLocals.containsKey(name);
 	}
 	
-	private void mergeUsed(Set<String> result, Set<String> source, int sourceIndex) {
-		for (String name : source) {
-			Integer index = this.newedLocals.get(name);
-			if (index == null) {
-				result.add(name);
-			} else if (index.intValue() > sourceIndex) {
-				result.add(name);
-			}
-		}
-	}
-	
-	public Set<String> getUseds(Map<String, Blocks> overallMap, Set<EntryId> alreadyVisited) {
+	public APIData getAPIData(Map<String, Blocks> overallMap, Set<EntryId> alreadyVisited) {
 		if (alreadyVisited.contains(this.entryId)) return null;
-		Set<String> result = new HashSet<String>(this.usedLocals.keySet());
+		APIData result = new APIData(this.inputLocals.keySet(), this.outputLocals.keySet());
 		alreadyVisited.add(this.entryId);
 		for (IndexedFanout ifout : this.fanouts) {
 			EntryId fout = ifout.getFanout();
@@ -122,11 +135,11 @@ public class Block {
 			if (routineName == null) {
 				Block tagBlock = this.siblings.get(tagName);
 				if (tagBlock == null) {
-					LOGGER.log(Level.SEVERE, "Unable to find information about tag " + tagName);
+					LOGGER.log(Level.SEVERE, "Unable to find information about tag " + tagName + " in " + this.entryId.getRoutineName());
 					continue;
 				}
-				Set<String> blockUsed = tagBlock.getUseds(overallMap, alreadyVisited);
-				if (blockUsed != null) this.mergeUsed(result, blockUsed, ifout.getIndex());
+				APIData blockUsed = tagBlock.getAPIData(overallMap, alreadyVisited);
+				if (blockUsed != null) result.merge(blockUsed, ifout.getIndex(), this.newedLocals);
 			} else {
 				Blocks routineBlocks = overallMap.get(routineName);
 				if (routineBlocks == null) {
@@ -135,11 +148,11 @@ public class Block {
 				}
 				Block tagBlock = routineBlocks.get(tagName);
 				if (tagBlock == null) {
-					LOGGER.log(Level.SEVERE, "Unable to find information about tag " + fout.toString());
+					LOGGER.log(Level.SEVERE, "Unable to find information about tag " + fout.toString() + " in " + routineName);
 					continue;
 				}
-				Set<String> blockUsed = tagBlock.getUseds(overallMap, alreadyVisited);
-				if (blockUsed != null) this.mergeUsed(result, blockUsed, ifout.getIndex());
+				APIData blockUsed = tagBlock.getAPIData(overallMap, alreadyVisited);
+				if (blockUsed != null) result.merge(blockUsed, ifout.getIndex(), this.newedLocals);
 			}				 
 		}
 		return result;

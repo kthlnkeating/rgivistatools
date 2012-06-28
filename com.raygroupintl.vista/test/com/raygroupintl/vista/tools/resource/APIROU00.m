@@ -43,4 +43,6 @@ STOREG ;
  S R=1
  Q
  ;
+ZZ S A=A+1
+ S D=D+1
  

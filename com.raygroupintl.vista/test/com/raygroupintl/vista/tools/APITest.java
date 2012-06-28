@@ -13,6 +13,7 @@ import org.junit.BeforeClass;
 import org.junit.Test;
 
 import com.raygroupintl.m.parsetree.Routine;
+import com.raygroupintl.m.parsetree.data.APIData;
 import com.raygroupintl.m.parsetree.data.Block;
 import com.raygroupintl.m.parsetree.data.Blocks;
 import com.raygroupintl.m.parsetree.data.EntryId;
@@ -46,15 +47,21 @@ public class APITest {
 		return r.getNode();
 	}
 	
-	private void usedTest(Map<String, Blocks> blocksMap, String routineName, String tag, String[] expectedUsed) {
+	private void usedTest(Map<String, Blocks> blocksMap, String routineName, String tag, String[] expectedInputs, String[] expectedOutputs) {
 		Blocks rbs = blocksMap.get(routineName);
 		Block lb = rbs.get(tag);
 		Set<EntryId> entryIdTrack = new HashSet<EntryId>();
-		Set<String> inputs = lb.getUseds(blocksMap, entryIdTrack);
-		Assert.assertEquals(expectedUsed.length, inputs.size());
-		for (String expectedInput : expectedUsed) {
+		APIData apiData = lb.getAPIData(blocksMap, entryIdTrack);
+		Set<String> inputs = new HashSet<String>(apiData.getInputs());
+		Assert.assertEquals(expectedInputs.length, inputs.size());
+		for (String expectedInput : expectedInputs) {
 			Assert.assertTrue(inputs.contains(expectedInput));			
 		}		
+		Set<String> outputs = new HashSet<String>(apiData.getOutputs());
+		for (String expectedOutput : expectedOutputs) {
+			Assert.assertTrue(outputs.contains(expectedOutput));			
+		}		
+		
 	}
 	
 	@Test
@@ -81,12 +88,14 @@ public class APITest {
 			Blocks blocks = recorder.getBlocks();
 			blocksMap.put(routines[i].getName(), blocks);
 		}
-		this.usedTest(blocksMap, "APIROU00", "FACT", new String[]{"I"});
-		this.usedTest(blocksMap, "APIROU00", "SUM", new String[]{"R", "I", "M"});
-		this.usedTest(blocksMap, "APIROU00", "SUMFACT", new String[]{"P", "S"});
-		this.usedTest(blocksMap, "APIROU00", "STORE", new String[]{"D", "K", "R"});
-		this.usedTest(blocksMap, "APIROU00", "STOREG", new String[]{"A", "D", "K", "R"});
-		this.usedTest(blocksMap, "APIROU01", "SUMFACT", new String[]{"P", "S"});
-		this.usedTest(blocksMap, "APIROU01", "STORE", new String[]{"D", "K", "R"});
+		this.usedTest(blocksMap, "APIROU00", "FACT", new String[]{"I"}, new String[]{"I"});
+		this.usedTest(blocksMap, "APIROU00", "SUM", new String[]{"R", "I", "M"}, new String[]{"R", "I"});
+		this.usedTest(blocksMap, "APIROU00", "SUMFACT", new String[]{"S"}, new String[]{"P"});
+		this.usedTest(blocksMap, "APIROU00", "STORE", new String[]{"D", "K"}, new String[]{"D", "R"});
+		this.usedTest(blocksMap, "APIROU00", "STOREG", new String[]{"K", "D"}, new String[]{"A", "D", "R"});
+		this.usedTest(blocksMap, "APIROU00", "ZZ", new String[]{"A", "D"}, new String[]{"A", "D"});
+		this.usedTest(blocksMap, "APIROU01", "SUMFACT", new String[]{"S"}, new String[]{"P"});
+		this.usedTest(blocksMap, "APIROU01", "STORE", new String[]{"D", "K"}, new String[]{"D", "R"});
+		this.usedTest(blocksMap, "APIROU01", "LOOP", new String[]{"S", "A", "J", "C"}, new String[]{"I", "J", "B", "D", "P"});
 	}
 }

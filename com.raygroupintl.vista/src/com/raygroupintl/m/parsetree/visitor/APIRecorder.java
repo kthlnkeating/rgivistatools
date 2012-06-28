@@ -32,7 +32,6 @@ public class APIRecorder extends FanoutRecorder {
 	private Blocks currentBlocks;
 	
 	private Block currentBlock;
-	private Block firstInCurrentBlocks;
 	private String currentRoutineName;
 	private int inDoBlock;
 	
@@ -43,24 +42,25 @@ public class APIRecorder extends FanoutRecorder {
 	
 	private void reset() {
 		this.currentBlocks = null;
-		this.firstInCurrentBlocks = null;
+		this.currentBlock = null;
 		this.currentRoutineName = null;
 		this.index = 0;		
+		this.inDoBlock = 0;
 		this.underCondition = 0;
 		this.underFor = 0;		
 	}
 	
-	private void addUsed(Local local) {
+	private void addOutput(Local local) {
 		++this.index;
-		this.currentBlock.addUsed(index, local);
+		this.currentBlock.addOutput(index, local);
 	}
 	
 	protected void assignLocal(Local local) {
-		this.addUsed(local);
+		this.addOutput(local);
 	}
 	
 	protected void killLocal(Local local) {		
-		this.addUsed(local);
+		this.addOutput(local);
 	}
 	
 	protected void newLocal(Local local) {
@@ -70,8 +70,8 @@ public class APIRecorder extends FanoutRecorder {
 	
 	protected void visitLocal(Local local) {
 		super.visitLocal(local);
-		++index;
-		this.currentBlock.addUsed(index, local);
+		++this.index;
+		this.currentBlock.addInput(index, local);
 	}
 
 	protected void updateFanout(boolean isGoto, boolean conditional) {
@@ -128,7 +128,7 @@ public class APIRecorder extends FanoutRecorder {
 		EntryId entryId = this.getEntryId(tag);		
 		this.currentBlock = new Block(this.index, entryId, this.currentBlocks);
 		if (lastBlock == null) {
-			this.firstInCurrentBlocks = this.currentBlock;
+			this.currentBlocks.setFirst(this.currentBlock);
 			if ((tag != null) && (! tag.isEmpty())) {
 				this.currentBlocks.put(tag, this.currentBlock);
 			}
@@ -140,13 +140,9 @@ public class APIRecorder extends FanoutRecorder {
 			EntryId defaultGoto = new EntryId(null, tag);
 			lastBlock.addFanout(this.index, defaultGoto, true);
 		}
-		++this.index;
 		String[] params = entry.getParameters();
-		if (params != null) {
-			for (String param : params) {
-				this.currentBlock.addNewed(this.index, param);
-			}
-		}
+		this.currentBlock.setFormals(params);
+		++this.index;
 		super.visitEntry(entry);
 		
 	}
@@ -157,15 +153,15 @@ public class APIRecorder extends FanoutRecorder {
 		Blocks lastBlocks = this.currentBlocks;
 		Block lastBlock = this.currentBlock;
 		this.currentBlock = null;
-		this.currentBlocks = new Blocks();
-		this.currentBlocks.putAll(lastBlocks);
+		this.currentBlocks = new Blocks(lastBlocks);
 		doBlock.acceptEntryList(this);
+		Block firstBlock = this.currentBlocks.getFirstBlock();
 		this.currentBlocks = lastBlocks;
 		this.currentBlock = lastBlock;
 		String tag = ":" + String.valueOf(this.index);
 		EntryId defaultDo = new EntryId(null, tag);		
 		lastBlock.addFanout(this.index, defaultDo, false);
-		this.currentBlocks.put(tag, this.firstInCurrentBlocks);
+		this.currentBlocks.put(tag, firstBlock);
 		--this.inDoBlock;
 	}
 	

@@ -76,7 +76,7 @@ public class TerminalFormatter {
 		String result = this.eol + TerminalFormatter.getSpaces(this.tab);
 		result += listElement;
 		this.column = length + this.tab;
-		this.listIndex = 0;		
+		this.listIndex = 1;		
 		return result;
 	}
 }
