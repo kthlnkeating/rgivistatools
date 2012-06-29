@@ -20,8 +20,10 @@ import com.raygroupintl.m.parsetree.DoBlock;
 import com.raygroupintl.m.parsetree.ElseCmd;
 import com.raygroupintl.m.parsetree.Entry;
 import com.raygroupintl.m.parsetree.ForLoop;
+import com.raygroupintl.m.parsetree.Global;
 import com.raygroupintl.m.parsetree.IfCmd;
 import com.raygroupintl.m.parsetree.Local;
+import com.raygroupintl.m.parsetree.Node;
 import com.raygroupintl.m.parsetree.QuitCmd;
 import com.raygroupintl.m.parsetree.Routine;
 import com.raygroupintl.m.parsetree.data.Block;
@@ -74,6 +76,19 @@ public class APIRecorder extends FanoutRecorder {
 		this.currentBlock.addInput(index, local);
 	}
 
+	protected void visitGlobal(Global global) {
+		super.visitGlobal(global);
+		String name = '^' + global.getName().toString() + '(';
+		Node subscript = global.getSubscript(0);
+		if (subscript != null) {
+			String constValue = subscript.getAsConstExpr();
+			if (constValue != null) {
+				name += constValue;
+			}
+		}
+		this.currentBlock.addGlobal(name);		
+	}
+	
 	protected void updateFanout(boolean isGoto, boolean conditional) {
 		EntryId fanout = this.getLastFanout();
 		if (fanout != null) {

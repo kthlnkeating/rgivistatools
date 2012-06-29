@@ -23,6 +23,12 @@ public class Visitor {
 	protected void visitIntegerLiteral(IntegerLiteral literal) {		
 	}
 		
+	protected void visitStringLiteral(StringLiteral literal) {		
+	}
+		
+	protected void visitNumberLiteral(NumberLiteral literal) {		
+	}
+		
 	private void visitAdditionalNodeHolder(AdditionalNodeHolder nodeHolder) {
 		Node addlNode = nodeHolder.getAdditionalNode();
 		if (addlNode != null) {

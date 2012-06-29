@@ -8,7 +8,8 @@ SUMFACT(N,M)
  F  D  Q:I>3
  . N R
  . S R=$$FACT^APIROU00(I)+$$SUM^APIROU00(I)
- . S I=I+1
+ . S ^UD(5,7)=^UD(N,M)
+ . S I=I+1+^UM
  . S P=R
  Q S
  ;

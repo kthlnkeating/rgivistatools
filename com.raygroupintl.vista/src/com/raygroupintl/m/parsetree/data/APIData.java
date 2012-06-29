@@ -26,10 +26,12 @@ import java.util.Set;
 public class APIData {
 	private Set<String> inputs;
 	private Set<String> outputs;
+	private Set<String> globals;
 	
-	public APIData(Set<String> inputs, Set<String> outputs) {
+	public APIData(Set<String> inputs, Set<String> outputs, Set<String> globals) {
 		this.inputs = new HashSet<String>(inputs);
 		this.outputs = new HashSet<String>(outputs);
+		this.globals = globals;
 	}
 	
 	private static void add(Set<String> target, String name, boolean hasSubscripts) {
@@ -69,6 +71,7 @@ public class APIData {
 	public void merge(APIData source, int sourceIndex, Map<String, Integer> newedLocals) {
 		merge(this.inputs, source.inputs, sourceIndex, newedLocals);
 		merge(this.outputs, source.outputs, sourceIndex, newedLocals);
+		this.globals.addAll(source.globals);
 	}
 	
 	private static List<String> getIO(Set<String> source) {
@@ -88,5 +91,9 @@ public class APIData {
 
 	public List<String> getOutputs() {
 		return getIO(this.outputs);
+	}
+
+	public List<String> getGlobals() {
+		return getIO(this.globals);
 	}
 }

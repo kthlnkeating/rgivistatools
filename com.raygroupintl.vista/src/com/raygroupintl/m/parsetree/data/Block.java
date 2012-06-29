@@ -40,6 +40,7 @@ public class Block {
 	private Map<String, Integer> newedLocals = new HashMap<String, Integer>();
 	private Map<String, Integer> inputLocals = new HashMap<String, Integer>();
 	private Map<String, Integer> outputLocals = new HashMap<String, Integer>();
+	private Set<String> globals = new HashSet<String>();
 
 	private List<IndexedFanout> fanouts = new ArrayList<IndexedFanout>();
 	private boolean closed;
@@ -96,6 +97,12 @@ public class Block {
 		}
 	}
 
+	public void addGlobal(String value) {
+		if (! this.closed) {
+			this.globals.add(value);
+		}
+	}
+
 	public void addFanout(int index, EntryId fanout, boolean shouldClose) {
 		if (! this.closed) {
 			IndexedFanout ifo = new IndexedFanout(index, fanout);
@@ -125,7 +132,7 @@ public class Block {
 	
 	public APIData getAPIData(Map<String, Blocks> overallMap, Set<EntryId> alreadyVisited, Map<String, String> replacedRoutines) {
 		if (alreadyVisited.contains(this.entryId)) return null;
-		APIData result = new APIData(this.inputLocals.keySet(), this.outputLocals.keySet());
+		APIData result = new APIData(this.inputLocals.keySet(), this.outputLocals.keySet(), this.globals);
 		alreadyVisited.add(this.entryId);
 		for (IndexedFanout ifout : this.fanouts) {
 			EntryId fout = ifout.getFanout();

@@ -12,6 +12,7 @@ FACT(N) ;
 SUM(N) ;
  S R=0
  F I=1:1:M S R=R+I
+ S ^RGI0("EF")=5
  Q R
  ;
 SUMFACT(N,M)

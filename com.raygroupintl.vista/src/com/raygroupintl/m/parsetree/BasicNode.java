@@ -61,6 +61,11 @@ public abstract class BasicNode implements Node {
 	}
 
 	@Override
+	public String getAsConstExpr() {
+		return null;
+	}
+
+	@Override
 	public ParentNode addSelf(ParentNode current, NodeList<Node> nodes) {
 		nodes.add(this);
 		return current;

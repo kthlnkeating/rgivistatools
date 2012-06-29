@@ -21,6 +21,7 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.Arrays;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Map;
 import java.util.Scanner;
 import java.util.Set;
@@ -63,7 +64,15 @@ public class APIWriter {
 		}
 		this.fileWrapper.writeEOL();		
 	}
-		
+	
+	private void writeAPIData(List<String> dataList, String title) {
+		this.fileWrapper.write(this.tf.startList(title));
+		for (String data : dataList) {
+			this.fileWrapper.write(this.tf.addToList(data));
+		}
+		this.fileWrapper.writeEOL();		
+	}
+	
 	private void write(EntryId entryId, String[] linePieces) {
 		String routineName = entryId.getRoutineName();
 		this.fileWrapper.writeEOL(" " + entryId.toString());
@@ -94,17 +103,10 @@ public class APIWriter {
 
 				
 				Set<EntryId> entryIfTrack = new HashSet<EntryId>();
-				APIData apiData = lb.getAPIData(this.routineBlocks, entryIfTrack, this.replacementRoutines);						
-				this.fileWrapper.write(this.tf.startList("INPUT"));
-				for (String input : apiData.getInputs()) {
-					this.fileWrapper.write(this.tf.addToList(input));
-				}
-				this.fileWrapper.writeEOL();
-				this.fileWrapper.write(this.tf.startList("OUTPUT"));
-				for (String output : apiData.getOutputs()) {
-					this.fileWrapper.write(this.tf.addToList(output));
-				}
-				this.fileWrapper.writeEOL();
+				APIData apiData = lb.getAPIData(this.routineBlocks, entryIfTrack, this.replacementRoutines);
+				this.writeAPIData(apiData.getInputs(), "INPUT");
+				this.writeAPIData(apiData.getOutputs(), "OUTPUT");
+				this.writeAPIData(apiData.getGlobals(), "GLBS");
 			}
 		}				
 		this.fileWrapper.writeEOL();

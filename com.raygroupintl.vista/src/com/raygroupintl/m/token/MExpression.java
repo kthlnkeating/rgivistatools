@@ -14,15 +14,22 @@
 // limitations under the License.
 //---------------------------------------------------------------------------
 
-package com.raygroupintl.m.parsetree;
+package com.raygroupintl.m.token;
 
-public class IntegerLiteral extends Literal {
-	public IntegerLiteral(String value) {
-		super(value);
+import com.raygroupintl.m.parsetree.Node;
+import com.raygroupintl.parser.Token;
+
+public class MExpression extends MSequence {
+	public MExpression(Token token) {
+		super(token);
 	}
 
 	@Override
-	public void accept(Visitor visitor) {
-		visitor.visitIntegerLiteral(this);
+	public Node getNode() {
+		if (this.get(1) == null) {
+			return ((MToken) this.get(0)).getNode();
+		} else {
+			return NodeUtilities.getNodes(this, this.size());
+		}
 	}
 }

@@ -16,13 +16,19 @@
 
 package com.raygroupintl.m.parsetree;
 
-public class IntegerLiteral extends Literal {
-	public IntegerLiteral(String value) {
-		super(value);
+public abstract class Literal extends TerminalNode {
+	private String value;
+	
+	public Literal(String value) {
+		this.value = value;
 	}
-
+	
+	public String getValue() {
+		return this.value;
+	}
+	
 	@Override
-	public void accept(Visitor visitor) {
-		visitor.visitIntegerLiteral(this);
+	public String getAsConstExpr() {
+		return this.value;
 	}
 }

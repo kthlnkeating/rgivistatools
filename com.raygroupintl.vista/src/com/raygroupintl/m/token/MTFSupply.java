@@ -157,6 +157,7 @@ public class MTFSupply {
 	@Rule("name, [exprlistinparan]")
 	public TokenFactory lvn;
 	
+	@TokenType(MExpression.class)
 	@Rule("expratom, [exprtail]")
 	public TokenFactory expr;
 	
@@ -676,6 +677,7 @@ public class MTFSupply {
 		@Rule("objectexpr | lvn | gvnall | indirection")
 		public TokenFactory glvn;
 			
+		@TokenType(MExpression.class)
 		@Rule("expratom | classmethod, [exprtail]")
 		public TokenFactory expr;
 		

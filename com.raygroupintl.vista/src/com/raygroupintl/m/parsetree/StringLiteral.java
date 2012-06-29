@@ -16,13 +16,13 @@
 
 package com.raygroupintl.m.parsetree;
 
-public class IntegerLiteral extends Literal {
-	public IntegerLiteral(String value) {
+public class StringLiteral extends Literal {
+	public StringLiteral(String value) {
 		super(value);
 	}
 
 	@Override
 	public void accept(Visitor visitor) {
-		visitor.visitIntegerLiteral(this);
+		visitor.visitStringLiteral(this);
 	}
 }

@@ -48,22 +48,30 @@ public class APITest {
 		MRoutine r = tf.tokenize(content);
 		return r.getNode();
 	}
-	
-	private void usedTest(Map<String, Blocks> blocksMap, String routineName, String tag, String[] expectedInputs, String[] expectedOutputs) {
+		
+	private void usedTest(Map<String, Blocks> blocksMap, String routineName, String tag, String[] expectedInputs, String[] expectedOutputs, String[] expectedGlobals) {
 		Blocks rbs = blocksMap.get(routineName);
 		Block lb = rbs.get(tag);
 		Set<EntryId> entryIdTrack = new HashSet<EntryId>();
 		APIData apiData = lb.getAPIData(blocksMap, entryIdTrack, replacement);
+		
 		Set<String> inputs = new HashSet<String>(apiData.getInputs());
 		Assert.assertEquals(expectedInputs.length, inputs.size());
 		for (String expectedInput : expectedInputs) {
 			Assert.assertTrue(inputs.contains(expectedInput));			
 		}		
+		
 		Set<String> outputs = new HashSet<String>(apiData.getOutputs());
+		Assert.assertEquals(expectedOutputs.length, outputs.size());
 		for (String expectedOutput : expectedOutputs) {
 			Assert.assertTrue(outputs.contains(expectedOutput));			
-		}		
-		
+		}				
+
+		Set<String> globals = new HashSet<String>(apiData.getGlobals());
+		Assert.assertEquals(expectedGlobals.length, globals.size());
+		for (String expectedGlobal : expectedGlobals) {
+			Assert.assertTrue(globals.contains(expectedGlobal));			
+		}				
 	}
 	
 	@Test
@@ -90,16 +98,16 @@ public class APITest {
 			Blocks blocks = recorder.getBlocks();
 			blocksMap.put(routines[i].getName(), blocks);
 		}
-		this.usedTest(blocksMap, "APIROU00", "FACT", new String[]{"I"}, new String[]{"I"});
-		this.usedTest(blocksMap, "APIROU00", "SUM", new String[]{"R", "I", "M"}, new String[]{"R", "I"});
-		this.usedTest(blocksMap, "APIROU00", "SUMFACT", new String[]{"S"}, new String[]{"P"});
-		this.usedTest(blocksMap, "APIROU00", "STORE", new String[]{"D", "K"}, new String[]{"D", "R"});
-		this.usedTest(blocksMap, "APIROU00", "STOREG", new String[]{"K", "D"}, new String[]{"A", "D", "R"});
-		this.usedTest(blocksMap, "APIROU00", "TOOTHER", new String[]{"I"}, new String[]{"I", "M"});
-		this.usedTest(blocksMap, "APIROU00", "TONONE", new String[]{"A", "D", "ME"}, new String[]{"A", "D", "NE", "HR"});
-		this.usedTest(blocksMap, "APIROU00", "ZZ", new String[]{"A", "D"}, new String[]{"A", "D"});
-		this.usedTest(blocksMap, "APIROU01", "SUMFACT", new String[]{"S"}, new String[]{"P"});
-		this.usedTest(blocksMap, "APIROU01", "STORE", new String[]{"D", "K"}, new String[]{"D", "R"});
-		this.usedTest(blocksMap, "APIROU01", "LOOP", new String[]{"S", "A", "J", "C"}, new String[]{"I", "J", "B", "D", "P"});
+		this.usedTest(blocksMap, "APIROU00", "FACT", new String[]{"I"}, new String[]{"I"}, new String[0]);
+		this.usedTest(blocksMap, "APIROU00", "SUM", new String[]{"R", "I", "M"}, new String[]{"R", "I"}, new String[]{"^RGI0(\"EF\""});
+		this.usedTest(blocksMap, "APIROU00", "SUMFACT", new String[]{"S"}, new String[]{"P"}, new String[]{"^RGI0(\"EF\""});
+		this.usedTest(blocksMap, "APIROU00", "STORE", new String[]{"D", "K"}, new String[]{"D", "R"}, new String[0]);
+		this.usedTest(blocksMap, "APIROU00", "STOREG", new String[]{"K", "D"}, new String[]{"A", "D", "R"}, new String[0]);
+		this.usedTest(blocksMap, "APIROU00", "TOOTHER", new String[]{"I"}, new String[]{"I", "M"}, new String[0]);
+		this.usedTest(blocksMap, "APIROU00", "TONONE", new String[]{"A", "D", "ME"}, new String[]{"A", "D", "NE", "HR"}, new String[0]);
+		this.usedTest(blocksMap, "APIROU00", "ZZ", new String[]{"A", "D"}, new String[]{"A", "D"}, new String[0]);
+		this.usedTest(blocksMap, "APIROU01", "SUMFACT", new String[]{"S"}, new String[]{"P"}, new String[]{"^RGI0(\"EF\"", "^UD(", "^UD(5", "^UM("});
+		this.usedTest(blocksMap, "APIROU01", "STORE", new String[]{"D", "K"}, new String[]{"D", "R"}, new String[0]);
+		this.usedTest(blocksMap, "APIROU01", "LOOP", new String[]{"S", "A", "J", "C"}, new String[]{"I", "J", "B", "D", "P"}, new String[]{"^RGI0(\"EF\"", "^UD(", "^UD(5", "^UM("});
 	}
 }

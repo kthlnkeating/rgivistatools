@@ -33,5 +33,7 @@ public interface Node {
 	
 	ParentNode addSelf(ParentNode current, NodeList<Node> nodes);
 	
+	String getAsConstExpr();
+	
 	boolean setEntryList(EntryList entryList);
 }
