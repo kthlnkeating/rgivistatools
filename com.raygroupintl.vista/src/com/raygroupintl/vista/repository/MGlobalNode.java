@@ -30,6 +30,7 @@ import java.util.logging.Logger;
 
 import com.raygroupintl.stringlib.MComparator;
 import com.raygroupintl.struct.Filter;
+import com.raygroupintl.struct.NameWithIndices;
 import com.raygroupintl.struct.Transformer;
 
 public class MGlobalNode {
@@ -164,25 +165,56 @@ public class MGlobalNode {
 		this.setValue(fullValues);
 	}
 	
-	public void read(Path path) {
+	private String[] getIndices(String[] nameAndIndices) {
+		if (nameAndIndices.length > 1) {
+			String indicesRaw = nameAndIndices[1];
+			String indicesWithComma = indicesRaw.substring(0, indicesRaw.length()-1);
+			String[] indices = indicesWithComma.split(",");
+			return indices;
+		} else {
+			return new String[0];
+		}
+	}
+	
+	public void read(Path path, Filter<NameWithIndices> filter) {
 		try {
 			Scanner scanner = new Scanner(path);
+ 		    if (scanner.hasNextLine()) scanner.nextLine();
+		    if (scanner.hasNextLine()) scanner.nextLine();			
 			while (scanner.hasNextLine()) {
 				String line = scanner.nextLine();
-				if ((line.length() > 0) && line.charAt(0) == '^') {
+				if ((line.length() > 0)) {
+					assert(line.charAt(0) == '^');
 					String[] nodesAndValue = line.split("=");
 					String node = nodesAndValue[0];
 					String value = nodesAndValue[1];
 					String[] nameAndIndices = node.split("\\(");
+					String[] indices = this.getIndices(nameAndIndices);
 					String name = nameAndIndices[0].substring(1);
-					String indicesWithComma = nameAndIndices[1].substring(0, nameAndIndices[1].length()-1);
-					String[] indices = indicesWithComma.split(",");
-					this.read(name, indices, value);
+					NameWithIndices nwi = new NameWithIndices(name, indices);
+					if ((filter == null) || (filter.isValid(nwi))) {
+						this.read(name, indices, value);
+					}
 				}			
 			}
 			scanner.close();
 		} catch (IOException exception) {
-			LOGGER.log(Level.SEVERE, "Unable to read global node from file " + path.toString());
+			LOGGER.log(Level.SEVERE, "Unable to read global nodes from file " + path.toString());
 		}
+	}
+	
+	public void read(Path path) {
+		this.read(path, null);
+	}
+
+	public void read(List<Path> paths, Filter<NameWithIndices> filter) {
+		for (Path path : paths) {
+			LOGGER.log(Level.INFO, "Reading " + path.toString());
+			this.read(path, filter);
+		}	
+	}
+	
+	public void read(List<Path> paths) {
+		this.read(paths, null);
 	}
 }

@@ -37,7 +37,7 @@ public class GeneralTest {
 		FileSupply fs = new FileSupply();
 		fs.addPath(packagePath);
 		try {
-			List<Path> paths = fs.getFiles();
+			List<Path> paths = fs.getMFiles();
 			Assert.assertTrue("No Problem List file found.", paths.size() > 0);
 			for (Path path : paths) {
 				String fileName = path.getFileName().toString();

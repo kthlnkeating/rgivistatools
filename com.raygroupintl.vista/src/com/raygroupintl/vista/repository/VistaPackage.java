@@ -155,7 +155,7 @@ public class VistaPackage  implements RepositoryNode {
 			Path packagePath = this.getPath();
 			FileSupply fs = new FileSupply();
 			fs.addPath(packagePath);
-			List<Path> paths = fs.getFiles();
+			List<Path> paths = fs.getMFiles();
 			return paths;		
 		} catch (Exception ex) {
 			return Collections.emptyList();

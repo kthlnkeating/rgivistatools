@@ -36,6 +36,11 @@ import com.raygroupintl.m.token.MRoutine;
 import com.raygroupintl.output.FileWrapper;
 import com.raygroupintl.parser.SyntaxErrorException;
 import com.raygroupintl.parser.annotation.ParseException;
+import com.raygroupintl.stringlib.EndsWithFilter;
+import com.raygroupintl.struct.Filter;
+import com.raygroupintl.struct.NameWithIndices;
+import com.raygroupintl.vista.repository.FileSupply;
+import com.raygroupintl.vista.repository.MGlobalNode;
 import com.raygroupintl.vista.repository.RepositoryInfo;
 import com.raygroupintl.vista.repository.RoutineFactory;
 import com.raygroupintl.vista.repository.VistaPackages;
@@ -165,6 +170,9 @@ public class MRoutineAnalyzer {
 		return packageNodes;		
 	}
 	
+	// -t fanin -o "C:\Afsin\Dependency Tool Verification\fanin.dat"
+	// -t api -i "C:\Afsin\Dependency Tool Verification\fanin.dat" -o "C:\Afsin\Dependency Tool Verification\api.dat"
+	// -t glb -o "C:\Afsin\Dependency Tool Verification\glb.dat
 	public static void main(String[] args) {
 		try {
 			CLIParams options = CLIParams.getInstance(args);
@@ -201,6 +209,24 @@ public class MRoutineAnalyzer {
 				//apiw.writeEntry("ADD^ABSV88B");
 				apiw.write(options.inputFile);
 				return;
+			}
+			if (at.equalsIgnoreCase("glb")) {
+				MGlobalNode root = new MGlobalNode();
+				FileSupply fs = new FileSupply();
+				List<Path> paths = fs.getFiles(new EndsWithFilter(".zwr"));
+				Filter<NameWithIndices> niFilter = new Filter<NameWithIndices>() {
+					@Override
+					public boolean isValid(NameWithIndices input) {
+						if (! input.getName().equals("DIC")) return false;
+						String[] indices = input.getIndices();
+						if (indices.length != 3) return false;
+						if (! indices[1].equals("0")) return false;
+						if (! indices[2].equals("\"GL\"")) return false;
+						return true;
+					}
+				};				
+				root.read(paths, niFilter);
+				LOGGER.log(Level.INFO, "Done");			
 			}
 			LOGGER.log(Level.SEVERE, "Unknown analysis type " + at);
 		} catch (Throwable t) {
