@@ -17,6 +17,8 @@
 package com.raygroupintl.m.parsetree;
 
 public class IndirectFanoutRoutine extends AdditionalNodeHolder {
+	private static final long serialVersionUID = 1L;
+
 	public IndirectFanoutRoutine(Node node) {
 		super(node);
 	}

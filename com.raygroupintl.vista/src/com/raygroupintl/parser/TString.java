@@ -4,6 +4,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class TString extends StringPiece implements Token {
+	private static final long serialVersionUID = 1L;
+	
 	public TString() {
 		super();
 	}

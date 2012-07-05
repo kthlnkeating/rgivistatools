@@ -16,7 +16,11 @@
 
 package com.raygroupintl.parser;
 
-public class StringPiece {
+import java.io.Serializable;
+
+public class StringPiece implements Serializable {
+	private static final long serialVersionUID = 1L;
+	
 	private String data;
 	private int beginIndex;
 	private int endIndex;

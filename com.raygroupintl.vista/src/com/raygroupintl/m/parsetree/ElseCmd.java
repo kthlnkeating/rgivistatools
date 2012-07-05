@@ -17,6 +17,8 @@
 package com.raygroupintl.m.parsetree;
 
 public class ElseCmd extends ParentNode {
+	private static final long serialVersionUID = 1L;
+
 	@Override
 	public void accept(Visitor visitor) {
 		visitor.visitElse(this);

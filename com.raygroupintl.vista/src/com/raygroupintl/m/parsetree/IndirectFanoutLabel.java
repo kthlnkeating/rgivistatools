@@ -17,6 +17,8 @@
 package com.raygroupintl.m.parsetree;
 
 public class IndirectFanoutLabel extends AdditionalNodeHolder {
+	private static final long serialVersionUID = 1L;
+
 	public IndirectFanoutLabel(Node node) {
 		super(node);
 	}

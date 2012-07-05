@@ -16,7 +16,9 @@
 
 package com.raygroupintl.m.parsetree;
 
-public interface Node {
+import java.io.Serializable;
+
+public interface Node extends Serializable {
 	void accept(Visitor visitor);
 	
 	void acceptPreAssignment(Visitor visitor);

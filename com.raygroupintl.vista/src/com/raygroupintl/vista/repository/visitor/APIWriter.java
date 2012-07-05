@@ -29,17 +29,18 @@ import java.util.Set;
 import com.raygroupintl.m.parsetree.data.APIData;
 import com.raygroupintl.m.parsetree.data.Block;
 import com.raygroupintl.m.parsetree.data.Blocks;
+import com.raygroupintl.m.parsetree.data.BlocksSupply;
 import com.raygroupintl.m.parsetree.data.EntryId;
 import com.raygroupintl.output.FileWrapper;
 import com.raygroupintl.output.TerminalFormatter;
 
 public class APIWriter {
 	private FileWrapper fileWrapper;
-	private Map<String, Blocks> routineBlocks;
+	private BlocksSupply routineBlocks;
 	private TerminalFormatter tf = new TerminalFormatter();
 	private Map<String, String> replacementRoutines;
 	
-	public APIWriter(FileWrapper fileWrapper, Map<String, Blocks> routineBlocks, Map<String, String> replacementRoutines) {
+	public APIWriter(FileWrapper fileWrapper, BlocksSupply routineBlocks, Map<String, String> replacementRoutines) {
 		this.fileWrapper = fileWrapper;
 		this.routineBlocks = routineBlocks;
 		this.replacementRoutines = replacementRoutines;
@@ -81,7 +82,7 @@ public class APIWriter {
 		this.write(linePieces, 3, "CALLING RPC's    ");
 		this.write(linePieces, 2, "CALLING OPTIONS  ");
 		this.tf.setTab(12);
-		Blocks rbs = this.routineBlocks.get(routineName);
+		Blocks rbs = this.routineBlocks.getBlocks(routineName);
 		if (rbs == null) {
 			this.fileWrapper.writeEOL(this.tf.titled("ERROR", "Routine " + routineName + " is missing."));
 		} else {

@@ -19,6 +19,8 @@ package com.raygroupintl.m.parsetree;
 import com.raygroupintl.parser.StringPiece;
 
 public class Global extends NodeWithSubscripts {
+	private static final long serialVersionUID = 1L;
+
 	public Global(StringPiece name) {
 		super(name);
 	}

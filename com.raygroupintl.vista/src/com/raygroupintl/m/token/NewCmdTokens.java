@@ -68,6 +68,8 @@ public final class NewCmdTokens {
 	}
 	
 	public static final class MNewedLocal extends MString {
+		private static final long serialVersionUID = 1L;
+		
 		public MNewedLocal(Token token) {
 			super(token);
 		}

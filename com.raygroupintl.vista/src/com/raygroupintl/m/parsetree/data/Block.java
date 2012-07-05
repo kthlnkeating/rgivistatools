@@ -130,7 +130,7 @@ public class Block {
 		return this.inputLocals.containsKey(name) || this.outputLocals.containsKey(name);
 	}
 	
-	public APIData getAPIData(Map<String, Blocks> overallMap, Set<EntryId> alreadyVisited, Map<String, String> replacedRoutines) {
+	public APIData getAPIData(BlocksSupply overallMap, Set<EntryId> alreadyVisited, Map<String, String> replacedRoutines) {
 		if (alreadyVisited.contains(this.entryId)) return null;
 		APIData result = new APIData(this.inputLocals.keySet(), this.outputLocals.keySet(), this.globals);
 		alreadyVisited.add(this.entryId);
@@ -162,13 +162,13 @@ public class Block {
 				APIData blockUsed = tagBlock.getAPIData(overallMap, alreadyVisited, replacedRoutines);
 				if (blockUsed != null) result.merge(blockUsed, ifout.getIndex(), this.newedLocals);
 			} else {
-				Blocks routineBlocks = overallMap.get(routineName);
+				Blocks routineBlocks = overallMap.getBlocks(routineName);
 				String originalTagName = tagName;
 				if (routineBlocks == null) {
 					if (replacedRoutines != null) {
 						String replacement = replacedRoutines.get(routineName);
 						if (replacement != null) {
-							routineBlocks = overallMap.get(replacement);
+							routineBlocks = overallMap.getBlocks(replacement);
 							if (tagName.equals(routineName)) {
 								tagName = replacement;
 							}

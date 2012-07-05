@@ -17,6 +17,8 @@
 package com.raygroupintl.m.parsetree;
 
 public abstract class Literal extends TerminalNode {
+	private static final long serialVersionUID = 1L;
+
 	private String value;
 	
 	public Literal(String value) {

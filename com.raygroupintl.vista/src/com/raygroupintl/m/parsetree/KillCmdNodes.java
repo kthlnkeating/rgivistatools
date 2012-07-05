@@ -18,6 +18,8 @@ package com.raygroupintl.m.parsetree;
 
 public class KillCmdNodes {
 	public static class AllKillCmd extends BasicNode {
+		private static final long serialVersionUID = 1L;
+
 		private Node postCondition;
 		
 		public AllKillCmd(Node postCondition) {
@@ -37,6 +39,8 @@ public class KillCmdNodes {
 	}	
 
 	public static class ExclusiveAtomicKill extends BasicNode {
+		private static final long serialVersionUID = 1L;
+
 		private Nodes<Node> nodes;
 		
 		public ExclusiveAtomicKill(Nodes<Node> nodes) {
@@ -56,6 +60,8 @@ public class KillCmdNodes {
 	}
 	
 	public static class AtomicKill extends BasicNode {
+		private static final long serialVersionUID = 1L;
+
 		private Node actual;
 		
 		public AtomicKill(Node node) {
@@ -73,6 +79,8 @@ public class KillCmdNodes {
 	}
 	
 	public static class KillCmd extends MultiCommand {
+		private static final long serialVersionUID = 1L;
+
 		public KillCmd(Node postCondition, Node argument) {
 			super(postCondition, argument);
 		}

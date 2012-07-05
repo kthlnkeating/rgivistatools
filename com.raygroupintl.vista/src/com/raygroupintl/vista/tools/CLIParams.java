@@ -52,7 +52,7 @@ public class CLIParams {
 	
 	public boolean validate() {
 		if (this.outputFile == null) {
-			CLIParams.logError("No output file is specified.");
+			CLIParams.logError("No output path is specified.");
 			return false;
 		}
 		if (this.analysisType.equals("api")) {

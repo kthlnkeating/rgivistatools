@@ -17,6 +17,8 @@
 package com.raygroupintl.m.parsetree;
 
 public class FanoutLabel extends AdditionalNodeHolder {
+	private static final long serialVersionUID = 1L;
+
 	private String value;
 	
 	public FanoutLabel(String value, Node addlNode) {

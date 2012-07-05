@@ -17,4 +17,5 @@
 package com.raygroupintl.m.parsetree;
 
 public class EntryList extends NodeList<Entry> {
+	private static final long serialVersionUID = 1L;
 }

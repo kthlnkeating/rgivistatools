@@ -41,6 +41,8 @@ public class BasicTokens {
 	}
 	
 	public static class MTFanoutLabelB extends MString {
+		private static final long serialVersionUID = 1L;
+		
 		public MTFanoutLabelB(Token value) {
 			super(value);
 		}

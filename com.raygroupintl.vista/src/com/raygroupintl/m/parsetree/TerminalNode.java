@@ -17,4 +17,5 @@
 package com.raygroupintl.m.parsetree;
 
 abstract class TerminalNode extends BasicNode {
+	private static final long serialVersionUID = 1L;
 }

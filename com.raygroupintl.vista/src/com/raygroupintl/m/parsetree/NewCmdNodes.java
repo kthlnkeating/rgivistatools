@@ -18,6 +18,8 @@ package com.raygroupintl.m.parsetree;
 
 public class NewCmdNodes {
 	public static class AllNewCmd extends BasicNode {
+		private static final long serialVersionUID = 1L;
+
 		private Node postCondition;
 		
 		public AllNewCmd(Node postCondition) {
@@ -37,6 +39,8 @@ public class NewCmdNodes {
 	}	
 
 	public static class ExclusiveAtomicNew extends BasicNode {
+		private static final long serialVersionUID = 1L;
+
 		private Nodes<Node> nodes;
 		
 		public ExclusiveAtomicNew(Nodes<Node> nodes) {
@@ -56,6 +60,8 @@ public class NewCmdNodes {
 	}
 	
 	public static class AtomicNew extends BasicNode {
+		private static final long serialVersionUID = 1L;
+
 		private Node actual;
 		
 		public AtomicNew(Node node) {
@@ -73,6 +79,8 @@ public class NewCmdNodes {
 	}
 	
 	public static class NewCmd extends MultiCommand {
+		private static final long serialVersionUID = 1L;
+
 		public NewCmd(Node postCondition, Node argument) {
 			super(postCondition, argument);
 		}

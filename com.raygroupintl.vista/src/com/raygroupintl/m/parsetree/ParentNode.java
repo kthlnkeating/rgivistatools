@@ -17,6 +17,8 @@
 package com.raygroupintl.m.parsetree;
 
 public abstract class ParentNode extends BasicNode {
+	private static final long serialVersionUID = 1L;
+
 	protected Nodes<Node> nodes;
 
 	public void setNodes(Nodes<Node> nodes) {

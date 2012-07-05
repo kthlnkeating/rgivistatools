@@ -17,6 +17,8 @@
 package com.raygroupintl.m.parsetree;
 
 public abstract class BasicNode implements Node {
+	private static final long serialVersionUID = 1L;
+
 	@Override
 	public void acceptPreAssignment(Visitor visitor) {
 		this.accept(visitor);

@@ -19,6 +19,8 @@ package com.raygroupintl.m.parsetree;
 import com.raygroupintl.parser.StringPiece;
 
 abstract class NodeWithSubscripts extends BasicNode {
+	private static final long serialVersionUID = 1L;
+
 	private StringPiece name;
 	private NodeList<Node> subsripts;
 	

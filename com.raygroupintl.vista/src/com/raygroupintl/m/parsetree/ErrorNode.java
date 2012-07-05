@@ -19,6 +19,8 @@ package com.raygroupintl.m.parsetree;
 import com.raygroupintl.m.struct.MError;
 
 public class ErrorNode extends TerminalNode {
+	private static final long serialVersionUID = 1L;
+
 	private int errorCode;
 	
 	public ErrorNode(int errorCode) {

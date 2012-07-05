@@ -17,6 +17,8 @@
 package com.raygroupintl.m.parsetree;
 
 public class StringLiteral extends Literal {
+	private static final long serialVersionUID = 1L;
+
 	public StringLiteral(String value) {
 		super(value);
 	}

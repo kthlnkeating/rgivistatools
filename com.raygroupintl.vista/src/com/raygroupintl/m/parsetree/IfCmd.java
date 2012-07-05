@@ -17,6 +17,8 @@
 package com.raygroupintl.m.parsetree;
 
 public class IfCmd extends ParentNode {
+	private static final long serialVersionUID = 1L;
+
 	private Nodes<Node> conditions;
 		
 	public IfCmd() {

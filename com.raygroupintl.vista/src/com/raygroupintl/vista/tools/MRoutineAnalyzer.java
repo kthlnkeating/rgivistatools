@@ -27,7 +27,8 @@ import java.util.logging.Logger;
 import com.raygroupintl.m.parsetree.ErrorNode;
 import com.raygroupintl.m.parsetree.Node;
 import com.raygroupintl.m.parsetree.Routine;
-import com.raygroupintl.m.parsetree.data.Blocks;
+import com.raygroupintl.m.parsetree.data.BlocksSupply;
+import com.raygroupintl.m.parsetree.data.SerializedBlocksSupply;
 import com.raygroupintl.m.struct.MError;
 import com.raygroupintl.m.token.MTFSupply;
 import com.raygroupintl.m.token.MVersion;
@@ -50,6 +51,7 @@ import com.raygroupintl.vista.repository.visitor.APIWriter;
 import com.raygroupintl.vista.repository.visitor.ErrorWriter;
 import com.raygroupintl.vista.repository.visitor.FaninWriter;
 import com.raygroupintl.vista.repository.visitor.FanoutWriter;
+import com.raygroupintl.vista.repository.visitor.SerializedRoutineWriter;
 
 public class MRoutineAnalyzer {
 	private final static Logger LOGGER = Logger.getLogger(MRoutineAnalyzer.class.getName());
@@ -170,44 +172,54 @@ public class MRoutineAnalyzer {
 		return packageNodes;		
 	}
 	
-	// -t fanin -o "C:\Afsin\Dependency Tool Verification\fanin.dat"
-	// -t api -i "C:\Afsin\Dependency Tool Verification\fanin.dat" -o "C:\Afsin\Dependency Tool Verification\api.dat"
+	// -t fanin -o "C:\Afsin\Dependency Tool Verification\java\fanin.dat"
+	// -t api -i "C:\Afsin\Dependency Tool Verification\java\fanin.dat" -o "C:\Afsin\Dependency Tool Verification\java\api.dat"
 	// -t glb -o "C:\Afsin\Dependency Tool Verification\glb.dat
+	// -t apisingle -i "C:\Afsin\Dependency Tool Verification\serial" -o "C:\Afsin\Dependency Tool Verification\java\api_single.dat"
 	public static void main(String[] args) {
 		try {
 			CLIParams options = CLIParams.getInstance(args);
 			if (options == null) return;
-
+			
 			MRoutineAnalyzer m = new MRoutineAnalyzer();
 			MRARoutineFactory rf = MRARoutineFactory.getInstance(MVersion.CACHE);
 			RepositoryInfo ri = RepositoryInfo.getInstance(rf);
 			VistaPackages packageNodes = m.getRoutinePackages(options, ri);
-			String outputFile = options.outputFile;
-			FileWrapper fr = new FileWrapper(outputFile);
+			String outputPath = options.outputFile;
 			String at = options.analysisType;
 			if (at.equalsIgnoreCase("error")) {
+				FileWrapper fr = new FileWrapper(outputPath);
 				ErrorExemptions exemptions = ErrorExemptions.getVistAFOIAInstance();
 				ErrorWriter ew = new ErrorWriter(exemptions, fr);
 				packageNodes.accept(ew);
 				return;
 			}
 			if (at.equalsIgnoreCase("fanout")) {
+				FileWrapper fr = new FileWrapper(outputPath);
 				FanoutWriter fow = new FanoutWriter(fr);
 				packageNodes.accept(fow);
 				return;
 			}
 			if (at.equalsIgnoreCase("fanin")) {
+				FileWrapper fr = new FileWrapper(outputPath);
 				FaninWriter fiw = new FaninWriter(ri, fr);
 				packageNodes.accept(fiw);
 				return;
 			}
 			if (at.equalsIgnoreCase("api")) {
+				FileWrapper fr = new FileWrapper(outputPath);
 				APIOverallRecorder api = new APIOverallRecorder();
 				packageNodes.accept(api);
-				Map<String, Blocks> blocks = api.getBlocks();
+				BlocksSupply blocks = api.getBlocks();
 				APIWriter apiw = new APIWriter(fr, blocks, replacementRoutines);
-				//apiw.writeEntry("ADD^ABSV88B");
 				apiw.write(options.inputFile);
+				return;
+			}
+			if (at.equalsIgnoreCase("apisingle")) {
+				FileWrapper fr = new FileWrapper(outputPath);
+				BlocksSupply blocks = new SerializedBlocksSupply(options.inputFile);
+				APIWriter apiw = new APIWriter(fr, blocks, replacementRoutines);
+				apiw.writeEntry("ADD^ABSV88B");
 				return;
 			}
 			if (at.equalsIgnoreCase("glb")) {
@@ -227,7 +239,14 @@ public class MRoutineAnalyzer {
 				};				
 				root.read(paths, niFilter);
 				LOGGER.log(Level.INFO, "Done");			
+				return;
 			}
+			if (at.equalsIgnoreCase("serial")) {
+				SerializedRoutineWriter srw = new SerializedRoutineWriter(outputPath);
+				packageNodes.accept(srw);
+				return;
+			}
+						
 			LOGGER.log(Level.SEVERE, "Unknown analysis type " + at);
 		} catch (Throwable t) {
 			LOGGER.log(Level.SEVERE, "Unexpected error", t);

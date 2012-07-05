@@ -17,6 +17,8 @@
 package com.raygroupintl.m.parsetree;
 
 public class AtomicGoto extends AtomicCommand {
+	private static final long serialVersionUID = 1L;
+
 	private boolean postConditional;
 	
 	public AtomicGoto(Node additionalNodes, boolean postConditional) {

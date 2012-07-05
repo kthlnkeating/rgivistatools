@@ -17,6 +17,8 @@
 package com.raygroupintl.m.parsetree;
 
 public class QuitCmd extends MultiCommand  {
+	private static final long serialVersionUID = 1L;
+
 	public QuitCmd(Node postCondition, Node argument) {
 		super(postCondition, argument);
 	}

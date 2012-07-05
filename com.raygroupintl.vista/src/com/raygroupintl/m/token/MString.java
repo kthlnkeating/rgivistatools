@@ -22,6 +22,8 @@ import com.raygroupintl.parser.TString;
 import com.raygroupintl.parser.Token;
 
 public class MString extends TString implements MToken {
+	private static final long serialVersionUID = 1L;
+	
 	public MString() {
 		super();
 	}

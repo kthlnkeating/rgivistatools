@@ -21,6 +21,8 @@ import java.util.Collections;
 import java.util.List;
 
 public class NodeList<T extends Node> extends Nodes<T> {
+	private static final long serialVersionUID = 1L;
+
 	private List<T> nodes;
 	public static int allocated;
 	public static int added;

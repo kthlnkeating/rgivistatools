@@ -17,6 +17,8 @@
 package com.raygroupintl.m.parsetree;
 
 public class EnvironmentFanoutRoutine extends AdditionalNodeHolder {
+	private static final long serialVersionUID = 1L;
+
 	public EnvironmentFanoutRoutine(Node node) {
 		super(node);
 	}

@@ -18,6 +18,8 @@ package com.raygroupintl.m.parsetree;
 
 public class SetCmdNodes {
 	public static class IndirectAtomicSet extends BasicNode {
+		private static final long serialVersionUID = 1L;
+
 		private Node node;
 		
 		public IndirectAtomicSet(Node node) {
@@ -35,6 +37,8 @@ public class SetCmdNodes {
 	}	
 
 	public static class AtomicSet extends BasicNode {
+		private static final long serialVersionUID = 1L;
+
 		private Node lhs;
 		private Node rhs;
 		
@@ -56,6 +60,8 @@ public class SetCmdNodes {
 	}
 		
 	public static class MultiAtomicSet extends BasicNode {
+		private static final long serialVersionUID = 1L;
+
 		private Nodes<Node> lhss;
 		private Node rhs;
 		
@@ -81,6 +87,8 @@ public class SetCmdNodes {
 	}
 	
 	public static class SetCmd extends MultiCommand {
+		private static final long serialVersionUID = 1L;
+
 		public SetCmd(Node postCondition, Node argument) {
 			super(postCondition, argument);
 		}

@@ -17,6 +17,8 @@
 package com.raygroupintl.m.parsetree;
 
 public class NakedGlobal extends BasicNode {
+	private static final long serialVersionUID = 1L;
+
 	private NodeList<Node> subscripts;
 	
 	public NakedGlobal(NodeList<Node> subscripts) {

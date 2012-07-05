@@ -68,6 +68,8 @@ public final class KillCmdTokens {
 	}
 	
 	public static final class MKilledLocal extends MString {
+		private static final long serialVersionUID = 1L;
+		
 		public MKilledLocal(Token token) {
 			super(token);
 		}

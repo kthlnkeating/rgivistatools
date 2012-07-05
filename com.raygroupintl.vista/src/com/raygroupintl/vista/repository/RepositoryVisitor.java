@@ -21,8 +21,7 @@ import com.raygroupintl.m.parsetree.Routine;
 public abstract class RepositoryVisitor {
 	protected abstract void visitRoutine(Routine routine);
 
-	protected void visitError() {
-		
+	protected void visitError() {		
 	}
 
 	protected void visitVistaPackage(VistaPackage routinePackage) {

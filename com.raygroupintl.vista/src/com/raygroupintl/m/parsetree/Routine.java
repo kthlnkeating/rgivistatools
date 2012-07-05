@@ -16,7 +16,16 @@
 
 package com.raygroupintl.m.parsetree;
 
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
 public class Routine extends BasicNode {
+	private static final long serialVersionUID = 1L;
+	private final static Logger LOGGER = Logger.getLogger(Routine.class.getName());
+
 	private String name;
 	private EntryList entryList;
 	private ErrorNode errorNode;
@@ -67,5 +76,19 @@ public class Routine extends BasicNode {
 	
 	public void setErrorNode(ErrorNode errorNode) {
 		this.errorNode = errorNode;
+	}
+	
+	public static Routine readSerialized(String fileName) {
+		try {
+			FileInputStream fis = new FileInputStream(fileName);
+			ObjectInputStream ois = new ObjectInputStream(fis);
+			Routine result = (Routine) ois.readObject();
+			ois.close();
+			return result;
+		} catch(IOException | ClassNotFoundException ioException) {
+			String msg = "Unable to read object from file " + fileName;
+			LOGGER.log(Level.SEVERE, msg, ioException);
+			return null;
+		}		
 	}
 }

@@ -17,6 +17,8 @@
 package com.raygroupintl.m.parsetree;
 
 public class Entry extends NodeList<Node> {
+	private static final long serialVersionUID = 1L;
+
 	private String name;
 	private String routineName;
 	private int index;

@@ -18,6 +18,8 @@ package com.raygroupintl.m.parsetree;
 
 public class MergeCmdNodes {
 	public static class IndirectAtomicMerge extends BasicNode {
+		private static final long serialVersionUID = 1L;
+
 		private Node node;
 		
 		public IndirectAtomicMerge(Node node) {
@@ -35,6 +37,8 @@ public class MergeCmdNodes {
 	}	
 
 	public static class AtomicMerge extends BasicNode {
+		private static final long serialVersionUID = 1L;
+
 		private Node lhs;
 		private Node rhs;
 		
@@ -56,6 +60,8 @@ public class MergeCmdNodes {
 	}
 		
 	public static class MergeCmd extends MultiCommand {
+		private static final long serialVersionUID = 1L;
+
 		public MergeCmd(Node postCondition, Node argument) {
 			super(postCondition, argument);
 		}

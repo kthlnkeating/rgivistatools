@@ -17,6 +17,8 @@
 package com.raygroupintl.m.parsetree;
 
 public class FanoutRoutine extends AdditionalNodeHolder {
+	private static final long serialVersionUID = 1L;
+
 	private String name;
 	
 	public FanoutRoutine(String name, Node addlNode) {

@@ -17,6 +17,8 @@
 package com.raygroupintl.m.parsetree;
 
 public class DoBlock extends BasicNode {
+	private static final long serialVersionUID = 1L;
+
 	private Node postCondition;
 	private EntryList entryList;
 	

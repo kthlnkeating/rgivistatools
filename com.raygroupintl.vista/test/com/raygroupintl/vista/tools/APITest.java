@@ -17,6 +17,7 @@ import com.raygroupintl.m.parsetree.data.APIData;
 import com.raygroupintl.m.parsetree.data.Block;
 import com.raygroupintl.m.parsetree.data.Blocks;
 import com.raygroupintl.m.parsetree.data.EntryId;
+import com.raygroupintl.m.parsetree.data.MapBlocksSupply;
 import com.raygroupintl.m.parsetree.visitor.APIRecorder;
 import com.raygroupintl.m.parsetree.visitor.ErrorRecorder;
 import com.raygroupintl.m.struct.MRoutineContent;
@@ -49,7 +50,7 @@ public class APITest {
 		return r.getNode();
 	}
 		
-	private void usedTest(Map<String, Blocks> blocksMap, String routineName, String tag, String[] expectedInputs, String[] expectedOutputs, String[] expectedGlobals) {
+	private void usedTest(MapBlocksSupply blocksMap, String routineName, String tag, String[] expectedInputs, String[] expectedOutputs, String[] expectedGlobals) {
 		Blocks rbs = blocksMap.get(routineName);
 		Block lb = rbs.get(tag);
 		Set<EntryId> entryIdTrack = new HashSet<EntryId>();
@@ -92,7 +93,7 @@ public class APITest {
 			Assert.assertEquals(0, er.getLastErrors().size());
 		}
 		APIRecorder recorder = new APIRecorder();
-		Map<String, Blocks> blocksMap = new HashMap<String, Blocks>();
+		MapBlocksSupply blocksMap = new MapBlocksSupply();
 		for (int i=0; i<routines.length; ++i) {			
 			routines[i].accept(recorder);
 			Blocks blocks = recorder.getBlocks();

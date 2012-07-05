@@ -17,6 +17,8 @@
 package com.raygroupintl.m.parsetree;
 
 public class Extrinsic extends AtomicCommand {
+	private static final long serialVersionUID = 1L;
+
 	public Extrinsic(Node additionalNodes) {
 		super(additionalNodes);
 	}

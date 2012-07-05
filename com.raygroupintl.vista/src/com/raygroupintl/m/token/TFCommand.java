@@ -57,6 +57,8 @@ public class TFCommand extends TokenFactorySupply {
 	private static final TFEmptyVerified TF_EMPTY = new TFEmptyVerified("commandempty", ' ');
 	
 	private static abstract class TCommandSpec extends MString {
+		private static final long serialVersionUID = 1L;
+		
 		private TokenFactory argumentFactory;
 		
 		public TCommandSpec(StringPiece value, TokenFactory argumentFactory) {
@@ -72,6 +74,8 @@ public class TFCommand extends TokenFactorySupply {
 	}
 		
 	private static class TBCommandSpec extends TCommandSpec {
+		private static final long serialVersionUID = 1L;
+		
 		private TBCommandSpec(StringPiece value, MTFSupply supply) {
 			super(value, supply.expr);
 		}
@@ -82,6 +86,8 @@ public class TFCommand extends TokenFactorySupply {
 	}
 	
 	private static class TCCommandSpec extends TCommandSpec {
+		private static final long serialVersionUID = 1L;
+		
 		private TCCommandSpec(StringPiece value, MTFSupply supply) {
 			super(value, supply.closearg);
 		}
@@ -92,6 +98,8 @@ public class TFCommand extends TokenFactorySupply {
 	}
 	
 	private static class TDCommandSpec extends TCommandSpec {
+		private static final long serialVersionUID = 1L;
+		
 		private TDCommandSpec(StringPiece value, MTFSupply supply) {
 			super(value, supply.doarguments);
 		}
@@ -102,6 +110,8 @@ public class TFCommand extends TokenFactorySupply {
 	}
 	
 	private static class TECommandSpec extends TCommandSpec {
+		private static final long serialVersionUID = 1L;
+		
 		private TECommandSpec(StringPiece value, MTFSupply supply) {
 			super(value, TF_EMPTY);
 		}
@@ -112,6 +122,8 @@ public class TFCommand extends TokenFactorySupply {
 	}
 
 	private static class TFCommandSpec extends TCommandSpec {
+		private static final long serialVersionUID = 1L;
+		
 		private TFCommandSpec(StringPiece value, MTFSupply supply) {
 			super(value, supply.forarg);
 		}
@@ -123,6 +135,8 @@ public class TFCommand extends TokenFactorySupply {
 	}
 
 	private static class TGCommandSpec extends TCommandSpec {
+		private static final long serialVersionUID = 1L;
+		
 		private TGCommandSpec(StringPiece value, MTFSupply supply) {
 			super(value, supply.gotoarguments);
 		}
@@ -133,6 +147,8 @@ public class TFCommand extends TokenFactorySupply {
 	}
 
 	private static class THCommandSpec extends TCommandSpec {
+		private static final long serialVersionUID = 1L;
+		
 		private THCommandSpec(StringPiece value, MTFSupply supply) {
 			super(value, supply.expr);
 		}
@@ -143,6 +159,8 @@ public class TFCommand extends TokenFactorySupply {
 	}
 
 	private static class TICommandSpec extends TCommandSpec {
+		private static final long serialVersionUID = 1L;
+		
 		private TICommandSpec(StringPiece value, MTFSupply supply) {
 			super(value, supply.exprlist);
 		}
@@ -153,6 +171,8 @@ public class TFCommand extends TokenFactorySupply {
 	}
 
 	private static class TJCommandSpec extends TCommandSpec {
+		private static final long serialVersionUID = 1L;
+		
 		private TJCommandSpec(StringPiece value, MTFSupply supply) {
 			super(value, supply.cmdjargs);
 		}
@@ -163,6 +183,8 @@ public class TFCommand extends TokenFactorySupply {
 	}
 
 	private static class TKCommandSpec extends TCommandSpec {
+		private static final long serialVersionUID = 1L;
+		
 		private TKCommandSpec(StringPiece value, MTFSupply supply) {
 			super(value, supply.killargs);
 		}
@@ -173,6 +195,8 @@ public class TFCommand extends TokenFactorySupply {
 	}
 
 	private static class TLCommandSpec extends TCommandSpec {
+		private static final long serialVersionUID = 1L;
+		
 		private TLCommandSpec(StringPiece value, MTFSupply supply) {
 			super(value, supply.lockargs);
 		}
@@ -183,6 +207,8 @@ public class TFCommand extends TokenFactorySupply {
 	}
 
 	private static class TMCommandSpec extends TCommandSpec {
+		private static final long serialVersionUID = 1L;
+		
 		private TMCommandSpec(StringPiece value, MTFSupply supply) {
 			super(value, supply.mergeargs);
 		}
@@ -193,6 +219,8 @@ public class TFCommand extends TokenFactorySupply {
 	}
 
 	private static class TNCommandSpec extends TCommandSpec {
+		private static final long serialVersionUID = 1L;
+		
 		private TNCommandSpec(StringPiece value, MTFSupply supply) {
 			super(value, supply.newargs);
 		}
@@ -203,6 +231,8 @@ public class TFCommand extends TokenFactorySupply {
 	}
 
 	private static class TOCommandSpec extends TCommandSpec {
+		private static final long serialVersionUID = 1L;
+		
 		private TOCommandSpec(StringPiece value, MTFSupply supply) {
 			super(value, supply.cmdoargs);
 		}
@@ -213,6 +243,8 @@ public class TFCommand extends TokenFactorySupply {
 	}
 
 	private static class TQCommandSpec extends TCommandSpec {
+		private static final long serialVersionUID = 1L;
+		
 		private TQCommandSpec(StringPiece value, MTFSupply supply) {
 			super(value, supply.expr);
 		}
@@ -223,6 +255,8 @@ public class TFCommand extends TokenFactorySupply {
 	}
 
 	private static class TRCommandSpec extends TCommandSpec {
+		private static final long serialVersionUID = 1L;
+		
 		private TRCommandSpec(StringPiece value, MTFSupply supply) {
 			super(value, supply.cmdrargs);
 		}
@@ -233,6 +267,8 @@ public class TFCommand extends TokenFactorySupply {
 	}
 
 	private static class TSCommandSpec extends TCommandSpec {
+		private static final long serialVersionUID = 1L;
+		
 		private TSCommandSpec(StringPiece value, MTFSupply supply) {
 			super(value, supply.setargs);
 		}
@@ -243,6 +279,8 @@ public class TFCommand extends TokenFactorySupply {
 	}
 
 	private static class TTCCommandSpec extends TCommandSpec {
+		private static final long serialVersionUID = 1L;
+		
 		private TTCCommandSpec(StringPiece value, MTFSupply supply) {
 			super(value, TF_EMPTY);
 		}
@@ -253,6 +291,8 @@ public class TFCommand extends TokenFactorySupply {
 	}
 
 	private static class TTRCommandSpec extends TCommandSpec {
+		private static final long serialVersionUID = 1L;
+		
 		private TTRCommandSpec(StringPiece value, MTFSupply supply) {
 			super(value, TF_EMPTY);
 		}
@@ -263,6 +303,8 @@ public class TFCommand extends TokenFactorySupply {
 	}
 
 	private static class TTROCommandSpec extends TCommandSpec {
+		private static final long serialVersionUID = 1L;
+		
 		private TTROCommandSpec(StringPiece value, MTFSupply supply) {
 			super(value, TF_EMPTY);
 		}
@@ -273,6 +315,8 @@ public class TFCommand extends TokenFactorySupply {
 	}
 
 	private static class TTSCommandSpec extends TCommandSpec {
+		private static final long serialVersionUID = 1L;
+		
 		private TTSCommandSpec(StringPiece value, MTFSupply supply) {
 			super(value, TF_EMPTY);
 		}
@@ -283,6 +327,8 @@ public class TFCommand extends TokenFactorySupply {
 	}
 
 	private static class TUCommandSpec extends TCommandSpec {
+		private static final long serialVersionUID = 1L;
+		
 		private TUCommandSpec(StringPiece value, MTFSupply supply) {
 			super(value, supply.cmduargs);
 		}
@@ -293,6 +339,8 @@ public class TFCommand extends TokenFactorySupply {
 	}
 
 	private static class TWCommandSpec extends TCommandSpec {
+		private static final long serialVersionUID = 1L;
+		
 		private TWCommandSpec(StringPiece value, MTFSupply supply) {
 			super(value, supply.writeargs);
 		}
@@ -303,6 +351,8 @@ public class TFCommand extends TokenFactorySupply {
 	}
 
 	private static class TVCommandSpec extends TCommandSpec {
+		private static final long serialVersionUID = 1L;
+		
 		private TVCommandSpec(StringPiece value, MTFSupply supply) {
 			super(value, new TFGenericArgument("vargument"));
 		}
@@ -313,6 +363,8 @@ public class TFCommand extends TokenFactorySupply {
 	}
 
 	private static class TXCommandSpec extends TCommandSpec {
+		private static final long serialVersionUID = 1L;
+		
 		private TXCommandSpec(StringPiece value, MTFSupply supply) {
 			super(value, supply.xecuteargs);
 		}
@@ -323,6 +375,8 @@ public class TFCommand extends TokenFactorySupply {
 	}
 
 	private static class TGenericCommandSpec extends TCommandSpec {
+		private static final long serialVersionUID = 1L;
+		
 		private TGenericCommandSpec(StringPiece value, MTFSupply supply) {
 			super(value, new TFGenericArgument("genericargument"));
 		}

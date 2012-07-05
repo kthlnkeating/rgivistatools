@@ -17,6 +17,8 @@
 package com.raygroupintl.m.parsetree;
 
 public abstract class Nodes<T extends Node> extends BasicNode {
+	private static final long serialVersionUID = 1L;
+
 	public abstract Iterable<T> getNodes();
 
 	private void acceptElements(Visitor visitor) {

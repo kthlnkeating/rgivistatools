@@ -16,24 +16,23 @@
 
 package com.raygroupintl.vista.repository.visitor;
 
-import java.util.HashMap;
-import java.util.Map;
 import java.util.logging.Logger;
 
 import com.raygroupintl.m.parsetree.Routine;
 import com.raygroupintl.m.parsetree.data.Blocks;
+import com.raygroupintl.m.parsetree.data.BlocksSupply;
+import com.raygroupintl.m.parsetree.data.MapBlocksSupply;
 import com.raygroupintl.m.parsetree.visitor.APIRecorder;
 import com.raygroupintl.vista.repository.RepositoryVisitor;
 import com.raygroupintl.vista.repository.VistaPackages;
 import com.raygroupintl.vista.repository.VistaPackage;
-import com.raygroupintl.vista.tools.MRoutineAnalyzer;
 
 public class APIOverallRecorder extends RepositoryVisitor {
-	private final static Logger LOGGER = Logger.getLogger(MRoutineAnalyzer.class.getName());
+	private final static Logger LOGGER = Logger.getLogger(APIOverallRecorder.class.getName());
 
 	private int packageCount;
 	private APIRecorder recorder;
-	private Map<String, Blocks> blocksMap = new HashMap<String, Blocks>();
+	private MapBlocksSupply blocksMap = new MapBlocksSupply();
 	
 	@Override
 	protected void visitVistaPackage(VistaPackage routinePackage) {
@@ -42,18 +41,20 @@ public class APIOverallRecorder extends RepositoryVisitor {
 		LOGGER.info(String.valueOf(this.packageCount) + ". " + routinePackage.getPackageName() + "\n");
 	}
 
+	@Override
 	public void visitRoutine(Routine routine) {
 		routine.accept(this.recorder);
 		Blocks blocks = this.recorder.getBlocks();
 		this.blocksMap.put(routine.getName(), blocks);
 	}
 	
+	@Override
 	protected void visitRoutinePackages(VistaPackages rps) {
 		this.recorder = new APIRecorder();
 		rps.acceptSubNodes(this);
 	}
 	
-	public Map<String, Blocks> getBlocks() {
+	public BlocksSupply getBlocks() {
 		return this.blocksMap;
 	}
 }

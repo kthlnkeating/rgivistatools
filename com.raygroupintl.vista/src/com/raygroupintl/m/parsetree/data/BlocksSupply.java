@@ -14,35 +14,8 @@
 // limitations under the License.
 //---------------------------------------------------------------------------
 
-package com.raygroupintl.m.parsetree;
+package com.raygroupintl.m.parsetree.data;
 
-public class Line extends ParentNode {
-	private static final long serialVersionUID = 1L;
-
-	private String tag;
-	private int index;
-	private int level;
-		
-	public Line(String tag, int index, int level) {
-		this.tag = tag;
-		this.index = index;
-		this.level = level;
-	}
-
-	public String getTag() {
-		return this.tag;
-	}
-	
-	public int getIndex() {
-		return this.index;
-	}
-
-	public int getLevel() {
-		return this.level;
-	}
-
-	@Override
-	public void accept(Visitor visitor) {
-		visitor.visitLine(this);
-	}
+public interface BlocksSupply {
+	Blocks getBlocks(String routineName);
 }

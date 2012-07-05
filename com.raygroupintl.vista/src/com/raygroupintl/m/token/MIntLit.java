@@ -21,6 +21,8 @@ import com.raygroupintl.m.parsetree.Node;
 import com.raygroupintl.parser.Token;
 
 public class MIntLit extends MString {
+	private static final long serialVersionUID = 1L;
+	
 	public MIntLit(Token token) {
 		super(token);
 	}

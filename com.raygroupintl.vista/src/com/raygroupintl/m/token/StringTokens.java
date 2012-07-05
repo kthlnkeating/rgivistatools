@@ -20,18 +20,24 @@ import com.raygroupintl.parser.Token;
 
 public class StringTokens {
 	public static class MName extends MString {
+		private static final long serialVersionUID = 1L;
+		
 		public MName(Token token) {
 			super(token);
 		}
 	}
 
 	public static class MIdent extends MString {
+		private static final long serialVersionUID = 1L;
+		
 		public MIdent(Token token) {
 			super(token);
 		}
 	}
 
 	public static class PatAtoms extends MString {
+		private static final long serialVersionUID = 1L;
+		
 		public PatAtoms(Token token) {
 			super(token);
 		}

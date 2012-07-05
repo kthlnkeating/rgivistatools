@@ -19,6 +19,8 @@ package com.raygroupintl.m.parsetree;
 import java.util.List;
 
 public class ForLoop extends ParentNode {
+	private static final long serialVersionUID = 1L;
+
 	private Node lhs;
 	private List<Node[]> rhss;
 		
