@@ -22,16 +22,29 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.logging.Logger;
 
 public class APIData {
+	private final static Logger LOGGER = Logger.getLogger(APIData.class.getName());
+
+	private Block sourceBlock;
+	
 	private Set<String> inputs;
 	private Set<String> outputs;
 	private Set<String> globals;
-	
-	public APIData(Set<String> inputs, Set<String> outputs, Set<String> globals) {
+		
+	public APIData(Block source) {
+		this.sourceBlock = source;
+	}
+		
+	public void set(Set<String> inputs, Set<String> outputs, Set<String> globals) {
 		this.inputs = new HashSet<String>(inputs);
 		this.outputs = new HashSet<String>(outputs);
-		this.globals = globals;
+		this.globals = new HashSet<String>(globals);
+	}
+	
+	public Block getSourceBlock() {
+		return this.sourceBlock;
 	}
 	
 	private static void add(Set<String> target, String name, boolean hasSubscripts) {
@@ -56,21 +69,28 @@ public class APIData {
 		add(this.outputs, name, hasSubscripts);
 	}
 	
-	private static void merge(Set<String> target, Set<String> source, int sourceIndex, Map<String, Integer> newedLocals) {
+	private void merge(Set<String> target, APIData sourceData, Set<String> source, int sourceIndex, Map<String, Integer> newedLocals) {
 		if (target == null) return;
 		for (String name : source) {
 			Integer index = newedLocals.get(name);
 			if (index == null) {
 				target.add(name);
+				if ("%1".equals(name) && sourceData.outputs == source) {
+					LOGGER.info(sourceData.sourceBlock.getEntryId().toString() + " updated " + this.sourceBlock.getEntryId().toString() + "\n");
+				}
 			} else if (index.intValue() > sourceIndex) {
 				target.add(name);
+				if ("%1".equals(name) && sourceData.outputs == source) {
+					LOGGER.info(sourceData.sourceBlock.getEntryId().toString() + " updated " + this.sourceBlock.getEntryId().toString() + "\n");
+				}
 			}
 		}		
 	}
 	
-	public void merge(APIData source, int sourceIndex, Map<String, Integer> newedLocals) {
-		merge(this.inputs, source.inputs, sourceIndex, newedLocals);
-		merge(this.outputs, source.outputs, sourceIndex, newedLocals);
+	public void merge(APIData source, int sourceIndex) {
+		Map<String, Integer> newedLocals = this.sourceBlock.getNewedLocals();
+		this.merge(this.inputs, source, source.inputs, sourceIndex, newedLocals);
+		this.merge(this.outputs, source, source.outputs, sourceIndex, newedLocals);
 		this.globals.addAll(source.globals);
 	}
 	

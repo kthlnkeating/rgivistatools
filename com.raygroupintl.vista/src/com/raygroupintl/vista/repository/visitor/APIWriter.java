@@ -20,11 +20,9 @@ import java.io.IOException;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.Arrays;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Scanner;
-import java.util.Set;
 
 import com.raygroupintl.m.parsetree.data.APIData;
 import com.raygroupintl.m.parsetree.data.Block;
@@ -33,12 +31,15 @@ import com.raygroupintl.m.parsetree.data.BlocksSupply;
 import com.raygroupintl.m.parsetree.data.EntryId;
 import com.raygroupintl.output.FileWrapper;
 import com.raygroupintl.output.TerminalFormatter;
+import com.raygroupintl.struct.Filter;
+import com.raygroupintl.struct.PassFilter;
 
 public class APIWriter {
 	private FileWrapper fileWrapper;
 	private BlocksSupply routineBlocks;
 	private TerminalFormatter tf = new TerminalFormatter();
 	private Map<String, String> replacementRoutines;
+	private Filter<EntryId> filter = new PassFilter<EntryId>();
 	
 	public APIWriter(FileWrapper fileWrapper, BlocksSupply routineBlocks, Map<String, String> replacementRoutines) {
 		this.fileWrapper = fileWrapper;
@@ -46,6 +47,10 @@ public class APIWriter {
 		this.replacementRoutines = replacementRoutines;
 	}
 
+	public void setFilter(Filter<EntryId> filter) {
+		this.filter = filter;
+	}
+	
 	private void write(String[] linePieces, int pieceIndex, String title) {
 		this.fileWrapper.write(this.tf.startList(title));
 		boolean has = false;
@@ -102,9 +107,7 @@ public class APIWriter {
 				}
 				this.fileWrapper.writeEOL();
 
-				
-				Set<EntryId> entryIfTrack = new HashSet<EntryId>();
-				APIData apiData = lb.getAPIData(this.routineBlocks, entryIfTrack, this.replacementRoutines);
+				APIData apiData = lb.getAPIData(this.routineBlocks, this.filter, this.replacementRoutines);
 				this.writeAPIData(apiData.getInputs(), "INPUT");
 				this.writeAPIData(apiData.getOutputs(), "OUTPUT");
 				this.writeAPIData(apiData.getGlobals(), "GLBS");

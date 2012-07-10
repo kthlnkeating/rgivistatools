@@ -14,32 +14,22 @@
 // limitations under the License.
 //---------------------------------------------------------------------------
 
-package com.raygroupintl.parser.annotation;
+package com.raygroupintl.struct;
 
-import java.util.Map;
-
-import com.raygroupintl.parser.TString;
-import com.raygroupintl.parser.Token;
-
-public class TSymbol extends TString implements RuleSupply {
-	private static final long serialVersionUID = 1L;
-
-	public TSymbol(Token token) {
-		super(token);
+public class Indexed<T> {
+	private T object;
+	private int index;
+	
+	public Indexed(T object, int index) {
+		this.object = object;
+		this.index = index;
 	}
 	
-	@Override
-	public FactorySupplyRule getRule(RuleSupplyFlag flag, String name, Map<String, RuleSupply> existing) {
-		String value = this.toValue().toString();
-		if (flag == RuleSupplyFlag.TOP) {
-			RuleSupply referred = existing.get(value);
-			if (referred == null) {
-				return null;
-			} else {
-				return new FSRCopy(referred.getRule(flag, value, existing));
-			}
-		} else {
-			return new FSRSingle(value, flag);			
-		}
+	public int getIndex() {
+		return this.index;
+	}
+	
+	public T getObject() {
+		return this.object;
 	}
 }

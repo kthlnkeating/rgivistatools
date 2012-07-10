@@ -28,6 +28,7 @@ import com.raygroupintl.m.parsetree.ErrorNode;
 import com.raygroupintl.m.parsetree.Node;
 import com.raygroupintl.m.parsetree.Routine;
 import com.raygroupintl.m.parsetree.data.BlocksSupply;
+import com.raygroupintl.m.parsetree.data.EntryId;
 import com.raygroupintl.m.parsetree.data.SerializedBlocksSupply;
 import com.raygroupintl.m.struct.MError;
 import com.raygroupintl.m.token.MTFSupply;
@@ -161,6 +162,18 @@ public class MRoutineAnalyzer {
 		}
 	}
 	
+	private static class PercentRoutineFilter implements Filter<EntryId> {
+		@Override
+		public boolean isValid(EntryId input) {
+			String routineName = input.getRoutineName();
+			if ((routineName != null) && (! routineName.isEmpty())) {
+				char ch = routineName.charAt(0);
+				return ch != '%';
+			}
+			return true;
+		}
+	}
+	
 	private VistaPackages getRoutinePackages(CLIParams options, RepositoryInfo ri)  throws IOException, SyntaxErrorException {
 		List<VistaPackage> packages = null; 
 		if (options.packages.size() == 0) {
@@ -219,7 +232,10 @@ public class MRoutineAnalyzer {
 				FileWrapper fr = new FileWrapper(outputPath);
 				BlocksSupply blocks = new SerializedBlocksSupply(options.inputFile);
 				APIWriter apiw = new APIWriter(fr, blocks, replacementRoutines);
+				PercentRoutineFilter filter = new PercentRoutineFilter();
+				apiw.setFilter(filter);
 				apiw.writeEntry("ADD^ABSV88B");
+				//apiw.writeEntry("ENROOT^DIQGU");
 				return;
 			}
 			if (at.equalsIgnoreCase("glb")) {
