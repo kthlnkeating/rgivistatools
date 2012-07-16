@@ -36,25 +36,25 @@ public class Block {
 
 	private static class FaninList {
 		private Block block;
-		private List<Indexed<Block>> faninBlocks = new ArrayList<Indexed<Block>>();
+		private List<IndexedBlock> faninBlocks = new ArrayList<IndexedBlock>();
 		private Set<Integer> existing = new HashSet<Integer>();
 		
 		public FaninList(Block block) {
 			this.block = block;
 		}
 				
-		public void addFanin(Block faninBlock, int index) {
+		public void addFanin(Block faninBlock, int index, List<Indexed<String>> byRefs) {
 			int faninId = System.identityHashCode(faninBlock);
 			if (faninId != System.identityHashCode(this.block)) {
 				if (! this.existing.contains(faninId)) {
-					Indexed<Block> e = new Indexed<Block>(faninBlock, index);
+					IndexedBlock e = new IndexedBlock(index, faninBlock, byRefs);
 					this.faninBlocks.add(e);
 					this.existing.add(faninId);
 				}
 			}
 		}
 		
-		public List<Indexed<Block>> getFaninBlocks() {
+		public List<IndexedBlock> getFaninBlocks() {
 			return this.faninBlocks;
 		}
 	}
@@ -69,7 +69,7 @@ public class Block {
 			this.rootId = System.identityHashCode(root);
 		}
 		
-		public void add(Block fanin, Block fanout, int fanoutIndex) {
+		public void add(Block fanin, Block fanout, int fanoutIndex, List<Indexed<String>> byRefs) {
 			Integer fanoutId = System.identityHashCode(fanout);
 			if (fanoutId != this.rootId) {
 				FaninList faninList = this.map.get(fanoutId);
@@ -78,7 +78,7 @@ public class Block {
 					faninList = new FaninList(fanout);
 					this.map.put(fanoutId, faninList);
 				}
-				faninList.addFanin(fanin, fanoutIndex);
+				faninList.addFanin(fanin, fanoutIndex, byRefs);
 			}
 		}
 		
@@ -102,18 +102,24 @@ public class Block {
 				datas.put(id, data);
 			}
 			
-			for (int i=this.list.size()-1; i>0; --i) {
-				Block b = this.list.get(i);
-				int id = System.identityHashCode(b);
-				APIData data = datas.get(id);
-				FaninList faninList = this.map.get(id);
-				List<Indexed<Block>> faninBlocks = faninList.getFaninBlocks();
-				for (Indexed<Block> ib : faninBlocks) {
-					Block faninBlock = ib.getObject();
-					int faninId = System.identityHashCode(faninBlock);
-					APIData faninData = datas.get(faninId);
-					faninData.merge(data, ib.getIndex());
+			int totalChange = Integer.MAX_VALUE;
+
+			while (totalChange > 0) {
+				totalChange = 0;
+				for (int i=this.list.size()-1; i>0; --i) {
+					Block b = this.list.get(i);
+					int id = System.identityHashCode(b);
+					APIData data = datas.get(id);
+					FaninList faninList = this.map.get(id);
+					List<IndexedBlock> faninBlocks = faninList.getFaninBlocks();
+					for (IndexedBlock ib : faninBlocks) {
+						Block faninBlock = ib.getBlock();
+						int faninId = System.identityHashCode(faninBlock);
+						APIData faninData = datas.get(faninId);
+						totalChange += faninData.merge(data, ib.getIndex(), ib.getByRefs());
+					}
 				}
+				LOGGER.info("Total Change: " + String.valueOf(totalChange));
 			}
 			
 			Block b = this.list.get(0);
@@ -127,9 +133,11 @@ public class Block {
 	private Blocks siblings;
 	
 	private String[] formals;
+	private Map<String, Integer> formalsSet;
 	private Map<String, Integer> newedLocals = new HashMap<String, Integer>();
 	private Map<String, Integer> inputLocals = new HashMap<String, Integer>();
 	private Map<String, Integer> outputLocals = new HashMap<String, Integer>();
+	private Set<String> subscripted = new HashSet<String>();
 	private Set<String> globals = new HashSet<String>();
 
 	private List<IndexedFanout> fanouts = new ArrayList<IndexedFanout>();
@@ -154,9 +162,16 @@ public class Block {
 	}
 	
 	public void setFormals(String[] formals) {
-		this.formals = formals;		
-		if (formals != null) for (String formal : formals) {
-			this.newedLocals.put(formal, this.index);
+		this.formals = formals;
+		if (formals != null) {
+			this.formalsSet = new HashMap<String, Integer>(formals.length*2);
+			int index = 0;
+			for (String formal : formals) {
+				formalsSet.put(formal, index);
+				++index;
+			}
+		} else {
+			this.formalsSet=null;
 		}
 	}
 	
@@ -176,8 +191,13 @@ public class Block {
 	public void addInput(int index, Local local) {
 		if (! this.closed) {
 			String label = local.getName().toString();
-			if ((! this.inputLocals.containsKey(label)) && (! this.newedLocals.containsKey(label))) {
-				this.inputLocals.put(label, index);
+			if ((! this.newedLocals.containsKey(label)) && (! this.outputLocals.containsKey(label))) {
+				if (! this.inputLocals.containsKey(label)) {
+					this.inputLocals.put(label, index);
+				}
+				if (local.hasSubscripts()) {
+					this.subscripted.add(label);
+				}
 			}
 		}
 	}
@@ -185,8 +205,13 @@ public class Block {
 	public void addOutput(int index, Local local) {
 		if (! this.closed) {
 			String label = local.getName().toString();
-			if ((! this.outputLocals.containsKey(label)) && (! this.newedLocals.containsKey(label))) {
-				this.outputLocals.put(label, index);
+			if (! this.newedLocals.containsKey(label)) {
+				if (! this.outputLocals.containsKey(label)) {
+					this.outputLocals.put(label, index);
+				}
+				if (local.hasSubscripts()) {
+					this.subscripted.add(label);
+				}
 			}
 		}
 	}
@@ -197,9 +222,10 @@ public class Block {
 		}
 	}
 
-	public void addFanout(int index, EntryId fanout, boolean shouldClose) {
+	public void addFanout(int index, EntryId fanout, boolean shouldClose, CallArgument[] arguments) {
 		if (! this.closed) {
 			IndexedFanout ifo = new IndexedFanout(index, fanout);
+			ifo.setByRefs(arguments);
 			this.fanouts.add(ifo);
 			if (shouldClose) {
 				this.close();
@@ -207,36 +233,57 @@ public class Block {
 		}
 	}	
 	
-	public boolean isNewed(Local local) {
-		return this.newedLocals.containsKey(local.getName().toString());
+	public Integer getAsFormal(String name) {
+		if (this.formalsSet != null) {
+			return this.formalsSet.get(name);			
+		} else {
+			return null;
+		}
 	}
 	
-	public boolean isInput(Local local) {
-		return this.inputLocals.containsKey(local.getName().toString());
+	public boolean isNewed(String name, int sourceIndex) {
+		Integer index = this.newedLocals.get(name);
+		if (index == null) {
+			return false;
+		} else if (index.intValue() > sourceIndex) {
+			return false;
+		}
+		return true;
 	}
 	
-	public boolean isOutput(Local local) {
-		return this.outputLocals.containsKey(local.getName().toString());
+	public boolean isAssigned(String name, int sourceIndex) {
+		Integer index = this.outputLocals.get(name);
+		if (index == null) {
+			return false;
+		} else if (index.intValue() > sourceIndex) {
+			return false;
+		}
+		return true;
 	}
 	
-	public boolean isUsed(Local local) {
-		String name = local.getName().toString();
-		return this.inputLocals.containsKey(name) || this.outputLocals.containsKey(name);
+	public boolean isSubscripted(String name) {
+		return this.subscripted.contains(name);
 	}
-	
+
 	public Map<String, Integer> getNewedLocals() {
 		return this.newedLocals;
 	}
 	
 	public APIData toAPIData() {
 		APIData result = new APIData(this);
-		result.set(this.inputLocals.keySet(), this.outputLocals.keySet(), this.globals);
+		result.set(this.inputLocals.keySet(), this.outputLocals.keySet(), this.subscripted, this.globals);
 		return result;
 	}
 	
 	public void update(FanoutBlocks fanoutBlocks, BlocksSupply overallMap, Filter<EntryId> filter, Map<String, String> replacedRoutines) {
 		for (IndexedFanout ifout : this.fanouts) {
 			EntryId fout = ifout.getFanout();
+			//if (this.entryId.getRoutineName().equals("DICN")) {
+			//	LOGGER.info(this.entryId.toString() + " to " + fout.toString() + "\n");
+			//	LOGGER.info("\n");
+			//}
+			
+			
 			if ((filter != null) && (! filter.isValid(fout))) continue;
 			String routineName = fout.getRoutineName();
 			String tagName = fout.getTag();					
@@ -261,7 +308,7 @@ public class Block {
 						continue;
 					}
 				}
-				fanoutBlocks.add(this, tagBlock, ifout.getIndex());
+				fanoutBlocks.add(this, tagBlock, ifout.getIndex(), ifout.getByRefs());
 			} else {
 				Blocks routineBlocks = overallMap.getBlocks(routineName);
 				String originalTagName = tagName;
@@ -296,7 +343,7 @@ public class Block {
 						continue;
 					}
 				}
-				fanoutBlocks.add(this, tagBlock, ifout.getIndex());
+				fanoutBlocks.add(this, tagBlock, ifout.getIndex(), ifout.getByRefs());
 			}				 
 		}
 	}
@@ -344,7 +391,7 @@ public class Block {
 					}
 				}
 				APIData blockUsed = tagBlock.getAPIData(overallMap, alreadyVisited, replacedRoutines);
-				if (blockUsed != null) result.merge(blockUsed, ifout.getIndex());
+				if (blockUsed != null) result.merge(blockUsed, ifout.getIndex(), ifout.getByRefs());
 			} else {
 				Blocks routineBlocks = overallMap.getBlocks(routineName);
 				String originalTagName = tagName;
@@ -380,7 +427,7 @@ public class Block {
 					}
 				}
 				APIData blockUsed = tagBlock.getAPIData(overallMap, alreadyVisited, replacedRoutines);
-				if (blockUsed != null) result.merge(blockUsed, ifout.getIndex());
+				if (blockUsed != null) result.merge(blockUsed, ifout.getIndex(), ifout.getByRefs());
 			}				 
 		}
 		return result;

@@ -143,6 +143,7 @@ public class MTFSupply {
 	@Rule("strlit | expritemd | unaryexpritem | numlit | exprinpar")
 	public TokenFactory expritem;
 	
+	@TokenType(MLocalByRef.class)
 	@Rule("'.', name")
 	public TokenFactory actualda;
 	@Rule("'.', indirection")

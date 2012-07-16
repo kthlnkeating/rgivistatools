@@ -33,6 +33,8 @@ public interface Node extends Serializable {
 	void acceptPreMerge(Visitor visitor);
 	void acceptPostMerge(Visitor visitor);
 	
+	void acceptCallArgument(Visitor visitor, int order);
+	
 	ParentNode addSelf(ParentNode current, NodeList<Node> nodes);
 	
 	String getAsConstExpr();

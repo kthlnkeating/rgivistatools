@@ -16,20 +16,22 @@
 
 package com.raygroupintl.m.parsetree;
 
-public class NumberLiteral extends Literal {
+public class LocalReference extends BasicNode {
 	private static final long serialVersionUID = 1L;
 
-	public NumberLiteral(String value) {
-		super(value);
+	private Local local;
+	
+	public LocalReference(Local local) {
+		this.local = local;
 	}
-
+	
 	@Override
 	public void accept(Visitor visitor) {
-		visitor.visitNumberLiteral(this);
+		this.local.accept(visitor);
 	}
-
+	
 	@Override
 	public void acceptCallArgument(Visitor visitor, int order) {
-		visitor.passNumberLiteral(this, order);
+		visitor.passLocalByRef(this.local, order);
 	}
 }

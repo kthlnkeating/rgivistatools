@@ -27,4 +27,9 @@ public class StringLiteral extends Literal {
 	public void accept(Visitor visitor) {
 		visitor.visitStringLiteral(this);
 	}
+
+	@Override
+	public void acceptCallArgument(Visitor visitor, int order) {
+		visitor.passStringLiteral(this, order);
+	}
 }

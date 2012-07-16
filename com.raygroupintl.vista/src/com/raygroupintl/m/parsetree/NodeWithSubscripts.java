@@ -49,6 +49,10 @@ abstract class NodeWithSubscripts extends BasicNode {
 		}
 	}
 	
+	public boolean hasSubscripts() {
+		return (this.subsripts != null) && (this.subsripts.size() > 0);
+	}
+	
 	public void acceptSubNodes(Visitor visitor) {
 		Nodes<Node> subscripts = this.getSubscripts();
 		if (subscripts != null) {

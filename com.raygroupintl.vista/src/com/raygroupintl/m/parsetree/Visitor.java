@@ -26,9 +26,15 @@ public class Visitor {
 	protected void visitStringLiteral(StringLiteral literal) {		
 	}
 		
+	protected void passStringLiteral(StringLiteral literal, int index) {		
+	}
+			
 	protected void visitNumberLiteral(NumberLiteral literal) {		
 	}
 		
+	protected void passNumberLiteral(NumberLiteral literal, int index) {		
+	}
+			
 	private void visitAdditionalNodeHolder(AdditionalNodeHolder nodeHolder) {
 		Node addlNode = nodeHolder.getAdditionalNode();
 		if (addlNode != null) {
@@ -49,6 +55,12 @@ public class Visitor {
 	protected void newLocal(Local local) {		
 	}
 	
+	protected void passLocalByVal(Local local, int index) {		
+	}
+	
+	protected void passLocalByRef(Local local, int index) {		
+	}
+
 	protected void visitLocal(Local local) {
 		local.acceptSubNodes(this);
 	}

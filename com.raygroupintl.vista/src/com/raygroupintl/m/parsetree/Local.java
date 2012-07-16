@@ -72,4 +72,10 @@ public class Local extends NodeWithSubscripts {
 	public void acceptPostMerge(Visitor visitor) {
 		visitor.assignLocal(this);
 	}
+	
+	@Override
+	public void acceptCallArgument(Visitor visitor, int order) {
+		this.acceptSubNodes(visitor);
+		visitor.passLocalByVal(this, order);
+	}
 }

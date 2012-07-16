@@ -63,6 +63,11 @@ public abstract class BasicNode implements Node {
 	}
 
 	@Override
+	public void acceptCallArgument(Visitor visitor, int order) {
+		this.accept(visitor);
+	}
+	
+	@Override
 	public String getAsConstExpr() {
 		return null;
 	}

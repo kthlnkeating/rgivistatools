@@ -14,22 +14,12 @@
 // limitations under the License.
 //---------------------------------------------------------------------------
 
-package com.raygroupintl.m.parsetree;
+package com.raygroupintl.m.parsetree.data;
 
-public class NumberLiteral extends Literal {
-	private static final long serialVersionUID = 1L;
-
-	public NumberLiteral(String value) {
-		super(value);
-	}
-
-	@Override
-	public void accept(Visitor visitor) {
-		visitor.visitNumberLiteral(this);
-	}
-
-	@Override
-	public void acceptCallArgument(Visitor visitor, int order) {
-		visitor.passNumberLiteral(this, order);
-	}
+public enum CallArgumentType {
+	COMPLEX,
+	LOCAL_BY_VAL,
+	LOCAL_BY_REF,
+	STRING_LITERAL,
+	NUMBER_LITERAL
 }

@@ -14,22 +14,32 @@
 // limitations under the License.
 //---------------------------------------------------------------------------
 
-package com.raygroupintl.m.parsetree;
+package com.raygroupintl.m.parsetree.data;
 
-public class NumberLiteral extends Literal {
-	private static final long serialVersionUID = 1L;
+import java.util.List;
 
-	public NumberLiteral(String value) {
-		super(value);
+import com.raygroupintl.struct.Indexed;
+
+public class IndexedBlock {
+	private int index;
+	private Block block;
+	private List<Indexed<String>> byRefs;
+		
+	public IndexedBlock(int index, Block block, List<Indexed<String>> byRefs) {
+		this.index = index;
+		this.block = block;
+		this.byRefs = byRefs;
 	}
 
-	@Override
-	public void accept(Visitor visitor) {
-		visitor.visitNumberLiteral(this);
+	public int getIndex() {
+		return this.index;
 	}
-
-	@Override
-	public void acceptCallArgument(Visitor visitor, int order) {
-		visitor.passNumberLiteral(this, order);
+		
+	public Block getBlock() {
+		return this.block;
+	}
+	
+	public List<Indexed<String>> getByRefs() {
+		return this.byRefs;
 	}
 }

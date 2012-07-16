@@ -24,6 +24,15 @@ public class ActualList extends NodeList<Node> {
 	}
 	
 	@Override
+	protected void acceptElements(Visitor visitor) {
+		int index = 0;
+		for (Node node : this.getNodes()) {
+			if (node != null) node.acceptCallArgument(visitor, index);
+			++index;
+		}		
+	}
+ 	
+	@Override
 	public void accept(Visitor visitor) {
 		visitor.visitActualList(this);
 	}

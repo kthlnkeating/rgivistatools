@@ -14,22 +14,23 @@
 // limitations under the License.
 //---------------------------------------------------------------------------
 
-package com.raygroupintl.m.parsetree;
+package com.raygroupintl.m.token;
 
-public class NumberLiteral extends Literal {
-	private static final long serialVersionUID = 1L;
+import com.raygroupintl.m.parsetree.Local;
+import com.raygroupintl.m.parsetree.LocalReference;
+import com.raygroupintl.m.parsetree.Node;
+import com.raygroupintl.parser.StringPiece;
+import com.raygroupintl.parser.Token;
 
-	public NumberLiteral(String value) {
-		super(value);
+public class MLocalByRef extends MSequence {
+	public MLocalByRef (Token token) {
+		super(token);
 	}
 
 	@Override
-	public void accept(Visitor visitor) {
-		visitor.visitNumberLiteral(this);
-	}
-
-	@Override
-	public void acceptCallArgument(Visitor visitor, int order) {
-		visitor.passNumberLiteral(this, order);
+	public Node getNode() {
+		StringPiece name = this.get(1).toValue();
+		Local local = new Local(name);
+		return new LocalReference(local);
 	}
 }

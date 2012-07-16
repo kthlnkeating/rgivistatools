@@ -28,6 +28,7 @@ import com.raygroupintl.m.parsetree.QuitCmd;
 import com.raygroupintl.m.parsetree.Routine;
 import com.raygroupintl.m.parsetree.data.Block;
 import com.raygroupintl.m.parsetree.data.Blocks;
+import com.raygroupintl.m.parsetree.data.CallArgument;
 import com.raygroupintl.m.parsetree.data.EntryId;
 
 public class APIRecorder extends FanoutRecorder {
@@ -94,7 +95,8 @@ public class APIRecorder extends FanoutRecorder {
 		if (fanout != null) {
 			++this.index;
 			boolean shouldClose = isGoto && (! conditional) && (this.underCondition < 1);
-			this.currentBlock.addFanout(index, fanout, shouldClose);
+			CallArgument[] callArguments = this.getLastArguments();
+			this.currentBlock.addFanout(index, fanout, shouldClose, callArguments);
 		}		
 	}
 		
@@ -153,7 +155,7 @@ public class APIRecorder extends FanoutRecorder {
 			}
 			this.currentBlocks.put(tag, this.currentBlock);
 			EntryId defaultGoto = new EntryId(null, tag);
-			lastBlock.addFanout(this.index, defaultGoto, true);
+			lastBlock.addFanout(this.index, defaultGoto, true, null);
 		}
 		String[] params = entry.getParameters();
 		this.currentBlock.setFormals(params);
@@ -175,7 +177,7 @@ public class APIRecorder extends FanoutRecorder {
 		this.currentBlock = lastBlock;
 		String tag = ":" + String.valueOf(this.index);
 		EntryId defaultDo = new EntryId(null, tag);		
-		lastBlock.addFanout(this.index, defaultDo, false);
+		lastBlock.addFanout(this.index, defaultDo, false, null);
 		this.currentBlocks.put(tag, firstBlock);
 		--this.inDoBlock;
 	}

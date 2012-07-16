@@ -20,85 +20,120 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
-import java.util.Map;
 import java.util.Set;
-import java.util.logging.Logger;
+//import java.util.logging.Logger;
+
+import com.raygroupintl.struct.Indexed;
 
 public class APIData {
-	private final static Logger LOGGER = Logger.getLogger(APIData.class.getName());
+	//private final static Logger LOGGER = Logger.getLogger(APIData.class.getName());
 
 	private Block sourceBlock;
 	
 	private Set<String> inputs;
 	private Set<String> outputs;
+	private Set<String> subscripted;
 	private Set<String> globals;
 		
 	public APIData(Block source) {
 		this.sourceBlock = source;
 	}
 		
-	public void set(Set<String> inputs, Set<String> outputs, Set<String> globals) {
+	public void set(Set<String> inputs, Set<String> outputs, Set<String> subscripted, Set<String> globals) {
 		this.inputs = new HashSet<String>(inputs);
 		this.outputs = new HashSet<String>(outputs);
 		this.globals = new HashSet<String>(globals);
+		this.subscripted = subscripted;
 	}
 	
 	public Block getSourceBlock() {
 		return this.sourceBlock;
 	}
 	
-	private static void add(Set<String> target, String name, boolean hasSubscripts) {
-		if (target.contains(name)) {
-			if (hasSubscripts) {
-				target.remove(name);
-				target.add(name + "*");
+	private void mergeInput(Block thisBlock, Block sourceBlock, String name, int sourceIndex) {
+		if ((! thisBlock.isNewed(name, sourceIndex) && (! thisBlock.isAssigned(name, sourceIndex)))) {
+			this.inputs.add(name);
+			if (sourceBlock.isSubscripted(name)) {
+				this.subscripted.add(name);
 			}
-		} else if (! target.contains(name + "*")) {
-			if (hasSubscripts) name = name + "*";
-			target.add(name);
+		} 		
+	}
+	
+	private void mergeInputs(APIData source, int sourceIndex, List<Indexed<String>> byRefs) {
+		Block thisBlock = this.getSourceBlock();
+		Block sourceBlock = source.getSourceBlock();
+		for (String name : source.inputs) {
+			Integer formalIndex = sourceBlock.getAsFormal(name);
+			if (formalIndex == null) {	
+				this.mergeInput(thisBlock, sourceBlock, name, sourceIndex);
+			} else if (byRefs!= null) {
+				int index = formalIndex.intValue();
+				for (Indexed<String> byRef : byRefs) {
+					if (index == byRef.getIndex()) {
+						String byRefName = byRef.getObject();
+						this.mergeInput(thisBlock, sourceBlock, byRefName, sourceIndex);
+					}
+				}				
+			}
 		}		
 	}
 	
-	public void addInput(String name, boolean hasSubscripts) {
-		if (this.inputs == null) this.inputs = new HashSet<String>();
-		add(this.inputs, name, hasSubscripts);
+	private boolean mergeOutput(Block thisBlock, Block sourceBlock, String name, int sourceIndex) {
+		if ((! thisBlock.isNewed(name, sourceIndex) && (! this.outputs.contains(name)))) {
+			//if ("A".equals(name)) {
+			//	LOGGER.info(sourceBlock.getEntryId().toString() + " updated " + thisBlock.getEntryId().toString() + "\n");
+			//}
+			this.outputs.add(name);
+			if (sourceBlock.isSubscripted(name)) {
+				this.subscripted.add(name);
+			}
+			return true;
+		}
+		return false;
 	}
 
-	public void addOutputs(String name, boolean hasSubscripts) {
-		if (this.outputs == null) this.outputs = new HashSet<String>();
-		add(this.outputs, name, hasSubscripts);
-	}
-	
-	private void merge(Set<String> target, APIData sourceData, Set<String> source, int sourceIndex, Map<String, Integer> newedLocals) {
-		if (target == null) return;
-		for (String name : source) {
-			Integer index = newedLocals.get(name);
-			if (index == null) {
-				target.add(name);
-				if ("%1".equals(name) && sourceData.outputs == source) {
-					LOGGER.info(sourceData.sourceBlock.getEntryId().toString() + " updated " + this.sourceBlock.getEntryId().toString() + "\n");
-				}
-			} else if (index.intValue() > sourceIndex) {
-				target.add(name);
-				if ("%1".equals(name) && sourceData.outputs == source) {
-					LOGGER.info(sourceData.sourceBlock.getEntryId().toString() + " updated " + this.sourceBlock.getEntryId().toString() + "\n");
+	private int mergeOutputs(APIData source, int sourceIndex, List<Indexed<String>> byRefs) {
+		Block thisBlock = this.getSourceBlock();
+		Block sourceBlock = source.getSourceBlock();
+		int result = 0;
+		for (String name : source.outputs) {			
+			Integer formalIndex = sourceBlock.getAsFormal(name);
+			if (formalIndex == null) {
+				boolean b = this.mergeOutput(thisBlock, sourceBlock, name, sourceIndex);
+				if (b) ++result;
+			} else if (byRefs!= null) {
+				int index = formalIndex.intValue();
+				for (Indexed<String> byRef : byRefs) {
+					if (index == byRef.getIndex()) {
+						String byRefName = byRef.getObject();
+						boolean b = this.mergeOutput(thisBlock, sourceBlock, byRefName, sourceIndex);
+						if (b) ++result;
+					}
 				}
 			}
-		}		
+		}
+		return result;
 	}
 	
-	public void merge(APIData source, int sourceIndex) {
-		Map<String, Integer> newedLocals = this.sourceBlock.getNewedLocals();
-		this.merge(this.inputs, source, source.inputs, sourceIndex, newedLocals);
-		this.merge(this.outputs, source, source.outputs, sourceIndex, newedLocals);
+	public int merge(APIData source, int sourceIndex, List<Indexed<String>> byRefs) {
+		this.mergeInputs(source, sourceIndex, byRefs);
+		int r = this.mergeOutputs(source, sourceIndex, byRefs);
 		this.globals.addAll(source.globals);
+		return r;
 	}
 	
-	private static List<String> getIO(Set<String> source) {
+	private List<String> getIO(Set<String> source) {
 		if (source == null) {
 			return Collections.emptyList();
 		} else {
-			List<String> result = new ArrayList<String>(source);
+			List<String> result = new ArrayList<String>(source.size());
+			for (String n : source) {
+				//if (this.subscripted.contains(n)) {
+				//	result.add(n + "*");
+				//} else {
+					result.add(n);
+				//}
+			}
 			Collections.sort(result);
 			return result;
 		}

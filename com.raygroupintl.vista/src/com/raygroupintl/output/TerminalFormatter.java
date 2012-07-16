@@ -22,7 +22,7 @@ public class TerminalFormatter {
 	private String eol = Utility.getEOL();
 	
 	private int tab = 0;
-	private int width = 79;
+	private int width = 76;
 	private int column = 0;
 	private int listIndex = 0;
 	
@@ -67,8 +67,9 @@ public class TerminalFormatter {
 			this.column += length;
 			++this.listIndex;
 			return listElement;
-		}		
-		if (this.column + length + 1 < this.width) {
+		}	
+		int more = this.listIndex == 0 ? 1 : 0;
+		if (this.column + length + 1 < this.width+more) {
 			this.column += length + 1;
 			++this.listIndex;
 			return ',' + listElement;
