@@ -164,6 +164,12 @@ public class APIData {
 		return getIO(this.outputs.keySet());
 	}
 
+	public List<String> getAssumed() {
+		Set<String> result = new HashSet<String>(this.inputs.keySet());
+		result.addAll(this.outputs.keySet());
+		return getIO(result);
+	}
+ 	
 	public List<String> getGlobals() {
 		return getIO(this.globals);
 	}

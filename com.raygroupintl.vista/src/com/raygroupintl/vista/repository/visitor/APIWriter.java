@@ -108,8 +108,9 @@ public class APIWriter {
 				this.fileWrapper.writeEOL();
 
 				APIData apiData = lb.getAPIData(this.routineBlocks, this.filter, this.replacementRoutines);
-				this.writeAPIData(apiData.getInputs(), "INPUT");
-				this.writeAPIData(apiData.getOutputs(), "OUTPUT");
+				//this.writeAPIData(apiData.getInputs(), "INPUT");
+				//this.writeAPIData(apiData.getOutputs(), "OUTPUT");
+				this.writeAPIData(apiData.getAssumed(), "ASSUMED");
 				this.writeAPIData(apiData.getGlobals(), "GLBS");
 			}
 		}				
