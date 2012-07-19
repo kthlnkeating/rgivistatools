@@ -7,7 +7,14 @@ GPIND ;
  S A=B
  G @A
  ;
-OTHER 
- S I=I+1
+CALL1
+ D B(A,.B) 
+ Q
+ ;
+B(A1,A2)
+ W A1
+ ;
+C ;
+ S A2=$G(A2)_"F"
  Q
  ;

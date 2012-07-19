@@ -92,12 +92,14 @@ public class APIRecorder extends FanoutRecorder {
 	
 	protected void updateFanout(boolean isGoto, boolean conditional) {
 		EntryId fanout = this.getLastFanout();
+		boolean shouldClose = isGoto && (! conditional) && (this.underCondition < 1);
 		if (fanout != null) {
 			++this.index;
-			boolean shouldClose = isGoto && (! conditional) && (this.underCondition < 1);
 			CallArgument[] callArguments = this.getLastArguments();
 			this.currentBlock.addFanout(index, fanout, shouldClose, callArguments);
-		}		
+		} else if (shouldClose) {
+			this.currentBlock.close();
+		}
 	}
 		
 	protected void visitQuit(QuitCmd quitCmd) {

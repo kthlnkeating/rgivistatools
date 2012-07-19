@@ -116,15 +116,43 @@ public class Block {
 						Block faninBlock = ib.getBlock();
 						int faninId = System.identityHashCode(faninBlock);
 						APIData faninData = datas.get(faninId);
-						totalChange += faninData.merge(data, ib.getIndex(), ib.getByRefs());
+						totalChange += faninData.mergeOutputs(data, ib.getIndex(), ib.getByRefs());
 					}
 				}
 				LOGGER.info("Total Change: " + String.valueOf(totalChange));
 			}
 			
+			totalChange = Integer.MAX_VALUE;
+			while (totalChange > 0) {
+				totalChange = 0;
+				for (int i=this.list.size()-1; i>0; --i) {
+					Block b = this.list.get(i);
+					int id = System.identityHashCode(b);
+					APIData data = datas.get(id);
+					FaninList faninList = this.map.get(id);
+					List<IndexedBlock> faninBlocks = faninList.getFaninBlocks();
+					for (IndexedBlock ib : faninBlocks) {
+						Block faninBlock = ib.getBlock();
+						int faninId = System.identityHashCode(faninBlock);
+						APIData faninData = datas.get(faninId);
+						totalChange += faninData.mergeInputs(data, ib.getIndex(), ib.getByRefs());
+					}
+				}
+				LOGGER.info("Total Change: " + String.valueOf(totalChange));
+			}			
+			
 			Block b = this.list.get(0);
 			int id = System.identityHashCode(b);
-			return datas.get(id);
+			APIData result = datas.get(id);
+		
+			for (int i=this.list.size()-1; i>0; --i) {
+				Block bi = this.list.get(i);
+				int idi = System.identityHashCode(bi);
+				APIData data = datas.get(idi);
+				result.mergeGlobals(data);
+			}
+
+			return result;
 		}		
 	}
 		
@@ -137,7 +165,6 @@ public class Block {
 	private Map<String, Integer> newedLocals = new HashMap<String, Integer>();
 	private Map<String, Integer> inputLocals = new HashMap<String, Integer>();
 	private Map<String, Integer> outputLocals = new HashMap<String, Integer>();
-	private Set<String> subscripted = new HashSet<String>();
 	private Set<String> globals = new HashSet<String>();
 
 	private List<IndexedFanout> fanouts = new ArrayList<IndexedFanout>();
@@ -195,9 +222,6 @@ public class Block {
 				if (! this.inputLocals.containsKey(label)) {
 					this.inputLocals.put(label, index);
 				}
-				if (local.hasSubscripts()) {
-					this.subscripted.add(label);
-				}
 			}
 		}
 	}
@@ -208,9 +232,6 @@ public class Block {
 			if (! this.newedLocals.containsKey(label)) {
 				if (! this.outputLocals.containsKey(label)) {
 					this.outputLocals.put(label, index);
-				}
-				if (local.hasSubscripts()) {
-					this.subscripted.add(label);
 				}
 			}
 		}
@@ -261,31 +282,24 @@ public class Block {
 		return true;
 	}
 	
-	public boolean isSubscripted(String name) {
-		return this.subscripted.contains(name);
-	}
-
 	public Map<String, Integer> getNewedLocals() {
 		return this.newedLocals;
 	}
 	
 	public APIData toAPIData() {
 		APIData result = new APIData(this);
-		result.set(this.inputLocals.keySet(), this.outputLocals.keySet(), this.subscripted, this.globals);
+		result.set(this.inputLocals, this.outputLocals, this.globals);
 		return result;
 	}
 	
 	public void update(FanoutBlocks fanoutBlocks, BlocksSupply overallMap, Filter<EntryId> filter, Map<String, String> replacedRoutines) {
 		for (IndexedFanout ifout : this.fanouts) {
 			EntryId fout = ifout.getFanout();
-			//if (this.entryId.getRoutineName().equals("DICN")) {
-			//	LOGGER.info(this.entryId.toString() + " to " + fout.toString() + "\n");
-			//	LOGGER.info("\n");
-			//}
-			
-			
 			if ((filter != null) && (! filter.isValid(fout))) continue;
 			String routineName = fout.getRoutineName();
+			if (routineName != null && routineName.equals("DICF2")) {
+				routineName = "DICF2";
+			}
 			String tagName = fout.getTag();					
 			if (tagName == null) {
 				tagName = routineName;
@@ -360,7 +374,7 @@ public class Block {
 	}
 
 		
-	public APIData getAPIData(BlocksSupply overallMap, Set<EntryId> alreadyVisitedIn, Map<String, String> replacedRoutines) {
+/*	public APIData getAPIData(BlocksSupply overallMap, Set<EntryId> alreadyVisitedIn, Map<String, String> replacedRoutines) {
 		if (alreadyVisitedIn.contains(this.entryId)) return null;
 		APIData result = this.toAPIData();
 		Set<EntryId> alreadyVisited = new HashSet<EntryId>(alreadyVisitedIn);
@@ -431,5 +445,5 @@ public class Block {
 			}				 
 		}
 		return result;
-	}
+	}*/
 }

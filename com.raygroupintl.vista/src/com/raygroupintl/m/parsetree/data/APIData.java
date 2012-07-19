@@ -18,85 +18,103 @@ package com.raygroupintl.m.parsetree.data;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
-//import java.util.logging.Logger;
+import java.util.logging.Logger;
 
 import com.raygroupintl.struct.Indexed;
 
 public class APIData {
-	//private final static Logger LOGGER = Logger.getLogger(APIData.class.getName());
+	private final static Logger LOGGER = Logger.getLogger(APIData.class.getName());
 
 	private Block sourceBlock;
 	
-	private Set<String> inputs;
-	private Set<String> outputs;
-	private Set<String> subscripted;
+	private Map<String, Integer> inputs;
+	private Map<String, Integer> outputs;
 	private Set<String> globals;
 		
 	public APIData(Block source) {
 		this.sourceBlock = source;
 	}
 		
-	public void set(Set<String> inputs, Set<String> outputs, Set<String> subscripted, Set<String> globals) {
-		this.inputs = new HashSet<String>(inputs);
-		this.outputs = new HashSet<String>(outputs);
+	public void set(Map<String, Integer> inputs, Map<String, Integer> outputs, Set<String> globals) {
+		this.inputs = new HashMap<String, Integer>(inputs);
+		this.outputs = new HashMap<String, Integer>(outputs);
 		this.globals = new HashSet<String>(globals);
-		this.subscripted = subscripted;
 	}
 	
 	public Block getSourceBlock() {
 		return this.sourceBlock;
 	}
 	
-	private void mergeInput(Block thisBlock, Block sourceBlock, String name, int sourceIndex) {
-		if ((! thisBlock.isNewed(name, sourceIndex) && (! thisBlock.isAssigned(name, sourceIndex)))) {
-			this.inputs.add(name);
-			if (sourceBlock.isSubscripted(name)) {
-				this.subscripted.add(name);
+	private boolean mergeInput(Block thisBlock, Block sourceBlock, String name, int sourceIndex) {
+		if (! thisBlock.isNewed(name, sourceIndex)) {
+			Integer outputIndex = this.outputs.get(name);
+			if ((outputIndex == null) || (outputIndex.intValue() >= sourceIndex)) {			
+				Integer inputIndex = this.inputs.get(name);
+				if ((inputIndex == null) || (inputIndex.intValue() > sourceIndex)) {						
+					this.inputs.put(name, sourceIndex);
+					return true;
+				}
 			}
-		} 		
+		}
+		return false;
 	}
 	
-	private void mergeInputs(APIData source, int sourceIndex, List<Indexed<String>> byRefs) {
+	public int mergeInputs(APIData source, int sourceIndex, List<Indexed<String>> byRefs) {
 		Block thisBlock = this.getSourceBlock();
 		Block sourceBlock = source.getSourceBlock();
-		for (String name : source.inputs) {
+		int result = 0;
+		for (String name : source.inputs.keySet()) {
 			Integer formalIndex = sourceBlock.getAsFormal(name);
 			if (formalIndex == null) {	
-				this.mergeInput(thisBlock, sourceBlock, name, sourceIndex);
+				boolean b = this.mergeInput(thisBlock, sourceBlock, name, sourceIndex);
+				if (b) ++ result;
 			} else if (byRefs!= null) {
 				int index = formalIndex.intValue();
 				for (Indexed<String> byRef : byRefs) {
 					if (index == byRef.getIndex()) {
 						String byRefName = byRef.getObject();
-						this.mergeInput(thisBlock, sourceBlock, byRefName, sourceIndex);
+						boolean b = this.mergeInput(thisBlock, sourceBlock, byRefName, sourceIndex);
+						if (b) ++result;
 					}
 				}				
 			}
-		}		
+		}
+		return result;
 	}
 	
+	static int count = 0;
+	
 	private boolean mergeOutput(Block thisBlock, Block sourceBlock, String name, int sourceIndex) {
-		if ((! thisBlock.isNewed(name, sourceIndex) && (! this.outputs.contains(name)))) {
-			//if ("A".equals(name)) {
-			//	LOGGER.info(sourceBlock.getEntryId().toString() + " updated " + thisBlock.getEntryId().toString() + "\n");
-			//}
-			this.outputs.add(name);
-			if (sourceBlock.isSubscripted(name)) {
-				this.subscripted.add(name);
+		if (! thisBlock.isNewed(name, sourceIndex)) {
+			Integer outputIndex = this.outputs.get(name);
+			if ((outputIndex == null) || (outputIndex.intValue() > sourceIndex)) {			
+				
+				//if (count < 30) 
+					if ("DIFILEI".equals(name)) {
+					LOGGER.info(sourceBlock.getEntryId().toString() + " updated " + thisBlock.getEntryId().toString() + "\n");
+					++count;
+				}
+				this.outputs.put(name, sourceIndex);
+				Integer inputIndex = this.inputs.get(name);
+				if ((inputIndex != null) && (inputIndex.intValue() > sourceIndex)) {
+					this.inputs.remove(name);
+				}
+				return true;
 			}
-			return true;
 		}
 		return false;
 	}
 
-	private int mergeOutputs(APIData source, int sourceIndex, List<Indexed<String>> byRefs) {
+	public int mergeOutputs(APIData source, int sourceIndex, List<Indexed<String>> byRefs) {
 		Block thisBlock = this.getSourceBlock();
 		Block sourceBlock = source.getSourceBlock();
 		int result = 0;
-		for (String name : source.outputs) {			
+		for (String name : source.outputs.keySet()) {			
 			Integer formalIndex = sourceBlock.getAsFormal(name);
 			if (formalIndex == null) {
 				boolean b = this.mergeOutput(thisBlock, sourceBlock, name, sourceIndex);
@@ -115,25 +133,23 @@ public class APIData {
 		return result;
 	}
 	
-	public int merge(APIData source, int sourceIndex, List<Indexed<String>> byRefs) {
-		this.mergeInputs(source, sourceIndex, byRefs);
+	public void mergeGlobals(APIData source) {
+		this.globals.addAll(source.globals);		
+	}
+	
+	
+/*	public int merge(APIData source, int sourceIndex, List<Indexed<String>> byRefs) {
 		int r = this.mergeOutputs(source, sourceIndex, byRefs);
+		r += this.mergeInputs(source, sourceIndex, byRefs);
 		this.globals.addAll(source.globals);
 		return r;
 	}
-	
+*/	
 	private List<String> getIO(Set<String> source) {
 		if (source == null) {
 			return Collections.emptyList();
 		} else {
-			List<String> result = new ArrayList<String>(source.size());
-			for (String n : source) {
-				//if (this.subscripted.contains(n)) {
-				//	result.add(n + "*");
-				//} else {
-					result.add(n);
-				//}
-			}
+			List<String> result = new ArrayList<String>(source);
 			Collections.sort(result);
 			return result;
 		}
@@ -141,11 +157,11 @@ public class APIData {
 	}
 	
 	public List<String> getInputs() {
-		return getIO(this.inputs);
+		return getIO(this.inputs.keySet());
 	}
 
 	public List<String> getOutputs() {
-		return getIO(this.outputs);
+		return getIO(this.outputs.keySet());
 	}
 
 	public List<String> getGlobals() {

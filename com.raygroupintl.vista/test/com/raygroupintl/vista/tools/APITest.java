@@ -77,7 +77,7 @@ public class APITest {
 	
 	@Test
 	public void testError() {
-		String[] fileNames = {"resource/APIROU00.m", "resource/APIROU01.m", "resource/APIROU02.m"};
+		String[] fileNames = {"resource/APIROU00.m", "resource/APIROU01.m", "resource/APIROU02.m", "resource/APIROU03.m"};
 		Routine[] routines = new Routine[fileNames.length];
 		{
 			int i = 0;
@@ -110,5 +110,7 @@ public class APITest {
 		this.usedTest(blocksMap, "APIROU01", "SUMFACT", new String[]{"S","N","M"}, new String[]{"P"}, new String[]{"^RGI0(\"EF\"", "^UD(", "^UD(5", "^UM("});
 		this.usedTest(blocksMap, "APIROU01", "STORE", new String[]{"K"}, new String[]{"D", "R"}, new String[0]);
 		this.usedTest(blocksMap, "APIROU01", "LOOP", new String[]{"S", "A", "C", "NUM"}, new String[]{"I", "J", "B", "D", "P"}, new String[]{"^RGI0(\"EF\"", "^UD(", "^UD(5", "^UM("});
+		this.usedTest(blocksMap, "APIROU03", "GPIND", new String[]{"B"}, new String[]{"A"}, new String[0]);
+		this.usedTest(blocksMap, "APIROU03", "CALL1", new String[]{"B"}, new String[]{"B"}, new String[0]);
 	}
 }
