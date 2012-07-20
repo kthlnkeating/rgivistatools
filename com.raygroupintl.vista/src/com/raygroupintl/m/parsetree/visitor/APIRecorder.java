@@ -77,6 +77,18 @@ public class APIRecorder extends FanoutRecorder {
 		this.currentBlock.addInput(index, local);
 	}
 
+	protected void passLocalByVal(Local local, int index) {		
+		++this.index;
+		this.currentBlock.addInput(index, local);
+	}
+	
+	@Override
+	protected void passLocalByRef(Local local, int index) {
+		++this.index;
+		this.currentBlock.addOutput(index, local);
+		super.passLocalByRef(local, index);
+	}
+
 	protected void visitGlobal(Global global) {
 		super.visitGlobal(global);
 		String name = '^' + global.getName().toString() + '(';

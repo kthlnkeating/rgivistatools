@@ -189,13 +189,14 @@ public class Block {
 	}
 	
 	public void setFormals(String[] formals) {
-		this.formals = formals;
+		//this.formals = formals;
 		if (formals != null) {
-			this.formalsSet = new HashMap<String, Integer>(formals.length*2);
-			int index = 0;
+			//this.formalsSet = new HashMap<String, Integer>(formals.length*2);
+			//int index = 0;
 			for (String formal : formals) {
-				formalsSet.put(formal, index);
-				++index;
+				//formalsSet.put(formal, index);
+				this.newedLocals.put(formal, -1);
+				//++index;
 			}
 		} else {
 			this.formalsSet=null;
@@ -245,7 +246,7 @@ public class Block {
 
 	public void addFanout(int index, EntryId fanout, boolean shouldClose, CallArgument[] arguments) {
 		if (! this.closed) {
-			IndexedFanout ifo = new IndexedFanout(index, fanout);
+			IndexedFanout ifo = new IndexedFanout(index, fanout);			
 			ifo.setByRefs(arguments);
 			this.fanouts.add(ifo);
 			if (shouldClose) {
