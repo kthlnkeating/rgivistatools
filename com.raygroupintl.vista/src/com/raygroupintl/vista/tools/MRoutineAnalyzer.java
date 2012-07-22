@@ -234,8 +234,7 @@ public class MRoutineAnalyzer {
 				APIWriter apiw = new APIWriter(fr, blocks, replacementRoutines);
 				PercentRoutineFilter filter = new PercentRoutineFilter();
 				apiw.setFilter(filter);
-				apiw.writeEntry("ADD^ABSV88B");
-				//apiw.writeEntry("ENROOT^DIQGU");
+				apiw.writeEntries(options.entries);
 				return;
 			}
 			if (at.equalsIgnoreCase("glb")) {

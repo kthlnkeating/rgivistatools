@@ -36,14 +36,14 @@ import com.raygroupintl.struct.PassFilter;
 
 public class APIWriter {
 	private FileWrapper fileWrapper;
-	private BlocksSupply routineBlocks;
+	private BlocksSupply blocksSupply;
 	private TerminalFormatter tf = new TerminalFormatter();
 	private Map<String, String> replacementRoutines;
 	private Filter<EntryId> filter = new PassFilter<EntryId>();
 	
-	public APIWriter(FileWrapper fileWrapper, BlocksSupply routineBlocks, Map<String, String> replacementRoutines) {
+	public APIWriter(FileWrapper fileWrapper, BlocksSupply blocksSupply, Map<String, String> replacementRoutines) {
 		this.fileWrapper = fileWrapper;
-		this.routineBlocks = routineBlocks;
+		this.blocksSupply = blocksSupply;
 		this.replacementRoutines = replacementRoutines;
 	}
 
@@ -87,7 +87,7 @@ public class APIWriter {
 		this.write(linePieces, 3, "CALLING RPC's    ");
 		this.write(linePieces, 2, "CALLING OPTIONS  ");
 		this.tf.setTab(12);
-		Blocks rbs = this.routineBlocks.getBlocks(routineName);
+		Blocks rbs = this.blocksSupply.getBlocks(routineName);
 		if (rbs == null) {
 			this.fileWrapper.writeEOL(this.tf.titled("ERROR", "Routine " + routineName + " is missing."));
 		} else {
@@ -107,7 +107,7 @@ public class APIWriter {
 				}
 				this.fileWrapper.writeEOL();
 
-				APIData apiData = lb.getAPIData(this.routineBlocks, this.filter, this.replacementRoutines);
+				APIData apiData = lb.getAPIData(this.blocksSupply, this.filter, this.replacementRoutines);
 				//this.writeAPIData(apiData.getInputs(), "INPUT");
 				//this.writeAPIData(apiData.getOutputs(), "OUTPUT");
 				this.writeAPIData(apiData.getAssumed(), "ASSUMED");
@@ -159,6 +159,17 @@ public class APIWriter {
 			EntryId entryId = EntryId.getInstance(entryIdValue);
 			String[] input = new String[]{entryIdValue, "", "", ""};
 			this.write(entryId, input);
+			this.fileWrapper.stop();
+		}
+	}
+
+	public void writeEntries(List<String> entries) {
+		if (this.fileWrapper.start()) {
+			for (String entry : entries) {
+				EntryId entryId = EntryId.getInstance(entry);
+				String[] input = new String[]{entry, "", "", ""};
+				this.write(entryId, input);
+			}
 			this.fileWrapper.stop();
 		}
 	}

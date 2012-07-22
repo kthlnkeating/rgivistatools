@@ -116,31 +116,12 @@ public class Block {
 						Block faninBlock = ib.getBlock();
 						int faninId = System.identityHashCode(faninBlock);
 						APIData faninData = datas.get(faninId);
-						totalChange += faninData.mergeOutputs(data, ib.getIndex(), ib.getByRefs());
+						totalChange += faninData.mergeAssumeds(data, ib.getIndex());
 					}
 				}
 				LOGGER.info("Total Change: " + String.valueOf(totalChange));
 			}
-			
-			totalChange = Integer.MAX_VALUE;
-			while (totalChange > 0) {
-				totalChange = 0;
-				for (int i=this.list.size()-1; i>0; --i) {
-					Block b = this.list.get(i);
-					int id = System.identityHashCode(b);
-					APIData data = datas.get(id);
-					FaninList faninList = this.map.get(id);
-					List<IndexedBlock> faninBlocks = faninList.getFaninBlocks();
-					for (IndexedBlock ib : faninBlocks) {
-						Block faninBlock = ib.getBlock();
-						int faninId = System.identityHashCode(faninBlock);
-						APIData faninData = datas.get(faninId);
-						totalChange += faninData.mergeInputs(data, ib.getIndex(), ib.getByRefs());
-					}
-				}
-				LOGGER.info("Total Change: " + String.valueOf(totalChange));
-			}			
-			
+						
 			Block b = this.list.get(0);
 			int id = System.identityHashCode(b);
 			APIData result = datas.get(id);
@@ -161,7 +142,7 @@ public class Block {
 	private Blocks siblings;
 	
 	private String[] formals;
-	private Map<String, Integer> formalsSet;
+	private Map<String, Integer> formalsMap;
 	private Map<String, Integer> newedLocals = new HashMap<String, Integer>();
 	private Map<String, Integer> inputLocals = new HashMap<String, Integer>();
 	private Map<String, Integer> outputLocals = new HashMap<String, Integer>();
@@ -189,17 +170,16 @@ public class Block {
 	}
 	
 	public void setFormals(String[] formals) {
-		//this.formals = formals;
+		this.formals = formals;
 		if (formals != null) {
-			//this.formalsSet = new HashMap<String, Integer>(formals.length*2);
-			//int index = 0;
+			this.formalsMap = new HashMap<String, Integer>(formals.length*2);
+			int index = 0;
 			for (String formal : formals) {
-				//formalsSet.put(formal, index);
-				this.newedLocals.put(formal, -1);
-				//++index;
+				formalsMap.put(formal, index);
+				++index;
 			}
 		} else {
-			this.formalsSet=null;
+			this.formalsMap=null;
 		}
 	}
 	
@@ -256,8 +236,8 @@ public class Block {
 	}	
 	
 	public Integer getAsFormal(String name) {
-		if (this.formalsSet != null) {
-			return this.formalsSet.get(name);			
+		if (this.formalsMap != null) {
+			return this.formalsMap.get(name);			
 		} else {
 			return null;
 		}
@@ -271,6 +251,13 @@ public class Block {
 			return false;
 		}
 		return true;
+	}
+	
+	public boolean isDefined(String name, int sourceIndex) {
+		if ((this.formalsMap != null) && (this.formalsMap.containsKey(name))) {
+			return true;
+		}
+		return this.isNewed(name, sourceIndex);
 	}
 	
 	public boolean isAssigned(String name, int sourceIndex) {
@@ -287,20 +274,28 @@ public class Block {
 		return this.newedLocals;
 	}
 	
+	private void updateAssumeds(Set<String> assumeds, Map<String, Integer> source) {
+		for (String name : source.keySet()) {
+			if ((this.formalsMap == null) || (! this.formalsMap.containsKey(name))) {
+				assumeds.add(name);
+			}
+		}		
+	}
+	
 	public APIData toAPIData() {
 		APIData result = new APIData(this);
-		result.set(this.inputLocals, this.outputLocals, this.globals);
+		HashSet<String> assumeds = new HashSet<String>();
+		this.updateAssumeds(assumeds, this.inputLocals);
+		this.updateAssumeds(assumeds, this.outputLocals);
+		result.set(assumeds, this.globals);
 		return result;
 	}
 	
-	public void update(FanoutBlocks fanoutBlocks, BlocksSupply overallMap, Filter<EntryId> filter, Map<String, String> replacedRoutines) {
+	public void update(FanoutBlocks fanoutBlocks, BlocksSupply blocksSupply, Filter<EntryId> filter, Map<String, String> replacedRoutines) {
 		for (IndexedFanout ifout : this.fanouts) {
 			EntryId fout = ifout.getFanout();
 			if ((filter != null) && (! filter.isValid(fout))) continue;
 			String routineName = fout.getRoutineName();
-			if (routineName != null && routineName.equals("DICF2")) {
-				routineName = "DICF2";
-			}
 			String tagName = fout.getTag();					
 			if (tagName == null) {
 				tagName = routineName;
@@ -325,13 +320,13 @@ public class Block {
 				}
 				fanoutBlocks.add(this, tagBlock, ifout.getIndex(), ifout.getByRefs());
 			} else {
-				Blocks routineBlocks = overallMap.getBlocks(routineName);
+				Blocks routineBlocks = blocksSupply.getBlocks(routineName);
 				String originalTagName = tagName;
 				if (routineBlocks == null) {
 					if (replacedRoutines != null) {
 						String replacement = replacedRoutines.get(routineName);
 						if (replacement != null) {
-							routineBlocks = overallMap.getBlocks(replacement);
+							routineBlocks = blocksSupply.getBlocks(replacement);
 							if (tagName.equals(routineName)) {
 								tagName = replacement;
 							}

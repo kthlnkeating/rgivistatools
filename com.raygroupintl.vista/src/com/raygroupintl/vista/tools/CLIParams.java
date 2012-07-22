@@ -40,6 +40,9 @@ public class CLIParams {
 	@CLIParameter(names={"-t", "--type"})
 	public String analysisType = "error";
 	
+	@CLIParameter(names={"-e", "--entry"})
+	public List<String> entries = new ArrayList<String>();
+	
 	private static void logError(String msg) {
 		Logger logger = Logger.getLogger(MRoutineAnalyzer.class.getName());		
 		logger.log(Level.SEVERE, msg);

@@ -51,21 +51,15 @@ public class APITest {
 		return r.getNode();
 	}
 		
-	private void usedTest(MapBlocksSupply blocksMap, String routineName, String tag, String[] expectedInputs, String[] expectedOutputs, String[] expectedGlobals) {
+	private void usedTest(MapBlocksSupply blocksMap, String routineName, String tag, String[] expectedAssumeds, String[] expectedGlobals) {
 		Blocks rbs = blocksMap.get(routineName);
 		Block lb = rbs.get(tag);
 		APIData apiData = lb.getAPIData(blocksMap, new PassFilter<EntryId>(), replacement);
 		
-		Set<String> inputs = new HashSet<String>(apiData.getInputs());
-		Assert.assertEquals(expectedInputs.length, inputs.size());
-		for (String expectedInput : expectedInputs) {
-			Assert.assertTrue(inputs.contains(expectedInput));			
-		}		
-		
-		Set<String> outputs = new HashSet<String>(apiData.getOutputs());
-		Assert.assertEquals(expectedOutputs.length, outputs.size());
-		for (String expectedOutput : expectedOutputs) {
-			Assert.assertTrue(outputs.contains(expectedOutput));			
+		Set<String> assumeds = new HashSet<String>(apiData.getAssumed());
+		Assert.assertEquals(expectedAssumeds.length, assumeds.size());
+		for (String expectedOutput : expectedAssumeds) {
+			Assert.assertTrue(assumeds.contains(expectedOutput));			
 		}				
 
 		Set<String> globals = new HashSet<String>(apiData.getGlobals());
@@ -99,18 +93,18 @@ public class APITest {
 			Blocks blocks = recorder.getBlocks();
 			blocksMap.put(routines[i].getName(), blocks);
 		}
-		this.usedTest(blocksMap, "APIROU00", "FACT", new String[]{"N"}, new String[]{"I"}, new String[0]);
-		this.usedTest(blocksMap, "APIROU00", "SUM", new String[]{"M"}, new String[]{"R", "I"}, new String[]{"^RGI0(\"EF\""});
-		this.usedTest(blocksMap, "APIROU00", "SUMFACT", new String[]{"S", "M"}, new String[]{"P"}, new String[]{"^RGI0(\"EF\""});
-		this.usedTest(blocksMap, "APIROU00", "STORE", new String[]{"K"}, new String[]{"D", "R", "A"}, new String[0]);
-		this.usedTest(blocksMap, "APIROU00", "STOREG", new String[]{"K"}, new String[]{"A", "D", "R"}, new String[0]);
-		this.usedTest(blocksMap, "APIROU00", "TOOTHER", new String[0], new String[]{"I", "M"}, new String[0]);
-		this.usedTest(blocksMap, "APIROU00", "TONONE", new String[]{"A", "D", "ME"}, new String[]{"A", "D", "NE", "HR"}, new String[0]);
-		this.usedTest(blocksMap, "APIROU00", "ZZ", new String[]{"A", "D"}, new String[]{"A", "D"}, new String[0]);
-		this.usedTest(blocksMap, "APIROU01", "SUMFACT", new String[]{"S","N","M"}, new String[]{"P"}, new String[]{"^RGI0(\"EF\"", "^UD(", "^UD(5", "^UM("});
-		this.usedTest(blocksMap, "APIROU01", "STORE", new String[]{"K"}, new String[]{"D", "R"}, new String[0]);
-		this.usedTest(blocksMap, "APIROU01", "LOOP", new String[]{"S", "A", "C", "NUM"}, new String[]{"I", "J", "B", "D", "P"}, new String[]{"^RGI0(\"EF\"", "^UD(", "^UD(5", "^UM("});
-		this.usedTest(blocksMap, "APIROU03", "GPIND", new String[]{"B"}, new String[]{"A"}, new String[0]);
-		this.usedTest(blocksMap, "APIROU03", "CALL1", new String[]{"B"}, new String[]{"B"}, new String[0]);
+		this.usedTest(blocksMap, "APIROU00", "FACT", new String[]{"I"}, new String[0]);
+		this.usedTest(blocksMap, "APIROU00", "SUM", new String[]{"M", "R", "I"}, new String[]{"^RGI0(\"EF\""});
+		this.usedTest(blocksMap, "APIROU00", "SUMFACT", new String[]{"S", "P"}, new String[]{"^RGI0(\"EF\""});
+		this.usedTest(blocksMap, "APIROU00", "STORE", new String[]{"K", "D", "R"}, new String[0]);
+		this.usedTest(blocksMap, "APIROU00", "STOREG", new String[]{"K", "A", "D", "R"}, new String[0]);
+		this.usedTest(blocksMap, "APIROU00", "TOOTHER", new String[]{"I", "M"}, new String[0]);
+		this.usedTest(blocksMap, "APIROU00", "TONONE", new String[]{"A", "D", "ME", "NE", "HR"}, new String[0]);
+		this.usedTest(blocksMap, "APIROU00", "ZZ", new String[]{"A", "D"}, new String[0]);
+		this.usedTest(blocksMap, "APIROU01", "SUMFACT", new String[]{"S", "P"}, new String[]{"^RGI0(\"EF\"", "^UD(", "^UD(5", "^UM("});
+		this.usedTest(blocksMap, "APIROU01", "STORE", new String[]{"K", "D", "R"}, new String[0]);
+		this.usedTest(blocksMap, "APIROU01", "LOOP", new String[]{"S", "A", "C", "I", "J", "B", "D", "P"}, new String[]{"^RGI0(\"EF\"", "^UD(", "^UD(5", "^UM("});
+		this.usedTest(blocksMap, "APIROU03", "GPIND", new String[]{"B", "A"}, new String[0]);
+		this.usedTest(blocksMap, "APIROU03", "CALL1", new String[]{"A", "B"}, new String[0]);
 	}
 }
