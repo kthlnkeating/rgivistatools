@@ -91,9 +91,10 @@ public class APIRecorder extends FanoutRecorder {
 
 	protected void visitGlobal(Global global) {
 		super.visitGlobal(global);
-		String name = '^' + global.getName().toString() + '(';
+		String name = '^' + global.getName().toString();
 		Node subscript = global.getSubscript(0);
 		if (subscript != null) {
+			name += '(';
 			String constValue = subscript.getAsConstExpr();
 			if (constValue != null) {
 				name += constValue;

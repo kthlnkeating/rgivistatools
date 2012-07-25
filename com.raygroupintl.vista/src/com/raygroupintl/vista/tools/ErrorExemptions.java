@@ -96,6 +96,7 @@ public class ErrorExemptions {
 		r.addRoutine("DGRUGMFU");
 		r.addRoutine("SPNRPC4");
 		r.addRoutine("MUSMCR1");
+		r.addRoutine("SDCNP");
 		//r.addRoutine("GMRAPT");  // Do block
 		//r.addRoutine("OOPSGUI3");
 		//r.addRoutine("IBDF10A");

@@ -49,6 +49,7 @@ import com.raygroupintl.vista.repository.VistaPackages;
 import com.raygroupintl.vista.repository.VistaPackage;
 import com.raygroupintl.vista.repository.visitor.APIOverallRecorder;
 import com.raygroupintl.vista.repository.visitor.APIWriter;
+import com.raygroupintl.vista.repository.visitor.EntryWriter;
 import com.raygroupintl.vista.repository.visitor.ErrorWriter;
 import com.raygroupintl.vista.repository.visitor.FaninWriter;
 import com.raygroupintl.vista.repository.visitor.FanoutWriter;
@@ -189,6 +190,7 @@ public class MRoutineAnalyzer {
 	// -t api -i "C:\Afsin\Dependency Tool Verification\java\fanin.dat" -o "C:\Afsin\Dependency Tool Verification\java\api.dat"
 	// -t glb -o "C:\Afsin\Dependency Tool Verification\glb.dat
 	// -t apisingle -i "C:\Afsin\Dependency Tool Verification\serial" -o "C:\Afsin\Dependency Tool Verification\java\api_single.dat"
+	// -t apisingle -i "C:\Afsin\Dependency Tool Verification\serial" -o "C:\Afsin\Dependency Tool Verification\java\api_single.dat" -e ADD^ABSV88B -e DEL^ABSV88B -e VENTRY^DIEFU		
 	public static void main(String[] args) {
 		try {
 			CLIParams options = CLIParams.getInstance(args);
@@ -219,22 +221,37 @@ public class MRoutineAnalyzer {
 				packageNodes.accept(fiw);
 				return;
 			}
+			if (at.equalsIgnoreCase("entry")) {
+				FileWrapper fr = new FileWrapper(outputPath);
+				EntryWriter ew = new EntryWriter(fr);
+				for (String r : options.routines) {
+					ew.addRoutineNameFilter(r);
+				}
+				packageNodes.accept(ew);
+				return;
+			}
 			if (at.equalsIgnoreCase("api")) {
 				FileWrapper fr = new FileWrapper(outputPath);
 				APIOverallRecorder api = new APIOverallRecorder();
 				packageNodes.accept(api);
 				BlocksSupply blocks = api.getBlocks();
 				APIWriter apiw = new APIWriter(fr, blocks, replacementRoutines);
+				PercentRoutineFilter filter = new PercentRoutineFilter();
+				apiw.setFilter(filter);
 				apiw.write(options.inputFile);
 				return;
 			}
-			if (at.equalsIgnoreCase("apisingle")) {
+			if (at.equalsIgnoreCase("apis")) {
 				FileWrapper fr = new FileWrapper(outputPath);
-				BlocksSupply blocks = new SerializedBlocksSupply(options.inputFile);
+				BlocksSupply blocks = new SerializedBlocksSupply(options.parseTreeDirectory);
 				APIWriter apiw = new APIWriter(fr, blocks, replacementRoutines);
 				PercentRoutineFilter filter = new PercentRoutineFilter();
 				apiw.setFilter(filter);
-				apiw.writeEntries(options.entries);
+				if (options.inputFile != null) {
+					apiw.write(options.inputFile);					
+				} else {
+					apiw.writeEntries(options.entries);
+				}
 				return;
 			}
 			if (at.equalsIgnoreCase("glb")) {
@@ -257,7 +274,7 @@ public class MRoutineAnalyzer {
 				return;
 			}
 			if (at.equalsIgnoreCase("serial")) {
-				SerializedRoutineWriter srw = new SerializedRoutineWriter(outputPath);
+				SerializedRoutineWriter srw = new SerializedRoutineWriter(options.parseTreeDirectory);
 				packageNodes.accept(srw);
 				return;
 			}

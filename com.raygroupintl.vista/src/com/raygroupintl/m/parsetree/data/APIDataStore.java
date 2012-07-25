@@ -14,33 +14,26 @@
 // limitations under the License.
 //---------------------------------------------------------------------------
 
-package com.raygroupintl.m.parsetree;
+package com.raygroupintl.m.parsetree.data;
 
-public class IntrinsicVariable extends BasicNode {
-	private static final long serialVersionUID = 1L;
+import java.util.HashMap;
+import java.util.Map;
 
-	private String name;
-	
-	public IntrinsicVariable(String name) {
-		this.name = name;
+public class APIDataStore {
+	private Map<Integer, APIData> map = new HashMap<Integer, APIData>();
+
+	public void reset() {
+		this.map = new HashMap<Integer, APIData>();
 	}
-	
-	public String getName() {
-		return this.name;
+
+	public APIData get(Block block) {
+		int id = System.identityHashCode(block);
+		return this.map.get(id);
 	}
-	
-	@Override
-	public void accept(Visitor visitor) {
-		visitor.visitIntrinsicVariable(this);
-	}
-	
-	@Override
-	public String getAsConstExpr() {
-		char ch = name.charAt(0);
-		if ((ch == 'H') || (ch == 'I') || (ch == 'J')) {
-			return "$" + ch;
-		} else {
-			return null;
-		}
+
+	public void put(APIData data) {
+		Block block = data.getSourceBlock();
+		int id = System.identityHashCode(block);
+		this.map.put(id, data);
 	}
 }

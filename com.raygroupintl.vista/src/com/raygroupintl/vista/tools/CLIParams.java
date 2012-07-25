@@ -31,11 +31,17 @@ public class CLIParams {
 	@CLIParameter(names={"-p", "--package"})
 	public List<String> packages = new ArrayList<String>();
 	
+	@CLIParameter(names={"-r", "--routine"})
+	public List<String> routines = new ArrayList<String>();
+	
 	@CLIParameter(names={"-o", "--output"})
 	public String outputFile;
 	 
 	@CLIParameter(names={"-i", "--input"})
 	public String inputFile;
+	
+	@CLIParameter(names={"-ptd", "--parsetreedir"})
+	public String parseTreeDirectory;
 	 
 	@CLIParameter(names={"-t", "--type"})
 	public String analysisType = "error";
@@ -54,7 +60,7 @@ public class CLIParams {
 	}
 	
 	public boolean validate() {
-		if (this.outputFile == null) {
+		if (! ((this.outputFile != null) || ((this.parseTreeDirectory != null) && this.analysisType.equals("serial")))) {
 			CLIParams.logError("No output path is specified.");
 			return false;
 		}

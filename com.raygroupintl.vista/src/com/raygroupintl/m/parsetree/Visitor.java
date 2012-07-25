@@ -220,6 +220,10 @@ public class Visitor {
 		this.visitAdditionalNodeHolder(extrinsic);
 	}
 
+	protected void visitObjectMethodCall(ObjectMethodCall omc) {
+		this.visitAdditionalNodeHolder(omc);
+	}
+
 	protected void visitDo(Do d) {
 		d.acceptSubNodes(this);
 	}

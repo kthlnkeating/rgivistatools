@@ -14,6 +14,7 @@ import org.junit.Test;
 
 import com.raygroupintl.m.parsetree.Routine;
 import com.raygroupintl.m.parsetree.data.APIData;
+import com.raygroupintl.m.parsetree.data.APIDataStore;
 import com.raygroupintl.m.parsetree.data.Block;
 import com.raygroupintl.m.parsetree.data.Blocks;
 import com.raygroupintl.m.parsetree.data.EntryId;
@@ -54,7 +55,7 @@ public class APITest {
 	private void usedTest(MapBlocksSupply blocksMap, String routineName, String tag, String[] expectedAssumeds, String[] expectedGlobals) {
 		Blocks rbs = blocksMap.get(routineName);
 		Block lb = rbs.get(tag);
-		APIData apiData = lb.getAPIData(blocksMap, new PassFilter<EntryId>(), replacement);
+		APIData apiData = lb.getAPIData(blocksMap, new APIDataStore(), new PassFilter<EntryId>(), replacement);
 		
 		Set<String> assumeds = new HashSet<String>(apiData.getAssumed());
 		Assert.assertEquals(expectedAssumeds.length, assumeds.size());
@@ -101,9 +102,9 @@ public class APITest {
 		this.usedTest(blocksMap, "APIROU00", "TOOTHER", new String[]{"I", "M"}, new String[0]);
 		this.usedTest(blocksMap, "APIROU00", "TONONE", new String[]{"A", "D", "ME", "NE", "HR"}, new String[0]);
 		this.usedTest(blocksMap, "APIROU00", "ZZ", new String[]{"A", "D"}, new String[0]);
-		this.usedTest(blocksMap, "APIROU01", "SUMFACT", new String[]{"S", "P"}, new String[]{"^RGI0(\"EF\"", "^UD(", "^UD(5", "^UM("});
+		this.usedTest(blocksMap, "APIROU01", "SUMFACT", new String[]{"S", "P"}, new String[]{"^RGI0(\"EF\"", "^UD(", "^UD(5", "^UM"});
 		this.usedTest(blocksMap, "APIROU01", "STORE", new String[]{"K", "D", "R"}, new String[0]);
-		this.usedTest(blocksMap, "APIROU01", "LOOP", new String[]{"S", "A", "C", "I", "J", "B", "D", "P"}, new String[]{"^RGI0(\"EF\"", "^UD(", "^UD(5", "^UM("});
+		this.usedTest(blocksMap, "APIROU01", "LOOP", new String[]{"S", "A", "C", "I", "J", "B", "D", "P"}, new String[]{"^RGI0(\"EF\"", "^UD(", "^UD(5", "^UM"});
 		this.usedTest(blocksMap, "APIROU03", "GPIND", new String[]{"B", "A"}, new String[0]);
 		this.usedTest(blocksMap, "APIROU03", "CALL1", new String[]{"A", "B"}, new String[0]);
 	}

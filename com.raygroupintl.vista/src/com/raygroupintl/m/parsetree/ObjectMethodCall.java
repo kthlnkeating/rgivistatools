@@ -16,31 +16,15 @@
 
 package com.raygroupintl.m.parsetree;
 
-public class IntrinsicVariable extends BasicNode {
+public class ObjectMethodCall extends AtomicCommand {
 	private static final long serialVersionUID = 1L;
 
-	private String name;
-	
-	public IntrinsicVariable(String name) {
-		this.name = name;
+	public ObjectMethodCall(Node additionalNodes) {
+		super(additionalNodes);
 	}
-	
-	public String getName() {
-		return this.name;
-	}
-	
+		
 	@Override
 	public void accept(Visitor visitor) {
-		visitor.visitIntrinsicVariable(this);
-	}
-	
-	@Override
-	public String getAsConstExpr() {
-		char ch = name.charAt(0);
-		if ((ch == 'H') || (ch == 'I') || (ch == 'J')) {
-			return "$" + ch;
-		} else {
-			return null;
-		}
+		visitor.visitObjectMethodCall(this);
 	}
 }

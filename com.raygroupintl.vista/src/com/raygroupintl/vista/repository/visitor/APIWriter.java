@@ -25,6 +25,7 @@ import java.util.Map;
 import java.util.Scanner;
 
 import com.raygroupintl.m.parsetree.data.APIData;
+import com.raygroupintl.m.parsetree.data.APIDataStore;
 import com.raygroupintl.m.parsetree.data.Block;
 import com.raygroupintl.m.parsetree.data.Blocks;
 import com.raygroupintl.m.parsetree.data.BlocksSupply;
@@ -73,19 +74,23 @@ public class APIWriter {
 	
 	private void writeAPIData(List<String> dataList, String title) {
 		this.fileWrapper.write(this.tf.startList(title));
-		for (String data : dataList) {
-			this.fileWrapper.write(this.tf.addToList(data));
+		if (dataList.size() > 0) {
+			for (String data : dataList) {
+				this.fileWrapper.write(this.tf.addToList(data));
+			}
+		} else {
+			this.fileWrapper.write("--");
 		}
 		this.fileWrapper.writeEOL();		
 	}
 	
-	private void write(EntryId entryId, String[] linePieces) {
+	private void write(EntryId entryId, APIDataStore store, String[] linePieces) {
 		String routineName = entryId.getRoutineName();
 		this.fileWrapper.writeEOL(" " + entryId.toString());
-		this.tf.setTab(21);
-		this.write(linePieces, 1, "CALLING PACKAGES ");
-		this.write(linePieces, 3, "CALLING RPC's    ");
-		this.write(linePieces, 2, "CALLING OPTIONS  ");
+		//this.tf.setTab(21);
+		//this.write(linePieces, 1, "CALLING PACKAGES ");
+		//this.write(linePieces, 3, "CALLING RPC's    ");
+		//this.write(linePieces, 2, "CALLING OPTIONS  ");
 		this.tf.setTab(12);
 		Blocks rbs = this.blocksSupply.getBlocks(routineName);
 		if (rbs == null) {
@@ -107,19 +112,17 @@ public class APIWriter {
 				}
 				this.fileWrapper.writeEOL();
 
-				APIData apiData = lb.getAPIData(this.blocksSupply, this.filter, this.replacementRoutines);
-				//this.writeAPIData(apiData.getInputs(), "INPUT");
-				//this.writeAPIData(apiData.getOutputs(), "OUTPUT");
+				APIData apiData = lb.getAPIData(this.blocksSupply, store, this.filter, this.replacementRoutines);
 				this.writeAPIData(apiData.getAssumed(), "ASSUMED");
 				this.writeAPIData(apiData.getGlobals(), "GLBS");
 			}
 		}				
 		this.fileWrapper.writeEOL();
-		this.fileWrapper.writeEOL();		
 	}
 	
 	public void auxWrite(String fanInFileName) {		
 		try {
+			APIDataStore store = new APIDataStore();
 			int packageCount = 0;
 			Path path = Paths.get(fanInFileName);
 			Scanner scanner = new Scanner(path);
@@ -140,7 +143,7 @@ public class APIWriter {
 						String label = pieces[0];
 						String routineName = pieces.length > 1 ? pieces[1] : null;
 						EntryId entryId = new EntryId(routineName, label);
-						this.write(entryId, linePieces);
+						this.write(entryId, store, linePieces);
 					}
 				}
 			}		
@@ -158,17 +161,19 @@ public class APIWriter {
 		if (this.fileWrapper.start()) {
 			EntryId entryId = EntryId.getInstance(entryIdValue);
 			String[] input = new String[]{entryIdValue, "", "", ""};
-			this.write(entryId, input);
+			APIDataStore store = new APIDataStore();
+			this.write(entryId, store, input);
 			this.fileWrapper.stop();
 		}
 	}
 
 	public void writeEntries(List<String> entries) {
 		if (this.fileWrapper.start()) {
+			APIDataStore store = new APIDataStore();
 			for (String entry : entries) {
 				EntryId entryId = EntryId.getInstance(entry);
 				String[] input = new String[]{entry, "", "", ""};
-				this.write(entryId, input);
+				this.write(entryId, store, input);
 			}
 			this.fileWrapper.stop();
 		}

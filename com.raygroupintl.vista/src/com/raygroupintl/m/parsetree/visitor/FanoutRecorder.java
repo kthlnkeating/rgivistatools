@@ -33,6 +33,7 @@ import com.raygroupintl.m.parsetree.Goto;
 import com.raygroupintl.m.parsetree.IndirectFanoutLabel;
 import com.raygroupintl.m.parsetree.IndirectFanoutRoutine;
 import com.raygroupintl.m.parsetree.Local;
+import com.raygroupintl.m.parsetree.ObjectMethodCall;
 import com.raygroupintl.m.parsetree.Routine;
 import com.raygroupintl.m.parsetree.data.CallArgument;
 import com.raygroupintl.m.parsetree.data.CallArgumentType;
@@ -173,6 +174,14 @@ public class FanoutRecorder extends LocationMarker {
 		this.lastInfo = new LastInfo();
 		super.visitExtrinsic(extrinsic);
 		this.updateFanout(false, false);
+		this.lastInfo = current;
+	}
+	
+	@Override
+	protected void visitObjectMethodCall(ObjectMethodCall omc) {
+		LastInfo current = this.lastInfo;
+		this.lastInfo = new LastInfo();
+		super.visitObjectMethodCall(omc);
 		this.lastInfo = current;
 	}
 	

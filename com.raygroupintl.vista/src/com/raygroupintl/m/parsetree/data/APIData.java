@@ -32,9 +32,14 @@ public class APIData {
 		this.sourceBlock = source;
 	}
 		
-	public void set(Set<String> assumeds, Set<String> globals) {
+	public void setAssumeds(Set<String> assumeds) {
 		this.assumeds = new HashSet<String>(assumeds);
-		this.globals = new HashSet<String>(globals);
+	}
+	
+	public void setAssumeds(APIData rhs) {
+		if (rhs != null) {
+			this.setAssumeds(rhs.assumeds);
+		}
 	}
 	
 	public Block getSourceBlock() {
@@ -54,16 +59,23 @@ public class APIData {
 		int result = 0;
 		for (String name : source.assumeds) {
 			boolean b = this.mergeAssumed(thisBlock, name, sourceIndex);
-			if (b) ++ result;
+			if (b) ++result;
 		}
 		return result;
 	}
 	
 	public void mergeGlobals(APIData source) {
-		this.globals.addAll(source.globals);		
+		this.mergeGlobals(source.globals);
 	}
 	
-	
+	public void mergeGlobals(Set<String> globals) {
+		if (this.globals == null) {
+			this.globals = new HashSet<String>(globals);	
+		} else {
+			this.globals.addAll(globals);		
+		}
+	}
+		
 	private List<String> getIO(Set<String> source) {
 		if (source == null) {
 			return Collections.emptyList();
