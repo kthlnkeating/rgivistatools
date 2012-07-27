@@ -18,13 +18,16 @@ package com.raygroupintl.m.parsetree.visitor;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import com.raygroupintl.m.parsetree.ActualList;
 import com.raygroupintl.m.parsetree.AtomicDo;
 import com.raygroupintl.m.parsetree.AtomicGoto;
 import com.raygroupintl.m.parsetree.Do;
+import com.raygroupintl.m.parsetree.DoBlock;
 import com.raygroupintl.m.parsetree.EnvironmentFanoutRoutine;
 import com.raygroupintl.m.parsetree.Extrinsic;
 import com.raygroupintl.m.parsetree.FanoutLabel;
@@ -77,6 +80,7 @@ public class FanoutRecorder extends LocationMarker {
 	private LastInfo lastInfo = new LastInfo();
 	private Filter<EntryId> filter;
 	private boolean conditional;
+	private Set<Integer> doBlockHash = new HashSet<Integer>();
 
 	public FanoutRecorder() {
 	}
@@ -197,6 +201,15 @@ public class FanoutRecorder extends LocationMarker {
 		this.conditional = g.getPostCondition() != null;
 		g.acceptSubNodes(this);
 		this.conditional = false;		
+	}
+
+	@Override
+	protected void visitDoBlock(DoBlock doBlock) {
+		int id = doBlock.getUniqueId();
+		if (! this.doBlockHash.contains(id)) {
+			doBlockHash.add(id);
+			super.visitDoBlock(doBlock);
+		}
 	}
 
 	@Override

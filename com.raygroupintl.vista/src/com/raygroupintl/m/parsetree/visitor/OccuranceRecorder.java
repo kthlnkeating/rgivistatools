@@ -17,7 +17,9 @@
 package com.raygroupintl.m.parsetree.visitor;
 
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Map;
+import java.util.Set;
 
 import com.raygroupintl.m.parsetree.AtomicDo;
 import com.raygroupintl.m.parsetree.AtomicGoto;
@@ -41,6 +43,8 @@ public class OccuranceRecorder extends LocationMarker {
 	private Map<LineLocation, Integer> doCalls = new HashMap<LineLocation, Integer>();
 	private Map<LineLocation, Integer> gotoCalls = new HashMap<LineLocation, Integer>();
 	private Map<LineLocation, Integer> extrinsics = new HashMap<LineLocation, Integer>();
+	
+	private Set<Integer> doBlockHash = new HashSet<Integer>();
 
 	private static void increment(Map<LineLocation, Integer> map, LineLocation location) {
 		Integer count = map.get(location);
@@ -51,6 +55,7 @@ public class OccuranceRecorder extends LocationMarker {
 		}
 		map.put(location, count);
 	}
+
 
 	protected void visitErrorNode(ErrorNode error) {
 		LineLocation location = this.getLastLocation();
@@ -65,9 +70,13 @@ public class OccuranceRecorder extends LocationMarker {
 	}
 
 	protected void visitDoBlock(DoBlock doBlock) {
-		LineLocation location = this.getLastLocation();
-		increment(this.doBlocks, location);
-		super.visitDoBlock(doBlock);
+		int id = doBlock.getUniqueId();
+		if (! this.doBlockHash.contains(id)) {
+			doBlockHash.add(id);
+			LineLocation location = this.getLastLocation();
+			increment(this.doBlocks, location);
+			super.visitDoBlock(doBlock);
+		}
 	}
 	
 	protected void visitExternalDo(ExternalDo externalDo) {

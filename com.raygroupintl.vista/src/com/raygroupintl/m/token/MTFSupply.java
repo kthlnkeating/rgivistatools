@@ -457,7 +457,7 @@ public class MTFSupply {
 	@TokenType(MergeCmdTokens.MAtomicMergeCmd.class)
 	@Rule("glvn, '=', glvn")
 	public TokenFactory mergeargdirect;
-	@TokenType(MergeCmdTokens.MAtomicMergeCmd.class)
+	@TokenType(MergeCmdTokens.MIndirectAtomicMergeCmd.class)
 	@Rule("indirection, ['=', glvn]")
 	public TokenFactory mergeargindirect;
 	@Rule("mergeargindirect | mergeargdirect")

@@ -36,4 +36,15 @@ public class CLIExamples {
 				"-ptd", "C:\\Sandbox\\serial"};
 		MRoutineAnalyzer.main(args2);
 	}
+	
+	//@Test
+	public void testGeneric() {
+		// Write the API
+		String args2[] = {
+				"-t", "apis", 
+				"-e", "ASK^DIC", 
+				"-o", "C:\\Sandbox\\j_test.dat",
+				"-ptd", "C:\\Sandbox\\serial"};
+		MRoutineAnalyzer.main(args2);
+	}
 }

@@ -16,30 +16,15 @@
 
 package com.raygroupintl.m.parsetree;
 
-public class IfCmd extends ParentNode {
+public class WriteCmd extends MultiCommand  {
 	private static final long serialVersionUID = 1L;
 
-	private Nodes<Node> conditions;
-		
-	public IfCmd() {
+	public WriteCmd(Node postCondition, Node argument) {
+		super(postCondition, argument);
 	}
 
-	public IfCmd(Nodes<Node> conditions) {
-		this.conditions = conditions;
-	}
-
-	@Override
-	public void acceptSubNodes(Visitor visitor) {
-		if (this.conditions != null) {
-			for (Node node : this.conditions.getNodes()) {
-				node.accept(visitor);
-			}
-		}
-		super.acceptSubNodes(visitor);
-	}
-	
 	@Override
 	public void accept(Visitor visitor) {
-		visitor.visitIf(this);
+		visitor.visitWriteCmd(this);
 	}
 }

@@ -27,6 +27,11 @@ public class APIData {
 	
 	private Set<String> assumeds;
 	private Set<String> globals;
+	
+	int indirectionCount;
+	int writeCount;
+	int readCount;
+	int executeCount;
 		
 	public APIData(Block source) {
 		this.sourceBlock = source;
@@ -75,6 +80,13 @@ public class APIData {
 			this.globals.addAll(globals);		
 		}
 	}
+	
+	public void mergeCounts(Block b) {
+		this.indirectionCount += b.getIndirectionCount();
+		this.readCount += b.getReadCount();
+		this.writeCount += b.getWriteCount();
+		this.executeCount += b.getExecuteCount();
+	}
 		
 	private List<String> getIO(Set<String> source) {
 		if (source == null) {
@@ -93,5 +105,21 @@ public class APIData {
  	
 	public List<String> getGlobals() {
 		return getIO(this.globals);
+	}
+	
+	public int getIndirectionCount() {
+		return this.indirectionCount;
+	}
+	
+	public int getWriteCount() {
+		return this.writeCount;
+	}
+	
+	public int getReadCount() {
+		return this.readCount;
+	}
+	
+	public int getExecuteCount() {
+		return this.executeCount;
 	}
 }

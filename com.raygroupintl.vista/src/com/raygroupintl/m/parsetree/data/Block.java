@@ -17,6 +17,7 @@
 package com.raygroupintl.m.parsetree.data;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
@@ -27,6 +28,8 @@ import java.util.logging.Logger;
 
 import com.raygroupintl.m.parsetree.Local;
 import com.raygroupintl.m.parsetree.visitor.APIRecorder;
+import com.raygroupintl.m.struct.LineLocation;
+import com.raygroupintl.output.FileWrapper;
 import com.raygroupintl.struct.Filter;
 import com.raygroupintl.struct.Indexed;
 
@@ -191,6 +194,13 @@ public class Block {
 	private Map<String, Integer> outputLocals = new HashMap<String, Integer>();
 	private Set<String> globals = new HashSet<String>();
 
+	int indirectionCount;
+	int writeCount;
+	int readCount;
+	int executeCount;
+	
+	LineLocation location;
+	
 	private List<IndexedFanout> fanouts = new ArrayList<IndexedFanout>();
 	private boolean closed;
 	
@@ -198,6 +208,21 @@ public class Block {
 		this.index = index;
 		this.entryId = entryId;
 		this.siblings = siblings;
+	}
+	
+	public void setLineLocation(LineLocation location) {
+		this.location = location;
+	}
+	
+	public LineLocation getLineLocation() {
+		return this.location;
+	}
+	
+	public String getLocationTitle() {
+		String result = this.entryId.getRoutineName();
+		result += "^" + this.location.getTag();
+		result += "^" + this.location.getOffset();
+		return result;
 	}
 	
 	public void close() {
@@ -432,9 +457,65 @@ public class Block {
 			++index;
 		}
 		List<Block> blocks = fanoutBlocks.getAllBlocks();
-		for (Block b : blocks) {
+/*		Map<String, Integer> writeResult = new HashMap<String,Integer>();
+		int all = 0;
+*/		for (Block b : blocks) {
 			result.mergeGlobals(b.getGlobals());
+/*			if (b.getIndirectionCount() > 0) {
+				if (writeResult.containsKey(b.getLocationTitle())) {
+					writeResult.put(b.getLocationTitle()+"->"+all,b.getIndirectionCount());
+					all += b.getIndirectionCount();
+				} else {
+					writeResult.put(b.getLocationTitle(),b.getIndirectionCount());
+					all += b.getIndirectionCount();
+				}
+			}			
+*/			result.mergeCounts(b);
 		}
+/*		{
+			List<String> keys = new ArrayList<String>(writeResult.keySet());
+			Collections.sort(keys);
+			FileWrapper fw = new FileWrapper("C:\\Sandbox\\j_write.dat");
+			fw.start();
+			for (String key : keys) {
+				String line = key + ":" + writeResult.get(key);
+				fw.writeEOL(line);
+			}
+			fw.stop();
+		}
+*/		
 		return result;		
+	}
+
+	public void incrementIndirection() {
+		++this.indirectionCount;
+	}
+	
+	public int getIndirectionCount() {
+		return this.indirectionCount;
+	}
+	
+	public void incrementWrite() {
+		++this.writeCount;
+	}
+	
+	public int getWriteCount() {
+		return this.writeCount;
+	}
+	
+	public void incrementRead() {
+		++this.readCount;
+	}
+	
+	public int getReadCount() {
+		return this.readCount;
+	}
+	
+	public void incrementExecute() {
+		++this.executeCount;
+	}
+	
+	public int getExecuteCount() {
+		return this.executeCount;
 	}
 }

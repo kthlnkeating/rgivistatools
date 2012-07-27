@@ -158,7 +158,21 @@ public class Visitor {
 		quitCmd.acceptSubNodes(this);
 	}
 
+	protected void visitReadCmd(ReadCmd readCmd) {
+		readCmd.acceptSubNodes(this);
+	}
+
 	
+	protected void visitWriteCmd(WriteCmd writeCmd) {
+		writeCmd.acceptSubNodes(this);
+	}
+
+	
+	protected void visitXecuteCmd(XecuteCmd xecuteCmd) {
+		xecuteCmd.acceptSubNodes(this);
+	}
+
+		
 	protected void visitIf(IfCmd ifCmd) {
 		ifCmd.acceptSubNodes(this);
 	}

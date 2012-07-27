@@ -16,20 +16,29 @@
 
 package com.raygroupintl.m.parsetree.visitor;
 
+import java.util.HashSet;
+import java.util.Set;
+
 import com.raygroupintl.m.parsetree.DoBlock;
 import com.raygroupintl.m.parsetree.ElseCmd;
 import com.raygroupintl.m.parsetree.Entry;
 import com.raygroupintl.m.parsetree.ForLoop;
 import com.raygroupintl.m.parsetree.Global;
 import com.raygroupintl.m.parsetree.IfCmd;
+import com.raygroupintl.m.parsetree.Indirection;
+import com.raygroupintl.m.parsetree.Line;
 import com.raygroupintl.m.parsetree.Local;
 import com.raygroupintl.m.parsetree.Node;
 import com.raygroupintl.m.parsetree.QuitCmd;
+import com.raygroupintl.m.parsetree.ReadCmd;
 import com.raygroupintl.m.parsetree.Routine;
+import com.raygroupintl.m.parsetree.WriteCmd;
+import com.raygroupintl.m.parsetree.XecuteCmd;
 import com.raygroupintl.m.parsetree.data.Block;
 import com.raygroupintl.m.parsetree.data.Blocks;
 import com.raygroupintl.m.parsetree.data.CallArgument;
 import com.raygroupintl.m.parsetree.data.EntryId;
+import com.raygroupintl.m.struct.LineLocation;
 
 public class APIRecorder extends FanoutRecorder {
 	private Blocks currentBlocks;
@@ -43,6 +52,8 @@ public class APIRecorder extends FanoutRecorder {
 	private int underCondition;
 	private int underFor;
 	
+	private Set<Integer> doBlockHash = new HashSet<Integer>();
+
 	private void reset() {
 		this.currentBlocks = null;
 		this.currentBlock = null;
@@ -123,6 +134,26 @@ public class APIRecorder extends FanoutRecorder {
 		}
 	}
 
+	@Override
+	protected void visitReadCmd(ReadCmd readCmd) {
+		super.visitReadCmd(readCmd);
+		this.currentBlock.incrementRead();
+	}
+
+	
+	@Override
+	protected void visitWriteCmd(WriteCmd writeCmd) {
+		super.visitWriteCmd(writeCmd);
+		this.currentBlock.incrementWrite();
+	}
+
+	
+	@Override
+	protected void visitXecuteCmd(XecuteCmd xecuteCmd) {
+		super.visitXecuteCmd(xecuteCmd);
+		this.currentBlock.incrementExecute();
+	}
+
 	protected void visitForLoop(ForLoop forLoop) {
 		++this.underFor;
 		super.visitForLoop(forLoop);
@@ -175,32 +206,50 @@ public class APIRecorder extends FanoutRecorder {
 		String[] params = entry.getParameters();
 		this.currentBlock.setFormals(params);
 		++this.index;
-		super.visitEntry(entry);
-		
+		super.visitEntry(entry);	
 	}
 			
+	protected void visitIndirection(Indirection indirection) {
+		this.currentBlock.incrementIndirection();
+		super.visitIndirection(indirection);
+	}
+
 	protected void visitDoBlock(DoBlock doBlock) {
-		++this.inDoBlock;
-		doBlock.acceptPostCondition(this);
-		Blocks lastBlocks = this.currentBlocks;
-		Block lastBlock = this.currentBlock;
-		this.currentBlock = null;
-		this.currentBlocks = new Blocks(lastBlocks);
-		doBlock.acceptEntryList(this);
-		Block firstBlock = this.currentBlocks.getFirstBlock();
-		this.currentBlocks = lastBlocks;
-		this.currentBlock = lastBlock;
-		String tag = ":" + String.valueOf(this.index);
-		EntryId defaultDo = new EntryId(null, tag);		
-		lastBlock.addFanout(this.index, defaultDo, false, null);
-		this.currentBlocks.put(tag, firstBlock);
-		--this.inDoBlock;
+		int id = doBlock.getUniqueId();
+		if (! this.doBlockHash.contains(id)) {
+			doBlockHash.add(id);
+			++this.inDoBlock;
+			doBlock.acceptPostCondition(this);
+			Blocks lastBlocks = this.currentBlocks;
+			Block lastBlock = this.currentBlock;
+			this.currentBlock = null;
+			this.currentBlocks = new Blocks(lastBlocks);
+			doBlock.acceptEntryList(this);
+			Block firstBlock = this.currentBlocks.getFirstBlock();
+			this.currentBlocks = lastBlocks;
+			this.currentBlock = lastBlock;
+			String tag = ":" + String.valueOf(this.index);
+			EntryId defaultDo = new EntryId(null, tag);		
+			lastBlock.addFanout(this.index, defaultDo, false, null);
+			this.currentBlocks.put(tag, firstBlock);
+			--this.inDoBlock;
+		}
 	}
 	
 	public Blocks getBlocks() {
 		return this.currentBlocks;
 	}
 	
+	@Override
+	protected void visitLine(Line line) {
+		if (this.currentBlock.getLineLocation() == null) {
+			String tag = line.getTag();
+			int index = line.getIndex();
+			this.currentBlock.setLineLocation(new LineLocation(tag, index));
+		}
+		super.visitLine(line);
+	}
+
 	protected void visitRoutine(Routine routine) {
 		this.reset();
 		this.currentBlocks = new Blocks();

@@ -47,9 +47,25 @@ public final class MergeCmdTokens {
 			MToken lhs = (MToken) this.get(0);
 			Node lhsNode = lhs.getNode();
 			MToken rhs = (MToken) this.get(2);
-			if (rhs == null) {
+			Node rhsNode = rhs.getNode();
+			return new MergeCmdNodes.AtomicMerge(lhsNode, rhsNode);
+		}		
+	}
+	
+	public static final class MIndirectAtomicMergeCmd extends MSequence {
+		public MIndirectAtomicMergeCmd(Token token) {
+			super(token);
+		}
+		
+		@Override
+		public Node getNode() {
+			MToken lhs = (MToken) this.get(0);
+			Node lhsNode = lhs.getNode();
+			MSequence rhsSeq = (MSequence) this.get(1);
+			if (rhsSeq == null) {
 				return new MergeCmdNodes.IndirectAtomicMerge(lhsNode);
 			} else {
+				MToken rhs = (MToken) rhsSeq.get(1);				
 				Node rhsNode = rhs.getNode();
 				return new MergeCmdNodes.AtomicMerge(lhsNode, rhsNode);
 			}

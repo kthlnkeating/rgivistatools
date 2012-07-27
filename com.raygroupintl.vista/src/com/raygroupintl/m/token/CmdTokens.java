@@ -8,6 +8,9 @@ import com.raygroupintl.m.parsetree.IfCmd;
 import com.raygroupintl.m.parsetree.Node;
 import com.raygroupintl.m.parsetree.Nodes;
 import com.raygroupintl.m.parsetree.QuitCmd;
+import com.raygroupintl.m.parsetree.ReadCmd;
+import com.raygroupintl.m.parsetree.WriteCmd;
+import com.raygroupintl.m.parsetree.XecuteCmd;
 import com.raygroupintl.parser.TList;
 import com.raygroupintl.parser.Token;
 
@@ -184,6 +187,10 @@ class CmdTokens {
 		protected String getFullName() {		
 			return "READ";
 		}			
+
+		protected Node getNode(Node postConditionNode, Node argumentNode) {
+			return new ReadCmd(postConditionNode, argumentNode);	
+		}
 	}
 
 	static class TC extends MCommand {
@@ -250,6 +257,10 @@ class CmdTokens {
 		protected String getFullName() {		
 			return "WRITE";
 		}			
+
+		protected Node getNode(Node postConditionNode, Node argumentNode) {
+			return new WriteCmd(postConditionNode, argumentNode);	
+		}
 	}
 
 	static class V extends MCommand {
@@ -272,6 +283,10 @@ class CmdTokens {
 		protected String getFullName() {		
 			return "XECUTE";
 		}			
+
+		protected Node getNode(Node postConditionNode, Node argumentNode) {
+			return new XecuteCmd(postConditionNode, argumentNode);	
+		}
 	}
 
 	static class Generic extends MCommand {

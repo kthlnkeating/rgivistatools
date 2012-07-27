@@ -84,6 +84,12 @@ public class APIWriter {
 		this.fileWrapper.writeEOL();		
 	}
 	
+	private void writeAPIData(int count, String title) {
+		this.fileWrapper.write(this.tf.startList(title));
+		this.fileWrapper.write(String.valueOf(count));
+		this.fileWrapper.writeEOL();		
+	}
+	
 	private void write(EntryId entryId, APIDataStore store, String[] linePieces) {
 		String routineName = entryId.getRoutineName();
 		this.fileWrapper.writeEOL(" " + entryId.toString());
@@ -115,6 +121,10 @@ public class APIWriter {
 				APIData apiData = lb.getAPIData(this.blocksSupply, store, this.filter, this.replacementRoutines);
 				this.writeAPIData(apiData.getAssumed(), "ASSUMED");
 				this.writeAPIData(apiData.getGlobals(), "GLBS");
+				this.writeAPIData(apiData.getReadCount(), "READ");
+				this.writeAPIData(apiData.getWriteCount(), "WRITE");
+				this.writeAPIData(apiData.getExecuteCount(), "EXEC");
+				this.writeAPIData(apiData.getIndirectionCount(), "IND");
 			}
 		}				
 		this.fileWrapper.writeEOL();

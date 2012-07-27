@@ -149,7 +149,7 @@ public class TRoutineTest {
 		Assert.assertEquals(21, or.getDoCount());
 		Assert.assertEquals(29, or.getAtomicDoCount());
 		Assert.assertEquals(8, or.getExternalDoCount());
-		Assert.assertEquals(23, or.getIndirectionCount());
+		Assert.assertEquals(27, or.getIndirectionCount());
 		Assert.assertEquals(17, or.getGotoCount());
 		Assert.assertEquals(31, or.getAtomicGotoCount());
 		Assert.assertEquals(5, or.getExtrinsicCount());
