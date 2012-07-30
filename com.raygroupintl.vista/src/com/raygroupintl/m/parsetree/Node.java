@@ -22,7 +22,7 @@ public interface Node extends Serializable {
 	void accept(Visitor visitor);
 	
 	void acceptPreAssignment(Visitor visitor);
-	void acceptPostAssignment(Visitor visitor);
+	void acceptPostAssignment(Visitor visitor, Node rhs);
 	
 	void acceptExclusiveNew(Visitor visitor);
 	void acceptNew(Visitor visitor);
@@ -31,7 +31,7 @@ public interface Node extends Serializable {
 	void acceptKill(Visitor visitor);
 
 	void acceptPreMerge(Visitor visitor);
-	void acceptPostMerge(Visitor visitor);
+	void acceptPostMerge(Visitor visitor, Node rhs);
 	
 	void acceptCallArgument(Visitor visitor, int order);
 	

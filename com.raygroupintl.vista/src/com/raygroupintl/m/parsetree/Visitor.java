@@ -46,7 +46,10 @@ public class Visitor {
 		this.visitAdditionalNodeHolder(pc);
 	}
 	
-	protected void assignLocal(Local local) {		
+	protected void setLocal(Local local, Node rhs) {		
+	}
+	
+	protected void mergeLocal(Local local, Node rhs) {		
 	}
 	
 	protected void killLocal(Local local) {		

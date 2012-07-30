@@ -164,13 +164,15 @@ public class RepositoryInfo {
 			int n = pieces.length;
 			if (pieces[0].length() > 0) {
 				packageInfo = new VistaPackage(pieces[0], pieces[1], rf);
-				if ((n > 2) && (pieces[2].length() > 0)) {
-					packageInfo.addPrefix(pieces[2]);
-				}
-				if ((n > 3) && (pieces[3].length() > 0)) {
-					packageInfo.addFile(pieces[3], pieces[4]);
-				}
 				r.addPackage(packageInfo);
+			}
+			if ((n > 2) && (pieces[2].length() > 0)) {
+				packageInfo.addPrefix(pieces[2]);
+				r.packagesByPrefix.put(pieces[2], packageInfo);
+				
+			}
+			if ((n > 3) && (pieces[3].length() > 0)) {
+				packageInfo.addFile(pieces[3], pieces[4]);
 			}
 		}
 		return r;		

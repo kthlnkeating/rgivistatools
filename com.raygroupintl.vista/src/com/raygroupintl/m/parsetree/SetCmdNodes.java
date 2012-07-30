@@ -50,7 +50,7 @@ public class SetCmdNodes {
 		public void acceptSubNodes(Visitor visitor) {
 			this.lhs.acceptPreAssignment(visitor);
 			this.rhs.accept(visitor);			
-			this.lhs.acceptPostAssignment(visitor);
+			this.lhs.acceptPostAssignment(visitor, this.rhs);
 		}
 		
 		@Override
@@ -76,7 +76,7 @@ public class SetCmdNodes {
 			}
 			this.rhs.accept(visitor);
 			for (Node lhs : this.lhss.getNodes()) {
-				lhs.acceptPostAssignment(visitor);
+				lhs.acceptPostAssignment(visitor, this.rhs);
 			}
 		}
 		

@@ -36,8 +36,10 @@ import com.raygroupintl.m.parsetree.Goto;
 import com.raygroupintl.m.parsetree.IndirectFanoutLabel;
 import com.raygroupintl.m.parsetree.IndirectFanoutRoutine;
 import com.raygroupintl.m.parsetree.Local;
+import com.raygroupintl.m.parsetree.NumberLiteral;
 import com.raygroupintl.m.parsetree.ObjectMethodCall;
 import com.raygroupintl.m.parsetree.Routine;
+import com.raygroupintl.m.parsetree.StringLiteral;
 import com.raygroupintl.m.parsetree.data.CallArgument;
 import com.raygroupintl.m.parsetree.data.CallArgumentType;
 import com.raygroupintl.m.parsetree.data.EntryId;
@@ -87,6 +89,20 @@ public class FanoutRecorder extends LocationMarker {
 	
 	public FanoutRecorder(Filter<EntryId> filter) {
 		this.filter = filter;
+	}
+	
+	@Override
+	protected void passStringLiteral(StringLiteral literal, int index) {		
+		String name = literal.getValue();
+		CallArgument ca = new CallArgument(CallArgumentType.STRING_LITERAL, name);
+		this.lastInfo.callArguments[index] = ca;
+	}
+	
+	@Override
+	protected void passNumberLiteral(NumberLiteral literal, int index) {		
+		String name = literal.getValue();
+		CallArgument ca = new CallArgument(CallArgumentType.NUMBER_LITERAL, name);
+		this.lastInfo.callArguments[index] = ca;
 	}
 	
 	@Override

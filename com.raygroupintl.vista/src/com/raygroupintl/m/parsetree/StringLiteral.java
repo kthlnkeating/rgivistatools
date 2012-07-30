@@ -23,6 +23,11 @@ public class StringLiteral extends Literal {
 		super(value);
 	}
 
+	public String getNakedValue() {
+		String value = this.getValue();
+		return value.substring(1, value.length()-1);
+	}
+	
 	@Override
 	public void accept(Visitor visitor) {
 		visitor.visitStringLiteral(this);

@@ -232,7 +232,7 @@ public class MRoutineAnalyzer {
 			}
 			if (at.equalsIgnoreCase("api")) {
 				FileWrapper fr = new FileWrapper(outputPath);
-				APIOverallRecorder api = new APIOverallRecorder();
+				APIOverallRecorder api = new APIOverallRecorder(ri);
 				packageNodes.accept(api);
 				BlocksSupply blocks = api.getBlocks();
 				APIWriter apiw = new APIWriter(fr, blocks, replacementRoutines);
@@ -243,7 +243,7 @@ public class MRoutineAnalyzer {
 			}
 			if (at.equalsIgnoreCase("apis")) {
 				FileWrapper fr = new FileWrapper(outputPath);
-				BlocksSupply blocks = new SerializedBlocksSupply(options.parseTreeDirectory);
+				BlocksSupply blocks = new SerializedBlocksSupply(options.parseTreeDirectory, ri);
 				APIWriter apiw = new APIWriter(fr, blocks, replacementRoutines);
 				PercentRoutineFilter filter = new PercentRoutineFilter();
 				apiw.setFilter(filter);

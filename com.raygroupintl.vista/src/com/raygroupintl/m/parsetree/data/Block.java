@@ -159,10 +159,14 @@ public class Block {
 			for (int i=this.list.size()-1; i>0; --i) {
 				Block bi = this.list.get(i);
 				result.mergeGlobals(bi.getGlobals());
+				result.mergeFilemanGlobals(bi.getFilemanGlobals());
+				result.mergeFilemanCalls(bi.getFilemanCalls());
 			}
 
 			for (Block bi : this.storedList) {
 				result.mergeGlobals(bi.getGlobals());
+				result.mergeFilemanGlobals(bi.getFilemanGlobals());
+				result.mergeFilemanCalls(bi.getFilemanCalls());
 			}			
 			
 			for (Block bi : this.list) {
@@ -193,7 +197,9 @@ public class Block {
 	private Map<String, Integer> inputLocals = new HashMap<String, Integer>();
 	private Map<String, Integer> outputLocals = new HashMap<String, Integer>();
 	private Set<String> globals = new HashSet<String>();
-
+	private Set<String> filemanGlobals = new HashSet<String>();
+	private Set<String> filemanCalls = new HashSet<String>();
+	
 	int indirectionCount;
 	int writeCount;
 	int readCount;
@@ -294,6 +300,26 @@ public class Block {
 
 	public Set<String> getGlobals() {
 		return this.globals;
+	}
+	
+	public void addFilemanGlobal(String value) {
+		if (! this.closed) {
+			this.filemanGlobals.add(value);
+		}
+	}
+
+	public Set<String> getFilemanGlobals() {
+		return this.filemanGlobals;
+	}
+	
+	public void addFilemanCalls(String value) {
+		if (! this.closed) {
+			this.filemanCalls.add(value);
+		}
+	}
+
+	public Set<String> getFilemanCalls() {
+		return this.filemanCalls;
 	}
 	
 	public void addFanout(int index, EntryId fanout, boolean shouldClose, CallArgument[] arguments) {
@@ -461,6 +487,8 @@ public class Block {
 		int all = 0;
 */		for (Block b : blocks) {
 			result.mergeGlobals(b.getGlobals());
+			result.mergeFilemanGlobals(b.getFilemanGlobals());
+			result.mergeFilemanCalls(b.getFilemanCalls());
 /*			if (b.getIndirectionCount() > 0) {
 				if (writeResult.containsKey(b.getLocationTitle())) {
 					writeResult.put(b.getLocationTitle()+"->"+all,b.getIndirectionCount());

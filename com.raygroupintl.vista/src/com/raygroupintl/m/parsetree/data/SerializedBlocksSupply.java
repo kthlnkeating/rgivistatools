@@ -22,13 +22,16 @@ import java.util.HashMap;
 
 import com.raygroupintl.m.parsetree.Routine;
 import com.raygroupintl.m.parsetree.visitor.APIRecorder;
+import com.raygroupintl.vista.repository.RepositoryInfo;
 
 public class SerializedBlocksSupply implements BlocksSupply {
 	private String inputPath;
 	private HashMap<String, Blocks> blocks = new HashMap<String, Blocks>();
+	private RepositoryInfo repositoryInfo;
 	
-	public SerializedBlocksSupply(String inputPath) {
+	public SerializedBlocksSupply(String inputPath, RepositoryInfo ri) {
 		this.inputPath = inputPath;
+		this.repositoryInfo = ri;
 	}
 	
 	@Override
@@ -38,7 +41,7 @@ public class SerializedBlocksSupply implements BlocksSupply {
 			Path path = Paths.get(this.inputPath, routineName + ".ser");
 			Routine routine = Routine.readSerialized(path.toString());
 			if (routine != null) {
-				APIRecorder recorder = new APIRecorder();
+				APIRecorder recorder = new APIRecorder(this.repositoryInfo);
 				routine.accept(recorder);
 				result = recorder.getBlocks();
 			}

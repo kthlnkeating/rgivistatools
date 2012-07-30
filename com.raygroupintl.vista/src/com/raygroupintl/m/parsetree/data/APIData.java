@@ -27,6 +27,8 @@ public class APIData {
 	
 	private Set<String> assumeds;
 	private Set<String> globals;
+	private Set<String> filemanGlobals = new HashSet<String>();
+	private Set<String> filemanCalls = new HashSet<String>();
 	
 	int indirectionCount;
 	int writeCount;
@@ -81,6 +83,30 @@ public class APIData {
 		}
 	}
 	
+	public void mergeFilemanGlobals(APIData source) {
+		this.mergeFilemanGlobals(source.filemanGlobals);
+	}
+	
+	public void mergeFilemanGlobals(Set<String> filemanGlobals) {
+		if (this.filemanGlobals == null) {
+			this.filemanGlobals = new HashSet<String>(filemanGlobals);	
+		} else {
+			this.filemanGlobals.addAll(filemanGlobals);		
+		}
+	}
+	
+	public void mergeFilemanCalls(APIData source) {
+		this.mergeFilemanCalls(source.filemanCalls);
+	}
+	
+	public void mergeFilemanCalls(Set<String> filemanCalls) {
+		if (this.filemanCalls == null) {
+			this.filemanCalls = new HashSet<String>(filemanCalls);	
+		} else {
+			this.filemanCalls.addAll(filemanCalls);		
+		}
+	}
+	
 	public void mergeCounts(Block b) {
 		this.indirectionCount += b.getIndirectionCount();
 		this.readCount += b.getReadCount();
@@ -105,6 +131,14 @@ public class APIData {
  	
 	public List<String> getGlobals() {
 		return getIO(this.globals);
+	}
+	
+	public List<String> getFilemanGlobals() {
+		return getIO(this.filemanGlobals);
+	}
+	
+	public List<String> getFilemanCalls() {
+		return getIO(this.filemanCalls);
 	}
 	
 	public int getIndirectionCount() {

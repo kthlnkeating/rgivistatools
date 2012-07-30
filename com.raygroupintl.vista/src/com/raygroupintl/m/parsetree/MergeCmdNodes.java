@@ -50,7 +50,7 @@ public class MergeCmdNodes {
 		public void acceptSubNodes(Visitor visitor) {
 			this.lhs.acceptPreMerge(visitor);
 			this.rhs.accept(visitor);			
-			this.lhs.acceptPostMerge(visitor);
+			this.lhs.acceptPostMerge(visitor, this.rhs);
 		}
 		
 		@Override

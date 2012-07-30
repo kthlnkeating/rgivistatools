@@ -125,6 +125,8 @@ public class APIWriter {
 				this.writeAPIData(apiData.getWriteCount(), "WRITE");
 				this.writeAPIData(apiData.getExecuteCount(), "EXEC");
 				this.writeAPIData(apiData.getIndirectionCount(), "IND");
+				this.writeAPIData(apiData.getFilemanGlobals(), "FMGLBS");
+				this.writeAPIData(apiData.getFilemanCalls(), "FMCALLS");
 			}
 		}				
 		this.fileWrapper.writeEOL();

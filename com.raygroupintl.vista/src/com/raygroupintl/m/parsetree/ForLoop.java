@@ -41,7 +41,7 @@ public class ForLoop extends ParentNode {
 					rhs[i].accept(visitor);
 				}
 			}
-			this.lhs.acceptPostAssignment(visitor);
+			this.lhs.acceptPostAssignment(visitor, null);
 		}
 		super.acceptSubNodes(visitor);
 	}

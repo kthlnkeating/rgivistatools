@@ -25,7 +25,7 @@ public abstract class BasicNode implements Node {
 	}
 
 	@Override
-	public void acceptPostAssignment(Visitor visitor) {
+	public void acceptPostAssignment(Visitor visitor, Node rhs) {
 	}
 
 	@Override
@@ -59,7 +59,7 @@ public abstract class BasicNode implements Node {
 	}
 
 	@Override
-	public void acceptPostMerge(Visitor visitor) {
+	public void acceptPostMerge(Visitor visitor, Node rhs) {
 	}
 
 	@Override

@@ -16,7 +16,9 @@
 
 package com.raygroupintl.m.parsetree.visitor;
 
+import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Map;
 import java.util.Set;
 
 import com.raygroupintl.m.parsetree.DoBlock;
@@ -29,18 +31,25 @@ import com.raygroupintl.m.parsetree.Indirection;
 import com.raygroupintl.m.parsetree.Line;
 import com.raygroupintl.m.parsetree.Local;
 import com.raygroupintl.m.parsetree.Node;
+import com.raygroupintl.m.parsetree.NumberLiteral;
 import com.raygroupintl.m.parsetree.QuitCmd;
 import com.raygroupintl.m.parsetree.ReadCmd;
 import com.raygroupintl.m.parsetree.Routine;
+import com.raygroupintl.m.parsetree.StringLiteral;
 import com.raygroupintl.m.parsetree.WriteCmd;
 import com.raygroupintl.m.parsetree.XecuteCmd;
 import com.raygroupintl.m.parsetree.data.Block;
 import com.raygroupintl.m.parsetree.data.Blocks;
 import com.raygroupintl.m.parsetree.data.CallArgument;
+import com.raygroupintl.m.parsetree.data.CallArgumentType;
 import com.raygroupintl.m.parsetree.data.EntryId;
 import com.raygroupintl.m.struct.LineLocation;
+import com.raygroupintl.vista.repository.RepositoryInfo;
+import com.raygroupintl.vista.repository.VistaPackage;
 
 public class APIRecorder extends FanoutRecorder {
+	private RepositoryInfo repositoryInfo;
+	
 	private Blocks currentBlocks;
 	
 	private Block currentBlock;
@@ -54,6 +63,10 @@ public class APIRecorder extends FanoutRecorder {
 	
 	private Set<Integer> doBlockHash = new HashSet<Integer>();
 
+	public APIRecorder(RepositoryInfo ri) {
+		this.repositoryInfo = ri;
+	}
+		
 	private void reset() {
 		this.currentBlocks = null;
 		this.currentBlock = null;
@@ -69,19 +82,91 @@ public class APIRecorder extends FanoutRecorder {
 		this.currentBlock.addOutput(index, local);
 	}
 	
-	protected void assignLocal(Local local) {
+	private static String removeDoubleQuote(String input) {
+		if (input.charAt(0) != '"') {
+			return input;
+		}
+		return input.substring(1, input.length()-1);
+	}
+	
+	private static boolean validate(String input) {
+		int dotCount = 0;
+		for (int i=0; i<input.length(); ++i) {
+			char ch = input.charAt(i);
+			if (ch == '.') {
+				++dotCount;
+				if (dotCount > 1) return false;
+			} else if (! Character.isDigit(ch)) {
+				return false;
+			}
+		}
+		return true;
+	}
+	
+	private boolean inFilemanRoutine(String routineName, boolean kernalToo) {
+		VistaPackage pkg = this.repositoryInfo == null ? null : this.repositoryInfo.getPackageFromRoutineName(routineName);
+		if (pkg == null) {			
+			char ch0 = routineName.charAt(0);
+			if (ch0 == 'D') {
+				char ch1 = routineName.charAt(1);
+				if ((ch1 == 'I') || (ch1 == 'M') || (ch1 == 'D')) {
+					return true;
+				}
+			}
+			return false;
+		} else {
+			String name = pkg.getPackageName();
+			return name.equalsIgnoreCase("VA FILEMAN") || (kernalToo && name.equalsIgnoreCase("KERNEL"));
+		}
+	}
+	
+	@Override
+	protected void setLocal(Local local, Node rhs) {
+		this.addOutput(local);
+		if ((rhs != null) && ! inFilemanRoutine(this.currentRoutineName, true)) {
+			String rhsAsConst = rhs.getAsConstExpr();
+			if (rhsAsConst != null) {
+				String name = local.getName().toString();
+				if (name.startsWith("DI") && (name.length() == 3)) {
+					char ch = name.charAt(2);
+					if ((ch == 'E') || (ch == 'K') || (ch == 'C')) {
+						rhsAsConst = removeDoubleQuote(rhsAsConst);
+						if ((rhsAsConst.length() > 0) && (rhsAsConst.charAt(0) == '^')) {
+							String[] namePieces = rhsAsConst.split("\\(");
+							if ((namePieces[0].length() > 0) && (namePieces.length > 1)) {
+								String result = namePieces[0] + "(";
+								if ((namePieces[1] != null) && (namePieces[1].length() > 0)) {
+									String[] subscripts = namePieces[1].split("\\,");
+									if ((subscripts.length > 0) && (subscripts[0].length() > 0) && validate(subscripts[0])) {
+										result += subscripts[0];									
+									}
+								}
+								this.currentBlock.addFilemanGlobal(result);
+							}
+						}
+					}
+				}
+			}
+		}
+	}
+	
+	@Override
+	protected void mergeLocal(Local local, Node rhs) {
 		this.addOutput(local);
 	}
 	
+	@Override
 	protected void killLocal(Local local) {		
 		this.addOutput(local);
 	}
 	
+	@Override
 	protected void newLocal(Local local) {
 		++this.index;
 		this.currentBlock.addNewed(this.index, local);
 	}
 	
+	@Override
 	protected void visitLocal(Local local) {
 		super.visitLocal(local);
 		++this.index;
@@ -121,6 +206,22 @@ public class APIRecorder extends FanoutRecorder {
 			++this.index;
 			CallArgument[] callArguments = this.getLastArguments();
 			this.currentBlock.addFanout(index, fanout, shouldClose, callArguments);
+			if ((callArguments != null) && (callArguments.length > 0) && ! inFilemanRoutine(this.currentRoutineName, true)) {
+				CallArgument ca = callArguments[0];
+				if (ca != null) {
+					CallArgumentType caType = ca.getType();
+					if ((caType == CallArgumentType.STRING_LITERAL) || (caType == CallArgumentType.NUMBER_LITERAL)) {
+						String routineName = fanout.getRoutineName();						
+						if ((routineName != null) && (routineName.length() > 1) && inFilemanRoutine(routineName, false)) {
+							String cleanValue = removeDoubleQuote(ca.getValue());
+							if (cleanValue.length() > 0 && validate(cleanValue)) {
+								String value = fanout.toString() + "(" + cleanValue;
+								this.currentBlock.addFilemanCalls(value);
+							}
+						}
+					}
+				}
+			}
 		} else if (shouldClose) {
 			this.currentBlock.close();
 		}

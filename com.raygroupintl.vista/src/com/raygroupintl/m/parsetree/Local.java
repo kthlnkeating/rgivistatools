@@ -40,8 +40,8 @@ public class Local extends NodeWithSubscripts {
 	}
 
 	@Override
-	public void acceptPostAssignment(Visitor visitor) {
-		visitor.assignLocal(this);
+	public void acceptPostAssignment(Visitor visitor, Node rhs) {
+		visitor.setLocal(this, rhs);
 	}
 	
 	@Override
@@ -69,8 +69,8 @@ public class Local extends NodeWithSubscripts {
 	}
 
 	@Override
-	public void acceptPostMerge(Visitor visitor) {
-		visitor.assignLocal(this);
+	public void acceptPostMerge(Visitor visitor, Node rhs) {
+		visitor.mergeLocal(this, rhs);
 	}
 	
 	@Override

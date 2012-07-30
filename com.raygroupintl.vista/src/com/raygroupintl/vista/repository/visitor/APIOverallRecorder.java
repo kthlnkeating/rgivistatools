@@ -23,6 +23,7 @@ import com.raygroupintl.m.parsetree.data.Blocks;
 import com.raygroupintl.m.parsetree.data.BlocksSupply;
 import com.raygroupintl.m.parsetree.data.MapBlocksSupply;
 import com.raygroupintl.m.parsetree.visitor.APIRecorder;
+import com.raygroupintl.vista.repository.RepositoryInfo;
 import com.raygroupintl.vista.repository.RepositoryVisitor;
 import com.raygroupintl.vista.repository.VistaPackages;
 import com.raygroupintl.vista.repository.VistaPackage;
@@ -30,9 +31,14 @@ import com.raygroupintl.vista.repository.VistaPackage;
 public class APIOverallRecorder extends RepositoryVisitor {
 	private final static Logger LOGGER = Logger.getLogger(APIOverallRecorder.class.getName());
 
+	private RepositoryInfo repositoryInfo;
 	private int packageCount;
 	private APIRecorder recorder;
 	private MapBlocksSupply blocksMap = new MapBlocksSupply();
+	
+	public APIOverallRecorder(RepositoryInfo ri) {
+		this.repositoryInfo = ri;
+	}
 	
 	@Override
 	protected void visitVistaPackage(VistaPackage routinePackage) {
@@ -50,7 +56,7 @@ public class APIOverallRecorder extends RepositoryVisitor {
 	
 	@Override
 	protected void visitRoutinePackages(VistaPackages rps) {
-		this.recorder = new APIRecorder();
+		this.recorder = new APIRecorder(this.repositoryInfo);
 		rps.acceptSubNodes(this);
 	}
 	
