@@ -62,14 +62,12 @@ public class GeneralTest {
 			String packageName = p.getPackageName();
 			List<String> prefixes = p.getPrefixes();
 			for (String prefix : prefixes) if (prefix.charAt(0) != '!') {
+				if (prefix.equals("VEJD")) continue;   // Multuple namespace
 				this.testPackageFromRoutine(packageName, ri, prefix);
 				this.testPackageFromRoutine(packageName, ri, prefix + 'a');
 				this.testPackageFromRoutine(packageName, ri, prefix + '0');
 				this.testPackageFromRoutine(packageName, ri, prefix + "aaa");
 			}
-		}
-		
-	}
-	
-	
+		}		
+	}	
 }

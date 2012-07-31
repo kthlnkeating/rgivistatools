@@ -99,7 +99,7 @@ public class VistaPackage  implements RepositoryNode {
 	}
 	
 	public List<FileInfo> getFiles() {
-		if (this.prefixes == null) {
+		if (this.files == null) {
 			return Collections.emptyList();
 		} else {
 			return Collections.unmodifiableList(this.files);
@@ -111,6 +111,14 @@ public class VistaPackage  implements RepositoryNode {
 			return Collections.emptyList();
 		} else {
 			return Collections.unmodifiableList(this.prefixes);
+		}
+	}
+	
+	public String getDefaultPrefix() {
+		if ((this.prefixes == null) || (this.prefixes.size() == 0)) {
+			return "UNCATEGORIZED";
+		} else {
+			return this.prefixes.get(0);
 		}
 	}
 	
@@ -177,5 +185,4 @@ public class VistaPackage  implements RepositoryNode {
 	public void accept(RepositoryVisitor visitor) {
 		visitor.visitVistaPackage(this);
 	}
-
 }

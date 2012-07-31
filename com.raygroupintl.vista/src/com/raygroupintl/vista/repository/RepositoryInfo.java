@@ -20,7 +20,6 @@ import java.io.IOException;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -33,7 +32,6 @@ import com.raygroupintl.m.parsetree.data.EntryId.StringFormat;
 import com.raygroupintl.stringlib.DigitFilter;
 import com.raygroupintl.struct.Filter;
 import com.raygroupintl.struct.Transformer;
-
 
 public class RepositoryInfo {
 	private static class OptionFilter implements Filter<MGlobalNode> {
@@ -105,12 +103,7 @@ public class RepositoryInfo {
 	}
 	
 	public List<VistaPackage> getAllPackages() {
-		Collection<VistaPackage> pis = this.packagesByPrefix.values();
-		List<VistaPackage> result = new ArrayList<VistaPackage>(pis.size());
-		for (VistaPackage pi : pis) {
-			result.add(pi);
-		}
-		return result;
+		return this.packages;
 	}
 	
 	public Path getPackagePath(String packageName) {
@@ -139,7 +132,7 @@ public class RepositoryInfo {
 			}
 		}
 		if (result == null) {
-			result = new VistaPackage("UNCATEGORIZED", "Uncategorized", this.rf);
+			result = this.packagesByName.get("UNCATEGORIZED");
 		}
 		return result;
 	}
@@ -175,6 +168,8 @@ public class RepositoryInfo {
 				packageInfo.addFile(pieces[3], pieces[4]);
 			}
 		}
+		packageInfo = new VistaPackage("UNCATEGORIZED", "Uncategorized", rf);
+		r.addPackage(packageInfo);
 		return r;		
 	}
 	
@@ -183,6 +178,7 @@ public class RepositoryInfo {
 		Scanner scanner = new Scanner(path);
 		RepositoryInfo r = getInstance(scanner, rf);
 		scanner.close();
+		
 		return r;
 	}
 

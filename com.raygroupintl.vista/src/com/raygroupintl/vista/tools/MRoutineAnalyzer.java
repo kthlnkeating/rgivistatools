@@ -18,6 +18,8 @@ package com.raygroupintl.vista.tools;
 
 import java.io.IOException;
 import java.nio.file.Path;
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -276,6 +278,32 @@ public class MRoutineAnalyzer {
 			if (at.equalsIgnoreCase("serial")) {
 				SerializedRoutineWriter srw = new SerializedRoutineWriter(options.parseTreeDirectory);
 				packageNodes.accept(srw);
+				return;
+			}
+			if (at.equals("routineinfo")) {
+				List<VistaPackage> packages = ri.getAllPackages();
+				List<String> routineNames = new ArrayList<String>();
+				for (VistaPackage p : packages) {
+					List<Path> paths = p.getPaths();
+					for (Path path : paths) {
+						String routineNameWithExtension = path.getFileName().toString();
+						String routineName = routineNameWithExtension.split("\\.")[0];
+						routineNames.add(routineName);
+					}
+				}
+				Collections.sort(routineNames);				
+				FileWrapper fr = new FileWrapper(outputPath);
+				fr.start();
+				for (String routineName : routineNames) {
+					VistaPackage pkg = ri.getPackageFromRoutineName(routineName);
+					String prefix = pkg.getDefaultPrefix();
+					String name = pkg.getPackageName();
+					if (prefix.equals("UNCATEGORIZED")) prefix = "UNKNOWN";
+					if (name.equals("UNCATEGORIZED")) name = "UNKNOWN";
+					String line = routineName + ":" + prefix + ":" + name;
+					fr.writeEOL(line);
+				}
+				fr.stop();
 				return;
 			}
 						
