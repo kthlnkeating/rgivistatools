@@ -133,9 +133,9 @@ public class APIRecorder extends FanoutRecorder {
 						rhsAsConst = removeDoubleQuote(rhsAsConst);
 						if ((rhsAsConst.length() > 0) && (rhsAsConst.charAt(0) == '^')) {
 							String[] namePieces = rhsAsConst.split("\\(");
-							if ((namePieces[0].length() > 0) && (namePieces.length > 1)) {
+							if ((namePieces[0].length() > 0)) {
 								String result = namePieces[0] + "(";
-								if ((namePieces[1] != null) && (namePieces[1].length() > 0)) {
+								if ((namePieces.length > 1) && (namePieces[1] != null) && (namePieces[1].length() > 0)) {
 									String[] subscripts = namePieces[1].split("\\,");
 									if ((subscripts.length > 0) && (subscripts[0].length() > 0) && validate(subscripts[0])) {
 										result += subscripts[0];									
