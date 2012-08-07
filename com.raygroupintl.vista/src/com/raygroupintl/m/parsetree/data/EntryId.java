@@ -78,11 +78,11 @@ public class EntryId implements Comparable<EntryId> {
 	}
 
 	private int compareLabels(String lhs, String rhs) {
-		if (lhs == null) {
-			if (rhs == null) return 0;
-			return 1;
+		if ((lhs == null) || (lhs.isEmpty())) {
+			if ((rhs == null) || (rhs.isEmpty())) return 0;
+			return -1;
 		}
-		if (rhs == null) return -1;
+		if ((rhs == null) || (rhs.isEmpty())) return 1;
 		return lhs.compareTo(rhs);
 	}
 	

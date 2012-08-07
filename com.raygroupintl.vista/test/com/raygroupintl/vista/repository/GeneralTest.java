@@ -12,14 +12,14 @@ import com.raygroupintl.m.token.MVersion;
 import com.raygroupintl.vista.repository.FileSupply;
 import com.raygroupintl.vista.repository.VistaPackage;
 import com.raygroupintl.vista.repository.RepositoryInfo;
-import com.raygroupintl.vista.tools.MRoutineAnalyzer;
+import com.raygroupintl.vista.tools.MRARoutineFactory;
 
 public class GeneralTest {
 	private RepositoryInfo getRepositoryInfo() {
 		try {
 			String root = RepositoryInfo.getLocation();
 			Assert.assertTrue("No location for repository root is specified.", (root != null) && (root.length() > 0));
-			MRoutineAnalyzer.MRARoutineFactory rf = MRoutineAnalyzer.MRARoutineFactory.getInstance(MVersion.CACHE);
+			MRARoutineFactory rf = MRARoutineFactory.getInstance(MVersion.CACHE);
 			RepositoryInfo ri = RepositoryInfo.getInstance(root, rf);
 			return ri;
 		} catch (IOException e) {

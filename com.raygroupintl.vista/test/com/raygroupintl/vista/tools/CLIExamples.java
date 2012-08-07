@@ -4,6 +4,24 @@ import org.junit.Test;
 
 public class CLIExamples {
 	//@Test
+	public void testFanoutAll() {
+		String args[] = {"fanout", "-o", "C:\\Sandbox\\j_fo_all.dat"};
+		MRoutineAnalyzer.main(args);				
+	}
+	
+	//@Test
+	public void testFanoutDG() {
+		String args[] = {"fanout", "-o", "C:\\Sandbox\\j_fo_dg.dat", "-p", "DG"};
+		MRoutineAnalyzer.main(args);				
+	}
+	
+	@Test
+	public void testFanoutGMPL() {
+		String args[] = {"fanout", "-o", "C:\\Sandbox\\j_fo_gmpl.dat", "-p", "GMPL"};
+		MRoutineAnalyzer.main(args);				
+	}
+	
+	//@Test
 	public void testCreateParseTreeFiles() {
 		// Create files for parse tree
 		String args1[] = {
@@ -18,7 +36,7 @@ public class CLIExamples {
 	 * variable VistA-FOIA that point to the VistA-FOIA library. It assumes
 	 * testCreateParseTreeFiles is run.
 	 */
-	@Test
+	//@Test
 	public void testProblemListAPITags() {
 	    // Create entry points for the routines.
 		String args0[] = {

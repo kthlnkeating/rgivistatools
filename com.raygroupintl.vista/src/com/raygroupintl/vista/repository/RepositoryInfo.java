@@ -20,6 +20,8 @@ import java.io.IOException;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -32,6 +34,7 @@ import com.raygroupintl.m.parsetree.data.EntryId.StringFormat;
 import com.raygroupintl.stringlib.DigitFilter;
 import com.raygroupintl.struct.Filter;
 import com.raygroupintl.struct.Transformer;
+import com.raygroupintl.vista.tools.MRALogger;
 
 public class RepositoryInfo {
 	private static class OptionFilter implements Filter<MGlobalNode> {
@@ -68,13 +71,19 @@ public class RepositoryInfo {
 		}			
 	}
 	
+	private static class PackagePrefixComparator implements Comparator<VistaPackage> {
+		public int compare(VistaPackage pkg0, VistaPackage pkg1) {
+			String prefix0 = pkg0.getPrimaryPrefix();
+			String prefix1 = pkg1.getPrimaryPrefix();
+			return prefix0.compareTo(prefix1);
+		}
+	}
+	
 	private List<VistaPackage> packages = new ArrayList<VistaPackage>();
 	private Map<String, VistaPackage> packagesByName = new HashMap<String, VistaPackage>();
 	private TreeMap<String, VistaPackage> packagesByPrefix = new TreeMap<String, VistaPackage>();
-	private RoutineFactory rf;	
 	
-	private RepositoryInfo(RoutineFactory rf) {
-		this.rf = rf;
+	private RepositoryInfo() {
 	}
 	
 	private void addPackage(VistaPackage packageInfo) {
@@ -97,13 +106,21 @@ public class RepositoryInfo {
 		List<VistaPackage> result = new ArrayList<VistaPackage>(packageNames.size());
 		for (String name : packageNames) {
 			VistaPackage p = this.getPackage(name);
-			result.add(p);
+			if (p == null) {
+				p = this.getPackageFromPrefix(name);
+			}
+			if (p != null) {
+				result.add(p);
+			}
 		}
+		Collections.sort(result, new PackagePrefixComparator());
 		return result;
 	}
 	
 	public List<VistaPackage> getAllPackages() {
-		return this.packages;
+		List<VistaPackage> result = new ArrayList<VistaPackage>(this.packages);
+		Collections.sort(result, new PackagePrefixComparator());
+		return result;
 	}
 	
 	public Path getPackagePath(String packageName) {
@@ -122,6 +139,9 @@ public class RepositoryInfo {
 	}
 	
 	public VistaPackage getPackageFromRoutineName(String routineName) {
+		if (routineName.charAt(0) == '%') {
+			return this.packagesByPrefix.get("XU");
+		}		
 		VistaPackage result = null;
 		int n = java.lang.Math.min(routineName.length(), 4);
 		for (int i=1; i<=n; ++i) {
@@ -148,7 +168,7 @@ public class RepositoryInfo {
 	}
 	
 	public static RepositoryInfo getInstance(Scanner scanner, RoutineFactory rf) throws IOException {
-		RepositoryInfo r = new RepositoryInfo(rf);
+		RepositoryInfo r = new RepositoryInfo();
 		VistaPackage packageInfo = null;
 		scanner.nextLine();
 		while (scanner.hasNextLine()) {
@@ -161,8 +181,9 @@ public class RepositoryInfo {
 			}
 			if ((n > 2) && (pieces[2].length() > 0)) {
 				packageInfo.addPrefix(pieces[2]);
-				r.packagesByPrefix.put(pieces[2], packageInfo);
-				
+				if (pieces[2].charAt(0) != '!') {
+					r.packagesByPrefix.put(pieces[2], packageInfo);				
+				}
 			}
 			if ((n > 3) && (pieces[3].length() > 0)) {
 				packageInfo.addFile(pieces[3], pieces[4]);
@@ -182,8 +203,17 @@ public class RepositoryInfo {
 		return r;
 	}
 
-	public static RepositoryInfo getInstance(RoutineFactory rf) throws IOException {
+	public static RepositoryInfo getInstance(RoutineFactory rf) {
 		String root = RepositoryInfo.getLocation();
-		return getInstance(root, rf);
+		if ((root == null) || (root.isEmpty())) {
+			MRALogger.logError("Root directory for VistA-FOIA needs to be specified using environemnt variable VistA-FOIA");
+			return null;
+		}
+		try {
+			return getInstance(root, rf);
+		} catch (IOException e) {
+			MRALogger.logError("Packages.csv is not found in directory " + root);
+			return null;
+		}
 	}
 }

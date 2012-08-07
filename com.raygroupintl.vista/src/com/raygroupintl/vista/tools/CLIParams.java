@@ -26,7 +26,7 @@ import com.raygroupintl.util.CLIParameter;
 
 public class CLIParams {
 	@CLIParameter
-	public List<String> reportContent = new ArrayList<String>();
+	public List<String> positionals = new ArrayList<String>();
 	
 	@CLIParameter(names={"-p", "--package"})
 	public List<String> packages = new ArrayList<String>();

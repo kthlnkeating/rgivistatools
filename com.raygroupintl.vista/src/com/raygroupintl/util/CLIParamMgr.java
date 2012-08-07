@@ -34,9 +34,8 @@ public class CLIParamMgr {
 			++index;
 		}
 	}
-		
-	public static <T> T parse(Class<T> cls, String[] args) throws IllegalAccessException, InstantiationException {
-		T target = cls.newInstance();
+	
+	public static <T> void update(T target, Class<T> cls, String[] args) throws IllegalAccessException {
 		Map<String, Field> namedFields = new HashMap<String, Field>();
 		Field positionalField = null;
 		for (Field f : cls.getDeclaredFields()) {			
@@ -50,7 +49,12 @@ public class CLIParamMgr {
 				}
 			}
 		}
-		updateValues(target, positionalField, namedFields, args);
+		updateValues(target, positionalField, namedFields, args);		
+	}
+	
+	public static <T> T parse(Class<T> cls, String[] args) throws IllegalAccessException, InstantiationException {
+		T target = cls.newInstance();
+		update(target, cls, args);
 		return target;
 	}
 }

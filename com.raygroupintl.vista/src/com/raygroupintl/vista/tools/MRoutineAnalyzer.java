@@ -18,8 +18,6 @@ package com.raygroupintl.vista.tools;
 
 import java.io.IOException;
 import java.nio.file.Path;
-import java.util.ArrayList;
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -29,33 +27,19 @@ import java.util.logging.Logger;
 import com.raygroupintl.m.parsetree.ErrorNode;
 import com.raygroupintl.m.parsetree.Node;
 import com.raygroupintl.m.parsetree.Routine;
-import com.raygroupintl.m.parsetree.data.BlocksSupply;
 import com.raygroupintl.m.parsetree.data.EntryId;
-import com.raygroupintl.m.parsetree.data.SerializedBlocksSupply;
 import com.raygroupintl.m.struct.MError;
 import com.raygroupintl.m.token.MTFSupply;
 import com.raygroupintl.m.token.MVersion;
 import com.raygroupintl.m.token.TFRoutine;
 import com.raygroupintl.m.token.MRoutine;
-import com.raygroupintl.output.FileWrapper;
 import com.raygroupintl.parser.SyntaxErrorException;
 import com.raygroupintl.parser.annotation.ParseException;
-import com.raygroupintl.stringlib.EndsWithFilter;
 import com.raygroupintl.struct.Filter;
-import com.raygroupintl.struct.NameWithIndices;
-import com.raygroupintl.vista.repository.FileSupply;
-import com.raygroupintl.vista.repository.MGlobalNode;
 import com.raygroupintl.vista.repository.RepositoryInfo;
 import com.raygroupintl.vista.repository.RoutineFactory;
 import com.raygroupintl.vista.repository.VistaPackages;
 import com.raygroupintl.vista.repository.VistaPackage;
-import com.raygroupintl.vista.repository.visitor.APIOverallRecorder;
-import com.raygroupintl.vista.repository.visitor.APIWriter;
-import com.raygroupintl.vista.repository.visitor.EntryWriter;
-import com.raygroupintl.vista.repository.visitor.ErrorWriter;
-import com.raygroupintl.vista.repository.visitor.FaninWriter;
-import com.raygroupintl.vista.repository.visitor.FanoutWriter;
-import com.raygroupintl.vista.repository.visitor.SerializedRoutineWriter;
 
 public class MRoutineAnalyzer {
 	private final static Logger LOGGER = Logger.getLogger(MRoutineAnalyzer.class.getName());
@@ -133,38 +117,6 @@ public class MRoutineAnalyzer {
 		replacementRoutines.put("%ZISUTL", "ZISUTL");
 	}
 	
-	public static class MRARoutineFactory implements RoutineFactory {
-		private TFRoutine tokenFactory;
-		
-		public MRARoutineFactory(TFRoutine tokenFactory) {
-			this.tokenFactory = tokenFactory;
-		}
-		
-		@Override
-		public Node getNode(Path path) {
-			try {
-				MRoutine mr = this.tokenFactory.tokenize(path);
-				Routine node = mr.getNode();
-				return node;
-			} catch (SyntaxErrorException e) {
-				return new ErrorNode(MError.ERR_BLOCK_STRUCTURE);
-			} catch (IOException e) {
-				return new ErrorNode(MError.ERR_ROUTINE_PATH);
-			}
-		}	
-		
-		public static MRARoutineFactory getInstance(MVersion version) {
-			try {
-				MTFSupply supply = MTFSupply.getInstance(version);
-				TFRoutine tf = new TFRoutine(supply);
-				return new MRARoutineFactory(tf);
-			} catch (ParseException e) {
-				LOGGER.log(Level.SEVERE, "Unable to load M parser definitions.");
-				return null;
-			}
-		}
-	}
-	
 	private static class PercentRoutineFilter implements Filter<EntryId> {
 		@Override
 		public boolean isValid(EntryId input) {
@@ -195,119 +147,125 @@ public class MRoutineAnalyzer {
 	// -t apisingle -i "C:\Afsin\Dependency Tool Verification\serial" -o "C:\Afsin\Dependency Tool Verification\java\api_single.dat" -e ADD^ABSV88B -e DEL^ABSV88B -e VENTRY^DIEFU		
 	public static void main(String[] args) {
 		try {
-			CLIParams options = CLIParams.getInstance(args);
-			if (options == null) return;
+			RunType runType = RunTypes.getRunType(args);
+			if (runType != null) {
+				runType.run();
+			}
 			
-			MRoutineAnalyzer m = new MRoutineAnalyzer();
-			MRARoutineFactory rf = MRARoutineFactory.getInstance(MVersion.CACHE);
-			RepositoryInfo ri = RepositoryInfo.getInstance(rf);
-			VistaPackages packageNodes = m.getRoutinePackages(options, ri);
-			String outputPath = options.outputFile;
-			String at = options.analysisType;
-			if (at.equalsIgnoreCase("error")) {
-				FileWrapper fr = new FileWrapper(outputPath);
-				ErrorExemptions exemptions = ErrorExemptions.getVistAFOIAInstance();
-				ErrorWriter ew = new ErrorWriter(exemptions, fr);
-				packageNodes.accept(ew);
-				return;
-			}
-			if (at.equalsIgnoreCase("fanout")) {
-				FileWrapper fr = new FileWrapper(outputPath);
-				FanoutWriter fow = new FanoutWriter(fr);
-				packageNodes.accept(fow);
-				return;
-			}
-			if (at.equalsIgnoreCase("fanin")) {
-				FileWrapper fr = new FileWrapper(outputPath);
-				FaninWriter fiw = new FaninWriter(ri, fr);
-				packageNodes.accept(fiw);
-				return;
-			}
-			if (at.equalsIgnoreCase("entry")) {
-				FileWrapper fr = new FileWrapper(outputPath);
-				EntryWriter ew = new EntryWriter(fr);
-				for (String r : options.routines) {
-					ew.addRoutineNameFilter(r);
-				}
-				packageNodes.accept(ew);
-				return;
-			}
-			if (at.equalsIgnoreCase("api")) {
-				FileWrapper fr = new FileWrapper(outputPath);
-				APIOverallRecorder api = new APIOverallRecorder(ri);
-				packageNodes.accept(api);
-				BlocksSupply blocks = api.getBlocks();
-				APIWriter apiw = new APIWriter(fr, blocks, replacementRoutines);
-				PercentRoutineFilter filter = new PercentRoutineFilter();
-				apiw.setFilter(filter);
-				apiw.write(options.inputFile);
-				return;
-			}
-			if (at.equalsIgnoreCase("apis")) {
-				FileWrapper fr = new FileWrapper(outputPath);
-				BlocksSupply blocks = new SerializedBlocksSupply(options.parseTreeDirectory, ri);
-				APIWriter apiw = new APIWriter(fr, blocks, replacementRoutines);
-				PercentRoutineFilter filter = new PercentRoutineFilter();
-				apiw.setFilter(filter);
-				if (options.inputFile != null) {
-					apiw.write(options.inputFile);					
-				} else {
-					apiw.writeEntries(options.entries);
-				}
-				return;
-			}
-			if (at.equalsIgnoreCase("glb")) {
-				MGlobalNode root = new MGlobalNode();
-				FileSupply fs = new FileSupply();
-				List<Path> paths = fs.getFiles(new EndsWithFilter(".zwr"));
-				Filter<NameWithIndices> niFilter = new Filter<NameWithIndices>() {
-					@Override
-					public boolean isValid(NameWithIndices input) {
-						if (! input.getName().equals("DIC")) return false;
-						String[] indices = input.getIndices();
-						if (indices.length != 3) return false;
-						if (! indices[1].equals("0")) return false;
-						if (! indices[2].equals("\"GL\"")) return false;
-						return true;
-					}
-				};				
-				root.read(paths, niFilter);
-				LOGGER.log(Level.INFO, "Done");			
-				return;
-			}
-			if (at.equalsIgnoreCase("serial")) {
-				SerializedRoutineWriter srw = new SerializedRoutineWriter(options.parseTreeDirectory);
-				packageNodes.accept(srw);
-				return;
-			}
-			if (at.equals("routineinfo")) {
-				List<VistaPackage> packages = ri.getAllPackages();
-				List<String> routineNames = new ArrayList<String>();
-				for (VistaPackage p : packages) {
-					List<Path> paths = p.getPaths();
-					for (Path path : paths) {
-						String routineNameWithExtension = path.getFileName().toString();
-						String routineName = routineNameWithExtension.split("\\.")[0];
-						routineNames.add(routineName);
-					}
-				}
-				Collections.sort(routineNames);				
-				FileWrapper fr = new FileWrapper(outputPath);
-				fr.start();
-				for (String routineName : routineNames) {
-					VistaPackage pkg = ri.getPackageFromRoutineName(routineName);
-					String prefix = pkg.getDefaultPrefix();
-					String name = pkg.getPackageName();
-					if (prefix.equals("UNCATEGORIZED")) prefix = "UNKNOWN";
-					if (name.equals("UNCATEGORIZED")) name = "UNKNOWN";
-					String line = routineName + ":" + prefix + ":" + name;
-					fr.writeEOL(line);
-				}
-				fr.stop();
-				return;
-			}
-						
-			LOGGER.log(Level.SEVERE, "Unknown analysis type " + at);
+			
+//			CLIParams options = CLIParams.getInstance(args);
+//			if (options == null) return;
+//			
+//			MRoutineAnalyzer m = new MRoutineAnalyzer();
+//			MRARoutineFactory rf = MRARoutineFactory.getInstance(MVersion.CACHE);
+//			RepositoryInfo ri = RepositoryInfo.getInstance(rf);
+//			VistaPackages packageNodes = m.getRoutinePackages(options, ri);
+//			String outputPath = options.outputFile;
+//			String at = options.analysisType;
+//			if (at.equalsIgnoreCase("error")) {
+//				FileWrapper fr = new FileWrapper(outputPath);
+//				ErrorExemptions exemptions = ErrorExemptions.getVistAFOIAInstance();
+//				ErrorWriter ew = new ErrorWriter(exemptions, fr);
+//				packageNodes.accept(ew);
+//				return;
+//			}
+//			if (at.equalsIgnoreCase("fanout")) {
+//				FileWrapper fr = new FileWrapper(outputPath);
+//				FanoutWriter fow = new FanoutWriter(fr);
+//				packageNodes.accept(fow);
+//				return;
+//			}
+//			if (at.equalsIgnoreCase("fanin")) {
+//				FileWrapper fr = new FileWrapper(outputPath);
+//				FaninWriter fiw = new FaninWriter(ri, fr);
+//				packageNodes.accept(fiw);
+//				return;
+//			}
+//			if (at.equalsIgnoreCase("entry")) {
+//				FileWrapper fr = new FileWrapper(outputPath);
+//				EntryWriter ew = new EntryWriter(fr);
+//				for (String r : options.routines) {
+//					ew.addRoutineNameFilter(r);
+//				}
+//				packageNodes.accept(ew);
+//				return;
+//			}
+//			if (at.equalsIgnoreCase("api")) {
+//				FileWrapper fr = new FileWrapper(outputPath);
+//				APIOverallRecorder api = new APIOverallRecorder(ri);
+//				packageNodes.accept(api);
+//				BlocksSupply blocks = api.getBlocks();
+//				APIWriter apiw = new APIWriter(fr, blocks, replacementRoutines);
+//				PercentRoutineFilter filter = new PercentRoutineFilter();
+//				apiw.setFilter(filter);
+//				apiw.write(options.inputFile);
+//				return;
+//			}
+//			if (at.equalsIgnoreCase("apis")) {
+//				FileWrapper fr = new FileWrapper(outputPath);
+//				BlocksSupply blocks = new SerializedBlocksSupply(options.parseTreeDirectory, ri);
+//				APIWriter apiw = new APIWriter(fr, blocks, replacementRoutines);
+//				PercentRoutineFilter filter = new PercentRoutineFilter();
+//				apiw.setFilter(filter);
+//				if (options.inputFile != null) {
+//					apiw.write(options.inputFile);					
+//				} else {
+//					apiw.writeEntries(options.entries);
+//				}
+//				return;
+//			}
+//			if (at.equalsIgnoreCase("glb")) {
+//				MGlobalNode root = new MGlobalNode();
+//				FileSupply fs = new FileSupply();
+//				List<Path> paths = fs.getFiles(new EndsWithFilter(".zwr"));
+//				Filter<NameWithIndices> niFilter = new Filter<NameWithIndices>() {
+//					@Override
+//					public boolean isValid(NameWithIndices input) {
+//						if (! input.getName().equals("DIC")) return false;
+//						String[] indices = input.getIndices();
+//						if (indices.length != 3) return false;
+//						if (! indices[1].equals("0")) return false;
+//						if (! indices[2].equals("\"GL\"")) return false;
+//						return true;
+//					}
+//				};				
+//				root.read(paths, niFilter);
+//				LOGGER.log(Level.INFO, "Done");			
+//				return;
+//			}
+//			if (at.equalsIgnoreCase("serial")) {
+//				SerializedRoutineWriter srw = new SerializedRoutineWriter(options.parseTreeDirectory);
+//				packageNodes.accept(srw);
+//				return;
+//			}
+//			if (at.equals("routineinfo")) {
+//				List<VistaPackage> packages = ri.getAllPackages();
+//				List<String> routineNames = new ArrayList<String>();
+//				for (VistaPackage p : packages) {
+//					List<Path> paths = p.getPaths();
+//					for (Path path : paths) {
+//						String routineNameWithExtension = path.getFileName().toString();
+//						String routineName = routineNameWithExtension.split("\\.")[0];
+//						routineNames.add(routineName);
+//					}
+//				}
+//				Collections.sort(routineNames);				
+//				FileWrapper fr = new FileWrapper(outputPath);
+//				fr.start();
+//				for (String routineName : routineNames) {
+//					VistaPackage pkg = ri.getPackageFromRoutineName(routineName);
+//					String prefix = pkg.getDefaultPrefix();
+//					String name = pkg.getPackageName();
+//					if (prefix.equals("UNCATEGORIZED")) prefix = "UNKNOWN";
+//					if (name.equals("UNCATEGORIZED")) name = "UNKNOWN";
+//					String line = routineName + ":" + prefix + ":" + name;
+//					fr.writeEOL(line);
+//				}
+//				fr.stop();
+//				return;
+//			}
+//						
+//			LOGGER.log(Level.SEVERE, "Unknown analysis type " + at);
 		} catch (Throwable t) {
 			LOGGER.log(Level.SEVERE, "Unexpected error", t);
 			return;

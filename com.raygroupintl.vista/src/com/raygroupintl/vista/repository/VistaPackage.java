@@ -54,6 +54,7 @@ public class VistaPackage  implements RepositoryNode {
 	private String packageName;
 	private String directoryName;
 	private List<String> prefixes;
+	private List<String> exceptionPrefixes;
 	private List<FileInfo> files;
 	public RoutineFactory rf;
 	
@@ -92,10 +93,17 @@ public class VistaPackage  implements RepositoryNode {
 	}
 	
 	public void addPrefix(String prefix) {
-		if (this.prefixes == null) {
-			this.prefixes = new ArrayList<String>();
+		if (prefix.charAt(0) == '!') {
+			if (this.exceptionPrefixes == null) {
+				this.exceptionPrefixes = new ArrayList<String>();
+			}
+			this.exceptionPrefixes.add(prefix.substring(1));
+		} else {
+			if (this.prefixes == null) {
+				this.prefixes = new ArrayList<String>();
+			}
+			this.prefixes.add(prefix);
 		}
-		this.prefixes.add(prefix);
 	}
 	
 	public List<FileInfo> getFiles() {
@@ -111,6 +119,14 @@ public class VistaPackage  implements RepositoryNode {
 			return Collections.emptyList();
 		} else {
 			return Collections.unmodifiableList(this.prefixes);
+		}
+	}
+	
+	public String getPrimaryPrefix() {
+		if (this.prefixes == null) {
+			return "UNCATEGORIZED"; 
+		} else {
+			return this.prefixes.get(0);
 		}
 	}
 	
@@ -151,7 +167,12 @@ public class VistaPackage  implements RepositoryNode {
 	public boolean contains(String routineName) {
 		List<String> prefixes = this.getPrefixes();
 		for (String prefix : prefixes) {
-			if (routineName.startsWith(prefix)) {
+			if (routineName.startsWith(prefix)) {				
+				if (this.exceptionPrefixes != null) {
+					for (String ePrefix : this.exceptionPrefixes) {
+						if (routineName.startsWith(ePrefix)) return false;
+					}
+				}
 				return true;
 			}
 		}
