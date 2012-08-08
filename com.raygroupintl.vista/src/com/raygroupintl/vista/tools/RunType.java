@@ -37,6 +37,7 @@ public abstract class RunType {
 		MRARoutineFactory rf = MRARoutineFactory.getInstance(MVersion.CACHE);
 		if (rf != null) {
 			RepositoryInfo ri = RepositoryInfo.getInstance(rf);
+			ri.addMDirectories(params.additionalMDirectories);
 			return ri;
 		}		
 		return null;

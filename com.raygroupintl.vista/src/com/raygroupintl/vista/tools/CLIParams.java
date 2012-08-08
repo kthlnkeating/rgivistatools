@@ -49,6 +49,9 @@ public class CLIParams {
 	@CLIParameter(names={"-e", "--entry"})
 	public List<String> entries = new ArrayList<String>();
 	
+	@CLIParameter(names={"-md", "--mdirectory"})
+	public List<String> additionalMDirectories = new ArrayList<String>();
+	
 	private static void logError(String msg) {
 		Logger logger = Logger.getLogger(MRoutineAnalyzer.class.getName());		
 		logger.log(Level.SEVERE, msg);

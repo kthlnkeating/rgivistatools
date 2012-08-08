@@ -57,6 +57,7 @@ public class VistaPackage  implements RepositoryNode {
 	private List<String> exceptionPrefixes;
 	private List<FileInfo> files;
 	public RoutineFactory rf;
+	private List<Path> additionalMFiles;
 	
 	public VistaPackage(String packageName, String directoryName, RoutineFactory rf) {
 		this.packageName = packageName;
@@ -185,6 +186,9 @@ public class VistaPackage  implements RepositoryNode {
 			FileSupply fs = new FileSupply();
 			fs.addPath(packagePath);
 			List<Path> paths = fs.getMFiles();
+			if (this.additionalMFiles != null) {
+				paths.addAll(this.additionalMFiles);
+			}
 			return paths;		
 		} catch (Exception ex) {
 			return Collections.emptyList();
@@ -205,5 +209,16 @@ public class VistaPackage  implements RepositoryNode {
 	@Override
 	public void accept(RepositoryVisitor visitor) {
 		visitor.visitVistaPackage(this);
+	}
+	
+	public boolean isUncategorized() {
+		return this.packageName.equals("UNCATEGORIZED");
+	}
+	
+	public void addAdditionalPath(Path path) {
+		if (this.additionalMFiles == null) {
+			this.additionalMFiles = new ArrayList<Path>();
+		}
+		this.additionalMFiles.add(path);
 	}
 }

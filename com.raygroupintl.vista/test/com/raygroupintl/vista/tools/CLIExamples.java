@@ -3,9 +3,9 @@ package com.raygroupintl.vista.tools;
 import org.junit.Test;
 
 public class CLIExamples {
-	//@Test
+	@Test
 	public void testFanoutAll() {
-		String args[] = {"fanout", "-o", "C:\\Sandbox\\j_fo_all.dat"};
+		String args[] = {"fanout", "-o", "C:\\Sandbox\\j_fo_all.dat", "-md", "C:\\Users\\Afsin\\git\\M-Tools"};
 		MRoutineAnalyzer.main(args);				
 	}
 	
@@ -15,7 +15,7 @@ public class CLIExamples {
 		MRoutineAnalyzer.main(args);				
 	}
 	
-	@Test
+	//@Test
 	public void testFanoutGMPL() {
 		String args[] = {"fanout", "-o", "C:\\Sandbox\\j_fo_gmpl.dat", "-p", "GMPL"};
 		MRoutineAnalyzer.main(args);				

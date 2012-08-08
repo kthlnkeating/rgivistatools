@@ -167,6 +167,25 @@ public class RepositoryInfo {
 		return result;
 	}
 	
+	public void addMDirectories(List<String> paths) {
+		String lastPath = null;
+		try {
+			for (String path : paths) {
+				lastPath = path;
+				FileSupply fs = new FileSupply();
+				fs.addPath(path);
+				List<Path> files = fs.getMFiles();
+				for (Path p : files) {
+					String name = p.getFileName().toString().split("\\.m")[0];
+					VistaPackage pkg = this.getPackageFromRoutineName(name);
+					pkg.addAdditionalPath(p);
+				}
+			}
+		} catch (IOException e) {
+			MRALogger.logError("Error reading directory " + lastPath);
+		}
+	}
+	
 	public static RepositoryInfo getInstance(Scanner scanner, RoutineFactory rf) throws IOException {
 		RepositoryInfo r = new RepositoryInfo();
 		VistaPackage packageInfo = null;
@@ -191,6 +210,9 @@ public class RepositoryInfo {
 		}
 		packageInfo = new VistaPackage("UNCATEGORIZED", "Uncategorized", rf);
 		r.addPackage(packageInfo);
+		packageInfo = r.getPackage("KERNEL");
+		packageInfo.addPrefix("%");
+		r.packagesByPrefix.put("%", packageInfo);				
 		return r;		
 	}
 	
