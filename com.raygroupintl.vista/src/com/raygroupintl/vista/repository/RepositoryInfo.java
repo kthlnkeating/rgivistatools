@@ -16,6 +16,7 @@
 
 package com.raygroupintl.vista.repository;
 
+import java.io.File;
 import java.io.IOException;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -117,10 +118,24 @@ public class RepositoryInfo {
 		return result;
 	}
 	
-	public List<VistaPackage> getAllPackages() {
-		List<VistaPackage> result = new ArrayList<VistaPackage>(this.packages);
+	public List<VistaPackage> getAllPackages(List<String> packageExceptions) {
+		List<VistaPackage> result = null;
+		if ((packageExceptions == null) || (packageExceptions.size() == 0)) {
+			result = new ArrayList<VistaPackage>(this.packages);
+		} else {
+			result = new ArrayList<VistaPackage>(this.packages.size());
+			for (VistaPackage vp : this.packages) {
+				if (packageExceptions.contains(vp.getPackageName())) continue;
+				if (packageExceptions.contains(vp.getDefaultPrefix())) continue;
+				result.add(vp);
+			}			
+		}
 		Collections.sort(result, new PackagePrefixComparator());
 		return result;
+	}
+	
+	public List<VistaPackage> getAllPackages() {
+		return this.getAllPackages(null);
 	}
 	
 	public Path getPackagePath(String packageName) {
@@ -186,6 +201,19 @@ public class RepositoryInfo {
 		}
 	}
 	
+	public void addMFiles(List<String> filePaths) {
+		for (String filePath : filePaths) {
+			File file = new File(filePath);
+			if (file.isFile()) {
+				String name = filePath.split("\\.m")[0];
+				VistaPackage pkg = this.getPackageFromRoutineName(name);
+				pkg.addAdditionalFile(Paths.get(filePath));					
+			} else {
+				MRALogger.logError("Error reading file " + filePath);					
+			}
+		}
+	}
+
 	public static RepositoryInfo getInstance(Scanner scanner, RoutineFactory rf) throws IOException {
 		RepositoryInfo r = new RepositoryInfo();
 		VistaPackage packageInfo = null;

@@ -23,7 +23,12 @@ public class CLIExamples {
 	
 	@Test
 	public void testFaninAll() {
-		String args[] = {"fanin", "-o", "C:\\Sandbox\\j_fi_all.dat", "-md", "C:\\Users\\Afsin\\git\\M-Tools"};
+		String args[] = {"fanin", "-o", "C:\\Sandbox\\j_fi_all.dat", 
+				"-md", "C:\\Afsin\\osehragit\\M-Tools",
+				"-md", "C:\\Afsin\\git\\UnitTests\\src",
+				"-mf", "C:\\Afsin\\git\\VistA-FOIA\\Scripts\\ZGI.m",
+				"-mf", "C:\\Afsin\\git\\VistA-FOIA\\Scripts\\ZGO.m",
+				"-pe", "DENTAL RECORD MANAGER"};
 		MRoutineAnalyzer.main(args);				
 	}
 

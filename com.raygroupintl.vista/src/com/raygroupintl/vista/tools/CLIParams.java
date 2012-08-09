@@ -31,6 +31,9 @@ public class CLIParams {
 	@CLIParameter(names={"-p", "--package"})
 	public List<String> packages = new ArrayList<String>();
 	
+	@CLIParameter(names={"-pe", "--packageexceptions"})
+	public List<String> packageExceptions = new ArrayList<String>();
+	
 	@CLIParameter(names={"-r", "--routine"})
 	public List<String> routines = new ArrayList<String>();
 	
@@ -51,6 +54,9 @@ public class CLIParams {
 	
 	@CLIParameter(names={"-md", "--mdirectory"})
 	public List<String> additionalMDirectories = new ArrayList<String>();
+	
+	@CLIParameter(names={"-mf", "--mfile"})
+	public List<String> additionalMFiles = new ArrayList<String>();
 	
 	private static void logError(String msg) {
 		Logger logger = Logger.getLogger(MRoutineAnalyzer.class.getName());		

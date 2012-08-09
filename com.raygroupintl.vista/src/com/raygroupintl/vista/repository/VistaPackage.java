@@ -221,4 +221,11 @@ public class VistaPackage  implements RepositoryNode {
 		}
 		this.additionalMFiles.add(path);
 	}
+	
+	public void addAdditionalFile(Path path) {
+		if (this.additionalMFiles == null) {
+			this.additionalMFiles = new ArrayList<Path>();
+		}
+		this.additionalMFiles.add(path);
+	}
 }

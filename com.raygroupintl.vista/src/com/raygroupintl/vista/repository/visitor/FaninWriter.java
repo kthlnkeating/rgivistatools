@@ -19,6 +19,7 @@ package com.raygroupintl.vista.repository.visitor;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -81,15 +82,17 @@ public class FaninWriter extends RepositoryVisitor {
 	}
 
 	public void visitRoutine(Routine routine) {
-		this.isCalled = true;
-		routine.accept(this.faninRecorder);
+		if ((routine.getName().startsWith("ZZ")) || (routine.getName().charAt(0) != '%')) {
+			routine.accept(this.faninRecorder);
+			this.isCalled = true;
+		}
 	}
 	
 	protected void visitRoutinePackages(VistaPackages rps) {
 		this.faninRecorder = new FanInRecorder();
 		List<VistaPackage> packagesTBReported = new ArrayList<VistaPackage>();
-		List<VistaPackage> packages = this.repositoryInfo.getAllPackages();
-		for (VistaPackage p : packages) {
+		//List<VistaPackage> packages = this.repositoryInfo.getAllPackages();
+		for (VistaPackage p : rps.getPackages()) {
 			this.isCalled = false;
 			p.accept(this);
 			if (this.isCalled) {
@@ -109,9 +112,12 @@ public class FaninWriter extends RepositoryVisitor {
 		codeFanins = null;
 				
 		Map<String, List<EntryIdWithSources>> faninsByPackage = new HashMap<String, List<EntryIdWithSources>>();
-		for (VistaPackage p : packages) {
+		Map<String, Set<String>> sourcePackagesByPackage = new HashMap<String, Set<String>>();
+
+		for (VistaPackage p : rps.getPackages()) {
 			String name = p.getPackageName();
 			faninsByPackage.put(name, new ArrayList<EntryIdWithSources>());
+			sourcePackagesByPackage.put(name, new HashSet<String>());
 		}
 		faninsByPackage.put("UNCATEGORIZED", new ArrayList<EntryIdWithSources>());
 		Set<EntryId> faninEntryIds = fanins.keySet();
@@ -123,6 +129,8 @@ public class FaninWriter extends RepositoryVisitor {
 			String packageName = p.getPackageName();
 			List<EntryIdWithSources> entryIds = faninsByPackage.get(packageName);
 			EntryIdSource source = fanins.get(f);
+			Set<String> sourcePrefixes = source.getPackages();
+			sourcePackagesByPackage.get(packageName).addAll(sourcePrefixes);
 			EntryIdWithSources fws = new EntryIdWithSources(f, source);
 			entryIds.add(fws);
 		}
@@ -131,12 +139,16 @@ public class FaninWriter extends RepositoryVisitor {
 		int ndx = 0;
 		if (this.fileWrapper.start()) {
 			tf.setTab(21);
-			for (VistaPackage p : packagesTBReported) {
+			for (VistaPackage p : rps.getPackages()) {
 				this.fileWrapper.writeEOL("--------------------------------------------------------------");
 				this.fileWrapper.writeEOL();
 				String name = p.getPackageName();
 				++ndx;
-				this.fileWrapper.writeEOL(String.valueOf(ndx) + ". PACKAGE NAME: " + name);
+				if (sourcePackagesByPackage.get(name).size() > 40) {
+					this.fileWrapper.writeEOL(String.valueOf(ndx) + ". COMMON SERVICE NAME: " + name);
+				} else {
+					this.fileWrapper.writeEOL(String.valueOf(ndx) + ". PACKAGE NAME: " + name);					
+				}
 				this.fileWrapper.writeEOL();
 				List<EntryIdWithSources> fs = faninsByPackage.get(name);
 				if (fs.size() == 0) {

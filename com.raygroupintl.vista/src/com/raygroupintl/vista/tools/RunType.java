@@ -38,6 +38,7 @@ public abstract class RunType {
 		if (rf != null) {
 			RepositoryInfo ri = RepositoryInfo.getInstance(rf);
 			ri.addMDirectories(params.additionalMDirectories);
+			ri.addMFiles(params.additionalMFiles);
 			return ri;
 		}		
 		return null;
@@ -46,7 +47,7 @@ public abstract class RunType {
 	public VistaPackages getVistaPackages(RepositoryInfo ri)  {
 		List<VistaPackage> packages = null; 
 		if (this.params.packages.size() == 0) {
-			packages = ri.getAllPackages();
+			packages = ri.getAllPackages(this.params.packageExceptions);
 			if ((packages == null) || (packages.size() == 0)) {
 				MRALogger.logError("Error loading package information from the repository.");
 				return null;								
