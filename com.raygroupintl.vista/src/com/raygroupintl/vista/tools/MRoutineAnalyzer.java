@@ -169,18 +169,6 @@ public class MRoutineAnalyzer {
 //				packageNodes.accept(ew);
 //				return;
 //			}
-//			if (at.equalsIgnoreCase("fanout")) {
-//				FileWrapper fr = new FileWrapper(outputPath);
-//				FanoutWriter fow = new FanoutWriter(fr);
-//				packageNodes.accept(fow);
-//				return;
-//			}
-//			if (at.equalsIgnoreCase("fanin")) {
-//				FileWrapper fr = new FileWrapper(outputPath);
-//				FaninWriter fiw = new FaninWriter(ri, fr);
-//				packageNodes.accept(fiw);
-//				return;
-//			}
 //			if (at.equalsIgnoreCase("entry")) {
 //				FileWrapper fr = new FileWrapper(outputPath);
 //				EntryWriter ew = new EntryWriter(fr);

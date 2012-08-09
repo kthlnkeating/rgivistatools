@@ -28,7 +28,7 @@ import com.raygroupintl.m.struct.LineLocation;
 
 public class FanInRecorder extends FanoutRecorder {
 	private Map<EntryId, Set<String>> fanins = new HashMap<EntryId, Set<String>>();
-	private String currentPackageName = "UNCATEGORIZED";
+	private String currentPackagePrefix = "UNCATEGORIZED";
 	
 	protected void visitRoutine(Routine routine) {
 		super.visitRoutine(routine);
@@ -41,14 +41,14 @@ public class FanInRecorder extends FanoutRecorder {
 						current =  new HashSet<String>();
 						this.fanins.put(f, current);
 					}
-					current.add(this.currentPackageName);
+					current.add(this.currentPackagePrefix);
 				}		
 			}
 		}
 	}
 	
-	public void setCurrentPackageName(String currentPackageName) {
-		this.currentPackageName = currentPackageName;
+	public void setCurrentPackagePrefix(String currentPackagePrefix) {
+		this.currentPackagePrefix = currentPackagePrefix;
 	}
 	
 	public Map<EntryId, Set<String>> getFanIns() {

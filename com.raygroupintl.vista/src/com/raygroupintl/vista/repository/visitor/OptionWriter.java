@@ -19,37 +19,63 @@ package com.raygroupintl.vista.repository.visitor;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
 import com.raygroupintl.m.parsetree.Routine;
 import com.raygroupintl.m.parsetree.data.EntryId;
+import com.raygroupintl.m.parsetree.data.EntryIdWithSource;
 import com.raygroupintl.m.parsetree.visitor.FanInRecorder;
 import com.raygroupintl.output.FileWrapper;
-import com.raygroupintl.output.TerminalFormatter;
 import com.raygroupintl.struct.Filter;
 import com.raygroupintl.vista.repository.RepositoryInfo;
 import com.raygroupintl.vista.repository.RepositoryVisitor;
 import com.raygroupintl.vista.repository.VistaPackage;
 import com.raygroupintl.vista.repository.VistaPackages;
 
-public class FaninWriter extends RepositoryVisitor {
+public class OptionWriter extends RepositoryVisitor {
 	private RepositoryInfo repositoryInfo;
 	private FileWrapper fileWrapper;
 	private FanInRecorder faninRecorder;
-	private boolean isCalled;
 	
 	private static class EntryIdSource {
 		public Set<String> packages;
+		public Set<String> options;
+		public Set<String> rpcs;
+		
+		private static void write(FileWrapper fw, Set<String> sources) {
+			if ((sources != null) && (sources.size() > 0)) {
+				boolean first = true;
+				for (String source : sources) {
+					if (! first) {
+						fw.write(",");
+					}
+					fw.write(source);
+					first = false;
+				}
+			} 
+		}
+		
+		public void addOption(String optionName) {
+			if (this.options == null) {
+				this.options = new HashSet<String>();
+			}
+			this.options.add(optionName);
+		}
 		
 		public void setPackages(Set<String> packages) {
 			this.packages = packages;
 		}
 		
-		public Set<String> getPackages() {
-			return this.packages;
-		}
+		public void write(FileWrapper fw) {
+			write(fw, this.packages);
+			fw.write("|");
+			write(fw, this.options);
+			fw.write("|");
+			write(fw, this.rpcs);			
+		}		
 	}
 	
 	private static class EntryIdWithSources implements Comparable<EntryIdWithSources> {
@@ -67,7 +93,7 @@ public class FaninWriter extends RepositoryVisitor {
 		}		
 	}
 	
-	public FaninWriter(RepositoryInfo repositoryInfo, FileWrapper fileWrapper) {
+	public OptionWriter(RepositoryInfo repositoryInfo, FileWrapper fileWrapper) {
 		this.repositoryInfo = repositoryInfo;
 		this.fileWrapper = fileWrapper;
 	}
@@ -76,37 +102,42 @@ public class FaninWriter extends RepositoryVisitor {
 	protected void visitVistaPackage(VistaPackage routinePackage) {
 		Filter<EntryId> filter = routinePackage.getPackageFanoutFilter();
 		this.faninRecorder.setFilter(filter);
-		this.faninRecorder.setCurrentPackagePrefix(routinePackage.getPrimaryPrefix());
+		this.faninRecorder.setCurrentPackagePrefix(routinePackage.getPackageName());
 		super.visitVistaPackage(routinePackage);
 	}
 
 	public void visitRoutine(Routine routine) {
-		this.isCalled = true;
 		routine.accept(this.faninRecorder);
 	}
 	
 	protected void visitRoutinePackages(VistaPackages rps) {
 		this.faninRecorder = new FanInRecorder();
-		List<VistaPackage> packagesTBReported = new ArrayList<VistaPackage>();
 		List<VistaPackage> packages = this.repositoryInfo.getAllPackages();
 		for (VistaPackage p : packages) {
-			this.isCalled = false;
 			p.accept(this);
-			if (this.isCalled) {
-				packagesTBReported.add(p);
-			}
 		}
 		Map<EntryId, Set<String>> codeFanins = this.faninRecorder.getFanIns();
 		
 		Map<EntryId, EntryIdSource> fanins = new HashMap<EntryId, EntryIdSource>();
 		Set<EntryId> codeFaninsEIs = codeFanins.keySet();
 		for (EntryId ei : codeFaninsEIs) {
-			Set<String> packagePrefixes = codeFanins.get(ei);
+			Set<String> packageNames = codeFanins.get(ei);
 			EntryIdSource source = new EntryIdSource();
-			source.setPackages(packagePrefixes);
+			source.setPackages(packageNames);
 			fanins.put(ei, source);
 		}
 		codeFanins = null;
+				
+		List<EntryIdWithSource> entryIdss = this.repositoryInfo.getOptionEntryPoints();
+		for (EntryIdWithSource eiws : entryIdss) {
+			EntryId ei = eiws.getEntryId();
+			EntryIdSource eis = fanins.get(ei);
+			if (eis == null) {
+				eis = new EntryIdSource();
+				fanins.put(ei, eis);
+			}
+			eis.addOption(eiws.getSource());
+		}
 				
 		Map<String, List<EntryIdWithSources>> faninsByPackage = new HashMap<String, List<EntryIdWithSources>>();
 		for (VistaPackage p : packages) {
@@ -126,42 +157,18 @@ public class FaninWriter extends RepositoryVisitor {
 			EntryIdWithSources fws = new EntryIdWithSources(f, source);
 			entryIds.add(fws);
 		}
-		
-		TerminalFormatter tf = new TerminalFormatter();
-		int ndx = 0;
 		if (this.fileWrapper.start()) {
-			tf.setTab(21);
-			for (VistaPackage p : packagesTBReported) {
-				this.fileWrapper.writeEOL("--------------------------------------------------------------");
-				this.fileWrapper.writeEOL();
+			for (VistaPackage p : packages) {
 				String name = p.getPackageName();
-				++ndx;
-				this.fileWrapper.writeEOL(String.valueOf(ndx) + ". PACKAGE NAME: " + name);
-				this.fileWrapper.writeEOL();
+				this.fileWrapper.writeEOL(name + ":");
 				List<EntryIdWithSources> fs = faninsByPackage.get(name);
-				if (fs.size() == 0) {
-					this.fileWrapper.writeEOL("   Not used by other packages");
-					this.fileWrapper.writeEOL();					
-				} else {
-					Collections.sort(fs);
-					for (EntryIdWithSources f : fs) {
-						this.fileWrapper.writeEOL("  " + f.entryId.toString());
-						String title = tf.startList("CALLING PACKAGES");
-						this.fileWrapper.write(title);
-						List<String> sourcePackages = new ArrayList<String>(f.sources.getPackages());
-						Collections.sort(sourcePackages);
-						for (String source : sourcePackages) {
-							VistaPackage vp = this.repositoryInfo.getPackageFromPrefix(source);							
-							String pkgName = vp.getPackageName();
-							String line = tf.addToList(pkgName);
-							this.fileWrapper.write(line);
-						}
-						this.fileWrapper.writeEOL();
-						this.fileWrapper.writeEOL();
-					}
+				Collections.sort(fs);
+				for (EntryIdWithSources f : fs) {
+					this.fileWrapper.write(f.entryId.toString());
+					this.fileWrapper.write("|");
+					f.sources.write(this.fileWrapper);
+					this.fileWrapper.writeEOL();
 				}
-				this.fileWrapper.writeEOL("--------------------------------------------------------------");
-				this.fileWrapper.writeEOL();
 			}
 			this.fileWrapper.stop();
 		}

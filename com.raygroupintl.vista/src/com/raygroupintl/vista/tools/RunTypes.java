@@ -24,6 +24,7 @@ import com.raygroupintl.output.FileWrapper;
 import com.raygroupintl.util.CLIParamMgr;
 import com.raygroupintl.vista.repository.RepositoryInfo;
 import com.raygroupintl.vista.repository.VistaPackages;
+import com.raygroupintl.vista.repository.visitor.FaninWriter;
 import com.raygroupintl.vista.repository.visitor.FanoutWriter;
 
 public class RunTypes {
@@ -49,11 +50,34 @@ public class RunTypes {
 			}
 		}
 	}
+
+	private static class Fanin extends RunType {		
+		public Fanin(CLIParams params) {
+			super(params);
+		}
 		
+		@Override
+		public void run() {
+			FileWrapper fr = this.getOutputFile();
+			if (fr != null) {
+				RepositoryInfo ri = this.getRepositoryInfo();
+				if (ri != null) {
+					VistaPackages vps = this.getVistaPackages(ri);
+					if (vps != null) {						
+						FaninWriter fow = new FaninWriter(ri, fr);
+						vps.accept(fow);
+					}
+				}
+			}
+		}
+	}
+		
+	
 	private static Map<String, RunType> getRunTypes(CLIParams params) {
 		if (RunTypes.RUN_TYPES == null) {
 			RunTypes.RUN_TYPES = new HashMap<String, RunType>();
 			RUN_TYPES.put("fanout", new Fanout(params));
+			RUN_TYPES.put("fanin", new Fanin(params));
 		}
 		return RunTypes.RUN_TYPES;
 	}

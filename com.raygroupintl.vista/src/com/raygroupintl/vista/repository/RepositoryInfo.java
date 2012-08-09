@@ -210,6 +210,7 @@ public class RepositoryInfo {
 		}
 		packageInfo = new VistaPackage("UNCATEGORIZED", "Uncategorized", rf);
 		r.addPackage(packageInfo);
+		r.packagesByPrefix.put("UNCATEGORIZED", packageInfo);				
 		packageInfo = r.getPackage("KERNEL");
 		packageInfo.addPrefix("%");
 		r.packagesByPrefix.put("%", packageInfo);				

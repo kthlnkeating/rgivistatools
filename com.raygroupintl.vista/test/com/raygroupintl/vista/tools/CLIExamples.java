@@ -3,7 +3,7 @@ package com.raygroupintl.vista.tools;
 import org.junit.Test;
 
 public class CLIExamples {
-	@Test
+	//@Test
 	public void testFanoutAll() {
 		String args[] = {"fanout", "-o", "C:\\Sandbox\\j_fo_all.dat", "-md", "C:\\Users\\Afsin\\git\\M-Tools"};
 		MRoutineAnalyzer.main(args);				
@@ -11,7 +11,7 @@ public class CLIExamples {
 	
 	//@Test
 	public void testFanoutDG() {
-		String args[] = {"fanout", "-o", "C:\\Sandbox\\j_fo_dg.dat", "-p", "DG"};
+		String args[] = {"fanout", "-o", "C:\\Sandbox\\j_fo_sd.dat", "-p", "SD"};
 		MRoutineAnalyzer.main(args);				
 	}
 	
@@ -21,6 +21,12 @@ public class CLIExamples {
 		MRoutineAnalyzer.main(args);				
 	}
 	
+	@Test
+	public void testFaninAll() {
+		String args[] = {"fanin", "-o", "C:\\Sandbox\\j_fi_all.dat", "-md", "C:\\Users\\Afsin\\git\\M-Tools"};
+		MRoutineAnalyzer.main(args);				
+	}
+
 	//@Test
 	public void testCreateParseTreeFiles() {
 		// Create files for parse tree
