@@ -19,3 +19,8 @@ MAIN
  W D Q ;
  Q
  ; 
+DOERR
+ F J=1:1:1 S A=A+1
+ . S Y=1
+ Q
+ ;

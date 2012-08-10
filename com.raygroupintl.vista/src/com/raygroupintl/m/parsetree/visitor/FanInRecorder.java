@@ -25,10 +25,17 @@ import java.util.Set;
 import com.raygroupintl.m.parsetree.Routine;
 import com.raygroupintl.m.parsetree.data.EntryId;
 import com.raygroupintl.m.struct.LineLocation;
+import com.raygroupintl.vista.repository.RepositoryInfo;
+import com.raygroupintl.vista.repository.VistaPackage;
 
 public class FanInRecorder extends FanoutRecorder {
+	private RepositoryInfo repositoryInfo;
 	private Map<EntryId, Set<String>> fanins = new HashMap<EntryId, Set<String>>();
 	private String currentPackagePrefix = "UNCATEGORIZED";
+	
+	public FanInRecorder(RepositoryInfo repositoryInfo) {
+		this.repositoryInfo = repositoryInfo;
+	}
 	
 	protected void visitRoutine(Routine routine) {
 		super.visitRoutine(routine);
@@ -36,6 +43,8 @@ public class FanInRecorder extends FanoutRecorder {
 		if (fanouts != null) {
 			for (List<EntryId> fs : fanouts.values()) {
 				for (EntryId f : fs) {
+					VistaPackage vp = this.repositoryInfo.getPackageFromRoutineName(f.getRoutineName());
+					if (vp.getDefaultPrefix().equals(this.currentPackagePrefix)) continue;						
 					Set<String> current = this.fanins.get(f);
 					if (current == null) {
 						current =  new HashSet<String>();

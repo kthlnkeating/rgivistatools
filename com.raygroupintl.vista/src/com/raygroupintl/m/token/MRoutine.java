@@ -112,41 +112,45 @@ public class MRoutine implements MToken {
 		
 		for (int i=0; i<this.lines.size(); ++i) {
 			MLine line = this.lines.get(i);
+			ErrorNode errorNode = null;
 			
 			int lineLevel = line.getLevel();
 			if (lineLevel > level + 1) {
-				ErrorNode errorNode = new ErrorNode(MError.ERR_BLOCK_STRUCTURE);
-				return new Routine(this.name, errorNode);
+				errorNode = new ErrorNode(MError.ERR_BLOCK_STRUCTURE);
 			}
 
-			if (lineLevel < level) {
-				for (int j=level; j>lineLevel; --j) {
-					entryList = entryLists.pop();
-				}
-				entry = entryList.getLastNode();
-				level = lineLevel;
-			} else if (lineLevel > level) {
-				if (lineNode == null) {
-					ErrorNode errorNode = new ErrorNode(MError.ERR_BLOCK_STRUCTURE);
-					return new Routine(this.name, errorNode);					
-				}
-				if (entryLists == null) entryLists = new Stack<>();
-				entryLists.push(entryList);
-				entryList = new EntryList();
-				if (! lineNode.setEntryList(entryList)) {
-					ErrorNode errorNode = new ErrorNode(MError.ERR_BLOCK_STRUCTURE);
-					return new Routine(this.name, errorNode);					
-				}
-				entry = null;
-				level = lineLevel;
-			}			
+			if (errorNode == null) {
+				if (lineLevel < level) {
+					for (int j=level; j>lineLevel; --j) {
+						entryList = entryLists.pop();
+					}
+					entry = entryList.getLastNode();
+					level = lineLevel;
+				} else if (lineLevel > level) {
+					if (lineNode == null) {
+						errorNode = new ErrorNode(MError.ERR_BLOCK_STRUCTURE);
+						return new Routine(this.name, errorNode);					
+					}
+					EntryList newEntryList = new EntryList();
+					if (lineNode.setEntryList(newEntryList)) {
+						if (entryLists == null) entryLists = new Stack<>();
+						entryLists.push(entryList);
+						entryList = newEntryList;
+						entry = null;
+						level = lineLevel;				
+					} else {
+						errorNode = new ErrorNode(MError.ERR_BLOCK_STRUCTURE);
+					}
+				}	
+			}
+			
 			String tag = line.getTag();
 			if ((tag != null) || (entry == null)) {
 				entry = new Entry(tag == null ? "" : tag, this.name, index, line.getParameters());
 				entryList.add(entry);
 			}
 
-			lineNode = line.getNode();
+			lineNode = (errorNode == null) ? line.getNode() : line.getAsErrorNode(errorNode);
 			entry.add(lineNode);
 			++index;
 		}

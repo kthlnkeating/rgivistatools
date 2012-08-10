@@ -10,7 +10,7 @@ public class CLIExamples {
 	}
 	
 	//@Test
-	public void testFanoutDG() {
+	public void testFanoutSD() {
 		String args[] = {"fanout", "-o", "C:\\Sandbox\\j_fo_sd.dat", "-p", "SD"};
 		MRoutineAnalyzer.main(args);				
 	}
@@ -24,11 +24,22 @@ public class CLIExamples {
 	@Test
 	public void testFaninAll() {
 		String args[] = {"fanin", "-o", "C:\\Sandbox\\j_fi_all.dat", 
-				"-md", "C:\\Afsin\\osehragit\\M-Tools",
-				"-md", "C:\\Afsin\\git\\UnitTests\\src",
-				"-mf", "C:\\Afsin\\git\\VistA-FOIA\\Scripts\\ZGI.m",
-				"-mf", "C:\\Afsin\\git\\VistA-FOIA\\Scripts\\ZGO.m",
+				"-md", "C:\\Users\\Afsin\\git\\M-Tools",
+				"-mf", "C:\\Users\\Afsin\\git\\VistA-FOIA\\Scripts\\ZGI.m",
+				"-mf", "C:\\Users\\Afsin\\git\\VistA-FOIA\\Scripts\\ZGO.m",
 				"-pe", "DENTAL RECORD MANAGER"};
+		MRoutineAnalyzer.main(args);				
+	}
+
+	//@Test
+	public void testFaninSD() {
+		String args[] = {"fanin", "-o", "C:\\Sandbox\\j_fi_sd.dat", "-p", "SD"};
+		MRoutineAnalyzer.main(args);				
+	}
+
+	//@Test
+	public void testFaninGMPL() {
+		String args[] = {"fanin", "-o", "C:\\Sandbox\\j_fi_gmpl.dat", "-p", "GMPL"};
 		MRoutineAnalyzer.main(args);				
 	}
 

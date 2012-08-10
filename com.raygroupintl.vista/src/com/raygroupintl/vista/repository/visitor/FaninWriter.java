@@ -39,7 +39,6 @@ public class FaninWriter extends RepositoryVisitor {
 	private RepositoryInfo repositoryInfo;
 	private FileWrapper fileWrapper;
 	private FanInRecorder faninRecorder;
-	private boolean isCalled;
 	
 	private static class EntryIdSource {
 		public Set<String> packages;
@@ -82,22 +81,16 @@ public class FaninWriter extends RepositoryVisitor {
 	}
 
 	public void visitRoutine(Routine routine) {
-		if ((routine.getName().startsWith("ZZ")) || (routine.getName().charAt(0) != '%')) {
+		if ((! routine.getName().startsWith("ZZ")) && (routine.getName().charAt(0) != '%')) {
 			routine.accept(this.faninRecorder);
-			this.isCalled = true;
 		}
 	}
 	
 	protected void visitRoutinePackages(VistaPackages rps) {
-		this.faninRecorder = new FanInRecorder();
-		List<VistaPackage> packagesTBReported = new ArrayList<VistaPackage>();
+		this.faninRecorder = new FanInRecorder(this.repositoryInfo);
 		//List<VistaPackage> packages = this.repositoryInfo.getAllPackages();
 		for (VistaPackage p : rps.getPackages()) {
-			this.isCalled = false;
 			p.accept(this);
-			if (this.isCalled) {
-				packagesTBReported.add(p);
-			}
 		}
 		Map<EntryId, Set<String>> codeFanins = this.faninRecorder.getFanIns();
 		

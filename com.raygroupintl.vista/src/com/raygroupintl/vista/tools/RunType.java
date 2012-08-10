@@ -44,6 +44,12 @@ public abstract class RunType {
 		return null;
 	}
 	
+	protected VistaPackages getAllVistaPackages(RepositoryInfo ri) {
+		List<VistaPackage> packages = ri.getAllPackages(this.params.packageExceptions);
+		VistaPackages packageNodes = new VistaPackages(packages);
+		return packageNodes;				
+	}
+	
 	public VistaPackages getVistaPackages(RepositoryInfo ri)  {
 		List<VistaPackage> packages = null; 
 		if (this.params.packages.size() == 0) {

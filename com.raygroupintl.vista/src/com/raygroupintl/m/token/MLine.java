@@ -2,6 +2,7 @@ package com.raygroupintl.m.token;
 
 import java.util.Iterator;
 
+import com.raygroupintl.m.parsetree.ErrorNode;
 import com.raygroupintl.m.parsetree.Line;
 import com.raygroupintl.m.parsetree.Node;
 import com.raygroupintl.m.parsetree.NodeList;
@@ -69,6 +70,22 @@ public class MLine extends MSequence {
 	
 	public int getIndex() {
 		return this.index;
+	}
+	
+	public Line getErrorNode(ErrorNode errorNode) {
+		Line result = new Line(this.tagName, this.index, this.getLevel());
+		NodeList<Node> nodes = new NodeList<Node>(1);
+		nodes.add(errorNode);
+		result.setNodes(null);
+		return result;
+	}
+	
+	public Line getAsErrorNode(ErrorNode errorNode) {
+		Line result = new Line(this.tagName, this.index, this.getLevel());
+		NodeList<Node> nodes = new NodeList<Node>(1);
+		nodes.add(errorNode);
+		result.setNodes(nodes);
+		return result;
 	}
 	
 	@Override

@@ -111,7 +111,7 @@ public class OptionWriter extends RepositoryVisitor {
 	}
 	
 	protected void visitRoutinePackages(VistaPackages rps) {
-		this.faninRecorder = new FanInRecorder();
+		this.faninRecorder = new FanInRecorder(this.repositoryInfo);
 		List<VistaPackage> packages = this.repositoryInfo.getAllPackages();
 		for (VistaPackage p : packages) {
 			p.accept(this);
