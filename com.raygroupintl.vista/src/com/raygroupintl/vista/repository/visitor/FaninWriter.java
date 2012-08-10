@@ -88,8 +88,8 @@ public class FaninWriter extends RepositoryVisitor {
 	
 	protected void visitRoutinePackages(VistaPackages rps) {
 		this.faninRecorder = new FanInRecorder(this.repositoryInfo);
-		//List<VistaPackage> packages = this.repositoryInfo.getAllPackages();
-		for (VistaPackage p : rps.getPackages()) {
+		List<VistaPackage> packages = this.repositoryInfo.getAllPackages();
+		for (VistaPackage p : packages) {
 			p.accept(this);
 		}
 		Map<EntryId, Set<String>> codeFanins = this.faninRecorder.getFanIns();
@@ -107,7 +107,7 @@ public class FaninWriter extends RepositoryVisitor {
 		Map<String, List<EntryIdWithSources>> faninsByPackage = new HashMap<String, List<EntryIdWithSources>>();
 		Map<String, Set<String>> sourcePackagesByPackage = new HashMap<String, Set<String>>();
 
-		for (VistaPackage p : rps.getPackages()) {
+		for (VistaPackage p : packages) {
 			String name = p.getPackageName();
 			faninsByPackage.put(name, new ArrayList<EntryIdWithSources>());
 			sourcePackagesByPackage.put(name, new HashSet<String>());
@@ -132,15 +132,20 @@ public class FaninWriter extends RepositoryVisitor {
 		int ndx = 0;
 		if (this.fileWrapper.start()) {
 			tf.setTab(21);
-			for (VistaPackage p : rps.getPackages()) {
-				this.fileWrapper.writeEOL("--------------------------------------------------------------");
-				this.fileWrapper.writeEOL();
+			List<VistaPackage> reportPackages = rps.getPackages();
+			boolean multi = reportPackages.size() > 1;
+			for (VistaPackage p : reportPackages) {
+				if (multi) {
+					this.fileWrapper.writeEOL("--------------------------------------------------------------");
+					this.fileWrapper.writeEOL();
+				}
 				String name = p.getPackageName();
 				++ndx;
+				String pkgNumberPrefix = multi ? String.valueOf(ndx) + ". " : "";
 				if (sourcePackagesByPackage.get(name).size() > 40) {
-					this.fileWrapper.writeEOL(String.valueOf(ndx) + ". COMMON SERVICE NAME: " + name);
+					this.fileWrapper.writeEOL(pkgNumberPrefix + "COMMON SERVICE NAME: " + name);
 				} else {
-					this.fileWrapper.writeEOL(String.valueOf(ndx) + ". PACKAGE NAME: " + name);					
+					this.fileWrapper.writeEOL(pkgNumberPrefix + "PACKAGE NAME: " + name);					
 				}
 				this.fileWrapper.writeEOL();
 				List<EntryIdWithSources> fs = faninsByPackage.get(name);
@@ -165,8 +170,10 @@ public class FaninWriter extends RepositoryVisitor {
 						this.fileWrapper.writeEOL();
 					}
 				}
-				this.fileWrapper.writeEOL("--------------------------------------------------------------");
-				this.fileWrapper.writeEOL();
+				if (multi) {
+					this.fileWrapper.writeEOL("--------------------------------------------------------------");
+					this.fileWrapper.writeEOL();
+				}
 			}
 			this.fileWrapper.stop();
 		}

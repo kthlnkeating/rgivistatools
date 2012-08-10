@@ -37,7 +37,7 @@ public class CLIExamples {
 		MRoutineAnalyzer.main(args);				
 	}
 
-	//@Test
+    //@Test
 	public void testFaninGMPL() {
 		String args[] = {"fanin", "-o", "C:\\Sandbox\\j_fi_gmpl.dat", "-p", "GMPL"};
 		MRoutineAnalyzer.main(args);				
