@@ -16,7 +16,7 @@
 
 package com.raygroupintl.m.parsetree.data;
 
-public class EntryIdWithSource {
+public class EntryIdWithSource implements Comparable<EntryIdWithSource> {
 	private EntryId entryId;
 	private String source;
 	
@@ -31,5 +31,14 @@ public class EntryIdWithSource {
 	
 	public String getSource() {
 		return this.source;
+	}
+	
+	@Override
+	public int compareTo(EntryIdWithSource rhs) {
+		int result = this.source.compareTo(rhs.source);
+		if (result == 0) {
+			result = this.entryId.compareTo(rhs.entryId);
+		}
+		return result;
 	}
 }

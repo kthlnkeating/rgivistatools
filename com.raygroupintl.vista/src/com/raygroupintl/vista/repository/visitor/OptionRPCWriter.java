@@ -29,31 +29,30 @@ import com.raygroupintl.vista.repository.RepositoryInfo;
 import com.raygroupintl.vista.repository.VistaPackage;
 import com.raygroupintl.vista.repository.VistaPackages;
 
-public class OptionWriter {
-	private RepositoryInfo repositoryInfo;
+public class OptionRPCWriter {
+	protected RepositoryInfo repositoryInfo;
 	private FileWrapper fileWrapper;
 	
-	public OptionWriter(RepositoryInfo repositoryInfo, FileWrapper fileWrapper) {
+	public OptionRPCWriter(RepositoryInfo repositoryInfo, FileWrapper fileWrapper) {
 		this.repositoryInfo = repositoryInfo;
 		this.fileWrapper = fileWrapper;
 	}
 		
-	public void write(VistaPackages vps) {
+	public void write(VistaPackages vps, List<EntryIdWithSource> values) {
 		List<VistaPackage> packages = this.repositoryInfo.getAllPackages();
-		List<EntryIdWithSource> options = this.repositoryInfo.getOptionEntryPoints();				
-		Map<String, List<EntryIdWithSource>> optionsByPackage = new HashMap<String, List<EntryIdWithSource>>();
+		Map<String, List<EntryIdWithSource>> valuesByPackage = new HashMap<String, List<EntryIdWithSource>>();
 		for (VistaPackage p : packages) {
 			String name = p.getPackageName();
-			optionsByPackage.put(name, new ArrayList<EntryIdWithSource>());
+			valuesByPackage.put(name, new ArrayList<EntryIdWithSource>());
 		}
-		for (EntryIdWithSource option : options) {
-			EntryId eid = option.getEntryId();
+		for (EntryIdWithSource value : values) {
+			EntryId eid = value.getEntryId();
 			String routineName = eid.getRoutineName();
 			if ((routineName != null) && (! routineName.isEmpty())) {
 				VistaPackage vp = this.repositoryInfo.getPackageFromRoutineName(routineName);
 				String name = vp.getPackageName();
-				List<EntryIdWithSource> pkgOptions = optionsByPackage.get(name);
-				pkgOptions.add(option);
+				List<EntryIdWithSource> pkgOptions = valuesByPackage.get(name);
+				pkgOptions.add(value);
 			}
 		}		
 		if (this.fileWrapper.start()) {
@@ -66,7 +65,7 @@ public class OptionWriter {
 				String prefix = multi ? String.valueOf(index) + ". " : "";
 				this.fileWrapper.writeEOL(prefix + name);
 				this.fileWrapper.writeEOL();
-				List<EntryIdWithSource> reportOptions = optionsByPackage.get(name);
+				List<EntryIdWithSource> reportOptions = valuesByPackage.get(name);
 				if ((reportOptions != null) && (reportOptions.size() > 0)) {
 					Collections.sort(reportOptions);
 					for (EntryIdWithSource reportOption : reportOptions) {

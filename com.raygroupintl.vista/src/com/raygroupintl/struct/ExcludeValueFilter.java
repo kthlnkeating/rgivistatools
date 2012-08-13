@@ -14,36 +14,20 @@
 // limitations under the License.
 //---------------------------------------------------------------------------
 
-package com.raygroupintl.m.parsetree;
+package com.raygroupintl.struct;
 
-import com.raygroupintl.parser.StringPiece;
+import java.util.HashSet;
+import java.util.Set;
 
-public class Global extends NodeWithSubscripts {
-	private static final long serialVersionUID = 1L;
+public class ExcludeValueFilter<T> implements Filter<T> {
+	private Set<T> values = new HashSet<T>();
 
-	public Global(StringPiece name) {
-		super(name);
-	}
-	
-	public Global(StringPiece name, NodeList<Node> subscripts) {
-		super(name, subscripts);
-	}
-
-	public String getAsString() {
-		String result = '^' + this.getName().toString();
-		Node subscript = this.getSubscript(0);
-		if (subscript != null) {
-			result += '(';
-			String constValue = subscript.getAsConstExpr();
-			if (constValue != null) {
-				result += constValue;
-			}
-		}
-		return result;
+	public void add(T value) {
+		this.values.add(value);
 	}
 	
 	@Override
-	public void accept(Visitor visitor) {
-		visitor.visitGlobal(this);
-	}
+	public boolean isValid(T input) {
+		return ! values.contains(input);
+	}	
 }

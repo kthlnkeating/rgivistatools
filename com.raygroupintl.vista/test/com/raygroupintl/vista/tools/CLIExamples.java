@@ -21,7 +21,7 @@ public class CLIExamples {
 		MRoutineAnalyzer.main(args);				
 	}
 	
-	@Test
+	//@Test
 	public void testFaninAll() {
 		String args[] = {"fanin", "-o", "C:\\Sandbox\\j_fi_all.dat", 
 				"-md", "C:\\Users\\Afsin\\git\\M-Tools",
@@ -43,6 +43,68 @@ public class CLIExamples {
 		MRoutineAnalyzer.main(args);				
 	}
 
+	//@Test
+	public void testOptionAll() {
+		String args[] = {"option", "-o", "C:\\Sandbox\\j_opt_all.dat", "-pe", "DENTAL RECORD MANAGER"};
+		MRoutineAnalyzer.main(args);				
+	}
+
+	//@Test
+	public void testOptionSD() {
+		String args[] = {"option", "-o", "C:\\Sandbox\\j_opt_sd.dat", "-p", "SD"};
+		MRoutineAnalyzer.main(args);				
+	}
+
+	//@Test
+	public void testOptionGMPL() {
+		String args[] = {"option", "-o", "C:\\Sandbox\\j_opt_gmpl.dat", "-p", "GMPL"};
+		MRoutineAnalyzer.main(args);				
+	}
+
+	//@Test
+	public void testRPCAll() {
+		String args[] = {"rpc", "-o", "C:\\Sandbox\\j_rpc_all.dat", "-pe", "DENTAL RECORD MANAGER"};
+		MRoutineAnalyzer.main(args);				
+	}
+
+	//@Test
+	public void testRPCSD() {
+		String args[] = {"rpc", "-o", "C:\\Sandbox\\j_rpc_sd.dat", "-p", "SD"};
+		MRoutineAnalyzer.main(args);				
+	}
+
+	//@Test
+	public void testRPCGMPL() {
+		String args[] = {"rpc", "-o", "C:\\Sandbox\\j_rpc_gmpl.dat", "-p", "GMPL"};
+		MRoutineAnalyzer.main(args);				
+	}
+
+	//@Test
+	public void testUsesGMPL() {
+		String args[] = {"usesglb", "-o", "C:\\Sandbox\\j_uses_gmpl.dat", "-p", "GMPL", "-ownf", "C:\\Users\\Afsin\\git\\M-RoutineAnalyzer\\src\\Ownership.csv"};
+		MRoutineAnalyzer.main(args);				
+	}
+
+	//@Test
+	public void testUsesSD() {
+		String args[] = {"usesglb", "-o", "C:\\Sandbox\\j_uses_sd.dat", "-p", "SD", "-ownf", "C:\\Users\\Afsin\\git\\M-RoutineAnalyzer\\src\\Ownership.csv"};
+		MRoutineAnalyzer.main(args);				
+	}
+
+	//@Test
+	public void testUsedGMPL() {
+		String args[] = {"usedglb", "-o", "C:\\Sandbox\\j_used_gmpl.dat", "-p", "GMPL", "-ownf", "C:\\Users\\Afsin\\git\\M-RoutineAnalyzer\\src\\Ownership.csv"};
+		MRoutineAnalyzer.main(args);				
+	}
+
+	@Test
+	public void testUsedSD() {
+		String args[] = {"usedglb", "-o", "C:\\Sandbox\\j_used_sd.dat", "-p", "SD", "-ownf", "C:\\Users\\Afsin\\git\\M-RoutineAnalyzer\\src\\Ownership.csv"};
+		MRoutineAnalyzer.main(args);				
+	}
+
+	
+	
 	//@Test
 	public void testCreateParseTreeFiles() {
 		// Create files for parse tree

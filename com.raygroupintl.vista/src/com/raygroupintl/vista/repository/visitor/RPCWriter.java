@@ -14,36 +14,18 @@
 // limitations under the License.
 //---------------------------------------------------------------------------
 
-package com.raygroupintl.m.parsetree;
+package com.raygroupintl.vista.repository.visitor;
 
-import com.raygroupintl.parser.StringPiece;
+import com.raygroupintl.output.FileWrapper;
+import com.raygroupintl.vista.repository.RepositoryInfo;
+import com.raygroupintl.vista.repository.VistaPackages;
 
-public class Global extends NodeWithSubscripts {
-	private static final long serialVersionUID = 1L;
-
-	public Global(StringPiece name) {
-		super(name);
+public class RPCWriter extends OptionRPCWriter {
+	public RPCWriter(RepositoryInfo repositoryInfo, FileWrapper fileWrapper) {
+		super(repositoryInfo, fileWrapper);
 	}
 	
-	public Global(StringPiece name, NodeList<Node> subscripts) {
-		super(name, subscripts);
-	}
-
-	public String getAsString() {
-		String result = '^' + this.getName().toString();
-		Node subscript = this.getSubscript(0);
-		if (subscript != null) {
-			result += '(';
-			String constValue = subscript.getAsConstExpr();
-			if (constValue != null) {
-				result += constValue;
-			}
-		}
-		return result;
-	}
-	
-	@Override
-	public void accept(Visitor visitor) {
-		visitor.visitGlobal(this);
+	public void write(VistaPackages vps) {
+		this.write(vps, this.repositoryInfo.getRPCs());
 	}
 }

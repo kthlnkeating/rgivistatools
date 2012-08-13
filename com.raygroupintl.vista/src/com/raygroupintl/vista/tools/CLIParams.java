@@ -58,6 +58,9 @@ public class CLIParams {
 	@CLIParameter(names={"-mf", "--mfile"})
 	public List<String> additionalMFiles = new ArrayList<String>();
 	
+	@CLIParameter(names={"-ownf", "--ownershipfile"})
+	public String ownershipFilePath;
+		
 	private static void logError(String msg) {
 		Logger logger = Logger.getLogger(MRoutineAnalyzer.class.getName());		
 		logger.log(Level.SEVERE, msg);

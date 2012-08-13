@@ -37,8 +37,13 @@ public abstract class RunType {
 		MRARoutineFactory rf = MRARoutineFactory.getInstance(MVersion.CACHE);
 		if (rf != null) {
 			RepositoryInfo ri = RepositoryInfo.getInstance(rf);
-			ri.addMDirectories(params.additionalMDirectories);
-			ri.addMFiles(params.additionalMFiles);
+			if (ri != null) {
+				ri.addMDirectories(params.additionalMDirectories);
+				ri.addMFiles(params.additionalMFiles);
+				if ((params.ownershipFilePath != null) && (! params.ownershipFilePath.isEmpty())) {
+					ri.readGlobalOwnership(params.ownershipFilePath);			
+				}
+			}			
 			return ri;
 		}		
 		return null;

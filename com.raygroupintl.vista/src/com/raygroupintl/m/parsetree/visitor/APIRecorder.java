@@ -16,9 +16,7 @@
 
 package com.raygroupintl.m.parsetree.visitor;
 
-import java.util.HashMap;
 import java.util.HashSet;
-import java.util.Map;
 import java.util.Set;
 
 import com.raygroupintl.m.parsetree.DoBlock;
@@ -31,11 +29,9 @@ import com.raygroupintl.m.parsetree.Indirection;
 import com.raygroupintl.m.parsetree.Line;
 import com.raygroupintl.m.parsetree.Local;
 import com.raygroupintl.m.parsetree.Node;
-import com.raygroupintl.m.parsetree.NumberLiteral;
 import com.raygroupintl.m.parsetree.QuitCmd;
 import com.raygroupintl.m.parsetree.ReadCmd;
 import com.raygroupintl.m.parsetree.Routine;
-import com.raygroupintl.m.parsetree.StringLiteral;
 import com.raygroupintl.m.parsetree.WriteCmd;
 import com.raygroupintl.m.parsetree.XecuteCmd;
 import com.raygroupintl.m.parsetree.data.Block;

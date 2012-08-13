@@ -24,8 +24,12 @@ import com.raygroupintl.output.FileWrapper;
 import com.raygroupintl.util.CLIParamMgr;
 import com.raygroupintl.vista.repository.RepositoryInfo;
 import com.raygroupintl.vista.repository.VistaPackages;
+import com.raygroupintl.vista.repository.visitor.DTUsedGlobalWriter;
+import com.raygroupintl.vista.repository.visitor.DTUsesGlobalWriter;
 import com.raygroupintl.vista.repository.visitor.FaninWriter;
 import com.raygroupintl.vista.repository.visitor.FanoutWriter;
+import com.raygroupintl.vista.repository.visitor.OptionWriter;
+import com.raygroupintl.vista.repository.visitor.RPCWriter;
 
 public class RunTypes {
 	private static Map<String, RunType> RUN_TYPES; 
@@ -72,12 +76,99 @@ public class RunTypes {
 		}
 	}
 		
-	
+	private static class Option extends RunType {		
+		public Option(CLIParams params) {
+			super(params);
+		}
+		
+		@Override
+		public void run() {
+			FileWrapper fr = this.getOutputFile();
+			if (fr != null) {
+				RepositoryInfo ri = this.getRepositoryInfo();
+				if (ri != null) {
+					VistaPackages vps = this.getVistaPackages(ri);
+					if (vps != null) {						
+						OptionWriter ow = new OptionWriter(ri, fr);
+						ow.write(vps);
+					}
+				}
+			}
+		}
+	}
+			
+	private static class RPC extends RunType {		
+		public RPC(CLIParams params) {
+			super(params);
+		}
+		
+		@Override
+		public void run() {
+			FileWrapper fr = this.getOutputFile();
+			if (fr != null) {
+				RepositoryInfo ri = this.getRepositoryInfo();
+				if (ri != null) {
+					VistaPackages vps = this.getVistaPackages(ri);
+					if (vps != null) {						
+						RPCWriter rw = new RPCWriter(ri, fr);
+						rw.write(vps);
+					}
+				}
+			}
+		}
+	}
+			
+	private static class UsesGlobal extends RunType {		
+		public UsesGlobal(CLIParams params) {
+			super(params);
+		}
+		
+		@Override
+		public void run() {
+			FileWrapper fr = this.getOutputFile();
+			if (fr != null) {
+				RepositoryInfo ri = this.getRepositoryInfo();
+				if (ri != null) {
+					VistaPackages vps = this.getVistaPackages(ri);
+					if (vps != null) {						
+						DTUsesGlobalWriter dtug = new DTUsesGlobalWriter(ri, fr);
+						vps.accept(dtug);
+					}
+				}
+			}
+		}
+	}
+			
+	private static class UsedGlobal extends RunType {		
+		public UsedGlobal(CLIParams params) {
+			super(params);
+		}
+		
+		@Override
+		public void run() {
+			FileWrapper fr = this.getOutputFile();
+			if (fr != null) {
+				RepositoryInfo ri = this.getRepositoryInfo();
+				if (ri != null) {
+					VistaPackages vps = this.getVistaPackages(ri);
+					if (vps != null) {						
+						DTUsedGlobalWriter dtug = new DTUsedGlobalWriter(ri, fr);
+						vps.accept(dtug);
+					}
+				}
+			}
+		}
+	}
+			
 	private static Map<String, RunType> getRunTypes(CLIParams params) {
 		if (RunTypes.RUN_TYPES == null) {
 			RunTypes.RUN_TYPES = new HashMap<String, RunType>();
 			RUN_TYPES.put("fanout", new Fanout(params));
 			RUN_TYPES.put("fanin", new Fanin(params));
+			RUN_TYPES.put("option", new Option(params));
+			RUN_TYPES.put("rpc", new RPC(params));
+			RUN_TYPES.put("usesglb", new UsesGlobal(params));
+			RUN_TYPES.put("usedglb", new UsedGlobal(params));
 		}
 		return RunTypes.RUN_TYPES;
 	}

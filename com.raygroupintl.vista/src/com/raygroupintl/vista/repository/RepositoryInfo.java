@@ -72,6 +72,37 @@ public class RepositoryInfo {
 		}			
 	}
 	
+	private static class RPCFilter implements Filter<MGlobalNode> {
+		private DigitFilter digitFilter = new DigitFilter();
+		
+		@Override
+		public boolean isValid(MGlobalNode input) {
+			if (this.digitFilter.isValid(input.getName())) {			
+				MGlobalNode node0 = input.getNode("0");
+				if (node0 != null) {
+					String routineName = node0.getValuePiece(2);
+					return (routineName != null) && (! routineName.isEmpty());
+				}
+			}
+			return false;
+		}
+	}
+
+	private static class RPCTransformer implements Transformer<MGlobalNode, EntryIdWithSource> {
+		@Override 
+		public EntryIdWithSource transform(MGlobalNode node) {
+			MGlobalNode node0 = node.getNode("0");
+			String name = node0.getValuePiece(0);
+			String tag = node0.getValuePiece(1);
+			String routineName = node0.getValuePiece(2);
+			if ((tag != null) && tag.isEmpty()) {
+				tag = null;
+			}
+			EntryId entryId = new EntryId(routineName, tag);
+			return new EntryIdWithSource(entryId, name);
+		}			
+	}
+	
 	private static class PackagePrefixComparator implements Comparator<VistaPackage> {
 		public int compare(VistaPackage pkg0, VistaPackage pkg1) {
 			String prefix0 = pkg0.getPrimaryPrefix();
@@ -83,6 +114,8 @@ public class RepositoryInfo {
 	private List<VistaPackage> packages = new ArrayList<VistaPackage>();
 	private Map<String, VistaPackage> packagesByName = new HashMap<String, VistaPackage>();
 	private TreeMap<String, VistaPackage> packagesByPrefix = new TreeMap<String, VistaPackage>();
+	private Map<String, String> packagesByGlobal;
+	private Map<String, String> fileByGlobal;
 	
 	private RepositoryInfo() {
 	}
@@ -153,6 +186,22 @@ public class RepositoryInfo {
 		return this.packagesByPrefix.get(prefix);
 	}
 	
+	public String getPackageFromGlobal(String global) {
+		if (this.packagesByGlobal == null) {
+			return null;
+		} else {
+			return this.packagesByGlobal.get(global);
+		}
+	}
+	
+	public String getFileNameFromGlobal(String global) {
+		if (this.fileByGlobal == null) {
+			return null;
+		} else {
+			return this.fileByGlobal.get(global);
+		}
+	}
+	
 	public VistaPackage getPackageFromRoutineName(String routineName) {
 		if (routineName.charAt(0) == '%') {
 			return this.packagesByPrefix.get("XU");
@@ -182,6 +231,16 @@ public class RepositoryInfo {
 		return result;
 	}
 	
+	public List<EntryIdWithSource> getRPCs() {
+		String root = RepositoryInfo.getLocation();
+		Path path = Paths.get(root, "Packages", "RPC Broker", "Globals", "8994+REMOTE PROCEDURE.zwr");
+		MGlobalNode rootNode = new MGlobalNode();
+		rootNode.read(path);
+		MGlobalNode node = rootNode.getNode("XWB","8994");
+		List<EntryIdWithSource> result = node.getValues(new RPCFilter(), new RPCTransformer());
+		return result;
+	}
+
 	public void addMDirectories(List<String> paths) {
 		String lastPath = null;
 		try {
@@ -211,6 +270,40 @@ public class RepositoryInfo {
 			} else {
 				MRALogger.logError("Error reading file " + filePath);					
 			}
+		}
+	}
+	
+	public void readGlobalOwnership(String filePath) {
+		try {
+			Path path = Paths.get(filePath);
+			Scanner scanner = new Scanner(path);
+			while (scanner.hasNextLine()) {
+				String line = scanner.nextLine();
+				line = line.replace(",\"^",",^");
+				line = line.replace("\"\"", "\"");
+				line = line.replace(",\"", "");
+				line = line.replace("(\",", "(,");				
+				String[] pieces = line.split(",");
+				if (pieces.length >= 5) {
+					String global = pieces[2].trim();
+					String packageName = pieces[4];
+					if (this.packagesByGlobal == null) {
+						this.packagesByGlobal = new HashMap<String, String>();
+						this.fileByGlobal = new HashMap<String, String>();
+					}
+					this.packagesByGlobal.put(global, packageName);
+					this.fileByGlobal.put(global, pieces[1]);
+					String globalName = global.split("\\(")[0] + "(";
+					if (! globalName.equals(global)) {
+						this.packagesByGlobal.put(globalName, packageName);
+						this.fileByGlobal.put(globalName, pieces[1]);						
+					}
+					
+				}
+			}
+			scanner.close();
+		} catch (IOException e) {
+			MRALogger.logError("Unable to read file " + filePath, e);
 		}
 	}
 
