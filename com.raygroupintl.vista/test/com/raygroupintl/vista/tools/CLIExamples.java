@@ -110,7 +110,7 @@ public class CLIExamples {
 		MRoutineAnalyzer.main(args1);		
 	}
 	
-	//@Test
+	@Test
 	public void testError() {
 		String args[] = {"error", "-o", "C:\\Sandbox\\j_error_all.dat"};
 		MRoutineAnalyzer.main(args);				
@@ -134,7 +134,7 @@ public class CLIExamples {
 	 * variable VistA-FOIA that point to the VistA-FOIA library. It assumes
 	 * testCreateParseTreeFiles is run.
 	 */
-	@Test
+	//@Test
 	public void testProblemListAPITags() {
 	    // Create entry points for the routines.
 		//String args0[] = {

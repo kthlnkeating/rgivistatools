@@ -107,11 +107,12 @@ public class TRoutineTest {
 	private void testErrTest0(MTFSupply m) {
 		String fileName = "resource/ERRTEST0.m";
 		List<ObjectInRoutine<MError>> result = this.getErrors(fileName, m);
-		Assert.assertEquals(4, result.size());
+		Assert.assertEquals(5, result.size());
 		testErrTest0Error(result.get(0), "MULTIPLY", 2);
 		testErrTest0Error(result.get(1), "MAIN", 3);
 		testErrTest0Error(result.get(2), "MAIN", 5);
 		testErrTest0Error(result.get(3), "DOERR", 2);
+		testErrTest0Error(result.get(4), "DOERR2", 4);
 	}
 
 	@Test

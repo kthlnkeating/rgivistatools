@@ -24,3 +24,11 @@ DOERR
  . S Y=1
  Q
  ;
+DOERR2
+ S A=A+1 D
+ . S Y=1
+ ;
+ . S K=3
+ Q
+ ;
+ 
