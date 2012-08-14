@@ -97,24 +97,38 @@ public class CLIExamples {
 		MRoutineAnalyzer.main(args);				
 	}
 
-	@Test
+	//@Test
 	public void testUsedSD() {
 		String args[] = {"usedglb", "-o", "C:\\Sandbox\\j_used_sd.dat", "-p", "SD", "-ownf", "C:\\Users\\Afsin\\git\\M-RoutineAnalyzer\\src\\Ownership.csv"};
 		MRoutineAnalyzer.main(args);				
 	}
 
-	
-	
 	//@Test
 	public void testCreateParseTreeFiles() {
 		// Create files for parse tree
-		String args1[] = {
-				"-t", "serial",
-				"-ptd", "C:\\Sandbox\\serial"};
+		String args1[] = {"parsetreesave", "-ptd", "C:\\Sandbox\\serial"};
 		MRoutineAnalyzer.main(args1);		
 	}
 	
-	
+	//@Test
+	public void testError() {
+		String args[] = {"error", "-o", "C:\\Sandbox\\j_error_all.dat"};
+		MRoutineAnalyzer.main(args);				
+	}
+		
+	//@Test
+	public void testRoutineInfo() {
+		String args[] = {"routineinfo", "-o", "C:\\Sandbox\\j_rtninfo_all.dat"};
+		MRoutineAnalyzer.main(args);				
+	}
+		
+	@Test
+	public void testFilemanCall() {
+		String args[] = {"filemancall", 
+						 "-o", "C:\\Sandbox\\j_fmc_all.dat"};
+		MRoutineAnalyzer.main(args);				
+	}
+		
 	/* This prints code quality report for all the tags in Problem List API
 	 * routines GMPLAPI*, GMPLSITE, GMPLDAL*, GMPLEXT*.  It assumes environment
 	 * variable VistA-FOIA that point to the VistA-FOIA library. It assumes
@@ -123,19 +137,19 @@ public class CLIExamples {
 	//@Test
 	public void testProblemListAPITags() {
 	    // Create entry points for the routines.
-		String args0[] = {
-				"-t", "entry",
-				"-p", "PROBLEM LIST", 
-				"-r", "GMPLAPI.*", "-r", "GMPLSITE", "-r", "GMPLDAL.*", "-r", "GMPLEXT.*", 
-				"-o", "C:\\Sandbox\\j_gmplapitest_all_in.dat"};
-		MRoutineAnalyzer.main(args0);
+		//String args0[] = {
+		//		"entry",
+		//		"-p", "PROBLEM LIST", 
+		//		"-r", "GMPLAPI.*", "-r", "GMPLSITE", "-r", "GMPLDAL.*", "-r", "GMPLEXT.*", 
+		//		"-o", "C:\\Sandbox\\j_gmpl_info_all_in.dat"};
+		//MRoutineAnalyzer.main(args0);
 		
 		// Write the API
 		String args2[] = {
-				"-t", "apis", 
-				"-i", "C:\\Sandbox\\j_gmplapitest_all_in.dat", 
-				"-o", "C:\\Sandbox\\j_gmplapitest_all.dat",
-				"-ptd", "C:\\Sandbox\\serial"};
+				"entryinfo", 
+				"-i", "C:\\Sandbox\\j_gmpl_info_all_in.dat", 
+				"-o", "C:\\Sandbox\\j_entryinfo_gmpl_all.dat"};//,
+				//"-ptd", "C:\\Sandbox\\serial"};
 		MRoutineAnalyzer.main(args2);
 	}
 	
