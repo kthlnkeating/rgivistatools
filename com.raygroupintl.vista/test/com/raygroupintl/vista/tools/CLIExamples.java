@@ -122,7 +122,7 @@ public class CLIExamples {
 		MRoutineAnalyzer.main(args);				
 	}
 		
-	@Test
+	//@Test
 	public void testFilemanCall() {
 		String args[] = {"filemancall", 
 						 "-o", "C:\\Sandbox\\j_fmc_all.dat"};
@@ -134,7 +134,7 @@ public class CLIExamples {
 	 * variable VistA-FOIA that point to the VistA-FOIA library. It assumes
 	 * testCreateParseTreeFiles is run.
 	 */
-	//@Test
+	@Test
 	public void testProblemListAPITags() {
 	    // Create entry points for the routines.
 		//String args0[] = {
@@ -148,8 +148,9 @@ public class CLIExamples {
 		String args2[] = {
 				"entryinfo", 
 				"-i", "C:\\Sandbox\\j_gmpl_info_all_in.dat", 
-				"-o", "C:\\Sandbox\\j_entryinfo_gmpl_all.dat"};//,
-				//"-ptd", "C:\\Sandbox\\serial"};
+				"-o", "C:\\Sandbox\\j_entryinfo_gmpl_0.dat",
+				"-ptd", "C:\\Sandbox\\serial",
+				"-f", "0"};
 		MRoutineAnalyzer.main(args2);
 	}
 	

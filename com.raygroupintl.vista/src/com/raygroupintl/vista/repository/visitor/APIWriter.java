@@ -19,7 +19,6 @@ package com.raygroupintl.vista.repository.visitor;
 import java.io.IOException;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 import java.util.Scanner;
@@ -30,17 +29,18 @@ import com.raygroupintl.m.parsetree.data.Block;
 import com.raygroupintl.m.parsetree.data.Blocks;
 import com.raygroupintl.m.parsetree.data.BlocksSupply;
 import com.raygroupintl.m.parsetree.data.EntryId;
+import com.raygroupintl.m.parsetree.filter.BasicSourcedFanoutFilter;
+import com.raygroupintl.m.parsetree.filter.SourcedFanoutFilter;
 import com.raygroupintl.output.FileWrapper;
 import com.raygroupintl.output.TerminalFormatter;
-import com.raygroupintl.struct.Filter;
 import com.raygroupintl.struct.PassFilter;
 
-public class APIWriter {
+public class APIWriter {	
 	private FileWrapper fileWrapper;
 	private BlocksSupply blocksSupply;
 	private TerminalFormatter tf = new TerminalFormatter();
 	private Map<String, String> replacementRoutines;
-	private Filter<EntryId> filter = new PassFilter<EntryId>();
+	private SourcedFanoutFilter filter = new BasicSourcedFanoutFilter(new PassFilter<EntryId>());
 	
 	public APIWriter(FileWrapper fileWrapper, BlocksSupply blocksSupply, Map<String, String> replacementRoutines) {
 		this.fileWrapper = fileWrapper;
@@ -48,28 +48,8 @@ public class APIWriter {
 		this.replacementRoutines = replacementRoutines;
 	}
 
-	public void setFilter(Filter<EntryId> filter) {
+	public void setFilter(SourcedFanoutFilter filter) {
 		this.filter = filter;
-	}
-	
-	private void write(String[] linePieces, int pieceIndex, String title) {
-		this.fileWrapper.write(this.tf.startList(title));
-		boolean has = false;
-		if (linePieces.length > pieceIndex) {
-			String piece = linePieces[pieceIndex];
-			if ((piece != null) && (! piece.isEmpty())) {
-				String[] sources = piece.split("\\,");
-				Arrays.sort(sources);
- 			    for (String source : sources) {
-					this.fileWrapper.write(this.tf.addToList(source));
-					has = true;
-				}
-			}
-		}
-		if (! has) {
-			this.fileWrapper.write(this.tf.addToList("--"));			
-		}
-		this.fileWrapper.writeEOL();		
 	}
 	
 	private void writeAPIData(List<String> dataList, String title) {

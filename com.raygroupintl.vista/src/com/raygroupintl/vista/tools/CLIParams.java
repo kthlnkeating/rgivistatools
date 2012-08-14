@@ -43,6 +43,9 @@ public class CLIParams {
 	@CLIParameter(names={"-i", "--input"})
 	public String inputFile;
 	
+	@CLIParameter(names={"-f", "--flag"})
+	public String flag;
+	
 	@CLIParameter(names={"-ptd", "--parsetreedir"})
 	public String parseTreeDirectory;
 	 

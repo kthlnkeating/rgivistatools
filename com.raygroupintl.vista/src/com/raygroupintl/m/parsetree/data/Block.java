@@ -17,7 +17,6 @@
 package com.raygroupintl.m.parsetree.data;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
@@ -27,10 +26,9 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import com.raygroupintl.m.parsetree.Local;
+import com.raygroupintl.m.parsetree.filter.SourcedFanoutFilter;
 import com.raygroupintl.m.parsetree.visitor.APIRecorder;
 import com.raygroupintl.m.struct.LineLocation;
-import com.raygroupintl.output.FileWrapper;
-import com.raygroupintl.struct.Filter;
 import com.raygroupintl.struct.Indexed;
 
 public class Block {
@@ -389,7 +387,7 @@ public class Block {
 		return result;
 	}
 	
-	public void update(FanoutBlocks fanoutBlocks, BlocksSupply blocksSupply, Filter<EntryId> filter, Map<String, String> replacedRoutines) {
+	public void update(FanoutBlocks fanoutBlocks, BlocksSupply blocksSupply, SourcedFanoutFilter filter, Map<String, String> replacedRoutines) {
 		for (IndexedFanout ifout : this.fanouts) {
 			EntryId fout = ifout.getFanout();
 			if ((filter != null) && (! filter.isValid(fout))) continue;
@@ -397,7 +395,7 @@ public class Block {
 			String tagName = fout.getTag();					
 			if (tagName == null) {
 				tagName = routineName;
-			}
+			}			
 			if (routineName == null) {
 				Block tagBlock = this.siblings.get(tagName);
 				if (tagBlock == null) {
@@ -456,7 +454,7 @@ public class Block {
 		}
 	}
 	
-	public APIData auxGetAPIData(BlocksSupply blocksSupply, APIDataStore store, Filter<EntryId> filter, Map<String, String> replacedRoutines) {
+	public APIData auxGetAPIData(BlocksSupply blocksSupply, APIDataStore store, SourcedFanoutFilter filter, Map<String, String> replacedRoutines) {
 		APIData result = store.get(this);
 		if (result != null) {
 			return result;
@@ -471,7 +469,8 @@ public class Block {
 		return fanoutBlocks.getAPI();
 	}
 	
-	public APIData getAPIData(BlocksSupply blocksSupply, APIDataStore store, Filter<EntryId> filter, Map<String, String> replacedRoutines) {
+	public APIData getAPIData(BlocksSupply blocksSupply, APIDataStore store, SourcedFanoutFilter filter, Map<String, String> replacedRoutines) {
+		if (filter != null) filter.setSource(this.entryId);
 		APIData forAssumeds = this.auxGetAPIData(blocksSupply, store, filter, replacedRoutines);
 		APIData result = new APIData(this);
 		result.setAssumeds(forAssumeds);
@@ -483,35 +482,12 @@ public class Block {
 			++index;
 		}
 		List<Block> blocks = fanoutBlocks.getAllBlocks();
-/*		Map<String, Integer> writeResult = new HashMap<String,Integer>();
-		int all = 0;
-*/		for (Block b : blocks) {
+		for (Block b : blocks) {
 			result.mergeGlobals(b.getGlobals());
 			result.mergeFilemanGlobals(b.getFilemanGlobals());
 			result.mergeFilemanCalls(b.getFilemanCalls());
-/*			if (b.getIndirectionCount() > 0) {
-				if (writeResult.containsKey(b.getLocationTitle())) {
-					writeResult.put(b.getLocationTitle()+"->"+all,b.getIndirectionCount());
-					all += b.getIndirectionCount();
-				} else {
-					writeResult.put(b.getLocationTitle(),b.getIndirectionCount());
-					all += b.getIndirectionCount();
-				}
-			}			
-*/			result.mergeCounts(b);
+			result.mergeCounts(b);
 		}
-/*		{
-			List<String> keys = new ArrayList<String>(writeResult.keySet());
-			Collections.sort(keys);
-			FileWrapper fw = new FileWrapper("C:\\Sandbox\\j_write.dat");
-			fw.start();
-			for (String key : keys) {
-				String line = key + ":" + writeResult.get(key);
-				fw.writeEOL(line);
-			}
-			fw.stop();
-		}
-*/		
 		return result;		
 	}
 

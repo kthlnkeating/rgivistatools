@@ -25,7 +25,12 @@ import java.util.Map;
 
 import com.raygroupintl.m.parsetree.data.BlocksSupply;
 import com.raygroupintl.m.parsetree.data.SerializedBlocksSupply;
+import com.raygroupintl.m.parsetree.filter.BasicSourcedFanoutFilter;
+import com.raygroupintl.m.parsetree.filter.ExcludeFilemanCallFanoutFilter;
+import com.raygroupintl.m.parsetree.filter.ExcludeNonPkgCallFanoutFilter;
+import com.raygroupintl.m.parsetree.filter.ExcludeNonRtnFanoutFilter;
 import com.raygroupintl.m.parsetree.filter.PercentRoutineFanoutFilter;
+import com.raygroupintl.m.parsetree.filter.SourcedFanoutFilter;
 import com.raygroupintl.output.FileWrapper;
 import com.raygroupintl.util.CLIParamMgr;
 import com.raygroupintl.vista.repository.RepositoryInfo;
@@ -374,9 +379,35 @@ public class RunTypes {
 			super(params);
 		}
 		
-		private void auxRun(FileWrapper fr, BlocksSupply blocks) {
+		private int getFanoutFlag() {
+			try {
+				int result = Integer.parseInt(this.params.flag);
+				if (result < 0) return 0;
+				if (result > 3) return 3;
+				return result;
+			} catch(Throwable t) {
+			}
+			return 0;
+		}
+		
+		private SourcedFanoutFilter getFilter(RepositoryInfo ri) {
+			int flag = this.getFanoutFlag();
+			switch (flag) {
+				case 1:
+					return new ExcludeFilemanCallFanoutFilter(ri);
+				case 2:
+					return new ExcludeNonPkgCallFanoutFilter(ri);
+				case 3:
+					return new ExcludeNonRtnFanoutFilter();
+				default:
+					PercentRoutineFanoutFilter filter = new PercentRoutineFanoutFilter();
+					return new BasicSourcedFanoutFilter(filter);
+			}
+		}
+		
+		private void auxRun(RepositoryInfo ri, FileWrapper fr, BlocksSupply blocks) {
 			APIWriter apiw = new APIWriter(fr, blocks, REPLACEMENT_ROUTINES);
-			PercentRoutineFanoutFilter filter = new PercentRoutineFanoutFilter();
+			SourcedFanoutFilter filter = this.getFilter(ri);
 			apiw.setFilter(filter);
 			if (this.params.inputFile != null) {
 				apiw.write(this.params.inputFile);					
@@ -396,10 +427,10 @@ public class RunTypes {
 						VistaPackages vps = new VistaPackages(ri.getAllPackages());
 						vps.accept(api);
 						BlocksSupply blocks = api.getBlocks();
-						this.auxRun(fr, blocks);
+						this.auxRun(ri, fr, blocks);
 					} else {
 						BlocksSupply blocks = new SerializedBlocksSupply(this.params.parseTreeDirectory, ri);
-						this.auxRun(fr, blocks);
+						this.auxRun(ri, fr, blocks);
 					}
 				}
 			}
