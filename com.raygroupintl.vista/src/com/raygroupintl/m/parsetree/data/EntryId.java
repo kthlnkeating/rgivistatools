@@ -39,7 +39,7 @@ public class EntryId implements Comparable<EntryId> {
 	}
 	
 	public String getLabelOrDefault() {
-		if (this.label == null) {
+		if ((this.label == null) || (this.label.isEmpty())) {
 			return this.routineName;
 		} else {
 			return this.label;
@@ -74,6 +74,24 @@ public class EntryId implements Comparable<EntryId> {
 		if (lbl == null) {
 			lbl = "";
 		}					
+		return lbl + rou;		
+	}
+
+	public String toString2() {
+		String lbl = this.getTag();
+		String rou = this.getRoutineName();
+		if (lbl == null) {
+			lbl = "";
+		} else if (rou != null) {
+			if (lbl.equals(rou)) {
+				lbl = "";
+			}			
+		}
+		if (rou != null) {
+			rou = "^" + rou;
+		} else {
+			rou = "";
+		}
 		return lbl + rou;		
 	}
 

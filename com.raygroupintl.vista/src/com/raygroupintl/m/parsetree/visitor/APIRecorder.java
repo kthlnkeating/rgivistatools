@@ -29,6 +29,7 @@ import com.raygroupintl.m.parsetree.Indirection;
 import com.raygroupintl.m.parsetree.Line;
 import com.raygroupintl.m.parsetree.Local;
 import com.raygroupintl.m.parsetree.Node;
+import com.raygroupintl.m.parsetree.OpenCloseUseCmdNodes;
 import com.raygroupintl.m.parsetree.QuitCmd;
 import com.raygroupintl.m.parsetree.ReadCmd;
 import com.raygroupintl.m.parsetree.Routine;
@@ -56,6 +57,7 @@ public class APIRecorder extends FanoutRecorder {
 	
 	private int underCondition;
 	private int underFor;
+	private boolean underDeviceParameter;
 	
 	private Set<Integer> doBlockHash = new HashSet<Integer>();
 
@@ -70,7 +72,8 @@ public class APIRecorder extends FanoutRecorder {
 		this.index = 0;		
 		this.inDoBlock = 0;
 		this.underCondition = 0;
-		this.underFor = 0;		
+		this.underFor = 0;
+		this.underDeviceParameter = false;
 	}
 	
 	private void addOutput(Local local) {
@@ -162,11 +165,32 @@ public class APIRecorder extends FanoutRecorder {
 		this.currentBlock.addNewed(this.index, local);
 	}
 	
+	private static Set<String> DEVICE_PARAMS = new HashSet<String>();
+	static {
+		DEVICE_PARAMS.add("LINE");
+		DEVICE_PARAMS.add("NOLINE");
+		DEVICE_PARAMS.add("VT");
+		DEVICE_PARAMS.add("NOESCAPE");
+		DEVICE_PARAMS.add("ESCAPE");
+	}
+	
+	
+	private boolean isDeviceParameter(Local local) {
+		String name = local.getName().toString();
+		if (DEVICE_PARAMS.contains(name)) {
+			return true;
+		} else {
+			return false;
+		}
+	}
+	
 	@Override
 	protected void visitLocal(Local local) {
-		super.visitLocal(local);
-		++this.index;
-		this.currentBlock.addInput(index, local);
+		if ((! this.underDeviceParameter) || (! isDeviceParameter(local))) { 
+			super.visitLocal(local);
+			++this.index;
+			this.currentBlock.addInput(index, local);
+		}
 	}
 
 	protected void passLocalByVal(Local local, int index) {		
@@ -221,6 +245,14 @@ public class APIRecorder extends FanoutRecorder {
 		} else if (shouldClose) {
 			this.currentBlock.close();
 		}
+	}
+
+	@Override
+	protected void visitDeviceParameters(OpenCloseUseCmdNodes.DeviceParameters deviceParameters) {
+		boolean current = this.underDeviceParameter;
+		this.underDeviceParameter = true;
+		super.visitDeviceParameters(deviceParameters);
+		this.underDeviceParameter = current;
 	}
 		
 	protected void visitQuit(QuitCmd quitCmd) {

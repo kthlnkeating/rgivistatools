@@ -138,7 +138,6 @@ public class Visitor {
 		this.visitAtomicCommand(atomicGoto);
 	}
 	
-
 	
 	protected void visitIndirectAtomicSet(SetCmdNodes.IndirectAtomicSet indirectAtomicSet) {
 		indirectAtomicSet.acceptSubNodes(this);
@@ -156,7 +155,36 @@ public class Visitor {
 		setCmd.acceptSubNodes(this);
 	}
 	
+	
+	protected void visitAtomicOpenCmd(OpenCloseUseCmdNodes.AtomicOpenCmd atomicOpenCmd) {
+		this.visitAtomicCommand(atomicOpenCmd);
+	}
+	
+	protected void visitAtomicCloseCmd(OpenCloseUseCmdNodes.AtomicCloseCmd atomicCloseCmd) {
+		this.visitAtomicCommand(atomicCloseCmd);
+	}
+	
+	protected void visitAtomicUseCmd(OpenCloseUseCmdNodes.AtomicUseCmd atomicUseCmd) {
+		this.visitAtomicCommand(atomicUseCmd);
+	}
 		
+	protected void visitOpenCmd(OpenCloseUseCmdNodes.OpenCmd openCmd) {
+		openCmd.acceptSubNodes(this);
+	}
+
+	protected void visitCloseCmd(OpenCloseUseCmdNodes.CloseCmd closeCmd) {
+		closeCmd.acceptSubNodes(this);
+	}
+
+	protected void visitUseCmd(OpenCloseUseCmdNodes.UseCmd useCmd) {
+		useCmd.acceptSubNodes(this);
+	}
+
+	protected void visitDeviceParameters(OpenCloseUseCmdNodes.DeviceParameters deviceParameters) {
+		this.visitAdditionalNodeHolder(deviceParameters);
+	}
+		
+	
 	protected void visitQuit(QuitCmd quitCmd) {
 		quitCmd.acceptSubNodes(this);
 	}

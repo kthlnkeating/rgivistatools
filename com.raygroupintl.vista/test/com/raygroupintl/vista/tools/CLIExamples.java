@@ -3,165 +3,83 @@ package com.raygroupintl.vista.tools;
 import org.junit.Test;
 
 public class CLIExamples {
-	//@Test
-	public void testFanoutAll() {
-		String args[] = {"fanout", "-o", "C:\\Sandbox\\j_fo_all.dat", "-md", "C:\\Users\\Afsin\\git\\M-Tools"};
-		MRoutineAnalyzer.main(args);				
-	}
-	
-	//@Test
-	public void testFanoutSD() {
-		String args[] = {"fanout", "-o", "C:\\Sandbox\\j_fo_sd.dat", "-p", "SD"};
-		MRoutineAnalyzer.main(args);				
-	}
-	
-	//@Test
-	public void testFanoutGMPL() {
-		String args[] = {"fanout", "-o", "C:\\Sandbox\\j_fo_gmpl.dat", "-p", "GMPL"};
-		MRoutineAnalyzer.main(args);				
-	}
-	
-	//@Test
-	public void testFaninAll() {
-		String args[] = {"fanin", "-o", "C:\\Sandbox\\j_fi_all.dat", 
-				"-md", "C:\\Users\\Afsin\\git\\M-Tools",
+	@Test
+	public void testAll() {
+		MRoutineAnalyzer.main(new String[]{"fanout", "-o", "C:\\Sandbox\\j_fo_all.txt"});				
+		MRoutineAnalyzer.main(new String[]{"fanout", "-o", "C:\\Sandbox\\j_fo_gmpl.txt", "-p", "GMPL"});				
+		MRoutineAnalyzer.main(new String[]{"fanout", "-o", "C:\\Sandbox\\j_fo_sd.txt", "-p", "SD"});				
+		
+		MRoutineAnalyzer.main(new String[]{"fanin", "-o", "C:\\Sandbox\\j_fi_all.txt",
 				"-mf", "C:\\Users\\Afsin\\git\\VistA-FOIA\\Scripts\\ZGI.m",
 				"-mf", "C:\\Users\\Afsin\\git\\VistA-FOIA\\Scripts\\ZGO.m",
-				"-pe", "DENTAL RECORD MANAGER"};
-		MRoutineAnalyzer.main(args);				
-	}
-
-	//@Test
-	public void testFaninSD() {
-		String args[] = {"fanin", "-o", "C:\\Sandbox\\j_fi_sd.dat", "-p", "SD"};
-		MRoutineAnalyzer.main(args);				
-	}
-
-    //@Test
-	public void testFaninGMPL() {
-		String args[] = {"fanin", "-o", "C:\\Sandbox\\j_fi_gmpl.dat", "-p", "GMPL"};
-		MRoutineAnalyzer.main(args);				
-	}
-
-	//@Test
-	public void testOptionAll() {
-		String args[] = {"option", "-o", "C:\\Sandbox\\j_opt_all.dat", "-pe", "DENTAL RECORD MANAGER"};
-		MRoutineAnalyzer.main(args);				
-	}
-
-	//@Test
-	public void testOptionSD() {
-		String args[] = {"option", "-o", "C:\\Sandbox\\j_opt_sd.dat", "-p", "SD"};
-		MRoutineAnalyzer.main(args);				
-	}
-
-	//@Test
-	public void testOptionGMPL() {
-		String args[] = {"option", "-o", "C:\\Sandbox\\j_opt_gmpl.dat", "-p", "GMPL"};
-		MRoutineAnalyzer.main(args);				
-	}
-
-	//@Test
-	public void testRPCAll() {
-		String args[] = {"rpc", "-o", "C:\\Sandbox\\j_rpc_all.dat", "-pe", "DENTAL RECORD MANAGER"};
-		MRoutineAnalyzer.main(args);				
-	}
-
-	//@Test
-	public void testRPCSD() {
-		String args[] = {"rpc", "-o", "C:\\Sandbox\\j_rpc_sd.dat", "-p", "SD"};
-		MRoutineAnalyzer.main(args);				
-	}
-
-	//@Test
-	public void testRPCGMPL() {
-		String args[] = {"rpc", "-o", "C:\\Sandbox\\j_rpc_gmpl.dat", "-p", "GMPL"};
-		MRoutineAnalyzer.main(args);				
-	}
-
-	//@Test
-	public void testUsesGMPL() {
-		String args[] = {"usesglb", "-o", "C:\\Sandbox\\j_uses_gmpl.dat", "-p", "GMPL", "-ownf", "C:\\Users\\Afsin\\git\\M-RoutineAnalyzer\\src\\Ownership.csv"};
-		MRoutineAnalyzer.main(args);				
-	}
-
-	//@Test
-	public void testUsesSD() {
-		String args[] = {"usesglb", "-o", "C:\\Sandbox\\j_uses_sd.dat", "-p", "SD", "-ownf", "C:\\Users\\Afsin\\git\\M-RoutineAnalyzer\\src\\Ownership.csv"};
-		MRoutineAnalyzer.main(args);				
-	}
-
-	//@Test
-	public void testUsedGMPL() {
-		String args[] = {"usedglb", "-o", "C:\\Sandbox\\j_used_gmpl.dat", "-p", "GMPL", "-ownf", "C:\\Users\\Afsin\\git\\M-RoutineAnalyzer\\src\\Ownership.csv"};
-		MRoutineAnalyzer.main(args);				
-	}
-
-	//@Test
-	public void testUsedSD() {
-		String args[] = {"usedglb", "-o", "C:\\Sandbox\\j_used_sd.dat", "-p", "SD", "-ownf", "C:\\Users\\Afsin\\git\\M-RoutineAnalyzer\\src\\Ownership.csv"};
-		MRoutineAnalyzer.main(args);				
-	}
-
-	//@Test
-	public void testCreateParseTreeFiles() {
-		// Create files for parse tree
-		String args1[] = {"parsetreesave", "-ptd", "C:\\Sandbox\\serial"};
-		MRoutineAnalyzer.main(args1);		
-	}
-	
-	@Test
-	public void testError() {
-		String args[] = {"error", "-o", "C:\\Sandbox\\j_error_all.dat"};
-		MRoutineAnalyzer.main(args);				
-	}
+				"-pe", "DENTAL RECORD MANAGER"});				
+		MRoutineAnalyzer.main(new String[]{"fanin", "-o", "C:\\Sandbox\\j_fi_gmpl.txt", "-p", "GMPL"});				
+		MRoutineAnalyzer.main(new String[]{"fanin", "-o", "C:\\Sandbox\\j_fi_sd.txt", "-p", "SD"});				
 		
-	//@Test
-	public void testRoutineInfo() {
-		String args[] = {"routineinfo", "-o", "C:\\Sandbox\\j_rtninfo_all.dat"};
-		MRoutineAnalyzer.main(args);				
-	}
+		MRoutineAnalyzer.main(new String[]{"option", "-o", "C:\\Sandbox\\j_opt_all.txt", "-pe", "DENTAL RECORD MANAGER"});				
+		MRoutineAnalyzer.main(new String[]{"option", "-o", "C:\\Sandbox\\j_opt_gmpl.txt", "-p", "GMPL"});				
+		MRoutineAnalyzer.main(new String[]{"option", "-o", "C:\\Sandbox\\j_opt_sd.txt", "-p", "SD"});				
 		
-	//@Test
-	public void testFilemanCall() {
-		String args[] = {"filemancall", 
-						 "-o", "C:\\Sandbox\\j_fmc_all.dat"};
-		MRoutineAnalyzer.main(args);				
-	}
+		MRoutineAnalyzer.main(new String[]{"rpc", "-o", "C:\\Sandbox\\j_rpc_all.txt", "-pe", "DENTAL RECORD MANAGER"});				
+		MRoutineAnalyzer.main(new String[]{"rpc", "-o", "C:\\Sandbox\\j_rpc_gmpl.txt", "-p", "GMPL"});				
+		MRoutineAnalyzer.main(new String[]{"rpc", "-o", "C:\\Sandbox\\j_rpc_sd.txt", "-p", "SD"});				
 		
-	/* This prints code quality report for all the tags in Problem List API
-	 * routines GMPLAPI*, GMPLSITE, GMPLDAL*, GMPLEXT*.  It assumes environment
-	 * variable VistA-FOIA that point to the VistA-FOIA library. It assumes
-	 * testCreateParseTreeFiles is run.
-	 */
-	//@Test
-	public void testProblemListAPITags() {
-	    // Create entry points for the routines.
-		//String args0[] = {
-		//		"entry",
-		//		"-p", "PROBLEM LIST", 
-		//		"-r", "GMPLAPI.*", "-r", "GMPLSITE", "-r", "GMPLDAL.*", "-r", "GMPLEXT.*", 
-		//		"-o", "C:\\Sandbox\\j_gmpl_info_all_in.dat"};
-		//MRoutineAnalyzer.main(args0);
+		MRoutineAnalyzer.main(new String[]{"usesglb", "-o", "C:\\Sandbox\\j_uses_gmpl.dat", "-p", "GMPL", "-ownf", "C:\\Sandbox\\Ownership.csv"});				
+		MRoutineAnalyzer.main(new String[]{"usesglb", "-o", "C:\\Sandbox\\j_uses_sd.dat", "-p", "SD", "-ownf", "C:\\Sandbox\\Ownership.csv"});				
+
+		MRoutineAnalyzer.main(new String[]{"usedglb", "-o", "C:\\Sandbox\\j_used_gmpl.dat", "-p", "GMPL", "-ownf", "C:\\Sandbox\\Ownership.csv"});				
+		MRoutineAnalyzer.main(new String[]{"usedglb", "-o", "C:\\Sandbox\\j_used_sd.dat", "-p", "SD", "-ownf", "C:\\Sandbox\\Ownership.csv"});				
 		
-		// Write the API
-		String args2[] = {
-				"entryinfo", 
-				"-i", "C:\\Sandbox\\j_gmpl_info_all_in.dat", 
-				"-o", "C:\\Sandbox\\j_entryinfo_gmpl_0.dat",
-				"-ptd", "C:\\Sandbox\\serial",
-				"-f", "0"};
-		MRoutineAnalyzer.main(args2);
-	}
-	
-	//@Test
-	public void testGeneric() {
-		// Write the API
-		String args2[] = {
-				"-t", "apis", 
-				"-e", "ASK^DIC", 
-				"-o", "C:\\Sandbox\\j_test.dat",
-				"-ptd", "C:\\Sandbox\\serial"};
-		MRoutineAnalyzer.main(args2);
+		MRoutineAnalyzer.main(new String[]{"filemancall", "-o", "C:\\Sandbox\\j_fmc_all.txt"});	  //SPNRPC4 is due to error			
+
+		MRoutineAnalyzer.main(new String[]{"parsetreesave", "-ptd", "C:\\Sandbox\\serial"});		
+
+		MRoutineAnalyzer.main(new String[]{"entry", "-p", "OR", "-r", "ORQQPL.*", "-o", "C:\\Sandbox\\j_einfo_cprspl_tags.txt"});
+		
+		MRoutineAnalyzer.main(new String[]{"entryinfo", "-i", "C:\\Sandbox\\j_einfo_cprspl_tags.txt", "-o", "C:\\Sandbox\\j_einfo_cprspl_0.txt",
+					"-ptd", "C:\\Sandbox\\serial", "-f", "0"});
+		MRoutineAnalyzer.main(new String[]{"entryinfo", "-i", "C:\\Sandbox\\j_einfo_cprspl_tags.txt", "-o", "C:\\Sandbox\\j_einfo_cprspl_1.txt",
+					"-ptd", "C:\\Sandbox\\serial", "-f", "1"});
+		MRoutineAnalyzer.main(new String[]{"entryinfo", "-i", "C:\\Sandbox\\j_einfo_cprspl_tags.txt", "-o", "C:\\Sandbox\\j_einfo_cprspl_2.txt",
+					"-ptd", "C:\\Sandbox\\serial", "-f", "2"});
+		MRoutineAnalyzer.main(new String[]{"entryinfo", "-i", "C:\\Sandbox\\j_einfo_cprspl_tags.txt", "-o", "C:\\Sandbox\\j_einfo_cprspl_3.txt",
+					"-ptd", "C:\\Sandbox\\serial", "-f", "3"});
+
+
+		MRoutineAnalyzer.main(new String[]{"fanin", "-o", "C:\\Sandbox\\j_einfo_gmplfi_tags.txt", "--rawformat", "-p", "GMPL"});
+
+		MRoutineAnalyzer.main(new String[]{"entryinfo", "-i", "C:\\Sandbox\\j_einfo_gmplfi_tags.txt", "-o", "C:\\Sandbox\\j_einfo_gmplfi_0.txt",
+					"-ptd", "C:\\Sandbox\\serial", "-f", "0"});
+		MRoutineAnalyzer.main(new String[]{"entryinfo", "-i", "C:\\Sandbox\\j_einfo_gmplfi_tags.txt", "-o", "C:\\Sandbox\\j_einfo_gmplfi_1.txt",
+					"-ptd", "C:\\Sandbox\\serial", "-f", "1"});
+		MRoutineAnalyzer.main(new String[]{"entryinfo", "-i", "C:\\Sandbox\\j_einfo_gmplfi_tags.txt", "-o", "C:\\Sandbox\\j_einfo_gmplfi_2.txt",
+					"-ptd", "C:\\Sandbox\\serial", "-f", "2"});
+		
+		
+		MRoutineAnalyzer.main(new String[]{"fanin", "-o", "C:\\Sandbox\\j_einfo_sdfi_tags.txt", "--rawformat", "-p", "SD"});
+
+		MRoutineAnalyzer.main(new String[]{"entryinfo", "-i", "C:\\Sandbox\\j_einfo_sdfi_tags.txt", "-o", "C:\\Sandbox\\j_einfo_sdfi_0.txt",
+					"-ptd", "C:\\Sandbox\\serial", "-f", "0"});
+		MRoutineAnalyzer.main(new String[]{"entryinfo", "-i", "C:\\Sandbox\\j_einfo_sdfi_tags.txt", "-o", "C:\\Sandbox\\j_einfo_sdfi_1.txt",
+					"-ptd", "C:\\Sandbox\\serial", "-f", "1"});
+		MRoutineAnalyzer.main(new String[]{"entryinfo", "-i", "C:\\Sandbox\\j_einfo_sdfi_tags.txt", "-o", "C:\\Sandbox\\j_einfo_sdfi_2.txt",
+					"-ptd", "C:\\Sandbox\\serial", "-f", "2"});
+		
+		
+		
+		
+		//MRoutineAnalyzer.main(new String[]{"fanin", "-o", "C:\\Sandbox\\j_einfo_fi_tags.txt", "--rawformat",
+		//		"-mf", "C:\\Users\\Afsin\\git\\VistA-FOIA\\Scripts\\ZGI.m",
+		//		"-mf", "C:\\Users\\Afsin\\git\\VistA-FOIA\\Scripts\\ZGO.m",
+		//		"-pe", "DENTAL RECORD MANAGER"});				
+
+		//MRoutineAnalyzer.main(new String[]{"entryinfo", "-i", "C:\\Sandbox\\j_einfo_fi_tags.txt", "-o", "C:\\Sandbox\\j_einfo_fi_0.txt",
+		//			"-ptd", "C:\\Sandbox\\serial", "-f", "0"});
+		//MRoutineAnalyzer.main(new String[]{"entryinfo", "-i", "C:\\Sandbox\\j_einfo_fi_tags.txt", "-o", "C:\\Sandbox\\j_einfo_fi_1.txt",
+		//			"-ptd", "C:\\Sandbox\\serial", "-f", "1"});
+		//MRoutineAnalyzer.main(new String[]{"entryinfo", "-i", "C:\\Sandbox\\j_einfo_fi_tags.txt", "-o", "C:\\Sandbox\\j_einfo_fi_2.txt",
+		//			"-ptd", "C:\\Sandbox\\serial", "-f", "2"});
+		//MRoutineAnalyzer.main(new String[]{"entryinfo", "-i", "C:\\Sandbox\\j_einfo_fi_tags.txt", "-o", "C:\\Sandbox\\j_einfo_fi_3.txt",
+		//			"-ptd", "C:\\Sandbox\\serial", "-f", "3"});
 	}
 }

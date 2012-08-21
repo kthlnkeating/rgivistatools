@@ -93,7 +93,7 @@ public class TFCommand extends TokenFactorySupply {
 		}
 	
 		public Token getToken(Token token) {
-			return new CmdTokens.C(token);
+			return new OpenCloseUseCmdTokens.MCloseCmd(token);
 		}
 	}
 	
@@ -238,7 +238,7 @@ public class TFCommand extends TokenFactorySupply {
 		}
 	
 		public Token getToken(Token token) {
-			return new CmdTokens.O(token);
+			return new OpenCloseUseCmdTokens.MOpenCmd(token);
 		}
 	}
 
@@ -334,7 +334,7 @@ public class TFCommand extends TokenFactorySupply {
 		}
 	
 		public Token getToken(Token token) {
-			return new CmdTokens.U(token);
+			return new OpenCloseUseCmdTokens.MUseCmd(token);
 		}
 	}
 

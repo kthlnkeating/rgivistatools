@@ -63,7 +63,10 @@ public class CLIParams {
 	
 	@CLIParameter(names={"-ownf", "--ownershipfile"})
 	public String ownershipFilePath;
-		
+	
+	@CLIParameter(names={"--rawformat"})
+	public boolean rawFormat;
+			
 	private static void logError(String msg) {
 		Logger logger = Logger.getLogger(MRoutineAnalyzer.class.getName());		
 		logger.log(Level.SEVERE, msg);

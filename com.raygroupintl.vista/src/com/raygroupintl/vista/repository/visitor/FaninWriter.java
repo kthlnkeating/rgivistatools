@@ -39,6 +39,7 @@ public class FaninWriter extends RepositoryVisitor {
 	private RepositoryInfo repositoryInfo;
 	private FileWrapper fileWrapper;
 	private FanInRecorder faninRecorder;
+	private boolean rawFormat;
 	
 	private static class EntryIdSource {
 		public Set<String> packages;
@@ -67,9 +68,10 @@ public class FaninWriter extends RepositoryVisitor {
 		}		
 	}
 	
-	public FaninWriter(RepositoryInfo repositoryInfo, FileWrapper fileWrapper) {
+	public FaninWriter(RepositoryInfo repositoryInfo, FileWrapper fileWrapper, boolean rawFormat) {
 		this.repositoryInfo = repositoryInfo;
 		this.fileWrapper = fileWrapper;
+		this.rawFormat = rawFormat;
 	}
 		
 	@Override
@@ -128,54 +130,70 @@ public class FaninWriter extends RepositoryVisitor {
 			entryIds.add(fws);
 		}
 		
-		TerminalFormatter tf = new TerminalFormatter();
-		int ndx = 0;
-		if (this.fileWrapper.start()) {
-			tf.setTab(21);
-			List<VistaPackage> reportPackages = rps.getPackages();
-			boolean multi = reportPackages.size() > 1;
-			for (VistaPackage p : reportPackages) {
-				if (multi) {
-					this.fileWrapper.writeEOL("--------------------------------------------------------------");
-					this.fileWrapper.writeEOL();
-				}
-				String name = p.getPackageName();
-				++ndx;
-				String pkgNumberPrefix = multi ? String.valueOf(ndx) + ". " : "";
-				if (sourcePackagesByPackage.get(name).size() > 40) {
-					this.fileWrapper.writeEOL(pkgNumberPrefix + "COMMON SERVICE NAME: " + name);
-				} else {
-					this.fileWrapper.writeEOL(pkgNumberPrefix + "PACKAGE NAME: " + name);					
-				}
-				this.fileWrapper.writeEOL();
-				List<EntryIdWithSources> fs = faninsByPackage.get(name);
-				if (fs.size() == 0) {
-					this.fileWrapper.writeEOL("   Not used by other packages");
-					this.fileWrapper.writeEOL();					
-				} else {
+		
+		if (rawFormat) {
+			if (this.fileWrapper.start()) {
+				List<VistaPackage> reportPackages = rps.getPackages();
+				for (VistaPackage p : reportPackages) {
+					String name = p.getPackageName();
+					List<EntryIdWithSources> fs = faninsByPackage.get(name);
 					Collections.sort(fs);
 					for (EntryIdWithSources f : fs) {
-						this.fileWrapper.writeEOL("  " + f.entryId.toString());
-						String title = tf.startList("CALLING PACKAGES");
-						this.fileWrapper.write(title);
-						List<String> sourcePackages = new ArrayList<String>(f.sources.getPackages());
-						Collections.sort(sourcePackages);
-						for (String source : sourcePackages) {
-							VistaPackage vp = this.repositoryInfo.getPackageFromPrefix(source);							
-							String pkgName = vp.getPackageName();
-							String line = tf.addToList(pkgName);
-							this.fileWrapper.write(line);
-						}
+						this.fileWrapper.writeEOL(f.entryId.toString());
+					}
+				}
+				this.fileWrapper.stop();
+			}	
+		} else {
+			TerminalFormatter tf = new TerminalFormatter();
+			int ndx = 0;
+			if (this.fileWrapper.start()) {
+				tf.setTab(21);
+				List<VistaPackage> reportPackages = rps.getPackages();
+				boolean multi = reportPackages.size() > 1;
+				for (VistaPackage p : reportPackages) {
+					if (multi) {
+						this.fileWrapper.writeEOL("--------------------------------------------------------------");
 						this.fileWrapper.writeEOL();
+					}
+					String name = p.getPackageName();
+					++ndx;
+					String pkgNumberPrefix = multi ? String.valueOf(ndx) + ". " : "";
+					if (sourcePackagesByPackage.get(name).size() > 40) {
+						this.fileWrapper.writeEOL(pkgNumberPrefix + "COMMON SERVICE NAME: " + name);
+					} else {
+						this.fileWrapper.writeEOL(pkgNumberPrefix + "PACKAGE NAME: " + name);					
+					}
+					this.fileWrapper.writeEOL();
+					List<EntryIdWithSources> fs = faninsByPackage.get(name);
+					if (fs.size() == 0) {
+						this.fileWrapper.writeEOL("   Not used by other packages");
+						this.fileWrapper.writeEOL();					
+					} else {
+						Collections.sort(fs);
+						for (EntryIdWithSources f : fs) {
+							this.fileWrapper.writeEOL("  " + f.entryId.toString());
+							String title = tf.startList("CALLING PACKAGES");
+							this.fileWrapper.write(title);
+							List<String> sourcePackages = new ArrayList<String>(f.sources.getPackages());
+							Collections.sort(sourcePackages);
+							for (String source : sourcePackages) {
+								VistaPackage vp = this.repositoryInfo.getPackageFromPrefix(source);							
+								String pkgName = vp.getPackageName();
+								String line = tf.addToList(pkgName);
+								this.fileWrapper.write(line);
+							}
+							this.fileWrapper.writeEOL();
+							this.fileWrapper.writeEOL();
+						}
+					}
+					if (multi) {
+						this.fileWrapper.writeEOL("--------------------------------------------------------------");
 						this.fileWrapper.writeEOL();
 					}
 				}
-				if (multi) {
-					this.fileWrapper.writeEOL("--------------------------------------------------------------");
-					this.fileWrapper.writeEOL();
-				}
+				this.fileWrapper.stop();
 			}
-			this.fileWrapper.stop();
 		}
 	}
 }

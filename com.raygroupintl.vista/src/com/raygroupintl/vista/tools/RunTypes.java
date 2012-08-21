@@ -123,7 +123,11 @@ public class RunTypes {
 		REPLACEMENT_ROUTINES.put("%ZISUTL", "ZISUTL");
 	}
 	
-	private static Map<String, RunType> RUN_TYPES; 
+	private static abstract class RunTypeFactory {
+		public abstract RunType getInstance(CLIParams params);
+	}
+		
+	private static Map<String, RunTypeFactory> RUN_TYPES; 
 		
 	private static class Fanout extends RunType {		
 		public Fanout(CLIParams params) {
@@ -159,7 +163,7 @@ public class RunTypes {
 				if (ri != null) {
 					VistaPackages vps = this.getVistaPackages(ri);
 					if (vps != null) {						
-						FaninWriter fow = new FaninWriter(ri, fr);
+						FaninWriter fow = new FaninWriter(ri, fr, this.params.rawFormat);
 						vps.accept(fow);
 					}
 				}
@@ -437,26 +441,86 @@ public class RunTypes {
 		}
 	}	
 	
-	private static Map<String, RunType> getRunTypes(CLIParams params) {
+	private static Map<String, RunTypeFactory> getRunTypes(CLIParams params) {
 		if (RunTypes.RUN_TYPES == null) {
-			RunTypes.RUN_TYPES = new HashMap<String, RunType>();
-			RUN_TYPES.put("fanout", new Fanout(params));
-			RUN_TYPES.put("fanin", new Fanin(params));
-			RUN_TYPES.put("option", new Option(params));
-			RUN_TYPES.put("rpc", new RPC(params));
-			RUN_TYPES.put("usesglb", new UsesGlobal(params));
-			RUN_TYPES.put("usedglb", new UsedGlobal(params));
-			RUN_TYPES.put("parsetreesave", new ParseTreeSave(params));
-			RUN_TYPES.put("entry", new Entry(params));
-			RUN_TYPES.put("entryinfo", new EntryInfo(params));
-			RUN_TYPES.put("error", new MError(params));
-			RUN_TYPES.put("routineinfo", new RoutineInfo(params));
-			RUN_TYPES.put("filemancall", new FilemanCallGlobal(params));
+			RunTypes.RUN_TYPES = new HashMap<String, RunTypeFactory>();
+			RUN_TYPES.put("fanout", new RunTypeFactory() {				
+				@Override
+				public RunType getInstance(CLIParams params) {
+					return new Fanout(params);
+				}
+			});
+			RUN_TYPES.put("fanin", new RunTypeFactory() {				
+				@Override
+				public RunType getInstance(CLIParams params) {
+					return  new Fanin(params);
+				}
+			});
+			RUN_TYPES.put("option", new RunTypeFactory() {				
+				@Override
+				public RunType getInstance(CLIParams params) {
+					return new Option(params);
+				}
+			});
+			RUN_TYPES.put("rpc", new RunTypeFactory() {				
+				@Override
+				public RunType getInstance(CLIParams params) {
+					return new RPC(params);
+				}
+			});
+			RUN_TYPES.put("usesglb", new RunTypeFactory() {				
+				@Override
+				public RunType getInstance(CLIParams params) {
+					return new UsesGlobal(params);
+				}
+			});
+			RUN_TYPES.put("usedglb", new RunTypeFactory() {				
+				@Override
+				public RunType getInstance(CLIParams params) {
+					return new UsedGlobal(params);
+				}
+			});
+			RUN_TYPES.put("parsetreesave", new RunTypeFactory() {				
+				@Override
+				public RunType getInstance(CLIParams params) {
+					return new ParseTreeSave(params);
+				}
+			});
+			RUN_TYPES.put("entry", new RunTypeFactory() {				
+				@Override
+				public RunType getInstance(CLIParams params) {
+					return new Entry(params);
+				}
+			});
+			RUN_TYPES.put("entryinfo", new RunTypeFactory() {				
+				@Override
+				public RunType getInstance(CLIParams params) {
+					return new EntryInfo(params);
+				}
+			});
+			RUN_TYPES.put("error", new RunTypeFactory() {				
+				@Override
+				public RunType getInstance(CLIParams params) {
+					return new MError(params);
+				}
+			});
+			RUN_TYPES.put("routineinfo", new RunTypeFactory() {				
+				@Override
+				public RunType getInstance(CLIParams params) {
+					return new RoutineInfo(params);
+				}
+			});
+			RUN_TYPES.put("filemancall", new RunTypeFactory() {				
+				@Override
+				public RunType getInstance(CLIParams params) {
+					return new FilemanCallGlobal(params);
+				}
+			});
 		}
 		return RunTypes.RUN_TYPES;
 	}
 	
-	private static String getRunTypeListMsg(Map<String, RunType> types) {
+	private static String getRunTypeListMsg(Map<String, RunTypeFactory> types) {
 		String result = "";
 		for (String runType : types.keySet()) {
 			if (! result.isEmpty()) {
@@ -470,19 +534,19 @@ public class RunTypes {
 	public static RunType getRunType(String[] args) {
 		try {
 			CLIParams params = CLIParamMgr.parse(CLIParams.class, args);
-			Map<String, RunType> runTypes = RunTypes.getRunTypes(params);			
+			Map<String, RunTypeFactory> runTypeFactories = RunTypes.getRunTypes(params);			
 			List<String> positionals = params.positionals;
 			if (positionals.size() == 0) {				
-				MRALogger.logError("A run type needs to be specified as the first positional argument.\n" + RunTypes.getRunTypeListMsg(runTypes));
+				MRALogger.logError("A run type needs to be specified as the first positional argument.\n" + RunTypes.getRunTypeListMsg(runTypeFactories));
 				return null;				
 			}
 			String specifiedType = positionals.get(0);
-			RunType specifiedRunType = runTypes.get(specifiedType);
-			if (specifiedRunType == null) {
-				MRALogger.logError("Specified run type " + specifiedType + " is not known.\n" + RunTypes.getRunTypeListMsg(runTypes));
+			RunTypeFactory specifiedFactory = runTypeFactories.get(specifiedType);
+			if (specifiedFactory == null) {
+				MRALogger.logError("Specified run type " + specifiedType + " is not known.\n" + RunTypes.getRunTypeListMsg(runTypeFactories));
 				return null;
 			}
-			return specifiedRunType;			
+			return specifiedFactory.getInstance(params);			
 		} catch (Throwable t) {
 			MRALogger.logError("Invalid command line options.", t);
 			return null;

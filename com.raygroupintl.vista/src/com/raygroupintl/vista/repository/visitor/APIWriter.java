@@ -72,7 +72,7 @@ public class APIWriter {
 	
 	private void write(EntryId entryId, APIDataStore store, String[] linePieces) {
 		String routineName = entryId.getRoutineName();
-		this.fileWrapper.writeEOL(" " + entryId.toString());
+		this.fileWrapper.writeEOL(" " + entryId.toString2());
 		//this.tf.setTab(21);
 		//this.write(linePieces, 1, "CALLING PACKAGES ");
 		//this.write(linePieces, 3, "CALLING RPC's    ");
@@ -80,12 +80,12 @@ public class APIWriter {
 		this.tf.setTab(12);
 		Blocks rbs = this.blocksSupply.getBlocks(routineName);
 		if (rbs == null) {
-			this.fileWrapper.writeEOL(this.tf.titled("ERROR", "Routine " + routineName + " is missing."));
+			this.fileWrapper.writeEOL("  ERROR: Invalid entry point");
 		} else {
 			String label = entryId.getLabelOrDefault();
 			Block lb = rbs.get(label);
 			if (lb == null) {
-				this.fileWrapper.writeEOL(this.tf.titled("ERROR", "Tag " + entryId.toString() + " is missing."));
+				this.fileWrapper.writeEOL("  ERROR: Invalid entry point");
 			} else {
 				String[] formals = lb.getFormals();
 				this.fileWrapper.write(this.tf.startList("FORMAL"));
@@ -133,6 +133,7 @@ public class APIWriter {
 					String[] pieces = linePieces[0].split("\\^");
 					if ((pieces != null) && (pieces.length > 0)) {
 						String label = pieces[0];
+						if ((label != null) && (label.isEmpty())) label = null;
 						String routineName = pieces.length > 1 ? pieces[1] : null;
 						EntryId entryId = new EntryId(routineName, label);
 						this.write(entryId, store, linePieces);

@@ -26,17 +26,6 @@ class CmdTokens {
 		}			
 	}
 		
-	static class C extends MCommand {
-		public C(Token token) {
-			super(token);
-		}		
-		
-		@Override
-		protected String getFullName() {		
-			return "CLOSE";
-		}			
-	}
-		
 	static class D extends MCommand {
 		public D(Token token) {
 			super(token);
@@ -151,18 +140,6 @@ class CmdTokens {
 		}			
 	}
 
-	static class O extends MCommand {
-		public O(Token token) {
-			super(token);
-		}		
-		
-		@Override
-		protected String getFullName() {		
-			return "OPEN";
-		}			
-	}
-
-
 	static class Q extends MCommand {
 		public Q(Token token) {
 			super(token);
@@ -234,17 +211,6 @@ class CmdTokens {
 		@Override
 		protected String getFullName() {		
 			return "TSTART";
-		}			
-	}
-
-	static class U extends MCommand {
-		public U(Token token) {
-			super(token);
-		}		
-		
-		@Override
-		protected String getFullName() {		
-			return "USE";
 		}			
 	}
 

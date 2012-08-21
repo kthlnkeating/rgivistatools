@@ -71,12 +71,14 @@ public class Block {
 		public FanoutBlocks(Block root, APIDataStore store) {
 			this.list.add(root);
 			this.rootId = System.identityHashCode(root);
+			FaninList faninList = new FaninList(root);
+			this.map.put(this.rootId, faninList);
 			this.store = store;
 		}
 		
 		public void add(Block fanin, Block fanout, int fanoutIndex, List<Indexed<String>> byRefs) {
 			Integer fanoutId = System.identityHashCode(fanout);
-			if (fanoutId != this.rootId) {
+			//if (fanoutId != this.rootId) {
 				APIData storedData = this.store == null ? null : this.store.get(fanout);
 				if (storedData != null) {
 					FaninList faninList = this.storedMap.get(fanoutId);
@@ -95,7 +97,7 @@ public class Block {
 					}
 					faninList.addFanin(fanin, fanoutIndex, byRefs);
 				}
-			}
+			//}
 		}
 		
 		public Block getBlock(int index) {
@@ -135,7 +137,7 @@ public class Block {
 
 			while (totalChange > 0) {
 				totalChange = 0;
-				for (int i=this.list.size()-1; i>0; --i) {
+				for (int i=this.list.size()-1; i>=0; --i) {
 					Block b = this.list.get(i);
 					int id = System.identityHashCode(b);
 					APIData data = datas.get(id);
@@ -492,7 +494,9 @@ public class Block {
 	}
 
 	public void incrementIndirection() {
-		++this.indirectionCount;
+		if (! this.closed) {
+			++this.indirectionCount;
+		}
 	}
 	
 	public int getIndirectionCount() {
@@ -500,7 +504,9 @@ public class Block {
 	}
 	
 	public void incrementWrite() {
-		++this.writeCount;
+		if (! this.closed) {
+			++this.writeCount;
+		}
 	}
 	
 	public int getWriteCount() {
@@ -508,7 +514,9 @@ public class Block {
 	}
 	
 	public void incrementRead() {
-		++this.readCount;
+		if (! this.closed) {
+			++this.readCount;
+		}
 	}
 	
 	public int getReadCount() {
@@ -516,7 +524,9 @@ public class Block {
 	}
 	
 	public void incrementExecute() {
-		++this.executeCount;
+		if (! this.closed) {
+			++this.executeCount;
+		}
 	}
 	
 	public int getExecuteCount() {
