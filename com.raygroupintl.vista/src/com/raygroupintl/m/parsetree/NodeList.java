@@ -24,28 +24,22 @@ public class NodeList<T extends Node> extends Nodes<T> {
 	private static final long serialVersionUID = 1L;
 
 	private List<T> nodes;
-	public static int allocated;
-	public static int added;
 	
 	public NodeList() {		
 	}
 	
 	public NodeList(int size) {
 		this.nodes = new ArrayList<T>(size);	
-		allocated += size;
 	}
 
 	public void reset(int size) {
 		this.nodes = new ArrayList<T>(size);
-		allocated += size;
 	}
 	
 	public void add(T node) {
 		if (this.nodes == null) {
 			this.nodes = new ArrayList<T>();
-			allocated += 10;
 		}
-		added += 1;
 		this.nodes.add(node);
 	}
 	

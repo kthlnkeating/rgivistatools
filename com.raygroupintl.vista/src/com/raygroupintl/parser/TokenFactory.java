@@ -53,7 +53,7 @@ public abstract class TokenFactory {
 	protected abstract Token tokenizeOnly(Text text, ObjectSupply objectSupply) throws SyntaxErrorException;
 	
 	public void setTargetType(Class<? extends Token> cls) {
-		final Constructor<? extends Token> constructor = getConstructor(cls, Token.class, Token.class);
+		final Constructor<? extends Token> constructor = getConstructor(cls, Token.class);
 		this.adapter = new Adapter() {			
 			@Override
 			public Token convert(Token ch) {
@@ -66,10 +66,10 @@ public abstract class TokenFactory {
 		};
 	}
 	
-	static protected Constructor<? extends Token> getConstructor(Class<? extends Token> cls, Class<?> constructorArgument, Class<? extends Token> targetCls) {
+	static private Constructor<? extends Token> getConstructor(Class<? extends Token> cls, Class<? extends Token> tokenCls) {
 		try {
-			if (! targetCls.isAssignableFrom(cls)) {
-				throw new IllegalArgumentException(cls.getName() + " must extend " + targetCls.getName() + ".");
+			if (! tokenCls.isAssignableFrom(cls)) {
+				throw new IllegalArgumentException(cls.getName() + " must extend " + tokenCls.getName() + ".");
 			}
 			int modifiers = cls.getModifiers();
 			if (! Modifier.isPublic(modifiers)) {
@@ -78,13 +78,13 @@ public abstract class TokenFactory {
 			if (Modifier.isAbstract(modifiers) || Modifier.isInterface(modifiers)) {
 				throw new IllegalArgumentException(cls.getName() + " is abstract.");
 			}
-			final Constructor<? extends Token> constructor = cls.getConstructor(constructorArgument);
+			final Constructor<? extends Token> constructor = cls.getConstructor(tokenCls);
 			if (! Modifier.isPublic(constructor.getModifiers())) {
 				throw new IllegalArgumentException(cls.getName() + " constructor (List) is not public.");			
 			}
 			return constructor;
 		} catch (NoSuchMethodException nsm) {
-			throw new IllegalArgumentException(cls.getName() + " does not have a constructor that accepts " + constructorArgument.getName() + ".");
+			throw new IllegalArgumentException(cls.getName() + " does not have a constructor that accepts " + tokenCls.getName() + ".");
 		}
 	}
 }
