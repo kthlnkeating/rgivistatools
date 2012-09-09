@@ -260,6 +260,18 @@ public class Visitor {
 		killCmd.acceptSubNodes(this);
 	}
 	
+	protected void visitCacheClassMethod(CacheClassMethod ccm) {
+		this.visitAdditionalNodeHolder(ccm);
+	}
+
+	protected void visitCacheSystemCall(CacheSystemCall csc) {
+		this.visitAdditionalNodeHolder(csc);
+	}
+
+	protected void visitCacheObjectDoRoutine(CacheObjectDoRoutine codr) {
+		this.visitAdditionalNodeHolder(codr);
+	}
+
 	
 	protected void visitExtrinsic(Extrinsic extrinsic) {
 		this.visitAdditionalNodeHolder(extrinsic);

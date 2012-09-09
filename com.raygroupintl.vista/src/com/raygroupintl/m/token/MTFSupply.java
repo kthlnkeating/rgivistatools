@@ -711,6 +711,7 @@ public class MTFSupply {
 		public TokenFactory classreftaillst;
 		@Rule("name, [classreftaillst]")
 		public TokenFactory classref;
+		@TokenType(MCacheClassMethod.class)
 		@Rule("ppclass, '(', classref, ')', '.', name, actuallist")
 		public TokenFactory classmethod;
 		
@@ -720,6 +721,7 @@ public class MTFSupply {
 		public TokenFactory method;
 		@Rule("{method}")
 		public TokenFactory methods;
+		@TokenType(MCacheSystemCall.class)
 		@Rule("system, [methods], actuallist")
 		public TokenFactory systemcall;
 		
@@ -738,6 +740,7 @@ public class MTFSupply {
 		@Rule("objdoargument | extdoargument | inddoargument | offsetdoargument | labelcalldoargument | doargument | onlyrsimpledoargument | onlyrdoargument | clsdoargument | sysdoargument")
 		public TokenFactory doargumentall;
 		
+		@TokenType(MCacheObjectDoRoutine.class)
 		@Rule("name, method")
 		public TokenFactory objdoroutine;
 		@Rule("envfanoutroutine | objdoroutine | fanoutroutine | indfanoutroutine")

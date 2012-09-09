@@ -38,6 +38,7 @@ import com.raygroupintl.vista.repository.VistaPackage;
 import com.raygroupintl.vista.repository.VistaPackages;
 import com.raygroupintl.vista.repository.visitor.APIOverallRecorder;
 import com.raygroupintl.vista.repository.visitor.APIWriter;
+import com.raygroupintl.vista.repository.visitor.CacheOccuranceWriter;
 import com.raygroupintl.vista.repository.visitor.DTFilemanCallWriter;
 import com.raygroupintl.vista.repository.visitor.DTUsedGlobalWriter;
 import com.raygroupintl.vista.repository.visitor.DTUsesGlobalWriter;
@@ -441,6 +442,27 @@ public class RunTypes {
 		}
 	}	
 	
+	private static class CacheUsage extends RunType {		
+		public CacheUsage(CLIParams params) {
+			super(params);
+		}
+		
+		@Override
+		public void run() {
+			FileWrapper fr = this.getOutputFile();
+			if (fr != null) {
+				RepositoryInfo ri = this.getRepositoryInfo();
+				if (ri != null) {
+					VistaPackages vps = this.getVistaPackages(ri);
+					if (vps != null) {	
+						CacheOccuranceWriter cow = new CacheOccuranceWriter(fr);
+						vps.accept(cow);
+					}
+				}
+			}
+		}
+	}
+
 	private static Map<String, RunTypeFactory> getRunTypes(CLIParams params) {
 		if (RunTypes.RUN_TYPES == null) {
 			RunTypes.RUN_TYPES = new HashMap<String, RunTypeFactory>();
@@ -514,6 +536,12 @@ public class RunTypes {
 				@Override
 				public RunType getInstance(CLIParams params) {
 					return new FilemanCallGlobal(params);
+				}
+			});
+			RUN_TYPES.put("cacheusage", new RunTypeFactory() {				
+				@Override
+				public RunType getInstance(CLIParams params) {
+					return new CacheUsage(params);
 				}
 			});
 		}
