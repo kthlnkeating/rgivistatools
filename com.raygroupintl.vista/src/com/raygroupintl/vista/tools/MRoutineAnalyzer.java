@@ -17,7 +17,89 @@
 package com.raygroupintl.vista.tools;
 
 public class MRoutineAnalyzer {
+	private static String getArgument(String[] args, int index, String defaultArg) {
+		if ((args != null) && (args.length > index)) {
+			return args[index];
+		} else {
+			return defaultArg;
+		}		
+	}
+	
+	private static void mRoutineAnalyzerTestBench(String[] args) {
+		String outputPath = getArgument(args, 1, "C:\\Sandbox");
+		String pathPrefix = getArgument(args, 2, "C:\\Sandbox\\m_");
+		
+		MRoutineAnalyzer.main(new String[]{"fanout", "-o", pathPrefix + "fo_all.txt"});				
+		MRoutineAnalyzer.main(new String[]{"fanout", "-o", pathPrefix + "fo_gmpl.txt", "-p", "GMPL"});				
+		MRoutineAnalyzer.main(new String[]{"fanout", "-o", pathPrefix + "fo_sd.txt", "-p", "SD"});				
+		
+		MRoutineAnalyzer.main(new String[]{"fanin", "-o", pathPrefix + "fi_all.txt",
+				"-mf", "C:\\Users\\Afsin\\git\\VistA-FOIA\\Scripts\\ZGI.m",
+				"-mf", "C:\\Users\\Afsin\\git\\VistA-FOIA\\Scripts\\ZGO.m",
+				"-pe", "DENTAL RECORD MANAGER"});				
+		MRoutineAnalyzer.main(new String[]{"fanin", "-o", pathPrefix + "fi_gmpl.txt", "-p", "GMPL"});				
+		MRoutineAnalyzer.main(new String[]{"fanin", "-o", pathPrefix + "fi_sd.txt", "-p", "SD"});				
+		
+		MRoutineAnalyzer.main(new String[]{"option", "-o", pathPrefix + "opt_all.txt", "-pe", "DENTAL RECORD MANAGER"});				
+		MRoutineAnalyzer.main(new String[]{"option", "-o", pathPrefix + "opt_gmpl.txt", "-p", "GMPL"});				
+		MRoutineAnalyzer.main(new String[]{"option", "-o", pathPrefix + "opt_sd.txt", "-p", "SD"});				
+		
+		MRoutineAnalyzer.main(new String[]{"rpc", "-o", pathPrefix + "rpc_all.txt", "-pe", "DENTAL RECORD MANAGER"});				
+		MRoutineAnalyzer.main(new String[]{"rpc", "-o", pathPrefix + "rpc_gmpl.txt", "-p", "GMPL"});				
+		MRoutineAnalyzer.main(new String[]{"rpc", "-o", pathPrefix + "rpc_sd.txt", "-p", "SD"});				
+		
+		MRoutineAnalyzer.main(new String[]{"usesglb", "-o", pathPrefix + "uses_gmpl.txt", "-p", "GMPL", "-ownf", outputPath + "\\Ownership.csv"});				
+		MRoutineAnalyzer.main(new String[]{"usesglb", "-o", pathPrefix + "uses_sd.txt", "-p", "SD", "-ownf", outputPath + "\\Ownership.csv"});				
+
+		MRoutineAnalyzer.main(new String[]{"usedglb", "-o", pathPrefix + "used_gmpl.txt", "-p", "GMPL", "-ownf", outputPath + "\\Ownership.csv"});				
+		MRoutineAnalyzer.main(new String[]{"usedglb", "-o", pathPrefix + "used_sd.txt", "-p", "SD", "-ownf", outputPath + "\\Ownership.csv"});				
+		
+		MRoutineAnalyzer.main(new String[]{"filemancall", "-o", pathPrefix + "fmc_all.txt"});	  //SPNRPC4 is due to error			
+
+		MRoutineAnalyzer.main(new String[]{"parsetreesave", "-ptd", outputPath + "\\serial"});		
+
+		MRoutineAnalyzer.main(new String[]{"entry", "-p", "OR", "-r", "ORQQPL.*", "-o", pathPrefix + "einfo_cprspl_tags.txt"});
+		
+		MRoutineAnalyzer.main(new String[]{"entryinfo", "-i", pathPrefix + "einfo_cprspl_tags.txt", "-o", pathPrefix + "einfo_cprspl_0.txt",
+					"-ptd", outputPath + "\\serial", "-f", "0"});
+		MRoutineAnalyzer.main(new String[]{"entryinfo", "-i", pathPrefix + "einfo_cprspl_tags.txt", "-o", pathPrefix + "einfo_cprspl_1.txt",
+					"-ptd", outputPath + "\\serial", "-f", "1"});
+		MRoutineAnalyzer.main(new String[]{"entryinfo", "-i", pathPrefix + "einfo_cprspl_tags.txt", "-o", pathPrefix + "einfo_cprspl_2.txt",
+					"-ptd", outputPath + "\\serial", "-f", "2"});
+		MRoutineAnalyzer.main(new String[]{"entryinfo", "-i", pathPrefix + "einfo_cprspl_tags.txt", "-o", pathPrefix + "einfo_cprspl_3.txt",
+					"-ptd", outputPath + "\\serial", "-f", "3"});
+
+
+		MRoutineAnalyzer.main(new String[]{"fanin", "-o", pathPrefix + "einfo_gmplfi_tags.txt", "--rawformat", "-p", "GMPL"});
+
+		MRoutineAnalyzer.main(new String[]{"entryinfo", "-i", pathPrefix + "einfo_gmplfi_tags.txt", "-o", pathPrefix + "einfo_gmplfi_0.txt",
+					"-ptd", outputPath + "\\serial", "-f", "0"});
+		MRoutineAnalyzer.main(new String[]{"entryinfo", "-i", pathPrefix + "einfo_gmplfi_tags.txt", "-o", pathPrefix + "einfo_gmplfi_1.txt",
+					"-ptd", outputPath + "\\serial", "-f", "1"});
+		MRoutineAnalyzer.main(new String[]{"entryinfo", "-i", pathPrefix + "einfo_gmplfi_tags.txt", "-o", pathPrefix + "einfo_gmplfi_2.txt",
+					"-ptd", outputPath + "\\serial", "-f", "2"});
+		MRoutineAnalyzer.main(new String[]{"entryinfo", "-i", pathPrefix + "einfo_gmplfi_tags.txt", "-o", pathPrefix + "einfo_gmplfi_3.txt",
+				"-ptd", outputPath + "\\serial", "-f", "3"});
+		
+		
+		MRoutineAnalyzer.main(new String[]{"fanin", "-o", pathPrefix + "einfo_sdfi_tags.txt", "--rawformat", "-p", "SD"});
+
+		MRoutineAnalyzer.main(new String[]{"entryinfo", "-i", pathPrefix + "einfo_sdfi_tags.txt", "-o", pathPrefix + "einfo_sdfi_0.txt",
+					"-ptd", outputPath + "\\serial", "-f", "0"});
+		MRoutineAnalyzer.main(new String[]{"entryinfo", "-i", pathPrefix + "einfo_sdfi_tags.txt", "-o", pathPrefix + "einfo_sdfi_1.txt",
+					"-ptd", outputPath + "\\serial", "-f", "1"});
+		MRoutineAnalyzer.main(new String[]{"entryinfo", "-i", pathPrefix + "einfo_sdfi_tags.txt", "-o", pathPrefix + "einfo_sdfi_2.txt",
+					"-ptd", outputPath + "\\serial", "-f", "2"});		
+		MRoutineAnalyzer.main(new String[]{"entryinfo", "-i", pathPrefix + "einfo_sdfi_tags.txt", "-o", pathPrefix + "einfo_sdfi_3.txt",
+				"-ptd", outputPath + "\\serial", "-f", "3"});		
+	}
+		
 	public static void main(String[] args) {
+		if ("mratb".equalsIgnoreCase(getArgument(args, 0, ""))) {
+			mRoutineAnalyzerTestBench(args);
+			return;
+		}
+				
 		try {
 			RunType runType = RunTypes.getRunType(args);
 			if (runType != null) {
