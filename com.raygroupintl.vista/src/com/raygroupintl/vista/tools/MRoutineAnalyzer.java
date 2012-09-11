@@ -16,6 +16,11 @@
 
 package com.raygroupintl.vista.tools;
 
+import java.nio.file.Path;
+import java.nio.file.Paths;
+
+import com.raygroupintl.vista.repository.RepositoryInfo;
+
 public class MRoutineAnalyzer {
 	private static String getArgument(String[] args, int index, String defaultArg) {
 		if ((args != null) && (args.length > index)) {
@@ -26,6 +31,9 @@ public class MRoutineAnalyzer {
 	}
 	
 	private static void mRoutineAnalyzerTestBench(String[] args) {
+		String root = RepositoryInfo.getLocationWithLog();
+		if (root == null) return;
+		
 		String outputPath = getArgument(args, 1, "C:\\Sandbox");
 		String pathPrefix = getArgument(args, 2, "C:\\Sandbox\\m_");
 		
@@ -33,10 +41,10 @@ public class MRoutineAnalyzer {
 		MRoutineAnalyzer.main(new String[]{"fanout", "-o", pathPrefix + "fo_gmpl.txt", "-p", "GMPL"});				
 		MRoutineAnalyzer.main(new String[]{"fanout", "-o", pathPrefix + "fo_sd.txt", "-p", "SD"});				
 		
+		Path zgi = Paths.get(root, "Scripts", "ZGI.m");
+		Path zgo = Paths.get(root, "Scripts", "ZGO.m");
 		MRoutineAnalyzer.main(new String[]{"fanin", "-o", pathPrefix + "fi_all.txt",
-				"-mf", "C:\\Users\\Afsin\\git\\VistA-FOIA\\Scripts\\ZGI.m",
-				"-mf", "C:\\Users\\Afsin\\git\\VistA-FOIA\\Scripts\\ZGO.m",
-				"-pe", "DENTAL RECORD MANAGER"});				
+				"-mf", zgi.toString(), "-mf", zgo.toString(), "-pe", "DENTAL RECORD MANAGER"});				
 		MRoutineAnalyzer.main(new String[]{"fanin", "-o", pathPrefix + "fi_gmpl.txt", "-p", "GMPL"});				
 		MRoutineAnalyzer.main(new String[]{"fanin", "-o", pathPrefix + "fi_sd.txt", "-p", "SD"});				
 		

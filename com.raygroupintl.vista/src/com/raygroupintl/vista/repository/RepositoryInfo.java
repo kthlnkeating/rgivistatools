@@ -132,6 +132,15 @@ public class RepositoryInfo {
 		return System.getenv("VistA-FOIA");
 	}
 	
+	public static String getLocationWithLog() {
+		String root = RepositoryInfo.getLocation();
+		if ((root == null) || (root.isEmpty())) {
+			MRALogger.logError("Root directory for VistA-FOIA needs to be specified using environemnt variable VistA-FOIA");
+			return null;
+		}
+		return root;
+	}
+	
 	public VistaPackage getPackage(String packageName) {
 		return this.packagesByName.get(packageName);
 	}
