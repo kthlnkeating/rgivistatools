@@ -21,8 +21,8 @@ import java.util.List;
 
 import com.raygroupintl.m.parsetree.ForLoop;
 import com.raygroupintl.m.parsetree.Node;
-import com.raygroupintl.parser.TList;
 import com.raygroupintl.parser.Token;
+import com.raygroupintl.parser.TokenStore;
 
 public class MForCmd extends MCommandBase {
 	public MForCmd(Token token) {
@@ -42,7 +42,7 @@ public class MForCmd extends MCommandBase {
 		} else {
 			List<Token> tokens = argument.toList();
 			MToken lhs = (MToken) tokens.get(0);
-			TList rhss = (TList) tokens.get(2);
+			TokenStore rhss = (TokenStore) tokens.get(2);
 			List<Node[]> nodes = new ArrayList<Node[]>(rhss.size());
 			for (Token t : rhss) {
 				List<Token> ts = t.toList();

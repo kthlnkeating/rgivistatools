@@ -20,6 +20,7 @@ import java.util.Map;
 
 import com.raygroupintl.parser.TSequence;
 import com.raygroupintl.parser.Token;
+import com.raygroupintl.parser.TokenStore;
 
 public class TSymbolList extends TSequence implements RuleSupply {
 	public TSymbolList(Token token) {
@@ -28,7 +29,7 @@ public class TSymbolList extends TSequence implements RuleSupply {
 	
 	private ListInfo getListInfo(String name, Map<String, RuleSupply> existing) {
 		ListInfo result = new ListInfo();
-		TSequence listInfoSpec = (TSequence) this.get(2);
+		TokenStore listInfoSpec = (TokenStore) this.get(2);
 		if (listInfoSpec == null) {
 			return result;
 		}
@@ -37,7 +38,7 @@ public class TSymbolList extends TSequence implements RuleSupply {
 		if (result.delimiter == null) {
 			return null;
 		}
-		TSequence otherSpec = (TSequence)listInfoSpec.get(2);
+		TokenStore otherSpec = (TokenStore)listInfoSpec.get(2);
 		if (otherSpec != null) {
 			RuleSupply leftSpec = (RuleSupply) otherSpec.get(1);
 			result.left = leftSpec.getRule(RuleSupplyFlag.INNER_REQUIRED, name + ".left", existing);

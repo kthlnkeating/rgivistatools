@@ -8,8 +8,8 @@ import com.raygroupintl.m.parsetree.Node;
 import com.raygroupintl.m.parsetree.NodeList;
 import com.raygroupintl.m.parsetree.ParentNode;
 import com.raygroupintl.parser.StringPiece;
-import com.raygroupintl.parser.TList;
 import com.raygroupintl.parser.Token;
+import com.raygroupintl.parser.TokenStore;
 
 public class MLine extends MSequence {
 	String tagName = "";
@@ -33,7 +33,7 @@ public class MLine extends MSequence {
 		if (paramsTokenWPars != null) {
 			Token paramTokens = paramsTokenWPars.toList().get(1);
 			if (paramTokens != null) {
-				TList resultAsList = (TList) paramTokens;
+				TokenStore resultAsList = (TokenStore) paramTokens;
 				int length = resultAsList.size();
 				if (length > 0) {
 					String[] result = new String[resultAsList.size()];
@@ -92,7 +92,7 @@ public class MLine extends MSequence {
 	public Line getNode() {
 		Line result = new Line(this.tagName, this.index, this.getLevel());
 		ParentNode currentParent = result;
-		TList cmds = (TList) this.get(4);
+		TokenStore cmds = (TokenStore) this.get(4);
 		if (cmds != null) {
 			NodeList<Node> nodes = null;
 			for (Iterator<Token> it = cmds.iterator(); it.hasNext();) {

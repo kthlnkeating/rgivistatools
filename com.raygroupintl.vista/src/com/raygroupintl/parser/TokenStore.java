@@ -18,8 +18,10 @@ package com.raygroupintl.parser;
 
 import java.util.List;
 
-public interface TokenStore extends Token {
+public interface TokenStore extends Iterable<Token> {
 	void addToken(Token token);
+	
+	StringPiece toValue();
 	
 	List<Token> toList();
 	
@@ -28,6 +30,8 @@ public interface TokenStore extends Token {
 	int size();
 	
 	boolean hasToken();
+	
+	Token get(int index);
 	
 	void set(int index, Token token);
 }

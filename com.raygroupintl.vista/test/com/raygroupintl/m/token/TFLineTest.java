@@ -13,11 +13,10 @@ import com.raygroupintl.m.token.MTFSupply;
 import com.raygroupintl.m.token.MVersion;
 import com.raygroupintl.m.token.TFRoutine;
 import com.raygroupintl.parser.SyntaxErrorException;
-import com.raygroupintl.parser.TList;
-import com.raygroupintl.parser.TSequence;
 import com.raygroupintl.parser.Text;
 import com.raygroupintl.parser.Token;
 import com.raygroupintl.parser.TokenFactory;
+import com.raygroupintl.parser.TokenStore;
 import com.raygroupintl.parser.annotation.ObjectSupply;
 
 public class TFLineTest {
@@ -49,7 +48,7 @@ public class TFLineTest {
 			Token t = f.tokenize(text, objectSupply);
 			String r = t.toValue().toString();
 			Assert.assertEquals(line, r);	
-			TList commands = (TList) ((TSequence) t).get(4);
+			TokenStore commands = (TokenStore) ((TokenStore) t).get(4);
 			boolean found = false;
 			for (Iterator<Token> it=commands.iterator(); it.hasNext();) {
 				Token errorCandidate = it.next();
@@ -75,7 +74,7 @@ public class TFLineTest {
 			Token t = f.tokenize(text, objectSupply);
 			String r = t.toValue().toString();
 			Assert.assertEquals(line, r);	
-			TList commands = (TList) ((TSequence) t).get(4);
+			TokenStore commands = (TokenStore) ((TokenStore) t).get(4);
 			Token error = commands.get(errorCommand);
 			Assert.assertTrue(error instanceof MSyntaxError);
 			Assert.assertEquals(errorLocation, ((MSyntaxError) error).getErrorIndex());

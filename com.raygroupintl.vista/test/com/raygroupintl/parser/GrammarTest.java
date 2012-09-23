@@ -74,7 +74,7 @@ public class GrammarTest {
 			if (seqIndex < 0) {
 				Assert.assertTrue(t.getClass().equals(cls));
 			} else {
-				Token tseq = ((TSequence) t).get(seqIndex);
+				Token tseq = ((TokenStore) t).get(seqIndex);
 				Assert.assertTrue(tseq.getClass().equals(cls));
 			}
 		} catch (SyntaxErrorException se) {

@@ -21,7 +21,7 @@ import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
 
-public class TList implements Token, TokenStore, Iterable<Token> {
+public class TList implements Token, TokenStore {
 	private List<Token> tokens;
 		
 	public TList() {
@@ -87,6 +87,7 @@ public class TList implements Token, TokenStore, Iterable<Token> {
 		}
 	}
 	
+	@Override
 	public Token get(int index) {
 		return this.tokens == null ? null : this.tokens.get(index);
 	}

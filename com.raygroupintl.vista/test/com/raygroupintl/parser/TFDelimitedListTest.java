@@ -13,7 +13,6 @@ import org.junit.Test;
 import com.raygroupintl.charlib.CharPredicate;
 import com.raygroupintl.charlib.CharRangePredicate;
 import com.raygroupintl.parser.SyntaxErrorException;
-import com.raygroupintl.parser.TDelimitedList;
 import com.raygroupintl.parser.TFCharacter;
 import com.raygroupintl.parser.TFDelimitedList;
 import com.raygroupintl.parser.TFString;
@@ -35,21 +34,21 @@ public class TFDelimitedListTest {
 		objectSupply = null;
 	}
 
-	public static void validTokenCheck(Token t, String v) {
-		Assert.assertEquals(v, t.toValue().toString());
-		Assert.assertEquals(v.length(), t.toValue().length());		
+	public static void validTokenCheck(StringPiece t, String v) {
+		Assert.assertEquals(v, t.toString());
+		Assert.assertEquals(v.length(), t.length());		
 	}
 	
 	public static void validCheckBasic(TFDelimitedList f, String v, String expected, String[] iteratorResults) {
 		Text text = new Text(v);
 		try {
-			TDelimitedList t = (TDelimitedList) f.tokenize(text, objectSupply);
-			validTokenCheck(t, expected);
+			TokenStore t = (TokenStore) f.tokenize(text, objectSupply);
+			validTokenCheck(t.toValue(), expected);
 			int index = 0;
 			Iterator<Token> it = null;
 			for (it = t.iterator(); it.hasNext(); ++index) {
 				Token tit = it.next();
-				validTokenCheck(tit, iteratorResults[index]);
+				validTokenCheck(tit.toValue(), iteratorResults[index]);
 			}
 			Assert.assertEquals(iteratorResults.length, index);
 			Assert.assertFalse(it.hasNext());			

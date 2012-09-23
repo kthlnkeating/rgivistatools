@@ -19,8 +19,8 @@ package com.raygroupintl.m.token;
 import com.raygroupintl.m.parsetree.ActualList;
 import com.raygroupintl.m.parsetree.IgnorableNode;
 import com.raygroupintl.m.parsetree.Node;
-import com.raygroupintl.parser.TList;
 import com.raygroupintl.parser.Token;
+import com.raygroupintl.parser.TokenStore;
 
 public class MActualList extends MSequence {
 	public MActualList(Token token) {
@@ -29,7 +29,7 @@ public class MActualList extends MSequence {
 
 	@Override
 	public Node getNode() {		
-		TList tokens = (TList) this.get(1);
+		TokenStore tokens = (TokenStore) this.get(1);
 		if (tokens == null) {
 			return new IgnorableNode();
 		} else {

@@ -19,9 +19,9 @@ package com.raygroupintl.parser.annotation;
 import java.util.Map;
 
 import com.raygroupintl.charlib.PredicateFactory;
-import com.raygroupintl.parser.TList;
 import com.raygroupintl.parser.TSequence;
 import com.raygroupintl.parser.Token;
+import com.raygroupintl.parser.TokenStore;
 
 public class TCharSymbol extends TSequence implements RuleSupply {
 	public TCharSymbol(Token token) {
@@ -43,7 +43,7 @@ public class TCharSymbol extends TSequence implements RuleSupply {
 		}
 	}
 	
-	private static void update(PredicateFactory pf, Token sign, TSequence spec) {
+	private static void update(PredicateFactory pf, Token sign, TokenStore spec) {
 		boolean exclude = (sign != null) && (sign.toValue().charAt(0) == '-');
 		char ch = getChar(spec.get(0).toValue().toString());
 		Token tRangeBound = spec.get(1);
@@ -54,7 +54,7 @@ public class TCharSymbol extends TSequence implements RuleSupply {
 				pf.addChar(ch);
 			}
 		} else {			
-			char chOther = getChar(((TSequence) tRangeBound).get(1).toValue().toString());
+			char chOther = getChar(((TokenStore) tRangeBound).get(1).toValue().toString());
 			if (exclude) {
 				pf.removeRange(ch, chOther);
 			} else {
@@ -66,11 +66,11 @@ public class TCharSymbol extends TSequence implements RuleSupply {
 	@Override
 	public FactorySupplyRule getRule(RuleSupplyFlag flag, String name, Map<String, RuleSupply> existing) {
 		PredicateFactory pf = new PredicateFactory();
-		update(pf, this.get(0), (TSequence) this.get(1));
-		TList list = (TList) this.get(2);
+		update(pf, this.get(0), (TokenStore) this.get(1));
+		TokenStore list = (TokenStore) this.get(2);
 		if (list != null) for (Token t : list) {
-			TSequence casted = (TSequence) t;
-			update(pf, casted.get(0), (TSequence) casted.get(1));
+			TokenStore casted = (TokenStore) t;
+			update(pf, casted.get(0), (TokenStore) casted.get(1));
 		}		
 
 		String key = this.toValue().toString();

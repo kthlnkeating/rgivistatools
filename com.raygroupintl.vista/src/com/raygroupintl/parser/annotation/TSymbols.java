@@ -18,9 +18,9 @@ package com.raygroupintl.parser.annotation;
 
 import java.util.Map;
 
-import com.raygroupintl.parser.TList;
 import com.raygroupintl.parser.TSequence;
 import com.raygroupintl.parser.Token;
+import com.raygroupintl.parser.TokenStore;
 
 public abstract class TSymbols extends TSequence implements RuleSupply {
 	private boolean required;
@@ -42,7 +42,7 @@ public abstract class TSymbols extends TSequence implements RuleSupply {
 	
 	@Override
 	public FactorySupplyRule getRule(RuleSupplyFlag flag, String name, Map<String, RuleSupply> existing) {
-		TList list = (TList) this.get(1);
+		TokenStore list = (TokenStore) this.get(1);
 		RuleSupplyFlag newFlag = this.convert(flag);
 		if (list.size() == 1) {
 			return ((RuleSupply) list.get(0)).getRule(newFlag, name, existing);

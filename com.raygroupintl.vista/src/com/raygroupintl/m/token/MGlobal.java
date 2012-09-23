@@ -20,8 +20,8 @@ import com.raygroupintl.m.parsetree.Global;
 import com.raygroupintl.m.parsetree.Node;
 import com.raygroupintl.m.parsetree.NodeList;
 import com.raygroupintl.parser.StringPiece;
-import com.raygroupintl.parser.TSequence;
 import com.raygroupintl.parser.Token;
+import com.raygroupintl.parser.TokenStore;
 
 public class MGlobal extends MSequence {
 	public MGlobal(Token token) {
@@ -30,7 +30,7 @@ public class MGlobal extends MSequence {
 
 	@Override
 	public Node getNode() {
-		TSequence actual = (TSequence) this.get(1);
+		TokenStore actual = (TokenStore) this.get(1);
 		if (actual.get(0) != null) {
 			return NodeUtilities.getNodes(actual, actual.size());
 		} else {

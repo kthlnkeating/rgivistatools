@@ -21,7 +21,7 @@ import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
 
-public class TSequence implements Token, TokenStore, Iterable<Token> {
+public class TSequence implements Token, TokenStore {
 	private List<Token> tokens;
 	int index = 0;
 	int length = 0;
@@ -74,6 +74,7 @@ public class TSequence implements Token, TokenStore, Iterable<Token> {
 		return this.index;
 	}
 	
+	@Override
 	public Token get(int i) {
 		if (this.index > i) {
 			return this.tokens.get(i);
