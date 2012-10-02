@@ -28,11 +28,6 @@ public class TFDelimitedList extends TokenFactory {
 		super(name);
 	}
 		
-	private TFDelimitedList(String name, TFSequence effective) {
-		super(name);
-		this.effective = effective;
-	}
-		
 	private TokenFactory getLeadingFactory(TokenFactory element, TokenFactory delimiter, boolean emptyAllowed) {
 		if (emptyAllowed) {
 			String elementName = this.getName() + "." + element.getName();
