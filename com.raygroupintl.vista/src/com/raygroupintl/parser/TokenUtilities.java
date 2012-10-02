@@ -14,23 +14,16 @@
 // limitations under the License.
 //---------------------------------------------------------------------------
 
-package com.raygroupintl.m.token;
+package com.raygroupintl.parser;
 
-import com.raygroupintl.m.parsetree.Node;
-import com.raygroupintl.parser.TSequence;
-import com.raygroupintl.parser.Token;
-
-public class MSequence extends TSequence implements MToken {
-	public MSequence(int length) {
-		super(length);
-	}
-	
-	public MSequence(Token token) {
-		super(token.toList());
-	}
-
-	@Override
-	public Node getNode() {
-		return NodeUtilities.getNodes(this, this.size());
+public class TokenUtilities {
+	public static  <T extends Token> StringPiece toValue(Iterable<T> tokens) {	
+		StringPiece result = new StringPiece();
+		for (T token : tokens) {
+			if (token != null) {
+				result.add(token.toValue());
+			}
+		}
+		return result;
 	}
 }

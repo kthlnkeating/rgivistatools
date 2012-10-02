@@ -16,84 +16,24 @@
 
 package com.raygroupintl.parser;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Iterator;
 import java.util.List;
 
-public class TList implements Token, TokenStore {
-	private List<Token> tokens;
-		
+public class TList extends ListStore implements Token {
 	public TList() {
 	}
 	
 	public TList(List<Token> tokens) {
-		this.tokens = tokens;
+		super(tokens);
 	}
 
 	public TList(Token token) {
-		this.tokens = token.toList();
-	}
-
-	@Override
-	public void addToken(Token token) {
-		if (this.tokens == null) {
-			this.tokens = new ArrayList<Token>();
-		}
-		this.tokens.add(token);
-	}
-
-	@Override
-	public List<Token> toList() {
-		if (this.tokens == null) {
-			return Collections.emptyList();
-		} else {
-			return this.tokens;
-		}
-	}
-
-	@Override
-	public boolean isAllNull() {
-		return (this.tokens == null) || (this.tokens.size() == 0);
-	}
-
-	@Override
-	public int size() {
-		return this.tokens == null ? 0 : this.tokens.size();
-	}
-
-	@Override
-	public boolean hasToken() {
-		return this.tokens != null;
-	}
-	
-	public void set(int index, Token token) {
-		this.tokens.set(index, token);
-	}
-
-	@Override
-	public StringPiece toValue() {	
-		StringPiece result = new StringPiece();
-		if (this.tokens != null) for (Token t : this.tokens) if (t != null) {
-			result.add(t.toValue());
-		}		
-		return result;
+		super(token.toList());
 	}
 
 	@Override
 	public void beautify() {
-		if (this.tokens != null) for (Token token : this.tokens) {
+		for (Token token : this) {
 			token.beautify();
 		}
-	}
-	
-	@Override
-	public Token get(int index) {
-		return this.tokens == null ? null : this.tokens.get(index);
-	}
-	
-	@Override
-	public Iterator<Token> iterator() {
-		return this.toList().iterator();
 	}
 }

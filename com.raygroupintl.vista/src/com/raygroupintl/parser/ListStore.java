@@ -17,85 +17,68 @@
 package com.raygroupintl.parser;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
 
-import com.raygroupintl.struct.IterableSingle;
-
-public class TString extends StringPiece implements Token, TokenStore {
-	private static final long serialVersionUID = 1L;
+public class ListStore implements TokenStore {
+	private List<Token> tokens;
+		
+	public ListStore() {
+	}
 	
-	public TString() {
-		super();
+	public ListStore(List<Token> tokens) {
+		this.tokens = tokens;
 	}
 
-	public TString(StringPiece value) {
-		super(value);
-	}
-	
-	public TString(Token token) {
-		super(token.toValue());
-	}
-	
-	public TString(String data, int beginIndex, int endIndex) {
-		super(data, beginIndex, endIndex);
-	}
-	
 	@Override
 	public void addToken(Token token) {
-		this.add(token.toValue());
+		if (this.tokens == null) {
+			this.tokens = new ArrayList<Token>();
+		}
+		this.tokens.add(token);
 	}
-	
+
 	@Override
-	public StringPiece toValue() {
-		return this;
-	}
-	
-	@Override
-	public List<Token> toList() {	
-		List<Token> result = new ArrayList<Token>();
-		result.add(this);	
-		return result;
+	public List<Token> toList() {
+		if (this.tokens == null) {
+			return Collections.emptyList();
+		} else {
+			return this.tokens;
+		}
 	}
 
 	@Override
 	public boolean isAllNull() {
-		return false;
+		return (this.tokens == null) || (this.tokens.size() == 0);
 	}
 
 	@Override
 	public int size() {
-		return 1;
+		return this.tokens == null ? 0 : this.tokens.size();
 	}
 
 	@Override
 	public boolean hasToken() {
-		return true;
-	}
-	
-	@Override
-	public Token get(int index) {
-		if (index == 0) {
-			return this;
-		} else {
-			throw new ArrayIndexOutOfBoundsException();
-		}
+		return this.tokens != null;
 	}
 	
 	public void set(int index, Token token) {
-		throw new UnsupportedOperationException();
-	}	
-	
-	public void setValue(StringPiece value) {
-		super.set(value);
+		this.tokens.set(index, token);
 	}
 
+	@Override
+	public StringPiece toValue() {	
+		return TokenUtilities.toValue(this);
+	}
+
+	@Override
+	public Token get(int index) {
+		return this.tokens == null ? null : this.tokens.get(index);
+	}
+	
 	@Override
 	public Iterator<Token> iterator() {
-		return new IterableSingle<Token>(this).iterator();
-	}
-
-	@Override
-	public void beautify() {		
+		return this.toList().iterator();
 	}
 }
