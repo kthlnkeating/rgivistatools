@@ -19,14 +19,14 @@ package com.raygroupintl.parser;
 import com.raygroupintl.parser.annotation.ObjectSupply;
 
 
-public class TFChoiceBasic extends TokenFactory {
+public class TFChoice extends TokenFactory {
 	private TokenFactory[] factories = {};
 	
-	public TFChoiceBasic(String name) {
+	public TFChoice(String name) {
 		super(name);
 	}
 	
-	public TFChoiceBasic(String name, TokenFactory... factories) {
+	public TFChoice(String name, TokenFactory... factories) {
 		super(name);
 		this.factories = factories;
 	}

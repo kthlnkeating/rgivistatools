@@ -12,7 +12,7 @@ import java.util.Set;
 import com.raygroupintl.charlib.Predicate;
 import com.raygroupintl.charlib.PredicateFactory;
 import com.raygroupintl.parser.TFCharacter;
-import com.raygroupintl.parser.TFChoiceBasic;
+import com.raygroupintl.parser.TFChoice;
 import com.raygroupintl.parser.TFConstant;
 import com.raygroupintl.parser.TFDelimitedList;
 import com.raygroupintl.parser.TFEnd;
@@ -37,7 +37,7 @@ public class Parser {
 		
 		public Map<String, TokenFactory> symbols = new HashMap<String, TokenFactory>();
 		
-		private java.util.List<Triple<TFChoiceBasic, Choice>> choices  = new ArrayList<Triple<TFChoiceBasic, Choice>>();
+		private java.util.List<Triple<TFChoice, Choice>> choices  = new ArrayList<Triple<TFChoice, Choice>>();
 		private java.util.List<Triple<TFSequence, Sequence>> sequences  = new ArrayList<Triple<TFSequence, Sequence>>();
 		private java.util.List<Triple<TFList, List>> lists  = new ArrayList<Triple<TFList, List>>();
 		private java.util.List<Triple<TFSequence, List>> enclosedLists  = new ArrayList<Triple<TFSequence, List>>();
@@ -55,8 +55,8 @@ public class Parser {
 		}
 		
 		private TokenFactory addChoice(String name, Choice choice) {
-			TFChoiceBasic value = new TFChoiceBasic(name);
-			this.choices.add(new Triple<TFChoiceBasic, Choice>(value, choice));
+			TFChoice value = new TFChoice(name);
+			this.choices.add(new Triple<TFChoice, Choice>(value, choice));
 			return value;			
 		}
 		
@@ -258,7 +258,7 @@ public class Parser {
 		}
 		
 		private void updateChoices() {		
-			for (Triple<TFChoiceBasic, Choice> p : this.choices) {
+			for (Triple<TFChoice, Choice> p : this.choices) {
 				TokenFactory[] fs = getFactories(this.symbols, p.annotation.value());
 				p.factory.setFactories(fs);
 			}

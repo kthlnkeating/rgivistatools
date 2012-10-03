@@ -23,7 +23,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-import com.raygroupintl.parser.TFForkableChoice;
+import com.raygroupintl.parser.TFChoice;
 import com.raygroupintl.parser.TFForkedSequence;
 import com.raygroupintl.parser.TFSequence;
 import com.raygroupintl.parser.TokenFactory;
@@ -109,11 +109,11 @@ public class FSRChoice extends FSRBase {
 	}
 
 	private List<FactorySupplyRule> list = new ArrayList<FactorySupplyRule>(); 
-	private TFForkableChoice factory;
+	private TFChoice factory;
 	
 	public FSRChoice(String name, RuleSupplyFlag flag) {
 		super(flag);
-		this.factory = new TFForkableChoice(name);
+		this.factory = new TFChoice(name);
 	}
 	
 	public void add(FactorySupplyRule r) {
@@ -163,8 +163,9 @@ public class FSRChoice extends FSRBase {
 		for (FactorySupplyRule r : this.list) {
 			r.update(localSymbols);
 		}
-		List<TokenFactory> fs = this.getChoiceFactories(localSymbols);
-		this.factory.setFactories(fs);
+		List<TokenFactory> fs = this.getChoiceFactories(localSymbols);		
+		TokenFactory[] fsAsArray = fs.toArray(new TokenFactory[0]);
+		this.factory.setFactories(fsAsArray);
 		return true;
 	}
 
