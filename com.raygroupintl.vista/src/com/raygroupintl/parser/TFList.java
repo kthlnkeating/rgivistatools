@@ -34,7 +34,8 @@ public final class TFList extends TokenFactory {
 		this.elementFactory = elementFactory;
 	}
 		
-	public TList tokenizeCommon(Text text, ObjectSupply objectSupply) throws SyntaxErrorException {
+	@Override
+	public TList tokenizeOnly(Text text, ObjectSupply objectSupply) throws SyntaxErrorException {
 		if (elementFactory == null) throw new IllegalStateException("TFList.setElementFactory needs to be called before TFList.tokenize");
 		
 		if (text.onChar()) {
@@ -58,15 +59,5 @@ public final class TFList extends TokenFactory {
 			return list;
 		}
 		return null;
-	}
-	
-	@Override
-	public TList tokenizeOnly(Text text, ObjectSupply objectSupply) throws SyntaxErrorException {
-		TList rawResult = this.tokenizeCommon(text, objectSupply);
-		if (rawResult == null) {
-			return null;
-		} else {
-			return rawResult;	
-		}
 	}
 }

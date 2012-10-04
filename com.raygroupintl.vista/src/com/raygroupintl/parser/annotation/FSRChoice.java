@@ -101,7 +101,7 @@ public class FSRChoice extends FSRBase {
 					FactorySupplyRule leading = symbols.get(name);
 					FSRForkedSequence newForked = new FSRForkedSequence(this.aname + "." + name, leading);
 					newForked.addFollower(current);
-					newForked.addFollower( tf);
+					newForked.addFollower(tf);
 					this.list.set(n, newForked);
 				}
 			}
@@ -135,7 +135,7 @@ public class FSRChoice extends FSRBase {
 		}
 		int n = algorithm.list.size();
 		for (int i=0; i<n; ++i) {
-			FactorySupplyRule on =algorithm.list.get(i);
+			FactorySupplyRule on = algorithm.list.get(i);
 			if (on instanceof FSRForkedSequence) {
 				FSRForkedSequence onf = (FSRForkedSequence) on;
 				int m = onf.followers.size();
@@ -145,13 +145,13 @@ public class FSRChoice extends FSRBase {
 					ons.update(symbols);
 					followerFactories.add((TFSequence) ons.getTheFactory(symbols));
 				}
-				FactorySupplyRule fsrLeader = ((FactorySupplyRule) onf.leader);
+				FactorySupplyRule fsrLeader = onf.leader;
 				fsrLeader.update(symbols);
 				TFForkedSequence nfs = new TFForkedSequence(onf.getName(), fsrLeader.getTheFactory(symbols), onf.singleValid);
 				nfs.setFollowers(followerFactories);
 				result.add(nfs);
 			} else {
-				result.add(((FactorySupplyRule) on).getTheFactory(symbols));
+				result.add(on.getTheFactory(symbols));
 			}
 		}
 		return result;

@@ -16,6 +16,7 @@
 
 package com.raygroupintl.m.parsetree;
 
+import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.ObjectInputStream;
@@ -78,15 +79,20 @@ public class Routine extends BasicNode {
 		this.errorNode = errorNode;
 	}
 	
-	public static Routine readSerialized(String fileName) {
+	public static Routine readSerialized(String directory, String routineName) {
+		File file = new File(directory, routineName + ".ser");
+		if (! file.isFile()) {
+			LOGGER.log(Level.WARNING, "File for routine " + routineName + "(" + file.toString() + ") does not exist.");
+			return null;
+		}		
 		try {
-			FileInputStream fis = new FileInputStream(fileName);
+			FileInputStream fis = new FileInputStream(file);
 			ObjectInputStream ois = new ObjectInputStream(fis);
 			Routine result = (Routine) ois.readObject();
 			ois.close();
 			return result;
 		} catch(IOException | ClassNotFoundException ioException) {
-			String msg = "Unable to read object from file " + fileName;
+			String msg = "Unable to read object from file " + file.toString();
 			LOGGER.log(Level.SEVERE, msg, ioException);
 			return null;
 		}		

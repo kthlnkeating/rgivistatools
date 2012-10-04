@@ -432,7 +432,7 @@ public class Block {
 					}
 					if (routineBlocks == null) {					
 						if (! reported.contains(fout)) {
-							LOGGER.log(Level.SEVERE, "Unable to find information about routine " + routineName);
+							LOGGER.log(Level.WARNING, "Unable to find information about routine " + routineName + ".");
 							reported.add(fout);
 						}
 						continue;

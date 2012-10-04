@@ -66,11 +66,8 @@ public abstract class TokenFactory {
 		};
 	}
 	
-	static private Constructor<? extends Token> getConstructor(Class<? extends Token> cls, Class<? extends Token> tokenCls) {
+	protected Constructor<? extends Token> getConstructor(Class<? extends Token> cls, Class<?> argument) {
 		try {
-			if (! tokenCls.isAssignableFrom(cls)) {
-				throw new IllegalArgumentException(cls.getName() + " must extend " + tokenCls.getName() + ".");
-			}
 			int modifiers = cls.getModifiers();
 			if (! Modifier.isPublic(modifiers)) {
 				throw new IllegalArgumentException(cls.getName() + " is not public.");
@@ -78,13 +75,13 @@ public abstract class TokenFactory {
 			if (Modifier.isAbstract(modifiers) || Modifier.isInterface(modifiers)) {
 				throw new IllegalArgumentException(cls.getName() + " is abstract.");
 			}
-			final Constructor<? extends Token> constructor = cls.getConstructor(tokenCls);
+			final Constructor<? extends Token> constructor = cls.getConstructor(argument);
 			if (! Modifier.isPublic(constructor.getModifiers())) {
-				throw new IllegalArgumentException(cls.getName() + " constructor (List) is not public.");			
+				throw new IllegalArgumentException(cls.getName() + " constructor (" + argument.getName() + ") is not public.");			
 			}
 			return constructor;
 		} catch (NoSuchMethodException nsm) {
-			throw new IllegalArgumentException(cls.getName() + " does not have a constructor that accepts " + tokenCls.getName() + ".");
+			throw new IllegalArgumentException(cls.getName() + " does not have a constructor that accepts " + argument.getName() + ".");
 		}
 	}
 }

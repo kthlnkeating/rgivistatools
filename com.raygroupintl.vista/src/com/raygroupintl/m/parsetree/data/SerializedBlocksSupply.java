@@ -16,8 +16,6 @@
 
 package com.raygroupintl.m.parsetree.data;
 
-import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.util.HashMap;
 
 import com.raygroupintl.m.parsetree.Routine;
@@ -38,8 +36,7 @@ public class SerializedBlocksSupply implements BlocksSupply {
 	public Blocks getBlocks(String routineName) {
 		if (! this.blocks.containsKey(routineName)) {			
 			Blocks result = null;
-			Path path = Paths.get(this.inputPath, routineName + ".ser");
-			Routine routine = Routine.readSerialized(path.toString());
+			Routine routine = Routine.readSerialized(this.inputPath, routineName);
 			if (routine != null) {
 				APIRecorder recorder = new APIRecorder(this.repositoryInfo);
 				routine.accept(recorder);
