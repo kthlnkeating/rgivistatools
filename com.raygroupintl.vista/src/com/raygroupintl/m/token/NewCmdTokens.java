@@ -21,11 +21,12 @@ import com.raygroupintl.m.parsetree.NewCmdNodes;
 import com.raygroupintl.m.parsetree.Node;
 import com.raygroupintl.m.parsetree.Nodes;
 import com.raygroupintl.parser.Token;
+import com.raygroupintl.parser.TokenStore;
 
 public final class NewCmdTokens {
 	public static final class MNewCmd extends MCommand {
-		public MNewCmd(Token token) {
-			super(token);
+		public MNewCmd(Token cmdName, Token cmdDependent) {
+			super(cmdName, cmdDependent);
 		}		
 		
 		@Override
@@ -44,8 +45,12 @@ public final class NewCmdTokens {
 	}
 	
 	public static final class MExclusiveAtomicNewCmd extends MSequence {
-		public  MExclusiveAtomicNewCmd(Token token) {
-			super(token);
+		public MExclusiveAtomicNewCmd(int length) {
+			super(length);
+		}
+		
+		public MExclusiveAtomicNewCmd(TokenStore store) {
+			super(store);
 		}
 		
 		@Override

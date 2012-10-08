@@ -14,24 +14,7 @@
 // limitations under the License.
 //---------------------------------------------------------------------------
 
-package com.raygroupintl.m.token;
+package com.raygroupintl.parser;
 
-import com.raygroupintl.m.parsetree.Node;
-import com.raygroupintl.m.parsetree.StringLiteral;
-import com.raygroupintl.parser.TokenStore;
-
-public class MStringLiteral extends MSequence {
-	public MStringLiteral(int length) {
-		super(length);
-	}
-
-	public MStringLiteral(TokenStore store) {
-		super(store);
-	}
-
-	@Override
-	public Node getNode() {
-		String value = this.toValue().toString();
-		return new StringLiteral(value);
-	}	
+public interface CompositeToken extends Token, TokenStore {
 }

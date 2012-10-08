@@ -16,17 +16,16 @@
 
 package com.raygroupintl.m.token;
 
-import java.util.List;
-
 import com.raygroupintl.m.parsetree.Node;
 import com.raygroupintl.m.parsetree.Nodes;
 import com.raygroupintl.m.parsetree.SetCmdNodes;
 import com.raygroupintl.parser.Token;
+import com.raygroupintl.parser.TokenStore;
 
 public final class SetCmdTokens {
 	public static final class MSetCmd extends MCommand {
-		public MSetCmd(Token token) {
-			super(token);
+		public MSetCmd(Token cmdName, Token cmdDependent) {
+			super(cmdName, cmdDependent);
 		}		
 		
 		@Override
@@ -41,8 +40,12 @@ public final class SetCmdTokens {
 	}
 	
 	public static final class MSingleAtomicSetCmd extends MSequence {
-		public MSingleAtomicSetCmd(Token token) {
-			super(token);
+		public MSingleAtomicSetCmd(int length) {
+			super(length);
+		}
+		
+		public MSingleAtomicSetCmd(TokenStore store) {
+			super(store);
 		}
 		
 		@Override
@@ -60,15 +63,19 @@ public final class SetCmdTokens {
 	}
 
 	public static final class MMultiAtomicSetCmd extends MSequence {
-		public MMultiAtomicSetCmd(Token token) {
-			super(token);
+		public MMultiAtomicSetCmd(int length) {
+			super(length);
+		}
+		
+		public MMultiAtomicSetCmd(TokenStore store) {
+			super(store);
 		}
 		
 		@Override
 		public Node getNode() {
-			List<Token> tokens = this.get(0).toList();			
-			MDelimitedList lhs = (MDelimitedList) tokens.get(1);
-			MToken rhs = (MToken) this.get(2);
+			MToken tokens = this.getSubNodeToken(0);			
+			MDelimitedList lhs = (MDelimitedList) tokens.getSubNodeToken(1);
+			MToken rhs = (MToken) this.getSubNodeToken(2);
 			Nodes<Node> lhsNodes = NodeUtilities.getNodes(lhs, lhs.size());
 			return new SetCmdNodes.MultiAtomicSet(lhsNodes, rhs.getNode());
 		}		

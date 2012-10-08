@@ -1,10 +1,13 @@
 package com.raygroupintl.parser;
 
 import com.raygroupintl.parser.TSequence;
-import com.raygroupintl.parser.Token;
 
 public class TNumber extends TSequence {
-	public TNumber(Token token) {
-		super(token);
+	public TNumber(int length) {
+		super(length);
+	}
+
+	public TNumber(TokenStore store) {
+		super(store.toList());
 	}
 }

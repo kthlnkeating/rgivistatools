@@ -16,6 +16,11 @@
 
 package com.raygroupintl.parser;
 
+import java.lang.reflect.Constructor;
+import java.lang.reflect.InvocationTargetException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
 import com.raygroupintl.parser.annotation.ObjectSupply;
 
 public class TFSequence extends TokenFactory {
@@ -67,6 +72,9 @@ public class TFSequence extends TokenFactory {
 	
 	private TokenFactory[] factories = {};
 	private RequiredFlags requiredFlags = new RequiredFlags();
+
+	private Constructor<? extends CompositeToken> constructor;
+	private Constructor<? extends CompositeToken> constructor2;
 	
 	public TFSequence(String name) {		
 		super(name);
@@ -94,7 +102,7 @@ public class TFSequence extends TokenFactory {
 		return this.factories.length;
 	}
 	
-	protected ValidateResult validateNull(int seqIndex, TSequence foundTokens, boolean noException) throws SyntaxErrorException {
+	protected ValidateResult validateNull(int seqIndex, CompositeToken foundTokens, boolean noException) throws SyntaxErrorException {
 		int firstRequired = this.requiredFlags.getFirstRequiredIndex();
 		int lastRequired = this.requiredFlags.getLastRequiredIndex();
 		
@@ -116,7 +124,7 @@ public class TFSequence extends TokenFactory {
 		}
 	}
 	
-	protected boolean validateEnd(int seqIndex, TSequence foundTokens, boolean noException) throws SyntaxErrorException {
+	protected boolean validateEnd(int seqIndex, CompositeToken foundTokens, boolean noException) throws SyntaxErrorException {
 		if (seqIndex < this.requiredFlags.getLastRequiredIndex()) {
 			if (noException) return false;
 			throw new SyntaxErrorException();
@@ -125,15 +133,39 @@ public class TFSequence extends TokenFactory {
 	}
 	
 	@Override
-	public final TSequence tokenizeOnly(Text text, ObjectSupply objectSupply) throws SyntaxErrorException {
+	public final CompositeToken tokenizeOnly(Text text, ObjectSupply objectSupply) throws SyntaxErrorException {
 		if (text.onChar()) {
-			TSequence foundTokens = objectSupply.newSequence(this.factories.length);
-			return this.tokenizeCommon(text, objectSupply, 0, foundTokens, false);
+			int length = this.factories.length;
+			try {
+				CompositeToken foundTokens = this.constructor != null ? this.constructor.newInstance(length) : objectSupply.newSequence(length);
+				return this.tokenizeCommon(text, objectSupply, 0, foundTokens, false);
+			} catch (InstantiationException | IllegalAccessException | IllegalArgumentException | InvocationTargetException t) {
+				String clsName =  this.getClass().getName();
+				Logger.getLogger(clsName).log(Level.SEVERE, "Unable to instantiate " + clsName + ".", t);
+			}
 		}		
 		return null;
 	}
 	
-	final TSequence tokenizeCommon(Text text, ObjectSupply objectSupply, int firstSeqIndex, TSequence foundTokens, boolean noException) throws SyntaxErrorException {
+	@Override
+	public void setSequenceTargetType(Class<? extends CompositeToken> cls) {
+		this.constructor = this.getConstructor(cls, Integer.TYPE);
+		this.constructor2 = this.getConstructor(cls, TokenStore.class);
+		
+	}
+	
+	public CompositeToken convertSequence(CompositeToken compositeToken) {
+		if (this.constructor2 == null) return compositeToken;
+		try {
+			return this.constructor2.newInstance(compositeToken);						
+		} catch (Throwable t) {
+			String clsName =  this.getClass().getName();
+			Logger.getLogger(clsName).log(Level.SEVERE, "Unable to instantiate " + clsName + ".", t);			
+		}
+		return null;
+	}
+	
+	final CompositeToken tokenizeCommon(Text text, ObjectSupply objectSupply, int firstSeqIndex, CompositeToken foundTokens, boolean noException) throws SyntaxErrorException {
 		int factoryCount = this.factories.length;
 		for (int i=firstSeqIndex; i<factoryCount; ++i) {
 			TokenFactory factory = this.factories[i];

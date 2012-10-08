@@ -17,7 +17,6 @@
 package com.raygroupintl.m.token;
 
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 import com.raygroupintl.m.parsetree.IntrinsicFunction;
@@ -25,36 +24,45 @@ import com.raygroupintl.m.parsetree.IntrinsicVariable;
 import com.raygroupintl.m.parsetree.Node;
 import com.raygroupintl.m.struct.MError;
 import com.raygroupintl.m.struct.MNameWithMnemonic;
+import com.raygroupintl.parser.CompositeToken;
 import com.raygroupintl.parser.StringPiece;
 import com.raygroupintl.parser.SyntaxErrorException;
 import com.raygroupintl.parser.TFSequence;
-import com.raygroupintl.parser.TSequence;
 import com.raygroupintl.parser.Token;
 import com.raygroupintl.parser.TokenFactory;
 import com.raygroupintl.parser.TokenFactorySupply;
+import com.raygroupintl.parser.TokenStore;
 
 public class TFIntrinsic extends TokenFactorySupply {		
 	public static class TIntrinsicVariable extends MSequence {
-		public TIntrinsicVariable(Token token) {
-			super(token);
+		public TIntrinsicVariable(int length) {
+			super(length);
+		}
+		
+		public TIntrinsicVariable(TokenStore store) {
+			super(store);
 		}
 		
 		@Override
 		public Node getNode() {
-			StringPiece name = this.get(0).toList().get(1).toValue();
+			StringPiece name = this.getSubNodeToken(0).getSubNodeToken(1).toValue();
 			return new IntrinsicVariable(name.toString());
 		}
 	}
 
 	private static class TIntrinsicFunction extends MSequence {
-		private TIntrinsicFunction(Token token) {
-			super(token);
+		private TIntrinsicFunction(int length) {
+			super(length);
+		}
+		
+		private TIntrinsicFunction(TokenStore store) {
+			super(store);
 		}
 		
 		@Override
 		public Node getNode() {
-			StringPiece name = this.get(0).toList().get(0).toList().get(1).toValue();
-			MToken arguments = (MToken) this.get(1).toList().get(0);	
+			StringPiece name = ((MToken) this.get(0)).getSubNodeToken(0).getSubNodeToken(1).toValue();
+			MToken arguments = ((MToken) this.get(1)).getSubNodeToken(0);	
 			return new IntrinsicFunction(name.toString(), arguments == null ? null : arguments.getNode());
 		}
 
@@ -143,7 +151,7 @@ public class TFIntrinsic extends TokenFactorySupply {
 		}
 		
 		@Override
-		protected ValidateResult validateNull(int seqIndex, TSequence foundTokens, boolean noException) throws SyntaxErrorException {
+		protected ValidateResult validateNull(int seqIndex, CompositeToken foundTokens, boolean noException) throws SyntaxErrorException {
 			if (seqIndex == 0 && this.nullAllowed) {
 				return ValidateResult.CONTINUE;
 			}
@@ -156,16 +164,16 @@ public class TFIntrinsic extends TokenFactorySupply {
 	public TokenFactory getSupplyTokenFactory() {
 		TFSequence result = new TFSequence("instrinsic.name", this.supply.intrinsicname, this.supply.lpar);
 		result.setRequiredFlags(true, false);
-		result.setTargetType(TIntrinsicVariable.class);
+		result.setSequenceTargetType(TIntrinsicVariable.class);
 		return result;		
 	}
 	
 	@Override
 	public TokenFactory getNextTokenFactory(Token token) throws SyntaxErrorException {
-		List<Token> nameNLPar = token.toList();
-		List<Token> nameTokens = nameNLPar.get(0).toList();
-		String name = nameTokens.get(1).toValue().toString();
-		if ((nameNLPar.size() > 1) && (nameNLPar.get(1) != null)) {
+		MToken nameNLPar = (MToken) token;
+		MToken nameTokens = nameNLPar.getSubNodeToken(0);
+		String name = nameTokens.getSubNodeToken(1).toValue().toString();
+		if ((nameNLPar.getNumSubNodes() > 1) && (nameNLPar.getSubNodeToken(1) != null)) {
 			String mn = name.toUpperCase();			
 			FunctionInfo info = TFIntrinsic.this.functions.get(mn);
 			if (info == null) {
@@ -186,9 +194,9 @@ public class TFIntrinsic extends TokenFactorySupply {
 
 	@Override
 	public Token getToken(Token supplyToken, Token nextToken) {
-		MSequence result = new MSequence(2);
+		TIntrinsicFunction result = new TIntrinsicFunction(2);
 		result.addToken(supplyToken);
 		result.addToken(nextToken);
-		return new TIntrinsicFunction(result);
+		return result;
 	}
 }

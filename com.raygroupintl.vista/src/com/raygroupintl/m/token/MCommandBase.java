@@ -22,8 +22,8 @@ import com.raygroupintl.parser.TString;
 import com.raygroupintl.parser.Token;
 
 public abstract class MCommandBase extends MSequence {
-	public MCommandBase(Token token) {
-		super(token);
+	public MCommandBase(Token token0, Token token1) {
+		super(token0, token1);
 	}
 
 	protected abstract String getFullName();

@@ -23,8 +23,12 @@ import com.raygroupintl.parser.Token;
 import com.raygroupintl.parser.TokenStore;
 
 public class MActualList extends MSequence {
-	public MActualList(Token token) {
-		super(token);
+	public MActualList(int length) {
+		super(length);
+	}
+
+	public MActualList(TokenStore store) {
+		super(store);
 	}
 
 	@Override

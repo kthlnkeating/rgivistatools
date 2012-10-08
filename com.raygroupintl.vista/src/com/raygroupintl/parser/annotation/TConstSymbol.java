@@ -20,10 +20,15 @@ import java.util.Map;
 
 import com.raygroupintl.parser.TSequence;
 import com.raygroupintl.parser.Token;
+import com.raygroupintl.parser.TokenStore;
 
 public class TConstSymbol extends TSequence implements RuleSupply {
-	public TConstSymbol(Token token) {
-		super(token);
+	public TConstSymbol(int length) {
+		super(length);
+	}
+	
+	public TConstSymbol(TokenStore store) {
+		super(store.toList());
 	}
 	
 	@Override

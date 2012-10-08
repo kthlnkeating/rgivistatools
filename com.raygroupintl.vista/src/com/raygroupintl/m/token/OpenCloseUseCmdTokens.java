@@ -20,11 +20,12 @@ import com.raygroupintl.m.parsetree.Node;
 import com.raygroupintl.m.parsetree.Nodes;
 import com.raygroupintl.m.parsetree.OpenCloseUseCmdNodes;
 import com.raygroupintl.parser.Token;
+import com.raygroupintl.parser.TokenStore;
 
 public class OpenCloseUseCmdTokens {
 	public static final class MOpenCmd extends MCommand {
-		public MOpenCmd(Token token) {
-			super(token);
+		public MOpenCmd(Token cmdName, Token cmdDependent) {
+			super(cmdName, cmdDependent);
 		}		
 		
 		@Override
@@ -50,8 +51,8 @@ public class OpenCloseUseCmdTokens {
 	}
 	
 	public static final class MCloseCmd extends MCommand {
-		public MCloseCmd(Token token) {
-			super(token);
+		public MCloseCmd(Token cmdName, Token cmdDependent) {
+			super(cmdName, cmdDependent);
 		}		
 		
 		@Override
@@ -77,8 +78,8 @@ public class OpenCloseUseCmdTokens {
 	}
 
 	public static final class MUseCmd extends MCommand {
-		public MUseCmd(Token token) {
-			super(token);
+		public MUseCmd(Token cmdName, Token cmdDependent) {
+			super(cmdName, cmdDependent);
 		}		
 		
 		@Override
@@ -103,9 +104,24 @@ public class OpenCloseUseCmdTokens {
 		}		
 	}
 
-	public static class MDeviceParameters extends MSequence {
-		public MDeviceParameters(Token token) {
+	public static class MUseDeviceParameters extends MTokenCopy {
+		public MUseDeviceParameters(Token token) {
 			super(token);
+		}
+		
+		@Override
+		public Node getNode(Node subNode) {
+			return new OpenCloseUseCmdNodes.DeviceParameters(subNode);
+		}
+	}
+	
+	public static class MDeviceParameters extends MSequence {
+		public MDeviceParameters(int length) {
+			super(length);
+		}
+		
+		public MDeviceParameters(TokenStore store) {
+			super(store);
 		}
 		
 		@Override

@@ -64,7 +64,15 @@ public class Parser {
 			TokenType tokenType = f.getAnnotation(TokenType.class);
 			if (tokenType != null) {
 				target.setTargetType(tokenType.value());
-			} 		
+			}
+			SequenceTokenType seqTokenType = f.getAnnotation(SequenceTokenType.class);
+			if (seqTokenType != null) {
+				target.setSequenceTargetType(seqTokenType.value());
+			}
+			DelimitedListTokenType dlTokenType = f.getAnnotation(DelimitedListTokenType.class);
+			if (dlTokenType != null) {
+				target.setDelimitedListTargetType(dlTokenType.value());
+			}
 		}
 
 		private TokenFactory addSequence(String name, Sequence sequence, Field f) {

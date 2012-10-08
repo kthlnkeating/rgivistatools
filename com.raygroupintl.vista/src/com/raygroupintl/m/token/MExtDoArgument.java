@@ -18,11 +18,15 @@ package com.raygroupintl.m.token;
 
 import com.raygroupintl.m.parsetree.ExternalDo;
 import com.raygroupintl.m.parsetree.Node;
-import com.raygroupintl.parser.Token;
+import com.raygroupintl.parser.TokenStore;
 
 public class MExtDoArgument extends MSequence {
-	public MExtDoArgument(Token token) {
-		super(token);
+	public MExtDoArgument(int length) {
+		super(length);
+	}
+	
+	public MExtDoArgument(TokenStore store) {
+		super(store);
 	}
 	
 	@Override

@@ -18,7 +18,7 @@ package com.raygroupintl.parser;
 
 import java.util.List;
 
-public class TSequence extends SequenceStore implements Token {
+public class TSequence extends SequenceStore implements CompositeToken {
 	public TSequence(int length) {
 		super(length);
 	}
@@ -27,8 +27,8 @@ public class TSequence extends SequenceStore implements Token {
 		super(tokens);
 	}
 
-	public TSequence(Token token) {
-		super(token.toList());
+	public TSequence(Token token0, Token token1) {
+		super(token0, token1);
 	}
 	
 	@Override

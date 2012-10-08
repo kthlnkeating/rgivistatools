@@ -22,6 +22,7 @@ import com.raygroupintl.parser.TokenFactory;
 import com.raygroupintl.parser.annotation.Rule;
 import com.raygroupintl.parser.annotation.ParseException;
 import com.raygroupintl.parser.annotation.Parser;
+import com.raygroupintl.parser.annotation.SequenceTokenType;
 import com.raygroupintl.parser.annotation.TokenType;
 
 public class MTFSupply {
@@ -74,10 +75,10 @@ public class MTFSupply {
 	@Rule("'^', [environment], name")
 	public TokenFactory envroutine;
 	
-	@TokenType(MNumLit.class)
+	@SequenceTokenType(MNumLit.class)
 	@Rule("'.', intlit, ['E', ['+' | '-'], intlit]")
 	public TokenFactory numlita;
-	@TokenType(MNumLit.class)
+	@SequenceTokenType(MNumLit.class)
 	@Rule("intlit, ['.', intlit], ['E', ['+' | '-'], intlit]")
 	public TokenFactory numlitb;
 	
@@ -90,7 +91,7 @@ public class MTFSupply {
 	@Rule("'+' + '-' + '\\''")
 	public TokenFactory unaryop;
 	
-	@TokenType(MStringLiteral.class)
+	@SequenceTokenType(MStringLiteral.class)
 	@Rule("('\"', [{-'\\r' - '\\n' - '\"'}], '\"'), [strlit]")	
 	public TokenFactory strlit;
 	
@@ -117,21 +118,21 @@ public class MTFSupply {
 	@Rule("'(', expr, ')'")
 	public TokenFactory exprinpar;
 	
-	@TokenType(MIndirection.class)
+	@SequenceTokenType(MIndirection.class)
 	@Rule("'@', expratom, [\"@(\", exprlist, ')']")
 	public TokenFactory indirection;
-	@TokenType(MIndirection.class)
+	@SequenceTokenType(MIndirection.class)
 	@Rule("'@', expratom")
 	public TokenFactory rindirection;
 		
 	@Rule("lvn | gvnall | indirection")
 	public TokenFactory glvn;
 	
-	@TokenType(MGlobal.class)
+	@SequenceTokenType(MGlobal.class)
 	@Rule("'^', ([environment], name, [exprlistinparan])")
 	public TokenFactory gvn;
 	
-	@TokenType(MSsvn.class)
+	@SequenceTokenType(MSsvn.class)
 	@Rule("\"^$\", ident, exprlistinparan")
 	public TokenFactory gvnssvn;
 
@@ -141,7 +142,7 @@ public class MTFSupply {
 	@Rule("unaryop, expratom")
 	public TokenFactory unaryexpritem;
 	
-	@TokenType(MNakedGlobal.class)
+	@SequenceTokenType(MNakedGlobal.class)
 	@Rule("'^', exprlistinparan")
 	public TokenFactory gvnnaked;
 	
@@ -159,7 +160,7 @@ public class MTFSupply {
 	@Rule("strlit | expritemd | unaryexpritem | numlit | exprinpar")
 	public TokenFactory expritem;
 	
-	@TokenType(MLocalByRef.class)
+	@SequenceTokenType(MLocalByRef.class)
 	@Rule("'.', name")
 	public TokenFactory actualda;
 	@Rule("'.', indirection")
@@ -170,15 +171,15 @@ public class MTFSupply {
 	@Rule("glvn | expritem")
 	public TokenFactory expratom;
 
-	@TokenType(MLocal.class)
+	@SequenceTokenType(MLocal.class)
 	@Rule("name, [exprlistinparan]")
 	public TokenFactory lvn;
 	
-	@TokenType(MExpression.class)
+	@SequenceTokenType(MExpression.class)
 	@Rule("expratom, [exprtail]")
 	public TokenFactory expr;
 	
-	@TokenType(MActualList.class)
+	@SequenceTokenType(MActualList.class)
 	@Rule("{actual:',':'(':')':1:1}")
 	public TokenFactory actuallist;
 
@@ -193,7 +194,7 @@ public class MTFSupply {
 	
 	@Rule("exprlistinparan | expr")
 	public TokenFactory exprorinlist;
-	@TokenType(OpenCloseUseCmdTokens.MDeviceParameters.class)	
+	@SequenceTokenType(OpenCloseUseCmdTokens.MDeviceParameters.class)	
 	@Rule("':', [deviceparams], [':'], [expr], [':'], [exprorinlist]")
 	public TokenFactory cmdoargtail;
 	@TokenType(OpenCloseUseCmdTokens.MAtomicOpenCmd.class)	
@@ -240,7 +241,7 @@ public class MTFSupply {
 	@Rule("{cmdrarg:','}")
 	public TokenFactory cmdrargs;
 	
-	@TokenType(BasicTokens.MPostCondition.class)
+	@SequenceTokenType(BasicTokens.MPostCondition.class)
 	@Rule("':', expr")
 	public TokenFactory postcondition;
 	@Rule("'*', expr")
@@ -250,7 +251,7 @@ public class MTFSupply {
 	
 	@Rule("{expr:':':'(':')':1}")
 	public TokenFactory usedeviceparamlist;
-	@TokenType(OpenCloseUseCmdTokens.MDeviceParameters.class)	
+	@TokenType(OpenCloseUseCmdTokens.MUseDeviceParameters.class)	
 	@Rule("usedeviceparamlist | expr")
 	public TokenFactory usedeviceparam;
 	@Rule("':', [usedeviceparam]")
@@ -274,23 +275,23 @@ public class MTFSupply {
 	
 	
 	
-	@TokenType(MExtrinsic.class)	
+	@SequenceTokenType(MExtrinsic.class)	
 	@Rule("indfanoutlabel, ['^', ((envfanoutroutine | fanoutroutine) , [actuallist]) | indfanoutroutine]")
 	public TokenFactory indexargument;
 
-	@TokenType(MExtrinsic.class)	
+	@SequenceTokenType(MExtrinsic.class)	
 	@Rule("fanoutlabel, actuallist")
 	public TokenFactory labelcallexargument;
 
-	@TokenType(MExtrinsic.class)	
+	@SequenceTokenType(MExtrinsic.class)	
 	@Rule("fanoutlabel, ['^', ((envfanoutroutine | fanoutroutine) , [actuallist]) | indfanoutroutine]")
 	public TokenFactory exargument;
 	
-	@TokenType(MExtrinsic.class)	
+	@SequenceTokenType(MExtrinsic.class)	
 	@Rule("'^', noindroutinepostcaret, [actuallist]")
 	public TokenFactory onlyrsimpleexargument;
 	
-	@TokenType(MExtrinsic.class)	
+	@SequenceTokenType(MExtrinsic.class)	
 	@Rule("'^', indirection")
 	public TokenFactory onlyrexargument;
 	
@@ -298,11 +299,11 @@ public class MTFSupply {
 	public TokenFactory extrinsicarg;
 	
 	
-	@TokenType(MExtDoArgument.class)
+	@SequenceTokenType(MExtDoArgument.class)
 	@Rule("'&', name, ['.', name], ['^', name], [actuallist], [postcondition]")
 	public TokenFactory extdoargument;
 
-	@TokenType(BasicTokens.MTFanoutLabelA.class)
+	@SequenceTokenType(BasicTokens.MTFanoutLabelA.class)
 	@Rule("name")
 	public TokenFactory fanoutlabela;
 	@TokenType(BasicTokens.MTFanoutLabelB.class)
@@ -310,16 +311,16 @@ public class MTFSupply {
 	public TokenFactory fanoutlabelb;
 	@Rule("fanoutlabela | fanoutlabelb")
 	public TokenFactory fanoutlabel;
-	@TokenType(BasicTokens.MTIndirectFanoutLabel.class)
+	@SequenceTokenType(BasicTokens.MTIndirectFanoutLabel.class)
 	@Rule("rindirection")
 	public TokenFactory indfanoutlabel;
-	@TokenType(BasicTokens.MTEnvironmentFanoutRoutine.class)
+	@SequenceTokenType(BasicTokens.MTEnvironmentFanoutRoutine.class)
 	@Rule("environment, name")
 	public TokenFactory envfanoutroutine;	
-	@TokenType(BasicTokens.MTFanoutRoutine.class)
+	@SequenceTokenType(BasicTokens.MTFanoutRoutine.class)
 	@Rule("name")
 	public TokenFactory fanoutroutine;
-	@TokenType(BasicTokens.MTIndirectFanoutRoutine.class)
+	@SequenceTokenType(BasicTokens.MTIndirectFanoutRoutine.class)
 	@Rule("rindirection")
 	public TokenFactory indfanoutroutine;
 	@Rule("envfanoutroutine | fanoutroutine")
@@ -331,23 +332,23 @@ public class MTFSupply {
 	@Rule("'^', goroutinepostcaret")
 	public TokenFactory goroutineref;
 	
-	@TokenType(MGotoArgument.class)	
+	@SequenceTokenType(MGotoArgument.class)	
 	@Rule("indfanoutlabel, [dolineoffset], [goroutineref], [postcondition]")
 	public TokenFactory indgoargument;
 
-	@TokenType(MGotoArgument.class)	
+	@SequenceTokenType(MGotoArgument.class)	
 	@Rule("fanoutlabel, dolineoffset, [goroutineref], [postcondition]")
 	public TokenFactory offsetgoargument;
 
-	@TokenType(MGotoArgument.class)	
+	@SequenceTokenType(MGotoArgument.class)	
 	@Rule("fanoutlabel, ['^', envfanoutroutine | fanoutroutine | indfanoutroutine], [postcondition]")
 	public TokenFactory goargument;
 	
-	@TokenType(MGotoArgument.class)	
+	@SequenceTokenType(MGotoArgument.class)	
 	@Rule("'^', indirection, [postcondition]")
 	public TokenFactory onlyrgoargument;
 	
-	@TokenType(MGotoArgument.class)	
+	@SequenceTokenType(MGotoArgument.class)	
 	@Rule("'^', noindroutinepostcaret, [postcondition]")
 	public TokenFactory onlyrsimplegoargument;
 	
@@ -357,27 +358,27 @@ public class MTFSupply {
 	@Rule("{goargumentall:','}")
 	public TokenFactory gotoarguments;	
 	
-	@TokenType(MDoArgument.class)	
+	@SequenceTokenType(MDoArgument.class)	
 	@Rule("indfanoutlabel, [dolineoffset], [doroutineref], [postcondition]")
 	public TokenFactory inddoargument;
 
-	@TokenType(MDoArgument.class)	
+	@SequenceTokenType(MDoArgument.class)	
 	@Rule("fanoutlabel, dolineoffset, [doroutineref], [postcondition]")
 	public TokenFactory offsetdoargument;
 
-	@TokenType(MDoArgument.class)	
+	@SequenceTokenType(MDoArgument.class)	
 	@Rule("fanoutlabel, actuallist, [postcondition]")
 	public TokenFactory labelcalldoargument;
 
-	@TokenType(MDoArgument.class)	
+	@SequenceTokenType(MDoArgument.class)	
 	@Rule("fanoutlabel, ['^', ((envfanoutroutine | fanoutroutine) , [actuallist]) | indfanoutroutine], [postcondition]")
 	public TokenFactory doargument;
 	
-	@TokenType(MDoArgument.class)	
+	@SequenceTokenType(MDoArgument.class)	
 	@Rule("'^', noindroutinepostcaret, [actuallist], [postcondition]")
 	public TokenFactory onlyrsimpledoargument;
 	
-	@TokenType(MDoArgument.class)	
+	@SequenceTokenType(MDoArgument.class)	
 	@Rule("'^', indirection, [postcondition]")
 	public TokenFactory onlyrdoargument;
 	
@@ -402,13 +403,13 @@ public class MTFSupply {
 	public TokenFactory setlhsbasics;	
 	@Rule("expr")
 	public TokenFactory setrhs;
-	@TokenType(SetCmdTokens.MSingleAtomicSetCmd.class)
+	@SequenceTokenType(SetCmdTokens.MSingleAtomicSetCmd.class)
 	@Rule("setlhsbasic, '=', setrhs")
 	public TokenFactory setargsingle;
-	@TokenType(SetCmdTokens.MMultiAtomicSetCmd.class)
+	@SequenceTokenType(SetCmdTokens.MMultiAtomicSetCmd.class)
 	@Rule("setlhsbasics, '=', setrhs")
 	public TokenFactory setargmulti;
-	@TokenType(SetCmdTokens.MSingleAtomicSetCmd.class)
+	@SequenceTokenType(SetCmdTokens.MSingleAtomicSetCmd.class)
 	@Rule("indirection, ['='], [setrhs]")
 	public TokenFactory setargindirect;
 	@Rule("setargindirect | setargmulti | setargsingle")
@@ -416,7 +417,7 @@ public class MTFSupply {
 	@Rule("{setarg:','}")
 	public TokenFactory setargs;
 	
-	@TokenType(OpenCloseUseCmdTokens.MDeviceParameters.class)	
+	@SequenceTokenType(OpenCloseUseCmdTokens.MDeviceParameters.class)	
 	@Rule("':', deviceparams")
 	public TokenFactory closeargdp;
 	@Rule("expr, [closeargdp]")
@@ -427,6 +428,7 @@ public class MTFSupply {
 	@Rule("{closearg:','}")
 	public TokenFactory closeargs;
 	
+	@SequenceTokenType(MForCmd.MForCmdEQRHS.class)
 	@Rule("expr, [':', expr], [':', expr]")
 	public TokenFactory forrhs;
 	@Rule("{forrhs:','}")
@@ -448,7 +450,7 @@ public class MTFSupply {
 	public TokenFactory newedlocal;
 	@Rule("rindirection | newedlocal")
 	public TokenFactory exclusivenewsingle;
-	@TokenType(NewCmdTokens.MExclusiveAtomicNewCmd.class)	
+	@SequenceTokenType(NewCmdTokens.MExclusiveAtomicNewCmd.class)	
 	@Rule("{exclusivenewsingle:',':'(':')'}")
 	public TokenFactory exclusivenew;
 	@TokenType(NewCmdTokens.MAtomicNewCmd.class)	
@@ -464,7 +466,7 @@ public class MTFSupply {
 	public TokenFactory killedlocal;
 	@Rule("rindirection | killedlocal")
 	public TokenFactory exclusivekillsingle;
-	@TokenType(KillCmdTokens.MExclusiveAtomicKillCmd.class)	
+	@SequenceTokenType(KillCmdTokens.MExclusiveAtomicKillCmd.class)	
 	@Rule("{exclusivekillsingle:',':'(':')'}")
 	public TokenFactory exclusivekill;
 	@TokenType(KillCmdTokens.MAtomicKillCmd.class)	
@@ -475,10 +477,10 @@ public class MTFSupply {
 	@Rule("{killarg:','}")
 	public TokenFactory killargs;
 
-	@TokenType(MergeCmdTokens.MAtomicMergeCmd.class)
+	@SequenceTokenType(MergeCmdTokens.MAtomicMergeCmd.class)
 	@Rule("glvn, '=', glvn")
 	public TokenFactory mergeargdirect;
-	@TokenType(MergeCmdTokens.MIndirectAtomicMergeCmd.class)
+	@SequenceTokenType(MergeCmdTokens.MIndirectAtomicMergeCmd.class)
 	@Rule("indirection, ['=', glvn]")
 	public TokenFactory mergeargindirect;
 	@Rule("mergeargindirect | mergeargdirect")
@@ -525,7 +527,7 @@ public class MTFSupply {
 	
 	public TFCommand command = new TFCommand("command", this);
 	
-	@TokenType(MComment.class)
+	@SequenceTokenType(MComment.class)
 	@Rule("';', [{- '\\r' - '\\n'}]")
 	public TokenFactory comment;
 	
@@ -538,7 +540,7 @@ public class MTFSupply {
 	@Rule("{' ' + '.'}")
 	public TokenFactory level;
 	
-	@TokenType(MLine.class)
+	@SequenceTokenType(MLine.class)
 	@Rule("[label], [lineformal], [ls], [level], [commandorcommentlist]")
 	public TokenFactory line;
 	
@@ -692,14 +694,14 @@ public class MTFSupply {
 		@Rule("glvn | expritem | classmethod")
 		public TokenFactory expratom;
 		
-		@TokenType(MObjectExpr.class)
+		@SequenceTokenType(MObjectExpr.class)
 		@Rule("name, '.', {name:'.'}, [actuallist]")
 		public TokenFactory objectexpr;
 		
 		@Rule("objectexpr | lvn | gvnall | indirection")
 		public TokenFactory glvn;
 			
-		@TokenType(MExpression.class)
+		@SequenceTokenType(MExpression.class)
 		@Rule("expratom | classmethod, [exprtail]")
 		public TokenFactory expr;
 		
@@ -711,7 +713,7 @@ public class MTFSupply {
 		public TokenFactory classreftaillst;
 		@Rule("name, [classreftaillst]")
 		public TokenFactory classref;
-		@TokenType(MCacheClassMethod.class)
+		@SequenceTokenType(MCacheClassMethod.class)
 		@Rule("ppclass, '(', classref, ')', '.', name, actuallist")
 		public TokenFactory classmethod;
 		
@@ -721,7 +723,7 @@ public class MTFSupply {
 		public TokenFactory method;
 		@Rule("{method}")
 		public TokenFactory methods;
-		@TokenType(MCacheSystemCall.class)
+		@SequenceTokenType(MCacheSystemCall.class)
 		@Rule("system, [methods], actuallist")
 		public TokenFactory systemcall;
 		
@@ -733,20 +735,20 @@ public class MTFSupply {
 		public TokenFactory clsdoargument;
 		@Rule("systemcall, [dolineoffset], [doroutineref], [actuallist], [postcondition]")
 		public TokenFactory sysdoargument;
-		@TokenType(MDoArgument.class)	
+		@SequenceTokenType(MDoArgument.class)	
 		@Rule("fanoutlabel, ['^', ((envfanoutroutine | objdoroutine | fanoutroutine) , [actuallist]) | indfanoutroutine], [postcondition]")
 		public TokenFactory doargument;
 
 		@Rule("objdoargument | extdoargument | inddoargument | offsetdoargument | labelcalldoargument | doargument | onlyrsimpledoargument | onlyrdoargument | clsdoargument | sysdoargument")
 		public TokenFactory doargumentall;
 		
-		@TokenType(MCacheObjectDoRoutine.class)
+		@SequenceTokenType(MCacheObjectDoRoutine.class)
 		@Rule("name, method")
 		public TokenFactory objdoroutine;
 		@Rule("envfanoutroutine | objdoroutine | fanoutroutine | indfanoutroutine")
 		public TokenFactory doroutinepostcaret;
 		
-		@TokenType(MExtrinsic.class)	
+		@SequenceTokenType(MExtrinsic.class)	
 		@Rule("fanoutlabel, ['^', ((envfanoutroutine | objdoroutine | fanoutroutine) , [actuallist]) | indfanoutroutine]")
 		public TokenFactory exargument;
 		

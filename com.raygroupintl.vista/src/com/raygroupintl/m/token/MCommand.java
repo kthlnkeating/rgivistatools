@@ -22,8 +22,8 @@ import com.raygroupintl.parser.TEmpty;
 import com.raygroupintl.parser.Token;
 
 public abstract class MCommand extends MCommandBase {
-	public MCommand(Token token) {
-		super(token);
+	public MCommand(Token token0, Token token1) {
+		super(token0, token1);
 	}
 	
 	protected Node getArgumentNode() {

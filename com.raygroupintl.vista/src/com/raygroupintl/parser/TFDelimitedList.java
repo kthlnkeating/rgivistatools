@@ -16,13 +16,17 @@
 
 package com.raygroupintl.parser;
 
+import java.lang.reflect.Constructor;
 import java.util.Arrays;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import com.raygroupintl.parser.annotation.ObjectSupply;
 
 public class TFDelimitedList extends TokenFactory {
 	private TFSequence effective;	
+	private Constructor<? extends CompositeToken> constructor;
 	
 	public TFDelimitedList(String name) {
 		super(name);
@@ -54,12 +58,26 @@ public class TFDelimitedList extends TokenFactory {
 		this.set(element, delimiter, false);
 	}
 
+	private CompositeToken convertList(ObjectSupply objectSupply, List<Token> list) {
+		if (this.constructor == null) {
+			return objectSupply.newDelimitedList(list);			
+		} else {
+			try {
+				return this.constructor.newInstance(list);						
+			} catch (Throwable t) {
+				String clsName =  this.getClass().getName();
+				Logger.getLogger(clsName).log(Level.SEVERE, "Unable to instantiate " + clsName + ".", t);			
+			}
+			return null;			
+		}
+	}
+	
 	@Override
-	protected TDelimitedList tokenizeOnly(Text text, ObjectSupply objectSupply) throws SyntaxErrorException {
+	protected CompositeToken tokenizeOnly(Text text, ObjectSupply objectSupply) throws SyntaxErrorException {
 		if (this.effective == null) {
 			throw new IllegalStateException("TFDelimitedList.set needs to be called before TFDelimitedList.tokenize");
 		} else {
-			TSequence internalResult = this.effective.tokenizeOnly(text, objectSupply);
+			CompositeToken internalResult = this.effective.tokenizeOnly(text, objectSupply);
 			if (internalResult == null) {
 				return null;
 			} else {
@@ -68,21 +86,26 @@ public class TFDelimitedList extends TokenFactory {
 				if (tailTokens == null) {
 					Token[] tmpResult = {leadingToken};
 					List<Token> list = Arrays.asList(tmpResult);
-					return objectSupply.newDelimitedList(list);
+					return this.convertList(objectSupply, list);
 				} else {		
-					List<Token> list = tailTokens.toList();
+					List<Token> list = ((TokenStore) tailTokens).toList();
 					list.add(0, leadingToken);
 					int lastIndex = list.size() - 1;
-					List<Token> lastToken = list.get(lastIndex).toList();
+					List<Token> lastToken = ((TokenStore)list.get(lastIndex)).toList();
 					if ((lastToken.size() < 2) || (lastToken.get(1) == null)) {
 						TSequence newLast = objectSupply.newSequence(2);
 						newLast.addToken(lastToken.get(0));
 						newLast.addToken(objectSupply.newEmpty());
 						list.set(lastIndex, newLast);
 					}
-					return objectSupply.newDelimitedList(list);
+					return this.convertList(objectSupply, list);
 				}
 			}
 		}
+	}
+	
+	@Override
+	public void setDelimitedListTargetType(Class<? extends CompositeToken> cls) {
+		this.constructor = this.getConstructor(cls, List.class);
 	}
 }

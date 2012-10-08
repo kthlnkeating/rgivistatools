@@ -16,18 +16,16 @@
 
 package com.raygroupintl.m.parsetree;
 
-import java.util.List;
-
 public class ForLoop extends ParentNode {
 	private static final long serialVersionUID = 1L;
 
 	private Node lhs;
-	private List<Node[]> rhss;
+	private Node rhss;
 		
 	public ForLoop() {		
 	}
 
-	public ForLoop(Node lhs, List<Node[]> rhss) {
+	public ForLoop(Node lhs, Node rhss) {
 		this.lhs = lhs;
 		this.rhss = rhss;
 	}
@@ -36,11 +34,7 @@ public class ForLoop extends ParentNode {
 	public void acceptSubNodes(Visitor visitor) {
 		if (this.lhs != null) {
 			this.lhs.acceptPreAssignment(visitor);
-			for (Node[] rhs : this.rhss) {
-				for (int i=0; i<rhs.length; ++i) {
-					rhs[i].accept(visitor);
-				}
-			}
+			this.rhss.accept(visitor);
 			this.lhs.acceptPostAssignment(visitor, null);
 		}
 		super.acceptSubNodes(visitor);

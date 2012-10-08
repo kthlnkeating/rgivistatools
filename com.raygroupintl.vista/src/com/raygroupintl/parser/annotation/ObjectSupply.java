@@ -24,10 +24,12 @@ import com.raygroupintl.parser.TList;
 import com.raygroupintl.parser.TSequence;
 import com.raygroupintl.parser.TString;
 import com.raygroupintl.parser.Token;
+import com.raygroupintl.parser.TokenStore;
 
 public interface ObjectSupply {
 	TString newString();
 	TSequence newSequence(int length);
+	TSequence newSequence(TokenStore store);
 	TList newList();
 	TDelimitedList newDelimitedList(List<Token> tokens);
 	TEmpty newEmpty();

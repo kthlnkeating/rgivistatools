@@ -4,11 +4,11 @@ import java.util.HashMap;
 import java.util.Map;
 
 import com.raygroupintl.m.struct.MError;
+import com.raygroupintl.parser.CompositeToken;
 import com.raygroupintl.parser.StringPiece;
 import com.raygroupintl.parser.SyntaxErrorException;
 import com.raygroupintl.parser.TFEmptyVerified;
 import com.raygroupintl.parser.TFSequence;
-import com.raygroupintl.parser.TSequence;
 import com.raygroupintl.parser.TString;
 import com.raygroupintl.parser.Text;
 import com.raygroupintl.parser.Token;
@@ -70,7 +70,7 @@ public class TFCommand extends TokenFactorySupply {
 			return this.argumentFactory;
 		}
 
-		public abstract Token getToken(Token token);
+		public abstract Token getToken(Token cmdToken, Token cmdDependentTokens);
 	}
 		
 	private static class TBCommandSpec extends TCommandSpec {
@@ -80,8 +80,8 @@ public class TFCommand extends TokenFactorySupply {
 			super(value, supply.expr);
 		}
 	
-		public Token getToken(Token token) {
-			return new CmdTokens.B(token);
+		public Token getToken(Token cmdName, Token cmdDependent) {
+			return new CmdTokens.B(cmdName, cmdDependent);
 		}
 	}
 	
@@ -92,8 +92,8 @@ public class TFCommand extends TokenFactorySupply {
 			super(value, supply.closearg);
 		}
 	
-		public Token getToken(Token token) {
-			return new OpenCloseUseCmdTokens.MCloseCmd(token);
+		public Token getToken(Token cmdName, Token cmdDependent) {
+			return new OpenCloseUseCmdTokens.MCloseCmd(cmdName, cmdDependent);
 		}
 	}
 	
@@ -104,8 +104,8 @@ public class TFCommand extends TokenFactorySupply {
 			super(value, supply.doarguments);
 		}
 	
-		public Token getToken(Token token) {
-			return new CmdTokens.D(token);
+		public Token getToken(Token cmdName, Token cmdDependent) {
+			return new CmdTokens.D(cmdName, cmdDependent);
 		}
 	}
 	
@@ -116,8 +116,8 @@ public class TFCommand extends TokenFactorySupply {
 			super(value, TF_EMPTY);
 		}
 	
-		public Token getToken(Token token) {
-			return new CmdTokens.E(token);
+		public Token getToken(Token cmdName, Token cmdDependent) {
+			return new CmdTokens.E(cmdName, cmdDependent);
 		}
 	}
 
@@ -128,9 +128,8 @@ public class TFCommand extends TokenFactorySupply {
 			super(value, supply.forarg);
 		}
 	
-		public Token getToken(Token token) {
-			return new MForCmd(token);
-			//return new CmdTokens.F(token);
+		public Token getToken(Token cmdName, Token cmdDependent) {
+			return new MForCmd(cmdName, cmdDependent);
 		}
 	}
 
@@ -141,8 +140,8 @@ public class TFCommand extends TokenFactorySupply {
 			super(value, supply.gotoarguments);
 		}
 	
-		public Token getToken(Token token) {
-			return new CmdTokens.G(token);
+		public Token getToken(Token cmdName, Token cmdDependent) {
+			return new CmdTokens.G(cmdName, cmdDependent);
 		}
 	}
 
@@ -153,8 +152,8 @@ public class TFCommand extends TokenFactorySupply {
 			super(value, supply.expr);
 		}
 	
-		public Token getToken(Token token) {
-			return new CmdTokens.H(token);
+		public Token getToken(Token cmdName, Token cmdDependent) {
+			return new CmdTokens.H(cmdName, cmdDependent);
 		}
 	}
 
@@ -165,8 +164,8 @@ public class TFCommand extends TokenFactorySupply {
 			super(value, supply.exprlist);
 		}
 	
-		public Token getToken(Token token) {
-			return new CmdTokens.I(token);
+		public Token getToken(Token cmdName, Token cmdDependent) {
+			return new CmdTokens.I(cmdName, cmdDependent);
 		}
 	}
 
@@ -177,8 +176,8 @@ public class TFCommand extends TokenFactorySupply {
 			super(value, supply.cmdjargs);
 		}
 	
-		public Token getToken(Token token) {
-			return new CmdTokens.J(token);
+		public Token getToken(Token cmdName, Token cmdDependent) {
+			return new CmdTokens.J(cmdName, cmdDependent);
 		}
 	}
 
@@ -189,8 +188,8 @@ public class TFCommand extends TokenFactorySupply {
 			super(value, supply.killargs);
 		}
 	
-		public Token getToken(Token token) {
-			return new KillCmdTokens.MKillCmd(token);
+		public Token getToken(Token cmdName, Token cmdDependent) {
+			return new KillCmdTokens.MKillCmd(cmdName, cmdDependent);
 		}
 	}
 
@@ -201,8 +200,8 @@ public class TFCommand extends TokenFactorySupply {
 			super(value, supply.lockargs);
 		}
 	
-		public Token getToken(Token token) {
-			return new CmdTokens.L(token);
+		public Token getToken(Token cmdName, Token cmdDependent) {
+			return new CmdTokens.L(cmdName, cmdDependent);
 		}
 	}
 
@@ -213,8 +212,8 @@ public class TFCommand extends TokenFactorySupply {
 			super(value, supply.mergeargs);
 		}
 	
-		public Token getToken(Token token) {
-			return new MergeCmdTokens.MMergeCmd(token);
+		public Token getToken(Token cmdName, Token cmdDependent) {
+			return new MergeCmdTokens.MMergeCmd(cmdName, cmdDependent);
 		}
 	}
 
@@ -225,8 +224,8 @@ public class TFCommand extends TokenFactorySupply {
 			super(value, supply.newargs);
 		}
 	
-		public Token getToken(Token token) {
-			return new NewCmdTokens.MNewCmd(token);
+		public Token getToken(Token cmdName, Token cmdDependent) {
+			return new NewCmdTokens.MNewCmd(cmdName, cmdDependent);
 		}
 	}
 
@@ -237,8 +236,8 @@ public class TFCommand extends TokenFactorySupply {
 			super(value, supply.cmdoargs);
 		}
 	
-		public Token getToken(Token token) {
-			return new OpenCloseUseCmdTokens.MOpenCmd(token);
+		public Token getToken(Token cmdName, Token cmdDependent) {
+			return new OpenCloseUseCmdTokens.MOpenCmd(cmdName, cmdDependent);
 		}
 	}
 
@@ -249,8 +248,8 @@ public class TFCommand extends TokenFactorySupply {
 			super(value, supply.expr);
 		}
 	
-		public Token getToken(Token token) {
-			return new CmdTokens.Q(token);
+		public Token getToken(Token cmdName, Token cmdDependent) {
+			return new CmdTokens.Q(cmdName, cmdDependent);
 		}
 	}
 
@@ -261,8 +260,8 @@ public class TFCommand extends TokenFactorySupply {
 			super(value, supply.cmdrargs);
 		}
 	
-		public Token getToken(Token token) {
-			return new CmdTokens.R(token);
+		public Token getToken(Token cmdName, Token cmdDependent) {
+			return new CmdTokens.R(cmdName, cmdDependent);
 		}
 	}
 
@@ -273,8 +272,8 @@ public class TFCommand extends TokenFactorySupply {
 			super(value, supply.setargs);
 		}
 	
-		public Token getToken(Token token) {
-			return new SetCmdTokens.MSetCmd(token);
+		public Token getToken(Token cmdName, Token cmdDependent) {
+			return new SetCmdTokens.MSetCmd(cmdName, cmdDependent);
 		}
 	}
 
@@ -285,8 +284,8 @@ public class TFCommand extends TokenFactorySupply {
 			super(value, TF_EMPTY);
 		}
 	
-		public Token getToken(Token token) {
-			return new CmdTokens.TC(token);
+		public Token getToken(Token cmdName, Token cmdDependent) {
+			return new CmdTokens.TC(cmdName, cmdDependent);
 		}
 	}
 
@@ -297,8 +296,8 @@ public class TFCommand extends TokenFactorySupply {
 			super(value, TF_EMPTY);
 		}
 	
-		public Token getToken(Token token) {
-			return new CmdTokens.TR(token);
+		public Token getToken(Token cmdName, Token cmdDependent) {
+			return new CmdTokens.TR(cmdName, cmdDependent);
 		}
 	}
 
@@ -309,8 +308,8 @@ public class TFCommand extends TokenFactorySupply {
 			super(value, TF_EMPTY);
 		}
 	
-		public Token getToken(Token token) {
-			return new CmdTokens.TRO(token);
+		public Token getToken(Token cmdName, Token cmdDependent) {
+			return new CmdTokens.TRO(cmdName, cmdDependent);
 		}
 	}
 
@@ -321,8 +320,8 @@ public class TFCommand extends TokenFactorySupply {
 			super(value, TF_EMPTY);
 		}
 	
-		public Token getToken(Token token) {
-			return new CmdTokens.TS(token);
+		public Token getToken(Token cmdName, Token cmdDependent) {
+			return new CmdTokens.TS(cmdName, cmdDependent);
 		}
 	}
 
@@ -333,8 +332,8 @@ public class TFCommand extends TokenFactorySupply {
 			super(value, supply.cmduargs);
 		}
 	
-		public Token getToken(Token token) {
-			return new OpenCloseUseCmdTokens.MUseCmd(token);
+		public Token getToken(Token cmdName, Token cmdDependent) {
+			return new OpenCloseUseCmdTokens.MUseCmd(cmdName, cmdDependent);
 		}
 	}
 
@@ -345,8 +344,8 @@ public class TFCommand extends TokenFactorySupply {
 			super(value, supply.writeargs);
 		}
 	
-		public Token getToken(Token token) {
-			return new CmdTokens.W(token);
+		public Token getToken(Token cmdName, Token cmdDependent) {
+			return new CmdTokens.W(cmdName, cmdDependent);
 		}
 	}
 
@@ -357,8 +356,8 @@ public class TFCommand extends TokenFactorySupply {
 			super(value, new TFGenericArgument("vargument"));
 		}
 		
-		public Token getToken(Token token) {
-			return new CmdTokens.V(token);
+		public Token getToken(Token cmdName, Token cmdDependent) {
+			return new CmdTokens.V(cmdName, cmdDependent);
 		}
 	}
 
@@ -369,8 +368,8 @@ public class TFCommand extends TokenFactorySupply {
 			super(value, supply.xecuteargs);
 		}
 	
-		public Token getToken(Token token) {
-			return new CmdTokens.X(token);
+		public Token getToken(Token cmdName, Token cmdDependent) {
+			return new CmdTokens.X(cmdName, cmdDependent);
 		}
 	}
 
@@ -381,8 +380,8 @@ public class TFCommand extends TokenFactorySupply {
 			super(value, new TFGenericArgument("genericargument"));
 		}
 	
-		public Token getToken(Token token) {
-			return new CmdTokens.Generic(token);
+		public Token getToken(Token cmdName, Token cmdDependent) {
+			return new CmdTokens.Generic(cmdName, cmdDependent);
 		}
 	}
 	
@@ -639,7 +638,7 @@ public class TFCommand extends TokenFactorySupply {
 		}
 		
 		@Override
-		protected ValidateResult validateNull(int seqIndex, TSequence foundTokens, boolean noException) throws SyntaxErrorException {
+		protected ValidateResult validateNull(int seqIndex, CompositeToken foundTokens, boolean noException) throws SyntaxErrorException {
 			if (seqIndex == 3) {
 				if (noException) return ValidateResult.NULL_RESULT;
 				throw new SyntaxErrorException(MError.ERR_GENERAL_SYNTAX);				
@@ -705,9 +704,6 @@ public class TFCommand extends TokenFactorySupply {
 		StringPiece cmdName = supplyToken.toValue();
 		TCSFactory tcs = this.commandSpecs.get(cmdName.toString().toUpperCase());
 		TCommandSpec spec = tcs.get(cmdName);
-		MSequence result = new MSequence(2);
-		result.addToken(supplyToken);
-		result.addToken(nextToken);
-		return spec.getToken(result);
+		return spec.getToken(supplyToken, nextToken);
 	}
 }

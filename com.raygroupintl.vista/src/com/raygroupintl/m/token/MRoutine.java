@@ -13,6 +13,7 @@ import com.raygroupintl.m.parsetree.EntryList;
 import com.raygroupintl.m.parsetree.Entry;
 import com.raygroupintl.m.parsetree.ErrorNode;
 import com.raygroupintl.m.parsetree.Line;
+import com.raygroupintl.m.parsetree.Node;
 import com.raygroupintl.m.parsetree.Routine;
 import com.raygroupintl.m.struct.MError;
 import com.raygroupintl.parser.StringPiece;
@@ -43,15 +44,6 @@ public class MRoutine implements MToken {
 		StringPiece result = new StringPiece();
 		for (MLine line : this.lines) {
 			result.add(line.toValue());
-		}
-		return result;
-	}
-	
-	@Override
-	public List<Token> toList() {
-		List<Token> result = new ArrayList<Token>();
-		for (MLine line : this.lines) {
-			result.add(line);
 		}
 		return result;
 	}
@@ -157,4 +149,24 @@ public class MRoutine implements MToken {
 		
 		return routine;
 	}
+	
+
+	@Override
+	public Node getSubNode(int index) {
+		return null;
+	}
+
+	@Override
+	public Node getSubNode(int index0, int index1) {
+		return null;
+	}	
+
+	public int getNumSubNodes() {
+		return 0;
+	}
+	
+	@Override
+	public MToken getSubNodeToken(int index) {
+		return null;
+	}	
 }

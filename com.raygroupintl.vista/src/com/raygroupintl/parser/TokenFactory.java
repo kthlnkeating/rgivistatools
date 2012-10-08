@@ -66,22 +66,30 @@ public abstract class TokenFactory {
 		};
 	}
 	
-	protected Constructor<? extends Token> getConstructor(Class<? extends Token> cls, Class<?> argument) {
+	public void setSequenceTargetType(Class<? extends CompositeToken> cls) {
+		throw new UnsupportedOperationException();
+	}
+	
+	public void setDelimitedListTargetType(Class<? extends CompositeToken> cls) {
+		throw new UnsupportedOperationException();
+	}
+	
+	protected <T> Constructor<? extends T> getConstructor(Class<? extends T> cls, Class<?> argument) {
 		try {
 			int modifiers = cls.getModifiers();
 			if (! Modifier.isPublic(modifiers)) {
-				throw new IllegalArgumentException(cls.getName() + " is not public.");
+				throw new IllegalArgumentException(this.name + ": " + cls.getName() + " is not public.");
 			}
 			if (Modifier.isAbstract(modifiers) || Modifier.isInterface(modifiers)) {
-				throw new IllegalArgumentException(cls.getName() + " is abstract.");
+				throw new IllegalArgumentException(this.name + ": " + cls.getName() + " is abstract.");
 			}
-			final Constructor<? extends Token> constructor = cls.getConstructor(argument);
+			final Constructor<? extends T> constructor = cls.getConstructor(argument);
 			if (! Modifier.isPublic(constructor.getModifiers())) {
-				throw new IllegalArgumentException(cls.getName() + " constructor (" + argument.getName() + ") is not public.");			
+				throw new IllegalArgumentException(this.name + ": " + cls.getName() + " constructor (" + argument.getName() + ") is not public.");			
 			}
 			return constructor;
 		} catch (NoSuchMethodException nsm) {
-			throw new IllegalArgumentException(cls.getName() + " does not have a constructor that accepts " + argument.getName() + ".");
+			throw new IllegalArgumentException(this.name + ": " + cls.getName() + " does not have a constructor that accepts " + argument.getName() + ".");
 		}
 	}
 }

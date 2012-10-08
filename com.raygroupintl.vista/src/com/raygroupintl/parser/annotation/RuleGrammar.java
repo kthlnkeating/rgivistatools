@@ -76,7 +76,7 @@ public class RuleGrammar {
 	@CharSpecified(ranges={'a', 'z'})
 	public TokenFactory specifiedsymbol; 
 
-	@TokenType(TCharSymbol.class)
+	@SequenceTokenType(TCharSymbol.class)
 	@Sequence(value={"squote", "squoted", "squote"}, required="all")
 	public TokenFactory charsymbol; 
 
@@ -88,18 +88,18 @@ public class RuleGrammar {
 	public TokenFactory charsymbolpp; 
 	@List(value="charsymbolpp")
 	public TokenFactory charsymbollist; 
-	@TokenType(TCharSymbol.class)
+	@SequenceTokenType(TCharSymbol.class)
 	@Sequence(value={"dpm", "charsymbolwr", "charsymbollist"}, required="oro")
 	public TokenFactory charsymbolall; 
 
-	@TokenType(TConstSymbol.class)
+	@SequenceTokenType(TConstSymbol.class)
 	@Sequence(value={"quote", "quoted", "quote", "colon", "bool"}, required="rrroo")
 	public TokenFactory constsymbol; 
 	
 	@Choice({"specifiedsymbol", "charsymbolall", "constsymbol", "optionalsymbols", "requiredsymbols", "list"})
 	public TokenFactory symbol; 
 	
-	@TokenType(TChoice.class)
+	@DelimitedListTokenType(TChoice.class)
 	@List(value="symbol", delim="choicedelimiter")
 	public TokenFactory symbolchoice; 
 
@@ -130,10 +130,10 @@ public class RuleGrammar {
 	@Sequence(value={"sp", "comma", "sp"}, required="oro")
 	public TokenFactory delimiter;
 	
-	@TokenType(TOptionalSymbols.class)
+	@SequenceTokenType(TOptionalSymbols.class)
 	@List(value="symbolchoice", delim="delimiter", left="openoptional", right="closeoptional")
 	public TokenFactory optionalsymbols; 
-	@TokenType(TRequiredSymbols.class)
+	@SequenceTokenType(TRequiredSymbols.class)
 	@List(value="symbolchoice", delim="delimiter", left="openrequired", right="closerequired")
 	public TokenFactory requiredsymbols;
 	
@@ -141,14 +141,14 @@ public class RuleGrammar {
 	public TokenFactory leftrightspec;
 	@Sequence(value={"colon", "anysymbols", "leftrightspec"}, required="roo")
 	public TokenFactory delimleftrightspec;
-	@TokenType(TSymbolList.class)
+	@SequenceTokenType(TSymbolList.class)
 	@Sequence(value={"openlist", "symbolchoice", "delimleftrightspec", "closelist"}, required="rror")
 	public TokenFactory list;
 	
 	@Choice({"specifiedsymbol", "charsymbolall", "constsymbol"})
 	public TokenFactory anysymbols;
 	
-	@TokenType(TRule.class)
+	@DelimitedListTokenType(TRule.class)
 	@List(value="symbolchoice", delim="delimiter")
 	public TokenFactory rule;
 }

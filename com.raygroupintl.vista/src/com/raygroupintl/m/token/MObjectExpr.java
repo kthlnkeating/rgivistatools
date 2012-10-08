@@ -18,11 +18,15 @@ package com.raygroupintl.m.token;
 
 import com.raygroupintl.m.parsetree.Node;
 import com.raygroupintl.m.parsetree.ObjectMethodCall;
-import com.raygroupintl.parser.Token;
+import com.raygroupintl.parser.TokenStore;
 
 public class MObjectExpr extends MSequence {
-	public MObjectExpr(Token token) {
-		super(token);
+	public MObjectExpr(int length) {
+		super(length);
+	}
+	
+	public MObjectExpr(TokenStore store) {
+		super(store);
 	}
 	
 	@Override

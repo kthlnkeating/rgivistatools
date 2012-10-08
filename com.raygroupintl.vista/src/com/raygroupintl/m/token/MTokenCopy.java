@@ -16,9 +16,6 @@
 
 package com.raygroupintl.m.token;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import com.raygroupintl.m.parsetree.Node;
 import com.raygroupintl.parser.StringPiece;
 import com.raygroupintl.parser.Token;
@@ -38,13 +35,6 @@ public abstract class MTokenCopy implements MToken {
 	}
 	
 	@Override
-	public List<Token> toList() {	
-		List<Token> result = new ArrayList<Token>();
-		result.add(this);	
-		return result;
-	}
-
-	@Override
 	public void beautify() {		
 	}	
 	
@@ -53,5 +43,25 @@ public abstract class MTokenCopy implements MToken {
 	public Node getNode() {
 		Node node = this.actual.getNode();
 		return this.getNode(node);		
+	}
+
+	@Override
+	public Node getSubNode(int index) {
+		return this.actual.getSubNode(index);
+	}
+
+	@Override
+	public Node getSubNode(int index0, int index1) {
+		return this.actual.getSubNode(index0, index1);
+	}	
+	
+	@Override
+	public int getNumSubNodes() {
+		return this.actual.getNumSubNodes();
+	}
+
+	@Override
+	public MToken getSubNodeToken(int index) {
+		return this.actual.getSubNodeToken(index);
 	}
 }

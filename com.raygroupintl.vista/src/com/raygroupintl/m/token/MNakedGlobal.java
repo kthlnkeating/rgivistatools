@@ -20,10 +20,15 @@ import com.raygroupintl.m.parsetree.NakedGlobal;
 import com.raygroupintl.m.parsetree.Node;
 import com.raygroupintl.m.parsetree.NodeList;
 import com.raygroupintl.parser.Token;
+import com.raygroupintl.parser.TokenStore;
 
 public class MNakedGlobal extends MSequence {
-	public MNakedGlobal(Token token) {
-		super(token);
+	public MNakedGlobal(int length) {
+		super(length);
+	}
+
+	public MNakedGlobal(TokenStore store) {
+		super(store);
 	}
 
 	@Override

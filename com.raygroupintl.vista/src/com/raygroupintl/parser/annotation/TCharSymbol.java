@@ -24,8 +24,12 @@ import com.raygroupintl.parser.Token;
 import com.raygroupintl.parser.TokenStore;
 
 public class TCharSymbol extends TSequence implements RuleSupply {
-	public TCharSymbol(Token token) {
-		super(token);
+	public TCharSymbol(int length) {
+		super(length);
+	}
+	
+	public TCharSymbol(TokenStore store) {
+		super(store.toList());
 	}
 	
 	private static char getChar(String inQuotes) {

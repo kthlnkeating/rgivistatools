@@ -34,6 +34,11 @@ public class DefaultObjectSupply implements ObjectSupply {
 	}
 	
 	@Override
+	public TSequence newSequence(TokenStore store) {
+		return new TSequence(store.toList());
+	}
+	
+	@Override
 	public TList newList() {
 		return new TList();
 	}

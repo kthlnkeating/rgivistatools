@@ -21,6 +21,7 @@ import java.util.List;
 import com.raygroupintl.parser.TDelimitedList;
 import com.raygroupintl.parser.TEmpty;
 import com.raygroupintl.parser.Token;
+import com.raygroupintl.parser.TokenStore;
 import com.raygroupintl.parser.annotation.ObjectSupply;
 
 public class MObjectSupply implements ObjectSupply {
@@ -32,6 +33,11 @@ public class MObjectSupply implements ObjectSupply {
 	@Override
 	public MSequence newSequence(int length) {
 		return new MSequence(length);
+	}
+	
+	@Override
+	public MSequence newSequence(TokenStore store) {
+		return new MSequence(store);
 	}
 	
 	@Override

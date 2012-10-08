@@ -25,8 +25,13 @@ import com.raygroupintl.parser.TokenStore;
 public abstract class TSymbols extends TSequence implements RuleSupply {
 	private boolean required;
 	
-	public TSymbols(Token token, boolean required) {
-		super(token);
+	public TSymbols(int length, boolean required) {
+		super(length);
+		this.required = required;
+	}
+
+	public TSymbols(TokenStore store, boolean required) {
+		super(store.toList());
 		this.required = required;
 	}
 

@@ -25,11 +25,16 @@ import com.raygroupintl.m.parsetree.Node;
 import com.raygroupintl.m.parsetree.PostConditional;
 import com.raygroupintl.parser.StringPiece;
 import com.raygroupintl.parser.Token;
+import com.raygroupintl.parser.TokenStore;
 
 public class BasicTokens {
 	public static class MTFanoutLabelA extends MSequence {
-		public MTFanoutLabelA(Token token) {
-			super(token);
+		public MTFanoutLabelA(int length) {
+			super(length);
+		}
+		
+		public MTFanoutLabelA(TokenStore store) {
+			super(store);
 		}
 		
 		@Override
@@ -56,8 +61,12 @@ public class BasicTokens {
 	}
 	
 	public static class MTIndirectFanoutLabel extends MIndirection {
-		public MTIndirectFanoutLabel(Token token) {
-			super(token);
+		public MTIndirectFanoutLabel(int length) {
+			super(length);
+		}
+		
+		public MTIndirectFanoutLabel(TokenStore store) {
+			super(store);
 		}
 		
 		@Override
@@ -67,15 +76,13 @@ public class BasicTokens {
 		}		
 	}
 	
-	public static class MTFanoutTagOffset extends MSequence {
-		public MTFanoutTagOffset(Token token) {
-			super(token);
-		}
-	}
-	
 	public static class MTFanoutRoutine extends MSequence {
-		public MTFanoutRoutine(Token token) {
-			super(token);
+		public MTFanoutRoutine(int length) {
+			super(length);
+		}
+		
+		public MTFanoutRoutine(TokenStore store) {
+			super(store);
 		}
 		
 		@Override
@@ -87,8 +94,12 @@ public class BasicTokens {
 	}
 	
 	public static class MTIndirectFanoutRoutine extends MIndirection {
-		public MTIndirectFanoutRoutine(Token token) {
-			super(token);
+		public MTIndirectFanoutRoutine(int length) {
+			super(length);
+		}
+	
+		public MTIndirectFanoutRoutine(TokenStore store) {
+			super(store);
 		}
 	
 		@Override
@@ -99,8 +110,12 @@ public class BasicTokens {
 	}
 	
 	public static class MTEnvironmentFanoutRoutine extends MSequence {
-		public MTEnvironmentFanoutRoutine(Token token) {
-			super(token);
+		public MTEnvironmentFanoutRoutine(int length) {
+			super(length);
+		}
+		
+		public MTEnvironmentFanoutRoutine(TokenStore store) {
+			super(store);
 		}
 		
 		@Override
@@ -111,8 +126,12 @@ public class BasicTokens {
 	}
 
 	public static class MPostCondition extends MSequence {
-		public MPostCondition(Token token) {
-			super(token);
+		public MPostCondition(int length) {
+			super(length);
+		}
+		
+		public MPostCondition(TokenStore store) {
+			super(store);
 		}
 		
 		@Override

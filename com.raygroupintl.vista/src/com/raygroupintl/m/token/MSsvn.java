@@ -22,6 +22,7 @@ import com.raygroupintl.m.parsetree.StructuredSystemVariable;
 import com.raygroupintl.m.struct.MNameWithMnemonic;
 import com.raygroupintl.parser.StringPiece;
 import com.raygroupintl.parser.Token;
+import com.raygroupintl.parser.TokenStore;
 
 public class MSsvn extends MSequence {
 	private static final MNameWithMnemonic.Map SSVS = new MNameWithMnemonic.Map();
@@ -37,8 +38,12 @@ public class MSsvn extends MSequence {
 		SSVS.update("W", "WINDOW"); 	
 	}
 	
-	public MSsvn(Token token) {
-		super(token);
+	public MSsvn(int length) {
+		super(length);
+	}
+	
+	public MSsvn(TokenStore store) {
+		super(store);
 	}
 	
 	@Override

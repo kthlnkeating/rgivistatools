@@ -20,24 +20,52 @@ import java.util.List;
 
 import com.raygroupintl.m.parsetree.Node;
 import com.raygroupintl.parser.TDelimitedList;
-import com.raygroupintl.parser.TEmpty;
 import com.raygroupintl.parser.Token;
 
 public class MDelimitedList extends TDelimitedList implements MToken {
-	public MDelimitedList(Token token) {
-		super(token);
-	}
-
 	public MDelimitedList(List<Token> tokens) {
 		super(tokens);
-	}
-
-	public MDelimitedList(TEmpty empty) {
-		super(empty);
 	}
 
 	@Override
 	public Node getNode() {
 		return NodeUtilities.getNodes(this, this.size());
+	}
+
+	@Override
+	public Node getSubNode(int index) {
+		MToken subToken = this.getSubNodeToken(index);
+		if (subToken != null) {
+			return subToken.getNode();
+		}
+		return null;
+	}
+
+	@Override
+	public Node getSubNode(int index0, int index1) {
+		MToken subToken = (MToken) this.get(index0);
+		if (subToken != null) {
+			subToken = (MToken) this.get(index1);
+			if (subToken != null) return subToken.getNode();
+		}
+		return null;
+	}	
+
+	@Override
+	public int getNumSubNodes() {
+		return this.size();
+	}
+
+	@Override
+	public MToken getSubNodeToken(int index) {
+		MToken subToken = (MToken) this.get(index);
+		if (subToken != null) {
+			if (index == 0) {
+				return subToken;
+			} else {
+				return subToken.getSubNodeToken(1);
+			}
+		}
+		return null;
 	}
 }

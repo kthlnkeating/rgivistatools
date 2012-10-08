@@ -19,13 +19,8 @@ package com.raygroupintl.m.token;
 import com.raygroupintl.m.parsetree.Node;
 import com.raygroupintl.m.parsetree.Nodes;
 import com.raygroupintl.parser.TList;
-import com.raygroupintl.parser.Token;
 
 public class MList extends TList implements MToken {
-	public MList(Token token) {
-		super(token);
-	}
-
 	public MList() {
 		super();
 	}
@@ -33,5 +28,31 @@ public class MList extends TList implements MToken {
 	@Override
 	public Nodes<Node> getNode() {
 		return NodeUtilities.getNodes(this, this.size());
+	}
+	
+	@Override
+	public Node getSubNode(int index) {
+		MToken subToken = (MToken) this.get(index);
+		return subToken == null ? null : subToken.getNode();
+	}
+
+	@Override
+	public Node getSubNode(int index0, int index1) {
+		MToken subToken = (MToken) this.get(index0);
+		if (subToken != null) {
+			subToken = (MToken) this.get(index1);
+			if (subToken != null) return subToken.getNode();
+		}
+		return null;
+	}	
+	
+	@Override
+	public int getNumSubNodes() {
+		return this.size();
+	}
+
+	@Override
+	public MToken getSubNodeToken(int index) {
+		return (MToken) this.get(index);
 	}
 }

@@ -23,8 +23,12 @@ import com.raygroupintl.parser.Token;
 import com.raygroupintl.parser.TokenStore;
 
 public class TSymbolList extends TSequence implements RuleSupply {
-	public TSymbolList(Token token) {
-		super(token);
+	public TSymbolList(int length) {
+		super(length);
+	}
+	
+	public TSymbolList(TokenStore store) {
+		super(store.toList());
 	}
 	
 	private ListInfo getListInfo(String name, Map<String, RuleSupply> existing) {

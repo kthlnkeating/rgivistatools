@@ -1,10 +1,13 @@
 package com.raygroupintl.parser;
 
 import com.raygroupintl.parser.TSequence;
-import com.raygroupintl.parser.Token;
 
 public class TGlobal extends TSequence {
-	public TGlobal(Token token) {
-		super(token);
+	public TGlobal(int length) {
+		super(length);
+	}
+	
+	public TGlobal(TokenStore store) {
+		super(store.toList());
 	}
 }

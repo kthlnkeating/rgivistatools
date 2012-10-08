@@ -26,9 +26,9 @@ public class TList extends ListStore implements Token {
 		super(tokens);
 	}
 
-	public TList(Token token) {
-		super(token.toList());
-	}
+	//public TList(Token token) {
+	//	super(token.toList());
+	//}
 
 	@Override
 	public void beautify() {

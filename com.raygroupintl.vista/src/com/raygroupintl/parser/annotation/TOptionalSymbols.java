@@ -16,10 +16,14 @@
 
 package com.raygroupintl.parser.annotation;
 
-import com.raygroupintl.parser.Token;
+import com.raygroupintl.parser.TokenStore;
 
 public class TOptionalSymbols extends TSymbols {
-	public TOptionalSymbols(Token token) {
-		super(token, false);
+	public TOptionalSymbols(int length) {
+		super(length, false);
+	}
+	
+	public TOptionalSymbols(TokenStore store) {
+		super(store, false);
 	}
 }

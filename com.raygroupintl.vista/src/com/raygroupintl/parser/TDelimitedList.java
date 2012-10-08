@@ -18,10 +18,10 @@ package com.raygroupintl.parser;
 
 import java.util.List;
 
-public class TDelimitedList extends DelimitedListStore implements Token {
-	public TDelimitedList(Token token) {
-		super(token.toList());
-	}
+public class TDelimitedList extends DelimitedListStore implements CompositeToken {
+	//public TDelimitedList(Token token) {
+	//	super(token.toList());
+	//}
 
 	public TDelimitedList(List<Token> tokens) {
 		super(tokens);

@@ -68,6 +68,14 @@ public class SequenceStore implements TokenStore {
 		this.length = tokens.size();
 	}
 
+	public SequenceStore(Token token0, Token token1) {
+		this.tokens = new ArrayList<Token>(2);
+		this.tokens.add(token0);
+		this.tokens.add(token1);
+		this.index = 2;
+		this.length = 2;
+	}	
+	
 	@Override
 	public StringPiece toValue() {	
 		return TokenUtilities.toValue(this);

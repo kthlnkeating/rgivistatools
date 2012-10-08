@@ -15,8 +15,12 @@ public class MLine extends MSequence {
 	String tagName = "";
 	int index = 0;
 
-	public MLine(Token token) {
-		super(token);
+	public MLine(int length) {
+		super(length);
+	}
+
+	public MLine(TokenStore store) {
+		super(store);
 	}
 
 	public String getTag() {
@@ -29,9 +33,9 @@ public class MLine extends MSequence {
 	}
 	
 	public String[] getParameters() {
-		Token paramsTokenWPars = this.get(1);
+		MToken paramsTokenWPars = this.getSubNodeToken(1);
 		if (paramsTokenWPars != null) {
-			Token paramTokens = paramsTokenWPars.toList().get(1);
+			Token paramTokens = paramsTokenWPars.getSubNodeToken(1);
 			if (paramTokens != null) {
 				TokenStore resultAsList = (TokenStore) paramTokens;
 				int length = resultAsList.size();

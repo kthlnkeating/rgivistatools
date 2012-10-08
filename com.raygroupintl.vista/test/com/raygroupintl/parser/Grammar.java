@@ -2,6 +2,7 @@ package com.raygroupintl.parser;
 
 import com.raygroupintl.parser.TokenFactory;
 import com.raygroupintl.parser.annotation.Rule;
+import com.raygroupintl.parser.annotation.SequenceTokenType;
 import com.raygroupintl.parser.annotation.TokenType;
 
 public class Grammar {
@@ -18,19 +19,19 @@ public class Grammar {
 	@Rule("{name:',':'(':')'}")
 	public TokenFactory params;
 		
-	@TokenType(TLocal.class)
+	@SequenceTokenType(TLocal.class)
 	@Rule("name, [params]")
 	public TokenFactory local;
 
-	@TokenType(TObject.class)
+	@SequenceTokenType(TObject.class)
 	@Rule("name, {('.', name)}, [params]")
 	public TokenFactory object;
 	
-	@TokenType(TNumber.class)
+	@SequenceTokenType(TNumber.class)
 	@Rule("['+' + '-'], ([intlit], ['.', intlit]), ['E', ['+' + '-'], intlit]")
 	public TokenFactory number;
 	
-	@TokenType(TGlobal.class)
+	@SequenceTokenType(TGlobal.class)
 	@Rule("caret, local")
 	public TokenFactory global;
 	

@@ -14,24 +14,16 @@
 // limitations under the License.
 //---------------------------------------------------------------------------
 
-package com.raygroupintl.m.token;
+package com.raygroupintl.parser.annotation;
 
-import com.raygroupintl.m.parsetree.Node;
-import com.raygroupintl.m.parsetree.StringLiteral;
-import com.raygroupintl.parser.TokenStore;
+import java.lang.annotation.ElementType;
+import java.lang.annotation.Retention;
+import java.lang.annotation.Target;
 
-public class MStringLiteral extends MSequence {
-	public MStringLiteral(int length) {
-		super(length);
-	}
+import com.raygroupintl.parser.CompositeToken;
 
-	public MStringLiteral(TokenStore store) {
-		super(store);
-	}
-
-	@Override
-	public Node getNode() {
-		String value = this.toValue().toString();
-		return new StringLiteral(value);
-	}	
+@Retention(java.lang.annotation.RetentionPolicy.RUNTIME)
+@Target({ElementType.FIELD})
+public @interface SequenceTokenType {
+	public Class<? extends CompositeToken> value();
 }

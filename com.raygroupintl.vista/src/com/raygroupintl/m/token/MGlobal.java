@@ -24,8 +24,12 @@ import com.raygroupintl.parser.Token;
 import com.raygroupintl.parser.TokenStore;
 
 public class MGlobal extends MSequence {
-	public MGlobal(Token token) {
-		super(token);
+	public MGlobal(int length) {
+		super(length);
+	}
+
+	public MGlobal(TokenStore store) {
+		super(store);
 	}
 
 	@Override

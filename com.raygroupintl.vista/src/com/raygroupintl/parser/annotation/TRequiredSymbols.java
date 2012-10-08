@@ -16,10 +16,14 @@
 
 package com.raygroupintl.parser.annotation;
 
-import com.raygroupintl.parser.Token;
+import com.raygroupintl.parser.TokenStore;
 
 public class TRequiredSymbols extends TSymbols {
-	public TRequiredSymbols(Token token) {
-		super(token, true);
+	public TRequiredSymbols(int length) {
+		super(length, true);
+	}
+	
+	public TRequiredSymbols(TokenStore store) {
+		super(store, true);
 	}
 }

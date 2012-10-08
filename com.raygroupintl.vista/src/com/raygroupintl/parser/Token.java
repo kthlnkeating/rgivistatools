@@ -16,11 +16,8 @@
 
 package com.raygroupintl.parser;
 
-import java.util.List;
-
 public interface Token {
 	StringPiece toValue();
-	List<Token> toList();
 	
 	void beautify();
 }

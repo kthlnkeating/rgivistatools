@@ -19,13 +19,17 @@ package com.raygroupintl.m.token;
 import com.raygroupintl.m.parsetree.Indirection;
 import com.raygroupintl.m.parsetree.Node;
 import com.raygroupintl.m.parsetree.Nodes;
-import com.raygroupintl.parser.Token;
+import com.raygroupintl.parser.TokenStore;
 
 public class MIndirection extends MSequence {
-	public MIndirection(Token token) {
-		super(token);
+	public MIndirection(int length) {
+		super(length);
 	}
-	
+
+	public MIndirection(TokenStore store) {
+		super(store);
+	}
+
 	@Override
 	public Node getNode() {
 		Nodes<Node> nodes = NodeUtilities.getNodes(this, this.size());

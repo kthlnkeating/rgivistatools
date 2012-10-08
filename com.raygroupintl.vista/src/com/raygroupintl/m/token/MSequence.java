@@ -17,20 +17,51 @@
 package com.raygroupintl.m.token;
 
 import com.raygroupintl.m.parsetree.Node;
+import com.raygroupintl.parser.CompositeToken;
 import com.raygroupintl.parser.TSequence;
 import com.raygroupintl.parser.Token;
+import com.raygroupintl.parser.TokenStore;
 
-public class MSequence extends TSequence implements MToken {
+public class MSequence extends TSequence implements MToken, CompositeToken {
 	public MSequence(int length) {
 		super(length);
 	}
 	
-	public MSequence(Token token) {
-		super(token.toList());
+	public MSequence(TokenStore store) {
+		super(store.toList());
 	}
-
+	
+	public MSequence(Token token0, Token token1) {
+		super(token0, token1);
+	}
+		
 	@Override
 	public Node getNode() {
 		return NodeUtilities.getNodes(this, this.size());
+	}
+
+	@Override
+	public Node getSubNode(int index) {
+		MToken subToken = (MToken) this.get(index);
+		return subToken == null ? null : subToken.getNode();
+	}
+
+	@Override
+	public Node getSubNode(int index0, int index1) {
+		MToken subToken = (MToken) this.get(index0);
+		if (subToken != null) {
+			return subToken.getSubNode(index1);
+		}
+		return null;
+	}	
+
+	@Override
+	public int getNumSubNodes() {
+		return this.size();
+	}
+
+	@Override
+	public MToken getSubNodeToken(int index) {
+		return (MToken) this.get(index);
 	}
 }

@@ -16,17 +16,47 @@
 
 package com.raygroupintl.m.token;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import com.raygroupintl.m.parsetree.ForLoop;
 import com.raygroupintl.m.parsetree.Node;
+import com.raygroupintl.m.parsetree.NodeList;
 import com.raygroupintl.parser.Token;
 import com.raygroupintl.parser.TokenStore;
 
 public class MForCmd extends MCommandBase {
-	public MForCmd(Token token) {
-		super(token);
+	public static class MForCmdEQRHS extends MSequence {
+		public MForCmdEQRHS(int length) {
+			super(length);
+		}
+		
+		public MForCmdEQRHS(TokenStore store) {
+			super(store);
+		}
+		
+		@Override
+		public Node getNode() {			
+			Node node0 = this.getSubNode(0);
+			Node node1 = this.getSubNode(1, 1);
+			Node node2 = node1 == null ? null : this.getSubNode(2, 1); 
+			
+			int length = 1;
+			if (node1 != null) {
+				++length;
+				if (node2 != null) ++length;
+			}
+			
+			NodeList<Node> result = new NodeList<Node>(length);
+			result.add(node0);
+			if (node1 != null) {
+				result.add(node1);
+				if (node2 != null) result.add(node2);
+			}
+		
+			return result;
+		}
+	}
+		
+	public MForCmd(Token cmdName, Token cmdDependent) {
+		super(cmdName, cmdDependent);
 	}
 
 	@Override
@@ -40,24 +70,7 @@ public class MForCmd extends MCommandBase {
 		if (argument == null) {
 			return new ForLoop();
 		} else {
-			List<Token> tokens = argument.toList();
-			MToken lhs = (MToken) tokens.get(0);
-			TokenStore rhss = (TokenStore) tokens.get(2);
-			List<Node[]> nodes = new ArrayList<Node[]>(rhss.size());
-			for (Token t : rhss) {
-				List<Token> ts = t.toList();
-				int size = ts.size();
-				if ((size > 2) && (ts.get(2) == null)) size = 2;
-				if ((size > 1) && (ts.get(1) == null)) size = 1;
-				Node[] a = new Node[size];
-				a[0] = ((MToken) ts.get(0)).getNode();				
-				for (int i=1; i<size; ++i) {
-					MToken ti = (MToken) ts.get(i).toList().get(1);
-					a[i] = ti.getNode();
-				}
-				nodes.add(a);
-			}	
-			return new ForLoop(lhs.getNode(), nodes);
+			return new ForLoop(argument.getSubNode(0), argument.getSubNode(2));
 		}
 	}	
 }

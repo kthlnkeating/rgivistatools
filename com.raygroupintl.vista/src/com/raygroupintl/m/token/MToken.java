@@ -21,4 +21,9 @@ import com.raygroupintl.parser.Token;
 
 public interface MToken extends Token {
 	Node getNode();
+	Node getSubNode(int index);
+	Node getSubNode(int index0, int index1);
+	int getNumSubNodes();
+	
+	MToken getSubNodeToken(int index);
 }

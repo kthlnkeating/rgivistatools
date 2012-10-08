@@ -82,20 +82,20 @@ public class TFForkedSequence extends TokenFactory {
 			int textIndex = text.getIndex();
 			for (TFSequence follower : this.followers) {
 				foundTokens.resetIndex(1);
-				Token result = follower.tokenizeCommon(text, objectSupply, 1, foundTokens, true);
+				CompositeToken result = follower.tokenizeCommon(text, objectSupply, 1, foundTokens, true);
 				if (result != null) {
 					TokenFactory f0th = follower.getFactory(0);
 					Token replaced = f0th.convert(leading);
 					foundTokens.set(0, replaced);
 					foundTokens.setLength(follower.getSequenceCount());
-					return follower.convert(result);
+					return follower.convertSequence(result);
 				}
 				text.resetIndex(textIndex);				
 			}
 		} else {
 			for (TFSequence follower : this.followers) {
 				if (follower.validateEnd(0, foundTokens, true)) {
-					return follower.convert(foundTokens);
+					return follower.convertSequence(foundTokens);
 				}
 			}
 		}
