@@ -16,7 +16,7 @@
 
 package com.raygroupintl.parser;
 
-import com.raygroupintl.parser.annotation.ObjectSupply;
+import com.raygroupintl.parsergen.ObjectSupply;
 
 public final class TFList extends TokenFactory {
 	private TokenFactory elementFactory;

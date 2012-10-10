@@ -22,7 +22,7 @@ import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import com.raygroupintl.parser.annotation.ObjectSupply;
+import com.raygroupintl.parsergen.ObjectSupply;
 
 public class TFDelimitedList extends TokenFactory {
 	private TFSequence effective;	

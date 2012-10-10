@@ -12,7 +12,7 @@ import com.raygroupintl.parser.Text;
 import com.raygroupintl.parser.Token;
 import com.raygroupintl.parser.TokenFactory;
 import com.raygroupintl.parser.TokenStore;
-import com.raygroupintl.parser.annotation.ObjectSupply;
+import com.raygroupintl.parsergen.ObjectSupply;
 
 public class TFCommonTest {
 	private static void checkObjectType(Token t) {

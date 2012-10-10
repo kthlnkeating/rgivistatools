@@ -11,7 +11,7 @@ import com.raygroupintl.m.token.MTFSupply;
 import com.raygroupintl.m.token.MVersion;
 import com.raygroupintl.parser.Token;
 import com.raygroupintl.parser.TokenFactory;
-import com.raygroupintl.parser.annotation.ObjectSupply;
+import com.raygroupintl.parsergen.ObjectSupply;
 
 public class TFTest {
 	private static MTFSupply supplyStd95;

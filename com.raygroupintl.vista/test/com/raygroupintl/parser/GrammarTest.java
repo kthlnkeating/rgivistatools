@@ -10,8 +10,8 @@ import org.junit.Test;
 import com.raygroupintl.parser.SyntaxErrorException;
 import com.raygroupintl.parser.Text;
 import com.raygroupintl.parser.Token;
-import com.raygroupintl.parser.annotation.ObjectSupply;
-import com.raygroupintl.parsergen.RuleBasedParserGenerator;
+import com.raygroupintl.parsergen.ObjectSupply;
+import com.raygroupintl.parsergen.rulebased.RuleBasedParserGenerator;
 
 public class GrammarTest {
 	private static Grammar grammar;

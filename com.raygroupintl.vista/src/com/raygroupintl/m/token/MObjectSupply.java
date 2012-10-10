@@ -22,7 +22,7 @@ import com.raygroupintl.parser.TDelimitedList;
 import com.raygroupintl.parser.TEmpty;
 import com.raygroupintl.parser.Token;
 import com.raygroupintl.parser.TokenStore;
-import com.raygroupintl.parser.annotation.ObjectSupply;
+import com.raygroupintl.parsergen.ObjectSupply;
 
 public class MObjectSupply implements ObjectSupply {
 	@Override

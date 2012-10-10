@@ -20,7 +20,7 @@ import java.util.List;
 
 import com.raygroupintl.parser.TSequence;
 import com.raygroupintl.parser.Token;
-import com.raygroupintl.parser.annotation.ObjectSupply;
+import com.raygroupintl.parsergen.ObjectSupply;
 
 public class DefaultObjectSupply implements ObjectSupply {
 	@Override

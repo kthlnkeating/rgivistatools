@@ -19,11 +19,11 @@ package com.raygroupintl.m.token;
 import com.raygroupintl.m.struct.MError;
 import com.raygroupintl.parser.TFSyntaxError;
 import com.raygroupintl.parser.TokenFactory;
-import com.raygroupintl.parser.annotation.Rule;
-import com.raygroupintl.parser.annotation.ParseException;
-import com.raygroupintl.parser.annotation.SequenceTokenType;
-import com.raygroupintl.parser.annotation.TokenType;
-import com.raygroupintl.parsergen.RuleBasedParserGenerator;
+import com.raygroupintl.parsergen.ParseException;
+import com.raygroupintl.parsergen.SequenceTokenType;
+import com.raygroupintl.parsergen.TokenType;
+import com.raygroupintl.parsergen.rulebased.Rule;
+import com.raygroupintl.parsergen.rulebased.RuleBasedParserGenerator;
 
 public class MTFSupply {
 	@Rule("'('")

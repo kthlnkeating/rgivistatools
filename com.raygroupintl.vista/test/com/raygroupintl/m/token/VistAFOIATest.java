@@ -17,7 +17,7 @@ import com.raygroupintl.m.token.MVersion;
 import com.raygroupintl.m.token.TFRoutine;
 import com.raygroupintl.m.token.MLine;
 import com.raygroupintl.m.token.MRoutine;
-import com.raygroupintl.parser.annotation.ParseException;
+import com.raygroupintl.parsergen.ParseException;
 import com.raygroupintl.vista.repository.FileSupply;
 import com.raygroupintl.vista.tools.ErrorExemptions;
 

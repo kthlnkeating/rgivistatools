@@ -18,7 +18,7 @@ package com.raygroupintl.parser;
 
 import java.util.List;
 
-import com.raygroupintl.parser.annotation.ObjectSupply;
+import com.raygroupintl.parsergen.ObjectSupply;
 
 public class TFForkedSequence extends TokenFactory {
 	private TokenFactory leader;

@@ -17,7 +17,7 @@
 package com.raygroupintl.parser;
 
 import com.raygroupintl.charlib.Predicate;
-import com.raygroupintl.parser.annotation.ObjectSupply;
+import com.raygroupintl.parsergen.ObjectSupply;
 
 public class TFCharacter extends TokenFactory {
 	private Predicate predicate;

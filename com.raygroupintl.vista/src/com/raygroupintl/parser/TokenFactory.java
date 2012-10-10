@@ -19,7 +19,7 @@ package com.raygroupintl.parser;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Modifier;
 
-import com.raygroupintl.parser.annotation.ObjectSupply;
+import com.raygroupintl.parsergen.ObjectSupply;
 
 public abstract class TokenFactory {
 	private String name;

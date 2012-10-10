@@ -19,7 +19,7 @@ import com.raygroupintl.parser.TFString;
 import com.raygroupintl.parser.Text;
 import com.raygroupintl.parser.Token;
 import com.raygroupintl.parser.TokenFactory;
-import com.raygroupintl.parser.annotation.ObjectSupply;
+import com.raygroupintl.parsergen.ObjectSupply;
 
 public class TFDelimitedListTest {
 	private static ObjectSupply objectSupply;

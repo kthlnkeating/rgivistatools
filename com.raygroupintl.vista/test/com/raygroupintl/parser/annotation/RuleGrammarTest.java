@@ -19,12 +19,17 @@ import com.raygroupintl.parser.TFSequence;
 import com.raygroupintl.parser.Text;
 import com.raygroupintl.parser.Token;
 import com.raygroupintl.parser.TokenFactory;
-import com.raygroupintl.parser.annotation.RuleGrammar;
-import com.raygroupintl.parser.annotation.TRule;
-import com.raygroupintl.parser.annotation.TOptionalSymbols;
-import com.raygroupintl.parser.annotation.TRequiredSymbols;
-import com.raygroupintl.parser.annotation.TSymbol;
-import com.raygroupintl.parsergen.RuleDefinitionParserGenerator;
+import com.raygroupintl.parsergen.ObjectSupply;
+import com.raygroupintl.parsergen.rulebased.FSRCustom;
+import com.raygroupintl.parsergen.rulebased.FactorySupplyRule;
+import com.raygroupintl.parsergen.rulebased.RulesMapByName;
+import com.raygroupintl.parsergen.ruledef.RuleDefinitionParserGenerator;
+import com.raygroupintl.parsergen.ruledef.RuleGrammar;
+import com.raygroupintl.parsergen.ruledef.TConstSymbol;
+import com.raygroupintl.parsergen.ruledef.TOptionalSymbols;
+import com.raygroupintl.parsergen.ruledef.TRequiredSymbols;
+import com.raygroupintl.parsergen.ruledef.TRule;
+import com.raygroupintl.parsergen.ruledef.TSymbol;
 
 public class RuleGrammarTest {
 	private static RuleGrammar spec;

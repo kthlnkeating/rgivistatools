@@ -28,7 +28,7 @@ import com.raygroupintl.m.token.MTFSupply;
 import com.raygroupintl.m.token.MVersion;
 import com.raygroupintl.m.token.TFRoutine;
 import com.raygroupintl.parser.SyntaxErrorException;
-import com.raygroupintl.parser.annotation.ParseException;
+import com.raygroupintl.parsergen.ParseException;
 import com.raygroupintl.vista.repository.RoutineFactory;
 
 public class MRARoutineFactory implements RoutineFactory {

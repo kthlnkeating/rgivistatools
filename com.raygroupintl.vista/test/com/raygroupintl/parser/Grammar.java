@@ -1,9 +1,9 @@
 package com.raygroupintl.parser;
 
 import com.raygroupintl.parser.TokenFactory;
-import com.raygroupintl.parser.annotation.Rule;
-import com.raygroupintl.parser.annotation.SequenceTokenType;
-import com.raygroupintl.parser.annotation.TokenType;
+import com.raygroupintl.parsergen.SequenceTokenType;
+import com.raygroupintl.parsergen.TokenType;
+import com.raygroupintl.parsergen.rulebased.Rule;
 
 public class Grammar {
 	@TokenType(TIntLit.class)
