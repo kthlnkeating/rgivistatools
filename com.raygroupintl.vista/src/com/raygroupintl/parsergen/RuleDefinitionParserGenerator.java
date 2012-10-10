@@ -1,13 +1,27 @@
-package com.raygroupintl.parser.annotation;
+//---------------------------------------------------------------------------
+// Copyright 2012 Ray Group International
+//
+// Licensed under the Apache License, Version 2.0 (the "License");
+// you may not use this file except in compliance with the License.
+// You may obtain a copy of the License at
+//
+//     http://www.apache.org/licenses/LICENSE-2.0
+//
+// Unless required by applicable law or agreed to in writing, software
+// distributed under the License is distributed on an "AS IS" BASIS,
+// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+// See the License for the specific language governing permissions and
+// limitations under the License.
+//---------------------------------------------------------------------------
+
+package com.raygroupintl.parsergen;
 
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.Map;
-import java.util.Set;
 
 import com.raygroupintl.charlib.Predicate;
 import com.raygroupintl.charlib.PredicateFactory;
@@ -20,8 +34,19 @@ import com.raygroupintl.parser.TFList;
 import com.raygroupintl.parser.TFSequence;
 import com.raygroupintl.parser.TFString;
 import com.raygroupintl.parser.TokenFactory;
+import com.raygroupintl.parser.annotation.CharSpecified;
+import com.raygroupintl.parser.annotation.Choice;
+import com.raygroupintl.parser.annotation.DelimitedListTokenType;
+import com.raygroupintl.parser.annotation.FSRCustom;
+import com.raygroupintl.parser.annotation.FactorySupplyRule;
+import com.raygroupintl.parser.annotation.List;
+import com.raygroupintl.parser.annotation.ParseException;
+import com.raygroupintl.parser.annotation.Sequence;
+import com.raygroupintl.parser.annotation.SequenceTokenType;
+import com.raygroupintl.parser.annotation.TokenType;
+import com.raygroupintl.parser.annotation.WordSpecified;
 
-public class Parser {
+public class RuleDefinitionParserGenerator extends ParserGenerator {
 	private static final class Triple<T extends TokenFactory, A extends Annotation> {
 		public T factory;
 		public A annotation;
@@ -32,9 +57,7 @@ public class Parser {
 		}
 	}
 	
-	private static class Store {
-		private static RuleParser ruleParser;
-		
+	private static class StoreX extends TokenFactoryStore {
 		public Map<String, TokenFactory> symbols = new HashMap<String, TokenFactory>();
 		
 		private java.util.List<Triple<TFChoice, Choice>> choices  = new ArrayList<Triple<TFChoice, Choice>>();
@@ -45,13 +68,9 @@ public class Parser {
 		private java.util.List<Triple<TFSequence, List>> enclosedDelimitedLists  = new ArrayList<Triple<TFSequence, List>>();
 		
 		private java.util.List<FactorySupplyRule> rules  = new ArrayList<FactorySupplyRule>();
-		private Map<String, RuleSupply> ruleSupplies  = new HashMap<String, RuleSupply>();
 		private Map<String, FactorySupplyRule> topRules  = new HashMap<String, FactorySupplyRule>();
 		
-		private RulesMapByName tfby;
-		
-		public Store() {
-			this.tfby = new RulesMapByName(this.topRules);
+		public StoreX() {
 		}
 		
 		private TokenFactory addChoice(String name, Choice choice) {
@@ -79,30 +98,6 @@ public class Parser {
 			TFSequence value = new TFSequence(name);
 			this.sequences.add(new Triple<TFSequence, Sequence>(value, sequence));
 			return value;			
-		}
-		
-		private TokenFactory addRule(String name, Rule ruleAnnotation, Field f) {
-			if (ruleParser == null) {
-				ruleParser = new RuleParser();
-			}
-			String ruleText = ruleAnnotation.value();
-			RuleSupply ruleSupply = this.ruleSupplies.get(name);
-			if (ruleSupply == null) {
-				ruleSupply = ruleParser.getTopTFRule(name, ruleText);
-				if (ruleSupply == null) return null;
-				this.ruleSupplies.put(name, ruleSupply);
-			}
-			FactorySupplyRule topRule = this.topRules.get(name);	
-			if (topRule == null) {
-				topRule = ruleSupply.getRule(RuleSupplyFlag.TOP, name, this.ruleSupplies);		
-				this.topRules.put(name, topRule);
-			}
-			if (topRule != null) {
-				TokenFactory value = topRule.getShellFactory();
-				this.rules.add(topRule);
-				return value;		
-			}
-			return null;
 		}
 		
 		private TokenFactory addList(String name, List list, Field f) {
@@ -155,7 +150,8 @@ public class Parser {
 			return tf;
 		}
 		
-		private TokenFactory addNotRule(Field f) {
+		@Override
+		protected TokenFactory add(Field f)  {
 			String name = f.getName();			
 			Choice choice = f.getAnnotation(Choice.class);
 			if (choice != null) {
@@ -180,24 +176,7 @@ public class Parser {
 			return null;			
 		}
 		
-		private TokenFactory add(Field f)  {
-			String name = f.getName();
-			
-			Rule description = f.getAnnotation(Rule.class);
-			if (description != null) {
-				return this.addRule(name, description, f);
-			} else {
-				TokenFactory result = this.addNotRule(f);
-				if (result != null) {
-					FSRCustom fsr = new FSRCustom(result);
-					this.topRules.put(name, fsr);
-					this.rules.add(fsr);
-				}
-				return result;
-			}
-		}
-		
-		private <T> boolean handleField(T target, Field f) throws IllegalAccessException {
+		protected <T> boolean handleField(T target, Field f) throws IllegalAccessException {
 			String name = f.getName();
 			TokenFactory already = this.symbols.get(name);
 			if (already == null) {					
@@ -224,47 +203,6 @@ public class Parser {
 			return true;
 		}
 		
-		private <T> void handleWithRemaining(T target, Field f, Set<String> remainingNames, java.util.List<Field> remaining) throws IllegalAccessException{
-			String name = f.getName();
-			if (remainingNames.contains(name)) {
-				remaining.add(f);							
-				return;
-			}
-			if (! this.handleField(target, f)) {
-				remainingNames.add(name);
-				remaining.add(f);
-			}			
-		}
-		
-		public <T> void add(T target) throws ClassNotFoundException, IllegalAccessException, InstantiationException, NoSuchMethodException {
-			Set<String> remainingNames = new HashSet<String>();
-			java.util.List<Field> remaining = new ArrayList<Field>();
-			Class<?> cls = target.getClass();
-			while (! cls.equals(Object.class)) {
-				for (Field f : cls.getDeclaredFields()) {
-					if (TokenFactory.class.isAssignableFrom(f.getType())) {
-						this.handleWithRemaining(target, f, remainingNames, remaining);
-					}
-				}
-				cls = cls.getSuperclass();
-			}
-			while (remaining.size() > 0) {
-				remainingNames = new HashSet<String>();
-				java.util.List<Field> loopRemaining = new ArrayList<Field>();
-				for (Field f : remaining) {
-					this.handleWithRemaining(target, f, remainingNames, loopRemaining);
-				}
-				if (remaining.size() == loopRemaining.size()) {
-					String symbols = "";
-					for (Field f : remaining) {
-						symbols += ", " + f.getName();
-					}
-					throw new ParseErrorException("Following symbols are not resolved: " + symbols.substring(1));
-				}
-				remaining = loopRemaining;
-			}			
-		}
-		
 		private void updateChoices() {		
 			for (Triple<TFChoice, Choice> p : this.choices) {
 				TokenFactory[] fs = getFactories(this.symbols, p.annotation.value());
@@ -280,31 +218,6 @@ public class Parser {
 			}
 		}
 	
-		private static void updateRules(java.util.List<FactorySupplyRule> list, java.util.List<FactorySupplyRule> remaining, RulesMapByName tfby) {
-			for (FactorySupplyRule r : list) {
-				r.update(tfby);
-				//TokenFactory f = r.getFactory(tfby);
-				//if (f == null) {
-				//	remaining.add(r);
-				//} 
-			}
-		}
-
-		private void updateRules() {
-			java.util.List<FactorySupplyRule> remaining = new ArrayList<FactorySupplyRule>();
-			updateRules(this.rules, remaining, this.tfby);
-			while (remaining.size() > 0) {
-				java.util.List<FactorySupplyRule> nextRemaining = new ArrayList<FactorySupplyRule>();
-				updateRules(remaining, nextRemaining, this.tfby);
-				if (nextRemaining.size() == remaining.size()) {
-					throw new ParseErrorException("There looks to be a circular symbol condition");					
-				}
-				remaining = nextRemaining;
-			}
-			
-			
-		}
-
 		private void updateLists() {
 			for (Triple<TFList, List> p : this.lists) {
 				TokenFactory f = this.symbols.get(p.annotation.value());
@@ -345,17 +258,21 @@ public class Parser {
 			}	
 		}
 		
-		public void update(Class<?> cls, boolean ignore)  throws IllegalAccessException, InstantiationException, ParseException {
+		@Override
+		public void addAssumed() {		
+			TokenFactory end = new TFEnd("end");
+			this.symbols.put("end", end);
+		}
+
+		@Override
+		public void update(Class<?> cls)  throws IllegalAccessException, InstantiationException, ParseException {
 			this.updateChoices();
 			this.updateSequences();
 			this.updateLists();
 			this.updateEnclosedLists();
 			this.updateEnclosedDelimitedLists();
 			this.updateDelimitedLists();
-			if (! ignore) {
-				this.updateRules();
-			}
-		}		
+		}
 	}
 	
 	private static TokenFactory[] getFactories(Map<String, TokenFactory> map, String[] names) {
@@ -386,30 +303,8 @@ public class Parser {
 		return result;
 	}
 	
-	<T> T parse(Class<T> cls, boolean ignore) throws ParseException {
-		try {
-			T target = cls.newInstance();
-			Store store = new Store();
-			store.add(target);
-			TokenFactory end = new TFEnd("end");
-			store.symbols.put("end", end);
-			FactorySupplyRule fsr = new FSRCustom(end);
-			store.rules.add(fsr);
-			store.topRules.put("end", fsr);
-			store.update(cls, ignore);
-			return target;
-		} catch (IllegalAccessException iae) {
-			throw new ParseException(iae);
-		} catch (InstantiationException ine) {
-			throw new ParseException(ine);
-		} catch (ClassNotFoundException cnf) {
-			throw new ParseException(cnf);
-		} catch (NoSuchMethodException nsm) {
-			throw new ParseException(nsm);			
-		}
-	}
-
-	public <T> T parse(Class<T> cls) throws ParseException {
-		return this.parse(cls, false);
+	@Override
+	protected TokenFactoryStore getStore() {
+		return new StoreX();			
 	}
 }

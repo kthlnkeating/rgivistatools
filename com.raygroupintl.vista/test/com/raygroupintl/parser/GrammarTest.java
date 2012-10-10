@@ -11,7 +11,7 @@ import com.raygroupintl.parser.SyntaxErrorException;
 import com.raygroupintl.parser.Text;
 import com.raygroupintl.parser.Token;
 import com.raygroupintl.parser.annotation.ObjectSupply;
-import com.raygroupintl.parser.annotation.Parser;
+import com.raygroupintl.parsergen.RuleBasedParserGenerator;
 
 public class GrammarTest {
 	private static Grammar grammar;
@@ -19,8 +19,8 @@ public class GrammarTest {
 	
 	@BeforeClass
 	public static void setUpBeforeClass() throws Exception {
-		Parser parser = new Parser();
-		grammar = parser.parse(Grammar.class);
+		RuleBasedParserGenerator parserGen = new RuleBasedParserGenerator();
+		grammar = parserGen.generate(Grammar.class);
 		objectSupply = new DefaultObjectSupply();
 	}
 

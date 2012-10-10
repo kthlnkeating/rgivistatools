@@ -21,9 +21,9 @@ import com.raygroupintl.parser.TFSyntaxError;
 import com.raygroupintl.parser.TokenFactory;
 import com.raygroupintl.parser.annotation.Rule;
 import com.raygroupintl.parser.annotation.ParseException;
-import com.raygroupintl.parser.annotation.Parser;
 import com.raygroupintl.parser.annotation.SequenceTokenType;
 import com.raygroupintl.parser.annotation.TokenType;
+import com.raygroupintl.parsergen.RuleBasedParserGenerator;
 
 public class MTFSupply {
 	@Rule("'('")
@@ -784,8 +784,8 @@ public class MTFSupply {
 	private static MTFSupply STD_95_SUPPLY;
 	
 	private static MTFSupply generateSupply(Class<? extends MTFSupply> cls) throws ParseException {
-		Parser parser = new Parser();
-		MTFSupply result = 	parser.parse(cls);
+		RuleBasedParserGenerator parserGen = new RuleBasedParserGenerator();
+		MTFSupply result = 	parserGen.generate(cls);
 		result.initialize();
 		return result;
 	}

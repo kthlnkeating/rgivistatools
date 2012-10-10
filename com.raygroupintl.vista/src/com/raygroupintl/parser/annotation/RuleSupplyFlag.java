@@ -16,7 +16,7 @@
 
 package com.raygroupintl.parser.annotation;
 
-enum RuleSupplyFlag {
+public enum RuleSupplyFlag {
 	INNER_REQUIRED,
 	INNER_OPTIONAL,
 	TOP;

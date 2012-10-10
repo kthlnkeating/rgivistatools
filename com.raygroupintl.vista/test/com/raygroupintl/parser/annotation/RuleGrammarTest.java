@@ -20,11 +20,11 @@ import com.raygroupintl.parser.Text;
 import com.raygroupintl.parser.Token;
 import com.raygroupintl.parser.TokenFactory;
 import com.raygroupintl.parser.annotation.RuleGrammar;
-import com.raygroupintl.parser.annotation.Parser;
 import com.raygroupintl.parser.annotation.TRule;
 import com.raygroupintl.parser.annotation.TOptionalSymbols;
 import com.raygroupintl.parser.annotation.TRequiredSymbols;
 import com.raygroupintl.parser.annotation.TSymbol;
+import com.raygroupintl.parsergen.RuleDefinitionParserGenerator;
 
 public class RuleGrammarTest {
 	private static RuleGrammar spec;
@@ -32,8 +32,8 @@ public class RuleGrammarTest {
 	
 	@BeforeClass
 	public static void setUpBeforeClass() throws Exception {
-		Parser parser = new Parser();
-		spec = parser.parse(RuleGrammar.class);
+		RuleDefinitionParserGenerator parserGen = new RuleDefinitionParserGenerator();
+		spec = parserGen.generate(RuleGrammar.class);
 		objectSupply = new DefaultObjectSupply();
 	}
 

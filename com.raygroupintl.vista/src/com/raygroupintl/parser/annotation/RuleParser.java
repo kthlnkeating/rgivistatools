@@ -19,6 +19,7 @@ package com.raygroupintl.parser.annotation;
 import com.raygroupintl.parser.DefaultObjectSupply;
 import com.raygroupintl.parser.SyntaxErrorException;
 import com.raygroupintl.parser.Text;
+import com.raygroupintl.parsergen.RuleDefinitionParserGenerator;
 
 public class RuleParser {
 	private RuleGrammar grammar;
@@ -26,8 +27,8 @@ public class RuleParser {
 	public RuleSupply getTopTFRule(String name, String ruleText) {
 		if (this.grammar == null) {
 			try {
-				Parser parser = new Parser();
-				this.grammar = parser.parse(RuleGrammar.class, true);
+				RuleDefinitionParserGenerator parserGen = new RuleDefinitionParserGenerator();
+				this.grammar = parserGen.generate(RuleGrammar.class);
 			} catch (ParseException e) {
 				throw new ParseErrorException("Error in rule grammar: " + e.getMessage());
 			}

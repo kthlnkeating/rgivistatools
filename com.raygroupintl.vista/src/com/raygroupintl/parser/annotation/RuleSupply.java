@@ -18,6 +18,6 @@ package com.raygroupintl.parser.annotation;
 
 import java.util.Map;
 
-interface RuleSupply {	
+public interface RuleSupply {	
 	FactorySupplyRule getRule(RuleSupplyFlag flag, String name, Map<String, RuleSupply> existing);
 }
