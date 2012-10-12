@@ -18,7 +18,6 @@ package com.raygroupintl.parsergen.rulebased;
 
 import com.raygroupintl.charlib.Predicate;
 import com.raygroupintl.parser.TFCharacter;
-import com.raygroupintl.parser.TokenFactory;
 import com.raygroupintl.parsergen.ListInfo;
 import com.raygroupintl.parsergen.ruledef.RuleSupplyFlag;
 
@@ -48,7 +47,7 @@ public class FSRChar extends FSRBase {
 	}
 	
 	@Override
-	public TokenFactory getShellFactory() {
+	public TFCharacter getShellFactory() {
 		return this.factory;
 	}
 	

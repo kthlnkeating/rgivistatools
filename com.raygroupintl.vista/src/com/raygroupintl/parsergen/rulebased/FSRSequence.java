@@ -77,7 +77,7 @@ public class FSRSequence extends FSRBase {
 	}
 
 	@Override
-	public TokenFactory getShellFactory() {
+	public TFSequence getShellFactory() {
 		return this.factory;
 	}
 	

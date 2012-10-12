@@ -42,10 +42,9 @@ public class RuleStore extends TokenFactoryStore {
 	private Map<String, RuleSupply> ruleSupplies  = new HashMap<String, RuleSupply>();
 	private Map<String, FactorySupplyRule> topRules  = new HashMap<String, FactorySupplyRule>();
 	
-	private RulesMapByName tfby;
+	//private FSRVisitingTFStore tfStore = new FSRVisitingTFStore();
 	
 	public RuleStore() {
-		this.tfby = new RulesMapByName(this.topRules);
 	}
 	
 	private void updateAdapter(Field f, TokenFactory target)  {
@@ -67,9 +66,9 @@ public class RuleStore extends TokenFactoryStore {
 		if (ruleParser == null) {
 			ruleParser = new RuleParser();
 		}
-		String ruleText = ruleAnnotation.value();
 		RuleSupply ruleSupply = this.ruleSupplies.get(name);
 		if (ruleSupply == null) {
+			String ruleText = ruleAnnotation.value();
 			ruleSupply = ruleParser.getTopTFRule(name, ruleText);
 			if (ruleSupply == null) return null;
 			this.ruleSupplies.put(name, ruleSupply);
@@ -132,17 +131,16 @@ public class RuleStore extends TokenFactoryStore {
 
 	private void updateRules() {
 		java.util.List<FactorySupplyRule> remaining = new ArrayList<FactorySupplyRule>();
-		updateRules(this.rules, remaining, this.tfby);
+		RulesMapByName tfby = new RulesMapByName(this.topRules);
+		updateRules(this.rules, remaining, tfby);
 		while (remaining.size() > 0) {
 			java.util.List<FactorySupplyRule> nextRemaining = new ArrayList<FactorySupplyRule>();
-			updateRules(remaining, nextRemaining, this.tfby);
+			updateRules(remaining, nextRemaining, tfby);
 			if (nextRemaining.size() == remaining.size()) {
 				throw new ParseErrorException("There looks to be a circular symbol condition");					
 			}
 			remaining = nextRemaining;
 		}
-		
-		
 	}
 	
 	@Override

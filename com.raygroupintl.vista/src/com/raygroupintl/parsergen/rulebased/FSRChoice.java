@@ -36,14 +36,14 @@ public class FSRChoice extends FSRBase {
 			this.aname = name;
 		}
 	 	
-		public String aname;
+		private String aname;
 		
-		public List<FactorySupplyRule> list = new ArrayList<FactorySupplyRule>();
+		private List<FactorySupplyRule> list = new ArrayList<FactorySupplyRule>();
 		
-		public Map<String, Integer> choiceOrder = new HashMap<String, Integer>();
-		public Map<Integer, List<String>> possibleShared = new HashMap<Integer, List<String>>();
-		public Set<String> restrictedChoices = new HashSet<String>();
-		public Map<Integer, String> leadingShared = new HashMap<Integer, String>();
+		private Map<String, Integer> choiceOrder = new HashMap<String, Integer>();
+		private Map<Integer, List<String>> possibleShared = new HashMap<Integer, List<String>>();
+		private Set<String> restrictedChoices = new HashSet<String>();
+		private Map<Integer, String> leadingShared = new HashMap<Integer, String>();
 		
 		public void updateChoicePossibilities(FactorySupplyRule f, RulesByName symbols, int index) {
 			FactorySupplyRule previous = null;
@@ -171,7 +171,7 @@ public class FSRChoice extends FSRBase {
 	}
 
 	@Override
-	public TokenFactory getShellFactory() {
+	public TFChoice getShellFactory() {
 		return this.factory;	
 	}
 }

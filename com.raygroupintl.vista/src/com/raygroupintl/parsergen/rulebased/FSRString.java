@@ -18,13 +18,12 @@ package com.raygroupintl.parsergen.rulebased;
 
 import com.raygroupintl.charlib.Predicate;
 import com.raygroupintl.parser.TFString;
-import com.raygroupintl.parser.TokenFactory;
 import com.raygroupintl.parsergen.ruledef.RuleSupplyFlag;
 
 public class FSRString extends FSRBase {
 	private String expr;
 	private Predicate predicate;
-	private TokenFactory factory;
+	private TFString factory;
 	
 	public FSRString(String expr, RuleSupplyFlag flag, Predicate predicate) {
 		super(flag);
@@ -47,7 +46,7 @@ public class FSRString extends FSRBase {
 	}
 	
 	@Override
-	public TokenFactory getShellFactory() {
+	public TFString getShellFactory() {
 		return this.factory;
 	}
 }

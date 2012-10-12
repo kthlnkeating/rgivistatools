@@ -727,8 +727,6 @@ public class MTFSupply {
 		@Rule("system, [methods], actuallist")
 		public TokenFactory systemcall;
 		
-		@Rule("fanoutlabel")
-		public TokenFactory doobjectname;
 		@Rule("fanoutlabel, method, [dolineoffset], [doroutineref], [actuallist], [postcondition]")
 		public TokenFactory objdoargument;
 		@Rule("classmethod, [dolineoffset], [doroutineref], [actuallist], [postcondition]")

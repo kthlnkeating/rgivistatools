@@ -72,12 +72,11 @@ public class FSRStringSequence extends FSRBase {
 			spg.update(localSymbols);
 		}		
 		
-		
 		return true;		
 	}
 
 	@Override
-	public TokenFactory getShellFactory() {
+	public TFSequence getShellFactory() {
 		return this.factory;
 	}
 	
