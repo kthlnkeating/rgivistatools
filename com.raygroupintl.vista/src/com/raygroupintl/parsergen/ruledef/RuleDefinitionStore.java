@@ -25,6 +25,7 @@ import java.util.Map;
 
 import com.raygroupintl.charlib.Predicate;
 import com.raygroupintl.charlib.PredicateFactory;
+import com.raygroupintl.parser.CompositeToken;
 import com.raygroupintl.parser.TFCharacter;
 import com.raygroupintl.parser.TFChoice;
 import com.raygroupintl.parser.TFConstant;
@@ -33,12 +34,11 @@ import com.raygroupintl.parser.TFEnd;
 import com.raygroupintl.parser.TFList;
 import com.raygroupintl.parser.TFSequence;
 import com.raygroupintl.parser.TFString;
+import com.raygroupintl.parser.Token;
 import com.raygroupintl.parser.TokenFactory;
-import com.raygroupintl.parsergen.DelimitedListTokenType;
+import com.raygroupintl.parsergen.AdapterSpecification;
 import com.raygroupintl.parsergen.ParseException;
-import com.raygroupintl.parsergen.SequenceTokenType;
 import com.raygroupintl.parsergen.TokenFactoryStore;
-import com.raygroupintl.parsergen.TokenType;
 import com.raygroupintl.parsergen.rulebased.FSRCustom;
 import com.raygroupintl.parsergen.rulebased.FactorySupplyRule;
 
@@ -68,61 +68,73 @@ public class RuleDefinitionStore extends TokenFactoryStore {
 	public RuleDefinitionStore() {
 	}
 	
-	private TokenFactory addChoice(String name, Choice choice) {
+	private TokenFactory addChoice(String name, Choice choice, AdapterSpecification spec) {
 		TFChoice value = new TFChoice(name);
+		Class<? extends Token> a = spec.getTokenAdapter();
+		if (a != null) value.setTargetType(a);
 		this.choices.add(new Triple<TFChoice, Choice>(value, choice));
 		return value;			
 	}
 	
-	private void updateAdapter(Field f, TokenFactory target)  {
-		TokenType tokenType = f.getAnnotation(TokenType.class);
-		if (tokenType != null) {
-			target.setTargetType(tokenType.value());
-		}
-		SequenceTokenType seqTokenType = f.getAnnotation(SequenceTokenType.class);
-		if (seqTokenType != null) {
-			target.setSequenceTargetType(seqTokenType.value());
-		}
-		DelimitedListTokenType dlTokenType = f.getAnnotation(DelimitedListTokenType.class);
-		if (dlTokenType != null) {
-			target.setDelimitedListTargetType(dlTokenType.value());
-		}
-	}
-
-	private TokenFactory addSequence(String name, Sequence sequence, Field f) {
+	private TokenFactory addSequence(String name, Sequence sequence, Field f, AdapterSpecification spec) {
 		TFSequence value = new TFSequence(name);
+		Class<? extends CompositeToken> a = spec.getSequenceTokenAdapter();
+		if (a != null) {
+			value.setSequenceTargetType(a);
+		} else {
+			Class<? extends Token> aAlt = spec.getTokenAdapter();
+			if (aAlt != null) value.setTargetType(aAlt);			
+		}
 		this.sequences.add(new Triple<TFSequence, Sequence>(value, sequence));
 		return value;			
 	}
 	
-	private TokenFactory addList(String name, List list, Field f) {
+	private TokenFactory addList(String name, List list, Field f, AdapterSpecification spec) {
 		String delimiter = list.delim();
 		String left = list.left();
 		String right = list.right();
 		if (delimiter.length() == 0) {
 			if ((left.length() == 0) || (right.length() == 0)) {
 				TFList value = new TFList(name);
+				Class<? extends Token> a = spec.getTokenAdapter();
+				if (a != null) value.setTargetType(a);
 				this.lists.add(new Triple<TFList, List>(value, list));
 				return value;
 			} else {
 				TFSequence value = new TFSequence(name);
+				Class<? extends CompositeToken> a = spec.getSequenceTokenAdapter();
+				if (a != null) {
+					value.setSequenceTargetType(a);
+				} else {
+					Class<? extends Token> aAlt = spec.getTokenAdapter();
+					if (aAlt != null) value.setTargetType(aAlt);			
+				}
 				this.enclosedLists.add(new Triple<TFSequence, List>(value, list));
 				return value;
 			}
 		} else {			
 			if ((left.length() == 0) || (right.length() == 0)) {
 				TFDelimitedList value = new TFDelimitedList(name);
+				Class<? extends CompositeToken> a = spec.getDelimitedListTokenAdapter();
+				value.setDelimitedListTargetType(a);
 				this.delimitedLists.add(new Triple<TFDelimitedList, List>(value, list));
 				return value;
 			} else {
 				TFSequence value = new TFSequence(name);
+				Class<? extends CompositeToken> a = spec.getSequenceTokenAdapter();
+				if (a != null) {
+					value.setSequenceTargetType(a);
+				} else {
+					Class<? extends Token> aAlt = spec.getTokenAdapter();
+					if (aAlt != null) value.setTargetType(aAlt);			
+				}
 				this.enclosedDelimitedLists.add(new Triple<TFSequence, List>(value, list));
 				return value;					
 			}
 		}
 	}
 	
-	private TokenFactory addCharacters(String name, CharSpecified characters, Field f) {
+	private TokenFactory addCharacters(String name, CharSpecified characters, Field f, AdapterSpecification spec) {
 		PredicateFactory pf = new PredicateFactory();
 		pf.addChars(characters.chars());
 		pf.addRanges(characters.ranges());
@@ -132,14 +144,18 @@ public class RuleDefinitionStore extends TokenFactoryStore {
 				
 		if (characters.single()) {
 			TFCharacter tf = new TFCharacter(name, result);
+			Class<? extends Token> a = spec.getTokenAdapter();
+			if (a != null) tf.setTargetType(a);
 			return tf;
 		} else {		
 			TFString tf = new TFString(name, result);
+			Class<? extends Token> a = spec.getTokenAdapter();
+			if (a != null) tf.setTargetType(a);
 			return tf;
 		}
 	}
 	
-	private TokenFactory addWords(String name, WordSpecified wordSpecied, Field f) {
+	private TokenFactory addWords(String name, WordSpecified wordSpecied, Field f, AdapterSpecification spec) {
 		String word = wordSpecied.value();
 		TFConstant tf = new TFConstant(name, word, wordSpecied.ignorecase());
 		return tf;
@@ -147,26 +163,27 @@ public class RuleDefinitionStore extends TokenFactoryStore {
 	
 	@Override
 	protected TokenFactory add(Field f)  {
-		String name = f.getName();			
+		String name = f.getName();
+		AdapterSpecification spec = AdapterSpecification.getInstance(f);
 		Choice choice = f.getAnnotation(Choice.class);
 		if (choice != null) {
-			return this.addChoice(name, choice);
+			return this.addChoice(name, choice, spec);
 		}			
 		Sequence sequence = f.getAnnotation(Sequence.class);
 		if (sequence != null) {
-			return this.addSequence(name, sequence, f);
+			return this.addSequence(name, sequence, f, spec);
 		}			
 		List list = f.getAnnotation(List.class);
 		if (list != null) {
-			return this.addList(name, list, f);
+			return this.addList(name, list, f, spec);
 		}			
 		CharSpecified characters = f.getAnnotation(CharSpecified.class);
 		if (characters != null) {
-			return this.addCharacters(name, characters, f);
+			return this.addCharacters(name, characters, f, spec);
 		}
 		WordSpecified words = f.getAnnotation(WordSpecified.class);
 		if (words != null) {
-			return this.addWords(name, words, f);
+			return this.addWords(name, words, f, spec);
 		}
 		return null;			
 	}
@@ -179,7 +196,6 @@ public class RuleDefinitionStore extends TokenFactoryStore {
 			if (value == null) {
 				value = this.add(f);
 				if (value != null) {
-					this.updateAdapter(f, value);
 					f.set(target, value);
 				} else {
 					return false;

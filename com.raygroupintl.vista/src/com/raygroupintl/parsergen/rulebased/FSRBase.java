@@ -17,6 +17,7 @@
 package com.raygroupintl.parsergen.rulebased;
 
 import com.raygroupintl.parser.TokenFactory;
+import com.raygroupintl.parsergen.AdapterSpecification;
 import com.raygroupintl.parsergen.ListInfo;
 import com.raygroupintl.parsergen.ParseErrorException;
 import com.raygroupintl.parsergen.ruledef.RuleSupplyFlag;
@@ -36,7 +37,7 @@ public abstract class FSRBase implements FactorySupplyRule {
 			case INNER_REQUIRED: 
 				return true;
 			default:
-				throw new ParseErrorException("Intenal error: attempt to get required flag for a top symbol.");
+				throw new ParseErrorException("Internal error: attempt to get required flag for a top symbol.");
 		}
 	}
 	
@@ -79,5 +80,10 @@ public abstract class FSRBase implements FactorySupplyRule {
 	@Override
 	public int getSequenceCount() {
 		return 1;
+	}
+
+	@Override
+	public void setAdapter(AdapterSpecification spec) {
+		spec.getNull();
 	}
 }

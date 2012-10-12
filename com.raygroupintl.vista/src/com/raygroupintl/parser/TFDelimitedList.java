@@ -104,7 +104,6 @@ public class TFDelimitedList extends TokenFactory {
 		}
 	}
 	
-	@Override
 	public void setDelimitedListTargetType(Class<? extends CompositeToken> cls) {
 		this.constructor = this.getConstructor(cls, List.class);
 	}

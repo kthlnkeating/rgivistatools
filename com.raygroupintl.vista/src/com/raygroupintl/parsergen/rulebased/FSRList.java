@@ -17,7 +17,9 @@
 package com.raygroupintl.parsergen.rulebased;
 
 import com.raygroupintl.parser.TFList;
+import com.raygroupintl.parser.Token;
 import com.raygroupintl.parser.TokenFactory;
+import com.raygroupintl.parsergen.AdapterSpecification;
 import com.raygroupintl.parsergen.ruledef.RuleSupplyFlag;
 
 public class FSRList extends FSRBase {
@@ -47,5 +49,11 @@ public class FSRList extends FSRBase {
 	@Override
 	public TFList getShellFactory() {
 		return this.factory;
+	}
+
+	@Override
+	public void setAdapter(AdapterSpecification spec) {
+		 Class<? extends Token> a = spec.getTokenAdapter();
+		 if (a != null) this.factory.setTargetType(a);
 	}
 }

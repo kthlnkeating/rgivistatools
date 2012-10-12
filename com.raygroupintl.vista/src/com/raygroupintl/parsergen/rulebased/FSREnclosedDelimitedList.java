@@ -16,9 +16,12 @@
 
 package com.raygroupintl.parsergen.rulebased;
 
+import com.raygroupintl.parser.CompositeToken;
 import com.raygroupintl.parser.TFDelimitedList;
 import com.raygroupintl.parser.TFSequence;
+import com.raygroupintl.parser.Token;
 import com.raygroupintl.parser.TokenFactory;
+import com.raygroupintl.parsergen.AdapterSpecification;
 import com.raygroupintl.parsergen.ruledef.RuleSupplyFlag;
 
 public class FSREnclosedDelimitedList extends FSRBase {
@@ -77,4 +80,15 @@ public class FSREnclosedDelimitedList extends FSRBase {
 	public TFSequence getShellFactory() {
 		return this.factory;
 	}
+
+	@Override
+	public void setAdapter(AdapterSpecification spec) {
+		 Class<? extends CompositeToken> a = spec.getSequenceTokenAdapter();
+		 if (a != null) {
+			 this.factory.setSequenceTargetType(a);
+		 } else {
+			 Class<? extends Token> aAlt = spec.getTokenAdapter();
+			 if (aAlt != null) this.factory.setTargetType(aAlt);
+		 }
+	}	
 }

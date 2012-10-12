@@ -18,6 +18,8 @@ package com.raygroupintl.parsergen.rulebased;
 
 import com.raygroupintl.charlib.Predicate;
 import com.raygroupintl.parser.TFString;
+import com.raygroupintl.parser.Token;
+import com.raygroupintl.parsergen.AdapterSpecification;
 import com.raygroupintl.parsergen.ruledef.RuleSupplyFlag;
 
 public class FSRString extends FSRBase {
@@ -48,6 +50,12 @@ public class FSRString extends FSRBase {
 	@Override
 	public TFString getShellFactory() {
 		return this.factory;
+	}
+
+	@Override
+	public void setAdapter(AdapterSpecification spec) {
+		 Class<? extends Token> a = spec.getTokenAdapter();
+		 if (a != null) this.factory.setTargetType(a);
 	}
 }
 	

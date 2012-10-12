@@ -66,14 +66,6 @@ public abstract class TokenFactory {
 		};
 	}
 	
-	public void setSequenceTargetType(Class<? extends CompositeToken> cls) {
-		throw new UnsupportedOperationException();
-	}
-	
-	public void setDelimitedListTargetType(Class<? extends CompositeToken> cls) {
-		throw new UnsupportedOperationException();
-	}
-	
 	protected <T> Constructor<? extends T> getConstructor(Class<? extends T> cls, Class<?> argument) {
 		try {
 			int modifiers = cls.getModifiers();

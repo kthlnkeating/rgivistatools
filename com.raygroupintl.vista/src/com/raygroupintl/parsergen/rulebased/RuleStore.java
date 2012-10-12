@@ -23,12 +23,10 @@ import java.util.Map;
 
 import com.raygroupintl.parser.TFEnd;
 import com.raygroupintl.parser.TokenFactory;
-import com.raygroupintl.parsergen.DelimitedListTokenType;
+import com.raygroupintl.parsergen.AdapterSpecification;
 import com.raygroupintl.parsergen.ParseErrorException;
 import com.raygroupintl.parsergen.ParseException;
-import com.raygroupintl.parsergen.SequenceTokenType;
 import com.raygroupintl.parsergen.TokenFactoryStore;
-import com.raygroupintl.parsergen.TokenType;
 import com.raygroupintl.parsergen.ruledef.RuleParser;
 import com.raygroupintl.parsergen.ruledef.RuleSupply;
 import com.raygroupintl.parsergen.ruledef.RuleSupplyFlag;
@@ -47,21 +45,6 @@ public class RuleStore extends TokenFactoryStore {
 	public RuleStore() {
 	}
 	
-	private void updateAdapter(Field f, TokenFactory target)  {
-		TokenType tokenType = f.getAnnotation(TokenType.class);
-		if (tokenType != null) {
-			target.setTargetType(tokenType.value());
-		}
-		SequenceTokenType seqTokenType = f.getAnnotation(SequenceTokenType.class);
-		if (seqTokenType != null) {
-			target.setSequenceTargetType(seqTokenType.value());
-		}
-		DelimitedListTokenType dlTokenType = f.getAnnotation(DelimitedListTokenType.class);
-		if (dlTokenType != null) {
-			target.setDelimitedListTargetType(dlTokenType.value());
-		}
-	}
-
 	private TokenFactory addRule(String name, Rule ruleAnnotation, Field f) {
 		if (ruleParser == null) {
 			ruleParser = new RuleParser();
@@ -79,6 +62,8 @@ public class RuleStore extends TokenFactoryStore {
 			this.topRules.put(name, topRule);
 		}
 		if (topRule != null) {
+			AdapterSpecification spec = AdapterSpecification.getInstance(f);
+			topRule.setAdapter(spec);
 			TokenFactory value = topRule.getShellFactory();
 			this.rules.add(topRule);
 			return value;		
@@ -104,7 +89,6 @@ public class RuleStore extends TokenFactoryStore {
 			if (value == null) {
 				value = this.add(f);
 				if (value != null) {
-					this.updateAdapter(f, value);
 					f.set(target, value);
 				} else {
 					return false;

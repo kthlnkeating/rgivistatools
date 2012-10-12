@@ -18,6 +18,8 @@ package com.raygroupintl.parsergen.rulebased;
 
 import com.raygroupintl.charlib.Predicate;
 import com.raygroupintl.parser.TFCharacter;
+import com.raygroupintl.parser.Token;
+import com.raygroupintl.parsergen.AdapterSpecification;
 import com.raygroupintl.parsergen.ListInfo;
 import com.raygroupintl.parsergen.ruledef.RuleSupplyFlag;
 
@@ -57,5 +59,11 @@ public class FSRChar extends FSRBase {
 			throw new UnsupportedOperationException("Delimiters and/or enclosers are not supported for list of character based symbols");
 		}		
 		return new FSRString("{" + this.expr + "}", flag, this.predicate);
+	}
+
+	@Override
+	public void setAdapter(AdapterSpecification spec) {
+		 Class<? extends Token> a = spec.getTokenAdapter();
+		 if (a != null) this.factory.setTargetType(a);
 	}
 }

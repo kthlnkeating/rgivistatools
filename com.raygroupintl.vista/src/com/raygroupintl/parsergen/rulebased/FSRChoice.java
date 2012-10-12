@@ -26,17 +26,14 @@ import java.util.Set;
 import com.raygroupintl.parser.TFChoice;
 import com.raygroupintl.parser.TFForkedSequence;
 import com.raygroupintl.parser.TFSequence;
+import com.raygroupintl.parser.Token;
 import com.raygroupintl.parser.TokenFactory;
+import com.raygroupintl.parsergen.AdapterSpecification;
 import com.raygroupintl.parsergen.ruledef.RuleSupplyFlag;
 
 public class FSRChoice extends FSRBase {
 	private static class ForkAlgorithm {	
-		
-		public ForkAlgorithm(String name) {
-			this.aname = name;
-		}
-	 	
-		private String aname;
+		private String appliedOnName;
 		
 		private List<FactorySupplyRule> list = new ArrayList<FactorySupplyRule>();
 		
@@ -45,6 +42,10 @@ public class FSRChoice extends FSRBase {
 		private Set<String> restrictedChoices = new HashSet<String>();
 		private Map<Integer, String> leadingShared = new HashMap<Integer, String>();
 		
+		public ForkAlgorithm(String name) {
+			this.appliedOnName = name;
+		}
+	 	
 		public void updateChoicePossibilities(FactorySupplyRule f, RulesByName symbols, int index) {
 			FactorySupplyRule previous = null;
 			List<String> allForIndex = new ArrayList<String>();
@@ -100,7 +101,7 @@ public class FSRChoice extends FSRBase {
 				} else {
 					String name = this.leadingShared.get(n);
 					FactorySupplyRule leading = symbols.get(name);
-					FSRForkedSequence newForked = new FSRForkedSequence(this.aname + "." + name, leading);
+					FSRForkedSequence newForked = new FSRForkedSequence(this.appliedOnName + "." + name, leading);
 					newForked.addFollower(current);
 					newForked.addFollower(tf);
 					this.list.set(n, newForked);
@@ -173,5 +174,11 @@ public class FSRChoice extends FSRBase {
 	@Override
 	public TFChoice getShellFactory() {
 		return this.factory;	
+	}
+	
+	@Override
+	public void setAdapter(AdapterSpecification spec) {
+		 Class<? extends Token> a = spec.getTokenAdapter();
+		 if (a != null) this.factory.setTargetType(a);
 	}
 }

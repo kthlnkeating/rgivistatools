@@ -17,6 +17,7 @@
 package com.raygroupintl.parsergen.rulebased;
 
 import com.raygroupintl.parser.TokenFactory;
+import com.raygroupintl.parsergen.AdapterSpecification;
 import com.raygroupintl.parsergen.ruledef.RuleSupplyFlag;
 
 public class FSRCopy extends FSRBase {
@@ -52,4 +53,8 @@ public class FSRCopy extends FSRBase {
 		return this.slave.update(symbols);
 	}
 
+	@Override
+	public void setAdapter(AdapterSpecification spec) {
+		this.slave.setAdapter(spec);
+	}
 }

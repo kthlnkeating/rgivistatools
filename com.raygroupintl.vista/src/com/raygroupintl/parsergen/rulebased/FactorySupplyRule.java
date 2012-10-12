@@ -17,6 +17,7 @@
 package com.raygroupintl.parsergen.rulebased;
 
 import com.raygroupintl.parser.TokenFactory;
+import com.raygroupintl.parsergen.AdapterSpecification;
 import com.raygroupintl.parsergen.ListInfo;
 import com.raygroupintl.parsergen.ruledef.RuleSupplyFlag;
 
@@ -33,5 +34,5 @@ public interface FactorySupplyRule {
 	TokenFactory getTheFactory(RulesByName symbols);
 	
 	FactorySupplyRule getLeading(RulesByName names);
-
+	void setAdapter(AdapterSpecification spec);
 }
