@@ -34,8 +34,8 @@ public class FSRSingle extends FSRBase {
 	}
 	
 	@Override
-	public FactorySupplyRule getLeading(RulesByName names) {
-		return names.get(this.value);
+	public FactorySupplyRule getLeading(RulesByName names, int level) {
+		return names.get(this.value).getLeading(names, level);
 	}	
 	
 	@Override

@@ -38,7 +38,7 @@ public class FSRCopy extends FSRBase {
 	}
 	
 	@Override
-	public FactorySupplyRule getLeading(RulesByName names) {
+	public FactorySupplyRule getLeading(RulesByName names, int level) {
 		return names.get(this.masterName);
 	}
 	

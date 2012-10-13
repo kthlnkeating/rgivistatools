@@ -42,8 +42,12 @@ public class FSRStringSequence extends FSRBase {
 	}
 	
 	@Override
-	public FactorySupplyRule getLeading(RulesByName names) {
-		return this.list.get(0);
+	public FactorySupplyRule getLeading(RulesByName names, int level) {
+		if (level == 0) {
+			return this.list.get(0).getLeading(names, 1);
+		} else {
+			return this;
+		}
 	}
 	
 	@Override

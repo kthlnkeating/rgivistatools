@@ -68,7 +68,7 @@ public abstract class FSRBase implements FactorySupplyRule {
 	}
 
 	@Override
-	public FactorySupplyRule getLeading(RulesByName names) {
+	public FactorySupplyRule getLeading(RulesByName names, int level) {
 		return this;
 	}
 	

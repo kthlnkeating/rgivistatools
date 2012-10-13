@@ -33,6 +33,6 @@ public interface FactorySupplyRule {
 	boolean update(RulesByName symbols);
 	TokenFactory getTheFactory(RulesByName symbols);
 	
-	FactorySupplyRule getLeading(RulesByName names);
+	FactorySupplyRule getLeading(RulesByName names, int level);
 	void setAdapter(AdapterSpecification spec);
 }

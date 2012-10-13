@@ -36,7 +36,6 @@ public class FSRChoice extends FSRBase {
 		private List<FactorySupplyRule> list = new ArrayList<FactorySupplyRule>();
 		
 		private Map<String, Integer> choiceOrder = new HashMap<String, Integer>();
-		private Map<Integer, List<String>> possibleShared = new HashMap<Integer, List<String>>();
 		private Map<Integer, String> leadingShared = new HashMap<Integer, String>();
 		
 		public ForkAlgorithm(String name) {
@@ -44,39 +43,20 @@ public class FSRChoice extends FSRBase {
 		}
 	 	
 		public void updateChoicePossibilities(FactorySupplyRule f, RulesByName symbols, int index) {
-			FactorySupplyRule previous = null;
 			List<String> allForIndex = new ArrayList<String>();
-			while (f != previous) {
-				String name = f.getName();
-				if (symbols.hasRule(name)) {
-					this.choiceOrder.put(name, index);
-					allForIndex.add(name);
-				}
-				previous = f;
-				f = f.getLeading(symbols);
+			String name = f.getLeading(symbols, 0).getName();
+			if (symbols.hasRule(name)) {
+				this.choiceOrder.put(name, index);
+				allForIndex.add(name);
 			}
-			this.possibleShared.put(index, allForIndex);
 		}
 		
 		public Integer findInChoices(FactorySupplyRule f, RulesByName names) {
-			FactorySupplyRule previous = null;
-			while (f != previous) {
-				String name = f.getName();
-				Integer order = this.choiceOrder.get(name);
-				if (order != null) {
-					if (this.possibleShared.containsKey(order)) {
-						for (String r : this.possibleShared.get(order)) {
-							if (! r.equals(name)) {
-								this.choiceOrder.remove(r);
-							}
-						}
-						this.leadingShared.put(order, name);
-						this.possibleShared.remove(order);
-					}
-					return order;
-				}
-				previous = f;
-				f = f.getLeading(names);
+			String name = f.getLeading(names, 0).getName();
+			Integer order = this.choiceOrder.get(name);
+			if (order != null) {
+				this.leadingShared.put(order, name);
+				return order;
 			}
 			return null;
 		}
