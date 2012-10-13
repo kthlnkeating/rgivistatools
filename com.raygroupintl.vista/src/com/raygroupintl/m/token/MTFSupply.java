@@ -303,7 +303,7 @@ public class MTFSupply {
 	@Rule("'&', name, ['.', name], ['^', name], [actuallist], [postcondition]")
 	public TokenFactory extdoargument;
 
-	@SequenceTokenType(BasicTokens.MTFanoutLabelA.class)
+	@TokenType(BasicTokens.MTFanoutLabelA.class)
 	@Rule("name")
 	public TokenFactory fanoutlabela;
 	@TokenType(BasicTokens.MTFanoutLabelB.class)
@@ -311,16 +311,16 @@ public class MTFSupply {
 	public TokenFactory fanoutlabelb;
 	@Rule("fanoutlabela | fanoutlabelb")
 	public TokenFactory fanoutlabel;
-	@SequenceTokenType(BasicTokens.MTIndirectFanoutLabel.class)
+	@TokenType(BasicTokens.MTIndirectFanoutLabel.class)
 	@Rule("rindirection")
 	public TokenFactory indfanoutlabel;
 	@SequenceTokenType(BasicTokens.MTEnvironmentFanoutRoutine.class)
 	@Rule("environment, name")
 	public TokenFactory envfanoutroutine;	
-	@SequenceTokenType(BasicTokens.MTFanoutRoutine.class)
+	@TokenType(BasicTokens.MTFanoutRoutine.class)
 	@Rule("name")
 	public TokenFactory fanoutroutine;
-	@SequenceTokenType(BasicTokens.MTIndirectFanoutRoutine.class)
+	@TokenType(BasicTokens.MTIndirectFanoutRoutine.class)
 	@Rule("rindirection")
 	public TokenFactory indfanoutroutine;
 	@Rule("envfanoutroutine | fanoutroutine")

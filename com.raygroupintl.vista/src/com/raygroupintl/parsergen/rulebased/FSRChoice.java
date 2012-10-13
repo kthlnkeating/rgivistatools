@@ -18,10 +18,8 @@ package com.raygroupintl.parsergen.rulebased;
 
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 
 import com.raygroupintl.parser.TFChoice;
 import com.raygroupintl.parser.TFForkedSequence;
@@ -39,7 +37,6 @@ public class FSRChoice extends FSRBase {
 		
 		private Map<String, Integer> choiceOrder = new HashMap<String, Integer>();
 		private Map<Integer, List<String>> possibleShared = new HashMap<Integer, List<String>>();
-		private Set<String> restrictedChoices = new HashSet<String>();
 		private Map<Integer, String> leadingShared = new HashMap<Integer, String>();
 		
 		public ForkAlgorithm(String name) {
@@ -51,11 +48,9 @@ public class FSRChoice extends FSRBase {
 			List<String> allForIndex = new ArrayList<String>();
 			while (f != previous) {
 				String name = f.getName();
-				if (! restrictedChoices.contains(name)) {
-					if (symbols.hasRule(name)) {
-						this.choiceOrder.put(name, index);
-						allForIndex.add(name);
-					}
+				if (symbols.hasRule(name)) {
+					this.choiceOrder.put(name, index);
+					allForIndex.add(name);
 				}
 				previous = f;
 				f = f.getLeading(symbols);
@@ -73,7 +68,6 @@ public class FSRChoice extends FSRBase {
 						for (String r : this.possibleShared.get(order)) {
 							if (! r.equals(name)) {
 								this.choiceOrder.remove(r);
-								this.restrictedChoices.add(r);
 							}
 						}
 						this.leadingShared.put(order, name);

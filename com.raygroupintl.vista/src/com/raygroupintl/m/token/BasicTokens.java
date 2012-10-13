@@ -28,84 +28,61 @@ import com.raygroupintl.parser.Token;
 import com.raygroupintl.parser.TokenStore;
 
 public class BasicTokens {
-	public static class MTFanoutLabelA extends MSequence {
-		public MTFanoutLabelA(int length) {
-			super(length);
-		}
-		
-		public MTFanoutLabelA(TokenStore store) {
-			super(store);
+	public static class MTFanoutLabelA extends MTokenCopy {
+		public MTFanoutLabelA(Token token) {
+			super(token);
 		}
 		
 		@Override
-		public Node getNode() {
-			Node addlNode = super.getNode();
+		public Node getNode(Node subNode) {
 			String value = this.toValue().toString();
-			return new FanoutLabel(value, addlNode);
+			return new FanoutLabel(value, subNode);
 		}		
 	}
 	
-	public static class MTFanoutLabelB extends MString {
-		private static final long serialVersionUID = 1L;
-		
-		public MTFanoutLabelB(Token value) {
-			super(value);
+	public static class MTFanoutLabelB extends MTokenCopy {
+		public MTFanoutLabelB(Token token) {
+			super(token);
 		}
 		
 		@Override
-		public Node getNode() {
-			Node addlNode = super.getNode();
+		public Node getNode(Node subNode) {
 			StringPiece value = this.toValue();
-			return new FanoutLabel(value.toString(), addlNode);
+			return new FanoutLabel(value.toString(), subNode);
 		}		
 	}
 	
-	public static class MTIndirectFanoutLabel extends MIndirection {
-		public MTIndirectFanoutLabel(int length) {
-			super(length);
-		}
-		
-		public MTIndirectFanoutLabel(TokenStore store) {
-			super(store);
+	public static class MTIndirectFanoutLabel extends MTokenCopy {
+		public MTIndirectFanoutLabel(Token token) {
+			super(token);
 		}
 		
 		@Override
-		public Node getNode() {
-			Node addlNode = super.getNode();
-			return new IndirectFanoutLabel(addlNode);
+		public Node getNode(Node subNode) {
+			return new IndirectFanoutLabel(subNode);
 		}		
 	}
 	
-	public static class MTFanoutRoutine extends MSequence {
-		public MTFanoutRoutine(int length) {
-			super(length);
-		}
-		
-		public MTFanoutRoutine(TokenStore store) {
-			super(store);
+	public static class MTFanoutRoutine extends MTokenCopy {
+		public MTFanoutRoutine(Token token) {
+			super(token);
 		}
 		
 		@Override
-		public Node getNode() {
+		public Node getNode(Node subNode) {
 			String name = this.toValue().toString();
-			Node addlNode = super.getNode();
-			return new FanoutRoutine(name, addlNode);
+			return new FanoutRoutine(name, subNode);
 		}		
 	}
 	
-	public static class MTIndirectFanoutRoutine extends MIndirection {
-		public MTIndirectFanoutRoutine(int length) {
-			super(length);
-		}
-	
-		public MTIndirectFanoutRoutine(TokenStore store) {
-			super(store);
+	public static class MTIndirectFanoutRoutine extends MTokenCopy {
+		public MTIndirectFanoutRoutine(Token token) {
+			super(token);
 		}
 	
 		@Override
-		public Node getNode() {
-			Node addlNode = super.getNode();
-			return new IndirectFanoutRoutine(addlNode);
+		public Node getNode(Node subNode) {
+			return new IndirectFanoutRoutine(subNode);
 		}		
 	}
 	

@@ -16,45 +16,50 @@
 
 package com.raygroupintl.parsergen.rulebased;
 
+import com.raygroupintl.parser.TFCopy;
+import com.raygroupintl.parser.Token;
 import com.raygroupintl.parser.TokenFactory;
 import com.raygroupintl.parsergen.AdapterSpecification;
 import com.raygroupintl.parsergen.ruledef.RuleSupplyFlag;
 
 public class FSRCopy extends FSRBase {
-	private FactorySupplyRule slave;
+	private String masterName;
+	private TFCopy factory;
 	
-	public FSRCopy(FactorySupplyRule slave) {
+	public FSRCopy(String name, String masterName) {
 		super(RuleSupplyFlag.TOP);
-		this.slave = slave;
+		this.masterName = masterName;
+		this.factory = new TFCopy(name);
 	}
 	
 	@Override
 	public String getName() {
-		return this.slave.getName();
+		return this.factory.getName();
 	}
 	
 	@Override
 	public FactorySupplyRule getLeading(RulesByName names) {
-		return this.slave;
+		return names.get(this.masterName);
 	}
 	
 	@Override
 	public TokenFactory getShellFactory() {
-		return this.slave.getShellFactory();
+		return this.factory;
 	}
 	
 	@Override
-	public int getSequenceCount() {
-		return this.slave.getSequenceCount();
-	}
-
-	@Override
 	public boolean update(RulesByName symbols) {
-		return this.slave.update(symbols);
+		RulesByNameLocal localSymbols = new RulesByNameLocal(symbols, this);
+		FactorySupplyRule fsrMaster = symbols.get(this.masterName);
+		if (! fsrMaster.update(localSymbols)) return false;
+		TokenFactory f = fsrMaster.getTheFactory(localSymbols);
+		this.factory.setMaster(f);
+		return true;
 	}
 
 	@Override
 	public void setAdapter(AdapterSpecification spec) {
-		this.slave.setAdapter(spec);
+		 Class<? extends Token> a = spec.getTokenAdapter();
+		 if (a != null) this.factory.setTargetType(a);
 	}
 }

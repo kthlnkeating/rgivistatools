@@ -35,12 +35,7 @@ public class TSymbol extends TString implements RuleSupply {
 	public FactorySupplyRule getRule(RuleSupplyFlag flag, String name, Map<String, RuleSupply> existing) {
 		String value = this.toValue().toString();
 		if (flag == RuleSupplyFlag.TOP) {
-			RuleSupply referred = existing.get(value);
-			if (referred == null) {
-				return null;
-			} else {
-				return new FSRCopy(referred.getRule(flag, value, existing));
-			}
+			return new FSRCopy(name, value);
 		} else {
 			return new FSRSingle(value, flag);			
 		}
