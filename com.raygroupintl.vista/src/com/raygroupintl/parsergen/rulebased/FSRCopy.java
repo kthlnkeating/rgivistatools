@@ -51,15 +51,22 @@ public class FSRCopy extends FSRBase {
 	public boolean update(RulesByName symbols) {
 		RulesByNameLocal localSymbols = new RulesByNameLocal(symbols, this);
 		FactorySupplyRule fsrMaster = symbols.get(this.masterName);
-		if (! fsrMaster.update(localSymbols)) return false;
-		TokenFactory f = fsrMaster.getTheFactory(localSymbols);
-		this.factory.setMaster(f);
-		return true;
+		if ((fsrMaster != null) && fsrMaster.update(localSymbols)) {
+			TokenFactory f = fsrMaster.getTheFactory(localSymbols);
+			this.factory.setMaster(f);
+			return true;
+		}
+		return false;
 	}
 
 	@Override
 	public void setAdapter(AdapterSpecification spec) {
 		 Class<? extends Token> a = spec.getTokenAdapter();
 		 if (a != null) this.factory.setTargetType(a);
+	}
+	
+	@Override
+	public String[] getNeededNames() {
+		return new String[]{this.masterName};
 	}
 }

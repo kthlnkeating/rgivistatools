@@ -71,6 +71,6 @@ public abstract class TokenFactoryStore {
 	
 	public abstract void addAssumed();
 
-	public abstract void update(Class<?> cls) throws IllegalAccessException, InstantiationException, ParseException;
+	public abstract void update(Class<?> cls) throws ParseException;
 }
 

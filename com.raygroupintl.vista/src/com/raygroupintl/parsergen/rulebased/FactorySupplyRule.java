@@ -35,4 +35,6 @@ public interface FactorySupplyRule {
 	
 	FactorySupplyRule getLeading(RulesByName names, int level);
 	void setAdapter(AdapterSpecification spec);
+	
+	String[] getNeededNames();
 }

@@ -86,4 +86,9 @@ public abstract class FSRBase implements FactorySupplyRule {
 	public void setAdapter(AdapterSpecification spec) {
 		spec.getNull();
 	}
+	
+	@Override
+	public String[] getNeededNames() {
+		return new String[0];
+	}
 }

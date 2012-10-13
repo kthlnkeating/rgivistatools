@@ -276,7 +276,7 @@ public class RuleDefinitionStore extends TokenFactoryStore {
 	}
 
 	@Override
-	public void update(Class<?> cls)  throws IllegalAccessException, InstantiationException, ParseException {
+	public void update(Class<?> cls) throws ParseException {
 		this.updateChoices();
 		this.updateSequences();
 		this.updateLists();

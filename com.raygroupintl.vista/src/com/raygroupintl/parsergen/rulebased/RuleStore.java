@@ -24,7 +24,6 @@ import java.util.Map;
 import com.raygroupintl.parser.TFEnd;
 import com.raygroupintl.parser.TokenFactory;
 import com.raygroupintl.parsergen.AdapterSpecification;
-import com.raygroupintl.parsergen.ParseErrorException;
 import com.raygroupintl.parsergen.ParseException;
 import com.raygroupintl.parsergen.TokenFactoryStore;
 import com.raygroupintl.parsergen.ruledef.RuleParser;
@@ -107,26 +106,6 @@ public class RuleStore extends TokenFactoryStore {
 		return true;
 	}
 	
-	private static void updateRules(java.util.List<FactorySupplyRule> list, java.util.List<FactorySupplyRule> remaining, RulesMapByName tfby) {
-		for (FactorySupplyRule r : list) {
-			r.update(tfby);
-		}
-	}
-
-	private void updateRules() {
-		java.util.List<FactorySupplyRule> remaining = new ArrayList<FactorySupplyRule>();
-		RulesMapByName tfby = new RulesMapByName(this.topRules);
-		updateRules(this.rules, remaining, tfby);
-		while (remaining.size() > 0) {
-			java.util.List<FactorySupplyRule> nextRemaining = new ArrayList<FactorySupplyRule>();
-			updateRules(remaining, nextRemaining, tfby);
-			if (nextRemaining.size() == remaining.size()) {
-				throw new ParseErrorException("There looks to be a circular symbol condition");					
-			}
-			remaining = nextRemaining;
-		}
-	}
-	
 	@Override
 	public void addAssumed() {		
 		TokenFactory end = new TFEnd("end");
@@ -137,8 +116,26 @@ public class RuleStore extends TokenFactoryStore {
 	}
 
 	@Override
-	public void update(Class<?> cls)  throws IllegalAccessException, InstantiationException, ParseException {
-		this.updateRules();
+	public void update(Class<?> cls) throws ParseException {
+		RulesMapByName tfby = new RulesMapByName(this.topRules);
+
+		String errorSymbols = "";
+		for (FactorySupplyRule r : this.rules) {
+			String[] neededs = r.getNeededNames();
+			for (String needed : neededs) {
+				if (! tfby.hasRule(needed)) {
+					errorSymbols += ", " + needed;					
+				}
+			}
+		}
+		if (! errorSymbols.isEmpty()) {
+			throw new ParseException("Following symbols are not resolved: " + errorSymbols.substring(1));			
+		}
+		
+		for (FactorySupplyRule r : this.rules) {
+			boolean result = r.update(tfby);			
+			assert(result);
+		}
 	}		
 }
 
