@@ -16,10 +16,8 @@
 
 package com.raygroupintl.parsergen.ruledef;
 
-import java.util.Map;
-
 import com.raygroupintl.parsergen.rulebased.FactorySupplyRule;
 
 public interface RuleSupply {	
-	FactorySupplyRule getRule(RuleSupplyFlag flag, String name, Map<String, RuleSupply> existing);
+	FactorySupplyRule getRule(RuleSupplyFlag flag, String name);
 }

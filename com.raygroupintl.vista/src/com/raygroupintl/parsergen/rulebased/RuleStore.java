@@ -57,7 +57,7 @@ public class RuleStore extends TokenFactoryStore {
 		}
 		FactorySupplyRule topRule = this.topRules.get(name);	
 		if (topRule == null) {
-			topRule = ruleSupply.getRule(RuleSupplyFlag.TOP, name, this.ruleSupplies);		
+			topRule = ruleSupply.getRule(RuleSupplyFlag.TOP, name);		
 			this.topRules.put(name, topRule);
 		}
 		if (topRule != null) {

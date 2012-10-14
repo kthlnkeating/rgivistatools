@@ -38,7 +38,7 @@ public class RuleParser {
 		Text text = new Text(ruleText);
 		try {
 			ObjectSupply objectSupply = new DefaultObjectSupply();
-			TRule t = (TRule) this.grammar.rule.tokenize(text, objectSupply);
+			TSymbolSequence t = (TSymbolSequence) this.grammar.sequence.tokenize(text, objectSupply);
 			int tLength = t.toValue().length();
 			if (tLength != ruleText.length()) {
 				String msg = "Error in rule " + name + " at position " + String.valueOf(tLength);		

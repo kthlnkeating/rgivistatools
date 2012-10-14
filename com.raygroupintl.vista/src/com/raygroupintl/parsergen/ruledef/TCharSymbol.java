@@ -16,8 +16,6 @@
 
 package com.raygroupintl.parsergen.ruledef;
 
-import java.util.Map;
-
 import com.raygroupintl.charlib.PredicateFactory;
 import com.raygroupintl.parser.TSequence;
 import com.raygroupintl.parser.Token;
@@ -70,7 +68,7 @@ public class TCharSymbol extends TSequence implements RuleSupply {
 	}
 	
 	@Override
-	public FactorySupplyRule getRule(RuleSupplyFlag flag, String name, Map<String, RuleSupply> existing) {
+	public FactorySupplyRule getRule(RuleSupplyFlag flag, String name) {
 		PredicateFactory pf = new PredicateFactory();
 		update(pf, this.get(0), (TokenStore) this.get(1));
 		TokenStore list = (TokenStore) this.get(2);

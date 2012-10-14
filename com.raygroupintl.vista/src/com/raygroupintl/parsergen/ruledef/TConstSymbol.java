@@ -16,8 +16,6 @@
 
 package com.raygroupintl.parsergen.ruledef;
 
-import java.util.Map;
-
 import com.raygroupintl.parser.TSequence;
 import com.raygroupintl.parser.Token;
 import com.raygroupintl.parser.TokenStore;
@@ -34,7 +32,7 @@ public class TConstSymbol extends TSequence implements RuleSupply {
 	}
 	
 	@Override
-	public FactorySupplyRule getRule(RuleSupplyFlag flag, String name, Map<String, RuleSupply> existing) {
+	public FactorySupplyRule getRule(RuleSupplyFlag flag, String name) {
 		String value = this.get(1).toValue().toString();
 		Token tIgnoreCase = this.get(4);
 		boolean ignoreCase = (tIgnoreCase != null) && (tIgnoreCase.toValue().toString().equals("1"));

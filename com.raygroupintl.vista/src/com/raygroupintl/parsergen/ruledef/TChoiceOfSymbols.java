@@ -17,29 +17,28 @@
 package com.raygroupintl.parsergen.ruledef;
 
 import java.util.List;
-import java.util.Map;
 
 import com.raygroupintl.parser.TDelimitedList;
 import com.raygroupintl.parser.Token;
 import com.raygroupintl.parsergen.rulebased.FSRChoice;
 import com.raygroupintl.parsergen.rulebased.FactorySupplyRule;
 
-public class TChoice extends TDelimitedList implements RuleSupply {
-	public TChoice(List<Token> tokens) {
+public class TChoiceOfSymbols extends TDelimitedList implements RuleSupply {
+	public TChoiceOfSymbols(List<Token> tokens) {
 		super(tokens);
 	}
 	
 	@Override
-	public FactorySupplyRule getRule(RuleSupplyFlag flag, String name, Map<String, RuleSupply> existing) {
+	public FactorySupplyRule getRule(RuleSupplyFlag flag, String name) {
 		if (this.size() == 1) {
 			RuleSupply r = (RuleSupply) this.get(0);
-			return r.getRule(flag, name, existing);
+			return r.getRule(flag, name);
 		} else {
 			int index = 0;
 			FSRChoice result = new FSRChoice(name, flag);
 			for (Token t : this) {
 				RuleSupply r  = (RuleSupply) t;
-				FactorySupplyRule fsr = r.getRule(flag.demoteInner(), name + "." + String.valueOf(index), existing);
+				FactorySupplyRule fsr = r.getRule(flag.demoteInner(), name + "." + String.valueOf(index));
 				if (fsr == null) return null;
 				result.add(fsr);
 				++index;

@@ -93,7 +93,7 @@ public class TFDelimitedList extends TokenFactory {
 					int lastIndex = list.size() - 1;
 					List<Token> lastToken = ((TokenStore)list.get(lastIndex)).toList();
 					if ((lastToken.size() < 2) || (lastToken.get(1) == null)) {
-						TSequence newLast = objectSupply.newSequence(2);
+						CompositeToken newLast = objectSupply.newSequence(2);
 						newLast.addToken(lastToken.get(0));
 						newLast.addToken(objectSupply.newEmpty());
 						list.set(lastIndex, newLast);

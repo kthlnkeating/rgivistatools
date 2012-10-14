@@ -16,14 +16,22 @@
 
 package com.raygroupintl.parsergen.ruledef;
 
+import com.raygroupintl.parser.TSequence;
 import com.raygroupintl.parser.TokenStore;
+import com.raygroupintl.parsergen.rulebased.FactorySupplyRule;
 
-public class TRequiredSymbols extends TSymbols {
+public class TRequiredSymbols extends TSequence implements RuleSupply {
 	public TRequiredSymbols(int length) {
-		super(length, true);
+		super(length);
 	}
 	
 	public TRequiredSymbols(TokenStore store) {
-		super(store, true);
+		super(store.toList());
+	}
+	
+	@Override
+	public FactorySupplyRule getRule(RuleSupplyFlag flag, String name) {
+		RuleSupply rs = (RuleSupply) this.get(1);
+		return rs.getRule(RuleSupplyFlag.INNER_REQUIRED, name);
 	}
 }

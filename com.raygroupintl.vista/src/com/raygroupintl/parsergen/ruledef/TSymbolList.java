@@ -16,8 +16,6 @@
 
 package com.raygroupintl.parsergen.ruledef;
 
-import java.util.Map;
-
 import com.raygroupintl.parser.TSequence;
 import com.raygroupintl.parser.Token;
 import com.raygroupintl.parser.TokenStore;
@@ -33,23 +31,23 @@ public class TSymbolList extends TSequence implements RuleSupply {
 		super(store.toList());
 	}
 	
-	private ListInfo getListInfo(String name, Map<String, RuleSupply> existing) {
+	private ListInfo getListInfo(String name) {
 		ListInfo result = new ListInfo();
 		TokenStore listInfoSpec = (TokenStore) this.get(2);
 		if (listInfoSpec == null) {
 			return result;
 		}
 		RuleSupply delimiter = (RuleSupply) listInfoSpec.get(1);
-		result.delimiter = delimiter.getRule(RuleSupplyFlag.INNER_REQUIRED, name + ".delimiter", existing);
+		result.delimiter = delimiter.getRule(RuleSupplyFlag.INNER_REQUIRED, name + ".delimiter");
 		if (result.delimiter == null) {
 			return null;
 		}
 		TokenStore otherSpec = (TokenStore)listInfoSpec.get(2);
 		if (otherSpec != null) {
 			RuleSupply leftSpec = (RuleSupply) otherSpec.get(1);
-			result.left = leftSpec.getRule(RuleSupplyFlag.INNER_REQUIRED, name + ".left", existing);
+			result.left = leftSpec.getRule(RuleSupplyFlag.INNER_REQUIRED, name + ".left");
 			RuleSupply rightSpec = (RuleSupply) otherSpec.get(3);
-			result.right = rightSpec.getRule(RuleSupplyFlag.INNER_REQUIRED, name + ".right", existing);
+			result.right = rightSpec.getRule(RuleSupplyFlag.INNER_REQUIRED, name + ".right");
 			Token emptyAllowedSpec = otherSpec.get(5);
 			result.emptyAllowed = (emptyAllowedSpec != null) && (emptyAllowedSpec.toValue().toString().equals("1"));
 			Token noneAllowedSpec = otherSpec.get(7);
@@ -62,14 +60,14 @@ public class TSymbolList extends TSequence implements RuleSupply {
 	}
 	
 	@Override
-	public FactorySupplyRule getRule(RuleSupplyFlag flag, String name, Map<String, RuleSupply> existing) {
+	public FactorySupplyRule getRule(RuleSupplyFlag flag, String name) {
 		RuleSupplyFlag innerFlag = flag.demoteInner();
 		RuleSupply ers = (RuleSupply) this.get(1);
-		FactorySupplyRule e = ers.getRule(innerFlag, name + ".element", existing);
+		FactorySupplyRule e = ers.getRule(innerFlag, name + ".element");
 		if (e == null) {
 			return null;
 		}		
-		ListInfo listInfo = this.getListInfo(name, existing);
+		ListInfo listInfo = this.getListInfo(name);
 		if (listInfo == null) {
 			return null;
 		}

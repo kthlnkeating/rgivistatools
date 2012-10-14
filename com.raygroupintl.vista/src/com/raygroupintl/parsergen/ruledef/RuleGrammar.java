@@ -102,7 +102,7 @@ public class RuleGrammar {
 	@Choice({"specifiedsymbol", "charsymbolall", "constsymbol", "optionalsymbols", "requiredsymbols", "list"})
 	public TokenFactory symbol; 
 	
-	@DelimitedListTokenType(TChoice.class)
+	@DelimitedListTokenType(TChoiceOfSymbols.class)
 	@List(value="symbol", delim="choicedelimiter")
 	public TokenFactory symbolchoice; 
 
@@ -134,10 +134,10 @@ public class RuleGrammar {
 	public TokenFactory delimiter;
 	
 	@SequenceTokenType(TOptionalSymbols.class)
-	@List(value="symbolchoice", delim="delimiter", left="openoptional", right="closeoptional")
+	@Sequence(value={"openoptional", "sequence", "closeoptional"}, required="all")
 	public TokenFactory optionalsymbols; 
 	@SequenceTokenType(TRequiredSymbols.class)
-	@List(value="symbolchoice", delim="delimiter", left="openrequired", right="closerequired")
+	@Sequence(value={"openrequired", "sequence", "closerequired"}, required="all")
 	public TokenFactory requiredsymbols;
 	
 	@Sequence(value={"colon", "anysymbols", "colon", "anysymbols", "colon", "bool", "colon", "bool"}, required="rrrroooo")
@@ -151,7 +151,7 @@ public class RuleGrammar {
 	@Choice({"specifiedsymbol", "charsymbolall", "constsymbol"})
 	public TokenFactory anysymbols;
 	
-	@DelimitedListTokenType(TRule.class)
+	@DelimitedListTokenType(TSymbolSequence.class)
 	@List(value="symbolchoice", delim="delimiter")
-	public TokenFactory rule;
+	public TokenFactory sequence;
 }

@@ -16,8 +16,6 @@
 
 package com.raygroupintl.parsergen.ruledef;
 
-import java.util.Map;
-
 import com.raygroupintl.parser.TString;
 import com.raygroupintl.parser.Token;
 import com.raygroupintl.parsergen.rulebased.FSRCopy;
@@ -32,7 +30,7 @@ public class TSymbol extends TString implements RuleSupply {
 	}
 	
 	@Override
-	public FactorySupplyRule getRule(RuleSupplyFlag flag, String name, Map<String, RuleSupply> existing) {
+	public FactorySupplyRule getRule(RuleSupplyFlag flag, String name) {
 		String value = this.toValue().toString();
 		if (flag == RuleSupplyFlag.TOP) {
 			return new FSRCopy(name, value);
