@@ -14,16 +14,20 @@
 // limitations under the License.
 //---------------------------------------------------------------------------
 
-package com.raygroupintl.parser;
+package com.raygroupintl.parsergen.ruledef;
 
-public class TString extends StringPieceImpl implements StringToken {
+import com.raygroupintl.parser.StringPiece;
+import com.raygroupintl.parser.StringToken;
+import com.raygroupintl.parser.Token;
+
+class TString extends StringPiece implements StringToken {
 	private static final long serialVersionUID = 1L;
 	
 	public TString() {
 		super();
 	}
 
-	public TString(StringPieceImpl value) {
+	public TString(StringPiece value) {
 		super(value);
 	}
 	
@@ -36,11 +40,11 @@ public class TString extends StringPieceImpl implements StringToken {
 	}
 	
 	@Override
-	public StringPieceImpl toValue() {
+	public StringPiece toValue() {
 		return this;
 	}
 	
-	public void setValue(StringPieceImpl value) {
+	public void setValue(StringPiece value) {
 		super.set(value);
 	}
 

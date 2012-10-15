@@ -18,29 +18,29 @@ package com.raygroupintl.parser;
 
 import java.io.Serializable;
 
-public class StringPieceImpl implements StringPieceStore, Serializable {
+public class StringPiece implements StringPieceStore, Serializable {
 	private static final long serialVersionUID = 1L;
 	
 	private String data;
 	private int beginIndex;
 	private int endIndex;
 	
-	public StringPieceImpl() {		
+	public StringPiece() {		
 	}
 	
-	public StringPieceImpl(String data) {
+	public StringPiece(String data) {
 		this.data = data;
 		this.beginIndex = 0;
 		this.endIndex = data.length();
 	}
 	
-	public StringPieceImpl(String data, int beginIndex, int endIndex) {
+	public StringPiece(String data, int beginIndex, int endIndex) {
 		this.data = data;
 		this.beginIndex = beginIndex;
 		this.endIndex = endIndex;
 	}
 	
-	public StringPieceImpl(StringPieceImpl rhs) {
+	public StringPiece(StringPiece rhs) {
 		this.set(rhs);
 	}
 	
@@ -53,7 +53,7 @@ public class StringPieceImpl implements StringPieceStore, Serializable {
 		}
 	}
 
-	public void set(StringPieceImpl rhs) {	
+	public void set(StringPiece rhs) {	
 		this.data = rhs.data;
 		this.beginIndex = rhs.beginIndex;
 		this.endIndex = rhs.endIndex;
@@ -96,7 +96,7 @@ public class StringPieceImpl implements StringPieceStore, Serializable {
 		return result;
 	}
 	
-	public void add(StringPieceImpl addlPiece) {
+	public void add(StringPiece addlPiece) {
 		if (addlPiece.data != null) {
 			if ((this.data != addlPiece.data) || (this.endIndex != addlPiece.beginIndex)) {
 				if (this.data == null) {

@@ -14,21 +14,13 @@
 // limitations under the License.
 //---------------------------------------------------------------------------
 
-package com.raygroupintl.parsergen;
+package com.raygroupintl.parser;
 
-import java.util.List;
+public class Empty {
+	public StringPiece toValue() {
+		return new StringPiece();
+	}
 
-import com.raygroupintl.parser.CompositeToken;
-import com.raygroupintl.parser.EmptyToken;
-import com.raygroupintl.parser.StringToken;
-import com.raygroupintl.parser.Token;
-import com.raygroupintl.parser.TokenStore;
-
-public interface ObjectSupply {
-	StringToken newString();
-	CompositeToken newSequence(int length);
-	CompositeToken newSequence(TokenStore store);
-	CompositeToken newList();
-	CompositeToken newDelimitedList(List<Token> tokens);
-	EmptyToken newEmpty();
+	public void beautify() {
+	}
 }

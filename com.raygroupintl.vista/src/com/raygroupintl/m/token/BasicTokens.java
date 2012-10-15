@@ -23,7 +23,7 @@ import com.raygroupintl.m.parsetree.IndirectFanoutLabel;
 import com.raygroupintl.m.parsetree.IndirectFanoutRoutine;
 import com.raygroupintl.m.parsetree.Node;
 import com.raygroupintl.m.parsetree.PostConditional;
-import com.raygroupintl.parser.StringPieceImpl;
+import com.raygroupintl.parser.StringPiece;
 import com.raygroupintl.parser.Token;
 import com.raygroupintl.parser.TokenStore;
 
@@ -47,7 +47,7 @@ public class BasicTokens {
 		
 		@Override
 		public Node getNode(Node subNode) {
-			StringPieceImpl value = this.toValue();
+			StringPiece value = this.toValue();
 			return new FanoutLabel(value.toString(), subNode);
 		}		
 	}

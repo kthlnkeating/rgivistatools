@@ -106,8 +106,8 @@ public class DelimitedListStore implements TokenStore {
 	}
 
 	@Override
-	public StringPieceImpl toValue() {	
-		StringPieceImpl result = new StringPieceImpl();
+	public StringPiece toValue() {	
+		StringPiece result = new StringPiece();
 		if (this.tokens != null) for (Token t : this.tokens) if (t != null) {
 			result.add(t.toValue());
 		}		

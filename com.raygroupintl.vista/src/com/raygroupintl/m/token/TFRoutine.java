@@ -20,7 +20,7 @@ import java.io.IOException;
 import java.nio.file.Path;
 
 import com.raygroupintl.m.struct.MRoutineContent;
-import com.raygroupintl.parser.StringPieceImpl;
+import com.raygroupintl.parser.StringPiece;
 import com.raygroupintl.parser.SyntaxErrorException;
 import com.raygroupintl.parser.Text;
 import com.raygroupintl.parser.Token;
@@ -36,7 +36,7 @@ public class TFRoutine {
 	}
 	
 	public static MLine recoverFromError(String line, SyntaxErrorException e) {
-		Token error = new MSyntaxError(0, new StringPieceImpl(line), 0);
+		Token error = new MSyntaxError(0, new StringPiece(line), 0);
 		MSequence result = new MSequence(5);
 		result.addToken(error);
 		for (int i=0; i<4; ++i) result.addToken(null);

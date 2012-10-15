@@ -76,7 +76,7 @@ public class ListStore implements TokenStore {
 	}
 
 	@Override
-	public StringPieceImpl toValue() {	
+	public StringPiece toValue() {	
 		return TokenUtilities.toValue(this);
 	}
 

@@ -1,4 +1,4 @@
-package com.raygroupintl.parser;
+package com.raygroupintl.parsergen.ruledef;
 
 import static org.junit.Assert.*;
 import junit.framework.Assert;
@@ -10,8 +10,12 @@ import org.junit.Test;
 import com.raygroupintl.parser.SyntaxErrorException;
 import com.raygroupintl.parser.Text;
 import com.raygroupintl.parser.Token;
+import com.raygroupintl.parser.TokenFactory;
+import com.raygroupintl.parser.TokenStore;
 import com.raygroupintl.parsergen.ObjectSupply;
 import com.raygroupintl.parsergen.rulebased.RuleBasedParserGenerator;
+import com.raygroupintl.parsergen.ruledef.DefaultObjectSupply;
+import com.raygroupintl.parsergen.ruledef.TString;
 
 public class GrammarTest {
 	private static Grammar grammar;

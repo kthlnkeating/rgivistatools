@@ -19,7 +19,7 @@ package com.raygroupintl.m.token;
 import java.util.List;
 
 import com.raygroupintl.parser.CompositeToken;
-import com.raygroupintl.parser.TEmpty;
+import com.raygroupintl.parser.EmptyToken;
 import com.raygroupintl.parser.Token;
 import com.raygroupintl.parser.TokenStore;
 import com.raygroupintl.parsergen.ObjectSupply;
@@ -51,7 +51,7 @@ public class MObjectSupply implements ObjectSupply {
 	}
 	
 	@Override
-	public TEmpty newEmpty() {
+	public EmptyToken newEmpty() {
 		return new MEmpty();
 	}
 }

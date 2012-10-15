@@ -6,7 +6,7 @@ import org.junit.runners.Suite.SuiteClasses;
 
 @RunWith(Suite.class)
 @SuiteClasses({
-	com.raygroupintl.parser.AllTests.class, 
+	com.raygroupintl.parsergen.ruledef.AllTests.class, 
 	com.raygroupintl.parser.annotation.AllTests.class, 
 	com.raygroupintl.m.token.AllTests.class, 
 	com.raygroupintl.vista.repository.AllTests.class, 

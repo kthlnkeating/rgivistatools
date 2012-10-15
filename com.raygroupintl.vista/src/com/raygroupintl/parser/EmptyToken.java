@@ -16,13 +16,6 @@
 
 package com.raygroupintl.parser;
 
-public class TEmpty implements Token {
-	@Override
-	public StringPieceImpl toValue() {
-		return new StringPieceImpl();
-	}
-
-	@Override
-	public void beautify() {
-	}
+public interface EmptyToken extends Token {
 }
+

@@ -14,21 +14,45 @@
 // limitations under the License.
 //---------------------------------------------------------------------------
 
-package com.raygroupintl.parsergen;
+package com.raygroupintl.parsergen.ruledef;
 
 import java.util.List;
 
 import com.raygroupintl.parser.CompositeToken;
-import com.raygroupintl.parser.EmptyToken;
 import com.raygroupintl.parser.StringToken;
+import com.raygroupintl.parser.TDelimitedList;
 import com.raygroupintl.parser.Token;
 import com.raygroupintl.parser.TokenStore;
+import com.raygroupintl.parsergen.ObjectSupply;
 
-public interface ObjectSupply {
-	StringToken newString();
-	CompositeToken newSequence(int length);
-	CompositeToken newSequence(TokenStore store);
-	CompositeToken newList();
-	CompositeToken newDelimitedList(List<Token> tokens);
-	EmptyToken newEmpty();
+public class DefaultObjectSupply implements ObjectSupply {
+	@Override
+	public StringToken newString() {
+		return new TString();
+	}
+	
+	@Override
+	public CompositeToken newSequence(int length) {
+		return new TSequence(length);
+	}
+	
+	@Override
+	public CompositeToken newSequence(TokenStore store) {
+		return new TSequence(store.toList());
+	}
+	
+	@Override
+	public CompositeToken newList() {
+		return new TList();
+	}
+	
+	@Override
+	public CompositeToken newDelimitedList(List<Token> tokens) {
+		return new TDelimitedList(tokens);
+	}
+	
+	@Override
+	public TEmpty newEmpty() {
+		return new TEmpty();
+	}
 }

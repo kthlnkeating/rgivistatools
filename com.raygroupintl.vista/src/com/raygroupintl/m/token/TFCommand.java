@@ -5,7 +5,7 @@ import java.util.Map;
 
 import com.raygroupintl.m.struct.MError;
 import com.raygroupintl.parser.CompositeToken;
-import com.raygroupintl.parser.StringPieceImpl;
+import com.raygroupintl.parser.StringPiece;
 import com.raygroupintl.parser.StringToken;
 import com.raygroupintl.parser.SyntaxErrorException;
 import com.raygroupintl.parser.TFEmptyVerified;
@@ -61,7 +61,7 @@ public class TFCommand extends TokenFactorySupply {
 		
 		private TokenFactory argumentFactory;
 		
-		public TCommandSpec(StringPieceImpl value, TokenFactory argumentFactory) {
+		public TCommandSpec(StringPiece value, TokenFactory argumentFactory) {
 			super(value);
 			this.argumentFactory = argumentFactory;
 		}
@@ -76,7 +76,7 @@ public class TFCommand extends TokenFactorySupply {
 	private static class TBCommandSpec extends TCommandSpec {
 		private static final long serialVersionUID = 1L;
 		
-		private TBCommandSpec(StringPieceImpl value, MTFSupply supply) {
+		private TBCommandSpec(StringPiece value, MTFSupply supply) {
 			super(value, supply.expr);
 		}
 	
@@ -88,7 +88,7 @@ public class TFCommand extends TokenFactorySupply {
 	private static class TCCommandSpec extends TCommandSpec {
 		private static final long serialVersionUID = 1L;
 		
-		private TCCommandSpec(StringPieceImpl value, MTFSupply supply) {
+		private TCCommandSpec(StringPiece value, MTFSupply supply) {
 			super(value, supply.closearg);
 		}
 	
@@ -100,7 +100,7 @@ public class TFCommand extends TokenFactorySupply {
 	private static class TDCommandSpec extends TCommandSpec {
 		private static final long serialVersionUID = 1L;
 		
-		private TDCommandSpec(StringPieceImpl value, MTFSupply supply) {
+		private TDCommandSpec(StringPiece value, MTFSupply supply) {
 			super(value, supply.doarguments);
 		}
 	
@@ -112,7 +112,7 @@ public class TFCommand extends TokenFactorySupply {
 	private static class TECommandSpec extends TCommandSpec {
 		private static final long serialVersionUID = 1L;
 		
-		private TECommandSpec(StringPieceImpl value, MTFSupply supply) {
+		private TECommandSpec(StringPiece value, MTFSupply supply) {
 			super(value, TF_EMPTY);
 		}
 	
@@ -124,7 +124,7 @@ public class TFCommand extends TokenFactorySupply {
 	private static class TFCommandSpec extends TCommandSpec {
 		private static final long serialVersionUID = 1L;
 		
-		private TFCommandSpec(StringPieceImpl value, MTFSupply supply) {
+		private TFCommandSpec(StringPiece value, MTFSupply supply) {
 			super(value, supply.forarg);
 		}
 	
@@ -136,7 +136,7 @@ public class TFCommand extends TokenFactorySupply {
 	private static class TGCommandSpec extends TCommandSpec {
 		private static final long serialVersionUID = 1L;
 		
-		private TGCommandSpec(StringPieceImpl value, MTFSupply supply) {
+		private TGCommandSpec(StringPiece value, MTFSupply supply) {
 			super(value, supply.gotoarguments);
 		}
 	
@@ -148,7 +148,7 @@ public class TFCommand extends TokenFactorySupply {
 	private static class THCommandSpec extends TCommandSpec {
 		private static final long serialVersionUID = 1L;
 		
-		private THCommandSpec(StringPieceImpl value, MTFSupply supply) {
+		private THCommandSpec(StringPiece value, MTFSupply supply) {
 			super(value, supply.expr);
 		}
 	
@@ -160,7 +160,7 @@ public class TFCommand extends TokenFactorySupply {
 	private static class TICommandSpec extends TCommandSpec {
 		private static final long serialVersionUID = 1L;
 		
-		private TICommandSpec(StringPieceImpl value, MTFSupply supply) {
+		private TICommandSpec(StringPiece value, MTFSupply supply) {
 			super(value, supply.exprlist);
 		}
 	
@@ -172,7 +172,7 @@ public class TFCommand extends TokenFactorySupply {
 	private static class TJCommandSpec extends TCommandSpec {
 		private static final long serialVersionUID = 1L;
 		
-		private TJCommandSpec(StringPieceImpl value, MTFSupply supply) {
+		private TJCommandSpec(StringPiece value, MTFSupply supply) {
 			super(value, supply.cmdjargs);
 		}
 	
@@ -184,7 +184,7 @@ public class TFCommand extends TokenFactorySupply {
 	private static class TKCommandSpec extends TCommandSpec {
 		private static final long serialVersionUID = 1L;
 		
-		private TKCommandSpec(StringPieceImpl value, MTFSupply supply) {
+		private TKCommandSpec(StringPiece value, MTFSupply supply) {
 			super(value, supply.killargs);
 		}
 	
@@ -196,7 +196,7 @@ public class TFCommand extends TokenFactorySupply {
 	private static class TLCommandSpec extends TCommandSpec {
 		private static final long serialVersionUID = 1L;
 		
-		private TLCommandSpec(StringPieceImpl value, MTFSupply supply) {
+		private TLCommandSpec(StringPiece value, MTFSupply supply) {
 			super(value, supply.lockargs);
 		}
 	
@@ -208,7 +208,7 @@ public class TFCommand extends TokenFactorySupply {
 	private static class TMCommandSpec extends TCommandSpec {
 		private static final long serialVersionUID = 1L;
 		
-		private TMCommandSpec(StringPieceImpl value, MTFSupply supply) {
+		private TMCommandSpec(StringPiece value, MTFSupply supply) {
 			super(value, supply.mergeargs);
 		}
 	
@@ -220,7 +220,7 @@ public class TFCommand extends TokenFactorySupply {
 	private static class TNCommandSpec extends TCommandSpec {
 		private static final long serialVersionUID = 1L;
 		
-		private TNCommandSpec(StringPieceImpl value, MTFSupply supply) {
+		private TNCommandSpec(StringPiece value, MTFSupply supply) {
 			super(value, supply.newargs);
 		}
 	
@@ -232,7 +232,7 @@ public class TFCommand extends TokenFactorySupply {
 	private static class TOCommandSpec extends TCommandSpec {
 		private static final long serialVersionUID = 1L;
 		
-		private TOCommandSpec(StringPieceImpl value, MTFSupply supply) {
+		private TOCommandSpec(StringPiece value, MTFSupply supply) {
 			super(value, supply.cmdoargs);
 		}
 	
@@ -244,7 +244,7 @@ public class TFCommand extends TokenFactorySupply {
 	private static class TQCommandSpec extends TCommandSpec {
 		private static final long serialVersionUID = 1L;
 		
-		private TQCommandSpec(StringPieceImpl value, MTFSupply supply) {
+		private TQCommandSpec(StringPiece value, MTFSupply supply) {
 			super(value, supply.expr);
 		}
 	
@@ -256,7 +256,7 @@ public class TFCommand extends TokenFactorySupply {
 	private static class TRCommandSpec extends TCommandSpec {
 		private static final long serialVersionUID = 1L;
 		
-		private TRCommandSpec(StringPieceImpl value, MTFSupply supply) {
+		private TRCommandSpec(StringPiece value, MTFSupply supply) {
 			super(value, supply.cmdrargs);
 		}
 	
@@ -268,7 +268,7 @@ public class TFCommand extends TokenFactorySupply {
 	private static class TSCommandSpec extends TCommandSpec {
 		private static final long serialVersionUID = 1L;
 		
-		private TSCommandSpec(StringPieceImpl value, MTFSupply supply) {
+		private TSCommandSpec(StringPiece value, MTFSupply supply) {
 			super(value, supply.setargs);
 		}
 	
@@ -280,7 +280,7 @@ public class TFCommand extends TokenFactorySupply {
 	private static class TTCCommandSpec extends TCommandSpec {
 		private static final long serialVersionUID = 1L;
 		
-		private TTCCommandSpec(StringPieceImpl value, MTFSupply supply) {
+		private TTCCommandSpec(StringPiece value, MTFSupply supply) {
 			super(value, TF_EMPTY);
 		}
 	
@@ -292,7 +292,7 @@ public class TFCommand extends TokenFactorySupply {
 	private static class TTRCommandSpec extends TCommandSpec {
 		private static final long serialVersionUID = 1L;
 		
-		private TTRCommandSpec(StringPieceImpl value, MTFSupply supply) {
+		private TTRCommandSpec(StringPiece value, MTFSupply supply) {
 			super(value, TF_EMPTY);
 		}
 	
@@ -304,7 +304,7 @@ public class TFCommand extends TokenFactorySupply {
 	private static class TTROCommandSpec extends TCommandSpec {
 		private static final long serialVersionUID = 1L;
 		
-		private TTROCommandSpec(StringPieceImpl value, MTFSupply supply) {
+		private TTROCommandSpec(StringPiece value, MTFSupply supply) {
 			super(value, TF_EMPTY);
 		}
 	
@@ -316,7 +316,7 @@ public class TFCommand extends TokenFactorySupply {
 	private static class TTSCommandSpec extends TCommandSpec {
 		private static final long serialVersionUID = 1L;
 		
-		private TTSCommandSpec(StringPieceImpl value, MTFSupply supply) {
+		private TTSCommandSpec(StringPiece value, MTFSupply supply) {
 			super(value, TF_EMPTY);
 		}
 	
@@ -328,7 +328,7 @@ public class TFCommand extends TokenFactorySupply {
 	private static class TUCommandSpec extends TCommandSpec {
 		private static final long serialVersionUID = 1L;
 		
-		private TUCommandSpec(StringPieceImpl value, MTFSupply supply) {
+		private TUCommandSpec(StringPiece value, MTFSupply supply) {
 			super(value, supply.cmduargs);
 		}
 	
@@ -340,7 +340,7 @@ public class TFCommand extends TokenFactorySupply {
 	private static class TWCommandSpec extends TCommandSpec {
 		private static final long serialVersionUID = 1L;
 		
-		private TWCommandSpec(StringPieceImpl value, MTFSupply supply) {
+		private TWCommandSpec(StringPiece value, MTFSupply supply) {
 			super(value, supply.writeargs);
 		}
 	
@@ -352,7 +352,7 @@ public class TFCommand extends TokenFactorySupply {
 	private static class TVCommandSpec extends TCommandSpec {
 		private static final long serialVersionUID = 1L;
 		
-		private TVCommandSpec(StringPieceImpl value, MTFSupply supply) {
+		private TVCommandSpec(StringPiece value, MTFSupply supply) {
 			super(value, new TFGenericArgument("vargument"));
 		}
 		
@@ -364,7 +364,7 @@ public class TFCommand extends TokenFactorySupply {
 	private static class TXCommandSpec extends TCommandSpec {
 		private static final long serialVersionUID = 1L;
 		
-		private TXCommandSpec(StringPieceImpl value, MTFSupply supply) {
+		private TXCommandSpec(StringPiece value, MTFSupply supply) {
 			super(value, supply.xecuteargs);
 		}
 	
@@ -376,7 +376,7 @@ public class TFCommand extends TokenFactorySupply {
 	private static class TGenericCommandSpec extends TCommandSpec {
 		private static final long serialVersionUID = 1L;
 		
-		private TGenericCommandSpec(StringPieceImpl value, MTFSupply supply) {
+		private TGenericCommandSpec(StringPiece value, MTFSupply supply) {
 			super(value, new TFGenericArgument("genericargument"));
 		}
 	
@@ -386,13 +386,13 @@ public class TFCommand extends TokenFactorySupply {
 	}
 	
 	private static abstract class TCSFactory {
-		public abstract TCommandSpec get(StringPieceImpl name);
+		public abstract TCommandSpec get(StringPiece name);
 	}
 	
 	public void addCommands(final MTFSupply supply) {
 		TCSFactory b = new TCSFactory() {			
 			@Override
-			public TCommandSpec get(StringPieceImpl name) {
+			public TCommandSpec get(StringPiece name) {
 				return new TBCommandSpec(name, supply);
 			}
 		};
@@ -401,7 +401,7 @@ public class TFCommand extends TokenFactorySupply {
 		
 		TCSFactory c = new TCSFactory() {			
 			@Override
-			public TCommandSpec get(StringPieceImpl name) {
+			public TCommandSpec get(StringPiece name) {
 				return new TCCommandSpec(name, supply);
 			}
 		};
@@ -410,7 +410,7 @@ public class TFCommand extends TokenFactorySupply {
 		
 		TCSFactory d = new TCSFactory() {			
 			@Override
-			public TCommandSpec get(StringPieceImpl name) {
+			public TCommandSpec get(StringPiece name) {
 				return new TDCommandSpec(name, supply);
 			}
 		};
@@ -419,7 +419,7 @@ public class TFCommand extends TokenFactorySupply {
 		
 		TCSFactory e = new TCSFactory() {			
 			@Override
-			public TCommandSpec get(StringPieceImpl name) {
+			public TCommandSpec get(StringPiece name) {
 				return new TECommandSpec(name, supply);
 			}
 		};
@@ -428,7 +428,7 @@ public class TFCommand extends TokenFactorySupply {
 
 		TCSFactory f = new TCSFactory() {			
 			@Override
-			public TCommandSpec get(StringPieceImpl name) {
+			public TCommandSpec get(StringPiece name) {
 				return new TFCommandSpec(name, supply);
 			}
 		};
@@ -437,7 +437,7 @@ public class TFCommand extends TokenFactorySupply {
 		
 		TCSFactory g = new TCSFactory() {			
 			@Override
-			public TCommandSpec get(StringPieceImpl name) {
+			public TCommandSpec get(StringPiece name) {
 				return new TGCommandSpec(name, supply);
 			}
 		};
@@ -446,7 +446,7 @@ public class TFCommand extends TokenFactorySupply {
 		
 		TCSFactory h = new TCSFactory() {			
 			@Override
-			public TCommandSpec get(StringPieceImpl name) {
+			public TCommandSpec get(StringPiece name) {
 				return new THCommandSpec(name, supply);
 			}
 		};
@@ -456,7 +456,7 @@ public class TFCommand extends TokenFactorySupply {
 		
 		TCSFactory i = new TCSFactory() {			
 			@Override
-			public TCommandSpec get(StringPieceImpl name) {
+			public TCommandSpec get(StringPiece name) {
 				return new TICommandSpec(name, supply);
 			}
 		};
@@ -465,7 +465,7 @@ public class TFCommand extends TokenFactorySupply {
 		
 		TCSFactory j = new TCSFactory() {			
 			@Override
-			public TCommandSpec get(StringPieceImpl name) {
+			public TCommandSpec get(StringPiece name) {
 				return new TJCommandSpec(name, supply);
 			}
 		};
@@ -474,7 +474,7 @@ public class TFCommand extends TokenFactorySupply {
 		
 		TCSFactory k = new TCSFactory() {			
 			@Override
-			public TCommandSpec get(StringPieceImpl name) {
+			public TCommandSpec get(StringPiece name) {
 				return new TKCommandSpec(name, supply);
 			}
 		};
@@ -483,7 +483,7 @@ public class TFCommand extends TokenFactorySupply {
 		
 		TCSFactory l = new TCSFactory() {			
 			@Override
-			public TCommandSpec get(StringPieceImpl name) {
+			public TCommandSpec get(StringPiece name) {
 				return new TLCommandSpec(name, supply);
 			}
 		};
@@ -492,7 +492,7 @@ public class TFCommand extends TokenFactorySupply {
 		
 		TCSFactory m = new TCSFactory() {			
 			@Override
-			public TCommandSpec get(StringPieceImpl name) {
+			public TCommandSpec get(StringPiece name) {
 				return new TMCommandSpec(name, supply);
 			}
 		};
@@ -501,7 +501,7 @@ public class TFCommand extends TokenFactorySupply {
 		
 		TCSFactory n = new TCSFactory() {			
 			@Override
-			public TCommandSpec get(StringPieceImpl name) {
+			public TCommandSpec get(StringPiece name) {
 				return new TNCommandSpec(name, supply);
 			}
 		};
@@ -510,7 +510,7 @@ public class TFCommand extends TokenFactorySupply {
 		
 		TCSFactory o = new TCSFactory() {			
 			@Override
-			public TCommandSpec get(StringPieceImpl name) {
+			public TCommandSpec get(StringPiece name) {
 				return new TOCommandSpec(name, supply);
 			}
 		};
@@ -519,7 +519,7 @@ public class TFCommand extends TokenFactorySupply {
 		
 		TCSFactory q = new TCSFactory() {			
 			@Override
-			public TCommandSpec get(StringPieceImpl name) {
+			public TCommandSpec get(StringPiece name) {
 				return new TQCommandSpec(name, supply);
 			}
 		};
@@ -528,7 +528,7 @@ public class TFCommand extends TokenFactorySupply {
 		
 		TCSFactory r = new TCSFactory() {			
 			@Override
-			public TCommandSpec get(StringPieceImpl name) {
+			public TCommandSpec get(StringPiece name) {
 				return new TRCommandSpec(name, supply);
 			}
 		};
@@ -537,7 +537,7 @@ public class TFCommand extends TokenFactorySupply {
 		
 		TCSFactory s = new TCSFactory() {			
 			@Override
-			public TCommandSpec get(StringPieceImpl name) {
+			public TCommandSpec get(StringPiece name) {
 				return new TSCommandSpec(name, supply);
 			}
 		};
@@ -546,7 +546,7 @@ public class TFCommand extends TokenFactorySupply {
 		
 		TCSFactory tc = new TCSFactory() {			
 			@Override
-			public TCommandSpec get(StringPieceImpl name) {
+			public TCommandSpec get(StringPiece name) {
 				return new TTCCommandSpec(name, supply);
 			}
 		};
@@ -555,7 +555,7 @@ public class TFCommand extends TokenFactorySupply {
 		
 		TCSFactory tr = new TCSFactory() {			
 			@Override
-			public TCommandSpec get(StringPieceImpl name) {
+			public TCommandSpec get(StringPiece name) {
 				return new TTRCommandSpec(name, supply);
 			}
 		};
@@ -564,7 +564,7 @@ public class TFCommand extends TokenFactorySupply {
 		
 		TCSFactory tro = new TCSFactory() {			
 			@Override
-			public TCommandSpec get(StringPieceImpl name) {
+			public TCommandSpec get(StringPiece name) {
 				return new TTROCommandSpec(name, supply);
 			}
 		};
@@ -573,7 +573,7 @@ public class TFCommand extends TokenFactorySupply {
 		
 		TCSFactory ts = new TCSFactory() {			
 			@Override
-			public TCommandSpec get(StringPieceImpl name) {
+			public TCommandSpec get(StringPiece name) {
 				return new TTSCommandSpec(name, supply);
 			}
 		};
@@ -582,7 +582,7 @@ public class TFCommand extends TokenFactorySupply {
 		
 		TCSFactory u = new TCSFactory() {			
 			@Override
-			public TCommandSpec get(StringPieceImpl name) {
+			public TCommandSpec get(StringPiece name) {
 				return new TUCommandSpec(name, supply);
 			}
 		};
@@ -591,7 +591,7 @@ public class TFCommand extends TokenFactorySupply {
 		
 		TCSFactory v = new TCSFactory() {			
 			@Override
-			public TCommandSpec get(StringPieceImpl name) {
+			public TCommandSpec get(StringPiece name) {
 				return new TVCommandSpec(name, supply);
 			}
 		};
@@ -600,7 +600,7 @@ public class TFCommand extends TokenFactorySupply {
 		
 		TCSFactory w = new TCSFactory() {			
 			@Override
-			public TCommandSpec get(StringPieceImpl name) {
+			public TCommandSpec get(StringPiece name) {
 				return new TWCommandSpec(name, supply);
 			}
 		};
@@ -609,7 +609,7 @@ public class TFCommand extends TokenFactorySupply {
 		
 		TCSFactory x = new TCSFactory() {			
 			@Override
-			public TCommandSpec get(StringPieceImpl name) {
+			public TCommandSpec get(StringPiece name) {
 				return new TXCommandSpec(name, supply);
 			}
 		};
@@ -620,7 +620,7 @@ public class TFCommand extends TokenFactorySupply {
 	public void addCommand(String name, final MTFSupply supply) {
 		TCSFactory generic = new TCSFactory() {		
 			@Override
-			public TCommandSpec get(StringPieceImpl name) {
+			public TCommandSpec get(StringPiece name) {
 				return new TGenericCommandSpec(name, supply);
 			}
 		};
@@ -662,7 +662,7 @@ public class TFCommand extends TokenFactorySupply {
 			if (token == null) {
 				return null;
 			} else {
-				StringPieceImpl cmdName = token.toValue();
+				StringPiece cmdName = token.toValue();
 				TCSFactory tcs = TFCommand.this.commandSpecs.get(token.toValue().toString().toUpperCase());
 				if (tcs == null) {
 					throw new SyntaxErrorException(MError.ERR_UNDEFINED_COMMAND);					
@@ -701,7 +701,7 @@ public class TFCommand extends TokenFactorySupply {
 	
 	@Override
 	public Token getToken(Token supplyToken, Token nextToken) {
-		StringPieceImpl cmdName = supplyToken.toValue();
+		StringPiece cmdName = supplyToken.toValue();
 		TCSFactory tcs = this.commandSpecs.get(cmdName.toString().toUpperCase());
 		TCommandSpec spec = tcs.get(cmdName);
 		return spec.getToken(supplyToken, nextToken);

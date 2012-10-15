@@ -14,29 +14,10 @@
 // limitations under the License.
 //---------------------------------------------------------------------------
 
-package com.raygroupintl.parser;
+package com.raygroupintl.parsergen.ruledef;
 
-import java.util.List;
+import com.raygroupintl.parser.Empty;
+import com.raygroupintl.parser.EmptyToken;
 
-public class TSequence extends SequenceStore implements CompositeToken {
-	public TSequence(int length) {
-		super(length);
-	}
-
-	public TSequence(List<Token> tokens) {
-		super(tokens);
-	}
-
-	public TSequence(Token token0, Token token1) {
-		super(token0, token1);
-	}
-	
-	@Override
-	public void beautify() {		
-		for (Token token : this) {
-			if (token != null) {
-				token.beautify();
-			}
-		}
-	}
+class TEmpty extends Empty implements EmptyToken {
 }

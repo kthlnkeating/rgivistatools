@@ -14,42 +14,33 @@
 // limitations under the License.
 //---------------------------------------------------------------------------
 
-package com.raygroupintl.parser;
+package com.raygroupintl.parsergen.ruledef;
 
 import java.util.List;
 
-import com.raygroupintl.parser.TSequence;
+import com.raygroupintl.parser.CompositeToken;
+import com.raygroupintl.parser.SequenceStore;
 import com.raygroupintl.parser.Token;
-import com.raygroupintl.parsergen.ObjectSupply;
 
-public class DefaultObjectSupply implements ObjectSupply {
-	@Override
-	public StringToken newString() {
-		return new TString();
+class TSequence extends SequenceStore implements CompositeToken {
+	public TSequence(int length) {
+		super(length);
+	}
+
+	public TSequence(List<Token> tokens) {
+		super(tokens);
+	}
+
+	public TSequence(Token token0, Token token1) {
+		super(token0, token1);
 	}
 	
 	@Override
-	public CompositeToken newSequence(int length) {
-		return new TSequence(length);
-	}
-	
-	@Override
-	public CompositeToken newSequence(TokenStore store) {
-		return new TSequence(store.toList());
-	}
-	
-	@Override
-	public CompositeToken newList() {
-		return new TList();
-	}
-	
-	@Override
-	public CompositeToken newDelimitedList(List<Token> tokens) {
-		return new TDelimitedList(tokens);
-	}
-	
-	@Override
-	public TEmpty newEmpty() {
-		return new TEmpty();
+	public void beautify() {		
+		for (Token token : this) {
+			if (token != null) {
+				token.beautify();
+			}
+		}
 	}
 }

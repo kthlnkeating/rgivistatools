@@ -16,16 +16,16 @@
 
 package com.raygroupintl.m.parsetree;
 
-import com.raygroupintl.parser.StringPieceImpl;
+import com.raygroupintl.parser.StringPiece;
 
 public class Global extends NodeWithSubscripts {
 	private static final long serialVersionUID = 1L;
 
-	public Global(StringPieceImpl name) {
+	public Global(StringPiece name) {
 		super(name);
 	}
 	
-	public Global(StringPieceImpl name, NodeList<Node> subscripts) {
+	public Global(StringPiece name, NodeList<Node> subscripts) {
 		super(name, subscripts);
 	}
 

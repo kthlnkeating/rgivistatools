@@ -1,4 +1,4 @@
-package com.raygroupintl.parser;
+package com.raygroupintl.parsergen.ruledef;
 
 import static org.junit.Assert.*;
 

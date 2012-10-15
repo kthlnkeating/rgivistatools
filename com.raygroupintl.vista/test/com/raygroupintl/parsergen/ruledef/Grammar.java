@@ -1,4 +1,4 @@
-package com.raygroupintl.parser;
+package com.raygroupintl.parsergen.ruledef;
 
 import com.raygroupintl.parser.TokenFactory;
 import com.raygroupintl.parsergen.SequenceTokenType;

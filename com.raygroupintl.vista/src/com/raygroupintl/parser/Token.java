@@ -17,7 +17,7 @@
 package com.raygroupintl.parser;
 
 public interface Token {
-	StringPieceImpl toValue();
+	StringPiece toValue();
 	
 	void beautify();
 }

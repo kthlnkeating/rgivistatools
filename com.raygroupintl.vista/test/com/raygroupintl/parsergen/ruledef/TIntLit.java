@@ -1,4 +1,7 @@
-package com.raygroupintl.parser;
+package com.raygroupintl.parsergen.ruledef;
+
+import com.raygroupintl.parser.Token;
+import com.raygroupintl.parsergen.ruledef.TString;
 
 public class TIntLit extends TString {
 	private static final long serialVersionUID = 1L;

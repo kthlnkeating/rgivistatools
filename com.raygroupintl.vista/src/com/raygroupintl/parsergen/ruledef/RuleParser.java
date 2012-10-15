@@ -16,7 +16,6 @@
 
 package com.raygroupintl.parsergen.ruledef;
 
-import com.raygroupintl.parser.DefaultObjectSupply;
 import com.raygroupintl.parser.SyntaxErrorException;
 import com.raygroupintl.parser.Text;
 import com.raygroupintl.parsergen.ObjectSupply;

@@ -16,7 +16,6 @@
 
 package com.raygroupintl.parsergen.ruledef;
 
-import com.raygroupintl.parser.TString;
 import com.raygroupintl.parser.Token;
 import com.raygroupintl.parsergen.rulebased.FSRCopy;
 import com.raygroupintl.parsergen.rulebased.FSRSingle;

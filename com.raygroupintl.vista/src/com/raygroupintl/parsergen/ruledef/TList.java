@@ -14,11 +14,15 @@
 // limitations under the License.
 //---------------------------------------------------------------------------
 
-package com.raygroupintl.parser;
+package com.raygroupintl.parsergen.ruledef;
 
 import java.util.List;
 
-public class TList extends ListStore implements CompositeToken {
+import com.raygroupintl.parser.CompositeToken;
+import com.raygroupintl.parser.ListStore;
+import com.raygroupintl.parser.Token;
+
+class TList extends ListStore implements CompositeToken {
 	public TList() {
 	}
 	

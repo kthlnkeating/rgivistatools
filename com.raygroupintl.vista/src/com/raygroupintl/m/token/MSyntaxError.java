@@ -19,14 +19,14 @@ package com.raygroupintl.m.token;
 import com.raygroupintl.m.parsetree.ErrorNode;
 import com.raygroupintl.m.parsetree.Node;
 import com.raygroupintl.m.struct.MError;
-import com.raygroupintl.parser.StringPieceImpl;
+import com.raygroupintl.parser.StringPiece;
 
 public class MSyntaxError implements MToken {	
 	private int errorCode = MError.ERR_GENERAL_SYNTAX;
-	private StringPieceImpl errorText;
+	private StringPiece errorText;
 	private int errorIndex;
 	
-	public MSyntaxError(int errorCode, StringPieceImpl errorText, int errorIndex) {
+	public MSyntaxError(int errorCode, StringPiece errorText, int errorIndex) {
 		this.errorCode = errorCode;
 		this.errorText = errorText;
 		this.errorIndex = errorIndex;
@@ -37,7 +37,7 @@ public class MSyntaxError implements MToken {
 	}
 	
 	@Override
-	public StringPieceImpl toValue() {
+	public StringPiece toValue() {
 		return this.errorText;
 	}
 

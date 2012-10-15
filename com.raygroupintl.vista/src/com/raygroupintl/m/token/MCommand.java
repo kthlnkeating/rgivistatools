@@ -18,7 +18,7 @@ package com.raygroupintl.m.token;
 
 import com.raygroupintl.m.parsetree.GenericCommand;
 import com.raygroupintl.m.parsetree.Node;
-import com.raygroupintl.parser.TEmpty;
+import com.raygroupintl.parser.EmptyToken;
 import com.raygroupintl.parser.Token;
 
 public abstract class MCommand extends MCommandBase {
@@ -31,7 +31,7 @@ public abstract class MCommand extends MCommandBase {
 		if (nameFollowUp == null) {
 			return null;
 		}
-		if (nameFollowUp.get(2) instanceof TEmpty) {
+		if (nameFollowUp.get(2) instanceof EmptyToken) {
 			return null;
 		}			
 		MToken argument = (MToken) nameFollowUp.get(2);

@@ -19,6 +19,7 @@ package com.raygroupintl.parser;
 import java.util.HashMap;
 import java.util.Map;
 
+
 public class TypeAwareTFStore {
 	private Map<String, TFCharacter> characters;
 	private Map<String, TFString> strings;

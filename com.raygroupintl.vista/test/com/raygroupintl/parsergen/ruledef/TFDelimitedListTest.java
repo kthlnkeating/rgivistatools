@@ -1,4 +1,4 @@
-package com.raygroupintl.parser;
+package com.raygroupintl.parsergen.ruledef;
 
 import static org.junit.Assert.fail;
 
@@ -12,6 +12,7 @@ import org.junit.Test;
 
 import com.raygroupintl.charlib.CharPredicate;
 import com.raygroupintl.charlib.CharRangePredicate;
+import com.raygroupintl.parser.StringPiece;
 import com.raygroupintl.parser.SyntaxErrorException;
 import com.raygroupintl.parser.TFCharacter;
 import com.raygroupintl.parser.TFDelimitedList;
@@ -19,7 +20,9 @@ import com.raygroupintl.parser.TFString;
 import com.raygroupintl.parser.Text;
 import com.raygroupintl.parser.Token;
 import com.raygroupintl.parser.TokenFactory;
+import com.raygroupintl.parser.TokenStore;
 import com.raygroupintl.parsergen.ObjectSupply;
+import com.raygroupintl.parsergen.ruledef.DefaultObjectSupply;
 
 public class TFDelimitedListTest {
 	private static ObjectSupply objectSupply;
@@ -34,7 +37,7 @@ public class TFDelimitedListTest {
 		objectSupply = null;
 	}
 
-	public static void validTokenCheck(StringPieceImpl t, String v) {
+	public static void validTokenCheck(StringPiece t, String v) {
 		Assert.assertEquals(v, t.toString());
 		Assert.assertEquals(v.length(), t.length());		
 	}

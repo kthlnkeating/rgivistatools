@@ -17,7 +17,7 @@
 package com.raygroupintl.parser;
 
 public interface StringPieceStore {
-	public void set(StringPieceImpl rhs);
+	public void set(StringPiece rhs);
 
 	public void set(String data, int beginIndex, int endIndex);	
 }

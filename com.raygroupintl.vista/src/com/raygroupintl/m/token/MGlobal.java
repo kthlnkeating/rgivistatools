@@ -19,7 +19,7 @@ package com.raygroupintl.m.token;
 import com.raygroupintl.m.parsetree.Global;
 import com.raygroupintl.m.parsetree.Node;
 import com.raygroupintl.m.parsetree.NodeList;
-import com.raygroupintl.parser.StringPieceImpl;
+import com.raygroupintl.parser.StringPiece;
 import com.raygroupintl.parser.Token;
 import com.raygroupintl.parser.TokenStore;
 
@@ -38,7 +38,7 @@ public class MGlobal extends MSequence {
 		if (actual.get(0) != null) {
 			return NodeUtilities.getNodes(actual, actual.size());
 		} else {
-			StringPieceImpl name = actual.get(1).toValue();
+			StringPiece name = actual.get(1).toValue();
 			Token subsripts = actual.get(2);
 			if (subsripts == null) {
 				return new Global(name);

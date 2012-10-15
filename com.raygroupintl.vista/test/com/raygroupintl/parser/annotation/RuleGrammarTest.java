@@ -12,7 +12,6 @@ import org.junit.Test;
 
 import com.raygroupintl.charlib.CharPredicate;
 import com.raygroupintl.charlib.Predicate;
-import com.raygroupintl.parser.DefaultObjectSupply;
 import com.raygroupintl.parser.SyntaxErrorException;
 import com.raygroupintl.parser.TFCharacter;
 import com.raygroupintl.parser.TFSequence;
@@ -23,6 +22,7 @@ import com.raygroupintl.parsergen.ObjectSupply;
 import com.raygroupintl.parsergen.rulebased.FSRCustom;
 import com.raygroupintl.parsergen.rulebased.FactorySupplyRule;
 import com.raygroupintl.parsergen.rulebased.RulesMapByName;
+import com.raygroupintl.parsergen.ruledef.DefaultObjectSupply;
 import com.raygroupintl.parsergen.ruledef.RuleDefinitionParserGenerator;
 import com.raygroupintl.parsergen.ruledef.RuleGrammar;
 import com.raygroupintl.parsergen.ruledef.RuleSupplyFlag;

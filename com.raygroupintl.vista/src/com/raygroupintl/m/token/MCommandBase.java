@@ -16,8 +16,8 @@
 
 package com.raygroupintl.m.token;
 
-import com.raygroupintl.parser.StringPieceImpl;
-import com.raygroupintl.parser.TEmpty;
+import com.raygroupintl.parser.EmptyToken;
+import com.raygroupintl.parser.StringPiece;
 import com.raygroupintl.parser.Token;
 
 public abstract class MCommandBase extends MSequence {
@@ -32,7 +32,7 @@ public abstract class MCommandBase extends MSequence {
 		if (nameFollowUp == null) {
 			return null;
 		}
-		if (nameFollowUp.get(2) instanceof TEmpty) {
+		if (nameFollowUp.get(2) instanceof EmptyToken) {
 			return null;
 		}			
 		MToken argument = (MToken) nameFollowUp.get(2);
@@ -44,8 +44,8 @@ public abstract class MCommandBase extends MSequence {
 
 	@Override
 	public void beautify() {
-		StringPieceImpl n = (StringPieceImpl) this.get(0);
-		StringPieceImpl newName = new StringPieceImpl(getFullName());
+		StringPiece n = (StringPiece) this.get(0);
+		StringPiece newName = new StringPiece(getFullName());
 		n.set(newName);
 		super.beautify();
 	}

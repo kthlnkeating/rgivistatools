@@ -16,7 +16,6 @@
 
 package com.raygroupintl.parsergen.ruledef;
 
-import com.raygroupintl.parser.TSequence;
 import com.raygroupintl.parser.Token;
 import com.raygroupintl.parser.TokenStore;
 import com.raygroupintl.parsergen.ListInfo;

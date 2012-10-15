@@ -16,12 +16,12 @@
 
 package com.raygroupintl.m.parsetree;
 
-import com.raygroupintl.parser.StringPieceImpl;
+import com.raygroupintl.parser.StringPiece;
 
 public class StructuredSystemVariable extends NodeWithSubscripts {
 	private static final long serialVersionUID = 1L;
 
-	public StructuredSystemVariable(StringPieceImpl name, NodeList<Node> subscripts) {
+	public StructuredSystemVariable(StringPiece name, NodeList<Node> subscripts) {
 		super(name, subscripts);
 	}
 
