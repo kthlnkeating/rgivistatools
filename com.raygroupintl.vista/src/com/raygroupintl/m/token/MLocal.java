@@ -19,7 +19,7 @@ package com.raygroupintl.m.token;
 import com.raygroupintl.m.parsetree.Local;
 import com.raygroupintl.m.parsetree.Node;
 import com.raygroupintl.m.parsetree.NodeList;
-import com.raygroupintl.parser.StringPiece;
+import com.raygroupintl.parser.StringPieceImpl;
 import com.raygroupintl.parser.Token;
 import com.raygroupintl.parser.TokenStore;
 
@@ -34,7 +34,7 @@ public class MLocal extends MSequence {
 
 	@Override
 	public Node getNode() {
-		StringPiece name = this.get(0).toValue();
+		StringPieceImpl name = this.get(0).toValue();
 		Token subsripts = this.get(1);
 		if (subsripts == null) {
 			return new Local(name);

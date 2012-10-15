@@ -25,7 +25,7 @@ import com.raygroupintl.m.parsetree.Node;
 import com.raygroupintl.m.struct.MError;
 import com.raygroupintl.m.struct.MNameWithMnemonic;
 import com.raygroupintl.parser.CompositeToken;
-import com.raygroupintl.parser.StringPiece;
+import com.raygroupintl.parser.StringPieceImpl;
 import com.raygroupintl.parser.SyntaxErrorException;
 import com.raygroupintl.parser.TFSequence;
 import com.raygroupintl.parser.Token;
@@ -45,7 +45,7 @@ public class TFIntrinsic extends TokenFactorySupply {
 		
 		@Override
 		public Node getNode() {
-			StringPiece name = this.getSubNodeToken(0).getSubNodeToken(1).toValue();
+			StringPieceImpl name = this.getSubNodeToken(0).getSubNodeToken(1).toValue();
 			return new IntrinsicVariable(name.toString());
 		}
 	}
@@ -61,7 +61,7 @@ public class TFIntrinsic extends TokenFactorySupply {
 		
 		@Override
 		public Node getNode() {
-			StringPiece name = ((MToken) this.get(0)).getSubNodeToken(0).getSubNodeToken(1).toValue();
+			StringPieceImpl name = ((MToken) this.get(0)).getSubNodeToken(0).getSubNodeToken(1).toValue();
 			MToken arguments = ((MToken) this.get(1)).getSubNodeToken(0);	
 			return new IntrinsicFunction(name.toString(), arguments == null ? null : arguments.getNode());
 		}

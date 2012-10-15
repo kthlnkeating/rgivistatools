@@ -17,18 +17,18 @@
 package com.raygroupintl.m.token;
 
 import com.raygroupintl.m.parsetree.Node;
-import com.raygroupintl.parser.StringPiece;
-import com.raygroupintl.parser.TString;
+import com.raygroupintl.parser.StringPieceImpl;
+import com.raygroupintl.parser.StringToken;
 import com.raygroupintl.parser.Token;
 
-public class MString extends TString implements MToken {
+public class MString extends StringPieceImpl implements MToken, StringToken {
 	private static final long serialVersionUID = 1L;
 	
 	public MString() {
 		super();
 	}
 	
-	public MString(StringPiece value) {
+	public MString(StringPieceImpl value) {
 		super(value);
 	}
 	
@@ -59,5 +59,14 @@ public class MString extends TString implements MToken {
 	@Override
 	public MToken getSubNodeToken(int index) {
 		return null;
+	}
+
+	@Override
+	public StringPieceImpl toValue() {
+		return this;
+	}
+	
+	@Override
+	public void beautify() {		
 	}
 }

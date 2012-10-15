@@ -24,7 +24,7 @@ import com.raygroupintl.parsergen.ObjectSupply;
 
 public class DefaultObjectSupply implements ObjectSupply {
 	@Override
-	public TString newString() {
+	public StringToken newString() {
 		return new TString();
 	}
 	

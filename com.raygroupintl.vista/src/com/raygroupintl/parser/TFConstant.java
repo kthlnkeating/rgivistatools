@@ -33,7 +33,7 @@ public class TFConstant extends TokenFactory {
 	}
 
 	@Override
-	public TString tokenizeOnly(Text text, ObjectSupply objectSupply) {
+	public StringToken tokenizeOnly(Text text, ObjectSupply objectSupply) {
 		return text.extractToken(this.value, objectSupply, this.ignoreCase);
 	}
 }

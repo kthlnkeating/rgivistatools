@@ -19,7 +19,7 @@ package com.raygroupintl.m.token;
 import java.util.HashMap;
 import java.util.Map;
 
-import com.raygroupintl.parser.TString;
+import com.raygroupintl.parser.StringToken;
 import com.raygroupintl.parser.Text;
 import com.raygroupintl.parser.Token;
 import com.raygroupintl.parser.TokenFactory;
@@ -71,7 +71,7 @@ public class TFOperator extends TokenFactory {
 					++index;
 				}
 				if (branch.validEnd) {
-					TString t = text.extractToken(index, objectSupply);
+					StringToken t = text.extractToken(index, objectSupply);
 					return new MOperator(t);
 				}				
 			}

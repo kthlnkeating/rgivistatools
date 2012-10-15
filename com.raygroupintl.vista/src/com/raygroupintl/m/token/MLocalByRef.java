@@ -19,7 +19,7 @@ package com.raygroupintl.m.token;
 import com.raygroupintl.m.parsetree.Local;
 import com.raygroupintl.m.parsetree.LocalReference;
 import com.raygroupintl.m.parsetree.Node;
-import com.raygroupintl.parser.StringPiece;
+import com.raygroupintl.parser.StringPieceImpl;
 import com.raygroupintl.parser.TokenStore;
 
 public class MLocalByRef extends MSequence {
@@ -33,7 +33,7 @@ public class MLocalByRef extends MSequence {
 
 	@Override
 	public Node getNode() {
-		StringPiece name = this.get(1).toValue();
+		StringPieceImpl name = this.get(1).toValue();
 		Local local = new Local(name);
 		return new LocalReference(local);
 	}

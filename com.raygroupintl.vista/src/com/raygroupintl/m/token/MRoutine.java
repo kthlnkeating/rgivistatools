@@ -16,7 +16,7 @@ import com.raygroupintl.m.parsetree.Line;
 import com.raygroupintl.m.parsetree.Node;
 import com.raygroupintl.m.parsetree.Routine;
 import com.raygroupintl.m.struct.MError;
-import com.raygroupintl.parser.StringPiece;
+import com.raygroupintl.parser.StringPieceImpl;
 import com.raygroupintl.parser.Token;
 
 public class MRoutine implements MToken {
@@ -40,8 +40,8 @@ public class MRoutine implements MToken {
 	}
 	
 	@Override
-	public StringPiece toValue() {
-		StringPiece result = new StringPiece();
+	public StringPieceImpl toValue() {
+		StringPieceImpl result = new StringPieceImpl();
 		for (MLine line : this.lines) {
 			result.add(line.toValue());
 		}

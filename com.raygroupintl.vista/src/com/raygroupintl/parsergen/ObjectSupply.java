@@ -19,13 +19,13 @@ package com.raygroupintl.parsergen;
 import java.util.List;
 
 import com.raygroupintl.parser.CompositeToken;
+import com.raygroupintl.parser.StringToken;
 import com.raygroupintl.parser.TEmpty;
-import com.raygroupintl.parser.TString;
 import com.raygroupintl.parser.Token;
 import com.raygroupintl.parser.TokenStore;
 
 public interface ObjectSupply {
-	TString newString();
+	StringToken newString();
 	CompositeToken newSequence(int length);
 	CompositeToken newSequence(TokenStore store);
 	CompositeToken newList();

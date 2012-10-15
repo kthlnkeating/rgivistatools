@@ -16,24 +16,24 @@
 
 package com.raygroupintl.m.parsetree;
 
-import com.raygroupintl.parser.StringPiece;
+import com.raygroupintl.parser.StringPieceImpl;
 
 abstract class NodeWithSubscripts extends BasicNode {
 	private static final long serialVersionUID = 1L;
 
-	private StringPiece name;
+	private StringPieceImpl name;
 	private NodeList<Node> subsripts;
 	
-	public NodeWithSubscripts(StringPiece name) {
+	public NodeWithSubscripts(StringPieceImpl name) {
 		this.name = name;
 	}
 	
-	public NodeWithSubscripts(StringPiece name, NodeList<Node> subscripts) {
+	public NodeWithSubscripts(StringPieceImpl name, NodeList<Node> subscripts) {
 		this.name = name;
 		this.subsripts = subscripts;
 	}
 		
-	public StringPiece getName() {
+	public StringPieceImpl getName() {
 		return this.name;
 	}
 	

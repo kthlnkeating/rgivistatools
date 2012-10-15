@@ -28,7 +28,7 @@ public class TFCharacter extends TokenFactory {
 	}
 	
 	@Override
-	protected TString tokenizeOnly(Text text, ObjectSupply objectSupply) {
+	protected StringToken tokenizeOnly(Text text, ObjectSupply objectSupply) {
 		return text.extractChar(this.predicate, objectSupply);
 	}
 }

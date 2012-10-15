@@ -18,29 +18,29 @@ package com.raygroupintl.parser;
 
 import java.io.Serializable;
 
-public class StringPiece implements Serializable {
+public class StringPieceImpl implements StringPieceStore, Serializable {
 	private static final long serialVersionUID = 1L;
 	
 	private String data;
 	private int beginIndex;
 	private int endIndex;
 	
-	public StringPiece() {		
+	public StringPieceImpl() {		
 	}
 	
-	public StringPiece(String data) {
+	public StringPieceImpl(String data) {
 		this.data = data;
 		this.beginIndex = 0;
 		this.endIndex = data.length();
 	}
 	
-	public StringPiece(String data, int beginIndex, int endIndex) {
+	public StringPieceImpl(String data, int beginIndex, int endIndex) {
 		this.data = data;
 		this.beginIndex = beginIndex;
 		this.endIndex = endIndex;
 	}
 	
-	public StringPiece(StringPiece rhs) {
+	public StringPieceImpl(StringPieceImpl rhs) {
 		this.set(rhs);
 	}
 	
@@ -53,7 +53,7 @@ public class StringPiece implements Serializable {
 		}
 	}
 
-	public void set(StringPiece rhs) {	
+	public void set(StringPieceImpl rhs) {	
 		this.data = rhs.data;
 		this.beginIndex = rhs.beginIndex;
 		this.endIndex = rhs.endIndex;
@@ -96,7 +96,7 @@ public class StringPiece implements Serializable {
 		return result;
 	}
 	
-	public void add(StringPiece addlPiece) {
+	public void add(StringPieceImpl addlPiece) {
 		if (addlPiece.data != null) {
 			if ((this.data != addlPiece.data) || (this.endIndex != addlPiece.beginIndex)) {
 				if (this.data == null) {

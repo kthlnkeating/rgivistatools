@@ -12,7 +12,7 @@ public class TCopy implements Token {
 	}
 	
 	@Override
-	public StringPiece toValue() {
+	public StringPieceImpl toValue() {
 		return this.master.toValue();
 	}	
 }

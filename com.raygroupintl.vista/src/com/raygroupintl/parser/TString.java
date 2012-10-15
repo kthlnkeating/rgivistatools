@@ -16,20 +16,14 @@
 
 package com.raygroupintl.parser;
 
-import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.List;
-
-import com.raygroupintl.struct.IterableSingle;
-
-public class TString extends StringPiece implements Token, TokenStore {
+public class TString extends StringPieceImpl implements StringToken {
 	private static final long serialVersionUID = 1L;
 	
 	public TString() {
 		super();
 	}
 
-	public TString(StringPiece value) {
+	public TString(StringPieceImpl value) {
 		super(value);
 	}
 	
@@ -42,65 +36,12 @@ public class TString extends StringPiece implements Token, TokenStore {
 	}
 	
 	@Override
-	public void addToken(Token token) {
-		this.add(token.toValue());
-	}
-	
-	@Override
-	public StringPiece toValue() {
+	public StringPieceImpl toValue() {
 		return this;
 	}
 	
-	@Override
-	public List<Token> toList() {	
-		List<Token> result = new ArrayList<Token>();
-		result.add(this);	
-		return result;
-	}
-
-	@Override
-	public void setLength(int length) {		
-	}
-
-	@Override
-	public void resetIndex(int index) {		
-	}
-	
-	@Override
-	public boolean isAllNull() {
-		return false;
-	}
-
-	@Override
-	public int size() {
-		return 1;
-	}
-
-	@Override
-	public boolean hasToken() {
-		return true;
-	}
-	
-	@Override
-	public Token get(int index) {
-		if (index == 0) {
-			return this;
-		} else {
-			throw new ArrayIndexOutOfBoundsException();
-		}
-	}
-	
-	public void set(int index, Token token) {
-		throw new UnsupportedOperationException();
-	}	
-	
-	public void setValue(StringPiece value) {
+	public void setValue(StringPieceImpl value) {
 		super.set(value);
-	}
-
-	@Override
-	public Iterator<Token> iterator() {
-		return new IterableSingle<Token>(this).iterator();
 	}
 
 	@Override

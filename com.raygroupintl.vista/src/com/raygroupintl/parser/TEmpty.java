@@ -16,63 +16,12 @@
 
 package com.raygroupintl.parser;
 
-import java.util.Collections;
-import java.util.Iterator;
-import java.util.List;
-
-public class TEmpty implements Token, TokenStore {
+public class TEmpty implements Token {
 	@Override
-	public void addToken(Token token) {
-		throw new UnsupportedOperationException();
-	}
-	
-	@Override
-	public StringPiece toValue() {
-		return new StringPiece();
+	public StringPieceImpl toValue() {
+		return new StringPieceImpl();
 	}
 
-	@Override
-	public List<Token> toList() {
-		return Collections.emptyList();
-	}
-
-	@Override
-	public void setLength(int length) {		
-	}
-
-	@Override
-	public void resetIndex(int index) {		
-	}
-	
-	@Override
-	public boolean isAllNull() {
-		return false;
-	}
-
-	@Override
-	public int size() {
-		return 0;
-	}
-
-	@Override
-	public boolean hasToken() {
-		return false;
-	}
-	
-	@Override
-	public Token get(int index) {
-		throw new ArrayIndexOutOfBoundsException();
-	}
-	
-	public void set(int index, Token token) {
-		throw new UnsupportedOperationException();
-	}	
-	
-	@Override
-	public Iterator<Token> iterator() {
-		return null;
-	}
-		
 	@Override
 	public void beautify() {
 	}

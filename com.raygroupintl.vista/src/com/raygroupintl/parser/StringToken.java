@@ -16,15 +16,5 @@
 
 package com.raygroupintl.parser;
 
-import com.raygroupintl.parsergen.ObjectSupply;
-
-public class TFEol extends TokenFactory {
-	public TFEol(String name) {
-		super(name);
-	}
-	
-	@Override
-	public Token tokenizeOnly(Text text, ObjectSupply objectSupply) {
-		return text.extractEOLToken(objectSupply);
-	}
+public interface StringToken extends Token, StringPieceStore {
 }

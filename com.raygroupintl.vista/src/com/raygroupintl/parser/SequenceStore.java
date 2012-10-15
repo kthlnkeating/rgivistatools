@@ -77,7 +77,7 @@ public class SequenceStore implements TokenStore {
 	}	
 	
 	@Override
-	public StringPiece toValue() {	
+	public StringPieceImpl toValue() {	
 		return TokenUtilities.toValue(this);
 	}
 

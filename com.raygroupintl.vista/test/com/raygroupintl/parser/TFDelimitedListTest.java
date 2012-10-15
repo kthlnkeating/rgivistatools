@@ -34,7 +34,7 @@ public class TFDelimitedListTest {
 		objectSupply = null;
 	}
 
-	public static void validTokenCheck(StringPiece t, String v) {
+	public static void validTokenCheck(StringPieceImpl t, String v) {
 		Assert.assertEquals(v, t.toString());
 		Assert.assertEquals(v.length(), t.length());		
 	}
