@@ -42,36 +42,22 @@ public class FSRChoice extends FSRBase {
 			this.appliedOnName = name;
 		}
 	 	
-		public void updateChoicePossibilities(FactorySupplyRule f, RulesByName symbols, int index) {
-			String name = f.getLeading(symbols, 0).getName();
-			if (symbols.hasRule(name)) {
-				this.choiceOrder.put(name, index);
-			}
-		}
-		
-		public Integer findInChoices(FactorySupplyRule f, RulesByName names) {
-			String name = f.getLeading(names, 0).getName();
-			Integer order = this.choiceOrder.get(name);
-			if (order != null) {
-				this.leadingShared.put(order, name);
-				return order;
-			}
-			return null;
-		}
-		
 		public void add(FactorySupplyRule tf, RulesByName symbols) {
-			Integer existing = this.findInChoices(tf, symbols);
+			String name = tf.getLeading(symbols, 0).getName();
+			Integer existing = this.choiceOrder.get(name);
 			if (existing == null) {
 				int n = this.list.size();
 				this.list.add(tf);
-				this.updateChoicePossibilities(tf, symbols, n);
+				if (symbols.hasRule(name)) {
+					this.choiceOrder.put(name, n);
+				}
 			} else {
+				this.leadingShared.put(existing, name);
 				int n = existing.intValue();
 				FactorySupplyRule current = this.list.get(n);
 				if (current instanceof FSRForkedSequence) {
 					((FSRForkedSequence) current).addFollower(tf);
 				} else {
-					String name = this.leadingShared.get(n);
 					FactorySupplyRule leading = symbols.get(name);
 					FSRForkedSequence newForked = new FSRForkedSequence(this.appliedOnName + "." + name, leading);
 					newForked.addFollower(current);
@@ -112,17 +98,15 @@ public class FSRChoice extends FSRBase {
 			FactorySupplyRule on = algorithm.list.get(i);
 			if (on instanceof FSRForkedSequence) {
 				FSRForkedSequence onf = (FSRForkedSequence) on;
-				int m = onf.followers.size();
-				List<TFSequence> followerFactories = new ArrayList<TFSequence>(m);
-				for (int j=0; j<m; ++j) {
-					FactorySupplyRule ons = (FactorySupplyRule) onf.followers.get(j);
-					ons.update(symbols);
-					followerFactories.add((TFSequence) ons.getTheFactory(symbols));
-				}
 				FactorySupplyRule fsrLeader = onf.leader;
 				fsrLeader.update(symbols);
 				TFForkedSequence nfs = new TFForkedSequence(onf.getName(), fsrLeader.getTheFactory(symbols), onf.singleValid);
-				nfs.setFollowers(followerFactories);
+				int m = onf.followers.size();
+				for (int j=0; j<m; ++j) {
+					FactorySupplyRule ons = (FactorySupplyRule) onf.followers.get(j);
+					ons.update(symbols);
+					nfs.addFollower((TFSequence) ons.getTheFactory(symbols));
+				}
 				result.add(nfs);
 			} else {
 				result.add(on.getTheFactory(symbols));

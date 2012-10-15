@@ -16,6 +16,7 @@
 
 package com.raygroupintl.parser;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import com.raygroupintl.parsergen.ObjectSupply;
@@ -53,12 +54,19 @@ public class TFForkedSequence extends TokenFactory {
 		this.singleValid = singleValid;
 	}
 	
-	public void setFollowers(List<TFSequence> followers) {
-		this.followers = followers;
+	public void addFollower(TFSequence follower) {
+		if (this.followers == null) {
+			this.followers = new ArrayList<TFSequence>();
+		}
+		this.followers.add(follower);
 	}
 	
-	public void set(List<TFSequence> followers) {
-		this.followers = followers;
+	public void setLeader(TokenFactory leader) {
+		this.leader = leader;
+	}
+	
+	public void setSingleValid(boolean b) {
+		this.singleValid = b;
 	}
 	
 	private int getMaxSequenceCount() {
