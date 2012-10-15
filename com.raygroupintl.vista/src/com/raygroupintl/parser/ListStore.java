@@ -49,6 +49,14 @@ public class ListStore implements TokenStore {
 	}
 
 	@Override
+	public void setLength(int length) {		
+	}
+
+	@Override
+	public void resetIndex(int index) {		
+	}
+	
+	@Override
 	public boolean isAllNull() {
 		return (this.tokens == null) || (this.tokens.size() == 0);
 	}

@@ -76,7 +76,7 @@ public class TFForkedSequence extends TokenFactory {
 		if (leading == null) {
 			return null;
 		}
-		TSequence foundTokens = objectSupply.newSequence(this.getMaxSequenceCount());
+		CompositeToken foundTokens = objectSupply.newSequence(this.getMaxSequenceCount());
 		foundTokens.addToken(leading);
 		if (text.onChar()) {
 			int textIndex = text.getIndex();

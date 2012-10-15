@@ -18,11 +18,11 @@ package com.raygroupintl.m.token;
 
 import com.raygroupintl.m.parsetree.Node;
 import com.raygroupintl.parser.CompositeToken;
-import com.raygroupintl.parser.TSequence;
+import com.raygroupintl.parser.SequenceStore;
 import com.raygroupintl.parser.Token;
 import com.raygroupintl.parser.TokenStore;
 
-public class MSequence extends TSequence implements MToken, CompositeToken {
+public class MSequence extends SequenceStore implements MToken, CompositeToken {
 	public MSequence(int length) {
 		super(length);
 	}
@@ -63,5 +63,14 @@ public class MSequence extends TSequence implements MToken, CompositeToken {
 	@Override
 	public MToken getSubNodeToken(int index) {
 		return (MToken) this.get(index);
+	}
+
+	@Override
+	public void beautify() {		
+		for (Token token : this) {
+			if (token != null) {
+				token.beautify();
+			}
+		}
 	}
 }

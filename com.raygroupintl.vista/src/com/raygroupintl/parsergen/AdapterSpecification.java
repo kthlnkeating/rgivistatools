@@ -29,7 +29,9 @@ public class AdapterSpecification {
 	private boolean hasAdapter;
 	
 	public <M> M getNull() {
-		if (this.hasAdapter) throw new ParseErrorException("Uncompatible adapter type.");
+		if (this.hasAdapter) {
+			throw new ParseErrorException("Uncompatible adapter type.");
+		}
 		return null;
 	}
 	

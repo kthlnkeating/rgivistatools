@@ -18,7 +18,7 @@ package com.raygroupintl.m.token;
 
 import java.util.List;
 
-import com.raygroupintl.parser.TDelimitedList;
+import com.raygroupintl.parser.CompositeToken;
 import com.raygroupintl.parser.TEmpty;
 import com.raygroupintl.parser.Token;
 import com.raygroupintl.parser.TokenStore;
@@ -41,12 +41,12 @@ public class MObjectSupply implements ObjectSupply {
 	}
 	
 	@Override
-	public MList newList() {
+	public CompositeToken newList() {
 		return new MList();
 	}
 	
 	@Override
-	public TDelimitedList newDelimitedList(List<Token> tokens) {
+	public CompositeToken newDelimitedList(List<Token> tokens) {
 		return new MDelimitedList(tokens);
 	}
 	

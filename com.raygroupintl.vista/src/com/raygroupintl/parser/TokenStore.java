@@ -25,7 +25,11 @@ public interface TokenStore extends Iterable<Token> {
 	
 	List<Token> toList();
 	
+	void setLength(int length);
+
 	boolean isAllNull();
+
+	public void resetIndex(int index);
 
 	int size();
 	

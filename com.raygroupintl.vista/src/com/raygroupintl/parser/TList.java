@@ -18,17 +18,13 @@ package com.raygroupintl.parser;
 
 import java.util.List;
 
-public class TList extends ListStore implements Token {
+public class TList extends ListStore implements CompositeToken {
 	public TList() {
 	}
 	
 	public TList(List<Token> tokens) {
 		super(tokens);
 	}
-
-	//public TList(Token token) {
-	//	super(token.toList());
-	//}
 
 	@Override
 	public void beautify() {

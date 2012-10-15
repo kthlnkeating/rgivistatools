@@ -18,9 +18,11 @@ package com.raygroupintl.m.token;
 
 import com.raygroupintl.m.parsetree.Node;
 import com.raygroupintl.m.parsetree.Nodes;
-import com.raygroupintl.parser.TList;
+import com.raygroupintl.parser.CompositeToken;
+import com.raygroupintl.parser.ListStore;
+import com.raygroupintl.parser.Token;
 
-public class MList extends TList implements MToken {
+public class MList extends ListStore implements MToken, CompositeToken {
 	public MList() {
 		super();
 	}
@@ -54,5 +56,12 @@ public class MList extends TList implements MToken {
 	@Override
 	public MToken getSubNodeToken(int index) {
 		return (MToken) this.get(index);
+	}
+
+	@Override
+	public void beautify() {
+		for (Token token : this) {
+			token.beautify();
+		}
 	}
 }

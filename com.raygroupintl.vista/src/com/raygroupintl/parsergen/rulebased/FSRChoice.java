@@ -43,11 +43,9 @@ public class FSRChoice extends FSRBase {
 		}
 	 	
 		public void updateChoicePossibilities(FactorySupplyRule f, RulesByName symbols, int index) {
-			List<String> allForIndex = new ArrayList<String>();
 			String name = f.getLeading(symbols, 0).getName();
 			if (symbols.hasRule(name)) {
 				this.choiceOrder.put(name, index);
-				allForIndex.add(name);
 			}
 		}
 		
@@ -152,7 +150,7 @@ public class FSRChoice extends FSRBase {
 	
 	@Override
 	public void setAdapter(AdapterSpecification spec) {
-		 Class<? extends Token> a = spec.getTokenAdapter();
-		 if (a != null) this.factory.setTargetType(a);
+		Class<? extends Token> a = spec.getTokenAdapter();
+		if (a != null) this.factory.setTargetType(a);
 	}
 }

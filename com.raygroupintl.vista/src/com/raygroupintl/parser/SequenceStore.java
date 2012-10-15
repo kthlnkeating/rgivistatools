@@ -124,6 +124,7 @@ public class SequenceStore implements TokenStore {
 		}
 	}
 	
+	@Override
 	public void setLength(int length) {
 		this.length = length;
 		for (int i = this.index; index<tokens.size(); ++index) {
@@ -136,6 +137,7 @@ public class SequenceStore implements TokenStore {
 		return this.tokens == null;
 	}
 
+	@Override
 	public void resetIndex(int index) {
 		this.index = index;
 	}

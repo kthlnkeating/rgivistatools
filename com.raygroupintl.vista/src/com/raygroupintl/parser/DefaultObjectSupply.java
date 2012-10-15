@@ -29,22 +29,22 @@ public class DefaultObjectSupply implements ObjectSupply {
 	}
 	
 	@Override
-	public TSequence newSequence(int length) {
+	public CompositeToken newSequence(int length) {
 		return new TSequence(length);
 	}
 	
 	@Override
-	public TSequence newSequence(TokenStore store) {
+	public CompositeToken newSequence(TokenStore store) {
 		return new TSequence(store.toList());
 	}
 	
 	@Override
-	public TList newList() {
+	public CompositeToken newList() {
 		return new TList();
 	}
 	
 	@Override
-	public TDelimitedList newDelimitedList(List<Token> tokens) {
+	public CompositeToken newDelimitedList(List<Token> tokens) {
 		return new TDelimitedList(tokens);
 	}
 	

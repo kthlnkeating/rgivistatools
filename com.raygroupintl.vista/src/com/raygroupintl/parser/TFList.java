@@ -35,11 +35,11 @@ public final class TFList extends TokenFactory {
 	}
 		
 	@Override
-	public TList tokenizeOnly(Text text, ObjectSupply objectSupply) throws SyntaxErrorException {
+	public CompositeToken tokenizeOnly(Text text, ObjectSupply objectSupply) throws SyntaxErrorException {
 		if (elementFactory == null) throw new IllegalStateException("TFList.setElementFactory needs to be called before TFList.tokenize");
 		
 		if (text.onChar()) {
-			TList list = objectSupply.newList();
+			CompositeToken list = objectSupply.newList();
 			while (text.onChar()) {
 				Token token = null;
 				try {
