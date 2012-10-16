@@ -21,7 +21,7 @@ public enum RuleSupplyFlag {
 	INNER_OPTIONAL,
 	TOP;
 	
-	RuleSupplyFlag demoteInner() {
+	public RuleSupplyFlag demoteInner() {
 		if (this == INNER_OPTIONAL) {
 			return INNER_OPTIONAL;
 		} else {
@@ -29,7 +29,7 @@ public enum RuleSupplyFlag {
 		}
 	}
 	
-	boolean toRuleRequiredFlag() {
+	public boolean toRuleRequiredFlag() {
 		if (this == INNER_OPTIONAL) {
 			return false;
 		} else {

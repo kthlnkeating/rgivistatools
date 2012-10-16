@@ -17,9 +17,6 @@
 package com.raygroupintl.parsergen.ruledef;
 
 import com.raygroupintl.parser.Token;
-import com.raygroupintl.parsergen.rulebased.FSRCopy;
-import com.raygroupintl.parsergen.rulebased.FSRSingle;
-import com.raygroupintl.parsergen.rulebased.FactorySupplyRule;
 
 public class TSymbol extends TString implements RuleSupply {
 	private static final long serialVersionUID = 1L;
@@ -29,12 +26,7 @@ public class TSymbol extends TString implements RuleSupply {
 	}
 	
 	@Override
-	public FactorySupplyRule getRule(RuleSupplyFlag flag, String name) {
-		String value = this.toValue().toString();
-		if (flag == RuleSupplyFlag.TOP) {
-			return new FSRCopy(name, value);
-		} else {
-			return new FSRSingle(value, flag);			
-		}
+	public void accept(RuleDefinitionVisitor visitor, String name, RuleSupplyFlag flag) {
+		visitor.visitSymbol(this, name, flag);
 	}
 }

@@ -19,8 +19,6 @@ package com.raygroupintl.parsergen.ruledef;
 import com.raygroupintl.charlib.PredicateFactory;
 import com.raygroupintl.parser.Token;
 import com.raygroupintl.parser.TokenStore;
-import com.raygroupintl.parsergen.rulebased.FSRChar;
-import com.raygroupintl.parsergen.rulebased.FactorySupplyRule;
 
 public class TCharSymbol extends TSequence implements RuleSupply {
 	public TCharSymbol(int length) {
@@ -46,7 +44,7 @@ public class TCharSymbol extends TSequence implements RuleSupply {
 		}
 	}
 	
-	private static void update(PredicateFactory pf, Token sign, TokenStore spec) {
+	public static void update(PredicateFactory pf, Token sign, TokenStore spec) {
 		boolean exclude = (sign != null) && (sign.toValue().charAt(0) == '-');
 		char ch = getChar(spec.get(0).toValue().toString());
 		Token tRangeBound = spec.get(1);
@@ -67,16 +65,7 @@ public class TCharSymbol extends TSequence implements RuleSupply {
 	}
 	
 	@Override
-	public FactorySupplyRule getRule(RuleSupplyFlag flag, String name) {
-		PredicateFactory pf = new PredicateFactory();
-		update(pf, this.get(0), (TokenStore) this.get(1));
-		TokenStore list = (TokenStore) this.get(2);
-		if (list != null) for (Token t : list) {
-			TokenStore casted = (TokenStore) t;
-			update(pf, casted.get(0), (TokenStore) casted.get(1));
-		}		
-
-		String key = this.toValue().toString();
-		return new FSRChar(key, flag, pf.generate());
+	public void accept(RuleDefinitionVisitor visitor, String name, RuleSupplyFlag flag) {
+		visitor.visitCharSymbol(this, name, flag);
 	}
 }

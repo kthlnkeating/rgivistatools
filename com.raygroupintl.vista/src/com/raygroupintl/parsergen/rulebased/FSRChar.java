@@ -20,7 +20,6 @@ import com.raygroupintl.charlib.Predicate;
 import com.raygroupintl.parser.TFCharacter;
 import com.raygroupintl.parser.Token;
 import com.raygroupintl.parsergen.AdapterSpecification;
-import com.raygroupintl.parsergen.ListInfo;
 import com.raygroupintl.parsergen.ruledef.RuleSupplyFlag;
 
 public class FSRChar extends FSRBase {

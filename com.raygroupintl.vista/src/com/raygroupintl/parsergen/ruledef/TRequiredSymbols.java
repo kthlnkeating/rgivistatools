@@ -17,7 +17,6 @@
 package com.raygroupintl.parsergen.ruledef;
 
 import com.raygroupintl.parser.TokenStore;
-import com.raygroupintl.parsergen.rulebased.FactorySupplyRule;
 
 public class TRequiredSymbols extends TSequence implements RuleSupply {
 	public TRequiredSymbols(int length) {
@@ -29,8 +28,7 @@ public class TRequiredSymbols extends TSequence implements RuleSupply {
 	}
 	
 	@Override
-	public FactorySupplyRule getRule(RuleSupplyFlag flag, String name) {
-		RuleSupply rs = (RuleSupply) this.get(1);
-		return rs.getRule(RuleSupplyFlag.INNER_REQUIRED, name);
+	public void accept(RuleDefinitionVisitor visitor, String name, RuleSupplyFlag flag) {
+		((RuleSupply) this.get(1)).accept(visitor, name, RuleSupplyFlag.INNER_REQUIRED);
 	}
 }

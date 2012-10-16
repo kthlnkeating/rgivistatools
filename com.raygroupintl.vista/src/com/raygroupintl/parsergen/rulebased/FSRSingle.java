@@ -21,16 +21,18 @@ import com.raygroupintl.parsergen.ParseErrorException;
 import com.raygroupintl.parsergen.ruledef.RuleSupplyFlag;
 
 public class FSRSingle extends FSRBase {
+	private String name;
 	private String value;
 		
-	public FSRSingle(String value, RuleSupplyFlag flag) {
+	public FSRSingle(String name, String value, RuleSupplyFlag flag) {
 		super(flag);
+		this.name = name;
 		this.value = value;
 	}
 	
 	@Override
 	public String getName() {
-		return this.value;
+		return this.name;
 	}
 	
 	@Override

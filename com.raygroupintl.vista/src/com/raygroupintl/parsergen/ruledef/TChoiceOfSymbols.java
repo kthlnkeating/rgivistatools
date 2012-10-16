@@ -20,30 +20,18 @@ import java.util.List;
 
 import com.raygroupintl.parser.TDelimitedList;
 import com.raygroupintl.parser.Token;
-import com.raygroupintl.parsergen.rulebased.FSRChoice;
-import com.raygroupintl.parsergen.rulebased.FactorySupplyRule;
 
 public class TChoiceOfSymbols extends TDelimitedList implements RuleSupply {
 	public TChoiceOfSymbols(List<Token> tokens) {
 		super(tokens);
 	}
-	
+		
 	@Override
-	public FactorySupplyRule getRule(RuleSupplyFlag flag, String name) {
+	public void accept(RuleDefinitionVisitor visitor, String name, RuleSupplyFlag flag) {
 		if (this.size() == 1) {
-			RuleSupply r = (RuleSupply) this.get(0);
-			return r.getRule(flag, name);
+			((RuleSupply) this.get(0)).accept(visitor, name, flag);	
 		} else {
-			int index = 0;
-			FSRChoice result = new FSRChoice(name, flag);
-			for (Token t : this) {
-				RuleSupply r  = (RuleSupply) t;
-				FactorySupplyRule fsr = r.getRule(flag.demoteInner(), name + "." + String.valueOf(index));
-				if (fsr == null) return null;
-				result.add(fsr);
-				++index;
-			}
-			return result;
+			visitor.visitChoiceOfSymbols(this, name, flag);
 		}
 	}
 }

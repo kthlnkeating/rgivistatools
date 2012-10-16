@@ -16,10 +16,7 @@
 
 package com.raygroupintl.parsergen.ruledef;
 
-import com.raygroupintl.parser.Token;
 import com.raygroupintl.parser.TokenStore;
-import com.raygroupintl.parsergen.rulebased.FSRConst;
-import com.raygroupintl.parsergen.rulebased.FactorySupplyRule;
 
 public class TConstSymbol extends TSequence implements RuleSupply {
 	public TConstSymbol(int length) {
@@ -31,11 +28,7 @@ public class TConstSymbol extends TSequence implements RuleSupply {
 	}
 	
 	@Override
-	public FactorySupplyRule getRule(RuleSupplyFlag flag, String name) {
-		String value = this.get(1).toValue().toString();
-		Token tIgnoreCase = this.get(4);
-		boolean ignoreCase = (tIgnoreCase != null) && (tIgnoreCase.toValue().toString().equals("1"));
-		FSRConst result = new FSRConst(value, ignoreCase, flag);
-		return result;
+	public void accept(RuleDefinitionVisitor visitor, String name, RuleSupplyFlag flag) {
+		visitor.visitConstSymbol(this, name, flag);
 	}
 }

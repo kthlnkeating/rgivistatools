@@ -30,16 +30,15 @@ import com.raygroupintl.parsergen.ruledef.RuleParser;
 import com.raygroupintl.parsergen.ruledef.RuleSupply;
 import com.raygroupintl.parsergen.ruledef.RuleSupplyFlag;
 
-public class RuleStore extends TokenFactoryStore {
+public class RuleStore extends TokenFactoryStore  {
 	private static RuleParser ruleParser;
 	
 	public Map<String, TokenFactory> symbols = new HashMap<String, TokenFactory>();
 	
 	private java.util.List<FactorySupplyRule> rules  = new ArrayList<FactorySupplyRule>();
 	private Map<String, RuleSupply> ruleSupplies  = new HashMap<String, RuleSupply>();
-	private Map<String, FactorySupplyRule> topRules  = new HashMap<String, FactorySupplyRule>();
 	
-	//private FSRVisitingTFStore tfStore = new FSRVisitingTFStore();
+	private DefinitionVisitor dv = new DefinitionVisitor();
 	
 	public RuleStore() {
 	}
@@ -55,19 +54,17 @@ public class RuleStore extends TokenFactoryStore {
 			if (ruleSupply == null) return null;
 			this.ruleSupplies.put(name, ruleSupply);
 		}
-		FactorySupplyRule topRule = this.topRules.get(name);	
+		FactorySupplyRule topRule = this.dv.topRules.get(name);	
 		if (topRule == null) {
-			topRule = ruleSupply.getRule(RuleSupplyFlag.TOP, name);		
-			this.topRules.put(name, topRule);
+			ruleSupply.accept(this.dv, name, RuleSupplyFlag.TOP);
+			topRule = this.dv.topRules.get(name);
 		}
-		if (topRule != null) {
-			AdapterSpecification spec = AdapterSpecification.getInstance(f);
-			topRule.setAdapter(spec);
-			TokenFactory value = topRule.getShellFactory();
-			this.rules.add(topRule);
-			return value;		
-		}
-		return null;
+
+		AdapterSpecification spec = AdapterSpecification.getInstance(f);
+		topRule.setAdapter(spec);
+		TokenFactory value = topRule.getShellFactory();
+		this.rules.add(topRule);
+		return value;
 	}
 	
 	@Override
@@ -94,7 +91,7 @@ public class RuleStore extends TokenFactoryStore {
 				}
 			} else {
 				FSRCustom fsr = new FSRCustom(value);
-				this.topRules.put(name, fsr);
+				this.dv.topRules.put(name, fsr);
 				this.rules.add(fsr);
 			}
 			if (value != null) {
@@ -112,12 +109,12 @@ public class RuleStore extends TokenFactoryStore {
 		this.symbols.put("end", end);
 		FactorySupplyRule fsr = new FSRCustom(end);
 		this.rules.add(fsr);
-		this.topRules.put("end", fsr);
+		this.dv.topRules.put("end", fsr);
 	}
 
 	@Override
 	public void update(Class<?> cls) throws ParseException {
-		RulesMapByName tfby = new RulesMapByName(this.topRules);
+		RulesMapByName tfby = new RulesMapByName(this.dv.topRules);
 
 		String errorSymbols = "";
 		for (FactorySupplyRule r : this.rules) {

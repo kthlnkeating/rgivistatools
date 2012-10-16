@@ -16,8 +16,6 @@
 
 package com.raygroupintl.parsergen.ruledef;
 
-import com.raygroupintl.parsergen.rulebased.FactorySupplyRule;
-
 public interface RuleSupply {	
-	FactorySupplyRule getRule(RuleSupplyFlag flag, String name);
+	void accept(RuleDefinitionVisitor visitor, String name, RuleSupplyFlag flag);
 }

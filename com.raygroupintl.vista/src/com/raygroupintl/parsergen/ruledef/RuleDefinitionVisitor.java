@@ -16,28 +16,11 @@
 
 package com.raygroupintl.parsergen.ruledef;
 
-public class RuleDefinitionVisitor {
-	protected void visitCharSymbol(TCharSymbol charSymbol, String name, RuleSupplyFlag flag) {		
-	}
-
-	protected void visitConstSymbol(TConstSymbol constSymbol, String name, RuleSupplyFlag flag) {		
-	}
-	
-	protected void visitSymbol(TSymbol symbol, String name, RuleSupplyFlag flag) {		
-	}
-	
-	protected void visitSymbolList(TSymbolList symbolList, String name, RuleSupplyFlag flag) {		
-	}
-	
-	protected void postChoiceOfSymbolsElementAccept(int index) {		
-	}
-
-	protected void visitChoiceOfSymbols(TChoiceOfSymbols choiceOfSymbols, String name, RuleSupplyFlag flag) {		
-	}
-	
-	protected void postSymbolSequenceElementAccept(int index) {		
-	}
-	
-	protected void visitSymbolSequence(TSymbolSequence sequence, String name, RuleSupplyFlag flag) {
-	}
+public interface RuleDefinitionVisitor {
+	void visitCharSymbol(TCharSymbol charSymbol, String name, RuleSupplyFlag flag);
+	void visitConstSymbol(TConstSymbol constSymbol, String name, RuleSupplyFlag flag);
+	void visitSymbol(TSymbol symbol, String name, RuleSupplyFlag flag);
+	void visitSymbolList(TSymbolList symbolList, String name, RuleSupplyFlag flag);
+	void visitChoiceOfSymbols(TChoiceOfSymbols choiceOfSymbols, String name, RuleSupplyFlag flag);
+	void visitSymbolSequence(TSymbolSequence sequence, String name, RuleSupplyFlag flag);
 }

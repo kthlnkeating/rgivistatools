@@ -14,9 +14,8 @@
 // limitations under the License.
 //---------------------------------------------------------------------------
 
-package com.raygroupintl.parsergen;
+package com.raygroupintl.parsergen.rulebased;
 
-import com.raygroupintl.parsergen.rulebased.FactorySupplyRule;
 
 public class ListInfo {
 	public FactorySupplyRule delimiter;
