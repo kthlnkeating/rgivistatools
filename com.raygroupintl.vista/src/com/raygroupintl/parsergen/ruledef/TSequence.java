@@ -22,7 +22,7 @@ import com.raygroupintl.parser.CompositeToken;
 import com.raygroupintl.parser.SequenceStore;
 import com.raygroupintl.parser.Token;
 
-class TSequence extends SequenceStore implements CompositeToken {
+public class TSequence extends SequenceStore implements CompositeToken {
 	public TSequence(int length) {
 		super(length);
 	}

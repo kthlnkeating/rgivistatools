@@ -1,4 +1,4 @@
-package com.raygroupintl.parsergen.ruledef;
+package com.raygroupintl.parsergen.rulebased;
 
 import com.raygroupintl.parser.StringPiece;
 import com.raygroupintl.parser.Token;

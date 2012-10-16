@@ -1,4 +1,4 @@
-package com.raygroupintl.parsergen.ruledef;
+package com.raygroupintl.parsergen.rulebased;
 
 import static org.junit.Assert.fail;
 

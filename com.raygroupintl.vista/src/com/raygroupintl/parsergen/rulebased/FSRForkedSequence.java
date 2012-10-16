@@ -19,25 +19,29 @@ package com.raygroupintl.parsergen.rulebased;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.raygroupintl.parser.TFForkedSequence;
+import com.raygroupintl.parser.TFSequence;
 import com.raygroupintl.parser.TokenFactory;
 import com.raygroupintl.parsergen.ParseErrorException;
 import com.raygroupintl.parsergen.ruledef.RuleSupplyFlag;
 
 public class FSRForkedSequence extends FSRBase {
-	public String name;
-	public FactorySupplyRule leader;
-	public List<FactorySupplyRule> followers = new ArrayList<FactorySupplyRule>();
-	public boolean singleValid;
+	private String name;
+	private FactorySupplyRule leader;
+	private List<FactorySupplyRule> followers = new ArrayList<FactorySupplyRule>();
+	private boolean singleValid;
+	private TFForkedSequence factory;
 
 	public FSRForkedSequence(String name, FactorySupplyRule leader) {
 		super(RuleSupplyFlag.INNER_REQUIRED);
 		this.name = name;
 		this.leader = leader;
+		this.factory = new TFForkedSequence(name);
 	}
 	
 	@Override
 	public TokenFactory getShellFactory() {
-		return null;
+		return this.factory;
 	}
 	
 	public String getName() {
@@ -63,5 +67,17 @@ public class FSRForkedSequence extends FSRBase {
 		} else {
 			throw new ParseErrorException("Unsupported token in the choices; " + follower.getName() + " must be either a sequence or copy of one");
 		}
+	}
+	
+	@Override
+	public boolean update(RulesByName symbols) {
+		this.leader.update(symbols);
+		this.factory.setLeader(this.leader.getTheFactory(symbols));		
+		this.factory.setSingleValid(this.singleValid);
+		for (FactorySupplyRule follower : this.followers) {
+			follower.update(symbols);
+			this.factory.addFollower((TFSequence) follower.getTheFactory(symbols));
+		}		
+		return true;
 	}
 }

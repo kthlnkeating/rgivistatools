@@ -1,4 +1,4 @@
-package com.raygroupintl.parsergen.ruledef;
+package com.raygroupintl.parsergen.rulebased;
 
 import org.junit.runner.RunWith;
 import org.junit.runners.Suite;

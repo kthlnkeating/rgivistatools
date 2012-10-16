@@ -22,8 +22,6 @@ import java.util.List;
 import java.util.Map;
 
 import com.raygroupintl.parser.TFChoice;
-import com.raygroupintl.parser.TFForkedSequence;
-import com.raygroupintl.parser.TFSequence;
 import com.raygroupintl.parser.Token;
 import com.raygroupintl.parser.TokenFactory;
 import com.raygroupintl.parsergen.AdapterSpecification;
@@ -43,14 +41,13 @@ public class FSRChoice extends FSRBase {
 		}
 	 	
 		public void add(FactorySupplyRule tf, RulesByName symbols) {
-			String name = tf.getLeading(symbols, 0).getName();
+			FactorySupplyRule leading = tf.getLeading(symbols, 0);
+			String name = leading.getName();
 			Integer existing = this.choiceOrder.get(name);
 			if (existing == null) {
 				int n = this.list.size();
 				this.list.add(tf);
-				if (symbols.hasRule(name)) {
-					this.choiceOrder.put(name, n);
-				}
+				this.choiceOrder.put(name, n);
 			} else {
 				this.leadingShared.put(existing, name);
 				int n = existing.intValue();
@@ -58,7 +55,6 @@ public class FSRChoice extends FSRBase {
 				if (current instanceof FSRForkedSequence) {
 					((FSRForkedSequence) current).addFollower(tf);
 				} else {
-					FactorySupplyRule leading = symbols.get(name);
 					FSRForkedSequence newForked = new FSRForkedSequence(this.appliedOnName + "." + name, leading);
 					newForked.addFollower(current);
 					newForked.addFollower(tf);
@@ -93,24 +89,9 @@ public class FSRChoice extends FSRBase {
 			FactorySupplyRule ar = r.getActualRule(symbols);
 			algorithm.add(ar, symbols);
 		}
-		int n = algorithm.list.size();
-		for (int i=0; i<n; ++i) {
-			FactorySupplyRule on = algorithm.list.get(i);
-			if (on instanceof FSRForkedSequence) {
-				FSRForkedSequence onf = (FSRForkedSequence) on;
-				FactorySupplyRule fsrLeader = onf.leader;
-				fsrLeader.update(symbols);
-				TFForkedSequence nfs = new TFForkedSequence(onf.getName(), fsrLeader.getTheFactory(symbols), onf.singleValid);
-				int m = onf.followers.size();
-				for (int j=0; j<m; ++j) {
-					FactorySupplyRule ons = (FactorySupplyRule) onf.followers.get(j);
-					ons.update(symbols);
-					nfs.addFollower((TFSequence) ons.getTheFactory(symbols));
-				}
-				result.add(nfs);
-			} else {
-				result.add(on.getTheFactory(symbols));
-			}
+		for (FactorySupplyRule on : algorithm.list) {
+			on.update(symbols);
+			result.add(on.getTheFactory(symbols));
 		}
 		return result;
 	}
@@ -118,9 +99,6 @@ public class FSRChoice extends FSRBase {
 	@Override
 	public boolean update(RulesByName symbols) {
 		RulesByNameLocal localSymbols = new RulesByNameLocal(symbols, this);
-		for (FactorySupplyRule r : this.list) {
-			r.update(localSymbols);
-		}
 		List<TokenFactory> fs = this.getChoiceFactories(localSymbols);		
 		TokenFactory[] fsAsArray = fs.toArray(new TokenFactory[0]);
 		this.factory.setFactories(fsAsArray);

@@ -29,13 +29,13 @@ public class RuleDefinitionVisitor {
 	protected void visitSymbolList(TSymbolList symbolList, String name, RuleSupplyFlag flag) {		
 	}
 	
-	protected void visitChoiceOfSymbolsElement(RuleSupply choiceOfSymbolsElement, String ruleName, RuleSupplyFlag flag, int index) {		
+	protected void postChoiceOfSymbolsElementAccept(int index) {		
 	}
 
-	protected void visitChoiceOfSymbols(TChoiceOfSymbols choice, String name, RuleSupplyFlag flag) {		
+	protected void visitChoiceOfSymbols(TChoiceOfSymbols choiceOfSymbols, String name, RuleSupplyFlag flag) {		
 	}
 	
-	protected void visitSymbolSequenceElement(RuleSupply sequenceElement, String sequenceName, int index) {		
+	protected void postSymbolSequenceElementAccept(int index) {		
 	}
 	
 	protected void visitSymbolSequence(TSymbolSequence sequence, String name, RuleSupplyFlag flag) {

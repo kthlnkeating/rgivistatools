@@ -20,7 +20,7 @@ import com.raygroupintl.parser.StringPiece;
 import com.raygroupintl.parser.StringToken;
 import com.raygroupintl.parser.Token;
 
-class TString extends StringPiece implements StringToken {
+public class TString extends StringPiece implements StringToken {
 	private static final long serialVersionUID = 1L;
 	
 	public TString() {
