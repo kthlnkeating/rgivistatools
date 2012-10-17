@@ -16,11 +16,12 @@
 
 package com.raygroupintl.parsergen.ruledef;
 
+import com.raygroupintl.charlib.Predicate;
 import com.raygroupintl.charlib.PredicateFactory;
 import com.raygroupintl.parser.Token;
 import com.raygroupintl.parser.TokenStore;
 
-public class TCharSymbol extends TSequence implements RuleSupply {
+public class TCharSymbol extends TSequence implements CharSymbol {
 	public TCharSymbol(int length) {
 		super(length);
 	}
@@ -62,6 +63,23 @@ public class TCharSymbol extends TSequence implements RuleSupply {
 				pf.addRange(ch, chOther);
 			}
 		}
+	}
+	
+	@Override
+	public String getKey() {
+		return this.toValue().toString();
+	}
+	
+	@Override
+	public Predicate getPredicate() {
+		PredicateFactory pf = new PredicateFactory();
+		TCharSymbol.update(pf, this.get(0), (TokenStore) this.get(1));
+		TokenStore list = (TokenStore) this.get(2);
+		if (list != null) for (Token t : list) {
+			TokenStore casted = (TokenStore) t;
+			TCharSymbol.update(pf, casted.get(0), (TokenStore) casted.get(1));
+		}		
+		return pf.generate();		
 	}
 	
 	@Override

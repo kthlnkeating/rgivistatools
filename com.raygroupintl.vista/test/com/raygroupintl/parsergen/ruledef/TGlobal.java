@@ -1,4 +1,4 @@
-package com.raygroupintl.parsergen.rulebased;
+package com.raygroupintl.parsergen.ruledef;
 
 import com.raygroupintl.parser.TokenStore;
 import com.raygroupintl.parsergen.ruledef.TSequence;

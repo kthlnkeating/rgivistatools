@@ -1,14 +1,14 @@
-package com.raygroupintl.parsergen.rulebased;
+package com.raygroupintl.parsergen.ruledef;
 
 import com.raygroupintl.parser.TokenStore;
 import com.raygroupintl.parsergen.ruledef.TSequence;
 
-public class TNumber extends TSequence {
-	public TNumber(int length) {
+public class TObject extends TSequence {
+	public TObject(int length) {
 		super(length);
 	}
 
-	public TNumber(TokenStore store) {
+	public TObject(TokenStore store) {
 		super(store.toList());
 	}
 }

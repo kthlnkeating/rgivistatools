@@ -4,18 +4,15 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
-import com.raygroupintl.charlib.PredicateFactory;
-import com.raygroupintl.parser.Token;
-import com.raygroupintl.parser.TokenStore;
+import com.raygroupintl.charlib.Predicate;
+import com.raygroupintl.parsergen.ruledef.CharSymbol;
+import com.raygroupintl.parsergen.ruledef.ConstSymbol;
 import com.raygroupintl.parsergen.ruledef.RuleDefinitionVisitor;
+import com.raygroupintl.parsergen.ruledef.RuleSupplies;
 import com.raygroupintl.parsergen.ruledef.RuleSupply;
 import com.raygroupintl.parsergen.ruledef.RuleSupplyFlag;
-import com.raygroupintl.parsergen.ruledef.TCharSymbol;
-import com.raygroupintl.parsergen.ruledef.TChoiceOfSymbols;
-import com.raygroupintl.parsergen.ruledef.TConstSymbol;
-import com.raygroupintl.parsergen.ruledef.TSymbol;
-import com.raygroupintl.parsergen.ruledef.TSymbolList;
-import com.raygroupintl.parsergen.ruledef.TSymbolSequence;
+import com.raygroupintl.parsergen.ruledef.Symbol;
+import com.raygroupintl.parsergen.ruledef.SymbolList;
 
 public class DefinitionVisitor implements RuleDefinitionVisitor {
 	public Map<String, FactorySupplyRule> topRules  = new HashMap<String, FactorySupplyRule>();
@@ -27,18 +24,17 @@ public class DefinitionVisitor implements RuleDefinitionVisitor {
 		return this.allRules.get(index-1);
 	}
 	
+	private FactorySupplyRule acceptAndReturn(RuleSupplies rss, int index, String name, RuleSupplyFlag flag) {
+		rss.acceptElement(this, index, name, flag);
+		int rIndex = this.allRules.size();
+		return this.allRules.get(rIndex-1);
+	}
+	
 	@Override
-	public void visitCharSymbol(TCharSymbol charSymbol, String name, RuleSupplyFlag flag) {
-		PredicateFactory pf = new PredicateFactory();
-		TCharSymbol.update(pf, charSymbol.get(0), (TokenStore) charSymbol.get(1));
-		TokenStore list = (TokenStore) charSymbol.get(2);
-		if (list != null) for (Token t : list) {
-			TokenStore casted = (TokenStore) t;
-			TCharSymbol.update(pf, casted.get(0), (TokenStore) casted.get(1));
-		}		
-
-		String key = charSymbol.toValue().toString();
-		FSRChar result = new FSRChar(key, flag, pf.generate());
+	public void visitCharSymbol(CharSymbol charSymbol, String name, RuleSupplyFlag flag) {
+		Predicate p = charSymbol.getPredicate();
+		String key = charSymbol.getKey();
+		FSRChar result = new FSRChar(key, flag, p);
 		if (flag == RuleSupplyFlag.TOP) {
 			this.topRules.put(name, result);
 		}
@@ -46,10 +42,9 @@ public class DefinitionVisitor implements RuleDefinitionVisitor {
 	}
 	
 	@Override
-	public void visitConstSymbol(TConstSymbol constSymbol, String name, RuleSupplyFlag flag) {
-		String value = constSymbol.get(1).toValue().toString();
-		Token tIgnoreCase = constSymbol.get(4);
-		boolean ignoreCase = (tIgnoreCase != null) && (tIgnoreCase.toValue().toString().equals("1"));
+	public void visitConstSymbol(ConstSymbol constSymbol, String name, RuleSupplyFlag flag) {
+		String value = constSymbol.getValue();
+		boolean ignoreCase = constSymbol.getIgnoreCaseFlag();
 		FSRConst result = new FSRConst(value, ignoreCase, flag);
 		if (flag == RuleSupplyFlag.TOP) {
 			this.topRules.put(name, result);
@@ -58,8 +53,8 @@ public class DefinitionVisitor implements RuleDefinitionVisitor {
 	}
 	
 	@Override
-	public void visitSymbol(TSymbol symbol, String name, RuleSupplyFlag flag) {
-		String value = symbol.toValue().toString();
+	public void visitSymbol(Symbol symbol, String name, RuleSupplyFlag flag) {
+		String value = symbol.getValue();
 		FactorySupplyRule result = null;
 		if (flag == RuleSupplyFlag.TOP) {
 			result = new FSRCopy(name, value);
@@ -72,38 +67,28 @@ public class DefinitionVisitor implements RuleDefinitionVisitor {
 		this.allRules.add(result);
 	}
 	
-	public ListInfo getListInfo(TSymbolList symbolList, String name) {
+	public ListInfo getListInfo(SymbolList symbolList, String name) {
 		ListInfo result = new ListInfo();
-		TokenStore listInfoSpec = (TokenStore) symbolList.get(2);
-		if (listInfoSpec == null) {
-			return result;
-		}
-		RuleSupply delimiter = (RuleSupply) listInfoSpec.get(1);
-		result.delimiter = this.acceptAndReturn(delimiter, name + ".delimiter", RuleSupplyFlag.INNER_REQUIRED);
-		if (result.delimiter == null) {
-			return null;
-		}
-		TokenStore otherSpec = (TokenStore)listInfoSpec.get(2);
-		if (otherSpec != null) {
-			RuleSupply leftSpec = (RuleSupply) otherSpec.get(1);
-			result.left = this.acceptAndReturn(leftSpec, name + ".left", RuleSupplyFlag.INNER_REQUIRED);
-			RuleSupply rightSpec = (RuleSupply) otherSpec.get(3);
-			result.right = this.acceptAndReturn(rightSpec, name + ".right", RuleSupplyFlag.INNER_REQUIRED);
-			Token emptyAllowedSpec = otherSpec.get(5);
-			result.emptyAllowed = (emptyAllowedSpec != null) && (emptyAllowedSpec.toValue().toString().equals("1"));
-			Token noneAllowedSpec = otherSpec.get(7);
-			result.noneAllowed = (noneAllowedSpec != null) && (noneAllowedSpec.toValue().toString().equals("1"));
-			if ((result.left == null) || (result.right == null)) {
-				return null;
+		RuleSupply delimiter = symbolList.getDelimiter();
+		if (delimiter != null) {		
+			result.delimiter = this.acceptAndReturn(delimiter, name + ".delimiter", RuleSupplyFlag.INNER_REQUIRED);
+			RuleSupply leftSpec = symbolList.getLeftParanthesis();
+			RuleSupply rightSpec = symbolList.getRightParanthesis();
+			if ((leftSpec != null) || (rightSpec != null)) { 
+				result.left = this.acceptAndReturn(leftSpec, name + ".left", RuleSupplyFlag.INNER_REQUIRED);
+				result.right = this.acceptAndReturn(rightSpec, name + ".right", RuleSupplyFlag.INNER_REQUIRED);
+				result.emptyAllowed = symbolList.isEmptyAllowed();
+				result.noneAllowed = symbolList.isNoneAllowed();
+				// throw if only one is set
 			}
 		}
 		return result;
 	}
 
 	@Override
-	public void visitSymbolList(TSymbolList symbolList, String name, RuleSupplyFlag flag) {		
+	public void visitSymbolList(SymbolList symbolList, String name, RuleSupplyFlag flag) {		
 		RuleSupplyFlag innerFlag = flag.demoteInner();
-		RuleSupply ers = (RuleSupply) symbolList.get(1);
+		RuleSupply ers = symbolList.getElement();
 		FactorySupplyRule e = this.acceptAndReturn(ers, name + ".element", innerFlag);
 		ListInfo listInfo = this.getListInfo(symbolList, name);
 		if (listInfo == null) {
@@ -117,36 +102,28 @@ public class DefinitionVisitor implements RuleDefinitionVisitor {
 		this.allRules.add(result);
 	}
 	
-	@Override
-	public void visitChoiceOfSymbols(TChoiceOfSymbols choiceOfSymbols, String name, RuleSupplyFlag flag) {		
-		int index = 0;
-		FSRChoice result = new FSRChoice(name, flag);
-		for (Token t : choiceOfSymbols) {
-			RuleSupply r  = (RuleSupply) t;
-			FactorySupplyRule fsr = acceptAndReturn(r, name + "." + String.valueOf(index), flag.demoteInner()); 
-			result.add(fsr);
-			++index;
+	private void visitCollection(FSRCollection fsrCollection, RuleSupplies rss, String name, RuleSupplyFlag flag) {
+		int size = rss.getSize();
+		for (int index = 0; index<size; ++index) {
+			FactorySupplyRule fsr = acceptAndReturn(rss, index, name + "." + String.valueOf(index), RuleSupplyFlag.INNER_REQUIRED); 
+			fsrCollection.add(fsr);
 		}
 		if (flag == RuleSupplyFlag.TOP) {
-			this.topRules.put(name, result);
+			this.topRules.put(name, fsrCollection);
 		}
-		this.allRules.add(result);
+		this.allRules.add(fsrCollection);
 	}
 	
 	@Override
-	public void visitSymbolSequence(TSymbolSequence sequence, String name, RuleSupplyFlag flag) {
+	public void visitChoiceOfSymbols(RuleSupplies choiceOfSymbols, String name, RuleSupplyFlag flag) {		
+		FSRChoice result = new FSRChoice(name, flag);
+		this.visitCollection(result, choiceOfSymbols, name, flag);
+	}
+	
+	@Override
+	public void visitSymbolSequence(RuleSupplies sequence, String name, RuleSupplyFlag flag) {
 		FSRSequence result = new FSRSequence(name, flag);
-		int index = 0;
-		for (Token t : sequence) {
-			RuleSupply rs = (RuleSupply) t;
-			FactorySupplyRule fsr = acceptAndReturn(rs, name + "." + String.valueOf(index), RuleSupplyFlag.INNER_REQUIRED); 
-			result.add(fsr);
-			++index;
-		}
-		if (flag == RuleSupplyFlag.TOP) {
-			this.topRules.put(name, result);
-		}
-		this.allRules.add(result);
+		this.visitCollection(result, sequence, name, flag);
 	}
 	
 	public FactorySupplyRule getLastRule() {

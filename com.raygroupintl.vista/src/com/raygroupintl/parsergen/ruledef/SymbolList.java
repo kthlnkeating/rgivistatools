@@ -16,33 +16,11 @@
 
 package com.raygroupintl.parsergen.ruledef;
 
-import java.util.List;
-
-import com.raygroupintl.parser.TDelimitedList;
-import com.raygroupintl.parser.Token;
-
-public class TSymbolSequence extends TDelimitedList implements RuleSupplies {
-	public TSymbolSequence(List<Token> tokens) {
-		super(tokens);
-	}
-	
-	@Override
-	public void accept(RuleDefinitionVisitor visitor, String name, RuleSupplyFlag flag) {
-		if (this.size() == 1) {
-			((RuleSupply) this.get(0)).accept(visitor, name, flag);	
-		} else {
-			visitor.visitSymbolSequence(this, name, flag);			
-		}
-	}
-
-	@Override
-	public int getSize() {
-		return this.size();
-	}
-	
-	@Override
-	public void acceptElement(RuleDefinitionVisitor visitor, int index, String name, RuleSupplyFlag flag) {
-		RuleSupply rs = (RuleSupply) this.getDelimiterFreeToken(index);
-		rs.accept(visitor, name, flag);
-	}
+public interface SymbolList extends RuleSupply {
+	RuleSupply getElement();	
+	RuleSupply getDelimiter();
+	RuleSupply getLeftParanthesis();	
+	RuleSupply getRightParanthesis();
+	boolean isEmptyAllowed();
+	boolean isNoneAllowed();
 }

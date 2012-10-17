@@ -21,7 +21,7 @@ import java.util.List;
 import com.raygroupintl.parser.TDelimitedList;
 import com.raygroupintl.parser.Token;
 
-public class TChoiceOfSymbols extends TDelimitedList implements RuleSupply {
+public class TChoiceOfSymbols extends TDelimitedList implements RuleSupplies {
 	public TChoiceOfSymbols(List<Token> tokens) {
 		super(tokens);
 	}
@@ -33,5 +33,16 @@ public class TChoiceOfSymbols extends TDelimitedList implements RuleSupply {
 		} else {
 			visitor.visitChoiceOfSymbols(this, name, flag);
 		}
+	}
+	
+	@Override
+	public int getSize() {
+		return this.size();
+	}
+	
+	@Override
+	public void acceptElement(RuleDefinitionVisitor visitor, int index, String name, RuleSupplyFlag flag) {
+		RuleSupply rs = (RuleSupply) this.getDelimiterFreeToken(index);
+		rs.accept(visitor, name, flag);
 	}
 }

@@ -16,15 +16,27 @@
 
 package com.raygroupintl.parsergen.ruledef;
 
+import com.raygroupintl.parser.Token;
 import com.raygroupintl.parser.TokenStore;
 
-public class TConstSymbol extends TSequence implements RuleSupply {
+public class TConstSymbol extends TSequence implements ConstSymbol {
 	public TConstSymbol(int length) {
 		super(length);
 	}
 	
 	public TConstSymbol(TokenStore store) {
 		super(store.toList());
+	}
+	
+	@Override
+	public String getValue() {
+		return this.get(1).toValue().toString();
+	}
+	
+	@Override
+	public boolean getIgnoreCaseFlag() {
+		Token t = this.get(4);
+		return (t != null) && (t.toValue().toString().equals("1"));		
 	}
 	
 	@Override

@@ -131,4 +131,13 @@ public class DelimitedListStore implements TokenStore {
 	public Iterator<Token> iterator() {
 		return new TDelimitedListIterator(this.toList().iterator());
 	}
+	
+	public Token getDelimiterFreeToken(int index) {
+		if (index == 0) {
+			return this.get(0);
+		} else {
+			TokenStore ts = (TokenStore) this.get(index);
+			return ts.get(1);
+		}
+	}
 }

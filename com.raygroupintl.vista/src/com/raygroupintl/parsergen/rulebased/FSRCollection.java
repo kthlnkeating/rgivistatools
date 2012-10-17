@@ -14,26 +14,21 @@
 // limitations under the License.
 //---------------------------------------------------------------------------
 
-package com.raygroupintl.parsergen.ruledef;
+package com.raygroupintl.parsergen.rulebased;
 
+import java.util.ArrayList;
 import java.util.List;
 
-import com.raygroupintl.parser.CompositeToken;
-import com.raygroupintl.parser.ListStore;
-import com.raygroupintl.parser.Token;
+import com.raygroupintl.parsergen.ruledef.RuleSupplyFlag;
 
-public class TList extends ListStore implements CompositeToken {
-	public TList() {
-	}
+public abstract class FSRCollection extends FSRBase {
+	protected List<FactorySupplyRule> list = new ArrayList<FactorySupplyRule>();
 	
-	public TList(List<Token> tokens) {
-		super(tokens);
+	protected FSRCollection(RuleSupplyFlag flag) {
+		super(flag);
 	}
 
-	@Override
-	public void beautify() {
-		for (Token token : this) {
-			token.beautify();
-		}
+	public void add(FactorySupplyRule r) {
+		this.list.add(r);
 	}
 }

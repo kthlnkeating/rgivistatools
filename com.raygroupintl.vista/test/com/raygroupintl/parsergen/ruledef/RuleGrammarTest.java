@@ -1,4 +1,4 @@
-package com.raygroupintl.parser.annotation;
+package com.raygroupintl.parsergen.ruledef;
 
 import static org.junit.Assert.*;
 

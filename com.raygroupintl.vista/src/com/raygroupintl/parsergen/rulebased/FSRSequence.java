@@ -26,17 +26,12 @@ import com.raygroupintl.parser.TokenFactory;
 import com.raygroupintl.parsergen.AdapterSpecification;
 import com.raygroupintl.parsergen.ruledef.RuleSupplyFlag;
 
-public class FSRSequence extends FSRBase {
-	private List<FactorySupplyRule> list = new ArrayList<FactorySupplyRule>();
+public class FSRSequence extends FSRCollection {
 	private TFSequence factory;	
 	
 	public FSRSequence(String name, RuleSupplyFlag flag) {
 		super(flag);
 		this.factory = new TFSequence(name);
-	}
-	
-	public void add(FactorySupplyRule r) {
-		this.list.add(r);
 	}
 	
 	@Override

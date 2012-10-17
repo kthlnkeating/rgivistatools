@@ -19,5 +19,5 @@ package com.raygroupintl.parsergen.ruledef;
 import com.raygroupintl.parser.Empty;
 import com.raygroupintl.parser.EmptyToken;
 
-class TEmpty extends Empty implements EmptyToken {
+public class TEmpty extends Empty implements EmptyToken {
 }
