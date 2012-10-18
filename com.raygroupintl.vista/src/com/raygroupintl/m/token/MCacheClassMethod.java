@@ -18,14 +18,14 @@ package com.raygroupintl.m.token;
 
 import com.raygroupintl.m.parsetree.CacheClassMethod;
 import com.raygroupintl.m.parsetree.Node;
-import com.raygroupintl.parser.TokenStore;
+import com.raygroupintl.parser.Tokens;
 
 public class MCacheClassMethod extends MSequence {
 	public MCacheClassMethod(int length) {
 		super(length);
 	}
 	
-	public MCacheClassMethod(TokenStore store) {
+	public MCacheClassMethod(Tokens store) {
 		super(store);
 	}
 	

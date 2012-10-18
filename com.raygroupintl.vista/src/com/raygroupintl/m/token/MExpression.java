@@ -17,14 +17,14 @@
 package com.raygroupintl.m.token;
 
 import com.raygroupintl.m.parsetree.Node;
-import com.raygroupintl.parser.TokenStore;
+import com.raygroupintl.parser.Tokens;
 
 public class MExpression extends MSequence {
 	public MExpression(int length) {
 		super(length);
 	}
 
-	public MExpression(TokenStore store) {
+	public MExpression(Tokens store) {
 		super(store);
 	}
 

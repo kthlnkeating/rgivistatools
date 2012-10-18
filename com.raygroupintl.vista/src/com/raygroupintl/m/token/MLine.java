@@ -9,7 +9,7 @@ import com.raygroupintl.m.parsetree.NodeList;
 import com.raygroupintl.m.parsetree.ParentNode;
 import com.raygroupintl.parser.StringPiece;
 import com.raygroupintl.parser.Token;
-import com.raygroupintl.parser.TokenStore;
+import com.raygroupintl.parser.Tokens;
 
 public class MLine extends MSequence {
 	String tagName = "";
@@ -19,7 +19,7 @@ public class MLine extends MSequence {
 		super(length);
 	}
 
-	public MLine(TokenStore store) {
+	public MLine(Tokens store) {
 		super(store);
 	}
 
@@ -37,7 +37,7 @@ public class MLine extends MSequence {
 		if (paramsTokenWPars != null) {
 			Token paramTokens = paramsTokenWPars.getSubNodeToken(1);
 			if (paramTokens != null) {
-				TokenStore resultAsList = (TokenStore) paramTokens;
+				Tokens resultAsList = (Tokens) paramTokens;
 				int length = resultAsList.size();
 				if (length > 0) {
 					String[] result = new String[resultAsList.size()];
@@ -96,7 +96,7 @@ public class MLine extends MSequence {
 	public Line getNode() {
 		Line result = new Line(this.tagName, this.index, this.getLevel());
 		ParentNode currentParent = result;
-		TokenStore cmds = (TokenStore) this.get(4);
+		Tokens cmds = (Tokens) this.get(4);
 		if (cmds != null) {
 			NodeList<Node> nodes = null;
 			for (Iterator<Token> it = cmds.iterator(); it.hasNext();) {

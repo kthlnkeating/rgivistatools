@@ -20,6 +20,7 @@ import com.raygroupintl.m.parsetree.ErrorNode;
 import com.raygroupintl.m.parsetree.Node;
 import com.raygroupintl.m.struct.MError;
 import com.raygroupintl.parser.StringPiece;
+import com.raygroupintl.parser.TokensVisitor;
 
 public class MSyntaxError implements MToken {	
 	private int errorCode = MError.ERR_GENERAL_SYNTAX;
@@ -69,4 +70,8 @@ public class MSyntaxError implements MToken {
 	public MToken getSubNodeToken(int index) {
 		return null;
 	}	
+	
+	public void accept(TokensVisitor visitor) {
+		visitor.visitSingle();
+	}
 }

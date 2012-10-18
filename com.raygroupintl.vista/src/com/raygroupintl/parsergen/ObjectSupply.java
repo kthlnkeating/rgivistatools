@@ -22,12 +22,12 @@ import com.raygroupintl.parser.CompositeToken;
 import com.raygroupintl.parser.EmptyToken;
 import com.raygroupintl.parser.StringToken;
 import com.raygroupintl.parser.Token;
-import com.raygroupintl.parser.TokenStore;
+import com.raygroupintl.parser.Tokens;
 
 public interface ObjectSupply {
 	StringToken newString();
 	CompositeToken newSequence(int length);
-	CompositeToken newSequence(TokenStore store);
+	CompositeToken newSequence(Tokens store);
 	CompositeToken newList();
 	CompositeToken newDelimitedList(List<Token> tokens);
 	EmptyToken newEmpty();

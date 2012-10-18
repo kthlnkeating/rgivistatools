@@ -19,14 +19,14 @@ package com.raygroupintl.m.token;
 import com.raygroupintl.m.parsetree.Indirection;
 import com.raygroupintl.m.parsetree.Node;
 import com.raygroupintl.m.parsetree.Nodes;
-import com.raygroupintl.parser.TokenStore;
+import com.raygroupintl.parser.Tokens;
 
 public class MIndirection extends MSequence {
 	public MIndirection(int length) {
 		super(length);
 	}
 
-	public MIndirection(TokenStore store) {
+	public MIndirection(Tokens store) {
 		super(store);
 	}
 

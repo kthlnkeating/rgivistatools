@@ -18,16 +18,16 @@ package com.raygroupintl.m.token;
 
 import com.raygroupintl.m.parsetree.Node;
 import com.raygroupintl.parser.CompositeToken;
-import com.raygroupintl.parser.SequenceStore;
+import com.raygroupintl.parser.SequenceOfTokens;
 import com.raygroupintl.parser.Token;
-import com.raygroupintl.parser.TokenStore;
+import com.raygroupintl.parser.Tokens;
 
-public class MSequence extends SequenceStore implements MToken, CompositeToken {
+public class MSequence extends SequenceOfTokens implements MToken, CompositeToken {
 	public MSequence(int length) {
 		super(length);
 	}
 	
-	public MSequence(TokenStore store) {
+	public MSequence(Tokens store) {
 		super(store.toList());
 	}
 	

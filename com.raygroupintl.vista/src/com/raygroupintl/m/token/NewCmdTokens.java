@@ -21,7 +21,7 @@ import com.raygroupintl.m.parsetree.NewCmdNodes;
 import com.raygroupintl.m.parsetree.Node;
 import com.raygroupintl.m.parsetree.Nodes;
 import com.raygroupintl.parser.Token;
-import com.raygroupintl.parser.TokenStore;
+import com.raygroupintl.parser.Tokens;
 
 public final class NewCmdTokens {
 	public static final class MNewCmd extends MCommand {
@@ -49,7 +49,7 @@ public final class NewCmdTokens {
 			super(length);
 		}
 		
-		public MExclusiveAtomicNewCmd(TokenStore store) {
+		public MExclusiveAtomicNewCmd(Tokens store) {
 			super(store);
 		}
 		

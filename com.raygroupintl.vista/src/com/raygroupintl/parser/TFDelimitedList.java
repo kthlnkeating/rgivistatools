@@ -88,10 +88,10 @@ public class TFDelimitedList extends TokenFactory {
 					List<Token> list = Arrays.asList(tmpResult);
 					return this.convertList(objectSupply, list);
 				} else {		
-					List<Token> list = ((TokenStore) tailTokens).toList();
+					List<Token> list = ((Tokens) tailTokens).toList();
 					list.add(0, leadingToken);
 					int lastIndex = list.size() - 1;
-					List<Token> lastToken = ((TokenStore)list.get(lastIndex)).toList();
+					List<Token> lastToken = ((Tokens)list.get(lastIndex)).toList();
 					if ((lastToken.size() < 2) || (lastToken.get(1) == null)) {
 						CompositeToken newLast = objectSupply.newSequence(2);
 						newLast.addToken(lastToken.get(0));

@@ -17,14 +17,14 @@
 package com.raygroupintl.m.token;
 
 import com.raygroupintl.m.parsetree.Node;
-import com.raygroupintl.parser.TokenStore;
+import com.raygroupintl.parser.Tokens;
 
 public class MComment extends MSequence {
 	public MComment(int length) {
 		super(length);
 	}
 	
-	public MComment(TokenStore store) {
+	public MComment(Tokens store) {
 		super(store);
 	}
 	

@@ -20,9 +20,8 @@ import java.util.List;
 
 import com.raygroupintl.parser.CompositeToken;
 import com.raygroupintl.parser.StringToken;
-import com.raygroupintl.parser.TDelimitedList;
 import com.raygroupintl.parser.Token;
-import com.raygroupintl.parser.TokenStore;
+import com.raygroupintl.parser.Tokens;
 import com.raygroupintl.parsergen.ObjectSupply;
 
 public class DefaultObjectSupply implements ObjectSupply {
@@ -37,7 +36,7 @@ public class DefaultObjectSupply implements ObjectSupply {
 	}
 	
 	@Override
-	public CompositeToken newSequence(TokenStore store) {
+	public CompositeToken newSequence(Tokens store) {
 		return new TSequence(store.toList());
 	}
 	

@@ -19,10 +19,10 @@ package com.raygroupintl.parsergen.ruledef;
 import java.util.List;
 
 import com.raygroupintl.parser.CompositeToken;
-import com.raygroupintl.parser.SequenceStore;
+import com.raygroupintl.parser.SequenceOfTokens;
 import com.raygroupintl.parser.Token;
 
-public class TSequence extends SequenceStore implements CompositeToken {
+public class TSequence extends SequenceOfTokens implements CompositeToken {
 	public TSequence(int length) {
 		super(length);
 	}

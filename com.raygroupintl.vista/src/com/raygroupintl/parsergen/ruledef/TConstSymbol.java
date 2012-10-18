@@ -17,14 +17,14 @@
 package com.raygroupintl.parsergen.ruledef;
 
 import com.raygroupintl.parser.Token;
-import com.raygroupintl.parser.TokenStore;
+import com.raygroupintl.parser.Tokens;
 
 public class TConstSymbol extends TSequence implements ConstSymbol {
 	public TConstSymbol(int length) {
 		super(length);
 	}
 	
-	public TConstSymbol(TokenStore store) {
+	public TConstSymbol(Tokens store) {
 		super(store.toList());
 	}
 	

@@ -19,10 +19,10 @@ package com.raygroupintl.m.token;
 import com.raygroupintl.m.parsetree.Node;
 import com.raygroupintl.m.parsetree.Nodes;
 import com.raygroupintl.parser.CompositeToken;
-import com.raygroupintl.parser.ListStore;
+import com.raygroupintl.parser.ListOfTokens;
 import com.raygroupintl.parser.Token;
 
-public class MList extends ListStore implements MToken, CompositeToken {
+public class MList extends ListOfTokens implements MToken, CompositeToken {
 	public MList() {
 		super();
 	}

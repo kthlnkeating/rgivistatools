@@ -18,16 +18,42 @@ package com.raygroupintl.parser;
 
 import java.util.List;
 
-public class TDelimitedList extends DelimitedListStore implements CompositeToken {
-	public TDelimitedList(List<Token> tokens) {
-		super(tokens);
+public abstract class CollectionOfTokens implements Tokens {
+	private static TokensVisitor TOKENS_VISITOR = new TokensVisitor();
+		
+	protected List<Token> tokens;
+
+	@Override
+	public Token get(int index0, int index1) {
+		Tokens ts = this.getTokens(index0);
+		if (ts == null) {
+			return null;
+		} else {
+			return ts.get(index1);
+		}
+	}
+	
+	@Override
+	public Token get(int index0, int index1, int index2) {
+		Tokens ts = this.getTokens(index0);
+		if (ts == null) {
+			return null;
+		} else {
+			return ts.get(index1, index2);
+		}
 	}
 
 	@Override
-	public void beautify() {
-		for (Token token : this.all()) {
-			token.beautify();
+	public Tokens getTokens(int index) {
+		Token t = this.get(index);
+		if (t == null) {
+			return null;
+		} else {
+			return TOKENS_VISITOR.toTokenStore(t);
 		}
 	}
-}
 
+	public void accept(TokensVisitor visitor) {
+		visitor.visitMultiple(this);
+	}
+}

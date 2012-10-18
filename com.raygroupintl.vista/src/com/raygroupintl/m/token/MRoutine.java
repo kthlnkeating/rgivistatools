@@ -18,6 +18,7 @@ import com.raygroupintl.m.parsetree.Routine;
 import com.raygroupintl.m.struct.MError;
 import com.raygroupintl.parser.StringPiece;
 import com.raygroupintl.parser.Token;
+import com.raygroupintl.parser.TokensVisitor;
 
 public class MRoutine implements MToken {
 	private String name;
@@ -168,5 +169,9 @@ public class MRoutine implements MToken {
 	@Override
 	public MToken getSubNodeToken(int index) {
 		return null;
-	}	
+	}
+	
+	public void accept(TokensVisitor visitor) {
+		visitor.visitSingle();
+	}
 }

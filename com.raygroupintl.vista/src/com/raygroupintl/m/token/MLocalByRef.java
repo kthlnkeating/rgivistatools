@@ -20,14 +20,14 @@ import com.raygroupintl.m.parsetree.Local;
 import com.raygroupintl.m.parsetree.LocalReference;
 import com.raygroupintl.m.parsetree.Node;
 import com.raygroupintl.parser.StringPiece;
-import com.raygroupintl.parser.TokenStore;
+import com.raygroupintl.parser.Tokens;
 
 public class MLocalByRef extends MSequence {
 	public MLocalByRef(int length) {
 		super(length);
 	}
 
-	public MLocalByRef(TokenStore store) {
+	public MLocalByRef(Tokens store) {
 		super(store);
 	}
 

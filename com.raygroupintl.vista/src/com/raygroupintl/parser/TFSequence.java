@@ -149,7 +149,7 @@ public class TFSequence extends TokenFactory {
 	
 	public void setSequenceTargetType(Class<? extends CompositeToken> cls) {
 		this.constructor = this.getConstructor(cls, Integer.TYPE);
-		this.constructor2 = this.getConstructor(cls, TokenStore.class);
+		this.constructor2 = this.getConstructor(cls, Tokens.class);
 		
 	}
 	

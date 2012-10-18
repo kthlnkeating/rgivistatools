@@ -25,7 +25,7 @@ import com.raygroupintl.m.parsetree.Node;
 import com.raygroupintl.m.parsetree.PostConditional;
 import com.raygroupintl.parser.StringPiece;
 import com.raygroupintl.parser.Token;
-import com.raygroupintl.parser.TokenStore;
+import com.raygroupintl.parser.Tokens;
 
 public class BasicTokens {
 	public static class MTFanoutLabelA extends MTokenCopy {
@@ -91,7 +91,7 @@ public class BasicTokens {
 			super(length);
 		}
 		
-		public MTEnvironmentFanoutRoutine(TokenStore store) {
+		public MTEnvironmentFanoutRoutine(Tokens store) {
 			super(store);
 		}
 		
@@ -107,7 +107,7 @@ public class BasicTokens {
 			super(length);
 		}
 		
-		public MPostCondition(TokenStore store) {
+		public MPostCondition(Tokens store) {
 			super(store);
 		}
 		

@@ -1,6 +1,6 @@
 package com.raygroupintl.parsergen.ruledef;
 
-import com.raygroupintl.parser.TokenStore;
+import com.raygroupintl.parser.Tokens;
 import com.raygroupintl.parsergen.ruledef.TSequence;
 
 public class TGlobal extends TSequence {
@@ -8,7 +8,7 @@ public class TGlobal extends TSequence {
 		super(length);
 	}
 	
-	public TGlobal(TokenStore store) {
+	public TGlobal(Tokens store) {
 		super(store.toList());
 	}
 }

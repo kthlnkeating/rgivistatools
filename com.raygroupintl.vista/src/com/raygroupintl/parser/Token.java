@@ -18,6 +18,6 @@ package com.raygroupintl.parser;
 
 public interface Token {
 	StringPiece toValue();
-	
+	void accept(TokensVisitor visitor);
 	void beautify();
 }

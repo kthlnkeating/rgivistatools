@@ -18,7 +18,6 @@ package com.raygroupintl.parsergen.ruledef;
 
 import java.util.List;
 
-import com.raygroupintl.parser.TDelimitedList;
 import com.raygroupintl.parser.Token;
 
 public class TChoiceOfSymbols extends TDelimitedList implements RuleSupplies {

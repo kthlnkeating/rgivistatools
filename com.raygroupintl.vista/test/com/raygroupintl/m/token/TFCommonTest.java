@@ -9,20 +9,20 @@ import com.raygroupintl.parser.SyntaxErrorException;
 import com.raygroupintl.parser.Text;
 import com.raygroupintl.parser.Token;
 import com.raygroupintl.parser.TokenFactory;
-import com.raygroupintl.parser.TokenStore;
+import com.raygroupintl.parser.Tokens;
 import com.raygroupintl.parsergen.ObjectSupply;
 
 public class TFCommonTest {
 	private static void checkObjectType(Token t) {
 		Assert.assertTrue(t instanceof MToken);
 		if (t instanceof MSequence) {
-			for (Token r : (TokenStore) t) {
+			for (Token r : (Tokens) t) {
 				if (r != null) checkObjectType(r);
 			}
 			return;
 		}
 		if (t instanceof MList) {
-			for (Token r : (TokenStore) t) {
+			for (Token r : (Tokens) t) {
 				if (r != null) checkObjectType(r);
 			}
 			return;			

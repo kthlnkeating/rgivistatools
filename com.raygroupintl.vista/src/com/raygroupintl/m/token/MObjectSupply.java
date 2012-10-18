@@ -21,7 +21,7 @@ import java.util.List;
 import com.raygroupintl.parser.CompositeToken;
 import com.raygroupintl.parser.EmptyToken;
 import com.raygroupintl.parser.Token;
-import com.raygroupintl.parser.TokenStore;
+import com.raygroupintl.parser.Tokens;
 import com.raygroupintl.parsergen.ObjectSupply;
 
 public class MObjectSupply implements ObjectSupply {
@@ -36,7 +36,7 @@ public class MObjectSupply implements ObjectSupply {
 	}
 	
 	@Override
-	public MSequence newSequence(TokenStore store) {
+	public MSequence newSequence(Tokens store) {
 		return new MSequence(store);
 	}
 	

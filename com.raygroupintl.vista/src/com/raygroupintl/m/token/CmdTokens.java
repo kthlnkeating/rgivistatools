@@ -28,7 +28,7 @@ import com.raygroupintl.m.parsetree.ReadCmd;
 import com.raygroupintl.m.parsetree.WriteCmd;
 import com.raygroupintl.m.parsetree.XecuteCmd;
 import com.raygroupintl.parser.Token;
-import com.raygroupintl.parser.TokenStore;
+import com.raygroupintl.parser.Tokens;
 
 class CmdTokens {
 	static class B extends MCommand {
@@ -124,7 +124,7 @@ class CmdTokens {
 
 		@Override
 		public Node getNode() {
-			TokenStore argument = (TokenStore) this.getArgument();
+			Tokens argument = (Tokens) this.getArgument();
 			if (argument != null) {
 				Nodes<Node> node = NodeUtilities.getNodes(argument, argument.size());
 				return new IfCmd(node);

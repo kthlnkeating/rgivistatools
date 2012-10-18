@@ -21,20 +21,20 @@ import com.raygroupintl.m.parsetree.Node;
 import com.raygroupintl.m.parsetree.NodeList;
 import com.raygroupintl.parser.StringPiece;
 import com.raygroupintl.parser.Token;
-import com.raygroupintl.parser.TokenStore;
+import com.raygroupintl.parser.Tokens;
 
 public class MGlobal extends MSequence {
 	public MGlobal(int length) {
 		super(length);
 	}
 
-	public MGlobal(TokenStore store) {
+	public MGlobal(Tokens store) {
 		super(store);
 	}
 
 	@Override
 	public Node getNode() {
-		TokenStore actual = (TokenStore) this.get(1);
+		Tokens actual = (Tokens) this.get(1);
 		if (actual.get(0) != null) {
 			return NodeUtilities.getNodes(actual, actual.size());
 		} else {

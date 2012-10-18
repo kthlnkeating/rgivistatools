@@ -22,25 +22,25 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.NoSuchElementException;
 
-public class SequenceStore implements TokenStore {
+public class SequenceOfTokens extends CollectionOfTokens {
 	private class SequenceStoreIterator implements Iterator<Token> {
 		private Iterator<Token> iterator;
 		private int iteratorIndex;
 				
 		public SequenceStoreIterator() {			
-			if (SequenceStore.this.tokens != null) {
-				this.iterator = SequenceStore.this.tokens.iterator();
+			if (SequenceOfTokens.this.tokens != null) {
+				this.iterator = SequenceOfTokens.this.tokens.iterator();
 			}
 		}
 		
 		@Override
 	    public boolean hasNext() {
-			return this.iteratorIndex < SequenceStore.this.index;
+			return this.iteratorIndex < SequenceOfTokens.this.index;
 	    }
 	
 		@Override
 		public Token next() throws NoSuchElementException {
-			if (this.iteratorIndex < SequenceStore.this.index) {
+			if (this.iteratorIndex < SequenceOfTokens.this.index) {
 				++this.iteratorIndex;
 				return this.iterator.next();
 			} else {
@@ -54,21 +54,20 @@ public class SequenceStore implements TokenStore {
 		}		
 	}
 
-	private List<Token> tokens;
 	private int index = 0;
 	private int length = 0;
 	
-	public SequenceStore(int length) {
+	public SequenceOfTokens(int length) {
 		this.length = length;
 	}
 
-	public SequenceStore(List<Token> tokens) {
+	public SequenceOfTokens(List<Token> tokens) {
 		this.tokens = tokens;
 		this.index = tokens.size();
 		this.length = tokens.size();
 	}
 
-	public SequenceStore(Token token0, Token token1) {
+	public SequenceOfTokens(Token token0, Token token1) {
 		this.tokens = new ArrayList<Token>(2);
 		this.tokens.add(token0);
 		this.tokens.add(token1);

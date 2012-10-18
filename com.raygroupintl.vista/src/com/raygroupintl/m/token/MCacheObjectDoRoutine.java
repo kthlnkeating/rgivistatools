@@ -18,14 +18,14 @@ package com.raygroupintl.m.token;
 
 import com.raygroupintl.m.parsetree.CacheObjectDoRoutine;
 import com.raygroupintl.m.parsetree.Node;
-import com.raygroupintl.parser.TokenStore;
+import com.raygroupintl.parser.Tokens;
 
 public class MCacheObjectDoRoutine extends MSequence {
 	public MCacheObjectDoRoutine(int length) {
 		super(length);
 	}
 	
-	public MCacheObjectDoRoutine(TokenStore store) {
+	public MCacheObjectDoRoutine(Tokens store) {
 		super(store);
 	}
 	

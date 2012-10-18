@@ -19,14 +19,14 @@ package com.raygroupintl.m.token;
 import com.raygroupintl.m.parsetree.AtomicDo;
 import com.raygroupintl.m.parsetree.Node;
 import com.raygroupintl.parser.Token;
-import com.raygroupintl.parser.TokenStore;
+import com.raygroupintl.parser.Tokens;
 
 public class MDoArgument extends MSequence {
 	public MDoArgument(int length) {
 		super(length);
 	}
 	
-	public MDoArgument(TokenStore store) {
+	public MDoArgument(Tokens store) {
 		super(store);
 	}
 	

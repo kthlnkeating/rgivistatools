@@ -20,10 +20,10 @@ import java.util.List;
 
 import com.raygroupintl.m.parsetree.Node;
 import com.raygroupintl.parser.CompositeToken;
-import com.raygroupintl.parser.DelimitedListStore;
+import com.raygroupintl.parser.DelimitedListOfTokens;
 import com.raygroupintl.parser.Token;
 
-public class MDelimitedList extends DelimitedListStore implements MToken, CompositeToken {
+public class MDelimitedList extends DelimitedListOfTokens implements MToken, CompositeToken {
 	public MDelimitedList(List<Token> tokens) {
 		super(tokens);
 	}

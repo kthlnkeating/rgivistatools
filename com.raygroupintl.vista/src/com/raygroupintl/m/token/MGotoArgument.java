@@ -19,14 +19,14 @@ package com.raygroupintl.m.token;
 import com.raygroupintl.m.parsetree.AtomicGoto;
 import com.raygroupintl.m.parsetree.Node;
 import com.raygroupintl.parser.Token;
-import com.raygroupintl.parser.TokenStore;
+import com.raygroupintl.parser.Tokens;
 
 public class MGotoArgument extends MSequence {
 	public MGotoArgument(int length) {
 		super(length);
 	}
 	
-	public MGotoArgument(TokenStore store) {
+	public MGotoArgument(Tokens store) {
 		super(store);
 	}
 	

@@ -31,7 +31,7 @@ import com.raygroupintl.parser.TFSequence;
 import com.raygroupintl.parser.Token;
 import com.raygroupintl.parser.TokenFactory;
 import com.raygroupintl.parser.TokenFactorySupply;
-import com.raygroupintl.parser.TokenStore;
+import com.raygroupintl.parser.Tokens;
 
 public class TFIntrinsic extends TokenFactorySupply {		
 	public static class TIntrinsicVariable extends MSequence {
@@ -39,7 +39,7 @@ public class TFIntrinsic extends TokenFactorySupply {
 			super(length);
 		}
 		
-		public TIntrinsicVariable(TokenStore store) {
+		public TIntrinsicVariable(Tokens store) {
 			super(store);
 		}
 		
@@ -55,7 +55,7 @@ public class TFIntrinsic extends TokenFactorySupply {
 			super(length);
 		}
 		
-		private TIntrinsicFunction(TokenStore store) {
+		private TIntrinsicFunction(Tokens store) {
 			super(store);
 		}
 		

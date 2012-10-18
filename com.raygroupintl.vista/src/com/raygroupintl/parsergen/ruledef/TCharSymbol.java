@@ -19,14 +19,14 @@ package com.raygroupintl.parsergen.ruledef;
 import com.raygroupintl.charlib.Predicate;
 import com.raygroupintl.charlib.PredicateFactory;
 import com.raygroupintl.parser.Token;
-import com.raygroupintl.parser.TokenStore;
+import com.raygroupintl.parser.Tokens;
 
 public class TCharSymbol extends TSequence implements CharSymbol {
 	public TCharSymbol(int length) {
 		super(length);
 	}
 	
-	public TCharSymbol(TokenStore store) {
+	public TCharSymbol(Tokens store) {
 		super(store.toList());
 	}
 	
@@ -45,7 +45,7 @@ public class TCharSymbol extends TSequence implements CharSymbol {
 		}
 	}
 	
-	public static void update(PredicateFactory pf, Token sign, TokenStore spec) {
+	public static void update(PredicateFactory pf, Token sign, Tokens spec) {
 		boolean exclude = (sign != null) && (sign.toValue().charAt(0) == '-');
 		char ch = getChar(spec.get(0).toValue().toString());
 		Token tRangeBound = spec.get(1);
@@ -56,7 +56,7 @@ public class TCharSymbol extends TSequence implements CharSymbol {
 				pf.addChar(ch);
 			}
 		} else {			
-			char chOther = getChar(((TokenStore) tRangeBound).get(1).toValue().toString());
+			char chOther = getChar(((Tokens) tRangeBound).get(1).toValue().toString());
 			if (exclude) {
 				pf.removeRange(ch, chOther);
 			} else {
@@ -73,11 +73,11 @@ public class TCharSymbol extends TSequence implements CharSymbol {
 	@Override
 	public Predicate getPredicate() {
 		PredicateFactory pf = new PredicateFactory();
-		TCharSymbol.update(pf, this.get(0), (TokenStore) this.get(1));
-		TokenStore list = (TokenStore) this.get(2);
+		TCharSymbol.update(pf, this.get(0), (Tokens) this.get(1));
+		Tokens list = (Tokens) this.get(2);
 		if (list != null) for (Token t : list) {
-			TokenStore casted = (TokenStore) t;
-			TCharSymbol.update(pf, casted.get(0), (TokenStore) casted.get(1));
+			Tokens casted = (Tokens) t;
+			TCharSymbol.update(pf, casted.get(0), (Tokens) casted.get(1));
 		}		
 		return pf.generate();		
 	}

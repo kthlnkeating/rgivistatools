@@ -20,7 +20,7 @@ import com.raygroupintl.m.parsetree.ForLoop;
 import com.raygroupintl.m.parsetree.Node;
 import com.raygroupintl.m.parsetree.NodeList;
 import com.raygroupintl.parser.Token;
-import com.raygroupintl.parser.TokenStore;
+import com.raygroupintl.parser.Tokens;
 
 public class MForCmd extends MCommandBase {
 	public static class MForCmdEQRHS extends MSequence {
@@ -28,7 +28,7 @@ public class MForCmd extends MCommandBase {
 			super(length);
 		}
 		
-		public MForCmdEQRHS(TokenStore store) {
+		public MForCmdEQRHS(Tokens store) {
 			super(store);
 		}
 		

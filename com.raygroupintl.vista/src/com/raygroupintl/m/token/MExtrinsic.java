@@ -18,14 +18,14 @@ package com.raygroupintl.m.token;
 
 import com.raygroupintl.m.parsetree.Extrinsic;
 import com.raygroupintl.m.parsetree.Node;
-import com.raygroupintl.parser.TokenStore;
+import com.raygroupintl.parser.Tokens;
 
 public class MExtrinsic extends MSequence {
 	public MExtrinsic(int length) {
 		super(length);
 	}
 
-	public MExtrinsic(TokenStore store) {
+	public MExtrinsic(Tokens store) {
 		super(store);
 	}
 

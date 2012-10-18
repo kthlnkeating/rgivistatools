@@ -17,14 +17,14 @@
 package com.raygroupintl.parsergen.ruledef;
 
 import com.raygroupintl.parser.Token;
-import com.raygroupintl.parser.TokenStore;
+import com.raygroupintl.parser.Tokens;
 
 public class TSymbolList extends TSequence implements SymbolList {
 	public TSymbolList(int length) {
 		super(length);
 	}
 	
-	public TSymbolList(TokenStore store) {
+	public TSymbolList(Tokens store) {
 		super(store.toList());
 	}
 	
@@ -33,41 +33,23 @@ public class TSymbolList extends TSequence implements SymbolList {
 		return (RuleSupply) this.get(1);
 	}
 	
-	private static TokenStore getGrandChild(TokenStore parent, int index0, int index1) {
-		TokenStore gc = (TokenStore) parent.get(index0);
-		if (gc == null) {
-			return null;
-		} else {
-			return (TokenStore) gc.get(index1);
-		}		
-	}
-	
 	@Override
 	public RuleSupply getDelimiter() {
-		return (RuleSupply) getGrandChild(this, 2, 1);
-	}
-	
-	private static Token getGreatGrandChild(TokenStore parent, int index0, int index1, int index2) {
-		TokenStore gc = getGrandChild(parent, index0, index1);
-		if (gc == null) {
-			return null;
-		} else {
-			return gc.get(index2);
-		}		
+		return (RuleSupply) this.get(2, 1);
 	}
 	
 	@Override
 	public RuleSupply getLeftParanthesis() {
-		return (RuleSupply) getGreatGrandChild(this, 2, 2, 1);
+		return (RuleSupply) this.get(2, 2, 1);
 	}
 	
 	@Override
 	public RuleSupply getRightParanthesis() {
-		return (RuleSupply) getGreatGrandChild(this, 2, 2, 3);
+		return (RuleSupply)  this.get(2, 2, 3);
 	}
 	
 	private boolean getFlag(int index) {
-		Token f = getGreatGrandChild(this, 2, 2, index);
+		Token f = this.get(2, 2, index);
 		if (f == null) {
 			return false;
 		} else {

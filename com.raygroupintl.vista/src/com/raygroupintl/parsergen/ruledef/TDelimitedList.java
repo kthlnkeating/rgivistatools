@@ -14,36 +14,24 @@
 // limitations under the License.
 //---------------------------------------------------------------------------
 
-package com.raygroupintl.m.token;
+package com.raygroupintl.parsergen.ruledef;
 
-import com.raygroupintl.m.parsetree.ActualList;
-import com.raygroupintl.m.parsetree.IgnorableNode;
-import com.raygroupintl.m.parsetree.Node;
+import java.util.List;
+
+import com.raygroupintl.parser.CompositeToken;
+import com.raygroupintl.parser.DelimitedListOfTokens;
 import com.raygroupintl.parser.Token;
-import com.raygroupintl.parser.Tokens;
 
-public class MActualList extends MSequence {
-	public MActualList(int length) {
-		super(length);
-	}
-
-	public MActualList(Tokens store) {
-		super(store);
+public class TDelimitedList extends DelimitedListOfTokens implements CompositeToken {
+	public TDelimitedList(List<Token> tokens) {
+		super(tokens);
 	}
 
 	@Override
-	public Node getNode() {		
-		Tokens tokens = (Tokens) this.get(1);
-		if (tokens == null) {
-			return new IgnorableNode();
-		} else {
-			int size = tokens.size();
-			ActualList nodes = new ActualList(size);
-			for (Token t : tokens) {
-				Node node = ((MToken) t).getNode();
-				nodes.add(node);
-			}
-			return nodes;
+	public void beautify() {
+		for (Token token : this.all()) {
+			token.beautify();
 		}
 	}
 }
+

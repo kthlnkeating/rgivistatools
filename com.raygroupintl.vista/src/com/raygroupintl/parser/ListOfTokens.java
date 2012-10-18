@@ -21,13 +21,11 @@ import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
 
-public class ListStore implements TokenStore {
-	private List<Token> tokens;
-		
-	public ListStore() {
+public class ListOfTokens extends CollectionOfTokens {
+	public ListOfTokens() {
 	}
 	
-	public ListStore(List<Token> tokens) {
+	public ListOfTokens(List<Token> tokens) {
 		this.tokens = tokens;
 	}
 

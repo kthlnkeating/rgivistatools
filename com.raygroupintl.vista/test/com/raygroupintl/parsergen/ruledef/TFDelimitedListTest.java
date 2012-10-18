@@ -20,7 +20,7 @@ import com.raygroupintl.parser.TFString;
 import com.raygroupintl.parser.Text;
 import com.raygroupintl.parser.Token;
 import com.raygroupintl.parser.TokenFactory;
-import com.raygroupintl.parser.TokenStore;
+import com.raygroupintl.parser.Tokens;
 import com.raygroupintl.parsergen.ObjectSupply;
 import com.raygroupintl.parsergen.ruledef.DefaultObjectSupply;
 
@@ -45,7 +45,7 @@ public class TFDelimitedListTest {
 	public static void validCheckBasic(TFDelimitedList f, String v, String expected, String[] iteratorResults) {
 		Text text = new Text(v);
 		try {
-			TokenStore t = (TokenStore) f.tokenize(text, objectSupply);
+			Tokens t = (Tokens) f.tokenize(text, objectSupply);
 			validTokenCheck(t.toValue(), expected);
 			int index = 0;
 			Iterator<Token> it = null;

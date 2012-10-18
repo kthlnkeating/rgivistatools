@@ -16,5 +16,5 @@
 
 package com.raygroupintl.parser;
 
-public interface CompositeToken extends Token, TokenStore {
+public interface CompositeToken extends Token, Tokens {
 }

@@ -18,14 +18,14 @@ package com.raygroupintl.m.token;
 
 import com.raygroupintl.m.parsetree.Node;
 import com.raygroupintl.m.parsetree.StringLiteral;
-import com.raygroupintl.parser.TokenStore;
+import com.raygroupintl.parser.Tokens;
 
 public class MStringLiteral extends MSequence {
 	public MStringLiteral(int length) {
 		super(length);
 	}
 
-	public MStringLiteral(TokenStore store) {
+	public MStringLiteral(Tokens store) {
 		super(store);
 	}
 

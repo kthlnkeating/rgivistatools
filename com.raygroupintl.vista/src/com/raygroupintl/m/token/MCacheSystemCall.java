@@ -18,14 +18,14 @@ package com.raygroupintl.m.token;
 
 import com.raygroupintl.m.parsetree.CacheSystemCall;
 import com.raygroupintl.m.parsetree.Node;
-import com.raygroupintl.parser.TokenStore;
+import com.raygroupintl.parser.Tokens;
 
 public class MCacheSystemCall extends MSequence {
 	public MCacheSystemCall(int length) {
 		super(length);
 	}
 	
-	public MCacheSystemCall(TokenStore store) {
+	public MCacheSystemCall(Tokens store) {
 		super(store);
 	}
 	

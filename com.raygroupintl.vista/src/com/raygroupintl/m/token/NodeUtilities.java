@@ -20,7 +20,7 @@ import com.raygroupintl.m.parsetree.Node;
 import com.raygroupintl.m.parsetree.NodeList;
 import com.raygroupintl.m.parsetree.Nodes;
 import com.raygroupintl.parser.Token;
-import com.raygroupintl.parser.TokenStore;
+import com.raygroupintl.parser.Tokens;
 
 class NodeUtilities {
 	static Nodes<Node> getNodes(Iterable<Token> iterable, int size) {
@@ -38,7 +38,7 @@ class NodeUtilities {
 	}
 	
 	static NodeList<Node> getSubscriptNodes(Token subscriptToken) {
-		TokenStore subscripts = (TokenStore) ((MToken) subscriptToken).getSubNodeToken(1);
+		Tokens subscripts = (Tokens) ((MToken) subscriptToken).getSubNodeToken(1);
 		int size = subscripts.size();
 		NodeList<Node> nodes = new NodeList<>(size);
 		for (Token t : subscripts) {

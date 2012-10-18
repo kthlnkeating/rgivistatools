@@ -22,7 +22,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.NoSuchElementException;
 
-public class DelimitedListStore implements TokenStore {
+public class DelimitedListOfTokens extends CollectionOfTokens {
 	private static class TDelimitedListIterator implements Iterator<Token> {
 		private Iterator<Token> iterator;
 		boolean firstNextCall = true;
@@ -43,7 +43,7 @@ public class DelimitedListStore implements TokenStore {
 				return this.iterator.next();
 			} else {
 				Token rawFullResult = this.iterator.next();
-				TokenStore fullResult = (TokenStore) rawFullResult;
+				Tokens fullResult = (Tokens) rawFullResult;
 				Token result = fullResult.get(1);
 				return result;
 			}
@@ -55,9 +55,7 @@ public class DelimitedListStore implements TokenStore {
 		}		
 	}
 
-	private List<Token> tokens;
-
-	public DelimitedListStore(List<Token> tokens) {
+	public DelimitedListOfTokens(List<Token> tokens) {
 		this.tokens = tokens;
 	}
 
@@ -136,7 +134,7 @@ public class DelimitedListStore implements TokenStore {
 		if (index == 0) {
 			return this.get(0);
 		} else {
-			TokenStore ts = (TokenStore) this.get(index);
+			Tokens ts = this.getTokens(index);
 			return ts.get(1);
 		}
 	}
