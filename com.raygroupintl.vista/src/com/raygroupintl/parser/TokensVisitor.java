@@ -27,8 +27,9 @@ public class TokensVisitor {
 		this.result = store;
 	}
 	
-	public Tokens toTokenStore(Token token) {
-		token.accept(this);
-		return this.result;
+	public static Tokens toTokens(Token token) {
+		TokensVisitor v = new TokensVisitor();
+		token.accept(v);
+		return v.result;
 	}	
 }

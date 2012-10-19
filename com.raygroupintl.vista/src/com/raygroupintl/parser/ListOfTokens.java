@@ -17,7 +17,6 @@
 package com.raygroupintl.parser;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
 
@@ -50,28 +49,6 @@ public class ListOfTokens extends CollectionOfTokens {
 	}
 	
 	@Override
-	public List<Token> toList() {
-		if (this.tokens == null) {
-			return Collections.emptyList();
-		} else {
-			return this.tokens;
-		}
-	}
-
-	@Override
-	public void setLength(int length) {		
-	}
-
-	@Override
-	public void resetIndex(int index) {		
-	}
-	
-	@Override
-	public boolean isAllNull() {
-		return (this.tokens == null) || (this.tokens.size() == 0);
-	}
-
-	@Override
 	public int size() {
 		return this.tokens == null ? 0 : this.tokens.size();
 	}
@@ -88,6 +65,6 @@ public class ListOfTokens extends CollectionOfTokens {
 
 	@Override
 	public Iterator<Token> iterator() {
-		return this.toList().iterator();
+		return this.tokens.iterator();
 	}
 }

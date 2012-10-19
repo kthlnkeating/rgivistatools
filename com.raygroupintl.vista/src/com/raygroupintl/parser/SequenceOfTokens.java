@@ -105,11 +105,6 @@ public class SequenceOfTokens extends CollectionOfTokens {
 	}
 	
 	@Override
-	public List<Token> toList() {
-		return this.tokens;
-	}
-
-	@Override
 	public void addToken(Token token) {
 		++index;
 		if (token == null) {
@@ -137,7 +132,6 @@ public class SequenceOfTokens extends CollectionOfTokens {
 		}
 	}
 
-	@Override
 	public void setLength(int length) {
 		this.length = length;
 		for (int i = this.index; index<tokens.size(); ++index) {
@@ -145,16 +139,14 @@ public class SequenceOfTokens extends CollectionOfTokens {
 		}				
 	}
 	
-	@Override
-	public boolean isAllNull() {
-		return this.tokens == null;
-	}
-
-	@Override
 	public void resetIndex(int index) {
 		this.index = index;
 	}
 	
+	public boolean isAllNull() {
+		return this.tokens == null;
+	}
+
 	@Override
 	public boolean hasToken() {
 		return this.index > 0;

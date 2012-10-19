@@ -16,9 +16,7 @@
 
 package com.raygroupintl.parser;
 
-import java.util.ArrayList;
 import java.util.Iterator;
-import java.util.List;
 import java.util.NoSuchElementException;
 
 import com.raygroupintl.struct.IterableSingle;
@@ -38,7 +36,7 @@ public class DelimitedListOfTokens extends CollectionOfTokens {
 				return super.next();
 			} else {
 				Token t = super.next();
-				Tokens tokens = TOKENS_VISITOR.toTokenStore(t);
+				Tokens tokens = TokensVisitor.toTokens(t);
 				return tokens.getToken(1);
 			}
 		}
@@ -78,31 +76,6 @@ public class DelimitedListOfTokens extends CollectionOfTokens {
 		} else {
 			return null;
 		}
-	}
-	
-	@Override
-	public List<Token> toList() {
-		List<Token> result = new ArrayList<Token>();
-		result.add(this.leadingToken);
-		if (this.remainingTokens != null) {
-			for (int i=0; i<this.remainingTokens.size(); ++i) {
-				result.add(this.remainingTokens.getToken(i));
-			}
-		}
-		return result;
-	}
-
-	@Override
-	public void setLength(int length) {		
-	}
-
-	@Override
-	public void resetIndex(int index) {		
-	}
-	
-	@Override
-	public boolean isAllNull() {
-		return false;
 	}
 
 	@Override

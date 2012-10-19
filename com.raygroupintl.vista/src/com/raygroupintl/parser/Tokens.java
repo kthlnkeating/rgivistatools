@@ -16,8 +16,6 @@
 
 package com.raygroupintl.parser;
 
-import java.util.List;
-
 public interface Tokens extends Iterable<Token> {
 	void addToken(Token token);
 	void setToken(int index, Token token);
@@ -28,21 +26,9 @@ public interface Tokens extends Iterable<Token> {
 	
 	Tokens getTokens(int index);
 
-	
-	
-	
+	boolean hasToken();
+		
 	StringPiece toValue();
 	
-	List<Token> toList();
-	
-	void setLength(int length);
-
-	boolean isAllNull();
-
-	public void resetIndex(int index);
-
 	int size();
-	
-	boolean hasToken();
-	
 }
