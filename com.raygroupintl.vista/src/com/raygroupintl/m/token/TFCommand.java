@@ -4,7 +4,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import com.raygroupintl.m.struct.MError;
-import com.raygroupintl.parser.CompositeToken;
+import com.raygroupintl.parser.SequenceOfTokens;
 import com.raygroupintl.parser.StringPiece;
 import com.raygroupintl.parser.StringToken;
 import com.raygroupintl.parser.SyntaxErrorException;
@@ -638,7 +638,7 @@ public class TFCommand extends TokenFactorySupply {
 		}
 		
 		@Override
-		protected ValidateResult validateNull(int seqIndex, CompositeToken foundTokens, boolean noException) throws SyntaxErrorException {
+		protected ValidateResult validateNull(int seqIndex, SequenceOfTokens foundTokens, boolean noException) throws SyntaxErrorException {
 			if (seqIndex == 3) {
 				if (noException) return ValidateResult.NULL_RESULT;
 				throw new SyntaxErrorException(MError.ERR_GENERAL_SYNTAX);				

@@ -24,7 +24,7 @@ import com.raygroupintl.m.parsetree.IntrinsicVariable;
 import com.raygroupintl.m.parsetree.Node;
 import com.raygroupintl.m.struct.MError;
 import com.raygroupintl.m.struct.MNameWithMnemonic;
-import com.raygroupintl.parser.CompositeToken;
+import com.raygroupintl.parser.SequenceOfTokens;
 import com.raygroupintl.parser.StringPiece;
 import com.raygroupintl.parser.SyntaxErrorException;
 import com.raygroupintl.parser.TFSequence;
@@ -151,7 +151,7 @@ public class TFIntrinsic extends TokenFactorySupply {
 		}
 		
 		@Override
-		protected ValidateResult validateNull(int seqIndex, CompositeToken foundTokens, boolean noException) throws SyntaxErrorException {
+		protected ValidateResult validateNull(int seqIndex, SequenceOfTokens foundTokens, boolean noException) throws SyntaxErrorException {
 			if (seqIndex == 0 && this.nullAllowed) {
 				return ValidateResult.CONTINUE;
 			}
