@@ -17,7 +17,7 @@
 package com.raygroupintl.parser;
 
 public abstract class CollectionOfTokens implements Tokens {
-	private static TokensVisitor TOKENS_VISITOR = new TokensVisitor();
+	protected static TokensVisitor TOKENS_VISITOR = new TokensVisitor();
 		
 	@Override
 	public Token getToken(int index0, int index1) {

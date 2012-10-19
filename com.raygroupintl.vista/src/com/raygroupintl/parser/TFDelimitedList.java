@@ -100,7 +100,7 @@ public class TFDelimitedList extends TokenFactory {
 	
 	public void setDelimitedListTargetType(Class<? extends CompositeToken> cls) {
 		try {
-			this.constructor = cls.getConstructor(new Class[]{Token.class, List.class});    //this.getConstructor(cls, List.class);
+			this.constructor = cls.getConstructor(new Class[]{Token.class, List.class});
 		} catch (Exception ex) {
 			
 		}

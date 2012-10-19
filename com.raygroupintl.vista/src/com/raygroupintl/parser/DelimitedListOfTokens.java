@@ -17,79 +17,77 @@
 package com.raygroupintl.parser;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
 import java.util.NoSuchElementException;
 
+import com.raygroupintl.struct.IterableSingle;
+import com.raygroupintl.struct.IterableSingleAndList;
+import com.raygroupintl.struct.SingleAndListIterator;
+import com.raygroupintl.struct.SingleIterator;
+
 public class DelimitedListOfTokens extends CollectionOfTokens {
-	private static class TDelimitedListIterator implements Iterator<Token> {
-		private Iterator<Token> iterator;
-		boolean firstNextCall = true;
-				
-		public TDelimitedListIterator(Iterator<Token> iterator) {
-			this.iterator = iterator;
+	private static class TDelimitedListIterator extends SingleAndListIterator<Token> {
+		public TDelimitedListIterator(Token leading, Iterable<Token> iterable) {
+			super(leading, iterable);
 		}
 		
-		@Override
-	    public boolean hasNext() {
-			return this.iterator.hasNext();
-	    }
-	
 		@Override
 		public Token next() throws NoSuchElementException {
-			if (this.firstNextCall) {
-				this.firstNextCall = false;
-				return this.iterator.next();
+			if (this.inInitialState()) {
+				return super.next();
 			} else {
-				Token rawFullResult = this.iterator.next();
-				Tokens fullResult = (Tokens) rawFullResult;
-				Token result = fullResult.getToken(1);
-				return result;
+				Token t = super.next();
+				Tokens tokens = TOKENS_VISITOR.toTokenStore(t);
+				return tokens.getToken(1);
 			}
 		}
-		
-		@Override
-		public void remove() {
-			throw new UnsupportedOperationException();
-		}		
 	}
 
 	public DelimitedListOfTokens(Token leadingToken, List<Token> tailTokens) {
-		this.tokens = new ArrayList<Token>(1 + (tailTokens == null ? 0 : tailTokens.size()));
-		this.tokens.add(leadingToken);
-		if (tailTokens != null) {
-			this.tokens.addAll(tailTokens);
-		}
+		this.leadingToken = leadingToken;
+		this.remainingTokens = tailTokens;
 	}
 
-	protected List<Token> tokens;
-
+	private Token leadingToken;
+	private List<Token> remainingTokens;
+	
 	@Override
 	public void setToken(int index, Token token) {
-		this.tokens.set(index, token);
+		if (index == 0) {
+			this.leadingToken = token;
+		} else {
+			this.remainingTokens.set(index-1, token);
+		}
 	}
 
 	@Override
 	public void addToken(Token token) {
-		if (this.tokens == null) {
-			this.tokens = new ArrayList<Token>();
+		if (this.remainingTokens == null) {
+			this.remainingTokens = new ArrayList<Token>();
 		}
-		this.tokens.add(token);
+		this.remainingTokens.add(token);
 	}
 
 	@Override
 	public Token getToken(int index) {
-		return this.tokens == null ? null : this.tokens.get(index);
+		if (index == 0) {
+			return this.leadingToken;
+		} else if (this.remainingTokens != null) {
+			return this.remainingTokens.get(index-1);
+		} else {
+			return null;
+		}
 	}
 	
 	@Override
 	public List<Token> toList() {
-		if (this.tokens == null) {
-			return Collections.emptyList();
-		} else {
-			return this.tokens;
+		List<Token> result = new ArrayList<Token>();
+		result.add(this.leadingToken);
+		if (this.remainingTokens != null) {
+			result.addAll(this.remainingTokens);
 		}
+		return result;
 	}
 
 	@Override
@@ -102,39 +100,44 @@ public class DelimitedListOfTokens extends CollectionOfTokens {
 	
 	@Override
 	public boolean isAllNull() {
-		return (this.tokens == null) || (this.tokens.size() == 0);
+		return false;
 	}
 
 	@Override
 	public int size() {
-		return this.tokens == null ? 0 : this.tokens.size();
+		return 1 + (this.remainingTokens == null ? 0 : this.remainingTokens.size());
 	}
 
 	@Override
 	public boolean hasToken() {
-		return this.tokens != null;
+		return true;
 	}
 	
 	@Override
 	public StringPiece toValue() {	
 		StringPiece result = new StringPiece();
-		if (this.tokens != null) for (Token t : this.tokens) if (t != null) {
+		result.add(this.leadingToken.toValue());
+		if (this.remainingTokens != null) for (Token t : this.remainingTokens) if (t != null) {
 			result.add(t.toValue());
 		}		
 		return result;
 	}
 
 	public Iterable<Token> all() {
-		if (this.tokens == null) {
-			return Collections.emptyList();
+		if (this.remainingTokens == null) {
+			return new IterableSingle<Token>(this.leadingToken);
 		} else {
-			return this.tokens;
+			return new IterableSingleAndList<Token>(this.leadingToken, this.remainingTokens);
 		}
 	}
 		
 	@Override
 	public Iterator<Token> iterator() {
-		return new TDelimitedListIterator(this.toList().iterator());
+		if (this.remainingTokens == null) {
+			return new SingleIterator<Token>(this.leadingToken);
+		} else {
+			return new TDelimitedListIterator(this.leadingToken, this.remainingTokens);
+		}
 	}
 	
 	public Token getLogicalToken(int index) {

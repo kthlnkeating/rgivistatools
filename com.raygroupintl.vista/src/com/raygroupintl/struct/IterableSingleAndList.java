@@ -17,48 +17,18 @@
 package com.raygroupintl.struct;
 
 import java.util.Iterator;
-import java.util.NoSuchElementException;
 
 public class IterableSingleAndList<T> implements Iterable<T> {
-	private T leadingElement;
-	private Iterable<T> remainingElements;
+	private T leading;
+	private Iterable<T> remainings;
 
-	public IterableSingleAndList(T leadingElement, Iterable<T> remainingElements) {
-		this.leadingElement = leadingElement;
-		this.remainingElements = remainingElements;
+	public IterableSingleAndList(T leading, Iterable<T> remainings) {
+		this.leading = leading;
+		this.remainings = remainings;
 	}
 	
 	@Override
 	public Iterator<T> iterator() {
-		return this.new SingleAndListIterator();
-	}
-	
-	private class SingleAndListIterator implements Iterator<T> {	
-		private boolean initialState = true;
-		private Iterator<T> remainingIterator;
-		
-		public SingleAndListIterator() {
-			this.remainingIterator = IterableSingleAndList.this.remainingElements.iterator();
-		}
-		
-		@Override
-	    public boolean hasNext() {
-	    	return this.initialState || this.remainingIterator.hasNext();
-	    }
-	
-		@Override
-		public T next() throws NoSuchElementException {
-			if (! this.initialState) {
-				return this.remainingIterator.next();
-			} else {
-				this.initialState = false;
-				return IterableSingleAndList.this.leadingElement;
-			}
-		}
-		
-		@Override
-		public void remove() {
-			throw new UnsupportedOperationException();
-		}
+		return new SingleAndListIterator<T>(this.leading, this.remainings);
 	}
 }
