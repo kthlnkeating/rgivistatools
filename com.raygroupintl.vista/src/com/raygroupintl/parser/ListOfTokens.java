@@ -69,10 +69,6 @@ public class ListOfTokens extends CollectionOfTokens {
 		return this.tokens != null;
 	}
 	
-	public void set(int index, Token token) {
-		this.tokens.set(index, token);
-	}
-
 	@Override
 	public StringPiece toValue() {	
 		return TokenUtilities.toValue(this);

@@ -124,6 +124,24 @@ public class SequenceOfTokens extends CollectionOfTokens {
 	}
 	
 	@Override
+	public void addToken(int index, Token token) {
+		++this.index;
+		this.tokens.add(index, token);
+	}
+	
+	@Override
+	public void setToken(int index, Token token) {
+		if (this.index <= index) {		
+			for (int i=this.index; i<index; ++i) {
+				this.addToken(null);
+			}
+			this.addToken(token);
+		} else {
+			this.tokens.set(index, token);
+		}
+	}
+
+	@Override
 	public void setLength(int length) {
 		this.length = length;
 		for (int i = this.index; index<tokens.size(); ++index) {
@@ -144,9 +162,5 @@ public class SequenceOfTokens extends CollectionOfTokens {
 	@Override
 	public boolean hasToken() {
 		return this.index > 0;
-	}
-
-	public void set(int index, Token token) {
-		this.tokens.set(index, token);
 	}
 }

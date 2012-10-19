@@ -20,6 +20,8 @@ import java.util.List;
 
 public interface Tokens  extends Iterable<Token> {
 	void addToken(Token token);
+	void addToken(int index, Token token);
+	void setToken(int index, Token token);
 	
 	StringPiece toValue();
 	
@@ -34,8 +36,6 @@ public interface Tokens  extends Iterable<Token> {
 	int size();
 	
 	boolean hasToken();
-	
-	void set(int index, Token token);
 	
 	Token get(int index);
 

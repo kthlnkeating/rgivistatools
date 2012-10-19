@@ -94,7 +94,7 @@ public class TFForkedSequence extends TokenFactory {
 				if (result != null) {
 					TokenFactory f0th = follower.getFactory(0);
 					Token replaced = f0th.convert(leading);
-					foundTokens.set(0, replaced);
+					foundTokens.setToken(0, replaced);
 					foundTokens.setLength(follower.getSequenceCount());
 					return follower.convertSequence(result);
 				}

@@ -84,23 +84,19 @@ public class TFDelimitedList extends TokenFactory {
 				return null;
 			} else {
 				Token leadingToken = internalResult.get(0);
-				Token tailTokens = internalResult.get(1);
+				Tokens tailTokens = internalResult.getTokens(1);
 				if (tailTokens == null) {
 					Token[] tmpResult = {leadingToken};
 					List<Token> list = Arrays.asList(tmpResult);
 					return this.convertList(objectSupply, list);
-				} else {		
-					List<Token> list = ((Tokens) tailTokens).toList();
-					list.add(0, leadingToken);
-					int lastIndex = list.size() - 1;
-					List<Token> lastToken = ((Tokens)list.get(lastIndex)).toList();
-					if ((lastToken.size() < 2) || (lastToken.get(1) == null)) {
-						CompositeToken newLast = objectSupply.newSequence(2);
-						newLast.addToken(lastToken.get(0));
-						newLast.addToken(objectSupply.newEmpty());
-						list.set(lastIndex, newLast);
+				} else {
+					tailTokens.addToken(0, leadingToken);
+					int lastIndex = tailTokens.size() - 1;
+					Tokens lastToken = tailTokens.getTokens(lastIndex);
+					if (lastToken.get(1) == null) {
+						lastToken.setToken(1, objectSupply.newEmpty());
 					}
-					return this.convertList(objectSupply, list);
+					return this.convertList(objectSupply, tailTokens.toList());
 				}
 			}
 		}
