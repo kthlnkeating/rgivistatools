@@ -24,7 +24,7 @@ public class MLine extends MSequence {
 	}
 
 	public String getTag() {
-		Token tag = this.get(0);
+		Token tag = this.getToken(0);
 		if (tag == null) {
 			return null;
 		} else {
@@ -55,7 +55,7 @@ public class MLine extends MSequence {
 	
 	public int getLevel() {
 		int level = 0;
-		Token levelToken = this.get(3);
+		Token levelToken = this.getToken(3);
 		if (levelToken != null) {
 			StringPiece levelTokenValue = levelToken.toValue();
 			return levelTokenValue.count('.');
@@ -96,7 +96,7 @@ public class MLine extends MSequence {
 	public Line getNode() {
 		Line result = new Line(this.tagName, this.index, this.getLevel());
 		ParentNode currentParent = result;
-		Tokens cmds = (Tokens) this.get(4);
+		Tokens cmds = (Tokens) this.getToken(4);
 		if (cmds != null) {
 			NodeList<Node> nodes = null;
 			for (Iterator<Token> it = cmds.iterator(); it.hasNext();) {

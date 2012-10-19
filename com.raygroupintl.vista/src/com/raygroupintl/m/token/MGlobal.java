@@ -34,12 +34,12 @@ public class MGlobal extends MSequence {
 
 	@Override
 	public Node getNode() {
-		Tokens actual = (Tokens) this.get(1);
-		if (actual.get(0) != null) {
+		Tokens actual = (Tokens) this.getToken(1);
+		if (actual.getToken(0) != null) {
 			return NodeUtilities.getNodes(actual, actual.size());
 		} else {
-			StringPiece name = actual.get(1).toValue();
-			Token subsripts = actual.get(2);
+			StringPiece name = actual.getToken(1).toValue();
+			Token subsripts = actual.getToken(2);
 			if (subsripts == null) {
 				return new Global(name);
 			} else {

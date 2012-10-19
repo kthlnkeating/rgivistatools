@@ -30,12 +30,12 @@ public class TConstSymbol extends TSequence implements ConstSymbol {
 	
 	@Override
 	public String getValue() {
-		return this.get(1).toValue().toString();
+		return this.getToken(1).toValue().toString();
 	}
 	
 	@Override
 	public boolean getIgnoreCaseFlag() {
-		Token t = this.get(4);
+		Token t = this.getToken(4);
 		return (t != null) && (t.toValue().toString().equals("1"));		
 	}
 	

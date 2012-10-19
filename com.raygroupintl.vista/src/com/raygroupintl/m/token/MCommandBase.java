@@ -28,14 +28,14 @@ public abstract class MCommandBase extends MSequence {
 	protected abstract String getFullName();
 
 	protected MToken getArgument() {
-		MSequence nameFollowUp = (MSequence) this.get(1);
+		MSequence nameFollowUp = (MSequence) this.getToken(1);
 		if (nameFollowUp == null) {
 			return null;
 		}
-		if (nameFollowUp.get(2) instanceof EmptyToken) {
+		if (nameFollowUp.getToken(2) instanceof EmptyToken) {
 			return null;
 		}			
-		MToken argument = (MToken) nameFollowUp.get(2);
+		MToken argument = (MToken) nameFollowUp.getToken(2);
 		if ((argument == null) || (argument.toValue().length() == 0)) {
 			return null;
 		}
@@ -44,7 +44,7 @@ public abstract class MCommandBase extends MSequence {
 
 	@Override
 	public void beautify() {
-		StringPiece n = (StringPiece) this.get(0);
+		StringPiece n = (StringPiece) this.getToken(0);
 		StringPiece newName = new StringPiece(getFullName());
 		n.set(newName);
 		super.beautify();

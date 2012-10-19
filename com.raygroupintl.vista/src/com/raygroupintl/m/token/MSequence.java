@@ -42,13 +42,13 @@ public class MSequence extends SequenceOfTokens implements MToken, CompositeToke
 
 	@Override
 	public Node getSubNode(int index) {
-		MToken subToken = (MToken) this.get(index);
+		MToken subToken = (MToken) this.getToken(index);
 		return subToken == null ? null : subToken.getNode();
 	}
 
 	@Override
 	public Node getSubNode(int index0, int index1) {
-		MToken subToken = (MToken) this.get(index0);
+		MToken subToken = (MToken) this.getToken(index0);
 		if (subToken != null) {
 			return subToken.getSubNode(index1);
 		}
@@ -62,7 +62,7 @@ public class MSequence extends SequenceOfTokens implements MToken, CompositeToke
 
 	@Override
 	public MToken getSubNodeToken(int index) {
-		return (MToken) this.get(index);
+		return (MToken) this.getToken(index);
 	}
 
 	@Override

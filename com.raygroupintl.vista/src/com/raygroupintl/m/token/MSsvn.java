@@ -48,8 +48,8 @@ public class MSsvn extends MSequence {
 	
 	@Override
 	public Node getNode() {
-		StringPiece name = this.get(1).toValue();
-		Token subsripts = this.get(2);
+		StringPiece name = this.getToken(1).toValue();
+		Token subsripts = this.getToken(2);
 		NodeList<Node> nodes = NodeUtilities.getSubscriptNodes(subsripts);
 		return new StructuredSystemVariable(name, nodes);
 	}

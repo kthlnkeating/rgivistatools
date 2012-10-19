@@ -103,7 +103,7 @@ class CmdTokens {
 		
 		@Override
 		protected String getFullName() {
-			Token argument = this.get(3);
+			Token argument = this.getToken(3);
 			if (argument == null) {
 				return "HALT";
 			} else {

@@ -30,26 +30,26 @@ public class TSymbolList extends TSequence implements SymbolList {
 	
 	@Override
 	public RuleSupply getElement() {
-		return (RuleSupply) this.get(1);
+		return (RuleSupply) this.getToken(1);
 	}
 	
 	@Override
 	public RuleSupply getDelimiter() {
-		return (RuleSupply) this.get(2, 1);
+		return (RuleSupply) this.getToken(2, 1);
 	}
 	
 	@Override
 	public RuleSupply getLeftParanthesis() {
-		return (RuleSupply) this.get(2, 2, 1);
+		return (RuleSupply) this.getToken(2, 2, 1);
 	}
 	
 	@Override
 	public RuleSupply getRightParanthesis() {
-		return (RuleSupply)  this.get(2, 2, 3);
+		return (RuleSupply)  this.getToken(2, 2, 3);
 	}
 	
 	private boolean getFlag(int index) {
-		Token f = this.get(2, 2, index);
+		Token f = this.getToken(2, 2, index);
 		if (f == null) {
 			return false;
 		} else {

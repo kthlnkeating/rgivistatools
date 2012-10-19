@@ -34,8 +34,8 @@ public class MLocal extends MSequence {
 
 	@Override
 	public Node getNode() {
-		StringPiece name = this.get(0).toValue();
-		Token subsripts = this.get(1);
+		StringPiece name = this.getToken(0).toValue();
+		Token subsripts = this.getToken(1);
 		if (subsripts == null) {
 			return new Local(name);
 		} else {

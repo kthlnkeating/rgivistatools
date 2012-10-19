@@ -44,9 +44,9 @@ public class MDelimitedList extends DelimitedListOfTokens implements MToken, Com
 
 	@Override
 	public Node getSubNode(int index0, int index1) {
-		MToken subToken = (MToken) this.get(index0);
+		MToken subToken = (MToken) this.getToken(index0);
 		if (subToken != null) {
-			subToken = (MToken) this.get(index1);
+			subToken = (MToken) this.getToken(index1);
 			if (subToken != null) return subToken.getNode();
 		}
 		return null;
@@ -59,7 +59,7 @@ public class MDelimitedList extends DelimitedListOfTokens implements MToken, Com
 
 	@Override
 	public MToken getSubNodeToken(int index) {
-		MToken subToken = (MToken) this.get(index);
+		MToken subToken = (MToken) this.getToken(index);
 		if (subToken != null) {
 			if (index == 0) {
 				return subToken;

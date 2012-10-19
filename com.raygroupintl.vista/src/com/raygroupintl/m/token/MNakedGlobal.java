@@ -33,7 +33,7 @@ public class MNakedGlobal extends MSequence {
 
 	@Override
 	public Node getNode() {
-		Token subsripts = this.get(1);
+		Token subsripts = this.getToken(1);
 		NodeList<Node> nodes = NodeUtilities.getSubscriptNodes(subsripts);
 		return new NakedGlobal(nodes);
 	}

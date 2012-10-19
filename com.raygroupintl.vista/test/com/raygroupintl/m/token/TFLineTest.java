@@ -48,7 +48,7 @@ public class TFLineTest {
 			Token t = f.tokenize(text, objectSupply);
 			String r = t.toValue().toString();
 			Assert.assertEquals(line, r);	
-			Tokens commands = (Tokens) ((Tokens) t).get(4);
+			Tokens commands = (Tokens) ((Tokens) t).getToken(4);
 			boolean found = false;
 			for (Iterator<Token> it=commands.iterator(); it.hasNext();) {
 				Token errorCandidate = it.next();
@@ -74,8 +74,8 @@ public class TFLineTest {
 			Token t = f.tokenize(text, objectSupply);
 			String r = t.toValue().toString();
 			Assert.assertEquals(line, r);	
-			Tokens commands = (Tokens) ((Tokens) t).get(4);
-			Token error = commands.get(errorCommand);
+			Tokens commands = (Tokens) ((Tokens) t).getToken(4);
+			Token error = commands.getToken(errorCommand);
 			Assert.assertTrue(error instanceof MSyntaxError);
 			Assert.assertEquals(errorLocation, ((MSyntaxError) error).getErrorIndex());
 		} catch (SyntaxErrorException e) {

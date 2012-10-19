@@ -29,6 +29,6 @@ public class TRequiredSymbols extends TSequence implements RuleSupply {
 	
 	@Override
 	public void accept(RuleDefinitionVisitor visitor, String name, RuleSupplyFlag flag) {
-		((RuleSupply) this.get(1)).accept(visitor, name, RuleSupplyFlag.INNER_REQUIRED);
+		((RuleSupply) this.getToken(1)).accept(visitor, name, RuleSupplyFlag.INNER_REQUIRED);
 	}
 }

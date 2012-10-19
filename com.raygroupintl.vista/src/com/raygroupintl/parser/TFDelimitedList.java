@@ -82,14 +82,14 @@ public class TFDelimitedList extends TokenFactory {
 			if (internalResult == null) {
 				return null;
 			} else {
-				Token leadingToken = internalResult.get(0);
+				Token leadingToken = internalResult.getToken(0);
 				Tokens tailTokens = internalResult.getTokens(1);
 				if (tailTokens == null) {
 					return this.convertList(objectSupply, leadingToken, null);
 				} else {
 					int lastIndex = tailTokens.size() - 1;
 					Tokens lastToken = tailTokens.getTokens(lastIndex);
-					if (lastToken.get(1) == null) {
+					if (lastToken.getToken(1) == null) {
 						lastToken.setToken(1, objectSupply.newEmpty());
 					}
 					return this.convertList(objectSupply, leadingToken, tailTokens.toList());

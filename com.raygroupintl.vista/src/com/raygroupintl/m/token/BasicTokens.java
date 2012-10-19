@@ -113,7 +113,7 @@ public class BasicTokens {
 		
 		@Override
 		public Node getNode() {
-			Node addlNode = ((MToken) this.get(1)).getNode();
+			Node addlNode = ((MToken) this.getToken(1)).getNode();
 			return new PostConditional(addlNode);
 		}		
 	}

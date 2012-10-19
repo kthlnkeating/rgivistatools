@@ -50,9 +50,9 @@ public final class SetCmdTokens {
 		
 		@Override
 		public Node getNode() {
-			MToken lhs = (MToken) this.get(0);
+			MToken lhs = (MToken) this.getToken(0);
 			Node lhsNode = lhs.getNode();
-			MToken rhs = (MToken) this.get(2);
+			MToken rhs = (MToken) this.getToken(2);
 			if (rhs == null) {
 				return new SetCmdNodes.IndirectAtomicSet(lhsNode);
 			} else {

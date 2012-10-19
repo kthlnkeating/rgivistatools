@@ -16,41 +16,32 @@
 
 package com.raygroupintl.parser;
 
-import java.util.List;
-
 public abstract class CollectionOfTokens implements Tokens {
 	private static TokensVisitor TOKENS_VISITOR = new TokensVisitor();
 		
-	protected List<Token> tokens;
-
 	@Override
-	public void setToken(int index, Token token) {
-		this.tokens.set(index, token);
-	}
-
-	@Override
-	public Token get(int index0, int index1) {
+	public Token getToken(int index0, int index1) {
 		Tokens ts = this.getTokens(index0);
 		if (ts == null) {
 			return null;
 		} else {
-			return ts.get(index1);
+			return ts.getToken(index1);
 		}
 	}
 	
 	@Override
-	public Token get(int index0, int index1, int index2) {
+	public Token getToken(int index0, int index1, int index2) {
 		Tokens ts = this.getTokens(index0);
 		if (ts == null) {
 			return null;
 		} else {
-			return ts.get(index1, index2);
+			return ts.getToken(index1, index2);
 		}
 	}
 
 	@Override
 	public Tokens getTokens(int index) {
-		Token t = this.get(index);
+		Token t = this.getToken(index);
 		if (t == null) {
 			return null;
 		} else {

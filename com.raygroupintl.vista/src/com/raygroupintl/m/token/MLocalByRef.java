@@ -33,7 +33,7 @@ public class MLocalByRef extends MSequence {
 
 	@Override
 	public Node getNode() {
-		StringPiece name = this.get(1).toValue();
+		StringPiece name = this.getToken(1).toValue();
 		Local local = new Local(name);
 		return new LocalReference(local);
 	}

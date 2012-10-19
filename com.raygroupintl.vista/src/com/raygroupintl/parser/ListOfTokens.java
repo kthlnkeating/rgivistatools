@@ -22,11 +22,18 @@ import java.util.Iterator;
 import java.util.List;
 
 public class ListOfTokens extends CollectionOfTokens {
+	protected List<Token> tokens;
+
 	public ListOfTokens() {
 	}
 	
 	public ListOfTokens(List<Token> tokens) {
 		this.tokens = tokens;
+	}
+
+	@Override
+	public void setToken(int index, Token token) {
+		this.tokens.set(index, token);
 	}
 
 	@Override
@@ -37,6 +44,11 @@ public class ListOfTokens extends CollectionOfTokens {
 		this.tokens.add(token);
 	}
 
+	@Override
+	public Token getToken(int index) {
+		return this.tokens == null ? null : this.tokens.get(index);
+	}
+	
 	@Override
 	public List<Token> toList() {
 		if (this.tokens == null) {
@@ -74,11 +86,6 @@ public class ListOfTokens extends CollectionOfTokens {
 		return TokenUtilities.toValue(this);
 	}
 
-	@Override
-	public Token get(int index) {
-		return this.tokens == null ? null : this.tokens.get(index);
-	}
-	
 	@Override
 	public Iterator<Token> iterator() {
 		return this.toList().iterator();

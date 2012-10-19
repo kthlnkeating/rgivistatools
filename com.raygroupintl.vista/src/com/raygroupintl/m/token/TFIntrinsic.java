@@ -61,8 +61,8 @@ public class TFIntrinsic extends TokenFactorySupply {
 		
 		@Override
 		public Node getNode() {
-			StringPiece name = ((MToken) this.get(0)).getSubNodeToken(0).getSubNodeToken(1).toValue();
-			MToken arguments = ((MToken) this.get(1)).getSubNodeToken(0);	
+			StringPiece name = ((MToken) this.getToken(0)).getSubNodeToken(0).getSubNodeToken(1).toValue();
+			MToken arguments = ((MToken) this.getToken(1)).getSubNodeToken(0);	
 			return new IntrinsicFunction(name.toString(), arguments == null ? null : arguments.getNode());
 		}
 

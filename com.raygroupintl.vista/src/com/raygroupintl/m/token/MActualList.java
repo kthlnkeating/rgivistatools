@@ -33,7 +33,7 @@ public class MActualList extends MSequence {
 
 	@Override
 	public Node getNode() {		
-		Tokens tokens = (Tokens) this.get(1);
+		Tokens tokens = (Tokens) this.getToken(1);
 		if (tokens == null) {
 			return new IgnorableNode();
 		} else {

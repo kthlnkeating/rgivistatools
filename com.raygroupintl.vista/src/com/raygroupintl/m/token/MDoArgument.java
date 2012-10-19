@@ -32,7 +32,7 @@ public class MDoArgument extends MSequence {
 	
 	@Override
 	public Node getNode() {
-		Token lastToken = this.get(this.size()-1);
+		Token lastToken = this.getToken(this.size()-1);
 		boolean postConditional = (lastToken != null) && (lastToken instanceof BasicTokens.MPostCondition);
 		Node additionalNodes = super.getNode();
 		AtomicDo result = new AtomicDo(additionalNodes, postConditional);

@@ -55,7 +55,7 @@ public final class NewCmdTokens {
 		
 		@Override
 		public Node getNode() {
-			MDelimitedList list = (MDelimitedList) this.get(1);
+			MDelimitedList list = (MDelimitedList) this.getToken(1);
 			Nodes<Node> nodes = NodeUtilities.getNodes(list, list.size());
 			return new NewCmdNodes.ExclusiveAtomicNew(nodes);
 		}		

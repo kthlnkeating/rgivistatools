@@ -54,6 +54,8 @@ public class SequenceOfTokens extends CollectionOfTokens {
 		}		
 	}
 
+	protected List<Token> tokens;
+
 	private int index = 0;
 	private int length = 0;
 	
@@ -85,7 +87,7 @@ public class SequenceOfTokens extends CollectionOfTokens {
 	}
 	
 	@Override
-	public Token get(int i) {
+	public Token getToken(int i) {
 		if (this.index > i) {
 			return this.tokens.get(i);
 		} else {

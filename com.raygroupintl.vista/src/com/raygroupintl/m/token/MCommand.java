@@ -27,14 +27,14 @@ public abstract class MCommand extends MCommandBase {
 	}
 	
 	protected Node getArgumentNode() {
-		MSequence nameFollowUp = (MSequence) this.get(1);
+		MSequence nameFollowUp = (MSequence) this.getToken(1);
 		if (nameFollowUp == null) {
 			return null;
 		}
-		if (nameFollowUp.get(2) instanceof EmptyToken) {
+		if (nameFollowUp.getToken(2) instanceof EmptyToken) {
 			return null;
 		}			
-		MToken argument = (MToken) nameFollowUp.get(2);
+		MToken argument = (MToken) nameFollowUp.getToken(2);
 		if ((argument == null) || (argument.toValue().length() == 0)) {
 			return null;
 		} else {				
@@ -43,15 +43,15 @@ public abstract class MCommand extends MCommandBase {
 	}
 
 	protected Node getPostConditionNode() {
-		MSequence nameFollowUp = (MSequence) this.get(1);
+		MSequence nameFollowUp = (MSequence) this.getToken(1);
 		if (nameFollowUp == null) {
 			return null;
 		}
-		MSequence postConditionWithColon = (MSequence) nameFollowUp.get(0);
+		MSequence postConditionWithColon = (MSequence) nameFollowUp.getToken(0);
 		if (postConditionWithColon == null) {
 			return null;
 		} else {
-			MToken postConditionToken = (MToken) postConditionWithColon.get(1);
+			MToken postConditionToken = (MToken) postConditionWithColon.getToken(1);
 			return postConditionToken.getNode();
 		}
 	}

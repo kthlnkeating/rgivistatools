@@ -44,7 +44,7 @@ public class DelimitedListOfTokens extends CollectionOfTokens {
 			} else {
 				Token rawFullResult = this.iterator.next();
 				Tokens fullResult = (Tokens) rawFullResult;
-				Token result = fullResult.get(1);
+				Token result = fullResult.getToken(1);
 				return result;
 			}
 		}
@@ -63,6 +63,13 @@ public class DelimitedListOfTokens extends CollectionOfTokens {
 		}
 	}
 
+	protected List<Token> tokens;
+
+	@Override
+	public void setToken(int index, Token token) {
+		this.tokens.set(index, token);
+	}
+
 	@Override
 	public void addToken(Token token) {
 		if (this.tokens == null) {
@@ -71,6 +78,11 @@ public class DelimitedListOfTokens extends CollectionOfTokens {
 		this.tokens.add(token);
 	}
 
+	@Override
+	public Token getToken(int index) {
+		return this.tokens == null ? null : this.tokens.get(index);
+	}
+	
 	@Override
 	public List<Token> toList() {
 		if (this.tokens == null) {
@@ -112,11 +124,6 @@ public class DelimitedListOfTokens extends CollectionOfTokens {
 		return result;
 	}
 
-	@Override
-	public Token get(int index) {
-		return this.tokens == null ? null : this.tokens.get(index);
-	}
-	
 	public Iterable<Token> all() {
 		if (this.tokens == null) {
 			return Collections.emptyList();
@@ -132,10 +139,10 @@ public class DelimitedListOfTokens extends CollectionOfTokens {
 	
 	public Token getLogicalToken(int index) {
 		if (index == 0) {
-			return this.get(0);
+			return this.getToken(0);
 		} else {
 			Tokens ts = this.getTokens(index);
-			return ts.get(1);
+			return ts.getToken(1);
 		}
 	}
 }
