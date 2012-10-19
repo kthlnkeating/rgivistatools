@@ -63,6 +63,6 @@ public class FSRChar extends FSRBase {
 	@Override
 	public void setAdapter(AdapterSpecification spec) {
 		 Class<? extends Token> a = spec.getTokenAdapter();
-		 if (a != null) this.factory.setTargetType(a);
+		 if (a != null) this.factory.setTargetType(a, Token.class);
 	}
 }

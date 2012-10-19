@@ -80,7 +80,7 @@ public class FSRSequence extends FSRCollection {
 			 this.factory.setSequenceTargetType(a);
 		 } else {
 			 Class<? extends Token> aAlt = spec.getTokenAdapter();
-			 if (aAlt != null) this.factory.setTargetType(aAlt);
+			 if (aAlt != null) this.factory.setTargetType(aAlt, Token.class);
 		 }
 	}	
 }

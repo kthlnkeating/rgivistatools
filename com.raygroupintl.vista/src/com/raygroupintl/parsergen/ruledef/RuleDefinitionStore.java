@@ -70,7 +70,7 @@ public class RuleDefinitionStore extends TokenFactoryStore {
 	private TokenFactory addChoice(String name, Choice choice, AdapterSpecification spec) {
 		TFChoice value = new TFChoice(name);
 		Class<? extends Token> a = spec.getTokenAdapter();
-		if (a != null) value.setTargetType(a);
+		if (a != null) value.setTargetType(a, Token.class);
 		this.choices.add(new Triple<TFChoice, Choice>(value, choice));
 		return value;			
 	}
@@ -82,7 +82,7 @@ public class RuleDefinitionStore extends TokenFactoryStore {
 			value.setSequenceTargetType(a);
 		} else {
 			Class<? extends Token> aAlt = spec.getTokenAdapter();
-			if (aAlt != null) value.setTargetType(aAlt);			
+			if (aAlt != null) value.setTargetType(aAlt, Token.class);			
 		}
 		this.sequences.add(new Triple<TFSequence, Sequence>(value, sequence));
 		return value;			
@@ -96,7 +96,7 @@ public class RuleDefinitionStore extends TokenFactoryStore {
 			if ((left.length() == 0) || (right.length() == 0)) {
 				TFList value = new TFList(name);
 				Class<? extends Token> a = spec.getTokenAdapter();
-				if (a != null) value.setTargetType(a);
+				if (a != null) value.setTargetType(a, Token.class);
 				this.lists.add(new Triple<TFList, List>(value, list));
 				return value;
 			} else {
@@ -106,7 +106,7 @@ public class RuleDefinitionStore extends TokenFactoryStore {
 					value.setSequenceTargetType(a);
 				} else {
 					Class<? extends Token> aAlt = spec.getTokenAdapter();
-					if (aAlt != null) value.setTargetType(aAlt);			
+					if (aAlt != null) value.setTargetType(aAlt, Token.class);			
 				}
 				this.enclosedLists.add(new Triple<TFSequence, List>(value, list));
 				return value;
@@ -125,7 +125,7 @@ public class RuleDefinitionStore extends TokenFactoryStore {
 					value.setSequenceTargetType(a);
 				} else {
 					Class<? extends Token> aAlt = spec.getTokenAdapter();
-					if (aAlt != null) value.setTargetType(aAlt);			
+					if (aAlt != null) value.setTargetType(aAlt, Token.class);			
 				}
 				this.enclosedDelimitedLists.add(new Triple<TFSequence, List>(value, list));
 				return value;					
@@ -144,12 +144,12 @@ public class RuleDefinitionStore extends TokenFactoryStore {
 		if (characters.single()) {
 			TFCharacter tf = new TFCharacter(name, result);
 			Class<? extends Token> a = spec.getTokenAdapter();
-			if (a != null) tf.setTargetType(a);
+			if (a != null) tf.setTargetType(a, Token.class);
 			return tf;
 		} else {		
 			TFString tf = new TFString(name, result);
 			Class<? extends Token> a = spec.getTokenAdapter();
-			if (a != null) tf.setTargetType(a);
+			if (a != null) tf.setTargetType(a, Token.class);
 			return tf;
 		}
 	}

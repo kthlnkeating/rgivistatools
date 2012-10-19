@@ -110,6 +110,6 @@ public class FSRChoice extends FSRCollection {
 	@Override
 	public void setAdapter(AdapterSpecification spec) {
 		Class<? extends Token> a = spec.getTokenAdapter();
-		if (a != null) this.factory.setTargetType(a);
+		if (a != null) this.factory.setTargetType(a, Token.class);
 	}
 }
