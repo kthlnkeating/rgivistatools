@@ -16,8 +16,8 @@
 
 package com.raygroupintl.m.token;
 
-import com.raygroupintl.parser.CompositeToken;
 import com.raygroupintl.parser.EmptyToken;
+import com.raygroupintl.parser.ListOfTokens;
 import com.raygroupintl.parser.SequenceOfTokens;
 import com.raygroupintl.parser.Token;
 import com.raygroupintl.parser.Tokens;
@@ -30,18 +30,13 @@ public class MObjectSupply implements ObjectSupply {
 	}
 	
 	@Override
-	public MSequence newSequence(int length) {
-		return new MSequence(length);
-	}
-	
-	@Override
 	public MSequence newSequence(SequenceOfTokens tokens) {
 		return new MSequence(tokens);
 	}
 	
 	@Override
-	public CompositeToken newList() {
-		return new MList();
+	public MList newList(ListOfTokens tokens) {
+		return new MList(tokens);
 	}
 	
 	@Override

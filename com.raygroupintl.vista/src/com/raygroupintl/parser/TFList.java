@@ -33,13 +33,10 @@ public final class TFList extends TokenFactory {
 	public void setElement(TokenFactory elementFactory) {
 		this.elementFactory = elementFactory;
 	}
-		
-	@Override
-	public CompositeToken tokenizeOnly(Text text, ObjectSupply objectSupply) throws SyntaxErrorException {
-		if (elementFactory == null) throw new IllegalStateException("TFList.setElementFactory needs to be called before TFList.tokenize");
-		
+
+	public ListOfTokens tokenizeCommon(Text text, ObjectSupply objectSupply) throws SyntaxErrorException {
 		if (text.onChar()) {
-			CompositeToken list = objectSupply.newList();
+			ListOfTokens list = new ListOfTokens();
 			while (text.onChar()) {
 				Token token = null;
 				try {
@@ -59,5 +56,16 @@ public final class TFList extends TokenFactory {
 			return list;
 		}
 		return null;
+	}
+	
+	@Override
+	public Token tokenizeOnly(Text text, ObjectSupply objectSupply) throws SyntaxErrorException {
+		if (elementFactory == null) throw new IllegalStateException("TFList.setElementFactory needs to be called before TFList.tokenize");
+		ListOfTokens tokens = this.tokenizeCommon(text, objectSupply);
+		if (tokens == null) {
+			return null;
+		} else {
+			return objectSupply.newList(tokens);
+		}
 	}
 }

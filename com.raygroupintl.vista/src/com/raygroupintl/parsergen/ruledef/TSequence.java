@@ -16,11 +16,10 @@
 
 package com.raygroupintl.parsergen.ruledef;
 
-import com.raygroupintl.parser.CompositeToken;
 import com.raygroupintl.parser.SequenceOfTokens;
 import com.raygroupintl.parser.Token;
 
-public class TSequence extends SequenceOfTokens implements CompositeToken {
+public class TSequence extends SequenceOfTokens implements Token {
 	public TSequence(int length) {
 		super(length);
 	}

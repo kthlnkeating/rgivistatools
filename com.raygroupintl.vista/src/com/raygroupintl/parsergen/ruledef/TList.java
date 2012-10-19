@@ -16,17 +16,14 @@
 
 package com.raygroupintl.parsergen.ruledef;
 
-import java.util.List;
-
-import com.raygroupintl.parser.CompositeToken;
 import com.raygroupintl.parser.ListOfTokens;
 import com.raygroupintl.parser.Token;
 
-public class TList extends ListOfTokens implements CompositeToken {
+public class TList extends ListOfTokens implements Token {
 	public TList() {
 	}
 	
-	public TList(List<Token> tokens) {
+	public TList(ListOfTokens tokens) {
 		super(tokens);
 	}
 

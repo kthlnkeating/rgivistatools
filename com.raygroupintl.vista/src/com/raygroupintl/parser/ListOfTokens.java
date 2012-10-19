@@ -27,8 +27,8 @@ public class ListOfTokens extends CollectionOfTokens {
 	public ListOfTokens() {
 	}
 	
-	public ListOfTokens(List<Token> tokens) {
-		this.tokens = tokens;
+	public ListOfTokens(ListOfTokens rhs) {
+		this.tokens = rhs.tokens;
 	}
 
 	@Override

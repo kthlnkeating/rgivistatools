@@ -25,7 +25,6 @@ import java.util.Map;
 
 import com.raygroupintl.charlib.Predicate;
 import com.raygroupintl.charlib.PredicateFactory;
-import com.raygroupintl.parser.CompositeToken;
 import com.raygroupintl.parser.TFCharacter;
 import com.raygroupintl.parser.TFChoice;
 import com.raygroupintl.parser.TFConstant;
@@ -78,7 +77,7 @@ public class RuleDefinitionStore extends TokenFactoryStore {
 	
 	private TokenFactory addSequence(String name, Sequence sequence, Field f, AdapterSpecification spec) {
 		TFSequence value = new TFSequence(name);
-		Class<? extends CompositeToken> a = spec.getSequenceTokenAdapter();
+		Class<? extends Token> a = spec.getSequenceTokenAdapter();
 		if (a != null) {
 			value.setSequenceTargetType(a);
 		} else {
@@ -102,7 +101,7 @@ public class RuleDefinitionStore extends TokenFactoryStore {
 				return value;
 			} else {
 				TFSequence value = new TFSequence(name);
-				Class<? extends CompositeToken> a = spec.getSequenceTokenAdapter();
+				Class<? extends Token> a = spec.getSequenceTokenAdapter();
 				if (a != null) {
 					value.setSequenceTargetType(a);
 				} else {
@@ -115,13 +114,13 @@ public class RuleDefinitionStore extends TokenFactoryStore {
 		} else {			
 			if ((left.length() == 0) || (right.length() == 0)) {
 				TFDelimitedList value = new TFDelimitedList(name);
-				Class<? extends CompositeToken> a = spec.getDelimitedListTokenAdapter();
+				Class<? extends Token> a = spec.getDelimitedListTokenAdapter();
 				value.setDelimitedListTargetType(a);
 				this.delimitedLists.add(new Triple<TFDelimitedList, List>(value, list));
 				return value;
 			} else {
 				TFSequence value = new TFSequence(name);
-				Class<? extends CompositeToken> a = spec.getSequenceTokenAdapter();
+				Class<? extends Token> a = spec.getSequenceTokenAdapter();
 				if (a != null) {
 					value.setSequenceTargetType(a);
 				} else {

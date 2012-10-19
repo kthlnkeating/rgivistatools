@@ -18,13 +18,12 @@ package com.raygroupintl.parsergen;
 
 import java.lang.reflect.Field;
 
-import com.raygroupintl.parser.CompositeToken;
 import com.raygroupintl.parser.Token;
 
 public class AdapterSpecification {
 	private Class<? extends Token> token;
-	private Class<? extends CompositeToken> delimitedList;
-	private Class<? extends CompositeToken> sequence;
+	private Class<? extends Token> delimitedList;
+	private Class<? extends Token> sequence;
 
 	private boolean hasAdapter;
 	
@@ -42,14 +41,14 @@ public class AdapterSpecification {
 		return getNull();
 	}
 	
-	public Class<? extends CompositeToken> getDelimitedListTokenAdapter() {
+	public Class<? extends Token> getDelimitedListTokenAdapter() {
 		if (this.delimitedList != null) {
 			return this.delimitedList;
 		}
 		return getNull();
 	}
 	
-	public Class<? extends CompositeToken> getSequenceTokenAdapter() {
+	public Class<? extends Token> getSequenceTokenAdapter() {
 		if (this.sequence != null) {
 			return this.sequence;
 		}

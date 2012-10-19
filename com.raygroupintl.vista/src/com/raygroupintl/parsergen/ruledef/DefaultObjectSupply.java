@@ -16,7 +16,7 @@
 
 package com.raygroupintl.parsergen.ruledef;
 
-import com.raygroupintl.parser.CompositeToken;
+import com.raygroupintl.parser.ListOfTokens;
 import com.raygroupintl.parser.SequenceOfTokens;
 import com.raygroupintl.parser.StringToken;
 import com.raygroupintl.parser.Token;
@@ -30,18 +30,13 @@ public class DefaultObjectSupply implements ObjectSupply {
 	}
 	
 	@Override
-	public CompositeToken newSequence(int length) {
-		return new TSequence(length);
-	}
-	
-	@Override
 	public Token newSequence(SequenceOfTokens tokens) {
 		return new TSequence(tokens);
 	}
 	
 	@Override
-	public CompositeToken newList() {
-		return new TList();
+	public Token newList(ListOfTokens tokens) {
+		return new TList(tokens);
 	}
 	
 	@Override

@@ -17,12 +17,11 @@
 package com.raygroupintl.m.token;
 
 import com.raygroupintl.m.parsetree.Node;
-import com.raygroupintl.parser.CompositeToken;
 import com.raygroupintl.parser.DelimitedListOfTokens;
 import com.raygroupintl.parser.Token;
 import com.raygroupintl.parser.Tokens;
 
-public class MDelimitedList extends DelimitedListOfTokens implements MToken, CompositeToken {
+public class MDelimitedList extends DelimitedListOfTokens implements MToken {
 	public MDelimitedList(Token leadingToken, Tokens tailTokens) {
 		super(leadingToken, tailTokens);
 	}

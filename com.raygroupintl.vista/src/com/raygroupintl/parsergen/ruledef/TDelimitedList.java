@@ -16,12 +16,11 @@
 
 package com.raygroupintl.parsergen.ruledef;
 
-import com.raygroupintl.parser.CompositeToken;
 import com.raygroupintl.parser.DelimitedListOfTokens;
 import com.raygroupintl.parser.Token;
 import com.raygroupintl.parser.Tokens;
 
-public class TDelimitedList extends DelimitedListOfTokens implements CompositeToken {
+public class TDelimitedList extends DelimitedListOfTokens implements Token {
 	public TDelimitedList(Token leadingToken, Tokens tailTokens) {
 		super(leadingToken, tailTokens);
 	}

@@ -17,11 +17,10 @@
 package com.raygroupintl.m.token;
 
 import com.raygroupintl.m.parsetree.Node;
-import com.raygroupintl.parser.CompositeToken;
 import com.raygroupintl.parser.SequenceOfTokens;
 import com.raygroupintl.parser.Token;
 
-public class MSequence extends SequenceOfTokens implements MToken, CompositeToken {
+public class MSequence extends SequenceOfTokens implements MToken {
 	public MSequence(int length) {
 		super(length);
 	}
