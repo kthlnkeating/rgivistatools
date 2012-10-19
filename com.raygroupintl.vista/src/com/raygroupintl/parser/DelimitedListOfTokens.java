@@ -36,7 +36,8 @@ public class DelimitedListOfTokens extends CollectionOfTokens {
 				return super.next();
 			} else {
 				Token t = super.next();
-				Tokens tokens = TokensVisitor.toTokens(t);
+				TokensVisitor v = new TokensVisitor();
+				Tokens tokens = v.toTokens(t);
 				return tokens.getToken(1);
 			}
 		}
