@@ -135,8 +135,8 @@ public class TFSequence extends TokenFactory {
 		return null;
 	}
 	
-	public void setSequenceTargetType(Class<? extends Token> cls) {
-		this.constructor = this.getConstructor(cls, SequenceOfTokens.class);
+	public void setSequenceTargetType(Class<? extends Token> cls, Class<SequenceOfTokens> seqCls) {
+		this.constructor = this.getConstructor(cls, seqCls);
 		
 	}
 	

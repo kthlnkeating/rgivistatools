@@ -25,6 +25,7 @@ import java.util.Map;
 
 import com.raygroupintl.charlib.Predicate;
 import com.raygroupintl.charlib.PredicateFactory;
+import com.raygroupintl.parser.SequenceOfTokens;
 import com.raygroupintl.parser.TFCharacter;
 import com.raygroupintl.parser.TFChoice;
 import com.raygroupintl.parser.TFConstant;
@@ -35,6 +36,7 @@ import com.raygroupintl.parser.TFSequence;
 import com.raygroupintl.parser.TFString;
 import com.raygroupintl.parser.Token;
 import com.raygroupintl.parser.TokenFactory;
+import com.raygroupintl.parser.Tokens;
 import com.raygroupintl.parsergen.AdapterSpecification;
 import com.raygroupintl.parsergen.ParseException;
 import com.raygroupintl.parsergen.TokenFactoryStore;
@@ -79,7 +81,7 @@ public class RuleDefinitionStore extends TokenFactoryStore {
 		TFSequence value = new TFSequence(name);
 		Class<? extends Token> a = spec.getSequenceTokenAdapter();
 		if (a != null) {
-			value.setSequenceTargetType(a);
+			value.setSequenceTargetType(a, SequenceOfTokens.class);
 		} else {
 			Class<? extends Token> aAlt = spec.getTokenAdapter();
 			if (aAlt != null) value.setTargetType(aAlt, Token.class);			
@@ -103,7 +105,7 @@ public class RuleDefinitionStore extends TokenFactoryStore {
 				TFSequence value = new TFSequence(name);
 				Class<? extends Token> a = spec.getSequenceTokenAdapter();
 				if (a != null) {
-					value.setSequenceTargetType(a);
+					value.setSequenceTargetType(a, SequenceOfTokens.class);
 				} else {
 					Class<? extends Token> aAlt = spec.getTokenAdapter();
 					if (aAlt != null) value.setTargetType(aAlt, Token.class);			
@@ -115,14 +117,14 @@ public class RuleDefinitionStore extends TokenFactoryStore {
 			if ((left.length() == 0) || (right.length() == 0)) {
 				TFDelimitedList value = new TFDelimitedList(name);
 				Class<? extends Token> a = spec.getDelimitedListTokenAdapter();
-				value.setDelimitedListTargetType(a);
+				value.setDelimitedListTargetType(a, Token.class, Tokens.class);
 				this.delimitedLists.add(new Triple<TFDelimitedList, List>(value, list));
 				return value;
 			} else {
 				TFSequence value = new TFSequence(name);
 				Class<? extends Token> a = spec.getSequenceTokenAdapter();
 				if (a != null) {
-					value.setSequenceTargetType(a);
+					value.setSequenceTargetType(a, SequenceOfTokens.class);
 				} else {
 					Class<? extends Token> aAlt = spec.getTokenAdapter();
 					if (aAlt != null) value.setTargetType(aAlt, Token.class);			

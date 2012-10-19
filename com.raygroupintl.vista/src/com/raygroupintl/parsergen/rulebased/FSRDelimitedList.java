@@ -18,6 +18,7 @@ package com.raygroupintl.parsergen.rulebased;
 
 import com.raygroupintl.parser.TFDelimitedList;
 import com.raygroupintl.parser.Token;
+import com.raygroupintl.parser.Tokens;
 import com.raygroupintl.parsergen.AdapterSpecification;
 import com.raygroupintl.parsergen.ruledef.RuleSupplyFlag;
 
@@ -56,6 +57,6 @@ public class FSRDelimitedList extends FSRBase {
 	@Override
 	public void setAdapter(AdapterSpecification spec) {
 		 Class<? extends Token> a = spec.getDelimitedListTokenAdapter();
-		 if (a != null) this.factory.setDelimitedListTargetType(a);
+		 if (a != null) this.factory.setDelimitedListTargetType(a, Token.class, Tokens.class);
 	}	
 }
