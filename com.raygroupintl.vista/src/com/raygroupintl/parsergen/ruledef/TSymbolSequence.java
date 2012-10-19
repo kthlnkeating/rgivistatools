@@ -16,12 +16,11 @@
 
 package com.raygroupintl.parsergen.ruledef;
 
-import java.util.List;
-
 import com.raygroupintl.parser.Token;
+import com.raygroupintl.parser.Tokens;
 
 public class TSymbolSequence extends TDelimitedList implements RuleSupplies {
-	public TSymbolSequence(Token leadingToken, List<Token> tailTokens) {
+	public TSymbolSequence(Token leadingToken, Tokens tailTokens) {		
 		super(leadingToken, tailTokens);
 	}
 	

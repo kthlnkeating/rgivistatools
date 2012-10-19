@@ -16,12 +16,11 @@
 
 package com.raygroupintl.parsergen.ruledef;
 
-import java.util.List;
-
 import com.raygroupintl.parser.Token;
+import com.raygroupintl.parser.Tokens;
 
 public class TChoiceOfSymbols extends TDelimitedList implements RuleSupplies {
-	public TChoiceOfSymbols(Token leadingToken, List<Token> tailTokens) {
+	public TChoiceOfSymbols(Token leadingToken, Tokens tailTokens) {
 		super(leadingToken, tailTokens);
 	}
 		

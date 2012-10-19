@@ -16,12 +16,11 @@
 
 package com.raygroupintl.m.token;
 
-import java.util.List;
-
 import com.raygroupintl.parser.CompositeToken;
 import com.raygroupintl.parser.EmptyToken;
 import com.raygroupintl.parser.SequenceOfTokens;
 import com.raygroupintl.parser.Token;
+import com.raygroupintl.parser.Tokens;
 import com.raygroupintl.parsergen.ObjectSupply;
 
 public class MObjectSupply implements ObjectSupply {
@@ -46,7 +45,7 @@ public class MObjectSupply implements ObjectSupply {
 	}
 	
 	@Override
-	public CompositeToken newDelimitedList(Token leadingToken, List<Token> tailTokens) {
+	public MDelimitedList newDelimitedList(Token leadingToken, Tokens tailTokens) {
 		return new MDelimitedList(leadingToken, tailTokens);
 	}
 	

@@ -44,29 +44,29 @@ public class DelimitedListOfTokens extends CollectionOfTokens {
 		}
 	}
 
-	public DelimitedListOfTokens(Token leadingToken, List<Token> tailTokens) {
+	public DelimitedListOfTokens(Token leadingToken, Tokens tailTokens) {
 		this.leadingToken = leadingToken;
 		this.remainingTokens = tailTokens;
 	}
 
 	private Token leadingToken;
-	private List<Token> remainingTokens;
+	private Tokens remainingTokens;
 	
 	@Override
 	public void setToken(int index, Token token) {
 		if (index == 0) {
 			this.leadingToken = token;
 		} else {
-			this.remainingTokens.set(index-1, token);
+			this.remainingTokens.setToken(index-1, token);
 		}
 	}
 
 	@Override
 	public void addToken(Token token) {
 		if (this.remainingTokens == null) {
-			this.remainingTokens = new ArrayList<Token>();
+			this.remainingTokens = new ListOfTokens();
 		}
-		this.remainingTokens.add(token);
+		this.remainingTokens.addToken(token);
 	}
 
 	@Override
@@ -74,7 +74,7 @@ public class DelimitedListOfTokens extends CollectionOfTokens {
 		if (index == 0) {
 			return this.leadingToken;
 		} else if (this.remainingTokens != null) {
-			return this.remainingTokens.get(index-1);
+			return this.remainingTokens.getToken(index-1);
 		} else {
 			return null;
 		}
@@ -85,7 +85,9 @@ public class DelimitedListOfTokens extends CollectionOfTokens {
 		List<Token> result = new ArrayList<Token>();
 		result.add(this.leadingToken);
 		if (this.remainingTokens != null) {
-			result.addAll(this.remainingTokens);
+			for (int i=0; i<this.remainingTokens.size(); ++i) {
+				result.add(this.remainingTokens.getToken(i));
+			}
 		}
 		return result;
 	}

@@ -16,19 +16,18 @@
 
 package com.raygroupintl.parsergen;
 
-import java.util.List;
-
 import com.raygroupintl.parser.CompositeToken;
 import com.raygroupintl.parser.EmptyToken;
 import com.raygroupintl.parser.SequenceOfTokens;
 import com.raygroupintl.parser.StringToken;
 import com.raygroupintl.parser.Token;
+import com.raygroupintl.parser.Tokens;
 
 public interface ObjectSupply {
 	StringToken newString();
 	CompositeToken newSequence(int length);
 	Token newSequence(SequenceOfTokens store);
 	CompositeToken newList();
-	CompositeToken newDelimitedList(Token leadingToken, List<Token> tailTokens);
+	Token newDelimitedList(Token leadingToken, Tokens tailTokens);
 	EmptyToken newEmpty();
 }

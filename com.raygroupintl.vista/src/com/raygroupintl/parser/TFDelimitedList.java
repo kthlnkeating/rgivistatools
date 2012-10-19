@@ -17,7 +17,6 @@
 package com.raygroupintl.parser;
 
 import java.lang.reflect.Constructor;
-import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -25,7 +24,7 @@ import com.raygroupintl.parsergen.ObjectSupply;
 
 public class TFDelimitedList extends TokenFactory {
 	private TFSequence effective;	
-	private Constructor<? extends CompositeToken> constructor;
+	private Constructor<? extends Token> constructor;
 	
 	public TFDelimitedList(String name) {
 		super(name);
@@ -59,7 +58,7 @@ public class TFDelimitedList extends TokenFactory {
 		this.set(element, delimiter, false);
 	}
 
-	private CompositeToken convertList(ObjectSupply objectSupply, Token leadingToken, List<Token> tailTokens) {
+	private Token convertList(ObjectSupply objectSupply, Token leadingToken, Tokens tailTokens) {
 		if (this.constructor == null) {
 			return objectSupply.newDelimitedList(leadingToken, tailTokens);			
 		} else {
@@ -92,15 +91,15 @@ public class TFDelimitedList extends TokenFactory {
 					if (lastToken.getToken(1) == null) {
 						lastToken.setToken(1, objectSupply.newEmpty());
 					}
-					return this.convertList(objectSupply, leadingToken, tailTokens.toList());
+					return this.convertList(objectSupply, leadingToken, tailTokens);
 				}
 			}
 		}
 	}
 	
-	public void setDelimitedListTargetType(Class<? extends CompositeToken> cls) {
+	public void setDelimitedListTargetType(Class<? extends Token> cls) {
 		try {
-			this.constructor = cls.getConstructor(new Class[]{Token.class, List.class});
+			this.constructor = cls.getConstructor(new Class[]{Token.class, Tokens.class});
 		} catch (Exception ex) {
 			
 		}
