@@ -45,13 +45,15 @@ public class TFDelimitedList extends TokenFactory {
 	public void set(TokenFactory element, TokenFactory delimiter, boolean emptyAllowed) {
 		TokenFactory leadingElement = this.getLeadingFactory(element, delimiter, emptyAllowed);
 		String tailElementName = this.getName() + "." + "tailelement";
-		TFSequence tailElement = new TFSequence(tailElementName, delimiter, emptyAllowed ? leadingElement : element);
-		tailElement.setRequiredFlags(true, !emptyAllowed);
+		TFSequence tailElement = new TFSequence(tailElementName, 2);
+		tailElement.add(delimiter, true);
+		tailElement.add(emptyAllowed ? leadingElement : element, !emptyAllowed);
 		String tailListName = this.getName() + "." + "taillist";
 		TokenFactory tail = new TFList(tailListName, tailElement);
 		String name = this.getName() + "." + "effective";
-		this.effective = new TFSequence(name, leadingElement, tail);
-		this.effective.setRequiredFlags(true, false);
+		this.effective = new TFSequence(name,2);
+		this.effective.add(leadingElement, true);
+		this.effective.add(tail, false);
 	}
 	
 	public void set(TokenFactory element, TokenFactory delimiter) {

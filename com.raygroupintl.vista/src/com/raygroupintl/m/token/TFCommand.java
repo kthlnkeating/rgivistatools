@@ -633,8 +633,8 @@ public class TFCommand extends TokenFactorySupply {
 	}
 	
 	private class TFCommandRest extends TFSequence {
-		public TFCommandRest(String name, TokenFactory... factories) {
-			super(name, factories);
+		public TFCommandRest(String name) {
+			super(name, 4);
 		}
 		
 		@Override
@@ -678,8 +678,11 @@ public class TFCommand extends TokenFactorySupply {
 	public TokenFactory getNextTokenFactory(Token token) throws SyntaxErrorException {
 		TCommandSpec spec = (TCommandSpec) token;
 		TokenFactory argumentFactory = spec.getArgumentFactory();
-		TFSequence tf = new TFCommandRest(this.getName(), this.supply.postcondition, this.supply.space, argumentFactory, this.supply.commandend);
-		tf.setRequiredFlags(false, false, false, false);
+		TFSequence tf = new TFCommandRest(this.getName());
+		tf.add(this.supply.postcondition, false);
+		tf.add(this.supply.space, false);
+		tf.add(argumentFactory, false);
+		tf.add(this.supply.commandend, false);
 		return tf;
 	}
 

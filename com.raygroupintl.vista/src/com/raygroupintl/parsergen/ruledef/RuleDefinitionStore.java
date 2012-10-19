@@ -216,16 +216,46 @@ public class RuleDefinitionStore extends TokenFactoryStore {
 	
 	private void updateChoices() {		
 		for (Triple<TFChoice, Choice> p : this.choices) {
-			TokenFactory[] fs = getFactories(this.symbols, p.annotation.value());
-			p.factory.setFactories(fs);
+			String[] names = p.annotation.value();
+			int n = names.length;
+			p.factory.reset(n);
+			for (int i=0; i<n; ++i) {
+				String name = names[i];
+				TokenFactory tf = this.symbols.get(name);
+				p.factory.add(tf);
+			}			
 		}
 	}
 	
+	private static boolean[] getRequiredFlags(String specification, int n) {
+		boolean[] result = new boolean[n];
+		if (specification.equals("all")) {
+			Arrays.fill(result, true);
+			return result;
+		}
+		if (specification.equals("none")) {
+			return result;
+		}
+		for (int i=0; i<specification.length(); ++i) {
+			char ch = specification.charAt(i);
+			if (ch == 'r') {
+				result[i] = true;
+			}
+		}
+		return result;
+	}
+
 	private void updateSequences() {
 		for (Triple<TFSequence, Sequence> p : this.sequences) {
-			TokenFactory[] fs = getFactories(this.symbols, p.annotation.value());
-			boolean[] required = getRequiredFlags(p.annotation.required(), fs.length);
-			p.factory.setFactories(fs, required);
+			String[] names = p.annotation.value();
+			int n = names.length;
+			boolean[] required = getRequiredFlags(p.annotation.required(), names.length);
+			p.factory.reset(n);
+			for (int i=0; i<n; ++i) {
+				String name = names[i];
+				TokenFactory tf = this.symbols.get(name);
+				p.factory.add(tf, required[i]);
+			}			
 		}
 	}
 
@@ -242,7 +272,10 @@ public class RuleDefinitionStore extends TokenFactoryStore {
 			TokenFactory l = this.symbols.get(p.annotation.left());
 			TokenFactory r = this.symbols.get(p.annotation.right());
 			TFList f = new TFList(p.factory.getName() + ".list", e);
-			p.factory.setFactories(new TokenFactory[]{l, f, r}, new boolean[]{true, ! p.annotation.none(), true});
+			p.factory.reset(3);
+			p.factory.add(l, true);
+			p.factory.add(f, ! p.annotation.none());
+			p.factory.add(r, true);
 		}	
 	}
 	
@@ -256,7 +289,10 @@ public class RuleDefinitionStore extends TokenFactoryStore {
 			TFDelimitedList dl = new TFDelimitedList(p.factory.getName() + ".list");
 			dl.set(e, d, p.annotation.empty());
 			
-			p.factory.setFactories(new TokenFactory[]{l, dl, r}, new boolean[]{true, ! p.annotation.none(), true});
+			p.factory.reset(3);
+			p.factory.add(l, true);
+			p.factory.add(dl, ! p.annotation.none());
+			p.factory.add(r, true);
 		}	
 	}
 	
@@ -283,33 +319,5 @@ public class RuleDefinitionStore extends TokenFactoryStore {
 		this.updateEnclosedLists();
 		this.updateEnclosedDelimitedLists();
 		this.updateDelimitedLists();
-	}
-
-	private static TokenFactory[] getFactories(Map<String, TokenFactory> map, String[] names) {
-		int n = names.length;
-		TokenFactory[] fs = new TokenFactory[n];
-		for (int i=0; i<n; ++i) {
-			String name = names[i];
-			fs[i] = map.get(name);
-		}
-		return fs;
-	}
-	
-	private static boolean[] getRequiredFlags(String specification, int n) {
-		boolean[] result = new boolean[n];
-		if (specification.equals("all")) {
-			Arrays.fill(result, true);
-			return result;
-		}
-		if (specification.equals("none")) {
-			return result;
-		}
-		for (int i=0; i<specification.length(); ++i) {
-			char ch = specification.charAt(i);
-			if (ch == 'r') {
-				result[i] = true;
-			}
-		}
-		return result;
 	}
 }

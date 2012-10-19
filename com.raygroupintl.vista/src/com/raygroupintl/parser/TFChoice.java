@@ -16,23 +16,36 @@
 
 package com.raygroupintl.parser;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import com.raygroupintl.parsergen.ObjectSupply;
 
-
 public class TFChoice extends TokenFactory {
-	private TokenFactory[] factories = {};
+	private List<TokenFactory> factories;
 	
 	public TFChoice(String name) {
 		super(name);
+		this.factories = new ArrayList<TokenFactory>();
 	}
 	
 	public TFChoice(String name, TokenFactory... factories) {
 		super(name);
-		this.factories = factories;
+		this.factories = new ArrayList<TokenFactory>(factories.length);
+		for (int i=0; i<factories.length; ++i) this.factories.add(factories[i]);
 	}
 	
 	public void setFactories(TokenFactory... factories) {
-		this.factories = factories;
+		this.factories = new ArrayList<TokenFactory>(factories.length);
+		for (int i=0; i<factories.length; ++i) this.factories.add(factories[i]);
+	}
+	
+	public void reset(int length) {
+		this.factories = new ArrayList<TokenFactory>(length);		
+	}
+	
+	public void add(TokenFactory tf) {
+		this.factories.add(tf);
 	}
 	
 	@Override

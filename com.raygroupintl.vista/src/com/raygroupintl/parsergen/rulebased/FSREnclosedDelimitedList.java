@@ -39,7 +39,7 @@ public class FSREnclosedDelimitedList extends FSRBase {
 		this.delimiter = delimiter;
 		this.left = left;
 		this.right = right;
-		this.factory = new TFSequence(name);
+		this.factory = new TFSequence(name, 3);
 	}
 	
 	public void setEmptyAllowed(boolean b) {
@@ -70,9 +70,11 @@ public class FSREnclosedDelimitedList extends FSRBase {
 		this.right.update(localSymbols);
 		TokenFactory l = this.left.getTheFactory(localSymbols);
 		TokenFactory r = this.right.getTheFactory(localSymbols);
-		TokenFactory[] factories = {l, dl, r};
-		boolean[] required = {true, ! this.none, true};	
-		this.factory.setFactories(factories, required);				
+		
+		this.factory.reset(4);
+		this.factory.add(l, true);
+		this.factory.add(dl, ! this.none);
+		this.factory.add(r, true);
 		return true;		
 	}
 

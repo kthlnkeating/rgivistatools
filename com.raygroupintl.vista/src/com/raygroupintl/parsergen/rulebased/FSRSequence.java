@@ -16,9 +16,6 @@
 
 package com.raygroupintl.parsergen.rulebased;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import com.raygroupintl.parser.CompositeToken;
 import com.raygroupintl.parser.TFSequence;
 import com.raygroupintl.parser.Token;
@@ -52,24 +49,13 @@ public class FSRSequence extends FSRCollection {
 	public boolean update(RulesByName symbols) {
 		RulesByNameLocal localSymbols = new RulesByNameLocal(symbols, this);
 		
-		List<TokenFactory> factories = new ArrayList<TokenFactory>();
-		List<Boolean> flags = new ArrayList<Boolean>();	
+		this.factory.reset(this.list.size());
 		for (FactorySupplyRule spg : this.list) {
 			TokenFactory f = spg.getTheFactory(localSymbols);
 			boolean b = spg.getRequired();
-			factories.add(f);
-			flags.add(b);
+			this.factory.add(f, b);
 		}
 
-		int n = factories.size();
-		TokenFactory[] fs = new TokenFactory[n];
-		boolean[] bs = new boolean[n];
-		for (int i=0; i<n; ++i) {
-			fs[i] = factories.get(i);
-			bs[i] = flags.get(i);
-		}		
-		this.factory.setFactories(fs, bs);
-		
 		for (FactorySupplyRule spg : this.list) {
 			spg.update(localSymbols);
 		}		

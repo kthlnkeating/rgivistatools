@@ -145,8 +145,8 @@ public class TFIntrinsic extends TokenFactorySupply {
 	private class TFIntrinsicRest extends TFSequence {	
 		private boolean nullAllowed;
 		
-		public TFIntrinsicRest(FunctionInfo info, boolean nullAllowed, String name, TokenFactory... factories) {
-			super(name, factories);
+		public TFIntrinsicRest(FunctionInfo info, boolean nullAllowed, String name) {
+			super(name, 2);
 			this.nullAllowed = nullAllowed;
 		}
 		
@@ -162,8 +162,9 @@ public class TFIntrinsic extends TokenFactorySupply {
 	
 	@Override
 	public TokenFactory getSupplyTokenFactory() {
-		TFSequence result = new TFSequence("instrinsic.name", this.supply.intrinsicname, this.supply.lpar);
-		result.setRequiredFlags(true, false);
+		TFSequence result = new TFSequence("instrinsic.name", 2);
+		result.add(this.supply.intrinsicname, true);
+		result.add(this.supply.lpar, false);
 		result.setSequenceTargetType(TIntrinsicVariable.class);
 		return result;		
 	}
@@ -180,8 +181,9 @@ public class TFIntrinsic extends TokenFactorySupply {
 				throw new SyntaxErrorException(MError.ERR_UNKNOWN_INTRINSIC_FUNCTION);
 			}
 			TokenFactory argumentFactory = info.getArgumentFactory();
-			TFSequence result = new TFIntrinsicRest(info, info.getMinNumArguments() == 0, "instrinsic.name", argumentFactory, this.supply.rpar);
-			result.setRequiredFlags(info.getMinNumArguments() > 0, true);
+			TFSequence result = new TFIntrinsicRest(info, info.getMinNumArguments() == 0, "instrinsic.name");
+			result.add(argumentFactory, info.getMinNumArguments() > 0);
+			result.add(this.supply.rpar, true);
 			return result;
 		} else {
 			if (TFIntrinsic.this.variables.containsKey(name)) {

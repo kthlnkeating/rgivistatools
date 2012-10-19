@@ -41,7 +41,7 @@ public class TChoiceOfSymbols extends TDelimitedList implements RuleSupplies {
 	
 	@Override
 	public void acceptElement(RuleDefinitionVisitor visitor, int index, String name, RuleSupplyFlag flag) {
-		RuleSupply rs = (RuleSupply) this.getDelimiterFreeToken(index);
+		RuleSupply rs = (RuleSupply) this.getLogicalToken(index);
 		rs.accept(visitor, name, flag);
 	}
 }

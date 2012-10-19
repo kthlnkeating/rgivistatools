@@ -94,9 +94,11 @@ public class FSRChoice extends FSRCollection {
 	@Override
 	public boolean update(RulesByName symbols) {
 		RulesByNameLocal localSymbols = new RulesByNameLocal(symbols, this);
-		List<TokenFactory> fs = this.getChoiceFactories(localSymbols);		
-		TokenFactory[] fsAsArray = fs.toArray(new TokenFactory[0]);
-		this.factory.setFactories(fsAsArray);
+		List<TokenFactory> fs = this.getChoiceFactories(localSymbols);
+		this.factory.reset(fs.size());
+		for (TokenFactory f : fs) {
+			this.factory.add(f);
+		}
 		return true;
 	}
 

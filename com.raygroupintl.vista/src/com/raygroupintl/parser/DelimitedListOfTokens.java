@@ -130,7 +130,7 @@ public class DelimitedListOfTokens extends CollectionOfTokens {
 		return new TDelimitedListIterator(this.toList().iterator());
 	}
 	
-	public Token getDelimiterFreeToken(int index) {
+	public Token getLogicalToken(int index) {
 		if (index == 0) {
 			return this.get(0);
 		} else {

@@ -18,6 +18,8 @@ package com.raygroupintl.parser;
 
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -29,32 +31,27 @@ public class TFSequence extends TokenFactory {
 	}
 
 	private final static class RequiredFlags {
-		private boolean[] flags;
+		private List<Boolean> flags;
 		private int firstRequired = Integer.MAX_VALUE;
 		private int lastRequired = Integer.MIN_VALUE;
 
 		public RequiredFlags() {
-			this(0);
+			this.flags = new ArrayList<Boolean>();
 		}
 
 		public RequiredFlags(int size) {
-			flags = new boolean[size];
+			this.flags = new ArrayList<Boolean>(size);
 		}
 
-		public void set(boolean[] flags) {
-			this.flags = flags;
-			this.firstRequired = Integer.MAX_VALUE;			
-			this.lastRequired = Integer.MIN_VALUE;			
-			int index = 0;
-			for (boolean b : flags) {
-				if (b) {
-					if (this.firstRequired == Integer.MAX_VALUE) {
-						this.firstRequired = index;
-					}
-					this.lastRequired = index;
+		public void add(boolean b) {
+			int n = this.flags.size();			
+			this.flags.add(b);
+			if (b) {
+				if (this.firstRequired == Integer.MAX_VALUE) {
+					this.firstRequired = n;
 				}
-				++index;
-			}		
+				this.lastRequired = n;
+			}
 		}
 		
 		public int getFirstRequiredIndex() {
@@ -66,11 +63,11 @@ public class TFSequence extends TokenFactory {
 		}
 		
 		public boolean isRequired(int i) {
-			return this.flags[i];
+			return this.flags.get(i);
 		}		
 	}
 	
-	private TokenFactory[] factories = {};
+	private List<TokenFactory> factories = new ArrayList<TokenFactory>();
 	private RequiredFlags requiredFlags = new RequiredFlags();
 
 	private Constructor<? extends CompositeToken> constructor;
@@ -80,28 +77,27 @@ public class TFSequence extends TokenFactory {
 		super(name);
 	}
 	
-	public TFSequence(String name, TokenFactory... factories) {
-		this(name);
-		this.factories = factories;
-		this.requiredFlags = new RequiredFlags(factories.length);
+	public TFSequence(String name, int length) {		
+		super(name);
+		this.factories = new ArrayList<TokenFactory>(length);
+		this.requiredFlags = new RequiredFlags(length);
 	}
-		
-	public void setFactories(TokenFactory[] factories, boolean[] requiredFlags) {
-		if (requiredFlags.length != factories.length) throw new IllegalArgumentException();
-		this.factories = factories;
-		this.requiredFlags.set(requiredFlags);
+	
+	public void reset(int length) {
+		this.factories = new ArrayList<TokenFactory>(length);
+		this.requiredFlags = new RequiredFlags(length);		
 	}
-
-	public void setRequiredFlags(boolean... requiredFlags) {
-		if (requiredFlags.length != this.factories.length) throw new IllegalArgumentException();
-		this.requiredFlags.set(requiredFlags);
+	
+	public void add(TokenFactory tf, boolean required) {
+		this.factories.add(tf);
+		this.requiredFlags.add(required);
 	}
 	
 	@Override
 	public int getSequenceCount() {
-		return this.factories.length;
+		return this.factories.size();
 	}
-	
+		
 	protected ValidateResult validateNull(int seqIndex, CompositeToken foundTokens, boolean noException) throws SyntaxErrorException {
 		int firstRequired = this.requiredFlags.getFirstRequiredIndex();
 		int lastRequired = this.requiredFlags.getLastRequiredIndex();
@@ -135,7 +131,7 @@ public class TFSequence extends TokenFactory {
 	@Override
 	public final CompositeToken tokenizeOnly(Text text, ObjectSupply objectSupply) throws SyntaxErrorException {
 		if (text.onChar()) {
-			int length = this.factories.length;
+			int length = this.factories.size();
 			try {
 				CompositeToken foundTokens = this.constructor != null ? this.constructor.newInstance(length) : objectSupply.newSequence(length);
 				return this.tokenizeCommon(text, objectSupply, 0, foundTokens, false);
@@ -165,9 +161,9 @@ public class TFSequence extends TokenFactory {
 	}
 	
 	final CompositeToken tokenizeCommon(Text text, ObjectSupply objectSupply, int firstSeqIndex, CompositeToken foundTokens, boolean noException) throws SyntaxErrorException {
-		int factoryCount = this.factories.length;
+		int factoryCount = this.factories.size();
 		for (int i=firstSeqIndex; i<factoryCount; ++i) {
-			TokenFactory factory = this.factories[i];
+			TokenFactory factory = this.factories.get(i);
 			Token token = null;
 			try {
 				token = factory.tokenize(text, objectSupply);				
@@ -195,6 +191,6 @@ public class TFSequence extends TokenFactory {
 	}
 	
 	public TokenFactory getFactory(int index) {
-		return this.factories[index];
+		return this.factories.get(index);
 	}
 }
