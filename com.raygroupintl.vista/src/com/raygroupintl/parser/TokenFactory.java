@@ -52,8 +52,8 @@ public abstract class TokenFactory {
 
 	protected abstract Token tokenizeOnly(Text text, ObjectSupply objectSupply) throws SyntaxErrorException;
 	
-	public void setTargetType(Class<? extends Token> cls) {
-		final Constructor<? extends Token> constructor = getConstructor(cls, Token.class);
+	public <M extends Token> void setTargetType(Class<M> cls) {
+		final Constructor<M> constructor = getConstructor(cls, Token.class);
 		this.adapter = new Adapter() {			
 			@Override
 			public Token convert(Token ch) {
@@ -66,7 +66,7 @@ public abstract class TokenFactory {
 		};
 	}
 	
-	protected <T> Constructor<? extends T> getConstructor(Class<? extends T> cls, Class<?> argument) {
+	protected <M, N> Constructor<M> getConstructor(Class<M> cls, Class<N> argument) {
 		try {
 			int modifiers = cls.getModifiers();
 			if (! Modifier.isPublic(modifiers)) {
@@ -75,7 +75,7 @@ public abstract class TokenFactory {
 			if (Modifier.isAbstract(modifiers) || Modifier.isInterface(modifiers)) {
 				throw new IllegalArgumentException(this.name + ": " + cls.getName() + " is abstract.");
 			}
-			final Constructor<? extends T> constructor = cls.getConstructor(argument);
+			final Constructor<M> constructor = cls.getConstructor(argument);
 			if (! Modifier.isPublic(constructor.getModifiers())) {
 				throw new IllegalArgumentException(this.name + ": " + cls.getName() + " constructor (" + argument.getName() + ") is not public.");			
 			}
