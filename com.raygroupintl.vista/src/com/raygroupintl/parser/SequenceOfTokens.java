@@ -63,10 +63,10 @@ public class SequenceOfTokens extends CollectionOfTokens {
 		this.length = length;
 	}
 
-	public SequenceOfTokens(List<Token> tokens) {
-		this.tokens = tokens;
-		this.index = tokens.size();
-		this.length = tokens.size();
+	public SequenceOfTokens(SequenceOfTokens rhs) {
+		this.tokens = rhs.tokens;
+		this.index = rhs.index;
+		this.length = rhs.length;
 	}
 
 	public SequenceOfTokens(Token token0, Token token1) {

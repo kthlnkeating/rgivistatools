@@ -19,8 +19,8 @@ package com.raygroupintl.m.token;
 import com.raygroupintl.m.parsetree.ForLoop;
 import com.raygroupintl.m.parsetree.Node;
 import com.raygroupintl.m.parsetree.NodeList;
+import com.raygroupintl.parser.SequenceOfTokens;
 import com.raygroupintl.parser.Token;
-import com.raygroupintl.parser.Tokens;
 
 public class MForCmd extends MCommandBase {
 	public static class MForCmdEQRHS extends MSequence {
@@ -28,8 +28,8 @@ public class MForCmd extends MCommandBase {
 			super(length);
 		}
 		
-		public MForCmdEQRHS(Tokens store) {
-			super(store);
+		public MForCmdEQRHS(SequenceOfTokens tokens) {
+			super(tokens);
 		}
 		
 		@Override

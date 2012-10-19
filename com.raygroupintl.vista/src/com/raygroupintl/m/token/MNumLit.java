@@ -18,15 +18,15 @@ package com.raygroupintl.m.token;
 
 import com.raygroupintl.m.parsetree.Node;
 import com.raygroupintl.m.parsetree.NumberLiteral;
-import com.raygroupintl.parser.Tokens;
+import com.raygroupintl.parser.SequenceOfTokens;
 
 public class MNumLit extends MSequence {
 	public MNumLit(int length) {
 		super(length);
 	}
 
-	public MNumLit(Tokens store) {
-		super(store);
+	public MNumLit(SequenceOfTokens tokens) {
+		super(tokens);
 	}
 
 	@Override

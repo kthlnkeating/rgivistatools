@@ -20,9 +20,9 @@ import com.raygroupintl.m.parsetree.Node;
 import com.raygroupintl.m.parsetree.NodeList;
 import com.raygroupintl.m.parsetree.StructuredSystemVariable;
 import com.raygroupintl.m.struct.MNameWithMnemonic;
+import com.raygroupintl.parser.SequenceOfTokens;
 import com.raygroupintl.parser.StringPiece;
 import com.raygroupintl.parser.Token;
-import com.raygroupintl.parser.Tokens;
 
 public class MSsvn extends MSequence {
 	private static final MNameWithMnemonic.Map SSVS = new MNameWithMnemonic.Map();
@@ -42,8 +42,8 @@ public class MSsvn extends MSequence {
 		super(length);
 	}
 	
-	public MSsvn(Tokens store) {
-		super(store);
+	public MSsvn(SequenceOfTokens tokens) {
+		super(tokens);
 	}
 	
 	@Override

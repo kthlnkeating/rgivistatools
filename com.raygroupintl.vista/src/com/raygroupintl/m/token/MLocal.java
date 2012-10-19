@@ -19,17 +19,17 @@ package com.raygroupintl.m.token;
 import com.raygroupintl.m.parsetree.Local;
 import com.raygroupintl.m.parsetree.Node;
 import com.raygroupintl.m.parsetree.NodeList;
+import com.raygroupintl.parser.SequenceOfTokens;
 import com.raygroupintl.parser.StringPiece;
 import com.raygroupintl.parser.Token;
-import com.raygroupintl.parser.Tokens;
 
 public class MLocal extends MSequence {
 	public MLocal(int length) {
 		super(length);
 	}
 
-	public MLocal(Tokens store) {
-		super(store);
+	public MLocal(SequenceOfTokens tokens) {
+		super(tokens);
 	}
 
 	@Override

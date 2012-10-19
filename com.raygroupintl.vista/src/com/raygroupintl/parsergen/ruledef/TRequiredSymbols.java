@@ -16,15 +16,15 @@
 
 package com.raygroupintl.parsergen.ruledef;
 
-import com.raygroupintl.parser.Tokens;
+import com.raygroupintl.parser.SequenceOfTokens;
 
 public class TRequiredSymbols extends TSequence implements RuleSupply {
 	public TRequiredSymbols(int length) {
 		super(length);
 	}
 	
-	public TRequiredSymbols(Tokens store) {
-		super(store.toList());
+	public TRequiredSymbols(SequenceOfTokens tokens) {
+		super(tokens);
 	}
 	
 	@Override

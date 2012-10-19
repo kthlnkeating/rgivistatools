@@ -20,15 +20,14 @@ import com.raygroupintl.m.parsetree.Node;
 import com.raygroupintl.parser.CompositeToken;
 import com.raygroupintl.parser.SequenceOfTokens;
 import com.raygroupintl.parser.Token;
-import com.raygroupintl.parser.Tokens;
 
 public class MSequence extends SequenceOfTokens implements MToken, CompositeToken {
 	public MSequence(int length) {
 		super(length);
 	}
 	
-	public MSequence(Tokens store) {
-		super(store.toList());
+	public MSequence(SequenceOfTokens tokens) {
+		super(tokens);
 	}
 	
 	public MSequence(Token token0, Token token1) {

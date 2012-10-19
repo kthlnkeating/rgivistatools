@@ -18,6 +18,7 @@ package com.raygroupintl.parsergen.ruledef;
 
 import com.raygroupintl.charlib.Predicate;
 import com.raygroupintl.charlib.PredicateFactory;
+import com.raygroupintl.parser.SequenceOfTokens;
 import com.raygroupintl.parser.Token;
 import com.raygroupintl.parser.Tokens;
 
@@ -26,8 +27,8 @@ public class TCharSymbol extends TSequence implements CharSymbol {
 		super(length);
 	}
 	
-	public TCharSymbol(Tokens store) {
-		super(store.toList());
+	public TCharSymbol(SequenceOfTokens tokens) {
+		super(tokens);
 	}
 	
 	private static char getChar(String inQuotes) {

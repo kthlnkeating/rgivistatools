@@ -19,8 +19,8 @@ package com.raygroupintl.m.token;
 import com.raygroupintl.m.parsetree.Node;
 import com.raygroupintl.m.parsetree.Nodes;
 import com.raygroupintl.m.parsetree.SetCmdNodes;
+import com.raygroupintl.parser.SequenceOfTokens;
 import com.raygroupintl.parser.Token;
-import com.raygroupintl.parser.Tokens;
 
 public final class SetCmdTokens {
 	public static final class MSetCmd extends MCommand {
@@ -44,8 +44,8 @@ public final class SetCmdTokens {
 			super(length);
 		}
 		
-		public MSingleAtomicSetCmd(Tokens store) {
-			super(store);
+		public MSingleAtomicSetCmd(SequenceOfTokens tokens) {
+			super(tokens);
 		}
 		
 		@Override
@@ -67,8 +67,8 @@ public final class SetCmdTokens {
 			super(length);
 		}
 		
-		public MMultiAtomicSetCmd(Tokens store) {
-			super(store);
+		public MMultiAtomicSetCmd(SequenceOfTokens tokens) {
+			super(tokens);
 		}
 		
 		@Override

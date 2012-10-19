@@ -69,7 +69,7 @@ public class TFSequence extends TokenFactory {
 	private List<TokenFactory> factories = new ArrayList<TokenFactory>();
 	private RequiredFlags requiredFlags = new RequiredFlags();
 
-	private Constructor<? extends CompositeToken> constructor;
+	private Constructor<? extends Token> constructor;
 	
 	public TFSequence(String name) {		
 		super(name);
@@ -127,34 +127,38 @@ public class TFSequence extends TokenFactory {
 	}
 	
 	@Override
-	public final CompositeToken tokenizeOnly(Text text, ObjectSupply objectSupply) throws SyntaxErrorException {
+	public final Token tokenizeOnly(Text text, ObjectSupply objectSupply) throws SyntaxErrorException {
 		if (text.onChar()) {
-			int length = this.factories.size();
-			SequenceOfTokens foundTokens = new SequenceOfTokens(length);
-			foundTokens = this.tokenizeCommon(text, objectSupply, 0, foundTokens, false);
+			SequenceOfTokens foundTokens = this.tokenizeCommon(text, objectSupply);
 			return this.convertSequence(foundTokens, objectSupply);
 		}		
 		return null;
 	}
 	
-	public void setSequenceTargetType(Class<? extends CompositeToken> cls) {
-		this.constructor = this.getConstructor(cls, Tokens.class);
+	public void setSequenceTargetType(Class<? extends Token> cls) {
+		this.constructor = this.getConstructor(cls, SequenceOfTokens.class);
 		
 	}
 	
-	public CompositeToken convertSequence(SequenceOfTokens compositeToken, ObjectSupply objectSupply) {
-		if (compositeToken == null) return null;
+	public Token convertSequence(SequenceOfTokens tokens, ObjectSupply objectSupply) {
+		if (tokens == null) return null;
 		if (this.constructor == null) {
-			return objectSupply.newSequence(compositeToken);
+			return objectSupply.newSequence(tokens);
 		} else {
 			try {
-				return this.constructor.newInstance(compositeToken);						
+				return this.constructor.newInstance(tokens);						
 			} catch (Throwable t) {
 				String clsName =  this.getClass().getName();
 				Logger.getLogger(clsName).log(Level.SEVERE, "Unable to instantiate " + clsName + ".", t);			
 			}
 			return null;
 		}
+	}
+	
+	final SequenceOfTokens tokenizeCommon(Text text, ObjectSupply objectSupply) throws SyntaxErrorException {
+		int length = this.factories.size();
+		SequenceOfTokens foundTokens = new SequenceOfTokens(length);
+		return this.tokenizeCommon(text, objectSupply, 0, foundTokens, false);
 	}
 	
 	final SequenceOfTokens tokenizeCommon(Text text, ObjectSupply objectSupply, int firstSeqIndex, SequenceOfTokens foundTokens, boolean noException) throws SyntaxErrorException {

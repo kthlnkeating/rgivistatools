@@ -16,16 +16,16 @@
 
 package com.raygroupintl.parsergen.ruledef;
 
+import com.raygroupintl.parser.SequenceOfTokens;
 import com.raygroupintl.parser.Token;
-import com.raygroupintl.parser.Tokens;
 
 public class TSymbolList extends TSequence implements SymbolList {
 	public TSymbolList(int length) {
 		super(length);
 	}
 	
-	public TSymbolList(Tokens store) {
-		super(store.toList());
+	public TSymbolList(SequenceOfTokens tokens) {
+		super(tokens);
 	}
 	
 	@Override

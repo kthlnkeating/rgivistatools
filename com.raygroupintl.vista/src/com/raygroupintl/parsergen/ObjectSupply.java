@@ -20,14 +20,14 @@ import java.util.List;
 
 import com.raygroupintl.parser.CompositeToken;
 import com.raygroupintl.parser.EmptyToken;
+import com.raygroupintl.parser.SequenceOfTokens;
 import com.raygroupintl.parser.StringToken;
 import com.raygroupintl.parser.Token;
-import com.raygroupintl.parser.Tokens;
 
 public interface ObjectSupply {
 	StringToken newString();
 	CompositeToken newSequence(int length);
-	CompositeToken newSequence(Tokens store);
+	Token newSequence(SequenceOfTokens store);
 	CompositeToken newList();
 	CompositeToken newDelimitedList(Token leadingToken, List<Token> tailTokens);
 	EmptyToken newEmpty();

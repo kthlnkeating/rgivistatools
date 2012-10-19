@@ -16,15 +16,15 @@
 
 package com.raygroupintl.parsergen.ruledef;
 
-import com.raygroupintl.parser.Tokens;
+import com.raygroupintl.parser.SequenceOfTokens;
 
 public class TOptionalSymbols extends TSequence implements RuleSupply {
 	public TOptionalSymbols(int length) {
 		super(length);
 	}
 	
-	public TOptionalSymbols(Tokens store) {
-		super(store.toList());
+	public TOptionalSymbols(SequenceOfTokens tokens) {
+		super(tokens);
 	}
 
 	@Override

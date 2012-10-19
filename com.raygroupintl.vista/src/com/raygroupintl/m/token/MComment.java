@@ -17,15 +17,15 @@
 package com.raygroupintl.m.token;
 
 import com.raygroupintl.m.parsetree.Node;
-import com.raygroupintl.parser.Tokens;
+import com.raygroupintl.parser.SequenceOfTokens;
 
 public class MComment extends MSequence {
 	public MComment(int length) {
 		super(length);
 	}
 	
-	public MComment(Tokens store) {
-		super(store);
+	public MComment(SequenceOfTokens tokens) {
+		super(tokens);
 	}
 	
 	@Override

@@ -74,11 +74,11 @@ public class TFDelimitedList extends TokenFactory {
 	}
 	
 	@Override
-	protected CompositeToken tokenizeOnly(Text text, ObjectSupply objectSupply) throws SyntaxErrorException {
+	protected Token tokenizeOnly(Text text, ObjectSupply objectSupply) throws SyntaxErrorException {
 		if (this.effective == null) {
 			throw new IllegalStateException("TFDelimitedList.set needs to be called before TFDelimitedList.tokenize");
 		} else {
-			CompositeToken internalResult = this.effective.tokenizeOnly(text, objectSupply);
+			SequenceOfTokens internalResult = this.effective.tokenizeCommon(text, objectSupply);
 			if (internalResult == null) {
 				return null;
 			} else {

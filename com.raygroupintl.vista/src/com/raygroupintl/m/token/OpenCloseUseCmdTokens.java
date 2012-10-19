@@ -19,8 +19,8 @@ package com.raygroupintl.m.token;
 import com.raygroupintl.m.parsetree.Node;
 import com.raygroupintl.m.parsetree.Nodes;
 import com.raygroupintl.m.parsetree.OpenCloseUseCmdNodes;
+import com.raygroupintl.parser.SequenceOfTokens;
 import com.raygroupintl.parser.Token;
-import com.raygroupintl.parser.Tokens;
 
 public class OpenCloseUseCmdTokens {
 	public static final class MOpenCmd extends MCommand {
@@ -120,8 +120,8 @@ public class OpenCloseUseCmdTokens {
 			super(length);
 		}
 		
-		public MDeviceParameters(Tokens store) {
-			super(store);
+		public MDeviceParameters(SequenceOfTokens tokens) {
+			super(tokens);
 		}
 		
 		@Override

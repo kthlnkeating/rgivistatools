@@ -18,8 +18,8 @@ package com.raygroupintl.m.token;
 
 import com.raygroupintl.m.parsetree.Node;
 import com.raygroupintl.m.parsetree.MergeCmdNodes;
+import com.raygroupintl.parser.SequenceOfTokens;
 import com.raygroupintl.parser.Token;
-import com.raygroupintl.parser.Tokens;
 
 public final class MergeCmdTokens {
 	public static final class MMergeCmd extends MCommand {
@@ -43,8 +43,8 @@ public final class MergeCmdTokens {
 			super(length);
 		}
 		
-		public MAtomicMergeCmd(Tokens store) {
-			super(store);
+		public MAtomicMergeCmd(SequenceOfTokens tokens) {
+			super(tokens);
 		}
 		
 		@Override
@@ -62,8 +62,8 @@ public final class MergeCmdTokens {
 			super(length);
 		}
 		
-		public MIndirectAtomicMergeCmd(Tokens store) {
-			super(store);
+		public MIndirectAtomicMergeCmd(SequenceOfTokens tokens) {
+			super(tokens);
 		}
 		
 		@Override

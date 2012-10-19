@@ -7,6 +7,7 @@ import com.raygroupintl.m.parsetree.Line;
 import com.raygroupintl.m.parsetree.Node;
 import com.raygroupintl.m.parsetree.NodeList;
 import com.raygroupintl.m.parsetree.ParentNode;
+import com.raygroupintl.parser.SequenceOfTokens;
 import com.raygroupintl.parser.StringPiece;
 import com.raygroupintl.parser.Token;
 import com.raygroupintl.parser.Tokens;
@@ -19,8 +20,8 @@ public class MLine extends MSequence {
 		super(length);
 	}
 
-	public MLine(Tokens store) {
-		super(store);
+	public MLine(SequenceOfTokens tokens) {
+		super(tokens);
 	}
 
 	public String getTag() {

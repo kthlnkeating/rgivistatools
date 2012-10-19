@@ -19,16 +19,16 @@ package com.raygroupintl.m.token;
 import com.raygroupintl.m.parsetree.NakedGlobal;
 import com.raygroupintl.m.parsetree.Node;
 import com.raygroupintl.m.parsetree.NodeList;
+import com.raygroupintl.parser.SequenceOfTokens;
 import com.raygroupintl.parser.Token;
-import com.raygroupintl.parser.Tokens;
 
 public class MNakedGlobal extends MSequence {
 	public MNakedGlobal(int length) {
 		super(length);
 	}
 
-	public MNakedGlobal(Tokens store) {
-		super(store);
+	public MNakedGlobal(SequenceOfTokens tokens) {
+		super(tokens);
 	}
 
 	@Override

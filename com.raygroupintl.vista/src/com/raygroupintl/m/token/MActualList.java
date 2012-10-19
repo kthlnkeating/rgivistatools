@@ -19,6 +19,7 @@ package com.raygroupintl.m.token;
 import com.raygroupintl.m.parsetree.ActualList;
 import com.raygroupintl.m.parsetree.IgnorableNode;
 import com.raygroupintl.m.parsetree.Node;
+import com.raygroupintl.parser.SequenceOfTokens;
 import com.raygroupintl.parser.Token;
 import com.raygroupintl.parser.Tokens;
 
@@ -27,8 +28,8 @@ public class MActualList extends MSequence {
 		super(length);
 	}
 
-	public MActualList(Tokens store) {
-		super(store);
+	public MActualList(SequenceOfTokens tokens) {
+		super(tokens);
 	}
 
 	@Override

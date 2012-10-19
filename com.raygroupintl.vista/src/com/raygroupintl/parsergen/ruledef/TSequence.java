@@ -16,8 +16,6 @@
 
 package com.raygroupintl.parsergen.ruledef;
 
-import java.util.List;
-
 import com.raygroupintl.parser.CompositeToken;
 import com.raygroupintl.parser.SequenceOfTokens;
 import com.raygroupintl.parser.Token;
@@ -27,7 +25,7 @@ public class TSequence extends SequenceOfTokens implements CompositeToken {
 		super(length);
 	}
 
-	public TSequence(List<Token> tokens) {
+	public TSequence(SequenceOfTokens tokens) {
 		super(tokens);
 	}
 

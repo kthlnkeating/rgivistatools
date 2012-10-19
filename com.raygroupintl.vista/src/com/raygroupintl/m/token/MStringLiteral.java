@@ -18,15 +18,15 @@ package com.raygroupintl.m.token;
 
 import com.raygroupintl.m.parsetree.Node;
 import com.raygroupintl.m.parsetree.StringLiteral;
-import com.raygroupintl.parser.Tokens;
+import com.raygroupintl.parser.SequenceOfTokens;
 
 public class MStringLiteral extends MSequence {
 	public MStringLiteral(int length) {
 		super(length);
 	}
 
-	public MStringLiteral(Tokens store) {
-		super(store);
+	public MStringLiteral(SequenceOfTokens tokens) {
+		super(tokens);
 	}
 
 	@Override
