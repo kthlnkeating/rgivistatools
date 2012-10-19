@@ -55,8 +55,12 @@ public class DelimitedListOfTokens extends CollectionOfTokens {
 		}		
 	}
 
-	public DelimitedListOfTokens(List<Token> tokens) {
-		this.tokens = tokens;
+	public DelimitedListOfTokens(Token leadingToken, List<Token> tailTokens) {
+		this.tokens = new ArrayList<Token>(1 + (tailTokens == null ? 0 : tailTokens.size()));
+		this.tokens.add(leadingToken);
+		if (tailTokens != null) {
+			this.tokens.addAll(tailTokens);
+		}
 	}
 
 	@Override

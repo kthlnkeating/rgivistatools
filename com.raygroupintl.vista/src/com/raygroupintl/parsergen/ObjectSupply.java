@@ -29,6 +29,6 @@ public interface ObjectSupply {
 	CompositeToken newSequence(int length);
 	CompositeToken newSequence(Tokens store);
 	CompositeToken newList();
-	CompositeToken newDelimitedList(List<Token> tokens);
+	CompositeToken newDelimitedList(Token leadingToken, List<Token> tailTokens);
 	EmptyToken newEmpty();
 }

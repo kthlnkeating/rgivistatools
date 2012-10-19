@@ -21,8 +21,8 @@ import java.util.List;
 import com.raygroupintl.parser.Token;
 
 public class TSymbolSequence extends TDelimitedList implements RuleSupplies {
-	public TSymbolSequence(List<Token> tokens) {
-		super(tokens);
+	public TSymbolSequence(Token leadingToken, List<Token> tailTokens) {
+		super(leadingToken, tailTokens);
 	}
 	
 	@Override

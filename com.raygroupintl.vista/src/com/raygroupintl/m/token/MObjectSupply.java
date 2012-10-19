@@ -46,8 +46,8 @@ public class MObjectSupply implements ObjectSupply {
 	}
 	
 	@Override
-	public CompositeToken newDelimitedList(List<Token> tokens) {
-		return new MDelimitedList(tokens);
+	public CompositeToken newDelimitedList(Token leadingToken, List<Token> tailTokens) {
+		return new MDelimitedList(leadingToken, tailTokens);
 	}
 	
 	@Override

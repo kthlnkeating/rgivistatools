@@ -124,12 +124,6 @@ public class SequenceOfTokens extends CollectionOfTokens {
 	}
 	
 	@Override
-	public void addToken(int index, Token token) {
-		++this.index;
-		this.tokens.add(index, token);
-	}
-	
-	@Override
 	public void setToken(int index, Token token) {
 		if (this.index <= index) {		
 			for (int i=this.index; i<index; ++i) {

@@ -23,8 +23,8 @@ import com.raygroupintl.parser.DelimitedListOfTokens;
 import com.raygroupintl.parser.Token;
 
 public class TDelimitedList extends DelimitedListOfTokens implements CompositeToken {
-	public TDelimitedList(List<Token> tokens) {
-		super(tokens);
+	public TDelimitedList(Token leadingToken, List<Token> tailTokens) {
+		super(leadingToken, tailTokens);
 	}
 
 	@Override

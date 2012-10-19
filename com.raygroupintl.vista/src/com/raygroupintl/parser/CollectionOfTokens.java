@@ -24,11 +24,6 @@ public abstract class CollectionOfTokens implements Tokens {
 	protected List<Token> tokens;
 
 	@Override
-	public void addToken(int index, Token token) {
-		this.tokens.add(index, token);
-	}
-
-	@Override
 	public void setToken(int index, Token token) {
 		this.tokens.set(index, token);
 	}

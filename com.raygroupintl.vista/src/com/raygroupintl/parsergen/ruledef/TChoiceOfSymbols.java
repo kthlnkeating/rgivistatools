@@ -21,8 +21,8 @@ import java.util.List;
 import com.raygroupintl.parser.Token;
 
 public class TChoiceOfSymbols extends TDelimitedList implements RuleSupplies {
-	public TChoiceOfSymbols(List<Token> tokens) {
-		super(tokens);
+	public TChoiceOfSymbols(Token leadingToken, List<Token> tailTokens) {
+		super(leadingToken, tailTokens);
 	}
 		
 	@Override

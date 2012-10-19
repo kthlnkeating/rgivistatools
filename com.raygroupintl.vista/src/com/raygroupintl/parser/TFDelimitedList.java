@@ -17,7 +17,6 @@
 package com.raygroupintl.parser;
 
 import java.lang.reflect.Constructor;
-import java.util.Arrays;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -60,12 +59,12 @@ public class TFDelimitedList extends TokenFactory {
 		this.set(element, delimiter, false);
 	}
 
-	private CompositeToken convertList(ObjectSupply objectSupply, List<Token> list) {
+	private CompositeToken convertList(ObjectSupply objectSupply, Token leadingToken, List<Token> tailTokens) {
 		if (this.constructor == null) {
-			return objectSupply.newDelimitedList(list);			
+			return objectSupply.newDelimitedList(leadingToken, tailTokens);			
 		} else {
 			try {
-				return this.constructor.newInstance(list);						
+				return this.constructor.newInstance(leadingToken, tailTokens);						
 			} catch (Throwable t) {
 				String clsName =  this.getClass().getName();
 				Logger.getLogger(clsName).log(Level.SEVERE, "Unable to instantiate " + clsName + ".", t);			
@@ -86,23 +85,24 @@ public class TFDelimitedList extends TokenFactory {
 				Token leadingToken = internalResult.get(0);
 				Tokens tailTokens = internalResult.getTokens(1);
 				if (tailTokens == null) {
-					Token[] tmpResult = {leadingToken};
-					List<Token> list = Arrays.asList(tmpResult);
-					return this.convertList(objectSupply, list);
+					return this.convertList(objectSupply, leadingToken, null);
 				} else {
-					tailTokens.addToken(0, leadingToken);
 					int lastIndex = tailTokens.size() - 1;
 					Tokens lastToken = tailTokens.getTokens(lastIndex);
 					if (lastToken.get(1) == null) {
 						lastToken.setToken(1, objectSupply.newEmpty());
 					}
-					return this.convertList(objectSupply, tailTokens.toList());
+					return this.convertList(objectSupply, leadingToken, tailTokens.toList());
 				}
 			}
 		}
 	}
 	
 	public void setDelimitedListTargetType(Class<? extends CompositeToken> cls) {
-		this.constructor = this.getConstructor(cls, List.class);
+		try {
+			this.constructor = cls.getConstructor(new Class[]{Token.class, List.class});    //this.getConstructor(cls, List.class);
+		} catch (Exception ex) {
+			
+		}
 	}
 }

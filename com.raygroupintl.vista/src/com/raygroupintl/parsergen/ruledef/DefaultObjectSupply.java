@@ -46,8 +46,8 @@ public class DefaultObjectSupply implements ObjectSupply {
 	}
 	
 	@Override
-	public CompositeToken newDelimitedList(List<Token> tokens) {
-		return new TDelimitedList(tokens);
+	public CompositeToken newDelimitedList(Token leadingToken, List<Token> tailTokens) {
+		return new TDelimitedList(leadingToken, tailTokens);
 	}
 	
 	@Override
