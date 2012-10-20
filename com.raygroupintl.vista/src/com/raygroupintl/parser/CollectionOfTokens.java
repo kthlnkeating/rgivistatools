@@ -44,7 +44,9 @@ public abstract class CollectionOfTokens implements Tokens {
 			return null;
 		} else {
 			if (t instanceof Tokens) {
-				return (Tokens) t; 
+				//@SuppressWarnings("unchecked")
+				Tokens ts = (Tokens) t;
+				return ts; 
 			} else {
 				return null;
 			}

@@ -29,17 +29,6 @@ public class TFChoice extends TokenFactory {
 		this.factories = new ArrayList<TokenFactory>();
 	}
 	
-	public TFChoice(String name, TokenFactory... factories) {
-		super(name);
-		this.factories = new ArrayList<TokenFactory>(factories.length);
-		for (int i=0; i<factories.length; ++i) this.factories.add(factories[i]);
-	}
-	
-	public void setFactories(TokenFactory... factories) {
-		this.factories = new ArrayList<TokenFactory>(factories.length);
-		for (int i=0; i<factories.length; ++i) this.factories.add(factories[i]);
-	}
-	
 	public void reset(int length) {
 		this.factories = new ArrayList<TokenFactory>(length);		
 	}

@@ -35,8 +35,9 @@ public class DelimitedListOfTokens extends CollectionOfTokens implements Iterabl
 			if (this.inInitialState()) {
 				return super.next();
 			} else {
-				Token t = super.next();
-				return ((Tokens) t).getToken(1);
+				//@SuppressWarnings("unchecked")
+				Tokens ts = (Tokens) super.next();
+				return ts.getToken(1);
 			}
 		}
 	}

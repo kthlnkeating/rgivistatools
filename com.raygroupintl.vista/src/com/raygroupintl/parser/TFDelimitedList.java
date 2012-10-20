@@ -34,7 +34,10 @@ public class TFDelimitedList extends TokenFactory {
 		if (emptyAllowed) {
 			String elementName = this.getName() + "." + element.getName();
 			String emptyName = this.getName() + "." + "empty";
-			return new TFChoice(elementName, element, new TFEmpty(emptyName, delimiter));	
+			TFChoice result = new TFChoice(elementName);
+			result.add(element);
+			result.add(new TFEmpty(emptyName, delimiter));
+			return result;
 		} else {
 			return element;
 		}
