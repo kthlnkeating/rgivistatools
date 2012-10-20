@@ -21,10 +21,6 @@ public class Empty {
 		return new StringPiece();
 	}
 
-	public void accept(TokensVisitor visitor) {
-		visitor.visitSingle();
-	}
-		
 	public void beautify() {
 	}
 }

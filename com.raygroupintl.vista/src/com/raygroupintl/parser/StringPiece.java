@@ -113,8 +113,4 @@ public class StringPiece implements StringPieceStore, Serializable {
 			}
 		}
 	}
-	
-	public void accept(TokensVisitor visitor) {
-		visitor.visitSingle();
-	}
 }

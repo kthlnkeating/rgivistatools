@@ -19,7 +19,6 @@ package com.raygroupintl.m.token;
 import com.raygroupintl.m.parsetree.Node;
 import com.raygroupintl.parser.StringPiece;
 import com.raygroupintl.parser.Token;
-import com.raygroupintl.parser.TokensVisitor;
 
 public abstract class MTokenCopy implements MToken {
 	private MToken actual;
@@ -65,8 +64,4 @@ public abstract class MTokenCopy implements MToken {
 	public MToken getSubNodeToken(int index) {
 		return this.actual.getSubNodeToken(index);
 	}
-	
-	public void accept(TokensVisitor visitor) {
-		this.actual.accept(visitor);
-	}	
 }

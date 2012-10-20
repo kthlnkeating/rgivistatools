@@ -43,12 +43,11 @@ public abstract class CollectionOfTokens implements Tokens {
 		if (t == null) {
 			return null;
 		} else {
-			TokensVisitor v = new TokensVisitor();
-			return v.toTokens(t);
+			if (t instanceof Tokens) {
+				return (Tokens) t; 
+			} else {
+				return null;
+			}
 		}
-	}
-
-	public void accept(TokensVisitor visitor) {
-		visitor.visitMultiple(this);
 	}
 }
