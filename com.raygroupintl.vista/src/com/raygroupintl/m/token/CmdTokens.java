@@ -124,7 +124,7 @@ class CmdTokens {
 
 		@Override
 		public Node getNode() {
-			Tokens argument = (Tokens) this.getArgument();
+			Tokens argument = this.getTokens(1, 2);
 			if (argument != null) {
 				Nodes<Node> node = NodeUtilities.getNodes(argument, argument.size());
 				return new IfCmd(node);

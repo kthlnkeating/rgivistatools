@@ -49,7 +49,7 @@ public class TCharSymbol extends TSequence implements CharSymbol {
 	public static void update(PredicateFactory pf, Token sign, Tokens spec) {
 		boolean exclude = (sign != null) && (sign.toValue().charAt(0) == '-');
 		char ch = getChar(spec.getToken(0).toValue().toString());
-		Token tRangeBound = spec.getToken(1);
+		Tokens tRangeBound = spec.getTokens(1);
 		if (tRangeBound == null) {
 			if (exclude) {
 				pf.removeChar(ch);
@@ -57,7 +57,7 @@ public class TCharSymbol extends TSequence implements CharSymbol {
 				pf.addChar(ch);
 			}
 		} else {			
-			char chOther = getChar(((Tokens) tRangeBound).getToken(1).toValue().toString());
+			char chOther = getChar(tRangeBound.getToken(1).toValue().toString());
 			if (exclude) {
 				pf.removeRange(ch, chOther);
 			} else {
@@ -74,11 +74,11 @@ public class TCharSymbol extends TSequence implements CharSymbol {
 	@Override
 	public Predicate getPredicate() {
 		PredicateFactory pf = new PredicateFactory();
-		TCharSymbol.update(pf, this.getToken(0), (Tokens) this.getToken(1));
-		Tokens list = (Tokens) this.getToken(2);
+		TCharSymbol.update(pf, this.getToken(0), this.getTokens(1));
+		Tokens list = this.getTokens(2);
 		if (list != null) for (Token t : list) {
 			Tokens casted = (Tokens) t;
-			TCharSymbol.update(pf, casted.getToken(0), (Tokens) casted.getToken(1));
+			TCharSymbol.update(pf, casted.getToken(0), casted.getTokens(1));
 		}		
 		return pf.generate();		
 	}

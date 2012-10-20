@@ -25,6 +25,7 @@ public interface Tokens extends Iterable<Token> {
 	Token getToken(int index0, int index1, int index2);	
 	
 	Tokens getTokens(int index);
+	Tokens getTokens(int index0, int index1);
 
 	boolean hasToken();
 		

@@ -34,21 +34,17 @@ public class MLine extends MSequence {
 	}
 	
 	public String[] getParameters() {
-		MToken paramsTokenWPars = this.getSubNodeToken(1);
-		if (paramsTokenWPars != null) {
-			Token paramTokens = paramsTokenWPars.getSubNodeToken(1);
-			if (paramTokens != null) {
-				Tokens resultAsList = (Tokens) paramTokens;
-				int length = resultAsList.size();
-				if (length > 0) {
-					String[] result = new String[resultAsList.size()];
-					int i=0;
-					for (Token t : resultAsList) {
-						result[i] = t.toValue().toString();
-						++i;
-					}
-					return result;
+		Tokens paramTokens = this.getTokens(1, 1);
+		if (paramTokens != null) {
+			int length = paramTokens.size();
+			if (length > 0) {
+				String[] result = new String[paramTokens.size()];
+				int i=0;
+				for (Token t : paramTokens) {
+					result[i] = t.toValue().toString();
+					++i;
 				}
+				return result;
 			}
 		}
 		return null;
@@ -97,7 +93,7 @@ public class MLine extends MSequence {
 	public Line getNode() {
 		Line result = new Line(this.tagName, this.index, this.getLevel());
 		ParentNode currentParent = result;
-		Tokens cmds = (Tokens) this.getToken(4);
+		Tokens cmds = this.getTokens(4);
 		if (cmds != null) {
 			NodeList<Node> nodes = null;
 			for (Iterator<Token> it = cmds.iterator(); it.hasNext();) {

@@ -50,4 +50,14 @@ public abstract class CollectionOfTokens implements Tokens {
 			}
 		}
 	}
+	
+	@Override
+	public Tokens getTokens(int index0, int index1) {
+		Tokens ts = this.getTokens(index0);
+		if (ts == null) {
+			return null;
+		} else {
+			return ts.getTokens(index1);
+		}
+	}
 }

@@ -22,7 +22,7 @@ import com.raygroupintl.m.parsetree.StructuredSystemVariable;
 import com.raygroupintl.m.struct.MNameWithMnemonic;
 import com.raygroupintl.parser.SequenceOfTokens;
 import com.raygroupintl.parser.StringPiece;
-import com.raygroupintl.parser.Token;
+import com.raygroupintl.parser.Tokens;
 
 public class MSsvn extends MSequence {
 	private static final MNameWithMnemonic.Map SSVS = new MNameWithMnemonic.Map();
@@ -49,7 +49,7 @@ public class MSsvn extends MSequence {
 	@Override
 	public Node getNode() {
 		StringPiece name = this.getToken(1).toValue();
-		Token subsripts = this.getToken(2);
+		Tokens subsripts = this.getTokens(2);
 		NodeList<Node> nodes = NodeUtilities.getSubscriptNodes(subsripts);
 		return new StructuredSystemVariable(name, nodes);
 	}

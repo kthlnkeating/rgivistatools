@@ -37,8 +37,8 @@ class NodeUtilities {
 		return result;		
 	}
 	
-	static NodeList<Node> getSubscriptNodes(Token subscriptToken) {
-		Tokens subscripts = (Tokens) ((MToken) subscriptToken).getSubNodeToken(1);
+	static NodeList<Node> getSubscriptNodes(Tokens subscriptTokens) {
+		Tokens subscripts = subscriptTokens.getTokens(1);
 		int size = subscripts.size();
 		NodeList<Node> nodes = new NodeList<>(size);
 		for (Token t : subscripts) {

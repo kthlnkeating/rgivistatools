@@ -21,7 +21,7 @@ import com.raygroupintl.m.parsetree.Node;
 import com.raygroupintl.m.parsetree.NodeList;
 import com.raygroupintl.parser.SequenceOfTokens;
 import com.raygroupintl.parser.StringPiece;
-import com.raygroupintl.parser.Token;
+import com.raygroupintl.parser.Tokens;
 
 public class MLocal extends MSequence {
 	public MLocal(int length) {
@@ -35,7 +35,7 @@ public class MLocal extends MSequence {
 	@Override
 	public Node getNode() {
 		StringPiece name = this.getToken(0).toValue();
-		Token subsripts = this.getToken(1);
+		Tokens subsripts = this.getTokens(1);
 		if (subsripts == null) {
 			return new Local(name);
 		} else {

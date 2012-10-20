@@ -21,7 +21,6 @@ import com.raygroupintl.m.parsetree.Node;
 import com.raygroupintl.m.parsetree.NodeList;
 import com.raygroupintl.parser.SequenceOfTokens;
 import com.raygroupintl.parser.StringPiece;
-import com.raygroupintl.parser.Token;
 import com.raygroupintl.parser.Tokens;
 
 public class MGlobal extends MSequence {
@@ -35,12 +34,12 @@ public class MGlobal extends MSequence {
 
 	@Override
 	public Node getNode() {
-		Tokens actual = (Tokens) this.getToken(1);
+		Tokens actual = this.getTokens(1);
 		if (actual.getToken(0) != null) {
 			return NodeUtilities.getNodes(actual, actual.size());
 		} else {
 			StringPiece name = actual.getToken(1).toValue();
-			Token subsripts = actual.getToken(2);
+			Tokens subsripts = actual.getTokens(2);
 			if (subsripts == null) {
 				return new Global(name);
 			} else {

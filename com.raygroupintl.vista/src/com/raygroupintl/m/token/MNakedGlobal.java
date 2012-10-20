@@ -20,7 +20,7 @@ import com.raygroupintl.m.parsetree.NakedGlobal;
 import com.raygroupintl.m.parsetree.Node;
 import com.raygroupintl.m.parsetree.NodeList;
 import com.raygroupintl.parser.SequenceOfTokens;
-import com.raygroupintl.parser.Token;
+import com.raygroupintl.parser.Tokens;
 
 public class MNakedGlobal extends MSequence {
 	public MNakedGlobal(int length) {
@@ -33,7 +33,7 @@ public class MNakedGlobal extends MSequence {
 
 	@Override
 	public Node getNode() {
-		Token subsripts = this.getToken(1);
+		Tokens subsripts = this.getTokens(1);
 		NodeList<Node> nodes = NodeUtilities.getSubscriptNodes(subsripts);
 		return new NakedGlobal(nodes);
 	}
