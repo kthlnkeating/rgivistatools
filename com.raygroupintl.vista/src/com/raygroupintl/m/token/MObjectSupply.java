@@ -16,7 +16,6 @@
 
 package com.raygroupintl.m.token;
 
-import com.raygroupintl.parser.EmptyToken;
 import com.raygroupintl.parser.ListOfTokens;
 import com.raygroupintl.parser.SequenceOfTokens;
 import com.raygroupintl.parser.TextPiece;
@@ -46,7 +45,7 @@ public class MObjectSupply implements ObjectSupply {
 	}
 	
 	@Override
-	public EmptyToken newEmpty() {
+	public MEmpty newEmpty() {
 		return new MEmpty();
 	}
 }

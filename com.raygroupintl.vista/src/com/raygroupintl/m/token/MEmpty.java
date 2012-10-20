@@ -18,9 +18,8 @@ package com.raygroupintl.m.token;
 
 import com.raygroupintl.m.parsetree.Node;
 import com.raygroupintl.parser.Empty;
-import com.raygroupintl.parser.EmptyToken;
 
-public class MEmpty extends Empty implements MToken, EmptyToken {
+public class MEmpty extends Empty implements MToken {
 	@Override
 	public Node getNode() {
 		return null;

@@ -16,7 +16,6 @@
 
 package com.raygroupintl.parsergen;
 
-import com.raygroupintl.parser.EmptyToken;
 import com.raygroupintl.parser.ListOfTokens;
 import com.raygroupintl.parser.SequenceOfTokens;
 import com.raygroupintl.parser.TextPiece;
@@ -28,5 +27,5 @@ public interface ObjectSupply {
 	Token newSequence(SequenceOfTokens store);
 	Token newList(ListOfTokens tokens);
 	Token newDelimitedList(Token leadingToken, Tokens tailTokens);
-	EmptyToken newEmpty();
+	Token newEmpty();
 }
