@@ -17,6 +17,7 @@
 package com.raygroupintl.m.token;
 
 import com.raygroupintl.m.parsetree.Node;
+import com.raygroupintl.parser.SequenceOfTokens;
 import com.raygroupintl.parser.TextPiece;
 import com.raygroupintl.parser.Token;
 
@@ -33,6 +34,10 @@ public class MString extends TextPiece implements MToken {
 	
 	public MString(Token token) {
 		super(token.toValue());
+	}
+	
+	public MString(SequenceOfTokens tokens) {
+		super(tokens.toValue());
 	}
 	
 	@Override

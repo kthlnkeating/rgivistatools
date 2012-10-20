@@ -16,30 +16,31 @@
 
 package com.raygroupintl.m.token;
 
-import com.raygroupintl.parser.Token;
+import com.raygroupintl.parser.SequenceOfTokens;
+import com.raygroupintl.parser.TextPiece;
 
 public class StringTokens {
 	public static class MName extends MString {
 		private static final long serialVersionUID = 1L;
 		
-		public MName(Token token) {
-			super(token);
+		public MName(SequenceOfTokens tokens) {
+			super(tokens);
 		}
 	}
 
 	public static class MIdent extends MString {
 		private static final long serialVersionUID = 1L;
 		
-		public MIdent(Token token) {
-			super(token);
+		public MIdent(TextPiece p) {
+			super(p);
 		}
 	}
 
 	public static class PatAtoms extends MString {
 		private static final long serialVersionUID = 1L;
 		
-		public PatAtoms(Token token) {
-			super(token);
+		public PatAtoms(TextPiece p) {
+			super(p);
 		}
 	}
 }

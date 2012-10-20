@@ -22,6 +22,8 @@ import com.raygroupintl.parser.Token;
 
 public class AdapterSpecification {
 	private Class<? extends Token> token;
+	private Class<? extends Token> string;
+	private Class<? extends Token> list;
 	private Class<? extends Token> delimitedList;
 	private Class<? extends Token> sequence;
 
@@ -39,6 +41,20 @@ public class AdapterSpecification {
 			return this.token;
 		}
 		return getNull();
+	}
+	
+	public Class<? extends Token> getStringTokenAdapter() {
+		if (this.string != null) {
+			return this.string;
+		}
+		return null;
+	}
+	
+	public Class<? extends Token> getListTokenAdapter() {
+		if (this.list != null) {
+			return this.list;
+		}
+		return null;
 	}
 	
 	public Class<? extends Token> getDelimitedListTokenAdapter() {
@@ -62,6 +78,16 @@ public class AdapterSpecification {
 		TokenType tokenType = f.getAnnotation(TokenType.class);
 		if (tokenType != null) {
 			result.token = tokenType.value();
+			++count;
+		}
+		StringTokenType stringTokenType = f.getAnnotation(StringTokenType.class);
+		if (stringTokenType != null) {
+			result.string = stringTokenType.value();
+			++count;
+		}
+		ListTokenType listTokenType = f.getAnnotation(ListTokenType.class);
+		if (listTokenType != null) {
+			result.list = listTokenType.value();
 			++count;
 		}
 		SequenceTokenType seqTokenType = f.getAnnotation(SequenceTokenType.class);

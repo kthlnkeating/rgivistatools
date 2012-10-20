@@ -16,11 +16,16 @@
 
 package com.raygroupintl.parser;
 
+import java.lang.reflect.Constructor;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
 import com.raygroupintl.charlib.Predicate;
 import com.raygroupintl.parsergen.ObjectSupply;
 
 public class TFString extends TokenFactory {
 	private Predicate predicate;
+	private Constructor<? extends Token> constructor;
 	
 	public TFString(String name, Predicate predicate) {
 		super(name);
@@ -30,6 +35,26 @@ public class TFString extends TokenFactory {
 	@Override
 	public Token tokenizeOnly(Text text, ObjectSupply objectSupply) {
 		TextPiece p = text.extractPiece(this.predicate);
-		return p == null ? null : objectSupply.newString(p);
+		return this.convertString(p, objectSupply);
+	}
+
+	public void setStringTargetType(Class<? extends Token> cls, Class<TextPiece> textPieceCls) {
+		this.constructor = this.getConstructor(cls, textPieceCls);		
+	}
+
+	public Token convertString(TextPiece p, ObjectSupply objectSupply) {
+		if (p == null) {
+			return null;
+		} else if (this.constructor == null) {
+			return objectSupply.newString(p);
+		} else {
+			try {
+				return this.constructor.newInstance(p);						
+			} catch (Throwable t) {
+				String clsName =  this.getClass().getName();
+				Logger.getLogger(clsName).log(Level.SEVERE, "Unable to instantiate " + clsName + ".", t);			
+			}
+			return null;
+		}
 	}
 }

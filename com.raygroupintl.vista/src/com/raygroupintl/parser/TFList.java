@@ -16,10 +16,15 @@
 
 package com.raygroupintl.parser;
 
+import java.lang.reflect.Constructor;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
 import com.raygroupintl.parsergen.ObjectSupply;
 
 public final class TFList extends TokenFactory {
 	private TokenFactory elementFactory;
+	private Constructor<? extends Token> constructor;
 	
 	public TFList(String name) {
 		super(name);
@@ -62,10 +67,25 @@ public final class TFList extends TokenFactory {
 	public Token tokenizeOnly(Text text, ObjectSupply objectSupply) throws SyntaxErrorException {
 		if (elementFactory == null) throw new IllegalStateException("TFList.setElementFactory needs to be called before TFList.tokenize");
 		ListOfTokens tokens = this.tokenizeCommon(text, objectSupply);
-		if (tokens == null) {
-			return null;
-		} else {
+		return this.convertList(tokens, objectSupply);
+	}
+	
+	public Token convertList(ListOfTokens tokens, ObjectSupply objectSupply) {
+		if (tokens == null) return null;
+		if (this.constructor == null) {
 			return objectSupply.newList(tokens);
+		} else {
+			try {
+				return this.constructor.newInstance(tokens);						
+			} catch (Throwable t) {
+				String clsName =  this.getClass().getName();
+				Logger.getLogger(clsName).log(Level.SEVERE, "Unable to instantiate " + clsName + ".", t);			
+			}
+			return null;
 		}
+	}
+
+	public void setListTargetType(Class<? extends Token> cls, Class<ListOfTokens> listCls) {
+		this.constructor = this.getConstructor(cls, listCls);		
 	}
 }

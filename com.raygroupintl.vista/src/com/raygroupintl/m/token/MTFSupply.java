@@ -21,6 +21,7 @@ import com.raygroupintl.parser.TFSyntaxError;
 import com.raygroupintl.parser.TokenFactory;
 import com.raygroupintl.parsergen.ParseException;
 import com.raygroupintl.parsergen.SequenceTokenType;
+import com.raygroupintl.parsergen.StringTokenType;
 import com.raygroupintl.parsergen.TokenType;
 import com.raygroupintl.parsergen.rulebased.Rule;
 import com.raygroupintl.parsergen.rulebased.RuleBasedParserGenerator;
@@ -51,21 +52,21 @@ public class MTFSupply {
 	public TokenFactory patatom;	
 	@Rule("{patatoms:',':'(':')'}")
 	public TokenFactory alternation;	
-	@TokenType(StringTokens.PatAtoms.class)	
+	@StringTokenType(StringTokens.PatAtoms.class)	
 	@Rule("{patatom}")	
 	public TokenFactory patatoms;
 	@Rule("indirection | patatoms")
 	public TokenFactory pattern;
 	
-	@TokenType(StringTokens.MName.class)
+	@SequenceTokenType(StringTokens.MName.class)
 	@Rule("'%' + 'a'...'z' + 'A'...'Z', [{'a'...'z' + 'A'...'Z' + '0'...'9'}]")
 	public TokenFactory name;	
 	
-	@TokenType(StringTokens.MIdent.class)
+	@StringTokenType(StringTokens.MIdent.class)
 	@Rule("{'a'...'z' + 'A'...'Z'}")
 	public TokenFactory ident;
 	
-	@TokenType(MIntLit.class)
+	@StringTokenType(MIntLit.class)
 	@Rule("{'0'...'9'}")
 	public TokenFactory intlit;
 	

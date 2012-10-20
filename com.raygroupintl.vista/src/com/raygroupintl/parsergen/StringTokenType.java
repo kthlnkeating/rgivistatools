@@ -14,22 +14,16 @@
 // limitations under the License.
 //---------------------------------------------------------------------------
 
-package com.raygroupintl.m.token;
+package com.raygroupintl.parsergen;
 
-import com.raygroupintl.m.parsetree.IntegerLiteral;
-import com.raygroupintl.m.parsetree.Node;
-import com.raygroupintl.parser.TextPiece;
+import java.lang.annotation.ElementType;
+import java.lang.annotation.Retention;
+import java.lang.annotation.Target;
 
-public class MIntLit extends MString {
-	private static final long serialVersionUID = 1L;
-	
-	public MIntLit(TextPiece p) {
-		super(p);
-	}
-	
-	@Override
-	public Node getNode() {
-		String value = this.toValue().toString();
-		return new IntegerLiteral(value);
-	}	
+import com.raygroupintl.parser.Token;
+
+@Retention(java.lang.annotation.RetentionPolicy.RUNTIME)
+@Target({ElementType.FIELD})
+public @interface StringTokenType {
+	public Class<? extends Token> value();
 }
