@@ -19,14 +19,15 @@ package com.raygroupintl.m.token;
 import com.raygroupintl.parser.EmptyToken;
 import com.raygroupintl.parser.ListOfTokens;
 import com.raygroupintl.parser.SequenceOfTokens;
+import com.raygroupintl.parser.TextPiece;
 import com.raygroupintl.parser.Token;
 import com.raygroupintl.parser.Tokens;
 import com.raygroupintl.parsergen.ObjectSupply;
 
 public class MObjectSupply implements ObjectSupply {
 	@Override
-	public MString newString() {
-		return new MString();
+	public MString newString(TextPiece piece) {
+		return new MString(piece);
 	}
 	
 	@Override

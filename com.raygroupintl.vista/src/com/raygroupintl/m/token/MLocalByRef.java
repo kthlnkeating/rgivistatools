@@ -20,7 +20,7 @@ import com.raygroupintl.m.parsetree.Local;
 import com.raygroupintl.m.parsetree.LocalReference;
 import com.raygroupintl.m.parsetree.Node;
 import com.raygroupintl.parser.SequenceOfTokens;
-import com.raygroupintl.parser.StringPiece;
+import com.raygroupintl.parser.TextPiece;
 
 public class MLocalByRef extends MSequence {
 	public MLocalByRef(int length) {
@@ -33,7 +33,7 @@ public class MLocalByRef extends MSequence {
 
 	@Override
 	public Node getNode() {
-		StringPiece name = this.getToken(1).toValue();
+		TextPiece name = this.getToken(1).toValue();
 		Local local = new Local(name);
 		return new LocalReference(local);
 	}

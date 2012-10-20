@@ -25,6 +25,7 @@ public class TFEol extends TokenFactory {
 	
 	@Override
 	public Token tokenizeOnly(Text text, ObjectSupply objectSupply) {
-		return text.extractEOLToken(objectSupply);
+		TextPiece p = text.extractEOLToken();
+		return p == null ? null : objectSupply.newString(p);
 	}
 }

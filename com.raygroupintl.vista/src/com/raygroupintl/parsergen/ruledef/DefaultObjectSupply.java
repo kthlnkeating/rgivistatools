@@ -18,15 +18,15 @@ package com.raygroupintl.parsergen.ruledef;
 
 import com.raygroupintl.parser.ListOfTokens;
 import com.raygroupintl.parser.SequenceOfTokens;
-import com.raygroupintl.parser.StringToken;
+import com.raygroupintl.parser.TextPiece;
 import com.raygroupintl.parser.Token;
 import com.raygroupintl.parser.Tokens;
 import com.raygroupintl.parsergen.ObjectSupply;
 
 public class DefaultObjectSupply implements ObjectSupply {
 	@Override
-	public StringToken newString() {
-		return new TString();
+	public TString newString(TextPiece piece) {
+		return new TString(piece);
 	}
 	
 	@Override

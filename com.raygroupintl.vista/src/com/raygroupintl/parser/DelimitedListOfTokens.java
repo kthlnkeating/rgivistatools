@@ -88,8 +88,8 @@ public class DelimitedListOfTokens extends CollectionOfTokens {
 	}
 	
 	@Override
-	public StringPiece toValue() {	
-		StringPiece result = new StringPiece();
+	public TextPiece toValue() {	
+		TextPiece result = new TextPiece();
 		result.add(this.leadingToken.toValue());
 		if (this.remainingTokens != null) for (Token t : this.remainingTokens) if (t != null) {
 			result.add(t.toValue());

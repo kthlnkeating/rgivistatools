@@ -29,7 +29,7 @@ public interface Tokens extends Iterable<Token> {
 
 	boolean hasToken();
 		
-	StringPiece toValue();
+	TextPiece toValue();
 	
 	int size();
 }

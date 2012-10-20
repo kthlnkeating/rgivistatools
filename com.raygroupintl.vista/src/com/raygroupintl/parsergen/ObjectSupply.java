@@ -19,12 +19,12 @@ package com.raygroupintl.parsergen;
 import com.raygroupintl.parser.EmptyToken;
 import com.raygroupintl.parser.ListOfTokens;
 import com.raygroupintl.parser.SequenceOfTokens;
-import com.raygroupintl.parser.StringToken;
+import com.raygroupintl.parser.TextPiece;
 import com.raygroupintl.parser.Token;
 import com.raygroupintl.parser.Tokens;
 
 public interface ObjectSupply {
-	StringToken newString();
+	Token newString(TextPiece piece);
 	Token newSequence(SequenceOfTokens store);
 	Token newList(ListOfTokens tokens);
 	Token newDelimitedList(Token leadingToken, Tokens tailTokens);

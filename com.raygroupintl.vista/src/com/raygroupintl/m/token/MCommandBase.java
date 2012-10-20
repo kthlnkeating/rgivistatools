@@ -17,7 +17,7 @@
 package com.raygroupintl.m.token;
 
 import com.raygroupintl.parser.EmptyToken;
-import com.raygroupintl.parser.StringPiece;
+import com.raygroupintl.parser.TextPiece;
 import com.raygroupintl.parser.Token;
 
 public abstract class MCommandBase extends MSequence {
@@ -44,8 +44,8 @@ public abstract class MCommandBase extends MSequence {
 
 	@Override
 	public void beautify() {
-		StringPiece n = (StringPiece) this.getToken(0);
-		StringPiece newName = new StringPiece(getFullName());
+		TextPiece n = (TextPiece) this.getToken(0);
+		TextPiece newName = new TextPiece(getFullName());
 		n.set(newName);
 		super.beautify();
 	}

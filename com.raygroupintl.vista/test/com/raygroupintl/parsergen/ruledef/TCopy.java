@@ -1,6 +1,6 @@
 package com.raygroupintl.parsergen.ruledef;
 
-import com.raygroupintl.parser.StringPiece;
+import com.raygroupintl.parser.TextPiece;
 import com.raygroupintl.parser.Token;
 
 public class TCopy implements Token {
@@ -15,7 +15,7 @@ public class TCopy implements Token {
 	}
 	
 	@Override
-	public StringPiece toValue() {
+	public TextPiece toValue() {
 		return this.master.toValue();
 	}
 }

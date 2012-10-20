@@ -78,7 +78,7 @@ public class SequenceOfTokens extends CollectionOfTokens {
 	}	
 	
 	@Override
-	public StringPiece toValue() {	
+	public TextPiece toValue() {	
 		return TokenUtilities.toValue(this);
 	}
 

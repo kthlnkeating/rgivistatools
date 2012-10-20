@@ -12,7 +12,7 @@ import org.junit.Test;
 
 import com.raygroupintl.charlib.CharPredicate;
 import com.raygroupintl.charlib.CharRangePredicate;
-import com.raygroupintl.parser.StringPiece;
+import com.raygroupintl.parser.TextPiece;
 import com.raygroupintl.parser.SyntaxErrorException;
 import com.raygroupintl.parser.TFCharacter;
 import com.raygroupintl.parser.TFDelimitedList;
@@ -37,7 +37,7 @@ public class TFDelimitedListTest {
 		objectSupply = null;
 	}
 
-	public static void validTokenCheck(StringPiece t, String v) {
+	public static void validTokenCheck(TextPiece t, String v) {
 		Assert.assertEquals(v, t.toString());
 		Assert.assertEquals(v.length(), t.length());		
 	}

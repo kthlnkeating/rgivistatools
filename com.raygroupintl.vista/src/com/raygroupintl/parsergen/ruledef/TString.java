@@ -16,18 +16,17 @@
 
 package com.raygroupintl.parsergen.ruledef;
 
-import com.raygroupintl.parser.StringPiece;
-import com.raygroupintl.parser.StringToken;
+import com.raygroupintl.parser.TextPiece;
 import com.raygroupintl.parser.Token;
 
-public class TString extends StringPiece implements StringToken {
+public class TString extends TextPiece implements Token {
 	private static final long serialVersionUID = 1L;
 	
 	public TString() {
 		super();
 	}
 
-	public TString(StringPiece value) {
+	public TString(TextPiece value) {
 		super(value);
 	}
 	
@@ -40,11 +39,11 @@ public class TString extends StringPiece implements StringToken {
 	}
 	
 	@Override
-	public StringPiece toValue() {
+	public TextPiece toValue() {
 		return this;
 	}
 	
-	public void setValue(StringPiece value) {
+	public void setValue(TextPiece value) {
 		super.set(value);
 	}
 

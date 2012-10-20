@@ -17,18 +17,17 @@
 package com.raygroupintl.m.token;
 
 import com.raygroupintl.m.parsetree.Node;
-import com.raygroupintl.parser.StringPiece;
-import com.raygroupintl.parser.StringToken;
+import com.raygroupintl.parser.TextPiece;
 import com.raygroupintl.parser.Token;
 
-public class MString extends StringPiece implements MToken, StringToken {
+public class MString extends TextPiece implements MToken {
 	private static final long serialVersionUID = 1L;
 	
 	public MString() {
 		super();
 	}
 	
-	public MString(StringPiece value) {
+	public MString(TextPiece value) {
 		super(value);
 	}
 	
@@ -62,7 +61,7 @@ public class MString extends StringPiece implements MToken, StringToken {
 	}
 
 	@Override
-	public StringPiece toValue() {
+	public TextPiece toValue() {
 		return this;
 	}
 	

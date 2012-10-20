@@ -59,7 +59,7 @@ public class ListOfTokens extends CollectionOfTokens {
 	}
 	
 	@Override
-	public StringPiece toValue() {	
+	public TextPiece toValue() {	
 		return TokenUtilities.toValue(this);
 	}
 

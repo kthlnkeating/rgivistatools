@@ -17,8 +17,8 @@
 package com.raygroupintl.parser;
 
 public class Empty {
-	public StringPiece toValue() {
-		return new StringPiece();
+	public TextPiece toValue() {
+		return new TextPiece();
 	}
 
 	public void beautify() {

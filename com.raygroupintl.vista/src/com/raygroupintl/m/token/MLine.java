@@ -8,7 +8,7 @@ import com.raygroupintl.m.parsetree.Node;
 import com.raygroupintl.m.parsetree.NodeList;
 import com.raygroupintl.m.parsetree.ParentNode;
 import com.raygroupintl.parser.SequenceOfTokens;
-import com.raygroupintl.parser.StringPiece;
+import com.raygroupintl.parser.TextPiece;
 import com.raygroupintl.parser.Token;
 import com.raygroupintl.parser.Tokens;
 
@@ -54,7 +54,7 @@ public class MLine extends MSequence {
 		int level = 0;
 		Token levelToken = this.getToken(3);
 		if (levelToken != null) {
-			StringPiece levelTokenValue = levelToken.toValue();
+			TextPiece levelTokenValue = levelToken.toValue();
 			return levelTokenValue.count('.');
 		}		
 		return level;

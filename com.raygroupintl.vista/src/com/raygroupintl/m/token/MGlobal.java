@@ -20,7 +20,7 @@ import com.raygroupintl.m.parsetree.Global;
 import com.raygroupintl.m.parsetree.Node;
 import com.raygroupintl.m.parsetree.NodeList;
 import com.raygroupintl.parser.SequenceOfTokens;
-import com.raygroupintl.parser.StringPiece;
+import com.raygroupintl.parser.TextPiece;
 import com.raygroupintl.parser.Tokens;
 
 public class MGlobal extends MSequence {
@@ -38,7 +38,7 @@ public class MGlobal extends MSequence {
 		if (actual.getToken(0) != null) {
 			return NodeUtilities.getNodes(actual, actual.size());
 		} else {
-			StringPiece name = actual.getToken(1).toValue();
+			TextPiece name = actual.getToken(1).toValue();
 			Tokens subsripts = actual.getTokens(2);
 			if (subsripts == null) {
 				return new Global(name);

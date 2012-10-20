@@ -16,16 +16,16 @@
 
 package com.raygroupintl.m.parsetree;
 
-import com.raygroupintl.parser.StringPiece;
+import com.raygroupintl.parser.TextPiece;
 
 public class Local extends NodeWithSubscripts {
 	private static final long serialVersionUID = 1L;
 
-	public Local(StringPiece name) {
+	public Local(TextPiece name) {
 		super(name);
 	}
 	
-	public Local(StringPiece name, NodeList<Node> subscripts) {
+	public Local(TextPiece name, NodeList<Node> subscripts) {
 		super(name, subscripts);
 	}
 

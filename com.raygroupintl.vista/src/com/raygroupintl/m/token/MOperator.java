@@ -1,11 +1,11 @@
 package com.raygroupintl.m.token;
 
-import com.raygroupintl.parser.Token;
+import com.raygroupintl.parser.TextPiece;
 
 public class MOperator extends MString {
 	private static final long serialVersionUID = 1L;
 	
-	public MOperator(Token token) {
-		super(token);
+	public MOperator(TextPiece p) {
+		super(p);
 	}
 }

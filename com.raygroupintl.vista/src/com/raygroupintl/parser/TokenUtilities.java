@@ -17,8 +17,8 @@
 package com.raygroupintl.parser;
 
 public class TokenUtilities {
-	public static <T extends Token> StringPiece toValue(Iterable<T> tokens) {	
-		StringPiece result = new StringPiece();
+	public static <T extends Token> TextPiece toValue(Iterable<T> tokens) {	
+		TextPiece result = new TextPiece();
 		for (T token : tokens) {
 			if (token != null) {
 				result.add(token.toValue());

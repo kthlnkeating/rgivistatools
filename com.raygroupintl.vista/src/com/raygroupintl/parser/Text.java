@@ -17,7 +17,6 @@
 package com.raygroupintl.parser;
 
 import com.raygroupintl.charlib.Predicate;
-import com.raygroupintl.parsergen.ObjectSupply;
 
 public class Text {
 	private String text;
@@ -68,19 +67,19 @@ public class Text {
 		return this.index;
 	}
 	
-	StringToken extractToken(String value, ObjectSupply objectSupply, boolean ignoreCase) {
+	TextPiece extractPiece(String value, boolean ignoreCase) {
 		if (this.text.length() >= this.index + value.length()) {
 			if (ignoreCase) {
 				String piece = this.text.substring(this.index, this.index+value.length());
 				if (piece.equalsIgnoreCase(value)) {
-					StringToken result = objectSupply.newString();
+					TextPiece result = new TextPiece();
 					result.set(this.text, this.index, this.index+value.length());
 					this.index += value.length();
 					return result;
 				}
 			} else {
 				if (this.text.startsWith(value, this.index)) {
-					StringToken result = objectSupply.newString();
+					TextPiece result = new TextPiece();
 					result.set(this.text, this.index, this.index+value.length());
 					this.index += value.length();
 					return result;
@@ -90,12 +89,12 @@ public class Text {
 		return null;	
 	}
 	
-	StringToken extractChar(Predicate predicate, ObjectSupply objectSupply) {
+	TextPiece extractChar(Predicate predicate) {
 		if (this.index < this.text.length()) {
 			char ch = this.text.charAt(this.index);
 			if (predicate.check(ch)) {
 				++this.index;
-				StringToken result = objectSupply.newString();
+				TextPiece result = new TextPiece();
 				result.set(this.text, this.index-1, this.index);
 				return result;
 			}
@@ -103,7 +102,7 @@ public class Text {
 		return null;		
 	}
 	
-	StringToken extractToken(Predicate predicate, ObjectSupply objectSupply) {
+	TextPiece extractPiece(Predicate predicate) {
 		int fromIndex = this.index;
 		while (this.onChar()) {
 			char ch = this.getChar();
@@ -111,7 +110,7 @@ public class Text {
 				if (fromIndex == this.index) {
 					return null;
 				} else {
-					StringToken result = objectSupply.newString();
+					TextPiece result = new TextPiece();
 					result.set(this.text, fromIndex, this.index);
 					return result;
 				}
@@ -119,7 +118,7 @@ public class Text {
 			++this.index;
 		}
 		if (fromIndex < this.text.length()) {
-			StringToken result = objectSupply.newString();
+			TextPiece result = new TextPiece();
 			result.set(this.text, fromIndex, this.index);			
 			return result;
 		} else {
@@ -127,14 +126,14 @@ public class Text {
 		}
 	}
 	
-	public StringToken extractToken(int length,  ObjectSupply objectSupply) {
-		StringToken result = objectSupply.newString();
+	public TextPiece extractPiece(int length) {
+		TextPiece result = new TextPiece();
 		result.set(this.text, this.index, this.index+length);
 		this.index += length;
 		return result;
 	}
 	
-	StringToken extractEOLToken(ObjectSupply objectSupply) {
+	TextPiece extractEOLToken() {
 		if (this.onChar()) {
 			char ch0th = this.getChar();
 			if ((ch0th == '\n') || (ch0th == '\r')) {
@@ -143,12 +142,12 @@ public class Text {
 					char ch1st = this.getChar();
 					if ((ch1st == '\n') || (ch1st == '\r')) {
 						++this.index;
-						StringToken result = objectSupply.newString();
+						TextPiece result = new TextPiece();
 						result.set(this.text, this.index-2, this.index);
 						return result;
 					}
 				}
-				StringToken result = objectSupply.newString();
+				TextPiece result = new TextPiece();
 				result.set(this.text, this.index-1, this.index);
 				return result;
 			}

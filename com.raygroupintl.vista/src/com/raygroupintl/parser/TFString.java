@@ -28,7 +28,8 @@ public class TFString extends TokenFactory {
 	}
 		
 	@Override
-	public StringToken tokenizeOnly(Text text, ObjectSupply objectSupply) {
-		return text.extractToken(this.predicate, objectSupply);
+	public Token tokenizeOnly(Text text, ObjectSupply objectSupply) {
+		TextPiece p = text.extractPiece(this.predicate);
+		return p == null ? null : objectSupply.newString(p);
 	}
 }

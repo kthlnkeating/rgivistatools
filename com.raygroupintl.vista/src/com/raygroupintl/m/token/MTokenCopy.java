@@ -17,7 +17,7 @@
 package com.raygroupintl.m.token;
 
 import com.raygroupintl.m.parsetree.Node;
-import com.raygroupintl.parser.StringPiece;
+import com.raygroupintl.parser.TextPiece;
 import com.raygroupintl.parser.Token;
 
 public abstract class MTokenCopy implements MToken {
@@ -30,7 +30,7 @@ public abstract class MTokenCopy implements MToken {
 	protected abstract Node getNode(Node subNode);
 
 	@Override
-	public StringPiece toValue() {
+	public TextPiece toValue() {
 		return this.actual.toValue();
 	}
 	
