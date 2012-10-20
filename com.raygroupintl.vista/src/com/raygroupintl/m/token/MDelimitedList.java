@@ -70,7 +70,7 @@ public class MDelimitedList extends DelimitedListOfTokens implements MToken {
 
 	@Override
 	public void beautify() {
-		for (Token token : this.all()) {
+		for (Token token : this.toIterable()) {
 			token.beautify();
 		}
 	}

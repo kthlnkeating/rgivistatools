@@ -41,7 +41,7 @@ class NodeUtilities {
 		Tokens subscripts = subscriptTokens.getTokens(1);
 		int size = subscripts.size();
 		NodeList<Node> nodes = new NodeList<>(size);
-		for (Token t : subscripts) {
+		for (Token t : subscripts.toLogicalIterable()) {
 			Node node = ((MToken) t).getNode();
 			nodes.add(node);
 		}

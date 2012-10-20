@@ -76,7 +76,7 @@ public class TCharSymbol extends TSequence implements CharSymbol {
 		PredicateFactory pf = new PredicateFactory();
 		TCharSymbol.update(pf, this.getToken(0), this.getTokens(1));
 		Tokens list = this.getTokens(2);
-		if (list != null) for (Token t : list) {
+		if (list != null) for (Token t : list.toIterable()) {
 			Tokens casted = (Tokens) t;
 			TCharSymbol.update(pf, casted.getToken(0), casted.getTokens(1));
 		}		

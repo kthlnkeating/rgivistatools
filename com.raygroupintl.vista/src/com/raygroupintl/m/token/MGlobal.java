@@ -36,7 +36,7 @@ public class MGlobal extends MSequence {
 	public Node getNode() {
 		Tokens actual = this.getTokens(1);
 		if (actual.getToken(0) != null) {
-			return NodeUtilities.getNodes(actual, actual.size());
+			return NodeUtilities.getNodes(actual.toLogicalIterable(), actual.size());
 		} else {
 			TextPiece name = actual.getToken(1).toValue();
 			Tokens subsripts = actual.getTokens(2);

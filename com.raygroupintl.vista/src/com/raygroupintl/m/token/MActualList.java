@@ -40,7 +40,7 @@ public class MActualList extends MSequence {
 		} else {
 			int size = tokens.size();
 			ActualList nodes = new ActualList(size);
-			for (Token t : tokens) {
+			for (Token t : tokens.toLogicalIterable()) {
 				Node node = ((MToken) t).getNode();
 				nodes.add(node);
 			}

@@ -2,8 +2,6 @@ package com.raygroupintl.parsergen.ruledef;
 
 import static org.junit.Assert.fail;
 
-import java.util.Iterator;
-
 import junit.framework.Assert;
 
 import org.junit.AfterClass;
@@ -48,13 +46,12 @@ public class TFDelimitedListTest {
 			Tokens t = (Tokens) f.tokenize(text, objectSupply);
 			validTokenCheck(t.toValue(), expected);
 			int index = 0;
-			Iterator<Token> it = null;
-			for (it = t.iterator(); it.hasNext(); ++index) {
-				Token tit = it.next();
+			for (Token tit : t.toLogicalIterable()) {
 				validTokenCheck(tit.toValue(), iteratorResults[index]);
+				++index;
 			}
 			Assert.assertEquals(iteratorResults.length, index);
-			Assert.assertFalse(it.hasNext());			
+			Assert.assertEquals(index, t.size());			
 		} catch (SyntaxErrorException e) {
 			fail("Unexpected xception: " + e.getMessage());
 		}

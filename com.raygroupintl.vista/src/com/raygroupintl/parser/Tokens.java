@@ -16,7 +16,7 @@
 
 package com.raygroupintl.parser;
 
-public interface Tokens extends Iterable<Token> {
+public interface Tokens {
 	void addToken(Token token);
 	void setToken(int index, Token token);
 	
@@ -30,6 +30,9 @@ public interface Tokens extends Iterable<Token> {
 	boolean hasToken();
 		
 	TextPiece toValue();
+	
+	Iterable<Token> toLogicalIterable();
+	Iterable<Token> toIterable();
 	
 	int size();
 }

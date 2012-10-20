@@ -16,13 +16,13 @@ public class TFCommonTest {
 	private static void checkObjectType(Token t) {
 		Assert.assertTrue(t instanceof MToken);
 		if (t instanceof MSequence) {
-			for (Token r : (Tokens) t) {
+			for (Token r : ((Tokens) t).toIterable()) {
 				if (r != null) checkObjectType(r);
 			}
 			return;
 		}
 		if (t instanceof MList) {
-			for (Token r : (Tokens) t) {
+			for (Token r : ((Tokens) t).toIterable()) {
 				if (r != null) checkObjectType(r);
 			}
 			return;			

@@ -1,7 +1,6 @@
 package com.raygroupintl.m.token;
 
 import java.util.Arrays;
-import java.util.Iterator;
 
 import junit.framework.Assert;
 
@@ -50,8 +49,7 @@ public class TFLineTest {
 			Assert.assertEquals(line, r);	
 			Tokens commands = (Tokens) ((Tokens) t).getToken(4);
 			boolean found = false;
-			for (Iterator<Token> it=commands.iterator(); it.hasNext();) {
-				Token errorCandidate = it.next();
+			for (Token errorCandidate : commands.toIterable()) {
 				if (errorCandidate instanceof MSyntaxError) {
 					found = true;
 					break;

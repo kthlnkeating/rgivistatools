@@ -126,7 +126,7 @@ class CmdTokens {
 		public Node getNode() {
 			Tokens argument = this.getTokens(1, 2);
 			if (argument != null) {
-				Nodes<Node> node = NodeUtilities.getNodes(argument, argument.size());
+				Nodes<Node> node = NodeUtilities.getNodes(argument.toLogicalIterable(), argument.size());
 				return new IfCmd(node);
 			} else {
 				return new IfCmd();

@@ -22,7 +22,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.NoSuchElementException;
 
-public class SequenceOfTokens extends CollectionOfTokens {
+public class SequenceOfTokens extends CollectionOfTokens implements Iterable<Token> {
 	private class SequenceStoreIterator implements Iterator<Token> {
 		private Iterator<Token> iterator;
 		private int iteratorIndex;
@@ -80,6 +80,14 @@ public class SequenceOfTokens extends CollectionOfTokens {
 	@Override
 	public TextPiece toValue() {	
 		return TokenUtilities.toValue(this);
+	}
+
+	public Iterable<Token> toLogicalIterable() {
+		return this;
+	}
+	
+	public Iterable<Token> toIterable() {
+		return this;
 	}
 
 	public int size() {

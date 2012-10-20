@@ -24,7 +24,7 @@ import com.raygroupintl.struct.IterableSingleAndList;
 import com.raygroupintl.struct.SingleAndListIterator;
 import com.raygroupintl.struct.SingleIterator;
 
-public class DelimitedListOfTokens extends CollectionOfTokens {
+public class DelimitedListOfTokens extends CollectionOfTokens implements Iterable<Token> {
 	private static class TDelimitedListIterator extends SingleAndListIterator<Token> {
 		public TDelimitedListIterator(Token leading, Iterable<Token> iterable) {
 			super(leading, iterable);
@@ -91,26 +91,30 @@ public class DelimitedListOfTokens extends CollectionOfTokens {
 	public TextPiece toValue() {	
 		TextPiece result = new TextPiece();
 		result.add(this.leadingToken.toValue());
-		if (this.remainingTokens != null) for (Token t : this.remainingTokens) if (t != null) {
+		if (this.remainingTokens != null) for (Token t : this.remainingTokens.toIterable()) if (t != null) {
 			result.add(t.toValue());
 		}		
 		return result;
 	}
 
-	public Iterable<Token> all() {
+	public Iterable<Token> toLogicalIterable() {
+		return this;
+	}
+	
+	public Iterable<Token> toIterable() {
 		if (this.remainingTokens == null) {
 			return new IterableSingle<Token>(this.leadingToken);
 		} else {
-			return new IterableSingleAndList<Token>(this.leadingToken, this.remainingTokens);
+			return new IterableSingleAndList<Token>(this.leadingToken, this.remainingTokens.toIterable());
 		}
 	}
-		
+	
 	@Override
 	public Iterator<Token> iterator() {
 		if (this.remainingTokens == null) {
 			return new SingleIterator<Token>(this.leadingToken);
 		} else {
-			return new TDelimitedListIterator(this.leadingToken, this.remainingTokens);
+			return new TDelimitedListIterator(this.leadingToken, this.remainingTokens.toIterable());
 		}
 	}
 	

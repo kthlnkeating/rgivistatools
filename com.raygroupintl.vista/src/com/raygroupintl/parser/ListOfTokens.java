@@ -20,7 +20,7 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
-public class ListOfTokens extends CollectionOfTokens {
+public class ListOfTokens extends CollectionOfTokens implements Iterable<Token> {
 	protected List<Token> tokens;
 
 	public ListOfTokens() {
@@ -61,6 +61,14 @@ public class ListOfTokens extends CollectionOfTokens {
 	@Override
 	public TextPiece toValue() {	
 		return TokenUtilities.toValue(this);
+	}
+
+	public Iterable<Token> toLogicalIterable() {
+		return this;
+	}
+	
+	public Iterable<Token> toIterable() {
+		return this;
 	}
 
 	@Override
