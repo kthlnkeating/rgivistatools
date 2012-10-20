@@ -16,6 +16,8 @@
 
 package com.raygroupintl.parsergen.ruledef;
 
-public interface RuleSupply {	
+import com.raygroupintl.parser.Token;
+
+public interface RuleSupply extends Token {	
 	void accept(RuleDefinitionVisitor visitor, String name, RuleSupplyFlag flag);
 }

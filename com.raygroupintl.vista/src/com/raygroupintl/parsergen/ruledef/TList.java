@@ -19,7 +19,7 @@ package com.raygroupintl.parsergen.ruledef;
 import com.raygroupintl.parser.ListOfTokens;
 import com.raygroupintl.parser.Token;
 
-public class TList extends ListOfTokens implements Token {
+public class TList extends ListOfTokens implements RuleSupply {
 	public TList() {
 	}
 	
@@ -27,6 +27,10 @@ public class TList extends ListOfTokens implements Token {
 		super(tokens);
 	}
 
+	@Override
+	public void accept(RuleDefinitionVisitor visitor, String name, RuleSupplyFlag flag) {		
+	}
+		
 	@Override
 	public void beautify() {
 		for (Token token : this) {

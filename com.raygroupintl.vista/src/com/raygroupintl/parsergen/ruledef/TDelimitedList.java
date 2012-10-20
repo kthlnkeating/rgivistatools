@@ -20,7 +20,7 @@ import com.raygroupintl.parser.DelimitedListOfTokens;
 import com.raygroupintl.parser.Token;
 import com.raygroupintl.parser.Tokens;
 
-public class TDelimitedList extends DelimitedListOfTokens implements Token {
+public class TDelimitedList extends DelimitedListOfTokens implements RuleSupply {
 	public TDelimitedList(Token leadingToken, Tokens tailTokens) {
 		super(leadingToken, tailTokens);
 	}
@@ -30,6 +30,10 @@ public class TDelimitedList extends DelimitedListOfTokens implements Token {
 		for (Token token : this.toIterable()) {
 			token.beautify();
 		}
+	}
+	
+	@Override
+	public void accept(RuleDefinitionVisitor visitor, String name, RuleSupplyFlag flag) {		
 	}
 }
 

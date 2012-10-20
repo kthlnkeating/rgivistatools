@@ -17,7 +17,9 @@
 package com.raygroupintl.parsergen.ruledef;
 
 import com.raygroupintl.parser.Empty;
-import com.raygroupintl.parser.Token;
 
-public class TEmpty extends Empty implements Token {
+public class TEmpty extends Empty implements RuleSupply {
+	@Override
+	public void accept(RuleDefinitionVisitor visitor, String name, RuleSupplyFlag flag) {		
+	}
 }

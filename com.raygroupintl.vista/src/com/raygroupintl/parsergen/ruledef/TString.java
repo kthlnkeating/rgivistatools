@@ -19,7 +19,7 @@ package com.raygroupintl.parsergen.ruledef;
 import com.raygroupintl.parser.TextPiece;
 import com.raygroupintl.parser.Token;
 
-public class TString extends TextPiece implements Token {
+public class TString extends TextPiece implements RuleSupply {
 	private static final long serialVersionUID = 1L;
 	
 	public TString() {
@@ -47,6 +47,10 @@ public class TString extends TextPiece implements Token {
 		super.set(value);
 	}
 
+	@Override
+	public void accept(RuleDefinitionVisitor visitor, String name, RuleSupplyFlag flag) {		
+	}
+		
 	@Override
 	public void beautify() {		
 	}

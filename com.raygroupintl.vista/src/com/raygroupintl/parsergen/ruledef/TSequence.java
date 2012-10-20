@@ -19,7 +19,7 @@ package com.raygroupintl.parsergen.ruledef;
 import com.raygroupintl.parser.SequenceOfTokens;
 import com.raygroupintl.parser.Token;
 
-public class TSequence extends SequenceOfTokens implements Token {
+public class TSequence extends SequenceOfTokens implements RuleSupply {
 	public TSequence(int length) {
 		super(length);
 	}
@@ -31,7 +31,11 @@ public class TSequence extends SequenceOfTokens implements Token {
 	public TSequence(Token token0, Token token1) {
 		super(token0, token1);
 	}
-	
+
+	@Override
+	public void accept(RuleDefinitionVisitor visitor, String name, RuleSupplyFlag flag) {		
+	}
+		
 	@Override
 	public void beautify() {		
 		for (Token token : this) {
