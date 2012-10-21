@@ -87,11 +87,6 @@ public class FSREnclosedDelimitedList extends FSRBase {
 	@Override
 	public void setAdapter(AdapterSpecification<Token> spec) {
 		 Constructor<? extends Token> a = spec.getSequenceTokenAdapter();
-		 if (a != null) {
-			 this.factory.setSequenceTargetType(a);
-		 } else {
-			 Constructor<? extends Token> constructorAlt = spec.getTokenAdapter();
-			 if (constructorAlt != null) this.factory.setTargetType(constructorAlt);
-		 }
+		 if (a != null) this.factory.setSequenceTargetType(a);
 	}	
 }

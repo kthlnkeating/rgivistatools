@@ -17,7 +17,6 @@
 package com.raygroupintl.parser;
 
 import java.lang.reflect.Constructor;
-import java.lang.reflect.Modifier;
 
 import com.raygroupintl.parsergen.ObjectSupply;
 
@@ -58,24 +57,5 @@ public abstract class TokenFactory {
 	
 	public <M extends Token> void setTargetType(Constructor<? extends Token> constructor) {
 		this.ctr = constructor;
-	}
-	
-	protected <M, N> Constructor<M> getConstructor(Class<M> cls, Class<N> argument) {
-		try {
-			int modifiers = cls.getModifiers();
-			if (! Modifier.isPublic(modifiers)) {
-				throw new IllegalArgumentException(this.name + ": " + cls.getName() + " is not public.");
-			}
-			if (Modifier.isAbstract(modifiers) || Modifier.isInterface(modifiers)) {
-				throw new IllegalArgumentException(this.name + ": " + cls.getName() + " is abstract.");
-			}
-			final Constructor<M> constructor = cls.getConstructor(argument);
-			if (! Modifier.isPublic(constructor.getModifiers())) {
-				throw new IllegalArgumentException(this.name + ": " + cls.getName() + " constructor (" + argument.getName() + ") is not public.");			
-			}
-			return constructor;
-		} catch (NoSuchMethodException nsm) {
-			throw new IllegalArgumentException(this.name + ": " + cls.getName() + " does not have a constructor that accepts " + argument.getName() + ".");
-		}
 	}
 }

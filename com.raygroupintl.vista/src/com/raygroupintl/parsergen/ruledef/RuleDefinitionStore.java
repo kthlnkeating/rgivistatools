@@ -79,12 +79,7 @@ public class RuleDefinitionStore extends TokenFactoryStore {
 	private TokenFactory addSequence(String name, Sequence sequence, Field f, AdapterSpecification<Token> spec) {
 		TFSequence value = new TFSequence(name);
 		Constructor<? extends Token> a = spec.getSequenceTokenAdapter();
-		if (a != null) {
-			value.setSequenceTargetType(a);
-		} else {
-			Constructor<? extends Token> constructorAlt = spec.getTokenAdapter();
-			if (constructorAlt != null) value.setTargetType(constructorAlt);			
-		}
+		if (a != null) value.setSequenceTargetType(a);
 		this.sequences.add(new Triple<TFSequence, Sequence>(value, sequence));
 		return value;			
 	}
@@ -103,12 +98,7 @@ public class RuleDefinitionStore extends TokenFactoryStore {
 			} else {
 				TFSequence value = new TFSequence(name);
 				Constructor<? extends Token> a = spec.getSequenceTokenAdapter();
-				if (a != null) {
-					value.setSequenceTargetType(a);
-				} else {
-					Constructor<? extends Token> constructorAlt = spec.getTokenAdapter();
-					if (constructorAlt != null) value.setTargetType(constructorAlt);			
-				}
+				if (a != null) value.setSequenceTargetType(a);
 				this.enclosedLists.add(new Triple<TFSequence, List>(value, list));
 				return value;
 			}
@@ -122,12 +112,7 @@ public class RuleDefinitionStore extends TokenFactoryStore {
 			} else {
 				TFSequence value = new TFSequence(name);
 				Constructor<? extends Token> a = spec.getSequenceTokenAdapter();
-				if (a != null) {
-					value.setSequenceTargetType(a);
-				} else {
-					Constructor<? extends Token> constructorAlt = spec.getTokenAdapter();
-					if (constructorAlt != null) value.setTargetType(constructorAlt);			
-				}
+				if (a != null) value.setSequenceTargetType(a);
 				this.enclosedDelimitedLists.add(new Triple<TFSequence, List>(value, list));
 				return value;					
 			}
