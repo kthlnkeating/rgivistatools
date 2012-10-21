@@ -33,7 +33,7 @@ public class TList extends ListOfTokens implements RuleSupply {
 		
 	@Override
 	public void beautify() {
-		for (Token token : this) {
+		for (Token token : this.toIterable()) {
 			token.beautify();
 		}
 	}

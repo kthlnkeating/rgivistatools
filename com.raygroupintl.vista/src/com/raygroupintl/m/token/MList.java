@@ -32,7 +32,7 @@ public class MList extends ListOfTokens implements MToken {
 
 	@Override
 	public Nodes<Node> getNode() {
-		return NodeUtilities.getNodes(this, this.size());
+		return NodeUtilities.getNodes(this.toIterable(), this.size());
 	}
 	
 	@Override
@@ -63,7 +63,7 @@ public class MList extends ListOfTokens implements MToken {
 
 	@Override
 	public void beautify() {
-		for (Token token : this) {
+		for (Token token : this.toIterable()) {
 			token.beautify();
 		}
 	}

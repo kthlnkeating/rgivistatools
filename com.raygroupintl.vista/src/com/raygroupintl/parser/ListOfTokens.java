@@ -17,10 +17,9 @@
 package com.raygroupintl.parser;
 
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
 
-public class ListOfTokens extends CollectionOfTokens implements Iterable<Token> {
+public class ListOfTokens extends CollectionOfTokens {
 	protected List<Token> tokens;
 
 	public ListOfTokens() {
@@ -60,19 +59,14 @@ public class ListOfTokens extends CollectionOfTokens implements Iterable<Token> 
 	
 	@Override
 	public TextPiece toValue() {	
-		return TokenUtilities.toValue(this);
+		return TokenUtilities.toValue(this.tokens);
 	}
 
 	public Iterable<Token> toLogicalIterable() {
-		return this;
+		return this.tokens;
 	}
 	
 	public Iterable<Token> toIterable() {
-		return this;
-	}
-
-	@Override
-	public Iterator<Token> iterator() {
-		return this.tokens.iterator();
+		return this.tokens;
 	}
 }

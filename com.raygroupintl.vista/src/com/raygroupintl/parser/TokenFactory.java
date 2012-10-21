@@ -23,7 +23,7 @@ import com.raygroupintl.parsergen.ObjectSupply;
 
 public abstract class TokenFactory {
 	private String name;
-	private Adapter adapter;
+	private Constructor<? extends Token> ctr;
 	
 	protected TokenFactory(String name) {
 		this.name = name;
@@ -43,8 +43,12 @@ public abstract class TokenFactory {
 	}
 	
 	protected final Token convert(Token token) {
-		if ((this.adapter != null) && (token != null)) {
-			return this.adapter.convert(token); 
+		if ((this.ctr != null) && (token != null)) {
+			try{
+				return this.ctr.newInstance(token); 
+			} catch (Throwable t) {
+				throw new IllegalStateException("Invalid token type had been assigned.");
+			}
 		} else {
 			return token;
 		}
@@ -53,17 +57,7 @@ public abstract class TokenFactory {
 	protected abstract Token tokenizeOnly(Text text, ObjectSupply objectSupply) throws SyntaxErrorException;
 	
 	public <M extends Token> void setTargetType(Class<M> cls, Class<Token> tokenClass) {
-		final Constructor<M> constructor = getConstructor(cls, tokenClass);
-		this.adapter = new Adapter() {			
-			@Override
-			public Token convert(Token ch) {
-				try{
-					return constructor.newInstance(ch);
-				} catch (Exception e) {	
-					return null;
-				}
-			}
-		};
+		this.ctr = getConstructor(cls, tokenClass);
 	}
 	
 	protected <M, N> Constructor<M> getConstructor(Class<M> cls, Class<N> argument) {

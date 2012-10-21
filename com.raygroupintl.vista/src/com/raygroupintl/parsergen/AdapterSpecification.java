@@ -27,10 +27,10 @@ public class AdapterSpecification {
 	private Class<? extends Token> delimitedList;
 	private Class<? extends Token> sequence;
 
-	private boolean hasAdapter;
+	private int count;
 	
 	public <M> M getNull() {
-		if (this.hasAdapter) {
+		if (this.count > 0) {
 			throw new ParseErrorException("Uncompatible adapter type.");
 		}
 		return null;
@@ -71,40 +71,57 @@ public class AdapterSpecification {
 		return getNull();
 	}
 	
-	public static AdapterSpecification getInstance(Field f) {
-		AdapterSpecification result = new AdapterSpecification();
-		int count = 0;
-		
+	public void addCopy(Field f) {
 		TokenType tokenType = f.getAnnotation(TokenType.class);
 		if (tokenType != null) {
-			result.token = tokenType.value();
-			++count;
-		}
+			this.token = tokenType.value();
+			++this.count;
+		}		
+	}
+	
+	public void addString(Field f) {
 		StringTokenType stringTokenType = f.getAnnotation(StringTokenType.class);
 		if (stringTokenType != null) {
-			result.string = stringTokenType.value();
-			++count;
+			this.string = stringTokenType.value();
+			++this.count;
 		}
+	}
+	
+	public void addList(Field f) {
 		ListTokenType listTokenType = f.getAnnotation(ListTokenType.class);
 		if (listTokenType != null) {
-			result.list = listTokenType.value();
-			++count;
+			this.list = listTokenType.value();
+			++this.count;
 		}
+	}
+	
+	public void addSequence(Field f) {
 		SequenceTokenType seqTokenType = f.getAnnotation(SequenceTokenType.class);
 		if (seqTokenType != null) {
-			result.sequence = seqTokenType.value();
-			++count;
+			this.sequence = seqTokenType.value();
+			++this.count;
 		}
+	}
+	
+	public void addDelimitedList(Field f) {
 		DelimitedListTokenType dlTokenType = f.getAnnotation(DelimitedListTokenType.class);
 		if (dlTokenType != null) {
-			result.delimitedList = dlTokenType.value();
-			++count;
-		}
+			this.delimitedList = dlTokenType.value();
+			++this.count;
+		}		
+	}
+	
+	public static AdapterSpecification getInstance(Field f) {
+		AdapterSpecification result = new AdapterSpecification();
+		result.addCopy(f);
+		result.addString(f);
+		result.addList(f);
+		result.addSequence(f);
+		result.addDelimitedList(f);
 		
-		if (count > 1) {
+		if (result.count > 1) {
 			throw new ParseErrorException("Multiple adapters are not allowed.");								
 		}
-		result.hasAdapter = (count > 0);
 		
 		return result;
 	}
