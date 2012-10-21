@@ -69,7 +69,7 @@ public class RuleDefinitionStore extends TokenFactoryStore {
 	public RuleDefinitionStore() {
 	}
 	
-	private TokenFactory addChoice(String name, Choice choice, AdapterSpecification spec) {
+	private TokenFactory addChoice(String name, Choice choice, AdapterSpecification<Token> spec) {
 		TFChoice value = new TFChoice(name);
 		Class<? extends Token> a = spec.getTokenAdapter();
 		if (a != null) value.setTargetType(a, Token.class);
@@ -77,7 +77,7 @@ public class RuleDefinitionStore extends TokenFactoryStore {
 		return value;			
 	}
 	
-	private TokenFactory addSequence(String name, Sequence sequence, Field f, AdapterSpecification spec) {
+	private TokenFactory addSequence(String name, Sequence sequence, Field f, AdapterSpecification<Token> spec) {
 		TFSequence value = new TFSequence(name);
 		Class<? extends Token> a = spec.getSequenceTokenAdapter();
 		if (a != null) {
@@ -90,7 +90,7 @@ public class RuleDefinitionStore extends TokenFactoryStore {
 		return value;			
 	}
 	
-	private TokenFactory addList(String name, List list, Field f, AdapterSpecification spec) {
+	private TokenFactory addList(String name, List list, Field f, AdapterSpecification<Token> spec) {
 		String delimiter = list.delim();
 		String left = list.left();
 		String right = list.right();
@@ -135,7 +135,7 @@ public class RuleDefinitionStore extends TokenFactoryStore {
 		}
 	}
 	
-	private TokenFactory addCharacters(String name, CharSpecified characters, Field f, AdapterSpecification spec) {
+	private TokenFactory addCharacters(String name, CharSpecified characters, Field f, AdapterSpecification<Token> spec) {
 		PredicateFactory pf = new PredicateFactory();
 		pf.addChars(characters.chars());
 		pf.addRanges(characters.ranges());
@@ -156,7 +156,7 @@ public class RuleDefinitionStore extends TokenFactoryStore {
 		}
 	}
 	
-	private TokenFactory addWords(String name, WordSpecified wordSpecied, Field f, AdapterSpecification spec) {
+	private TokenFactory addWords(String name, WordSpecified wordSpecied, Field f, AdapterSpecification<Token> spec) {
 		String word = wordSpecied.value();
 		TFConstant tf = new TFConstant(name, word, wordSpecied.ignorecase());
 		return tf;
@@ -165,7 +165,7 @@ public class RuleDefinitionStore extends TokenFactoryStore {
 	@Override
 	protected TokenFactory add(Field f)  {
 		String name = f.getName();
-		AdapterSpecification spec = AdapterSpecification.getInstance(f);
+		AdapterSpecification<Token> spec = AdapterSpecification.getInstance(f, Token.class);
 		Choice choice = f.getAnnotation(Choice.class);
 		if (choice != null) {
 			return this.addChoice(name, choice, spec);

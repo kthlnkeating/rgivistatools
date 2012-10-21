@@ -75,7 +75,7 @@ public class FSRSequence extends FSRCollection {
 	}
 
 	@Override
-	public void setAdapter(AdapterSpecification spec) {
+	public void setAdapter(AdapterSpecification<Token> spec) {
 		 Class<? extends Token> a = spec.getSequenceTokenAdapter();
 		 if (a != null) {
 			 this.factory.setSequenceTargetType(a, SequenceOfTokens.class);

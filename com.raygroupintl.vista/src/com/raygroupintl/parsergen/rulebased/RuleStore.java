@@ -22,6 +22,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import com.raygroupintl.parser.TFEnd;
+import com.raygroupintl.parser.Token;
 import com.raygroupintl.parser.TokenFactory;
 import com.raygroupintl.parsergen.AdapterSpecification;
 import com.raygroupintl.parsergen.ParseException;
@@ -60,7 +61,7 @@ public class RuleStore extends TokenFactoryStore  {
 			topRule = this.dv.topRules.get(name);
 		}
 
-		AdapterSpecification spec = AdapterSpecification.getInstance(f);
+		AdapterSpecification<Token> spec = AdapterSpecification.getInstance(f, Token.class);
 		topRule.setAdapter(spec);
 		TokenFactory value = topRule.getShellFactory();
 		this.rules.add(topRule);

@@ -53,7 +53,7 @@ public class FSRList extends FSRBase {
 	}
 
 	@Override
-	public void setAdapter(AdapterSpecification spec) {
+	public void setAdapter(AdapterSpecification<Token> spec) {
 		 Class<? extends Token> a = spec.getListTokenAdapter();
 		 if (a != null) this.factory.setListTargetType(a, ListOfTokens.class);
 	}

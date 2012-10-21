@@ -54,7 +54,7 @@ public class FSRString extends FSRBase {
 	}
 
 	@Override
-	public void setAdapter(AdapterSpecification spec) {
+	public void setAdapter(AdapterSpecification<Token> spec) {
 		 Class<? extends Token> a = spec.getStringTokenAdapter();
 		 if (a != null) this.factory.setStringTargetType(a, TextPiece.class);
 	}

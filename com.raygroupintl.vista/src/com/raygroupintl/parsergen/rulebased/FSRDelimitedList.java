@@ -55,7 +55,7 @@ public class FSRDelimitedList extends FSRBase {
 	}
 	
 	@Override
-	public void setAdapter(AdapterSpecification spec) {
+	public void setAdapter(AdapterSpecification<Token> spec) {
 		 Class<? extends Token> a = spec.getDelimitedListTokenAdapter();
 		 if (a != null) this.factory.setDelimitedListTargetType(a, Token.class, Tokens.class);
 	}	

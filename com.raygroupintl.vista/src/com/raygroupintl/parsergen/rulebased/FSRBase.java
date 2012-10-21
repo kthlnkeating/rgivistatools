@@ -16,6 +16,7 @@
 
 package com.raygroupintl.parsergen.rulebased;
 
+import com.raygroupintl.parser.Token;
 import com.raygroupintl.parser.TokenFactory;
 import com.raygroupintl.parsergen.AdapterSpecification;
 import com.raygroupintl.parsergen.ParseErrorException;
@@ -82,7 +83,7 @@ public abstract class FSRBase implements FactorySupplyRule {
 	}
 
 	@Override
-	public void setAdapter(AdapterSpecification spec) {
+	public void setAdapter(AdapterSpecification<Token> spec) {
 		spec.getNull();
 	}
 	
