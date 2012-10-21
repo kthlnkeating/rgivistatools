@@ -52,7 +52,6 @@ public class MTFSupply {
 	public TokenFactory patatom;	
 	@Rule("{patatoms:',':'(':')'}")
 	public TokenFactory alternation;	
-	@StringTokenType(StringTokens.PatAtoms.class)	
 	@Rule("{patatom}")	
 	public TokenFactory patatoms;
 	@Rule("indirection | patatoms")
@@ -198,7 +197,7 @@ public class MTFSupply {
 	@SequenceTokenType(OpenCloseUseCmdTokens.MDeviceParameters.class)	
 	@Rule("':', [deviceparams], [':'], [expr], [':'], [exprorinlist]")
 	public TokenFactory cmdoargtail;
-	@TokenType(OpenCloseUseCmdTokens.MAtomicOpenCmd.class)	
+	@SequenceTokenType(OpenCloseUseCmdTokens.MAtomicOpenCmd.class)	
 	@Rule("expr, [cmdoargtail]")
 	public TokenFactory cmdoargbasic;
 	@Rule("indirection | cmdoargbasic")
@@ -257,8 +256,8 @@ public class MTFSupply {
 	public TokenFactory usedeviceparam;
 	@Rule("':', [usedeviceparam]")
 	public TokenFactory colonusedeviceparam;
+	@SequenceTokenType(OpenCloseUseCmdTokens.MAtomicUseCmd.class)	
 	@Rule("expr, [colonusedeviceparam], [colonusedeviceparam]")
-	@TokenType(OpenCloseUseCmdTokens.MAtomicUseCmd.class)	
 	public TokenFactory cmduarg;
 	@Rule("{cmduarg:','}")
 	public TokenFactory cmduargs;
@@ -421,8 +420,8 @@ public class MTFSupply {
 	@SequenceTokenType(OpenCloseUseCmdTokens.MDeviceParameters.class)	
 	@Rule("':', deviceparams")
 	public TokenFactory closeargdp;
+	@SequenceTokenType(OpenCloseUseCmdTokens.MAtomicCloseCmd.class)		
 	@Rule("expr, [closeargdp]")
-	@TokenType(OpenCloseUseCmdTokens.MAtomicCloseCmd.class)		
 	public TokenFactory closeargdirect;
 	@Rule("indirection | closeargdirect")
 	public TokenFactory closearg;

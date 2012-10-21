@@ -47,14 +47,14 @@ public class AdapterSpecification {
 		if (this.string != null) {
 			return this.string;
 		}
-		return null;
+		return getNull();
 	}
 	
 	public Class<? extends Token> getListTokenAdapter() {
 		if (this.list != null) {
 			return this.list;
 		}
-		return null;
+		return getNull();
 	}
 	
 	public Class<? extends Token> getDelimitedListTokenAdapter() {
@@ -68,7 +68,7 @@ public class AdapterSpecification {
 		if (this.sequence != null) {
 			return this.sequence;
 		}
-		return null;
+		return getNull();
 	}
 	
 	public static AdapterSpecification getInstance(Field f) {

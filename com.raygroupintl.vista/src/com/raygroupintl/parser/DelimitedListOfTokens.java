@@ -42,14 +42,14 @@ public class DelimitedListOfTokens extends CollectionOfTokens implements Iterabl
 		}
 	}
 
+	private Token leadingToken;
+	private Tokens remainingTokens;
+	
 	public DelimitedListOfTokens(Token leadingToken, Tokens tailTokens) {
 		this.leadingToken = leadingToken;
 		this.remainingTokens = tailTokens;
 	}
 
-	private Token leadingToken;
-	private Tokens remainingTokens;
-	
 	@Override
 	public void setToken(int index, Token token) {
 		if (index == 0) {

@@ -35,12 +35,4 @@ public class StringTokens {
 			super(p);
 		}
 	}
-
-	public static class PatAtoms extends MString {
-		private static final long serialVersionUID = 1L;
-		
-		public PatAtoms(TextPiece p) {
-			super(p);
-		}
-	}
 }

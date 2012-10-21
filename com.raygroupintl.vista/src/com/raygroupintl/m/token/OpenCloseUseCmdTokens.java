@@ -39,13 +39,14 @@ public class OpenCloseUseCmdTokens {
 		}
 	}
 
-	public static final class MAtomicOpenCmd extends MTokenCopy {
-		public MAtomicOpenCmd(Token token) {
-			super(token);
+	public static final class MAtomicOpenCmd extends MSequence {
+		public MAtomicOpenCmd(SequenceOfTokens tokens) {
+			super(tokens);
 		}
 		
 		@Override
-		public Node getNode(Node subNode) {
+		public Node getNode() {
+			Node subNode = super.getNode();
 			return new OpenCloseUseCmdNodes.AtomicOpenCmd(subNode);
 		}		
 	}
@@ -66,13 +67,14 @@ public class OpenCloseUseCmdTokens {
 		}
 	}
 
-	public static final class MAtomicCloseCmd extends MTokenCopy {
-		public MAtomicCloseCmd(Token token) {
-			super(token);
+	public static final class MAtomicCloseCmd extends MSequence {
+		public MAtomicCloseCmd(SequenceOfTokens tokens) {
+			super(tokens);
 		}
 		
 		@Override
-		public Node getNode(Node subNode) {
+		public Node getNode() {
+			Node subNode = super.getNode();
 			return new OpenCloseUseCmdNodes.AtomicCloseCmd(subNode);
 		}		
 	}
@@ -93,13 +95,14 @@ public class OpenCloseUseCmdTokens {
 		}
 	}
 
-	public static final class MAtomicUseCmd extends MTokenCopy {
-		public MAtomicUseCmd(Token token) {
-			super(token);
+	public static final class MAtomicUseCmd extends MSequence {
+		public MAtomicUseCmd(SequenceOfTokens tokens) {
+			super(tokens);
 		}
 		
 		@Override
-		public Node getNode(Node subNode) {
+		public Node getNode() {
+			Node subNode = super.getNode();
 			return new OpenCloseUseCmdNodes.AtomicUseCmd(subNode);
 		}		
 	}
