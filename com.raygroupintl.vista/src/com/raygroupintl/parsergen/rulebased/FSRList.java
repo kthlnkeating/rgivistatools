@@ -16,7 +16,8 @@
 
 package com.raygroupintl.parsergen.rulebased;
 
-import com.raygroupintl.parser.ListOfTokens;
+import java.lang.reflect.Constructor;
+
 import com.raygroupintl.parser.TFList;
 import com.raygroupintl.parser.Token;
 import com.raygroupintl.parser.TokenFactory;
@@ -54,7 +55,7 @@ public class FSRList extends FSRBase {
 
 	@Override
 	public void setAdapter(AdapterSpecification<Token> spec) {
-		 Class<? extends Token> a = spec.getListTokenAdapter();
-		 if (a != null) this.factory.setListTargetType(a, ListOfTokens.class);
+		 Constructor<? extends Token> a = spec.getListTokenAdapter();
+		 if (a != null) this.factory.setListTargetType(a);
 	}
 }

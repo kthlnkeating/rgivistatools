@@ -16,7 +16,8 @@
 
 package com.raygroupintl.parsergen.rulebased;
 
-import com.raygroupintl.parser.SequenceOfTokens;
+import java.lang.reflect.Constructor;
+
 import com.raygroupintl.parser.TFDelimitedList;
 import com.raygroupintl.parser.TFSequence;
 import com.raygroupintl.parser.Token;
@@ -85,12 +86,12 @@ public class FSREnclosedDelimitedList extends FSRBase {
 
 	@Override
 	public void setAdapter(AdapterSpecification<Token> spec) {
-		 Class<? extends Token> a = spec.getSequenceTokenAdapter();
+		 Constructor<? extends Token> a = spec.getSequenceTokenAdapter();
 		 if (a != null) {
-			 this.factory.setSequenceTargetType(a, SequenceOfTokens.class);
+			 this.factory.setSequenceTargetType(a);
 		 } else {
-			 Class<? extends Token> aAlt = spec.getTokenAdapter();
-			 if (aAlt != null) this.factory.setTargetType(aAlt, Token.class);
+			 Constructor<? extends Token> constructorAlt = spec.getTokenAdapter();
+			 if (constructorAlt != null) this.factory.setTargetType(constructorAlt);
 		 }
 	}	
 }

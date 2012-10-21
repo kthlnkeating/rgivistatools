@@ -85,7 +85,7 @@ public final class TFList extends TokenFactory {
 		}
 	}
 
-	public void setListTargetType(Class<? extends Token> cls, Class<ListOfTokens> listCls) {
-		this.constructor = this.getConstructor(cls, listCls);		
+	public void setListTargetType(Constructor<? extends Token> constructor) {
+		this.constructor = constructor;		
 	}
 }

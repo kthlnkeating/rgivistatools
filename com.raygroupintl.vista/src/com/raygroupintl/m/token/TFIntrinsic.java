@@ -164,7 +164,11 @@ public class TFIntrinsic extends TokenFactorySupply {
 		TFSequence result = new TFSequence("instrinsic.name", 2);
 		result.add(this.supply.intrinsicname, true);
 		result.add(this.supply.lpar, false);
-		result.setSequenceTargetType(TIntrinsicVariable.class, SequenceOfTokens.class);
+		try {
+			result.setSequenceTargetType(TIntrinsicVariable.class.getConstructor(SequenceOfTokens.class));
+		} catch (Throwable t) {
+			return null;
+		}
 		return result;		
 	}
 	

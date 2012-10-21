@@ -16,9 +16,10 @@
 
 package com.raygroupintl.parsergen.rulebased;
 
+import java.lang.reflect.Constructor;
+
 import com.raygroupintl.charlib.Predicate;
 import com.raygroupintl.parser.TFString;
-import com.raygroupintl.parser.TextPiece;
 import com.raygroupintl.parser.Token;
 import com.raygroupintl.parsergen.AdapterSpecification;
 import com.raygroupintl.parsergen.ruledef.RuleSupplyFlag;
@@ -55,8 +56,8 @@ public class FSRString extends FSRBase {
 
 	@Override
 	public void setAdapter(AdapterSpecification<Token> spec) {
-		 Class<? extends Token> a = spec.getStringTokenAdapter();
-		 if (a != null) this.factory.setStringTargetType(a, TextPiece.class);
+		 Constructor<? extends Token> c = spec.getStringTokenAdapter();
+		 if (c != null) this.factory.setStringTargetType(c);
 	}
 }
 	

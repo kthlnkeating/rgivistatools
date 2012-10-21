@@ -56,8 +56,8 @@ public abstract class TokenFactory {
 
 	protected abstract Token tokenizeOnly(Text text, ObjectSupply objectSupply) throws SyntaxErrorException;
 	
-	public <M extends Token> void setTargetType(Class<M> cls, Class<Token> tokenClass) {
-		this.ctr = getConstructor(cls, tokenClass);
+	public <M extends Token> void setTargetType(Constructor<? extends Token> constructor) {
+		this.ctr = constructor;
 	}
 	
 	protected <M, N> Constructor<M> getConstructor(Class<M> cls, Class<N> argument) {

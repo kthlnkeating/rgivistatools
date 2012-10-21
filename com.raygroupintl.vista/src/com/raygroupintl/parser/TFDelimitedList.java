@@ -100,11 +100,7 @@ public class TFDelimitedList extends TokenFactory {
 		}
 	}
 	
-	public void setDelimitedListTargetType(Class<? extends Token> cls, Class<Token> tokenCls, Class<Tokens> tokensCls) {
-		try {
-			this.constructor = cls.getConstructor(new Class[]{tokenCls, tokensCls});
-		} catch (Exception ex) {
-			
-		}
+	public void setDelimitedListTargetType(Constructor<? extends Token> constructor) {
+		this.constructor = constructor;
 	}
 }

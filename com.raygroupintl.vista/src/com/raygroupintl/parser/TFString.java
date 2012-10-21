@@ -38,8 +38,8 @@ public class TFString extends TokenFactory {
 		return this.convertString(p, objectSupply);
 	}
 
-	public void setStringTargetType(Class<? extends Token> cls, Class<TextPiece> textPieceCls) {
-		this.constructor = this.getConstructor(cls, textPieceCls);		
+	public void setStringTargetType(Constructor<? extends Token> constructor) {
+		this.constructor = constructor;		
 	}
 
 	public Token convertString(TextPiece p, ObjectSupply objectSupply) {

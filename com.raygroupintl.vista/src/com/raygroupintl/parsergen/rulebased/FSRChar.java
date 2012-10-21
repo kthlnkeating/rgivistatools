@@ -16,6 +16,8 @@
 
 package com.raygroupintl.parsergen.rulebased;
 
+import java.lang.reflect.Constructor;
+
 import com.raygroupintl.charlib.Predicate;
 import com.raygroupintl.parser.TFCharacter;
 import com.raygroupintl.parser.Token;
@@ -62,7 +64,7 @@ public class FSRChar extends FSRBase {
 
 	@Override
 	public void setAdapter(AdapterSpecification<Token> spec) {
-		 Class<? extends Token> a = spec.getTokenAdapter();
-		 if (a != null) this.factory.setTargetType(a, Token.class);
+		 Constructor<? extends Token> constructor = spec.getTokenAdapter();
+		 if (constructor != null) this.factory.setTargetType(constructor);
 	}
 }

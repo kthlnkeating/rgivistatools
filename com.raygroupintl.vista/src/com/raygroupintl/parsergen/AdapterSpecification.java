@@ -16,19 +16,44 @@
 
 package com.raygroupintl.parsergen;
 
+import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
+import java.lang.reflect.Modifier;
 
+import com.raygroupintl.parser.ListOfTokens;
+import com.raygroupintl.parser.SequenceOfTokens;
+import com.raygroupintl.parser.TextPiece;
 import com.raygroupintl.parser.Token;
+import com.raygroupintl.parser.Tokens;
 
 public class AdapterSpecification<T extends Token> {
-	private Class<? extends T> token;
-	private Class<? extends T> string;
-	private Class<? extends T> list;
-	private Class<? extends T> delimitedList;
-	private Class<? extends T> sequence;
+	private Constructor<? extends T> token;
+	private Constructor<? extends T> string;
+	private Constructor<? extends T> list;
+	private Constructor<? extends T> delimitedList;
+	private Constructor<? extends T> sequence;
 
 	private int count;
 	
+	protected static <M, N> Constructor<M> getConstructor(String name, Class<M> cls, Class<N> argument) {
+		try {
+			int modifiers = cls.getModifiers();
+			if (! Modifier.isPublic(modifiers)) {
+				throw new IllegalArgumentException(name + ": " + cls.getName() + " is not public.");
+			}
+			if (Modifier.isAbstract(modifiers) || Modifier.isInterface(modifiers)) {
+				throw new IllegalArgumentException(name + ": " + cls.getName() + " is abstract.");
+			}
+			final Constructor<M> constructor = cls.getConstructor(argument);
+			if (! Modifier.isPublic(constructor.getModifiers())) {
+				throw new IllegalArgumentException(name + ": " + cls.getName() + " constructor (" + argument.getName() + ") is not public.");			
+			}
+			return constructor;
+		} catch (NoSuchMethodException nsm) {
+			throw new IllegalArgumentException(name + ": " + cls.getName() + " does not have a constructor that accepts " + argument.getName() + ".");
+		}
+	}
+
 	public <M> M getNull() {
 		if (this.count > 0) {
 			throw new ParseErrorException("Uncompatible adapter type.");
@@ -36,35 +61,35 @@ public class AdapterSpecification<T extends Token> {
 		return null;
 	}
 	
-	public Class<? extends Token> getTokenAdapter() {
+	public Constructor<? extends Token> getTokenAdapter() {
 		if (this.token != null) {
 			return this.token;
 		}
 		return getNull();
 	}
 	
-	public Class<? extends Token> getStringTokenAdapter() {
+	public Constructor<? extends Token> getStringTokenAdapter() {
 		if (this.string != null) {
 			return this.string;
 		}
 		return getNull();
 	}
 	
-	public Class<? extends Token> getListTokenAdapter() {
+	public Constructor<? extends Token> getListTokenAdapter() {
 		if (this.list != null) {
 			return this.list;
 		}
 		return getNull();
 	}
 	
-	public Class<? extends Token> getDelimitedListTokenAdapter() {
+	public Constructor<? extends Token> getDelimitedListTokenAdapter() {
 		if (this.delimitedList != null) {
 			return this.delimitedList;
 		}
 		return getNull();
 	}
 	
-	public Class<? extends Token> getSequenceTokenAdapter() {
+	public Constructor<? extends Token> getSequenceTokenAdapter() {
 		if (this.sequence != null) {
 			return this.sequence;
 		}
@@ -84,35 +109,49 @@ public class AdapterSpecification<T extends Token> {
 	public void addCopy(Field f, Class<T> actualTokencls) {
 		TokenType tokenType = f.getAnnotation(TokenType.class);
 		if (tokenType != null) {
-			this.token = this.addGeneric(tokenType.value(), actualTokencls);
+			Class<? extends T> t = this.addGeneric(tokenType.value(), actualTokencls);
+			Constructor<? extends T> constructor = getConstructor(f.getName(), t, Token.class);
+			this.token = constructor;
 		}		
 	}
 	
 	public void addString(Field f, Class<T> actualTokencls) {
 		StringTokenType stringTokenType = f.getAnnotation(StringTokenType.class);
 		if (stringTokenType != null) {
-			this.string = this.addGeneric(stringTokenType.value(), actualTokencls);
+			Class<? extends T> t = this.addGeneric(stringTokenType.value(), actualTokencls);
+			Constructor<? extends T> constructor = getConstructor(f.getName(), t, TextPiece.class);
+			this.string = constructor;
 		}
 	}
 	
 	public void addList(Field f, Class<T> actualTokencls) {
 		ListTokenType listTokenType = f.getAnnotation(ListTokenType.class);
 		if (listTokenType != null) {
-			this.list = this.addGeneric(listTokenType.value(), actualTokencls);
+			Class<? extends T> t = this.addGeneric(listTokenType.value(), actualTokencls);
+			Constructor<? extends T> constructor = getConstructor(f.getName(), t, ListOfTokens.class);
+			this.list = constructor;
 		}
 	}
 	
 	public void addSequence(Field f, Class<T> actualTokencls) {
 		SequenceTokenType seqTokenType = f.getAnnotation(SequenceTokenType.class);
 		if (seqTokenType != null) {
-			this.sequence = this.addGeneric(seqTokenType.value(), actualTokencls);
+			Class<? extends T> t = this.addGeneric(seqTokenType.value(), actualTokencls);
+			Constructor<? extends T> constructor = getConstructor(f.getName(), t, SequenceOfTokens.class);
+			this.sequence = constructor;
 		}
 	}
 	
 	public void addDelimitedList(Field f, Class<T> actualTokencls) {
 		DelimitedListTokenType dlTokenType = f.getAnnotation(DelimitedListTokenType.class);
 		if (dlTokenType != null) {
-			this.delimitedList = this.addGeneric(dlTokenType.value(), actualTokencls);
+			Class<? extends T> t = this.addGeneric(dlTokenType.value(), actualTokencls);
+			try {
+				Constructor<? extends T> constructor = t.getConstructor(new Class[]{actualTokencls, Tokens.class});
+				this.delimitedList = constructor;
+			} catch (Throwable e) {
+				throw new ParseErrorException("Uncompatible adapter type.");			
+			}
 		}		
 	}
 	
