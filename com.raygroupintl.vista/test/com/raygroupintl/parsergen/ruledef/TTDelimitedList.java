@@ -24,12 +24,5 @@ public class TTDelimitedList extends DelimitedListOfTokens<Token> implements Tok
 	public TTDelimitedList(Token leadingToken, Tokens<Token> tailTokens) {
 		super(leadingToken, tailTokens);
 	}
-
-	@Override
-	public void beautify() {
-		for (Token token : this.toIterable()) {
-			token.beautify();
-		}
-	}
 }
 

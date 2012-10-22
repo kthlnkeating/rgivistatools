@@ -29,6 +29,6 @@ public class TOptionalSymbols extends TSequence implements RuleSupply {
 
 	@Override
 	public void accept(RuleDefinitionVisitor visitor, String name, RuleSupplyFlag flag) {
-		((RuleSupply) this.getToken(1)).accept(visitor, name, RuleSupplyFlag.INNER_OPTIONAL);
+		this.getToken(1).accept(visitor, name, RuleSupplyFlag.INNER_OPTIONAL);
 	}
 }

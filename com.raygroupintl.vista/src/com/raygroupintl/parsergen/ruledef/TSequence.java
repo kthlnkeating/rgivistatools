@@ -34,13 +34,4 @@ public class TSequence extends SequenceOfTokens<RuleSupply> implements RuleSuppl
 	@Override
 	public void accept(RuleDefinitionVisitor visitor, String name, RuleSupplyFlag flag) {		
 	}
-		
-	@Override
-	public void beautify() {		
-		for (RuleSupply token : this) {
-			if (token != null) {
-				token.beautify();
-			}
-		}
-	}
 }

@@ -26,7 +26,7 @@ public class TChoiceOfSymbols extends TDelimitedList implements RuleSupplies {
 	@Override
 	public void accept(RuleDefinitionVisitor visitor, String name, RuleSupplyFlag flag) {
 		if (this.size() == 1) {
-			((RuleSupply) this.getToken(0)).accept(visitor, name, flag);	
+			this.getToken(0).accept(visitor, name, flag);	
 		} else {
 			visitor.visitChoiceOfSymbols(this, name, flag);
 		}
@@ -39,7 +39,7 @@ public class TChoiceOfSymbols extends TDelimitedList implements RuleSupplies {
 	
 	@Override
 	public void acceptElement(RuleDefinitionVisitor visitor, int index, String name, RuleSupplyFlag flag) {
-		RuleSupply rs = (RuleSupply) this.getLogicalToken(index);
+		RuleSupply rs = this.getLogicalToken(index);
 		rs.accept(visitor, name, flag);
 	}
 }

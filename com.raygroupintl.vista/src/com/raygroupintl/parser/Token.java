@@ -18,5 +18,4 @@ package com.raygroupintl.parser;
 
 public interface Token {
 	TextPiece toValue();
-	void beautify();
 }

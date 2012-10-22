@@ -34,7 +34,7 @@ public abstract class MCommandBase extends MSequence {
 		if (nameFollowUp.getToken(2) instanceof Empty) {
 			return null;
 		}			
-		MToken argument = (MToken) nameFollowUp.getToken(2);
+		MToken argument = nameFollowUp.getToken(2);
 		if ((argument == null) || (argument.toValue().length() == 0)) {
 			return null;
 		}

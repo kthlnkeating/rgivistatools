@@ -20,24 +20,7 @@ import com.raygroupintl.parser.SequenceOfTokens;
 import com.raygroupintl.parser.Token;
 
 public class TTSequence extends SequenceOfTokens<Token> implements Token {
-	public TTSequence(int length) {
-		super(length);
-	}
-
 	public TTSequence(SequenceOfTokens<Token> tokens) {
 		super(tokens);
-	}
-
-	public TTSequence(Token token0, Token token1) {
-		super(token0, token1);
-	}
-
-	@Override
-	public void beautify() {		
-		for (Token token : this) {
-			if (token != null) {
-				token.beautify();
-			}
-		}
 	}
 }

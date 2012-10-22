@@ -20,7 +20,6 @@ import com.raygroupintl.m.parsetree.ActualList;
 import com.raygroupintl.m.parsetree.IgnorableNode;
 import com.raygroupintl.m.parsetree.Node;
 import com.raygroupintl.parser.SequenceOfTokens;
-import com.raygroupintl.parser.Token;
 import com.raygroupintl.parser.Tokens;
 
 public class MActualList extends MSequence {
@@ -40,8 +39,8 @@ public class MActualList extends MSequence {
 		} else {
 			int size = tokens.size();
 			ActualList nodes = new ActualList(size);
-			for (Token t : tokens.toLogicalIterable()) {
-				Node node = ((MToken) t).getNode();
+			for (MToken t : tokens.toLogicalIterable()) {
+				Node node = t.getNode();
 				nodes.add(node);
 			}
 			return nodes;

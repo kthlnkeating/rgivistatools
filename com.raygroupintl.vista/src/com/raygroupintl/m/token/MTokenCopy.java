@@ -23,7 +23,7 @@ public abstract class MTokenCopy implements MToken {
 	private MToken actual;
 	
 	public MTokenCopy(MToken token) {
-		this.actual = (MToken) token;
+		this.actual = token;
 	}
 
 	protected abstract Node getNode(Node subNode);

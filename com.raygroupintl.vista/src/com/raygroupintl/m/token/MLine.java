@@ -95,7 +95,7 @@ public class MLine extends MSequence {
 		if (cmds != null) {
 			NodeList<Node> nodes = null;
 			for (MToken t : cmds.toLogicalIterable()) {
-				Node node = ((MToken) t).getNode();
+				Node node = t.getNode();
 				if (node != null) {
 					if (nodes == null) nodes = new NodeList<Node>(cmds.size());
 					currentParent = node.addSelf(currentParent, nodes);

@@ -49,9 +49,9 @@ public final class SetCmdTokens {
 		
 		@Override
 		public Node getNode() {
-			MToken lhs = (MToken) this.getToken(0);
+			MToken lhs = this.getToken(0);
 			Node lhsNode = lhs.getNode();
-			MToken rhs = (MToken) this.getToken(2);
+			MToken rhs = this.getToken(2);
 			if (rhs == null) {
 				return new SetCmdNodes.IndirectAtomicSet(lhsNode);
 			} else {
@@ -74,7 +74,7 @@ public final class SetCmdTokens {
 		public Node getNode() {
 			MToken tokens = this.getSubNodeToken(0);			
 			MDelimitedList lhs = (MDelimitedList) tokens.getSubNodeToken(1);
-			MToken rhs = (MToken) this.getSubNodeToken(2);
+			MToken rhs = this.getSubNodeToken(2);
 			Nodes<Node> lhsNodes = NodeUtilities.getNodes(lhs, lhs.size());
 			return new SetCmdNodes.MultiAtomicSet(lhsNodes, rhs.getNode());
 		}		

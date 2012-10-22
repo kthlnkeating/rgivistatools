@@ -25,10 +25,9 @@ import com.raygroupintl.parser.Tokens;
 class NodeUtilities {
 	static Nodes<Node> getNodes(Iterable<MToken> iterable, int size) {
 		NodeList<Node> result = new NodeList<Node>(size);
-		for (Token t : iterable) {
-			if ((t != null) && (t instanceof MToken)) {
-				MToken mt = (MToken) t;
-				Node node = mt.getNode();
+		for (MToken t : iterable) {
+			if (t != null) {
+				Node node = t.getNode();
 				if (node != null) {
 					result.add(node);
 				}
@@ -41,8 +40,8 @@ class NodeUtilities {
 		Tokens<MToken> subscripts = subscriptTokens.getTokens(1);
 		int size = subscripts.size();
 		NodeList<Node> nodes = new NodeList<>(size);
-		for (Token t : subscripts.toLogicalIterable()) {
-			Node node = ((MToken) t).getNode();
+		for (MToken t : subscripts.toLogicalIterable()) {
+			Node node = t.getNode();
 			nodes.add(node);
 		}
 		return nodes;

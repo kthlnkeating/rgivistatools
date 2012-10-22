@@ -25,13 +25,6 @@ public class TDelimitedList extends DelimitedListOfTokens<RuleSupply> implements
 	}
 
 	@Override
-	public void beautify() {
-		for (RuleSupply token : this.toIterable()) {
-			token.beautify();
-		}
-	}
-	
-	@Override
 	public void accept(RuleDefinitionVisitor visitor, String name, RuleSupplyFlag flag) {		
 	}
 }

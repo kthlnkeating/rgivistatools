@@ -10,10 +10,6 @@ public class TTCopy implements Token {
 		this.master = token;
 	}
 	
-	public void beautify() {
-		this.master.beautify();
-	}
-	
 	@Override
 	public TextPiece toValue() {
 		return this.master.toValue();

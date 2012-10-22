@@ -29,11 +29,4 @@ public class TList extends ListOfTokens<RuleSupply> implements RuleSupply {
 	@Override
 	public void accept(RuleDefinitionVisitor visitor, String name, RuleSupplyFlag flag) {		
 	}
-		
-	@Override
-	public void beautify() {
-		for (RuleSupply token : this.toIterable()) {
-			token.beautify();
-		}
-	}
 }

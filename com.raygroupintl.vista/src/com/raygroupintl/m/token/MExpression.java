@@ -31,7 +31,7 @@ public class MExpression extends MSequence {
 	@Override
 	public Node getNode() {
 		if (this.getToken(1) == null) {
-			return ((MToken) this.getToken(0)).getNode();
+			return this.getToken(0).getNode();
 		} else {
 			return NodeUtilities.getNodes(this, this.size());
 		}

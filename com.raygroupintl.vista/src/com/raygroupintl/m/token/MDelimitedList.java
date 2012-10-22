@@ -18,7 +18,6 @@ package com.raygroupintl.m.token;
 
 import com.raygroupintl.m.parsetree.Node;
 import com.raygroupintl.parser.DelimitedListOfTokens;
-import com.raygroupintl.parser.Token;
 import com.raygroupintl.parser.Tokens;
 
 public class MDelimitedList extends DelimitedListOfTokens<MToken> implements MToken {
@@ -42,9 +41,9 @@ public class MDelimitedList extends DelimitedListOfTokens<MToken> implements MTo
 
 	@Override
 	public Node getSubNode(int index0, int index1) {
-		MToken subToken = (MToken) this.getToken(index0);
+		MToken subToken = this.getToken(index0);
 		if (subToken != null) {
-			subToken = (MToken) this.getToken(index1);
+			subToken = this.getToken(index1);
 			if (subToken != null) return subToken.getNode();
 		}
 		return null;
@@ -57,7 +56,7 @@ public class MDelimitedList extends DelimitedListOfTokens<MToken> implements MTo
 
 	@Override
 	public MToken getSubNodeToken(int index) {
-		MToken subToken = (MToken) this.getToken(index);
+		MToken subToken = this.getToken(index);
 		if (subToken != null) {
 			if (index == 0) {
 				return subToken;
@@ -70,7 +69,7 @@ public class MDelimitedList extends DelimitedListOfTokens<MToken> implements MTo
 
 	@Override
 	public void beautify() {
-		for (Token token : this.toIterable()) {
+		for (MToken token : this.toIterable()) {
 			token.beautify();
 		}
 	}

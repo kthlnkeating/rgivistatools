@@ -18,7 +18,6 @@ package com.raygroupintl.m.token;
 
 import com.raygroupintl.m.parsetree.Node;
 import com.raygroupintl.parser.SequenceOfTokens;
-import com.raygroupintl.parser.Token;
 
 public class MSequence extends SequenceOfTokens<MToken> implements MToken {
 	public MSequence(int length) {
@@ -40,13 +39,13 @@ public class MSequence extends SequenceOfTokens<MToken> implements MToken {
 
 	@Override
 	public Node getSubNode(int index) {
-		MToken subToken = (MToken) this.getToken(index);
+		MToken subToken = this.getToken(index);
 		return subToken == null ? null : subToken.getNode();
 	}
 
 	@Override
 	public Node getSubNode(int index0, int index1) {
-		MToken subToken = (MToken) this.getToken(index0);
+		MToken subToken = this.getToken(index0);
 		if (subToken != null) {
 			return subToken.getSubNode(index1);
 		}
@@ -60,12 +59,12 @@ public class MSequence extends SequenceOfTokens<MToken> implements MToken {
 
 	@Override
 	public MToken getSubNodeToken(int index) {
-		return (MToken) this.getToken(index);
+		return this.getToken(index);
 	}
 
 	@Override
 	public void beautify() {		
-		for (Token token : this) {
+		for (MToken token : this) {
 			if (token != null) {
 				token.beautify();
 			}

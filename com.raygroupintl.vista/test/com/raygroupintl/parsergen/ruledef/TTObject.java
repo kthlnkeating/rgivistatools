@@ -5,10 +5,6 @@ import com.raygroupintl.parser.Token;
 import com.raygroupintl.parsergen.ruledef.TTSequence;
 
 public class TTObject extends TTSequence {
-	public TTObject(int length) {
-		super(length);
-	}
-
 	public TTObject(SequenceOfTokens<Token> tokens) {
 		super(tokens);
 	}

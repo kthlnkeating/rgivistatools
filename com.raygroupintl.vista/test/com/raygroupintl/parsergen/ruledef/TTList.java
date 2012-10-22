@@ -20,17 +20,7 @@ import com.raygroupintl.parser.ListOfTokens;
 import com.raygroupintl.parser.Token;
 
 public class TTList extends ListOfTokens<Token> implements Token {
-	public TTList() {
-	}
-	
 	public TTList(ListOfTokens<Token> tokens) {
 		super(tokens);
-	}
-
-	@Override
-	public void beautify() {
-		for (Token token : this.toIterable()) {
-			token.beautify();
-		}
 	}
 }

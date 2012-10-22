@@ -59,8 +59,8 @@ public class TFIntrinsic extends TokenFactorySupply<MToken> {
 		
 		@Override
 		public Node getNode() {
-			TextPiece name = ((MToken) this.getToken(0)).getSubNodeToken(0).getSubNodeToken(1).toValue();
-			MToken arguments = ((MToken) this.getToken(1)).getSubNodeToken(0);	
+			TextPiece name = this.getToken(0).getSubNodeToken(0).getSubNodeToken(1).toValue();
+			MToken arguments = this.getToken(1).getSubNodeToken(0);	
 			return new IntrinsicFunction(name.toString(), arguments == null ? null : arguments.getNode());
 		}
 
@@ -173,10 +173,9 @@ public class TFIntrinsic extends TokenFactorySupply<MToken> {
 	
 	@Override
 	public TokenFactory<MToken> getNextTokenFactory(MToken token) throws SyntaxErrorException {
-		MToken nameNLPar = (MToken) token;
-		MToken nameTokens = nameNLPar.getSubNodeToken(0);
+		MToken nameTokens = token.getSubNodeToken(0);
 		String name = nameTokens.getSubNodeToken(1).toValue().toString();
-		if ((nameNLPar.getNumSubNodes() > 1) && (nameNLPar.getSubNodeToken(1) != null)) {
+		if ((token.getNumSubNodes() > 1) && (token.getSubNodeToken(1) != null)) {
 			String mn = name.toUpperCase();			
 			FunctionInfo info = TFIntrinsic.this.functions.get(mn);
 			if (info == null) {

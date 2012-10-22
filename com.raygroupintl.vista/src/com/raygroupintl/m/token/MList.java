@@ -19,7 +19,6 @@ package com.raygroupintl.m.token;
 import com.raygroupintl.m.parsetree.Node;
 import com.raygroupintl.m.parsetree.Nodes;
 import com.raygroupintl.parser.ListOfTokens;
-import com.raygroupintl.parser.Token;
 
 public class MList extends ListOfTokens<MToken> implements MToken {
 	public MList() {
@@ -37,15 +36,15 @@ public class MList extends ListOfTokens<MToken> implements MToken {
 	
 	@Override
 	public Node getSubNode(int index) {
-		MToken subToken = (MToken) this.getToken(index);
+		MToken subToken = this.getToken(index);
 		return subToken == null ? null : subToken.getNode();
 	}
 
 	@Override
 	public Node getSubNode(int index0, int index1) {
-		MToken subToken = (MToken) this.getToken(index0);
+		MToken subToken = this.getToken(index0);
 		if (subToken != null) {
-			subToken = (MToken) this.getToken(index1);
+			subToken = this.getToken(index1);
 			if (subToken != null) return subToken.getNode();
 		}
 		return null;
@@ -58,12 +57,12 @@ public class MList extends ListOfTokens<MToken> implements MToken {
 
 	@Override
 	public MToken getSubNodeToken(int index) {
-		return (MToken) this.getToken(index);
+		return this.getToken(index);
 	}
 
 	@Override
 	public void beautify() {
-		for (Token token : this.toIterable()) {
+		for (MToken token : this.toIterable()) {
 			token.beautify();
 		}
 	}

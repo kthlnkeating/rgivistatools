@@ -22,10 +22,6 @@ import com.raygroupintl.parser.Token;
 public class TTString extends TextPiece implements Token {
 	private static final long serialVersionUID = 1L;
 	
-	public TTString() {
-		super();
-	}
-
 	public TTString(TextPiece value) {
 		super(value);
 	}
@@ -33,9 +29,5 @@ public class TTString extends TextPiece implements Token {
 	@Override
 	public TextPiece toValue() {
 		return this;
-	}
-	
-	@Override
-	public void beautify() {		
 	}
 }

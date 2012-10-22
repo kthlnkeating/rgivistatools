@@ -41,7 +41,7 @@ public class TFLineTest {
 		objectSupply = null;
 	}
 		
-	private Token lineTest(TokenFactory<MToken> f, String line, boolean errorAsWell) {
+	private MToken lineTest(TokenFactory<MToken> f, String line, boolean errorAsWell) {
 		try {
 			Text text = new Text(line);
 			MToken t = f.tokenize(text, objectSupply);
@@ -83,7 +83,7 @@ public class TFLineTest {
 		}
 	}
 
-	private Token lineTest(TokenFactory<MToken> f, String line) {
+	private MToken lineTest(TokenFactory<MToken> f, String line) {
 		return lineTest(f, line, true);
 	}
 	
@@ -162,7 +162,7 @@ public class TFLineTest {
 	}
 	
 	public void testBeautify(TokenFactory<MToken> f) {
-		Token l = lineTest(f, " S @A=\"S\"  S @H@(0)=3");
+		MToken l = lineTest(f, " S @A=\"S\"  S @H@(0)=3");
 		l.beautify();
 		String expected = " SET @A=\"S\"  SET @H@(0)=3";
 		String actual = l.toValue().toString();
