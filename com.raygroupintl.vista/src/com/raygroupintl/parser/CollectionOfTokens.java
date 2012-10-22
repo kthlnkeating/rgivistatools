@@ -62,4 +62,9 @@ public abstract class CollectionOfTokens<T extends Token> implements Tokens<T> {
 			return ts.getTokens(index1);
 		}
 	}
+	
+	@Override
+	public String toString() {
+		return this.toValue().toString();
+	}
 }

@@ -16,7 +16,6 @@
 
 package com.raygroupintl.m.token;
 
-import com.raygroupintl.parser.Empty;
 import com.raygroupintl.parser.TextPiece;
 
 public abstract class MCommandBase extends MSequence {
@@ -27,14 +26,7 @@ public abstract class MCommandBase extends MSequence {
 	protected abstract String getFullName();
 
 	protected MToken getArgument() {
-		MSequence nameFollowUp = (MSequence) this.getToken(1);
-		if (nameFollowUp == null) {
-			return null;
-		}
-		if (nameFollowUp.getToken(2) instanceof Empty) {
-			return null;
-		}			
-		MToken argument = nameFollowUp.getToken(2);
+		MToken argument = this.getToken(1, 2);
 		if ((argument == null) || (argument.toValue().length() == 0)) {
 			return null;
 		}

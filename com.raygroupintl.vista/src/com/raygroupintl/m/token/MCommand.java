@@ -18,7 +18,6 @@ package com.raygroupintl.m.token;
 
 import com.raygroupintl.m.parsetree.GenericCommand;
 import com.raygroupintl.m.parsetree.Node;
-import com.raygroupintl.parser.Empty;
 
 public abstract class MCommand extends MCommandBase {
 	public MCommand(MToken token0, MToken token1) {
@@ -26,18 +25,11 @@ public abstract class MCommand extends MCommandBase {
 	}
 	
 	protected Node getArgumentNode() {
-		MSequence nameFollowUp = (MSequence) this.getToken(1);
-		if (nameFollowUp == null) {
-			return null;
-		}
-		if (nameFollowUp.getToken(2) instanceof Empty) {
-			return null;
-		}			
-		MToken argument = nameFollowUp.getToken(2);
-		if ((argument == null) || (argument.toValue().length() == 0)) {
+		MToken a = this.getToken(1, 2);
+		if ((a == null) || (a.toValue().length() == 0)) {
 			return null;
 		} else {				
-			return argument.getNode();
+			return a.getNode();
 		}
 	}
 

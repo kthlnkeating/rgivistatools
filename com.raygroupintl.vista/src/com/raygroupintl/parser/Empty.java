@@ -17,10 +17,14 @@
 package com.raygroupintl.parser;
 
 public class Empty {
+	private static TextPiece EMPTY_TEXT_PIECE = new TextPiece();
+	
 	public TextPiece toValue() {
-		return new TextPiece();
+		return EMPTY_TEXT_PIECE;
 	}
-
-	public void beautify() {
+	
+	@Override 
+	public String toString() {
+		return "";
 	}
 }

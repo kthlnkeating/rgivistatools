@@ -44,4 +44,8 @@ public class MEmpty extends Empty implements MToken {
 	public MToken getSubNodeToken(int index) {
 		return null;
 	}
+	
+	@Override
+	public void beautify() {		
+	}
 }
