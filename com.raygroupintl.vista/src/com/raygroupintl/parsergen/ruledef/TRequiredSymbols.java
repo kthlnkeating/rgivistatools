@@ -23,7 +23,7 @@ public class TRequiredSymbols extends TSequence implements RuleSupply {
 		super(length);
 	}
 	
-	public TRequiredSymbols(SequenceOfTokens tokens) {
+	public TRequiredSymbols(SequenceOfTokens<RuleSupply> tokens) {
 		super(tokens);
 	}
 	

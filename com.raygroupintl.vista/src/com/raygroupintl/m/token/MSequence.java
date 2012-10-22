@@ -20,16 +20,16 @@ import com.raygroupintl.m.parsetree.Node;
 import com.raygroupintl.parser.SequenceOfTokens;
 import com.raygroupintl.parser.Token;
 
-public class MSequence extends SequenceOfTokens implements MToken {
+public class MSequence extends SequenceOfTokens<MToken> implements MToken {
 	public MSequence(int length) {
 		super(length);
 	}
 	
-	public MSequence(SequenceOfTokens tokens) {
+	public MSequence(SequenceOfTokens<MToken> tokens) {
 		super(tokens);
 	}
 	
-	public MSequence(Token token0, Token token1) {
+	public MSequence(MToken token0, MToken token1) {
 		super(token0, token1);
 	}
 		

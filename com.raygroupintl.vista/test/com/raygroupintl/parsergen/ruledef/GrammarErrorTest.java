@@ -6,15 +6,16 @@ import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
+import com.raygroupintl.parser.Token;
 import com.raygroupintl.parsergen.ParseException;
 import com.raygroupintl.parsergen.rulebased.RuleBasedParserGenerator;
 
 public class GrammarErrorTest {
-	private static RuleBasedParserGenerator parserGen;
+	private static RuleBasedParserGenerator<Token> parserGen;
 	
 	@BeforeClass
 	public static void setUpBeforeClass() throws Exception {
-		parserGen = new RuleBasedParserGenerator();
+		parserGen = new RuleBasedParserGenerator<Token>();
 	}
 
 	@AfterClass
@@ -25,7 +26,7 @@ public class GrammarErrorTest {
 	@Test
 	public void testGrammarInError() {
 		try {
-			parserGen.generate(GrammarInError0.class);
+			parserGen.generate(GrammarInError0.class, Token.class);
 		} catch (ParseException pe) {
 			return;
 		} catch (Throwable t) {

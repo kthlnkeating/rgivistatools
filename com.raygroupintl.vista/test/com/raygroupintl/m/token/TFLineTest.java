@@ -19,9 +19,9 @@ import com.raygroupintl.parser.Tokens;
 import com.raygroupintl.parsergen.ObjectSupply;
 
 public class TFLineTest {
-	private static TokenFactory fStd95;
-	private static TokenFactory fCache;
-	private static ObjectSupply objectSupply;
+	private static TokenFactory<MToken> fStd95;
+	private static TokenFactory<MToken> fCache;
+	private static ObjectSupply<MToken> objectSupply;
 	
 	@BeforeClass
 	public static void setUpBeforeClass() throws Exception {
@@ -41,13 +41,14 @@ public class TFLineTest {
 		objectSupply = null;
 	}
 		
-	private Token lineTest(TokenFactory f, String line, boolean errorAsWell) {
+	private Token lineTest(TokenFactory<MToken> f, String line, boolean errorAsWell) {
 		try {
 			Text text = new Text(line);
-			Token t = f.tokenize(text, objectSupply);
+			MToken t = f.tokenize(text, objectSupply);
 			String r = t.toValue().toString();
 			Assert.assertEquals(line, r);	
-			Tokens commands = (Tokens) ((Tokens) t).getToken(4);
+			@SuppressWarnings("unchecked")
+			Tokens<MToken> commands = (Tokens<MToken>) ((Tokens<MToken>) t).getToken(4);
 			boolean found = false;
 			for (Token errorCandidate : commands.toIterable()) {
 				if (errorCandidate instanceof MSyntaxError) {
@@ -66,14 +67,15 @@ public class TFLineTest {
 		}			
 	}
 
-	private void lineTest(TokenFactory f, String line, int errorCommand, int errorLocation) {
+	private void lineTest(TokenFactory<MToken> f, String line, int errorCommand, int errorLocation) {
 		try {
 			Text text = new Text(line);
-			Token t = f.tokenize(text, objectSupply);
+			MToken t = f.tokenize(text, objectSupply);
 			String r = t.toValue().toString();
 			Assert.assertEquals(line, r);	
-			Tokens commands = (Tokens) ((Tokens) t).getToken(4);
-			Token error = commands.getToken(errorCommand);
+			@SuppressWarnings("unchecked")
+			Tokens<MToken> commands = (Tokens<MToken>) ((Tokens<MToken>) t).getToken(4);
+			MToken error = commands.getToken(errorCommand);
 			Assert.assertTrue(error instanceof MSyntaxError);
 			Assert.assertEquals(errorLocation, ((MSyntaxError) error).getErrorIndex());
 		} catch (SyntaxErrorException e) {
@@ -81,11 +83,11 @@ public class TFLineTest {
 		}
 	}
 
-	private Token lineTest(TokenFactory f, String line) {
+	private Token lineTest(TokenFactory<MToken> f, String line) {
 		return lineTest(f, line, true);
 	}
 	
-	private void lineParameterTest(TokenFactory f, String line, String[] expectedParams) {
+	private void lineParameterTest(TokenFactory<MToken> f, String line, String[] expectedParams) {
 		try {
 			Text text = new Text(line);
 			MLine t = (MLine) f.tokenize(text, objectSupply);
@@ -109,7 +111,7 @@ public class TFLineTest {
 		lineParameterTest(fStd95, "TAG(A,B,C) ;", new String[]{"A", "B", "C"});
 	}
 	
-	public void testBasic(TokenFactory f, boolean cache) {
+	public void testBasic(TokenFactory<MToken> f, boolean cache) {
 		lineTest(f, " S A=A+1  F  S B=$O(^F(B)) Q:B=\"\"   S ^F(B,A)=5");
 		lineTest(f, " S $E(A)=J+1 Q:B=\"\"\"YYY\"\"\"  Q:B=\"\"\"XXX\"\"\"");
 		lineTest(f, " I '$D(USERPRT),(STATUS'=\"c\") Q ;not individual & not complete");
@@ -159,7 +161,7 @@ public class TFLineTest {
 		testBasic(fStd95, false);
 	}
 	
-	public void testBeautify(TokenFactory f) {
+	public void testBeautify(TokenFactory<MToken> f) {
 		Token l = lineTest(f, " S @A=\"S\"  S @H@(0)=3");
 		l.beautify();
 		String expected = " SET @A=\"S\"  SET @H@(0)=3";

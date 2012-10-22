@@ -25,7 +25,7 @@ public class MCacheClassMethod extends MSequence {
 		super(length);
 	}
 	
-	public MCacheClassMethod(SequenceOfTokens tokens) {
+	public MCacheClassMethod(SequenceOfTokens<MToken> tokens) {
 		super(tokens);
 	}
 	

@@ -22,28 +22,28 @@ import java.util.logging.Logger;
 
 import com.raygroupintl.parsergen.ObjectSupply;
 
-public final class TFList extends TokenFactory {
-	private TokenFactory elementFactory;
-	private Constructor<? extends Token> constructor;
+public final class TFList<T extends Token> extends TokenFactory<T> {
+	private TokenFactory<T> elementFactory;
+	private Constructor<? extends T> constructor;
 	
 	public TFList(String name) {
 		super(name);
 	}
 	
-	public TFList(String name, TokenFactory elementFactory) {
+	public TFList(String name, TokenFactory<T> elementFactory) {
 		super(name);
 		this.elementFactory = elementFactory;
 	}
 	
-	public void setElement(TokenFactory elementFactory) {
+	public void setElement(TokenFactory<T> elementFactory) {
 		this.elementFactory = elementFactory;
 	}
 
-	public ListOfTokens tokenizeCommon(Text text, ObjectSupply objectSupply) throws SyntaxErrorException {
+	public ListOfTokens<T> tokenizeCommon(Text text, ObjectSupply<T> objectSupply) throws SyntaxErrorException {
 		if (text.onChar()) {
-			ListOfTokens list = new ListOfTokens();
+			ListOfTokens<T> list = new ListOfTokens<T>();
 			while (text.onChar()) {
-				Token token = null;
+				T token = null;
 				try {
 					token = this.elementFactory.tokenize(text, objectSupply);
 				} catch (SyntaxErrorException e) {
@@ -64,13 +64,13 @@ public final class TFList extends TokenFactory {
 	}
 	
 	@Override
-	public Token tokenizeOnly(Text text, ObjectSupply objectSupply) throws SyntaxErrorException {
+	public T tokenizeOnly(Text text, ObjectSupply<T> objectSupply) throws SyntaxErrorException {
 		if (elementFactory == null) throw new IllegalStateException("TFList.setElementFactory needs to be called before TFList.tokenize");
-		ListOfTokens tokens = this.tokenizeCommon(text, objectSupply);
+		ListOfTokens<T> tokens = this.tokenizeCommon(text, objectSupply);
 		return this.convertList(tokens, objectSupply);
 	}
 	
-	public Token convertList(ListOfTokens tokens, ObjectSupply objectSupply) {
+	public T convertList(ListOfTokens<T> tokens, ObjectSupply<T> objectSupply) {
 		if (tokens == null) return null;
 		if (this.constructor == null) {
 			return objectSupply.newList(tokens);
@@ -85,7 +85,7 @@ public final class TFList extends TokenFactory {
 		}
 	}
 
-	public void setListTargetType(Constructor<? extends Token> constructor) {
+	public void setListTargetType(Constructor<? extends T> constructor) {
 		this.constructor = constructor;		
 	}
 }

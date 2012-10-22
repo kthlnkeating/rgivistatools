@@ -1,75 +1,77 @@
 package com.raygroupintl.parsergen.ruledef;
 
+import com.raygroupintl.parser.Token;
 import com.raygroupintl.parser.TokenFactory;
 import com.raygroupintl.parsergen.SequenceTokenType;
+import com.raygroupintl.parsergen.StringTokenType;
 import com.raygroupintl.parsergen.TokenType;
 import com.raygroupintl.parsergen.rulebased.Rule;
 
 public class Grammar {
-	@TokenType(TIntLit.class)
+	@StringTokenType(TTIntLit.class)
 	@Rule("'0'...'9'")
-	public TokenFactory intlit;
+	public TokenFactory<Token> intlit;
 
 	@Rule("'^'")
-	public TokenFactory caret;
+	public TokenFactory<Token> caret;
 
 	@Rule("{'a'...'z'}")
-	public TokenFactory name;
+	public TokenFactory<Token> name;
 
 	@Rule("{name:',':'(':')'}")
-	public TokenFactory params;
+	public TokenFactory<Token> params;
 		
-	@SequenceTokenType(TLocal.class)
+	@SequenceTokenType(TTLocal.class)
 	@Rule("name, [params]")
-	public TokenFactory local;
+	public TokenFactory<Token> local;
 
-	@SequenceTokenType(TObject.class)
+	@SequenceTokenType(TTObject.class)
 	@Rule("name, {('.', name)}, [params]")
-	public TokenFactory object;
+	public TokenFactory<Token> object;
 	
-	@SequenceTokenType(TNumber.class)
+	@SequenceTokenType(TTNumber.class)
 	@Rule("['+' + '-'], ([intlit], ['.', intlit]), ['E', ['+' + '-'], intlit]")
-	public TokenFactory number;
+	public TokenFactory<Token> number;
 	
-	@SequenceTokenType(TGlobal.class)
+	@SequenceTokenType(TTGlobal.class)
 	@Rule("caret, local")
-	public TokenFactory global;
+	public TokenFactory<Token> global;
 	
 	@Rule("object | local | global | number")
-	public TokenFactory expratom;
+	public TokenFactory<Token> expratom;
 
 	@Rule("'+' | 'm'")
-	public TokenFactory operator;
+	public TokenFactory<Token> operator;
 
 	@Rule("expratom, [{(operator, expratom)}]")
-	public TokenFactory expr;
+	public TokenFactory<Token> expr;
 	
-	@TokenType(TNameA.class)
+	@TokenType(TTNameA.class)
 	@Rule("name")
-	public TokenFactory namea;
+	public TokenFactory<Token> namea;
 
-	@TokenType(TNameB.class)
+	@TokenType(TTNameB.class)
 	@Rule("name")
-	public TokenFactory nameb;
+	public TokenFactory<Token> nameb;
 	
 	@Rule("namea, '^', name")
-	public TokenFactory nameaseq;
+	public TokenFactory<Token> nameaseq;
 	
 	@Rule("nameb, ':', name")
-	public TokenFactory namebseq;
+	public TokenFactory<Token> namebseq;
 	
 	@Rule("name, intlit")
-	public TokenFactory nameseq;
+	public TokenFactory<Token> nameseq;
 	
 	@Rule("caret | number | nameaseq | namebseq")
-	public TokenFactory testchoicea;
+	public TokenFactory<Token> testchoicea;
 	
 	@Rule("caret | number | name | nameaseq | namebseq")
-	public TokenFactory testchoiceb;
+	public TokenFactory<Token> testchoiceb;
 	
 	@Rule("nameseq | number | name | nameaseq")
-	public TokenFactory testchoicec;
+	public TokenFactory<Token> testchoicec;
 	
 	@Rule("nameb | number | nameaseq | nameseq")
-	public TokenFactory testchoiced;
+	public TokenFactory<Token> testchoiced;
 }

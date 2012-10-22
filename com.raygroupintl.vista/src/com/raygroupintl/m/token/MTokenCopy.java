@@ -18,12 +18,11 @@ package com.raygroupintl.m.token;
 
 import com.raygroupintl.m.parsetree.Node;
 import com.raygroupintl.parser.TextPiece;
-import com.raygroupintl.parser.Token;
 
 public abstract class MTokenCopy implements MToken {
 	private MToken actual;
 	
-	public MTokenCopy(Token token) {
+	public MTokenCopy(MToken token) {
 		this.actual = (MToken) token;
 	}
 

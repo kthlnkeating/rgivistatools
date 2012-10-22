@@ -19,7 +19,6 @@ package com.raygroupintl.m.token;
 import com.raygroupintl.m.parsetree.Node;
 import com.raygroupintl.parser.SequenceOfTokens;
 import com.raygroupintl.parser.TextPiece;
-import com.raygroupintl.parser.Token;
 
 public class MString extends TextPiece implements MToken {
 	private static final long serialVersionUID = 1L;
@@ -32,11 +31,11 @@ public class MString extends TextPiece implements MToken {
 		super(value);
 	}
 	
-	public MString(Token token) {
+	public MString(MToken token) {
 		super(token.toValue());
 	}
 	
-	public MString(SequenceOfTokens tokens) {
+	public MString(SequenceOfTokens<MToken> tokens) {
 		super(tokens.toValue());
 	}
 	

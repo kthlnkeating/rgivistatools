@@ -23,7 +23,7 @@ public class StringTokens {
 	public static class MName extends MString {
 		private static final long serialVersionUID = 1L;
 		
-		public MName(SequenceOfTokens tokens) {
+		public MName(SequenceOfTokens<MToken> tokens) {
 			super(tokens);
 		}
 	}

@@ -26,7 +26,7 @@ public class MGotoArgument extends MSequence {
 		super(length);
 	}
 	
-	public MGotoArgument(SequenceOfTokens tokens) {
+	public MGotoArgument(SequenceOfTokens<MToken> tokens) {
 		super(tokens);
 	}
 	

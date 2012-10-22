@@ -24,7 +24,7 @@ public class MComment extends MSequence {
 		super(length);
 	}
 	
-	public MComment(SequenceOfTokens tokens) {
+	public MComment(SequenceOfTokens<MToken> tokens) {
 		super(tokens);
 	}
 	

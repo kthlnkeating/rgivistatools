@@ -21,11 +21,10 @@ import java.util.Map;
 
 import com.raygroupintl.parser.TextPiece;
 import com.raygroupintl.parser.Text;
-import com.raygroupintl.parser.Token;
 import com.raygroupintl.parser.TokenFactory;
 import com.raygroupintl.parsergen.ObjectSupply;
 
-public class TFOperator extends TokenFactory {
+public class TFOperator extends TokenFactory<MToken> {
 	private static class OperatorBranch {
 		public Map<Character, OperatorBranch> nextBranch = new HashMap<Character, OperatorBranch>();
 		public boolean validEnd;
@@ -57,7 +56,7 @@ public class TFOperator extends TokenFactory {
 	}
 		
 	@Override
-	public Token tokenizeOnly(Text text, ObjectSupply objectSupply) {
+	public MToken tokenizeOnly(Text text, ObjectSupply<MToken> objectSupply) {
 		if (text.onChar()) {
 			char ch = text.getChar();	
 			OperatorBranch branch = this.operators.get(ch);

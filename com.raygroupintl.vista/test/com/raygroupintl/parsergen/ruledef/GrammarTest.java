@@ -14,18 +14,18 @@ import com.raygroupintl.parser.TokenFactory;
 import com.raygroupintl.parser.Tokens;
 import com.raygroupintl.parsergen.ObjectSupply;
 import com.raygroupintl.parsergen.rulebased.RuleBasedParserGenerator;
-import com.raygroupintl.parsergen.ruledef.DefaultObjectSupply;
-import com.raygroupintl.parsergen.ruledef.TString;
+import com.raygroupintl.parsergen.ruledef.TestObjectSupply;
+import com.raygroupintl.parsergen.ruledef.TTString;
 
 public class GrammarTest {
 	private static Grammar grammar;
-	private static ObjectSupply objectSupply;
+	private static ObjectSupply<Token> objectSupply;
 	
 	@BeforeClass
 	public static void setUpBeforeClass() throws Exception {
-		RuleBasedParserGenerator parserGen = new RuleBasedParserGenerator();
-		grammar = parserGen.generate(Grammar.class);
-		objectSupply = new DefaultObjectSupply();
+		RuleBasedParserGenerator<Token> parserGen = new RuleBasedParserGenerator<Token>();
+		grammar = parserGen.generate(Grammar.class, Token.class);
+		objectSupply = new TestObjectSupply();
 	}
 
 	@AfterClass
@@ -43,7 +43,7 @@ public class GrammarTest {
 		try {
 			Text text = new Text(v, 0);
 			Token number = grammar.number.tokenize(text, objectSupply);
-			Assert.assertTrue(number instanceof TNumber);
+			Assert.assertTrue(number instanceof TTNumber);
 		} catch (SyntaxErrorException se) {
 			fail("Unexpected exception: " + se.getMessage());			
 		}				
@@ -70,7 +70,7 @@ public class GrammarTest {
 		}				
 	}
 	
-	public void testChoice(TokenFactory f, String v, Class<?> cls, int seqIndex) {
+	public void testChoice(TokenFactory<Token> f, String v, Class<?> cls, int seqIndex) {
 		try {
 			Text text = new Text(v, 0);
 			Token t = f.tokenize(text, objectSupply);
@@ -78,7 +78,8 @@ public class GrammarTest {
 			if (seqIndex < 0) {
 				Assert.assertTrue(t.getClass().equals(cls));
 			} else {
-				Token tseq = ((Tokens) t).getToken(seqIndex);
+				@SuppressWarnings("unchecked")
+				Token tseq = ((Tokens<Token>) t).getToken(seqIndex);
 				Assert.assertTrue(tseq.getClass().equals(cls));
 			}
 		} catch (SyntaxErrorException se) {
@@ -86,7 +87,7 @@ public class GrammarTest {
 		}				
 	}
 	
-	public void testChoiceError(TokenFactory f, String v) {
+	public void testChoiceError(TokenFactory<Token> f, String v) {
 		try {
 			Text text = new Text(v, 0);
 			f.tokenize(text, objectSupply);
@@ -97,25 +98,25 @@ public class GrammarTest {
 	
 	@Test
 	public void testChoice() {
-		testChoice(grammar.testchoicea, "1", TNumber.class, -1);
-		testChoice(grammar.testchoicea, "a^a", TNameA.class, 0);
-		testChoice(grammar.testchoicea, "a:a", TNameB.class, 0);
+		testChoice(grammar.testchoicea, "1", TTNumber.class, -1);
+		testChoice(grammar.testchoicea, "a^a", TTNameA.class, 0);
+		testChoice(grammar.testchoicea, "a:a", TTNameB.class, 0);
 		testChoiceError(grammar.testchoicea, "a");
 		
-		testChoice(grammar.testchoiceb, "1", TNumber.class, -1);
-		testChoice(grammar.testchoiceb, "a^a", TNameA.class, 0);
-		testChoice(grammar.testchoiceb, "a:a", TNameB.class, 0);
-		testChoice(grammar.testchoiceb, "a", TString.class, -1);
+		testChoice(grammar.testchoiceb, "1", TTNumber.class, -1);
+		testChoice(grammar.testchoiceb, "a^a", TTNameA.class, 0);
+		testChoice(grammar.testchoiceb, "a:a", TTNameB.class, 0);
+		testChoice(grammar.testchoiceb, "a", TTString.class, -1);
 		testChoiceError(grammar.testchoicea, "a1");
 
-		testChoice(grammar.testchoicec, "1", TNumber.class, -1);
-		testChoice(grammar.testchoicec, "a1", TString.class, 0);
-		testChoice(grammar.testchoicec, "a^a", TNameA.class, 0);
-		testChoice(grammar.testchoicec, "a", TString.class, -1);
+		testChoice(grammar.testchoicec, "1", TTNumber.class, -1);
+		testChoice(grammar.testchoicec, "a1", TTString.class, 0);
+		testChoice(grammar.testchoicec, "a^a", TTNameA.class, 0);
+		testChoice(grammar.testchoicec, "a", TTString.class, -1);
 
-		testChoice(grammar.testchoiced, "1", TNumber.class, -1);
-		testChoice(grammar.testchoiced, "a1", TString.class, 0);
-		testChoice(grammar.testchoiced, "a^a", TNameA.class, 0);
-		testChoice(grammar.testchoiced, "a", TNameB.class, -1);
+		testChoice(grammar.testchoiced, "1", TTNumber.class, -1);
+		testChoice(grammar.testchoiced, "a1", TTString.class, 0);
+		testChoice(grammar.testchoiced, "a^a", TTNameA.class, 0);
+		testChoice(grammar.testchoiced, "a", TTNameB.class, -1);
 	}
 }

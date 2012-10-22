@@ -28,11 +28,11 @@ import com.raygroupintl.parser.TokenFactory;
 import com.raygroupintl.parsergen.AdapterSpecification;
 import com.raygroupintl.parsergen.ruledef.RuleSupplyFlag;
 
-public class FSRChoice extends FSRCollection {
-	private static class ForkAlgorithm {	
+public class FSRChoice<T extends Token> extends FSRCollection<T> {
+	private static class ForkAlgorithm<T extends Token> {	
 		private String appliedOnName;
 		
-		private List<FactorySupplyRule> list = new ArrayList<FactorySupplyRule>();
+		private List<FactorySupplyRule<T>> list = new ArrayList<FactorySupplyRule<T>>();
 		
 		private Map<String, Integer> choiceOrder = new HashMap<String, Integer>();
 		private Map<Integer, String> leadingShared = new HashMap<Integer, String>();
@@ -41,8 +41,8 @@ public class FSRChoice extends FSRCollection {
 			this.appliedOnName = name;
 		}
 	 	
-		public void add(FactorySupplyRule tf, RulesByName symbols) {
-			FactorySupplyRule leading = tf.getLeading(symbols, 0);
+		public void add(FactorySupplyRule<T> tf, RulesByName<T> symbols) {
+			FactorySupplyRule<T> leading = tf.getLeading(symbols, 0);
 			String name = leading.getName();
 			Integer existing = this.choiceOrder.get(name);
 			if (existing == null) {
@@ -52,11 +52,11 @@ public class FSRChoice extends FSRCollection {
 			} else {
 				this.leadingShared.put(existing, name);
 				int n = existing.intValue();
-				FactorySupplyRule current = this.list.get(n);
+				FactorySupplyRule<T> current = this.list.get(n);
 				if (current instanceof FSRForkedSequence) {
-					((FSRForkedSequence) current).addFollower(tf);
+					((FSRForkedSequence<T>) current).addFollower(tf);
 				} else {
-					FSRForkedSequence newForked = new FSRForkedSequence(this.appliedOnName + "." + name, leading);
+					FSRForkedSequence<T> newForked = new FSRForkedSequence<T>(this.appliedOnName + "." + name, leading);
 					newForked.addFollower(current);
 					newForked.addFollower(tf);
 					this.list.set(n, newForked);
@@ -65,11 +65,11 @@ public class FSRChoice extends FSRCollection {
 		}	
 	}
 
-	private TFChoice factory;
+	private TFChoice<T> factory;
 	
 	public FSRChoice(String name, RuleSupplyFlag flag) {
 		super(flag);
-		this.factory = new TFChoice(name);
+		this.factory = new TFChoice<T>(name);
 	}
 	
 	@Override
@@ -77,15 +77,15 @@ public class FSRChoice extends FSRCollection {
 		return this.factory.getName();
 	}
 	
-	private List<TokenFactory> getChoiceFactories(RulesByName symbols) {
-		List<TokenFactory> result = new ArrayList<TokenFactory>();
+	private List<TokenFactory<T>> getChoiceFactories(RulesByName<T> symbols) {
+		List<TokenFactory<T>> result = new ArrayList<TokenFactory<T>>();
 		
-		ForkAlgorithm algorithm = new ForkAlgorithm(this.getName());
-		for (FactorySupplyRule r : this.list) {
-			FactorySupplyRule ar = r.getActualRule(symbols);
+		ForkAlgorithm<T> algorithm = new ForkAlgorithm<T>(this.getName());
+		for (FactorySupplyRule<T> r : this.list) {
+			FactorySupplyRule<T> ar = r.getActualRule(symbols);
 			algorithm.add(ar, symbols);
 		}
-		for (FactorySupplyRule on : algorithm.list) {
+		for (FactorySupplyRule<T> on : algorithm.list) {
 			on.update(symbols);
 			result.add(on.getTheFactory(symbols));
 		}
@@ -93,24 +93,24 @@ public class FSRChoice extends FSRCollection {
 	}
 	
 	@Override
-	public boolean update(RulesByName symbols) {
-		RulesByNameLocal localSymbols = new RulesByNameLocal(symbols, this);
-		List<TokenFactory> fs = this.getChoiceFactories(localSymbols);
+	public boolean update(RulesByName<T> symbols) {
+		RulesByNameLocal<T> localSymbols = new RulesByNameLocal<T>(symbols, this);
+		List<TokenFactory<T>> fs = this.getChoiceFactories(localSymbols);
 		this.factory.reset(fs.size());
-		for (TokenFactory f : fs) {
+		for (TokenFactory<T> f : fs) {
 			this.factory.add(f);
 		}
 		return true;
 	}
 
 	@Override
-	public TFChoice getShellFactory() {
+	public TFChoice<T> getShellFactory() {
 		return this.factory;	
 	}
 	
 	@Override
-	public void setAdapter(AdapterSpecification<Token> spec) {
-		Constructor<? extends Token> constructor = spec.getTokenAdapter();
+	public void setAdapter(AdapterSpecification<T> spec) {
+		Constructor<? extends T> constructor = spec.getTokenAdapter();
 		if (constructor != null) this.factory.setTargetType(constructor);
 	}
 }

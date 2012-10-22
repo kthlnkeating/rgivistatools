@@ -2,19 +2,19 @@ package com.raygroupintl.parser;
 
 import com.raygroupintl.parsergen.ObjectSupply;
 
-public class TFCopy extends TokenFactory {
-	private TokenFactory tf;
+public class TFCopy<T extends Token> extends TokenFactory<T> {
+	private TokenFactory<T> tf;
 	
 	public TFCopy(String name) {
 		super(name);
 	}
 	
-	public void setMaster(TokenFactory master) {
+	public void setMaster(TokenFactory<T> master) {
 		this.tf = master;
 	}
 	
 	@Override
-	protected Token tokenizeOnly(Text text, ObjectSupply objectSupply) throws SyntaxErrorException {
+	protected T tokenizeOnly(Text text, ObjectSupply<T> objectSupply) throws SyntaxErrorException {
 		return this.tf.tokenize(text, objectSupply);
 	}
 }

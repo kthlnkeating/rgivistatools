@@ -27,13 +27,13 @@ public class MNakedGlobal extends MSequence {
 		super(length);
 	}
 
-	public MNakedGlobal(SequenceOfTokens tokens) {
+	public MNakedGlobal(SequenceOfTokens<MToken> tokens) {
 		super(tokens);
 	}
 
 	@Override
 	public Node getNode() {
-		Tokens subsripts = this.getTokens(1);
+		Tokens<MToken> subsripts = this.getTokens(1);
 		NodeList<Node> nodes = NodeUtilities.getSubscriptNodes(subsripts);
 		return new NakedGlobal(nodes);
 	}

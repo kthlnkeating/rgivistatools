@@ -14,8 +14,8 @@ import com.raygroupintl.parsergen.ParseException;
 public class TFIntrinsicTest {
 	private void testTFIntrinsic(MVersion version) {
 		try {
-			TokenFactory f = MTFSupply.getInstance(version).intrinsic;
-			ObjectSupply objectSupply = new MObjectSupply();
+			TokenFactory<MToken> f = MTFSupply.getInstance(version).intrinsic;
+			ObjectSupply<MToken> objectSupply = new MObjectSupply();
 			TFCommonTest.validCheck(f, objectSupply, "$EREF");
 			TFCommonTest.validCheck(f, objectSupply, "$P(LST,\",\",FLD)");		
 			TFCommonTest.validCheck(f, objectSupply, "$S(LST=\"A\":0,1:1)");		

@@ -18,13 +18,13 @@ package com.raygroupintl.parser;
 
 import com.raygroupintl.parsergen.ObjectSupply;
 
-public class TFEnd extends TokenFactory {
+public class TFEnd<T extends Token> extends TokenFactory<T> {
 	public TFEnd(String name) {
 		super(name);
 	}
 	
 	@Override
-	public Token tokenizeOnly(Text text, ObjectSupply objectSupply) {
+	public T tokenizeOnly(Text text, ObjectSupply<T> objectSupply) {
 		if (text.onChar()) {
 			return null;
 		} else {

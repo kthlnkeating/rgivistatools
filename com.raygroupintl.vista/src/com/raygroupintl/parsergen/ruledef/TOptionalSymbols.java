@@ -23,7 +23,7 @@ public class TOptionalSymbols extends TSequence implements RuleSupply {
 		super(length);
 	}
 	
-	public TOptionalSymbols(SequenceOfTokens tokens) {
+	public TOptionalSymbols(SequenceOfTokens<RuleSupply> tokens) {
 		super(tokens);
 	}
 

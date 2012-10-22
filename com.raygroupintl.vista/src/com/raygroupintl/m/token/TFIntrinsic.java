@@ -28,17 +28,16 @@ import com.raygroupintl.parser.SequenceOfTokens;
 import com.raygroupintl.parser.TextPiece;
 import com.raygroupintl.parser.SyntaxErrorException;
 import com.raygroupintl.parser.TFSequence;
-import com.raygroupintl.parser.Token;
 import com.raygroupintl.parser.TokenFactory;
 import com.raygroupintl.parser.TokenFactorySupply;
 
-public class TFIntrinsic extends TokenFactorySupply {		
+public class TFIntrinsic extends TokenFactorySupply<MToken> {		
 	public static class TIntrinsicVariable extends MSequence {
 		public TIntrinsicVariable(int length) {
 			super(length);
 		}
 		
-		public TIntrinsicVariable(SequenceOfTokens tokens) {
+		public TIntrinsicVariable(SequenceOfTokens<MToken> tokens) {
 			super(tokens);
 		}
 		
@@ -54,7 +53,7 @@ public class TFIntrinsic extends TokenFactorySupply {
 			super(length);
 		}
 		
-		private TIntrinsicFunction(SequenceOfTokens tokens) {
+		private TIntrinsicFunction(SequenceOfTokens<MToken> tokens) {
 			super(tokens);
 		}
 		
@@ -68,13 +67,13 @@ public class TFIntrinsic extends TokenFactorySupply {
 	}
 	
 	private static class FunctionInfo {
-		private TokenFactory argumentFactory;
+		private TokenFactory<MToken> argumentFactory;
 		//private String mnemonic;
 		//private String name;
 		private int minNumArguments;
 		//private int maxNumArguments;
 		
-		public FunctionInfo(String mnemonic, String name, TokenFactory argumentFactory, int minNumArguments, int maxNumArguments) {
+		public FunctionInfo(String mnemonic, String name, TokenFactory<MToken> argumentFactory, int minNumArguments, int maxNumArguments) {
 			//this.mnemonic = mnemonic;
 			//this.name = name;
 			this.argumentFactory = argumentFactory;
@@ -98,7 +97,7 @@ public class TFIntrinsic extends TokenFactorySupply {
 		//	return this.maxNumArguments;
 		//}
 		
-		public TokenFactory getArgumentFactory() {
+		public TokenFactory<MToken> getArgumentFactory() {
 			return this.argumentFactory;
 		}
 	}
@@ -121,7 +120,7 @@ public class TFIntrinsic extends TokenFactorySupply {
 		this.variables.update(mnemonic, name); 	
 	}
 	
-	public FunctionInfo addFunction(TokenFactory argumentFactory, String mnemonic, String name, int minNumArguments, int maxNumArguments) {
+	public FunctionInfo addFunction(TokenFactory<MToken> argumentFactory, String mnemonic, String name, int minNumArguments, int maxNumArguments) {
 		FunctionInfo fi = new FunctionInfo(mnemonic, name, argumentFactory, minNumArguments, maxNumArguments);
 		if (this.functions == null) {
 			this.functions = new HashMap<String, FunctionInfo>();	
@@ -133,15 +132,15 @@ public class TFIntrinsic extends TokenFactorySupply {
 		return fi;
 	}
 		
-	public FunctionInfo addFunction(TokenFactory argumentFactory, String name, int minNumArguments, int maxNumArguments) {
+	public FunctionInfo addFunction(TokenFactory<MToken> argumentFactory, String name, int minNumArguments, int maxNumArguments) {
 		return this.addFunction(argumentFactory, name, name, minNumArguments, maxNumArguments);
 	}
 		
-	public FunctionInfo addFunction(TokenFactory argumentFactory, String name) {
+	public FunctionInfo addFunction(TokenFactory<MToken> argumentFactory, String name) {
 		return this.addFunction(argumentFactory, name, 1, Integer.MAX_VALUE);
 	}
 
-	private class TFIntrinsicRest extends TFSequence {	
+	private class TFIntrinsicRest extends TFSequence<MToken> {	
 		private boolean nullAllowed;
 		
 		public TFIntrinsicRest(FunctionInfo info, boolean nullAllowed, String name) {
@@ -150,7 +149,7 @@ public class TFIntrinsic extends TokenFactorySupply {
 		}
 		
 		@Override
-		protected ValidateResult validateNull(int seqIndex, SequenceOfTokens foundTokens, boolean noException) throws SyntaxErrorException {
+		protected ValidateResult validateNull(int seqIndex, SequenceOfTokens<MToken> foundTokens, boolean noException) throws SyntaxErrorException {
 			if (seqIndex == 0 && this.nullAllowed) {
 				return ValidateResult.CONTINUE;
 			}
@@ -160,8 +159,8 @@ public class TFIntrinsic extends TokenFactorySupply {
 	}
 	
 	@Override
-	public TokenFactory getSupplyTokenFactory() {
-		TFSequence result = new TFSequence("instrinsic.name", 2);
+	public TokenFactory<MToken> getSupplyTokenFactory() {
+		TFSequence<MToken> result = new TFSequence<MToken>("instrinsic.name", 2);
 		result.add(this.supply.intrinsicname, true);
 		result.add(this.supply.lpar, false);
 		try {
@@ -173,7 +172,7 @@ public class TFIntrinsic extends TokenFactorySupply {
 	}
 	
 	@Override
-	public TokenFactory getNextTokenFactory(Token token) throws SyntaxErrorException {
+	public TokenFactory<MToken> getNextTokenFactory(MToken token) throws SyntaxErrorException {
 		MToken nameNLPar = (MToken) token;
 		MToken nameTokens = nameNLPar.getSubNodeToken(0);
 		String name = nameTokens.getSubNodeToken(1).toValue().toString();
@@ -183,8 +182,8 @@ public class TFIntrinsic extends TokenFactorySupply {
 			if (info == null) {
 				throw new SyntaxErrorException(MError.ERR_UNKNOWN_INTRINSIC_FUNCTION);
 			}
-			TokenFactory argumentFactory = info.getArgumentFactory();
-			TFSequence result = new TFIntrinsicRest(info, info.getMinNumArguments() == 0, "instrinsic.name");
+			TokenFactory<MToken> argumentFactory = info.getArgumentFactory();
+			TFSequence<MToken> result = new TFIntrinsicRest(info, info.getMinNumArguments() == 0, "instrinsic.name");
 			result.add(argumentFactory, info.getMinNumArguments() > 0);
 			result.add(this.supply.rpar, true);
 			return result;
@@ -198,7 +197,7 @@ public class TFIntrinsic extends TokenFactorySupply {
 	}
 
 	@Override
-	public Token getToken(Token supplyToken, Token nextToken) {
+	public MToken getToken(MToken supplyToken, MToken nextToken) {
 		TIntrinsicFunction result = new TIntrinsicFunction(2);
 		result.addToken(supplyToken);
 		result.addToken(nextToken);

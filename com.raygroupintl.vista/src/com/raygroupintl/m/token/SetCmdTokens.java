@@ -20,11 +20,10 @@ import com.raygroupintl.m.parsetree.Node;
 import com.raygroupintl.m.parsetree.Nodes;
 import com.raygroupintl.m.parsetree.SetCmdNodes;
 import com.raygroupintl.parser.SequenceOfTokens;
-import com.raygroupintl.parser.Token;
 
 public final class SetCmdTokens {
 	public static final class MSetCmd extends MCommand {
-		public MSetCmd(Token cmdName, Token cmdDependent) {
+		public MSetCmd(MToken cmdName, MToken cmdDependent) {
 			super(cmdName, cmdDependent);
 		}		
 		
@@ -44,7 +43,7 @@ public final class SetCmdTokens {
 			super(length);
 		}
 		
-		public MSingleAtomicSetCmd(SequenceOfTokens tokens) {
+		public MSingleAtomicSetCmd(SequenceOfTokens<MToken> tokens) {
 			super(tokens);
 		}
 		
@@ -67,7 +66,7 @@ public final class SetCmdTokens {
 			super(length);
 		}
 		
-		public MMultiAtomicSetCmd(SequenceOfTokens tokens) {
+		public MMultiAtomicSetCmd(SequenceOfTokens<MToken> tokens) {
 			super(tokens);
 		}
 		

@@ -18,21 +18,23 @@ package com.raygroupintl.parsergen.rulebased;
 
 import java.util.Map;
 
+import com.raygroupintl.parser.Token;
 
-public class RulesMapByName implements RulesByName {
-	private Map<String, FactorySupplyRule> topRules;
+
+public class RulesMapByName<T extends Token> implements RulesByName<T> {
+	private Map<String, FactorySupplyRule<T>> topRules;
 	
-	public RulesMapByName(Map<String, FactorySupplyRule> topRules) {
+	public RulesMapByName(Map<String, FactorySupplyRule<T>> topRules) {
 		this.topRules = topRules;
 	}
 	
 	@Override
-	public FactorySupplyRule get(String name) {
+	public FactorySupplyRule<T> get(String name) {
 		return this.topRules.get(name);
 	}
 	
 	@Override
-	public void put(String name, FactorySupplyRule rule) {
+	public void put(String name, FactorySupplyRule<T> rule) {
 		this.topRules.put(name, rule);
 	}
 

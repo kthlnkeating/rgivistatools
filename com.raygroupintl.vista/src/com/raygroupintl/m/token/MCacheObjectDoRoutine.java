@@ -25,7 +25,7 @@ public class MCacheObjectDoRoutine extends MSequence {
 		super(length);
 	}
 	
-	public MCacheObjectDoRoutine(SequenceOfTokens tokens) {
+	public MCacheObjectDoRoutine(SequenceOfTokens<MToken> tokens) {
 		super(tokens);
 	}
 	

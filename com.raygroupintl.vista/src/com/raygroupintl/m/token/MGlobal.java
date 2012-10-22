@@ -28,18 +28,18 @@ public class MGlobal extends MSequence {
 		super(length);
 	}
 
-	public MGlobal(SequenceOfTokens tokens) {
+	public MGlobal(SequenceOfTokens<MToken> tokens) {
 		super(tokens);
 	}
 
 	@Override
 	public Node getNode() {
-		Tokens actual = this.getTokens(1);
+		Tokens<MToken> actual = this.getTokens(1);
 		if (actual.getToken(0) != null) {
 			return NodeUtilities.getNodes(actual.toLogicalIterable(), actual.size());
 		} else {
 			TextPiece name = actual.getToken(1).toValue();
-			Tokens subsripts = actual.getTokens(2);
+			Tokens<MToken> subsripts = actual.getTokens(2);
 			if (subsripts == null) {
 				return new Global(name);
 			} else {

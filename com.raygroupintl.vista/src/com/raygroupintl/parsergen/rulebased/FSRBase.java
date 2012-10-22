@@ -22,7 +22,7 @@ import com.raygroupintl.parsergen.AdapterSpecification;
 import com.raygroupintl.parsergen.ParseErrorException;
 import com.raygroupintl.parsergen.ruledef.RuleSupplyFlag;
 
-public abstract class FSRBase implements FactorySupplyRule {
+public abstract class FSRBase<T extends Token> implements FactorySupplyRule<T> {
 	private RuleSupplyFlag flag;
 	
 	public FSRBase(RuleSupplyFlag flag) {
@@ -42,15 +42,15 @@ public abstract class FSRBase implements FactorySupplyRule {
 	}
 	
 	@Override
-	public FactorySupplyRule formList(String name, RuleSupplyFlag flag, ListInfo info) {
+	public FactorySupplyRule<T> formList(String name, RuleSupplyFlag flag, ListInfo<T> info) {
 		if (info.delimiter == null) {
-			return new FSRList(name, flag, this);
+			return new FSRList<T>(name, flag, this);
 		}
 		if ((info.left == null) || (info.right == null)) {
-			return new FSRDelimitedList(name, flag, this, info.delimiter);		
+			return new FSRDelimitedList<T>(name, flag, this, info.delimiter);		
 		}
 		{
-			FSREnclosedDelimitedList result = new FSREnclosedDelimitedList(name, flag, this, info.delimiter, info.left, info.right);
+			FSREnclosedDelimitedList<T> result = new FSREnclosedDelimitedList<T>(name, flag, this, info.delimiter, info.left, info.right);
 			result.setEmptyAllowed(info.emptyAllowed);
 			result.setNoneAllowed(info.noneAllowed);
 			return result;
@@ -58,22 +58,22 @@ public abstract class FSRBase implements FactorySupplyRule {
 	}
 
 	@Override
-	public boolean update(RulesByName symbols) {
+	public boolean update(RulesByName<T> symbols) {
 		return true;
 	}
 
-	public TokenFactory getTheFactory(RulesByName symbols) {
-		FactorySupplyRule af = this.getActualRule(symbols);
+	public TokenFactory<T> getTheFactory(RulesByName<T> symbols) {
+		FactorySupplyRule<T> af = this.getActualRule(symbols);
 		return af.getShellFactory();
 	}
 
 	@Override
-	public FactorySupplyRule getLeading(RulesByName names, int level) {
+	public FactorySupplyRule<T> getLeading(RulesByName<T> names, int level) {
 		return this;
 	}
 	
 	@Override
-	public FactorySupplyRule getActualRule(RulesByName symbols) {
+	public FactorySupplyRule<T> getActualRule(RulesByName<T> symbols) {
 		return this;
 	}
 	
@@ -83,7 +83,7 @@ public abstract class FSRBase implements FactorySupplyRule {
 	}
 
 	@Override
-	public void setAdapter(AdapterSpecification<Token> spec) {
+	public void setAdapter(AdapterSpecification<T> spec) {
 		spec.getNull();
 	}
 	

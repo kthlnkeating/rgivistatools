@@ -18,29 +18,29 @@ package com.raygroupintl.parser;
 
 import com.raygroupintl.parsergen.ObjectSupply;
 
-public abstract class TokenFactorySupply extends TokenFactory {
+public abstract class TokenFactorySupply<T extends Token> extends TokenFactory<T> {
 	public TokenFactorySupply(String name) {
 		super(name);
 	}
 	
-	public abstract TokenFactory getSupplyTokenFactory();
+	public abstract TokenFactory<T> getSupplyTokenFactory();
 	
-	public abstract TokenFactory getNextTokenFactory(Token token) throws SyntaxErrorException;
+	public abstract TokenFactory<T> getNextTokenFactory(T token) throws SyntaxErrorException;
 	
-	public abstract Token getToken(Token supplyToken, Token nextToken);
+	public abstract T getToken(T supplyToken, T nextToken);
 	
 	@Override
-	public Token tokenizeOnly(Text text, ObjectSupply objectSupply) throws SyntaxErrorException {
-		TokenFactory supplyFactory = getSupplyTokenFactory();
-		Token token = supplyFactory.tokenize(text, objectSupply);
+	public T tokenizeOnly(Text text, ObjectSupply<T> objectSupply) throws SyntaxErrorException {
+		TokenFactory<T> supplyFactory = getSupplyTokenFactory();
+		T token = supplyFactory.tokenize(text, objectSupply);
 		if (token == null) {
 			return null;
 		} else {
-			TokenFactory tf = this.getNextTokenFactory(token);
+			TokenFactory<T> tf = this.getNextTokenFactory(token);
 			if (tf == null) {
 				return token;
 			} else {
-				Token nextToken = tf.tokenize(text, objectSupply);
+				T nextToken = tf.tokenize(text, objectSupply);
 				return this.getToken(token, nextToken);
 			}
 		}

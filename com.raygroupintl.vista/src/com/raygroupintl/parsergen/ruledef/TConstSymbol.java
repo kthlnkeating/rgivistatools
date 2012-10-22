@@ -24,7 +24,7 @@ public class TConstSymbol extends TSequence implements ConstSymbol {
 		super(length);
 	}
 	
-	public TConstSymbol(SequenceOfTokens tokens) {
+	public TConstSymbol(SequenceOfTokens<RuleSupply> tokens) {
 		super(tokens);
 	}
 	

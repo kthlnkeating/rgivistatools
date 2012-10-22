@@ -23,135 +23,135 @@ import com.raygroupintl.parsergen.TokenType;
 
 public class RuleGrammar {
 	@CharSpecified(chars={','}, single=true)
-	public TokenFactory comma;
+	public TokenFactory<RuleSupply> comma;
 	
 	@CharSpecified(chars={':'}, single=true)
-	public TokenFactory colon;
+	public TokenFactory<RuleSupply> colon;
 
 	@CharSpecified(chars={'('}, single=true)
-	public TokenFactory lpar;
+	public TokenFactory<RuleSupply> lpar;
 	@CharSpecified(chars={')'}, single=true)
-	public TokenFactory rpar;
+	public TokenFactory<RuleSupply> rpar;
 	
 	@CharSpecified(chars={'['}, single=true)
-	public TokenFactory lsqr;
+	public TokenFactory<RuleSupply> lsqr;
 	@CharSpecified(chars={']'}, single=true)
-	public TokenFactory rsqr;
+	public TokenFactory<RuleSupply> rsqr;
 	
 	@CharSpecified(chars={'{'}, single=true)
-	public TokenFactory lcur;
+	public TokenFactory<RuleSupply> lcur;
 	@CharSpecified(chars={'}'}, single=true)
-	public TokenFactory rcur;
+	public TokenFactory<RuleSupply> rcur;
 	
 	@CharSpecified(chars={'\''}, single=true)
-	public TokenFactory squote;
+	public TokenFactory<RuleSupply> squote;
 	@Choice({"escapedsquote", "escapedn", "escapedr", "escapedt", "noquote"})
-	public TokenFactory squoted;
+	public TokenFactory<RuleSupply> squoted;
 
 	@CharSpecified(chars={'"'}, single=true)
-	public TokenFactory quote;
+	public TokenFactory<RuleSupply> quote;
 	@CharSpecified(excludechars={'"'})
-	public TokenFactory quoted;
+	public TokenFactory<RuleSupply> quoted;
 
 	@CharSpecified(chars={'|'}, single=true)
-	public TokenFactory pipe;
+	public TokenFactory<RuleSupply> pipe;
 	
 	@CharSpecified(chars={'+', '-'}, single=true)
-	public TokenFactory pm;
+	public TokenFactory<RuleSupply> pm;
 	
 	@CharSpecified(chars={'1', '0'}, single=true)
-	public TokenFactory bool;
+	public TokenFactory<RuleSupply> bool;
 	
 	@WordSpecified("...")
-	public TokenFactory ellipsis;
+	public TokenFactory<RuleSupply> ellipsis;
 	@WordSpecified("\\'")
-	public TokenFactory escapedsquote;
+	public TokenFactory<RuleSupply> escapedsquote;
 	@WordSpecified("\\n")
-	public TokenFactory escapedn;
+	public TokenFactory<RuleSupply> escapedn;
 	@WordSpecified("\\r")
-	public TokenFactory escapedr;
+	public TokenFactory<RuleSupply> escapedr;
 	@WordSpecified("\\t")
-	public TokenFactory escapedt;
+	public TokenFactory<RuleSupply> escapedt;
 	@CharSpecified(excludechars={'\''}, single=true)
-	public TokenFactory noquote;
+	public TokenFactory<RuleSupply> noquote;
 
 	@TokenType(TSymbol.class)
 	@CharSpecified(ranges={'a', 'z'})
-	public TokenFactory specifiedsymbol; 
+	public TokenFactory<RuleSupply> specifiedsymbol; 
 
 	@SequenceTokenType(TCharSymbol.class)
 	@Sequence(value={"squote", "squoted", "squote"}, required="all")
-	public TokenFactory charsymbol; 
+	public TokenFactory<RuleSupply> charsymbol; 
 
 	@Sequence(value={"ellipsis", "charsymbol"}, required="all")
-	public TokenFactory charsymbolto; 
+	public TokenFactory<RuleSupply> charsymbolto; 
 	@Sequence(value={"charsymbol", "charsymbolto", "sp"}, required="roo")
-	public TokenFactory charsymbolwr; 
+	public TokenFactory<RuleSupply> charsymbolwr; 
 	@Sequence(value={"dpm", "charsymbolwr"}, required="all")
-	public TokenFactory charsymbolpp; 
+	public TokenFactory<RuleSupply> charsymbolpp; 
 	@List(value="charsymbolpp")
-	public TokenFactory charsymbollist; 
+	public TokenFactory<RuleSupply> charsymbollist; 
 	@SequenceTokenType(TCharSymbol.class)
 	@Sequence(value={"dpm", "charsymbolwr", "charsymbollist"}, required="oro")
-	public TokenFactory charsymbolall; 
+	public TokenFactory<RuleSupply> charsymbolall; 
 
 	@SequenceTokenType(TConstSymbol.class)
 	@Sequence(value={"quote", "quoted", "quote", "colon", "bool"}, required="rrroo")
-	public TokenFactory constsymbol; 
+	public TokenFactory<RuleSupply> constsymbol; 
 	
 	@Choice({"specifiedsymbol", "charsymbolall", "constsymbol", "optionalsymbols", "requiredsymbols", "list"})
-	public TokenFactory symbol; 
+	public TokenFactory<RuleSupply> symbol; 
 	
 	@DelimitedListTokenType(TChoiceOfSymbols.class)
 	@List(value="symbol", delim="choicedelimiter")
-	public TokenFactory symbolchoice; 
+	public TokenFactory<RuleSupply> symbolchoice; 
 
 	@CharSpecified(chars={' '})
-	public TokenFactory sp;
+	public TokenFactory<RuleSupply> sp;
 
 	@Sequence(value={"sp", "lpar", "sp"}, required="oro")
-	public TokenFactory openrequired;
+	public TokenFactory<RuleSupply> openrequired;
 	@Sequence(value={"sp", "rpar", "sp"}, required="oro")
-	public TokenFactory closerequired;
+	public TokenFactory<RuleSupply> closerequired;
 
 	@Sequence(value={"pm", "sp"}, required="ro")
-	public TokenFactory dpm;	
+	public TokenFactory<RuleSupply> dpm;	
 	
 	@Sequence(value={"sp", "lsqr", "sp"}, required="oro")
-	public TokenFactory openoptional;
+	public TokenFactory<RuleSupply> openoptional;
 	@Sequence(value={"sp", "rsqr", "sp"}, required="oro")
-	public TokenFactory closeoptional;
+	public TokenFactory<RuleSupply> closeoptional;
 	
 	@Sequence(value={"sp", "lcur", "sp"}, required="oro")
-	public TokenFactory openlist;
+	public TokenFactory<RuleSupply> openlist;
 	@Sequence(value={"sp", "rcur", "sp"}, required="oro")
-	public TokenFactory closelist;
+	public TokenFactory<RuleSupply> closelist;
 	
 	@Sequence(value={"sp", "pipe", "sp"}, required="oro")
-	public TokenFactory choicedelimiter;
+	public TokenFactory<RuleSupply> choicedelimiter;
 
 	@Sequence(value={"sp", "comma", "sp"}, required="oro")
-	public TokenFactory delimiter;
+	public TokenFactory<RuleSupply> delimiter;
 	
 	@SequenceTokenType(TOptionalSymbols.class)
 	@Sequence(value={"openoptional", "sequence", "closeoptional"}, required="all")
-	public TokenFactory optionalsymbols; 
+	public TokenFactory<RuleSupply> optionalsymbols; 
 	@SequenceTokenType(TRequiredSymbols.class)
 	@Sequence(value={"openrequired", "sequence", "closerequired"}, required="all")
-	public TokenFactory requiredsymbols;
+	public TokenFactory<RuleSupply> requiredsymbols;
 	
 	@Sequence(value={"colon", "anysymbols", "colon", "anysymbols", "colon", "bool", "colon", "bool"}, required="rrrroooo")
-	public TokenFactory leftrightspec;
+	public TokenFactory<RuleSupply> leftrightspec;
 	@Sequence(value={"colon", "anysymbols", "leftrightspec"}, required="roo")
-	public TokenFactory delimleftrightspec;
+	public TokenFactory<RuleSupply> delimleftrightspec;
 	@SequenceTokenType(TSymbolList.class)
 	@Sequence(value={"openlist", "symbolchoice", "delimleftrightspec", "closelist"}, required="rror")
-	public TokenFactory list;
+	public TokenFactory<RuleSupply> list;
 	
 	@Choice({"specifiedsymbol", "charsymbolall", "constsymbol"})
-	public TokenFactory anysymbols;
+	public TokenFactory<RuleSupply> anysymbols;
 	
 	@DelimitedListTokenType(TSymbolSequence.class)
 	@List(value="symbolchoice", delim="delimiter")
-	public TokenFactory sequence;
+	public TokenFactory<RuleSupply> sequence;
 }

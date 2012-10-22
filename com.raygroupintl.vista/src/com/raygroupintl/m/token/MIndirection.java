@@ -26,7 +26,7 @@ public class MIndirection extends MSequence {
 		super(length);
 	}
 
-	public MIndirection(SequenceOfTokens tokens) {
+	public MIndirection(SequenceOfTokens<MToken> tokens) {
 		super(tokens);
 	}
 

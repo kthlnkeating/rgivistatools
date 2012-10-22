@@ -18,7 +18,7 @@ package com.raygroupintl.parser;
 
 import com.raygroupintl.parsergen.ObjectSupply;
 
-public class TFConstant extends TokenFactory {
+public class TFConstant<T extends Token> extends TokenFactory<T> {
 	private String value;
 	private boolean ignoreCase;
 	
@@ -33,7 +33,7 @@ public class TFConstant extends TokenFactory {
 	}
 
 	@Override
-	public Token tokenizeOnly(Text text, ObjectSupply objectSupply) {
+	public T tokenizeOnly(Text text, ObjectSupply<T> objectSupply) {
 		TextPiece p = text.extractPiece(this.value, this.ignoreCase);
 		return p == null ? null : objectSupply.newString(p);
 	}

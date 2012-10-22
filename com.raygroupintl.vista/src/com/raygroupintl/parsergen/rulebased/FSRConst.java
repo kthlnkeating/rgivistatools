@@ -17,17 +17,18 @@
 package com.raygroupintl.parsergen.rulebased;
 
 import com.raygroupintl.parser.TFConstant;
+import com.raygroupintl.parser.Token;
 import com.raygroupintl.parsergen.ruledef.RuleSupplyFlag;
 
-public class FSRConst extends FSRBase {
+public class FSRConst<T extends Token> extends FSRBase<T >{
 	private String value;
-	private TFConstant factory;
+	private TFConstant<T> factory;
 	
 	public FSRConst(String value, boolean ignoreCase, RuleSupplyFlag flag) {
 		super(flag);
 		this.value = value;
 		String key = "\"" + this.value + "\"";
-		this.factory = new TFConstant(key, this.value, ignoreCase);
+		this.factory = new TFConstant<T>(key, this.value, ignoreCase);
 	}
 	
 	@Override
@@ -36,7 +37,7 @@ public class FSRConst extends FSRBase {
 	}
 	
 	@Override
-	public TFConstant getShellFactory() {
+	public TFConstant<T> getShellFactory() {
 		return this.factory;
 	}
 }

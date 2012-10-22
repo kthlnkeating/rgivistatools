@@ -21,20 +21,20 @@ import com.raygroupintl.parser.TokenFactory;
 import com.raygroupintl.parsergen.AdapterSpecification;
 import com.raygroupintl.parsergen.ruledef.RuleSupplyFlag;
 
-public interface FactorySupplyRule {
-	FactorySupplyRule getActualRule(RulesByName symbols);
+public interface FactorySupplyRule<T extends Token> {
+	FactorySupplyRule<T> getActualRule(RulesByName<T> symbols);
 	boolean getRequired();
-	TokenFactory getShellFactory();
+	TokenFactory<T> getShellFactory();
 	
 	String getName();
 	
-	FactorySupplyRule formList(String name, RuleSupplyFlag flag, ListInfo info);
+	FactorySupplyRule<T> formList(String name, RuleSupplyFlag flag, ListInfo<T> info);
 	int getSequenceCount();
-	boolean update(RulesByName symbols);
-	TokenFactory getTheFactory(RulesByName symbols);
+	boolean update(RulesByName<T> symbols);
+	TokenFactory<T> getTheFactory(RulesByName<T> symbols);
 	
-	FactorySupplyRule getLeading(RulesByName names, int level);
-	void setAdapter(AdapterSpecification<Token> spec);
+	FactorySupplyRule<T> getLeading(RulesByName<T> names, int level);
+	void setAdapter(AdapterSpecification<T> spec);
 	
 	String[] getNeededNames();
 }

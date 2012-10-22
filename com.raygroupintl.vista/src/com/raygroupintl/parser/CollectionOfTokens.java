@@ -16,10 +16,10 @@
 
 package com.raygroupintl.parser;
 
-public abstract class CollectionOfTokens implements Tokens {
+public abstract class CollectionOfTokens<T extends Token> implements Tokens<T> {
 	@Override
-	public Token getToken(int index0, int index1) {
-		Tokens ts = this.getTokens(index0);
+	public T getToken(int index0, int index1) {
+		Tokens<T> ts = this.getTokens(index0);
 		if (ts == null) {
 			return null;
 		} else {
@@ -28,8 +28,8 @@ public abstract class CollectionOfTokens implements Tokens {
 	}
 	
 	@Override
-	public Token getToken(int index0, int index1, int index2) {
-		Tokens ts = this.getTokens(index0);
+	public T getToken(int index0, int index1, int index2) {
+		Tokens<T> ts = this.getTokens(index0);
 		if (ts == null) {
 			return null;
 		} else {
@@ -38,14 +38,14 @@ public abstract class CollectionOfTokens implements Tokens {
 	}
 
 	@Override
-	public Tokens getTokens(int index) {
-		Token t = this.getToken(index);
+	public Tokens<T> getTokens(int index) {
+		T t = this.getToken(index);
 		if (t == null) {
 			return null;
 		} else {
 			if (t instanceof Tokens) {
-				//@SuppressWarnings("unchecked")
-				Tokens ts = (Tokens) t;
+				@SuppressWarnings("unchecked")
+				Tokens<T> ts = (Tokens<T>) t;
 				return ts; 
 			} else {
 				return null;
@@ -54,8 +54,8 @@ public abstract class CollectionOfTokens implements Tokens {
 	}
 	
 	@Override
-	public Tokens getTokens(int index0, int index1) {
-		Tokens ts = this.getTokens(index0);
+	public Tokens<T> getTokens(int index0, int index1) {
+		Tokens<T> ts = this.getTokens(index0);
 		if (ts == null) {
 			return null;
 		} else {

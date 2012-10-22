@@ -16,18 +16,20 @@
 
 package com.raygroupintl.parsergen.rulebased;
 
+import com.raygroupintl.parser.Token;
 
-class RulesByNameLocal implements RulesByName {
-	private RulesByName factories;
-	private FactorySupplyRule me;
+
+class RulesByNameLocal<T extends Token> implements RulesByName<T> {
+	private RulesByName<T> factories;
+	private FactorySupplyRule<T> me;
 	
-	public RulesByNameLocal(RulesByName factories, FactorySupplyRule me) {
+	public RulesByNameLocal(RulesByName<T> factories, FactorySupplyRule<T> me) {
 		this.factories = factories;
 		this.me = me;
 	}
 	
 	@Override
-	public FactorySupplyRule get(String name) {
+	public FactorySupplyRule<T> get(String name) {
 		if (this.me.getName().equals(name)) {
 			return this.me;
 		} else {
@@ -36,7 +38,7 @@ class RulesByNameLocal implements RulesByName {
 	}
 	
 	@Override
-	public void put(String name, FactorySupplyRule r) {
+	public void put(String name, FactorySupplyRule<T> r) {
 		this.factories.put(name, r);
 	}
 	

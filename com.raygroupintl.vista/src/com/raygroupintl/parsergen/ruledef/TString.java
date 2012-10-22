@@ -17,7 +17,6 @@
 package com.raygroupintl.parsergen.ruledef;
 
 import com.raygroupintl.parser.TextPiece;
-import com.raygroupintl.parser.Token;
 
 public class TString extends TextPiece implements RuleSupply {
 	private static final long serialVersionUID = 1L;
@@ -30,7 +29,7 @@ public class TString extends TextPiece implements RuleSupply {
 		super(value);
 	}
 	
-	public TString(Token token) {
+	public TString(RuleSupply token) {
 		super(token.toValue());
 	}
 	

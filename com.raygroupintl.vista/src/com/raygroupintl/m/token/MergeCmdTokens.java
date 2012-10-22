@@ -19,11 +19,10 @@ package com.raygroupintl.m.token;
 import com.raygroupintl.m.parsetree.Node;
 import com.raygroupintl.m.parsetree.MergeCmdNodes;
 import com.raygroupintl.parser.SequenceOfTokens;
-import com.raygroupintl.parser.Token;
 
 public final class MergeCmdTokens {
 	public static final class MMergeCmd extends MCommand {
-		public MMergeCmd(Token cmdName, Token cmdDependent) {
+		public MMergeCmd(MToken cmdName, MToken cmdDependent) {
 			super(cmdName, cmdDependent);
 		}		
 		
@@ -43,7 +42,7 @@ public final class MergeCmdTokens {
 			super(length);
 		}
 		
-		public MAtomicMergeCmd(SequenceOfTokens tokens) {
+		public MAtomicMergeCmd(SequenceOfTokens<MToken> tokens) {
 			super(tokens);
 		}
 		
@@ -62,7 +61,7 @@ public final class MergeCmdTokens {
 			super(length);
 		}
 		
-		public MIndirectAtomicMergeCmd(SequenceOfTokens tokens) {
+		public MIndirectAtomicMergeCmd(SequenceOfTokens<MToken> tokens) {
 			super(tokens);
 		}
 		

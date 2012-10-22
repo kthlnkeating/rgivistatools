@@ -22,10 +22,10 @@ import com.raygroupintl.parser.TextPiece;
 import com.raygroupintl.parser.Token;
 import com.raygroupintl.parser.Tokens;
 
-public interface ObjectSupply {
-	Token newString(TextPiece piece);
-	Token newSequence(SequenceOfTokens store);
-	Token newList(ListOfTokens tokens);
-	Token newDelimitedList(Token leadingToken, Tokens tailTokens);
-	Token newEmpty();
+public interface ObjectSupply<T extends Token> {
+	T newString(TextPiece piece);
+	T newSequence(SequenceOfTokens<T> store);
+	T newList(ListOfTokens<T> tokens);
+	T newDelimitedList(T leadingToken, Tokens<T> tailTokens);
+	T newEmpty();
 }

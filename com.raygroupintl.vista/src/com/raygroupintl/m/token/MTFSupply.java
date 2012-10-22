@@ -28,521 +28,521 @@ import com.raygroupintl.parsergen.rulebased.RuleBasedParserGenerator;
 
 public class MTFSupply {
 	@Rule("'('")
-	public TokenFactory lpar;
+	public TokenFactory<MToken> lpar;
 	@Rule("')'")
-	public TokenFactory rpar;
+	public TokenFactory<MToken> rpar;
 	@Rule("' '")
-	public TokenFactory space;
+	public TokenFactory<MToken> space;
 	
 	@Rule("{'a'...'x' + 'A'...'X'}")
-	public TokenFactory paton;
+	public TokenFactory<MToken> paton;
 	@Rule("'y' + 'Y', {'a'...'z' + 'A'...'Z' - 'y' - 'Y'}, 'y' + 'Y'")
-	public TokenFactory patony;
+	public TokenFactory<MToken> patony;
 	@Rule("'z' + 'Z', {'a'...'y' + 'A'...'Y'}, 'z' + 'Z'")
-	public TokenFactory patonz;
+	public TokenFactory<MToken> patonz;
 	@Rule("paton | patony | patonz")
-	public TokenFactory patons;
+	public TokenFactory<MToken> patons;
 	@Rule("['\\''], patons")
-	public TokenFactory patcode;	
+	public TokenFactory<MToken> patcode;	
 	@Rule("[intlit], ['.'], [intlit]")
-	public TokenFactory repcount;
+	public TokenFactory<MToken> repcount;
 	@Rule("alternation | patcode | strlit")
-	public TokenFactory patatomre;
+	public TokenFactory<MToken> patatomre;
 	@Rule("repcount, patatomre")
-	public TokenFactory patatom;	
+	public TokenFactory<MToken> patatom;	
 	@Rule("{patatoms:',':'(':')'}")
-	public TokenFactory alternation;	
+	public TokenFactory<MToken> alternation;	
 	@Rule("{patatom}")	
-	public TokenFactory patatoms;
+	public TokenFactory<MToken> patatoms;
 	@Rule("indirection | patatoms")
-	public TokenFactory pattern;
+	public TokenFactory<MToken> pattern;
 	
 	@SequenceTokenType(StringTokens.MName.class)
 	@Rule("'%' + 'a'...'z' + 'A'...'Z', [{'a'...'z' + 'A'...'Z' + '0'...'9'}]")
-	public TokenFactory name;	
+	public TokenFactory<MToken> name;	
 	
 	@StringTokenType(StringTokens.MIdent.class)
 	@Rule("{'a'...'z' + 'A'...'Z'}")
-	public TokenFactory ident;
+	public TokenFactory<MToken> ident;
 	
 	@StringTokenType(MIntLit.class)
 	@Rule("{'0'...'9'}")
-	public TokenFactory intlit;
+	public TokenFactory<MToken> intlit;
 	
 	@Rule("name | intlit")
-	public TokenFactory label;
+	public TokenFactory<MToken> label;
 	
 	@Rule("'^', [environment], name")
-	public TokenFactory envroutine;
+	public TokenFactory<MToken> envroutine;
 	
 	@SequenceTokenType(MNumLit.class)
 	@Rule("'.', intlit, ['E', ['+' | '-'], intlit]")
-	public TokenFactory numlita;
+	public TokenFactory<MToken> numlita;
 	@SequenceTokenType(MNumLit.class)
 	@Rule("intlit, ['.', intlit], ['E', ['+' | '-'], intlit]")
-	public TokenFactory numlitb;
+	public TokenFactory<MToken> numlitb;
 	
 	@Rule("numlita | numlitb")
-	public TokenFactory numlit;
+	public TokenFactory<MToken> numlit;
 	
 	public TFOperator operator = new TFOperator("operator");
-	public TokenFactory error = new TFSyntaxError("error", MError.ERR_GENERAL_SYNTAX);
+	public TokenFactory<MToken> error = new TFSyntaxError<MToken>("error", MError.ERR_GENERAL_SYNTAX);
 	
 	@Rule("'+' + '-' + '\\''")
-	public TokenFactory unaryop;
+	public TokenFactory<MToken> unaryop;
 	
 	@SequenceTokenType(MStringLiteral.class)
 	@Rule("('\"', [{-'\\r' - '\\n' - '\"'}], '\"'), [strlit]")	
-	public TokenFactory strlit;
+	public TokenFactory<MToken> strlit;
 	
 	@Rule("('|', expr, '|') | {expratom:',':'[':']'}")
-	public TokenFactory environment;
+	public TokenFactory<MToken> environment;
 	
 	@Rule("'?', pattern")
-	public TokenFactory exprtaila;
+	public TokenFactory<MToken> exprtaila;
 	@Rule("\"'?\", pattern")
-	public TokenFactory exprtailb;
+	public TokenFactory<MToken> exprtailb;
 	@Rule("operator, expratom")
-	public TokenFactory exprtailc;
+	public TokenFactory<MToken> exprtailc;
 	@Rule("exprtaila | exprtailb | exprtailc")
-	public TokenFactory exprtails;
+	public TokenFactory<MToken> exprtails;
 	@Rule("{exprtails}")
-	public TokenFactory exprtail;
+	public TokenFactory<MToken> exprtail;
 
 	@Rule("{expr:','}")
-	public TokenFactory exprlist;
+	public TokenFactory<MToken> exprlist;
 	
 	@Rule("{expr:',':'(':')'}")
-	public TokenFactory exprlistinparan;
+	public TokenFactory<MToken> exprlistinparan;
 
 	@Rule("'(', expr, ')'")
-	public TokenFactory exprinpar;
+	public TokenFactory<MToken> exprinpar;
 	
 	@SequenceTokenType(MIndirection.class)
 	@Rule("'@', expratom, [\"@(\", exprlist, ')']")
-	public TokenFactory indirection;
+	public TokenFactory<MToken> indirection;
 	@SequenceTokenType(MIndirection.class)
 	@Rule("'@', expratom")
-	public TokenFactory rindirection;
+	public TokenFactory<MToken> rindirection;
 		
 	@Rule("lvn | gvnall | indirection")
-	public TokenFactory glvn;
+	public TokenFactory<MToken> glvn;
 	
 	@SequenceTokenType(MGlobal.class)
 	@Rule("'^', ([environment], name, [exprlistinparan])")
-	public TokenFactory gvn;
+	public TokenFactory<MToken> gvn;
 	
 	@SequenceTokenType(MSsvn.class)
 	@Rule("\"^$\", ident, exprlistinparan")
-	public TokenFactory gvnssvn;
+	public TokenFactory<MToken> gvnssvn;
 
 	@Rule("\"$$\", extrinsicarg")
-	public TokenFactory extrinsic;
+	public TokenFactory<MToken> extrinsic;
 	
 	@Rule("unaryop, expratom")
-	public TokenFactory unaryexpritem;
+	public TokenFactory<MToken> unaryexpritem;
 	
 	@SequenceTokenType(MNakedGlobal.class)
 	@Rule("'^', exprlistinparan")
-	public TokenFactory gvnnaked;
+	public TokenFactory<MToken> gvnnaked;
 	
 	@Rule("expr, ':', expr")
-	public TokenFactory dselectarge;
+	public TokenFactory<MToken> dselectarge;
 	@Rule("{dselectarge:','}")
-	public TokenFactory dselectarg;
+	public TokenFactory<MToken> dselectarg;
 	
 	@Rule("gvnssvn | gvnnaked | gvn")
-	public TokenFactory gvnall;
+	public TokenFactory<MToken> gvnall;
 
 	@Rule("extrinsic | external | intrinsic")
-	public TokenFactory expritemd;
+	public TokenFactory<MToken> expritemd;
 	
 	@Rule("strlit | expritemd | unaryexpritem | numlit | exprinpar")
-	public TokenFactory expritem;
+	public TokenFactory<MToken> expritem;
 	
 	@SequenceTokenType(MLocalByRef.class)
 	@Rule("'.', name")
-	public TokenFactory actualda;
+	public TokenFactory<MToken> actualda;
 	@Rule("'.', indirection")
-	public TokenFactory actualdb;
+	public TokenFactory<MToken> actualdb;
 	@Rule("numlita | actualda | actualdb | expr")
-	public TokenFactory actual;
+	public TokenFactory<MToken> actual;
 	
 	@Rule("glvn | expritem")
-	public TokenFactory expratom;
+	public TokenFactory<MToken> expratom;
 
 	@SequenceTokenType(MLocal.class)
 	@Rule("name, [exprlistinparan]")
-	public TokenFactory lvn;
+	public TokenFactory<MToken> lvn;
 	
 	@SequenceTokenType(MExpression.class)
 	@Rule("expratom, [exprtail]")
-	public TokenFactory expr;
+	public TokenFactory<MToken> expr;
 	
 	@SequenceTokenType(MActualList.class)
 	@Rule("{actual:',':'(':')':1:1}")
-	public TokenFactory actuallist;
+	public TokenFactory<MToken> actuallist;
 
 	@Rule("'=', expr")
-	public TokenFactory deviceparama;
+	public TokenFactory<MToken> deviceparama;
 	@Rule("expr, [deviceparama]")
-	public TokenFactory deviceparam;
+	public TokenFactory<MToken> deviceparam;
 	@Rule("{deviceparam:':':'(':')':1}")
-	public TokenFactory deviceparamsi;
+	public TokenFactory<MToken> deviceparamsi;
 	@Rule("deviceparamsi | deviceparam")
-	public TokenFactory deviceparams;
+	public TokenFactory<MToken> deviceparams;
 	
 	@Rule("exprlistinparan | expr")
-	public TokenFactory exprorinlist;
+	public TokenFactory<MToken> exprorinlist;
 	@SequenceTokenType(OpenCloseUseCmdTokens.MDeviceParameters.class)	
 	@Rule("':', [deviceparams], [':'], [expr], [':'], [exprorinlist]")
-	public TokenFactory cmdoargtail;
+	public TokenFactory<MToken> cmdoargtail;
 	@SequenceTokenType(OpenCloseUseCmdTokens.MAtomicOpenCmd.class)	
 	@Rule("expr, [cmdoargtail]")
-	public TokenFactory cmdoargbasic;
+	public TokenFactory<MToken> cmdoargbasic;
 	@Rule("indirection | cmdoargbasic")
-	public TokenFactory cmdoarg;
+	public TokenFactory<MToken> cmdoarg;
 	@Rule("{cmdoarg:','}")
-	public TokenFactory cmdoargs;
+	public TokenFactory<MToken> cmdoargs;
 		
 	@Rule("indirection | label")
-	public TokenFactory linetagname;
+	public TokenFactory<MToken> linetagname;
 	@Rule("'+', expr")
-	public TokenFactory lineoffset;
+	public TokenFactory<MToken> lineoffset;
 	@Rule("[linetagname], [lineoffset]")
-	public TokenFactory tagspec;
+	public TokenFactory<MToken> tagspec;
 	@Rule("[environment], name")
-	public TokenFactory envname;
+	public TokenFactory<MToken> envname;
 	@Rule("rindirection | envname")
-	public TokenFactory routinespeccc;
+	public TokenFactory<MToken> routinespeccc;
 	@Rule("'^', routinespeccc")
-	public TokenFactory routinespec;
+	public TokenFactory<MToken> routinespec;
 	@Rule("[tagspec], [routinespec]")
-	public TokenFactory cmdgargmain;
+	public TokenFactory<MToken> cmdgargmain;
 	
 	@Rule("'#', expr")
-	public TokenFactory readcount;
+	public TokenFactory<MToken> readcount;
 
 	@Rule("'?', expr")
-	public TokenFactory tabformat;
+	public TokenFactory<MToken> tabformat;
 	@Rule("{'!' + '#'}, [tabformat]")
-	public TokenFactory xtabformat;
+	public TokenFactory<MToken> xtabformat;
 	@Rule("tabformat | xtabformat")
-	public TokenFactory format;
+	public TokenFactory<MToken> format;
 	
 	@Rule("glvn, [readcount], [timeout]")
-	public TokenFactory cmdrargdef;	
+	public TokenFactory<MToken> cmdrargdef;	
 	@Rule("'*', [glvn], [timeout]")
-	public TokenFactory cmdrargast;	
+	public TokenFactory<MToken> cmdrargast;	
 	@Rule("indirection, [timeout]")
-	public TokenFactory cmdrargat;	
+	public TokenFactory<MToken> cmdrargat;	
 	@Rule("format | strlit | cmdrargast | cmdrargat | cmdrargdef")
-	public TokenFactory cmdrarg;
+	public TokenFactory<MToken> cmdrarg;
 	@Rule("{cmdrarg:','}")
-	public TokenFactory cmdrargs;
+	public TokenFactory<MToken> cmdrargs;
 	
 	@SequenceTokenType(BasicTokens.MPostCondition.class)
 	@Rule("':', expr")
-	public TokenFactory postcondition;
+	public TokenFactory<MToken> postcondition;
 	@Rule("'*', expr")
-	public TokenFactory asterixexpr;
+	public TokenFactory<MToken> asterixexpr;
 	@Rule("':', expr")
-	public TokenFactory timeout;
+	public TokenFactory<MToken> timeout;
 	
 	@Rule("{expr:':':'(':')':1}")
-	public TokenFactory usedeviceparamlist;
+	public TokenFactory<MToken> usedeviceparamlist;
 	@TokenType(OpenCloseUseCmdTokens.MUseDeviceParameters.class)	
 	@Rule("usedeviceparamlist | expr")
-	public TokenFactory usedeviceparam;
+	public TokenFactory<MToken> usedeviceparam;
 	@Rule("':', [usedeviceparam]")
-	public TokenFactory colonusedeviceparam;
+	public TokenFactory<MToken> colonusedeviceparam;
 	@SequenceTokenType(OpenCloseUseCmdTokens.MAtomicUseCmd.class)	
 	@Rule("expr, [colonusedeviceparam], [colonusedeviceparam]")
-	public TokenFactory cmduarg;
+	public TokenFactory<MToken> cmduarg;
 	@Rule("{cmduarg:','}")
-	public TokenFactory cmduargs;
+	public TokenFactory<MToken> cmduargs;
 	
 	@Rule("label, [lineoffset]")
-	public TokenFactory labelwoffset;
+	public TokenFactory<MToken> labelwoffset;
 	@Rule("rindirection | labelwoffset")
-	public TokenFactory entryspeca;
+	public TokenFactory<MToken> entryspeca;
 	@Rule("[entryspeca], [routinespec], [actuallist], [colonusedeviceparam], [timeout]")
-	public TokenFactory cmdjarg;
+	public TokenFactory<MToken> cmdjarg;
 	@Rule("'^', [usedeviceparam]")
-	public TokenFactory jobparams;
+	public TokenFactory<MToken> jobparams;
 	@Rule("{cmdjarg:','}")
-	public TokenFactory cmdjargs;
+	public TokenFactory<MToken> cmdjargs;
 	
 	
 	
 	@SequenceTokenType(MExtrinsic.class)	
 	@Rule("indfanoutlabel, ['^', ((envfanoutroutine | fanoutroutine) , [actuallist]) | indfanoutroutine]")
-	public TokenFactory indexargument;
+	public TokenFactory<MToken> indexargument;
 
 	@SequenceTokenType(MExtrinsic.class)	
 	@Rule("fanoutlabel, actuallist")
-	public TokenFactory labelcallexargument;
+	public TokenFactory<MToken> labelcallexargument;
 
 	@SequenceTokenType(MExtrinsic.class)	
 	@Rule("fanoutlabel, ['^', ((envfanoutroutine | fanoutroutine) , [actuallist]) | indfanoutroutine]")
-	public TokenFactory exargument;
+	public TokenFactory<MToken> exargument;
 	
 	@SequenceTokenType(MExtrinsic.class)	
 	@Rule("'^', noindroutinepostcaret, [actuallist]")
-	public TokenFactory onlyrsimpleexargument;
+	public TokenFactory<MToken> onlyrsimpleexargument;
 	
 	@SequenceTokenType(MExtrinsic.class)	
 	@Rule("'^', indirection")
-	public TokenFactory onlyrexargument;
+	public TokenFactory<MToken> onlyrexargument;
 	
 	@Rule("indexargument | labelcallexargument | exargument | onlyrsimpleexargument | onlyrexargument")
-	public TokenFactory extrinsicarg;
+	public TokenFactory<MToken> extrinsicarg;
 	
 	
 	@SequenceTokenType(MExtDoArgument.class)
 	@Rule("'&', name, ['.', name], ['^', name], [actuallist], [postcondition]")
-	public TokenFactory extdoargument;
+	public TokenFactory<MToken> extdoargument;
 
 	@TokenType(BasicTokens.MTFanoutLabelA.class)
 	@Rule("name")
-	public TokenFactory fanoutlabela;
+	public TokenFactory<MToken> fanoutlabela;
 	@TokenType(BasicTokens.MTFanoutLabelB.class)
 	@Rule("intlit")
-	public TokenFactory fanoutlabelb;
+	public TokenFactory<MToken> fanoutlabelb;
 	@Rule("fanoutlabela | fanoutlabelb")
-	public TokenFactory fanoutlabel;
+	public TokenFactory<MToken> fanoutlabel;
 	@TokenType(BasicTokens.MTIndirectFanoutLabel.class)
 	@Rule("rindirection")
-	public TokenFactory indfanoutlabel;
+	public TokenFactory<MToken> indfanoutlabel;
 	@SequenceTokenType(BasicTokens.MTEnvironmentFanoutRoutine.class)
 	@Rule("environment, name")
-	public TokenFactory envfanoutroutine;	
+	public TokenFactory<MToken> envfanoutroutine;	
 	@TokenType(BasicTokens.MTFanoutRoutine.class)
 	@Rule("name")
-	public TokenFactory fanoutroutine;
+	public TokenFactory<MToken> fanoutroutine;
 	@TokenType(BasicTokens.MTIndirectFanoutRoutine.class)
 	@Rule("rindirection")
-	public TokenFactory indfanoutroutine;
+	public TokenFactory<MToken> indfanoutroutine;
 	@Rule("envfanoutroutine | fanoutroutine")
-	public TokenFactory noindroutinepostcaret;
+	public TokenFactory<MToken> noindroutinepostcaret;
 	
 	@Rule("envfanoutroutine | fanoutroutine | indfanoutroutine")
-	public TokenFactory goroutinepostcaret;
+	public TokenFactory<MToken> goroutinepostcaret;
 	
 	@Rule("'^', goroutinepostcaret")
-	public TokenFactory goroutineref;
+	public TokenFactory<MToken> goroutineref;
 	
 	@SequenceTokenType(MGotoArgument.class)	
 	@Rule("indfanoutlabel, [dolineoffset], [goroutineref], [postcondition]")
-	public TokenFactory indgoargument;
+	public TokenFactory<MToken> indgoargument;
 
 	@SequenceTokenType(MGotoArgument.class)	
 	@Rule("fanoutlabel, dolineoffset, [goroutineref], [postcondition]")
-	public TokenFactory offsetgoargument;
+	public TokenFactory<MToken> offsetgoargument;
 
 	@SequenceTokenType(MGotoArgument.class)	
 	@Rule("fanoutlabel, ['^', envfanoutroutine | fanoutroutine | indfanoutroutine], [postcondition]")
-	public TokenFactory goargument;
+	public TokenFactory<MToken> goargument;
 	
 	@SequenceTokenType(MGotoArgument.class)	
 	@Rule("'^', indirection, [postcondition]")
-	public TokenFactory onlyrgoargument;
+	public TokenFactory<MToken> onlyrgoargument;
 	
 	@SequenceTokenType(MGotoArgument.class)	
 	@Rule("'^', noindroutinepostcaret, [postcondition]")
-	public TokenFactory onlyrsimplegoargument;
+	public TokenFactory<MToken> onlyrsimplegoargument;
 	
 	@Rule("indgoargument | offsetgoargument | goargument | onlyrsimplegoargument | onlyrgoargument")
-	public TokenFactory goargumentall;
+	public TokenFactory<MToken> goargumentall;
 	
 	@Rule("{goargumentall:','}")
-	public TokenFactory gotoarguments;	
+	public TokenFactory<MToken> gotoarguments;	
 	
 	@SequenceTokenType(MDoArgument.class)	
 	@Rule("indfanoutlabel, [dolineoffset], [doroutineref], [postcondition]")
-	public TokenFactory inddoargument;
+	public TokenFactory<MToken> inddoargument;
 
 	@SequenceTokenType(MDoArgument.class)	
 	@Rule("fanoutlabel, dolineoffset, [doroutineref], [postcondition]")
-	public TokenFactory offsetdoargument;
+	public TokenFactory<MToken> offsetdoargument;
 
 	@SequenceTokenType(MDoArgument.class)	
 	@Rule("fanoutlabel, actuallist, [postcondition]")
-	public TokenFactory labelcalldoargument;
+	public TokenFactory<MToken> labelcalldoargument;
 
 	@SequenceTokenType(MDoArgument.class)	
 	@Rule("fanoutlabel, ['^', ((envfanoutroutine | fanoutroutine) , [actuallist]) | indfanoutroutine], [postcondition]")
-	public TokenFactory doargument;
+	public TokenFactory<MToken> doargument;
 	
 	@SequenceTokenType(MDoArgument.class)	
 	@Rule("'^', noindroutinepostcaret, [actuallist], [postcondition]")
-	public TokenFactory onlyrsimpledoargument;
+	public TokenFactory<MToken> onlyrsimpledoargument;
 	
 	@SequenceTokenType(MDoArgument.class)	
 	@Rule("'^', indirection, [postcondition]")
-	public TokenFactory onlyrdoargument;
+	public TokenFactory<MToken> onlyrdoargument;
 	
 	@Rule("extdoargument | inddoargument | offsetdoargument | labelcalldoargument | doargument | onlyrsimpledoargument | onlyrdoargument")
-	public TokenFactory doargumentall;
+	public TokenFactory<MToken> doargumentall;
 	
 	@Rule("{doargumentall:','}")
-	public TokenFactory doarguments;	
+	public TokenFactory<MToken> doarguments;	
 	
 	@Rule("envfanoutroutine | fanoutroutine | indfanoutroutine")
-	public TokenFactory doroutinepostcaret;
+	public TokenFactory<MToken> doroutinepostcaret;
 	
 	@Rule("'^', doroutinepostcaret")
-	public TokenFactory doroutineref;
+	public TokenFactory<MToken> doroutineref;
 	
 	@Rule("'+', expr")
-	public TokenFactory dolineoffset;
+	public TokenFactory<MToken> dolineoffset;
 
 	@Rule("intrinsic | glvn")
-	public TokenFactory setlhsbasic;
+	public TokenFactory<MToken> setlhsbasic;
 	@Rule("{setlhsbasic:',':'(':')'}")
-	public TokenFactory setlhsbasics;	
+	public TokenFactory<MToken> setlhsbasics;	
 	@Rule("expr")
-	public TokenFactory setrhs;
+	public TokenFactory<MToken> setrhs;
 	@SequenceTokenType(SetCmdTokens.MSingleAtomicSetCmd.class)
 	@Rule("setlhsbasic, '=', setrhs")
-	public TokenFactory setargsingle;
+	public TokenFactory<MToken> setargsingle;
 	@SequenceTokenType(SetCmdTokens.MMultiAtomicSetCmd.class)
 	@Rule("setlhsbasics, '=', setrhs")
-	public TokenFactory setargmulti;
+	public TokenFactory<MToken> setargmulti;
 	@SequenceTokenType(SetCmdTokens.MSingleAtomicSetCmd.class)
 	@Rule("indirection, ['='], [setrhs]")
-	public TokenFactory setargindirect;
+	public TokenFactory<MToken> setargindirect;
 	@Rule("setargindirect | setargmulti | setargsingle")
-	public TokenFactory setarg;
+	public TokenFactory<MToken> setarg;
 	@Rule("{setarg:','}")
-	public TokenFactory setargs;
+	public TokenFactory<MToken> setargs;
 	
 	@SequenceTokenType(OpenCloseUseCmdTokens.MDeviceParameters.class)	
 	@Rule("':', deviceparams")
-	public TokenFactory closeargdp;
+	public TokenFactory<MToken> closeargdp;
 	@SequenceTokenType(OpenCloseUseCmdTokens.MAtomicCloseCmd.class)		
 	@Rule("expr, [closeargdp]")
-	public TokenFactory closeargdirect;
+	public TokenFactory<MToken> closeargdirect;
 	@Rule("indirection | closeargdirect")
-	public TokenFactory closearg;
+	public TokenFactory<MToken> closearg;
 	@Rule("{closearg:','}")
-	public TokenFactory closeargs;
+	public TokenFactory<MToken> closeargs;
 	
 	@SequenceTokenType(MForCmd.MForCmdEQRHS.class)
 	@Rule("expr, [':', expr], [':', expr]")
-	public TokenFactory forrhs;
+	public TokenFactory<MToken> forrhs;
 	@Rule("{forrhs:','}")
-	public TokenFactory forrhss;
+	public TokenFactory<MToken> forrhss;
 	@Rule("lvn, '=', forrhss")
-	public TokenFactory forarg;
+	public TokenFactory<MToken> forarg;
 	
 	@Rule("gvn | indirection | lvn")
-	public TokenFactory lockeesingle;
+	public TokenFactory<MToken> lockeesingle;
 	@Rule("lockeesingle | {lockee:',':'(':')'}")
-	public TokenFactory lockee;
+	public TokenFactory<MToken> lockee;
 	@Rule("['+' + '-'], lockee, [timeout]")
-	public TokenFactory lockarg;
+	public TokenFactory<MToken> lockarg;
 	@Rule("{lockarg:','}")
-	public TokenFactory lockargs;
+	public TokenFactory<MToken> lockargs;
 	
 	@TokenType(NewCmdTokens.MNewedLocal.class)
 	@Rule("name")
-	public TokenFactory newedlocal;
+	public TokenFactory<MToken> newedlocal;
 	@Rule("rindirection | newedlocal")
-	public TokenFactory exclusivenewsingle;
+	public TokenFactory<MToken> exclusivenewsingle;
 	@SequenceTokenType(NewCmdTokens.MExclusiveAtomicNewCmd.class)	
 	@Rule("{exclusivenewsingle:',':'(':')'}")
-	public TokenFactory exclusivenew;
+	public TokenFactory<MToken> exclusivenew;
 	@TokenType(NewCmdTokens.MAtomicNewCmd.class)	
 	@Rule("rindirection | intrinsicname | newedlocal")
-	public TokenFactory normalnew;	
+	public TokenFactory<MToken> normalnew;	
 	@Rule("exclusivenew | normalnew")
-	public TokenFactory newarg;
+	public TokenFactory<MToken> newarg;
 	@Rule("{newarg:','}")
-	public TokenFactory newargs;
+	public TokenFactory<MToken> newargs;
 		
 	@TokenType(KillCmdTokens.MKilledLocal.class)
 	@Rule("name")
-	public TokenFactory killedlocal;
+	public TokenFactory<MToken> killedlocal;
 	@Rule("rindirection | killedlocal")
-	public TokenFactory exclusivekillsingle;
+	public TokenFactory<MToken> exclusivekillsingle;
 	@SequenceTokenType(KillCmdTokens.MExclusiveAtomicKillCmd.class)	
 	@Rule("{exclusivekillsingle:',':'(':')'}")
-	public TokenFactory exclusivekill;
+	public TokenFactory<MToken> exclusivekill;
 	@TokenType(KillCmdTokens.MAtomicKillCmd.class)	
 	@Rule("glvn")
-	public TokenFactory normalkill;		
+	public TokenFactory<MToken> normalkill;		
 	@Rule("exclusivekill | normalkill")
-	public TokenFactory killarg;
+	public TokenFactory<MToken> killarg;
 	@Rule("{killarg:','}")
-	public TokenFactory killargs;
+	public TokenFactory<MToken> killargs;
 
 	@SequenceTokenType(MergeCmdTokens.MAtomicMergeCmd.class)
 	@Rule("glvn, '=', glvn")
-	public TokenFactory mergeargdirect;
+	public TokenFactory<MToken> mergeargdirect;
 	@SequenceTokenType(MergeCmdTokens.MIndirectAtomicMergeCmd.class)
 	@Rule("indirection, ['=', glvn]")
-	public TokenFactory mergeargindirect;
+	public TokenFactory<MToken> mergeargindirect;
 	@Rule("mergeargindirect | mergeargdirect")
-	public TokenFactory mergearg;
+	public TokenFactory<MToken> mergearg;
 	@Rule("{mergearg:','}")
-	public TokenFactory mergeargs;
+	public TokenFactory<MToken> mergeargs;
 	
 	@Rule("'.', name")
-	public TokenFactory dname;
+	public TokenFactory<MToken> dname;
 	@Rule("'^', name")
-	public TokenFactory cname;
+	public TokenFactory<MToken> cname;
 	@Rule("name, [dname], [cname]")
-	public TokenFactory ampersandtail;
+	public TokenFactory<MToken> ampersandtail;
 	@Rule("\"$&\", [ampersandtail], [actuallist]")
-	public TokenFactory external;
+	public TokenFactory<MToken> external;
 
 	@Rule("',', expr")
-	public TokenFactory dorderarga;
+	public TokenFactory<MToken> dorderarga;
 	@Rule("glvn, [dorderarga]")
-	public TokenFactory dorderarg;
+	public TokenFactory<MToken> dorderarg;
 	
 	@Rule("indirection | expr")
-	public TokenFactory xecuteargmain;
+	public TokenFactory<MToken> xecuteargmain;
 	@Rule("xecuteargmain, [postcondition]")
-	public TokenFactory xecutearg;
+	public TokenFactory<MToken> xecutearg;
 	@Rule("{xecutearg:','}")
-	public TokenFactory xecuteargs;
+	public TokenFactory<MToken> xecuteargs;
 
 	@Rule("'/', name, actuallist")
-	public TokenFactory writeargslash;
+	public TokenFactory<MToken> writeargslash;
 	@Rule("format | writeargslash | asterixexpr | indirection | expr")
-	public TokenFactory writearg;
+	public TokenFactory<MToken> writearg;
 	@Rule("{writearg:','}")
-	public TokenFactory writeargs;
+	public TokenFactory<MToken> writeargs;
 	
 	@Rule("{name:',':'(':')':0:1}")
-	public TokenFactory lineformal;
+	public TokenFactory<MToken> lineformal;
 		
 	@Rule("'$', ident")
-	public TokenFactory intrinsicname;
+	public TokenFactory<MToken> intrinsicname;
 
 	@Rule("{' '} | comment | end")
-	public TokenFactory commandend;
+	public TokenFactory<MToken> commandend;
 	
 	public TFCommand command = new TFCommand("command", this);
 	
 	@SequenceTokenType(MComment.class)
 	@Rule("';', [{- '\\r' - '\\n'}]")
-	public TokenFactory comment;
+	public TokenFactory<MToken> comment;
 	
 	@Rule("{command | comment | error}")
-	public TokenFactory commandorcommentlist;
+	public TokenFactory<MToken> commandorcommentlist;
 	
 	@Rule("{' ' + '\\t'}")
-	public TokenFactory ls;
+	public TokenFactory<MToken> ls;
 	
 	@Rule("{' ' + '.'}")
-	public TokenFactory level;
+	public TokenFactory<MToken> level;
 	
 	@SequenceTokenType(MLine.class)
 	@Rule("[label], [lineformal], [ls], [level], [commandorcommentlist]")
-	public TokenFactory line;
+	public TokenFactory<MToken> line;
 	
 	public TFIntrinsic intrinsic = new TFIntrinsic("intrinsic", this);
 	
@@ -692,78 +692,78 @@ public class MTFSupply {
 	
 	public static class CacheSupply extends MTFSupply {
 		@Rule("glvn | expritem | classmethod")
-		public TokenFactory expratom;
+		public TokenFactory<MToken> expratom;
 		
 		@SequenceTokenType(MObjectExpr.class)
 		@Rule("name, '.', {name:'.'}, [actuallist]")
-		public TokenFactory objectexpr;
+		public TokenFactory<MToken> objectexpr;
 		
 		@Rule("objectexpr | lvn | gvnall | indirection")
-		public TokenFactory glvn;
+		public TokenFactory<MToken> glvn;
 			
 		@SequenceTokenType(MExpression.class)
 		@Rule("expratom | classmethod, [exprtail]")
-		public TokenFactory expr;
+		public TokenFactory<MToken> expr;
 		
 		@Rule("\"##class\"")
-		public TokenFactory ppclass;
+		public TokenFactory<MToken> ppclass;
 		@Rule("'.', name")
-		public TokenFactory classreftail;
+		public TokenFactory<MToken> classreftail;
 		@Rule("{classreftail}")
-		public TokenFactory classreftaillst;
+		public TokenFactory<MToken> classreftaillst;
 		@Rule("name, [classreftaillst]")
-		public TokenFactory classref;
+		public TokenFactory<MToken> classref;
 		@SequenceTokenType(MCacheClassMethod.class)
 		@Rule("ppclass, '(', classref, ')', '.', name, actuallist")
-		public TokenFactory classmethod;
+		public TokenFactory<MToken> classmethod;
 		
 		@Rule("\"$SYSTEM\":1")
-		public TokenFactory system;
+		public TokenFactory<MToken> system;
 		@Rule("'.', name")
-		public TokenFactory method;
+		public TokenFactory<MToken> method;
 		@Rule("{method}")
-		public TokenFactory methods;
+		public TokenFactory<MToken> methods;
 		@SequenceTokenType(MCacheSystemCall.class)
 		@Rule("system, [methods], actuallist")
-		public TokenFactory systemcall;
+		public TokenFactory<MToken> systemcall;
 		
 		@Rule("fanoutlabel, method, [dolineoffset], [doroutineref], [actuallist], [postcondition]")
-		public TokenFactory objdoargument;
+		public TokenFactory<MToken> objdoargument;
 		@Rule("classmethod, [dolineoffset], [doroutineref], [actuallist], [postcondition]")
-		public TokenFactory clsdoargument;
+		public TokenFactory<MToken> clsdoargument;
 		@Rule("systemcall, [dolineoffset], [doroutineref], [actuallist], [postcondition]")
-		public TokenFactory sysdoargument;
+		public TokenFactory<MToken> sysdoargument;
 		@SequenceTokenType(MDoArgument.class)	
 		@Rule("fanoutlabel, ['^', ((envfanoutroutine | objdoroutine | fanoutroutine) , [actuallist]) | indfanoutroutine], [postcondition]")
-		public TokenFactory doargument;
+		public TokenFactory<MToken> doargument;
 
 		@Rule("objdoargument | extdoargument | inddoargument | offsetdoargument | labelcalldoargument | doargument | onlyrsimpledoargument | onlyrdoargument | clsdoargument | sysdoargument")
-		public TokenFactory doargumentall;
+		public TokenFactory<MToken> doargumentall;
 		
 		@SequenceTokenType(MCacheObjectDoRoutine.class)
 		@Rule("name, method")
-		public TokenFactory objdoroutine;
+		public TokenFactory<MToken> objdoroutine;
 		@Rule("envfanoutroutine | objdoroutine | fanoutroutine | indfanoutroutine")
-		public TokenFactory doroutinepostcaret;
+		public TokenFactory<MToken> doroutinepostcaret;
 		
 		@SequenceTokenType(MExtrinsic.class)	
 		@Rule("fanoutlabel, ['^', ((envfanoutroutine | objdoroutine | fanoutroutine) , [actuallist]) | indfanoutroutine]")
-		public TokenFactory exargument;
+		public TokenFactory<MToken> exargument;
 		
 		
 		
 		
 		@Rule("classmethod | expr")
-		public TokenFactory setrhs;
+		public TokenFactory<MToken> setrhs;
 		
 		@Rule("expr, ',', {([expr], [':', expr]):','}")
-		public TokenFactory dcasearg;
+		public TokenFactory<MToken> dcasearg;
 	
 		@Rule("{actual:','}")
-		public TokenFactory dsystemarg;
+		public TokenFactory<MToken> dsystemarg;
 		
 		@Rule("'$', ident, [methods]")
-		public TokenFactory intrinsicname;
+		public TokenFactory<MToken> intrinsicname;
 
 		@Override
 		protected void initialize() {		
@@ -782,8 +782,8 @@ public class MTFSupply {
 	private static MTFSupply STD_95_SUPPLY;
 	
 	private static MTFSupply generateSupply(Class<? extends MTFSupply> cls) throws ParseException {
-		RuleBasedParserGenerator parserGen = new RuleBasedParserGenerator();
-		MTFSupply result = 	parserGen.generate(cls);
+		RuleBasedParserGenerator<MToken> parserGen = new RuleBasedParserGenerator<MToken>();
+		MTFSupply result = 	parserGen.generate(cls, MToken.class);
 		result.initialize();
 		return result;
 	}

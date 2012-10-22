@@ -20,9 +20,9 @@ import java.lang.reflect.Constructor;
 
 import com.raygroupintl.parsergen.ObjectSupply;
 
-public abstract class TokenFactory {
+public abstract class TokenFactory<T extends Token> {
 	private String name;
-	private Constructor<? extends Token> ctr;
+	private Constructor<? extends T> ctr;
 	
 	protected TokenFactory(String name) {
 		this.name = name;
@@ -36,12 +36,12 @@ public abstract class TokenFactory {
 		return 1;
 	}
 	
-	public final Token tokenize(Text text, ObjectSupply objectSupply) throws SyntaxErrorException {
-		Token result = this.tokenizeOnly(text, objectSupply);
+	public final T tokenize(Text text, ObjectSupply<T> objectSupply) throws SyntaxErrorException {
+		T result = this.tokenizeOnly(text, objectSupply);
 		return this.convert(result);
 	}
 	
-	protected final Token convert(Token token) {
+	protected final T convert(T token) {
 		if ((this.ctr != null) && (token != null)) {
 			try{
 				return this.ctr.newInstance(token); 
@@ -53,9 +53,9 @@ public abstract class TokenFactory {
 		}
 	}
 
-	protected abstract Token tokenizeOnly(Text text, ObjectSupply objectSupply) throws SyntaxErrorException;
+	protected abstract T tokenizeOnly(Text text, ObjectSupply<T> objectSupply) throws SyntaxErrorException;
 	
-	public <M extends Token> void setTargetType(Constructor<? extends Token> constructor) {
+	public <M extends Token> void setTargetType(Constructor<? extends T> constructor) {
 		this.ctr = constructor;
 	}
 }

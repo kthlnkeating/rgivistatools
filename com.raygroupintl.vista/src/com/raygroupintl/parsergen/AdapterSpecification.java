@@ -61,35 +61,35 @@ public class AdapterSpecification<T extends Token> {
 		return null;
 	}
 	
-	public Constructor<? extends Token> getTokenAdapter() {
+	public Constructor<? extends T> getTokenAdapter() {
 		if (this.token != null) {
 			return this.token;
 		}
 		return getNull();
 	}
 	
-	public Constructor<? extends Token> getStringTokenAdapter() {
+	public Constructor<? extends T> getStringTokenAdapter() {
 		if (this.string != null) {
 			return this.string;
 		}
 		return getNull();
 	}
 	
-	public Constructor<? extends Token> getListTokenAdapter() {
+	public Constructor<? extends T> getListTokenAdapter() {
 		if (this.list != null) {
 			return this.list;
 		}
 		return getNull();
 	}
 	
-	public Constructor<? extends Token> getDelimitedListTokenAdapter() {
+	public Constructor<? extends T> getDelimitedListTokenAdapter() {
 		if (this.delimitedList != null) {
 			return this.delimitedList;
 		}
 		return getNull();
 	}
 	
-	public Constructor<? extends Token> getSequenceTokenAdapter() {
+	public Constructor<? extends T> getSequenceTokenAdapter() {
 		if (this.sequence != null) {
 			return this.sequence;
 		}
@@ -110,7 +110,7 @@ public class AdapterSpecification<T extends Token> {
 		TokenType tokenType = f.getAnnotation(TokenType.class);
 		if (tokenType != null) {
 			Class<? extends T> t = this.addGeneric(tokenType.value(), actualTokencls);
-			Constructor<? extends T> constructor = getConstructor(f.getName(), t, Token.class);
+			Constructor<? extends T> constructor = getConstructor(f.getName(), t, actualTokencls);
 			this.token = constructor;
 		}		
 	}

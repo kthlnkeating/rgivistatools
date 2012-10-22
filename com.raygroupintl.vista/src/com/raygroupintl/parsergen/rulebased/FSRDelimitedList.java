@@ -23,16 +23,16 @@ import com.raygroupintl.parser.Token;
 import com.raygroupintl.parsergen.AdapterSpecification;
 import com.raygroupintl.parsergen.ruledef.RuleSupplyFlag;
 
-public class FSRDelimitedList extends FSRBase {
-	private FactorySupplyRule element;
-	private FactorySupplyRule delimiter;
-	private TFDelimitedList factory;
+public class FSRDelimitedList<T extends Token> extends FSRBase<T> {
+	private FactorySupplyRule<T> element;
+	private FactorySupplyRule<T> delimiter;
+	private TFDelimitedList<T> factory;
 	
-	public FSRDelimitedList(String name, RuleSupplyFlag flag, FactorySupplyRule element, FactorySupplyRule delimiter) {
+	public FSRDelimitedList(String name, RuleSupplyFlag flag, FactorySupplyRule<T> element, FactorySupplyRule<T> delimiter) {
 		super(flag);
 		this.element = element;
 		this.delimiter = delimiter;
-		this.factory = new TFDelimitedList(name);
+		this.factory = new TFDelimitedList<T>(name);
 	}
 	
 	@Override
@@ -41,8 +41,8 @@ public class FSRDelimitedList extends FSRBase {
 	}
 	
 	@Override
-	public boolean update(RulesByName symbols) {
-		RulesByNameLocal localSymbols = new RulesByNameLocal(symbols, this);
+	public boolean update(RulesByName<T> symbols) {
+		RulesByNameLocal<T> localSymbols = new RulesByNameLocal<T>(symbols, this);
 		this.element.update(localSymbols);
 		this.delimiter.update(localSymbols);
 
@@ -51,13 +51,13 @@ public class FSRDelimitedList extends FSRBase {
 	}
 
 	@Override
-	public TFDelimitedList getShellFactory() {
+	public TFDelimitedList<T> getShellFactory() {
 		return this.factory;
 	}
 	
 	@Override
-	public void setAdapter(AdapterSpecification<Token> spec) {
-		 Constructor<? extends Token> a = spec.getDelimitedListTokenAdapter();
+	public void setAdapter(AdapterSpecification<T> spec) {
+		 Constructor<? extends T> a = spec.getDelimitedListTokenAdapter();
 		 if (a != null) this.factory.setDelimitedListTargetType(a);
 	}	
 }

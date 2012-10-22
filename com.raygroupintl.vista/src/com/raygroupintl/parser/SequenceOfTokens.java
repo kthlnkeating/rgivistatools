@@ -22,9 +22,9 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.NoSuchElementException;
 
-public class SequenceOfTokens extends CollectionOfTokens implements Iterable<Token> {
-	private class SequenceStoreIterator implements Iterator<Token> {
-		private Iterator<Token> iterator;
+public class SequenceOfTokens<T extends Token> extends CollectionOfTokens<T> implements Iterable<T> {
+	private class SequenceStoreIterator implements Iterator<T> {
+		private Iterator<T> iterator;
 		private int iteratorIndex;
 				
 		public SequenceStoreIterator() {			
@@ -39,7 +39,7 @@ public class SequenceOfTokens extends CollectionOfTokens implements Iterable<Tok
 	    }
 	
 		@Override
-		public Token next() throws NoSuchElementException {
+		public T next() throws NoSuchElementException {
 			if (this.iteratorIndex < SequenceOfTokens.this.index) {
 				++this.iteratorIndex;
 				return this.iterator.next();
@@ -54,7 +54,7 @@ public class SequenceOfTokens extends CollectionOfTokens implements Iterable<Tok
 		}		
 	}
 
-	protected List<Token> tokens;
+	protected List<T> tokens;
 
 	private int index = 0;
 	private int length = 0;
@@ -63,14 +63,14 @@ public class SequenceOfTokens extends CollectionOfTokens implements Iterable<Tok
 		this.length = length;
 	}
 
-	public SequenceOfTokens(SequenceOfTokens rhs) {
+	public SequenceOfTokens(SequenceOfTokens<T> rhs) {
 		this.tokens = rhs.tokens;
 		this.index = rhs.index;
 		this.length = rhs.length;
 	}
 
-	public SequenceOfTokens(Token token0, Token token1) {
-		this.tokens = new ArrayList<Token>(2);
+	public SequenceOfTokens(T token0, T token1) {
+		this.tokens = new ArrayList<T>(2);
 		this.tokens.add(token0);
 		this.tokens.add(token1);
 		this.index = 2;
@@ -82,11 +82,11 @@ public class SequenceOfTokens extends CollectionOfTokens implements Iterable<Tok
 		return TokenUtilities.toValue(this);
 	}
 
-	public Iterable<Token> toLogicalIterable() {
+	public Iterable<T> toLogicalIterable() {
 		return this;
 	}
 	
-	public Iterable<Token> toIterable() {
+	public Iterable<T> toIterable() {
 		return this;
 	}
 
@@ -95,7 +95,7 @@ public class SequenceOfTokens extends CollectionOfTokens implements Iterable<Tok
 	}
 	
 	@Override
-	public Token getToken(int i) {
+	public T getToken(int i) {
 		if (this.index > i) {
 			return this.tokens.get(i);
 		} else {
@@ -104,7 +104,7 @@ public class SequenceOfTokens extends CollectionOfTokens implements Iterable<Tok
 	}
 	
 	@Override
-	public Iterator<Token> iterator() {
+	public Iterator<T> iterator() {
 		if (this.tokens == null) {
 			return Collections.emptyListIterator();
 		} else {
@@ -113,7 +113,7 @@ public class SequenceOfTokens extends CollectionOfTokens implements Iterable<Tok
 	}
 	
 	@Override
-	public void addToken(Token token) {
+	public void addToken(T token) {
 		++index;
 		if (token == null) {
 			if (this.tokens != null) {
@@ -121,7 +121,7 @@ public class SequenceOfTokens extends CollectionOfTokens implements Iterable<Tok
 			}
 		} else {
 			if (this.tokens == null) {
-				this.tokens = new ArrayList<Token>(this.length);				
+				this.tokens = new ArrayList<T>(this.length);				
 				for (int i=0; i<index-1; ++i) this.tokens.add(null);
 			}
 			this.tokens.add(token);
@@ -129,7 +129,7 @@ public class SequenceOfTokens extends CollectionOfTokens implements Iterable<Tok
 	}
 	
 	@Override
-	public void setToken(int index, Token token) {
+	public void setToken(int index, T token) {
 		if (this.index <= index) {		
 			for (int i=this.index; i<index; ++i) {
 				this.addToken(null);

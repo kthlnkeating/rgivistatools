@@ -24,7 +24,7 @@ import java.util.logging.Logger;
 
 import com.raygroupintl.parsergen.ObjectSupply;
 
-public class TFSequence extends TokenFactory {
+public class TFSequence<T extends Token> extends TokenFactory<T> {
 	public enum ValidateResult {
 		CONTINUE, BREAK, NULL_RESULT
 	}
@@ -66,10 +66,10 @@ public class TFSequence extends TokenFactory {
 		}		
 	}
 	
-	private List<TokenFactory> factories = new ArrayList<TokenFactory>();
+	private List<TokenFactory<T>> factories = new ArrayList<TokenFactory<T>>();
 	private RequiredFlags requiredFlags = new RequiredFlags();
 
-	private Constructor<? extends Token> constructor;
+	private Constructor<? extends T> constructor;
 	
 	public TFSequence(String name) {		
 		super(name);
@@ -77,16 +77,16 @@ public class TFSequence extends TokenFactory {
 	
 	public TFSequence(String name, int length) {		
 		super(name);
-		this.factories = new ArrayList<TokenFactory>(length);
+		this.factories = new ArrayList<TokenFactory<T>>(length);
 		this.requiredFlags = new RequiredFlags(length);
 	}
 	
 	public void reset(int length) {
-		this.factories = new ArrayList<TokenFactory>(length);
+		this.factories = new ArrayList<TokenFactory<T>>(length);
 		this.requiredFlags = new RequiredFlags(length);		
 	}
 	
-	public void add(TokenFactory tf, boolean required) {
+	public void add(TokenFactory<T> tf, boolean required) {
 		this.factories.add(tf);
 		this.requiredFlags.add(required);
 	}
@@ -96,7 +96,7 @@ public class TFSequence extends TokenFactory {
 		return this.factories.size();
 	}
 		
-	protected ValidateResult validateNull(int seqIndex, SequenceOfTokens foundTokens, boolean noException) throws SyntaxErrorException {
+	protected ValidateResult validateNull(int seqIndex, SequenceOfTokens<T> foundTokens, boolean noException) throws SyntaxErrorException {
 		int firstRequired = this.requiredFlags.getFirstRequiredIndex();
 		int lastRequired = this.requiredFlags.getLastRequiredIndex();
 		
@@ -118,7 +118,7 @@ public class TFSequence extends TokenFactory {
 		}
 	}
 	
-	protected boolean validateEnd(int seqIndex, SequenceOfTokens foundTokens, boolean noException) throws SyntaxErrorException {
+	protected boolean validateEnd(int seqIndex, SequenceOfTokens<T> foundTokens, boolean noException) throws SyntaxErrorException {
 		if (seqIndex < this.requiredFlags.getLastRequiredIndex()) {
 			if (noException) return false;
 			throw new SyntaxErrorException();
@@ -127,19 +127,19 @@ public class TFSequence extends TokenFactory {
 	}
 	
 	@Override
-	public final Token tokenizeOnly(Text text, ObjectSupply objectSupply) throws SyntaxErrorException {
+	public final T tokenizeOnly(Text text, ObjectSupply<T> objectSupply) throws SyntaxErrorException {
 		if (text.onChar()) {
-			SequenceOfTokens foundTokens = this.tokenizeCommon(text, objectSupply);
+			SequenceOfTokens<T> foundTokens = this.tokenizeCommon(text, objectSupply);
 			return this.convertSequence(foundTokens, objectSupply);
 		}		
 		return null;
 	}
 	
-	public void setSequenceTargetType(Constructor<? extends Token> constructor) {
+	public void setSequenceTargetType(Constructor<? extends T> constructor) {
 		this.constructor = constructor;		
 	}
 	
-	public Token convertSequence(SequenceOfTokens tokens, ObjectSupply objectSupply) {
+	public T convertSequence(SequenceOfTokens<T> tokens, ObjectSupply<T> objectSupply) {
 		if (tokens == null) return null;
 		if (this.constructor == null) {
 			return objectSupply.newSequence(tokens);
@@ -154,17 +154,17 @@ public class TFSequence extends TokenFactory {
 		}
 	}
 	
-	final SequenceOfTokens tokenizeCommon(Text text, ObjectSupply objectSupply) throws SyntaxErrorException {
+	final SequenceOfTokens<T> tokenizeCommon(Text text, ObjectSupply<T> objectSupply) throws SyntaxErrorException {
 		int length = this.factories.size();
-		SequenceOfTokens foundTokens = new SequenceOfTokens(length);
+		SequenceOfTokens<T> foundTokens = new SequenceOfTokens<T>(length);
 		return this.tokenizeCommon(text, objectSupply, 0, foundTokens, false);
 	}
 	
-	final SequenceOfTokens tokenizeCommon(Text text, ObjectSupply objectSupply, int firstSeqIndex, SequenceOfTokens foundTokens, boolean noException) throws SyntaxErrorException {
+	final SequenceOfTokens<T> tokenizeCommon(Text text, ObjectSupply<T> objectSupply, int firstSeqIndex, SequenceOfTokens<T> foundTokens, boolean noException) throws SyntaxErrorException {
 		int factoryCount = this.factories.size();
 		for (int i=firstSeqIndex; i<factoryCount; ++i) {
-			TokenFactory factory = this.factories.get(i);
-			Token token = null;
+			TokenFactory<T> factory = this.factories.get(i);
+			T token = null;
 			try {
 				token = factory.tokenize(text, objectSupply);				
 			} catch (SyntaxErrorException e) {
@@ -190,7 +190,7 @@ public class TFSequence extends TokenFactory {
 		return foundTokens;
 	}
 	
-	public TokenFactory getFactory(int index) {
+	public TokenFactory<T> getFactory(int index) {
 		return this.factories.get(index);
 	}
 }

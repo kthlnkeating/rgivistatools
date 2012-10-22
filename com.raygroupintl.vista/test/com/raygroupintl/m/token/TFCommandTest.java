@@ -19,7 +19,7 @@ import com.raygroupintl.parsergen.ObjectSupply;
 public class TFCommandTest {	
 	private static TFCommand fStd95;
 	private static TFCommand fCache;
-	private static ObjectSupply objectSupply;
+	private static ObjectSupply<MToken> objectSupply;
 	
 	@BeforeClass
 	public static void setUpBeforeClass() throws Exception {
@@ -40,7 +40,7 @@ public class TFCommandTest {
 		objectSupply = null;
 	}
 		
-	private void testCommand(TokenFactory f, String v, boolean error) {
+	private void testCommand(TokenFactory<MToken> f, String v, boolean error) {
 		try {
 			Text text = new Text(v);
 			Token t = f.tokenize(text, objectSupply);
@@ -55,7 +55,7 @@ public class TFCommandTest {
 		}
 	}
 
-	private void testCommand(TokenFactory f, String v) {
+	private void testCommand(TokenFactory<MToken> f, String v) {
 		testCommand(f, v, false);
 	}
 

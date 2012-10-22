@@ -21,8 +21,8 @@ import com.raygroupintl.parser.DelimitedListOfTokens;
 import com.raygroupintl.parser.Token;
 import com.raygroupintl.parser.Tokens;
 
-public class MDelimitedList extends DelimitedListOfTokens implements MToken {
-	public MDelimitedList(Token leadingToken, Tokens tailTokens) {
+public class MDelimitedList extends DelimitedListOfTokens<MToken> implements MToken {
+	public MDelimitedList(MToken leadingToken, Tokens<MToken> tailTokens) {
 		super(leadingToken, tailTokens);
 	}
 

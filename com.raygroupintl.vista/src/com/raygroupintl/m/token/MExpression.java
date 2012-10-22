@@ -24,7 +24,7 @@ public class MExpression extends MSequence {
 		super(length);
 	}
 
-	public MExpression(SequenceOfTokens tokens) {
+	public MExpression(SequenceOfTokens<MToken> tokens) {
 		super(tokens);
 	}
 

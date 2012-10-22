@@ -16,17 +16,19 @@
 
 package com.raygroupintl.parsergen.rulebased;
 
-public interface FSRVisitor {
-	void addChar(FSRChar fsr);
-	void addChoice(FSRChoice fsr);
-	void addConst(FSRConst fsr);
-	void addCopy(FSRCopy copy);
-	void addCustom(FSRCustom fsr);
-	void addDelimitedList(FSRDelimitedList fsr);
-	void addEnclosedDelimitedList(FSREnclosedDelimitedList fsr);
-	void addForkedSequence(FSRForkedSequence fsr);
-	void addList(FSRList fsr);
-	void addSequence(FSRSequence fsr);
-	void addString(FSRString fsr);
-	void addStringSequence(FSRStringSequence fsr);
+import com.raygroupintl.parser.Token;
+
+public interface FSRVisitor<T extends Token> {
+	void addChar(FSRChar<T> fsr);
+	void addChoice(FSRChoice<T> fsr);
+	void addConst(FSRConst<T> fsr);
+	void addCopy(FSRCopy<T> copy);
+	void addCustom(FSRCustom<T> fsr);
+	void addDelimitedList(FSRDelimitedList<T> fsr);
+	void addEnclosedDelimitedList(FSREnclosedDelimitedList<T> fsr);
+	void addForkedSequence(FSRForkedSequence<T> fsr);
+	void addList(FSRList<T> fsr);
+	void addSequence(FSRSequence<T> fsr);
+	void addString(FSRString<T> fsr);
+	void addStringSequence(FSRStringSequence<T> fsr);
 }

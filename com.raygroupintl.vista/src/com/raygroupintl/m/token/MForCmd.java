@@ -20,7 +20,6 @@ import com.raygroupintl.m.parsetree.ForLoop;
 import com.raygroupintl.m.parsetree.Node;
 import com.raygroupintl.m.parsetree.NodeList;
 import com.raygroupintl.parser.SequenceOfTokens;
-import com.raygroupintl.parser.Token;
 
 public class MForCmd extends MCommandBase {
 	public static class MForCmdEQRHS extends MSequence {
@@ -28,7 +27,7 @@ public class MForCmd extends MCommandBase {
 			super(length);
 		}
 		
-		public MForCmdEQRHS(SequenceOfTokens tokens) {
+		public MForCmdEQRHS(SequenceOfTokens<MToken> tokens) {
 			super(tokens);
 		}
 		
@@ -55,7 +54,7 @@ public class MForCmd extends MCommandBase {
 		}
 	}
 		
-	public MForCmd(Token cmdName, Token cmdDependent) {
+	public MForCmd(MToken cmdName, MToken cmdDependent) {
 		super(cmdName, cmdDependent);
 	}
 

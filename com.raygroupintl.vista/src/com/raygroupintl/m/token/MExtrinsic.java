@@ -25,7 +25,7 @@ public class MExtrinsic extends MSequence {
 		super(length);
 	}
 
-	public MExtrinsic(SequenceOfTokens tokens) {
+	public MExtrinsic(SequenceOfTokens<MToken> tokens) {
 		super(tokens);
 	}
 

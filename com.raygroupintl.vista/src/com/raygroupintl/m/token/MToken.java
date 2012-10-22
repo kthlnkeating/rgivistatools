@@ -26,4 +26,6 @@ public interface MToken extends Token {
 	int getNumSubNodes();
 	
 	MToken getSubNodeToken(int index);
+	
+	void beautify();
 }

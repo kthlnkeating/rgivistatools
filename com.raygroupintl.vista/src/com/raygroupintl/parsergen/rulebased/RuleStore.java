@@ -31,20 +31,20 @@ import com.raygroupintl.parsergen.ruledef.RuleParser;
 import com.raygroupintl.parsergen.ruledef.RuleSupply;
 import com.raygroupintl.parsergen.ruledef.RuleSupplyFlag;
 
-public class RuleStore extends TokenFactoryStore  {
+public class RuleStore<T extends Token> extends TokenFactoryStore<T>  {
 	private static RuleParser ruleParser;
 	
-	public Map<String, TokenFactory> symbols = new HashMap<String, TokenFactory>();
+	public Map<String, TokenFactory<T>> symbols = new HashMap<String, TokenFactory<T>>();
 	
-	private java.util.List<FactorySupplyRule> rules  = new ArrayList<FactorySupplyRule>();
+	private java.util.List<FactorySupplyRule<T>> rules  = new ArrayList<FactorySupplyRule<T>>();
 	private Map<String, RuleSupply> ruleSupplies  = new HashMap<String, RuleSupply>();
 	
-	private DefinitionVisitor dv = new DefinitionVisitor();
+	private DefinitionVisitor<T> dv = new DefinitionVisitor<T>();
 	
 	public RuleStore() {
 	}
 	
-	private TokenFactory addRule(String name, Rule ruleAnnotation, Field f) {
+	private TokenFactory<T> addRule(String name, Rule ruleAnnotation, Field f, Class<T> tokenCls) {
 		if (ruleParser == null) {
 			ruleParser = new RuleParser();
 		}
@@ -55,43 +55,44 @@ public class RuleStore extends TokenFactoryStore  {
 			if (ruleSupply == null) return null;
 			this.ruleSupplies.put(name, ruleSupply);
 		}
-		FactorySupplyRule topRule = this.dv.topRules.get(name);	
+		FactorySupplyRule<T> topRule = this.dv.topRules.get(name);	
 		if (topRule == null) {
 			ruleSupply.accept(this.dv, name, RuleSupplyFlag.TOP);
 			topRule = this.dv.topRules.get(name);
 		}
 
-		AdapterSpecification<Token> spec = AdapterSpecification.getInstance(f, Token.class);
+		AdapterSpecification<T> spec = AdapterSpecification.getInstance(f, tokenCls);
 		topRule.setAdapter(spec);
-		TokenFactory value = topRule.getShellFactory();
+		TokenFactory<T> value = topRule.getShellFactory();
 		this.rules.add(topRule);
 		return value;
 	}
 	
 	@Override
-	protected TokenFactory add(Field f)  {
+	protected TokenFactory<T> add(Field f, Class<T> tokenCls)  {
 		String name = f.getName();			
 		Rule description = f.getAnnotation(Rule.class);
 		if (description != null) {
-			return this.addRule(name, description, f);
+			return this.addRule(name, description, f, tokenCls);
 		} 
 		return null;
 	}
 	
-	protected <T> boolean handleField(T target, Field f) throws IllegalAccessException {
+	protected <M> boolean handleField(M target, Field f, Class<T> tokenCls) throws IllegalAccessException {
 		String name = f.getName();
-		TokenFactory already = this.symbols.get(name);
-		if (already == null) {					
-			TokenFactory value = (TokenFactory) f.get(target);
+		TokenFactory<T> already = this.symbols.get(name);
+		if (already == null) {
+			@SuppressWarnings("unchecked")
+			TokenFactory<T> value = (TokenFactory<T>) f.get(target);
 			if (value == null) {
-				value = this.add(f);
+				value = this.add(f, tokenCls);
 				if (value != null) {
 					f.set(target, value);
 				} else {
 					return false;
 				}
 			} else {
-				FSRCustom fsr = new FSRCustom(value);
+				FSRCustom<T> fsr = new FSRCustom<T>(value);
 				this.dv.topRules.put(name, fsr);
 				this.rules.add(fsr);
 			}
@@ -106,19 +107,19 @@ public class RuleStore extends TokenFactoryStore  {
 	
 	@Override
 	public void addAssumed() {		
-		TokenFactory end = new TFEnd("end");
+		TokenFactory<T> end = new TFEnd<T>("end");
 		this.symbols.put("end", end);
-		FactorySupplyRule fsr = new FSRCustom(end);
+		FactorySupplyRule<T> fsr = new FSRCustom<T>(end);
 		this.rules.add(fsr);
 		this.dv.topRules.put("end", fsr);
 	}
 
 	@Override
 	public void update(Class<?> cls) throws ParseException {
-		RulesMapByName tfby = new RulesMapByName(this.dv.topRules);
+		RulesMapByName<T> tfby = new RulesMapByName<T>(this.dv.topRules);
 
 		String errorSymbols = "";
-		for (FactorySupplyRule r : this.rules) {
+		for (FactorySupplyRule<T> r : this.rules) {
 			String[] neededs = r.getNeededNames();
 			for (String needed : neededs) {
 				if (! tfby.hasRule(needed)) {
@@ -130,7 +131,7 @@ public class RuleStore extends TokenFactoryStore  {
 			throw new ParseException("Following symbols are not resolved: " + errorSymbols.substring(1));			
 		}
 		
-		for (FactorySupplyRule r : this.rules) {
+		for (FactorySupplyRule<T> r : this.rules) {
 			boolean result = r.update(tfby);			
 			assert(result);
 		}

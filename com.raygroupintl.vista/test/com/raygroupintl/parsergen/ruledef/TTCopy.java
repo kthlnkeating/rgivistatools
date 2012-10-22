@@ -3,10 +3,10 @@ package com.raygroupintl.parsergen.ruledef;
 import com.raygroupintl.parser.TextPiece;
 import com.raygroupintl.parser.Token;
 
-public class TCopy implements Token {
+public class TTCopy implements Token {
 	private Token master;
 	
-	public TCopy(Token token) {
+	public TTCopy(Token token) {
 		this.master = token;
 	}
 	

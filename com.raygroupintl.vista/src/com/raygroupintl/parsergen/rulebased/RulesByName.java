@@ -16,10 +16,12 @@
 
 package com.raygroupintl.parsergen.rulebased;
 
+import com.raygroupintl.parser.Token;
 
-public interface RulesByName  {
-	FactorySupplyRule get(String name);
-	void put(String name, FactorySupplyRule rule);
+
+public interface RulesByName<T extends Token>  {
+	FactorySupplyRule<T> get(String name);
+	void put(String name, FactorySupplyRule<T> rule);
 	
 	boolean hasRule(String name);
 }

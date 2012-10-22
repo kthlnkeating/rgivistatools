@@ -24,7 +24,7 @@ public class TSymbolList extends TSequence implements SymbolList {
 		super(length);
 	}
 	
-	public TSymbolList(SequenceOfTokens tokens) {
+	public TSymbolList(SequenceOfTokens<RuleSupply> tokens) {
 		super(tokens);
 	}
 	

@@ -17,13 +17,12 @@
 package com.raygroupintl.parsergen.ruledef;
 
 import com.raygroupintl.parser.ListOfTokens;
-import com.raygroupintl.parser.Token;
 
-public class TList extends ListOfTokens implements RuleSupply {
+public class TList extends ListOfTokens<RuleSupply> implements RuleSupply {
 	public TList() {
 	}
 	
-	public TList(ListOfTokens tokens) {
+	public TList(ListOfTokens<RuleSupply> tokens) {
 		super(tokens);
 	}
 
@@ -33,7 +32,7 @@ public class TList extends ListOfTokens implements RuleSupply {
 		
 	@Override
 	public void beautify() {
-		for (Token token : this.toIterable()) {
+		for (RuleSupply token : this.toIterable()) {
 			token.beautify();
 		}
 	}

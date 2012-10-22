@@ -21,26 +21,27 @@ import java.util.List;
 
 import com.raygroupintl.parser.TFForkedSequence;
 import com.raygroupintl.parser.TFSequence;
+import com.raygroupintl.parser.Token;
 import com.raygroupintl.parser.TokenFactory;
 import com.raygroupintl.parsergen.ParseErrorException;
 import com.raygroupintl.parsergen.ruledef.RuleSupplyFlag;
 
-public class FSRForkedSequence extends FSRBase {
+public class FSRForkedSequence<T extends Token> extends FSRBase<T> {
 	private String name;
-	private FactorySupplyRule leader;
-	private List<FactorySupplyRule> followers = new ArrayList<FactorySupplyRule>();
+	private FactorySupplyRule<T> leader;
+	private List<FactorySupplyRule<T>> followers = new ArrayList<FactorySupplyRule<T>>();
 	private boolean singleValid;
-	private TFForkedSequence factory;
+	private TFForkedSequence<T> factory;
 
-	public FSRForkedSequence(String name, FactorySupplyRule leader) {
+	public FSRForkedSequence(String name, FactorySupplyRule<T> leader) {
 		super(RuleSupplyFlag.INNER_REQUIRED);
 		this.name = name;
 		this.leader = leader;
-		this.factory = new TFForkedSequence(name);
+		this.factory = new TFForkedSequence<T>(name);
 	}
 	
 	@Override
-	public TokenFactory getShellFactory() {
+	public TokenFactory<T> getShellFactory() {
 		return this.factory;
 	}
 	
@@ -48,7 +49,7 @@ public class FSRForkedSequence extends FSRBase {
 		return this.name;
 	}
 	
-	public FactorySupplyRule getLeading(RulesByName names) {
+	public FactorySupplyRule<T> getLeading(RulesByName<T> names) {
 		return null;
 	}
 	
@@ -56,7 +57,7 @@ public class FSRForkedSequence extends FSRBase {
 		return 1;
 	}
 	
-	public void addFollower(FactorySupplyRule follower) {
+	public void addFollower(FactorySupplyRule<T> follower) {
 		if (follower.getSequenceCount() == 1) {
 			this.singleValid = true;
 			this.leader = follower;
@@ -70,13 +71,13 @@ public class FSRForkedSequence extends FSRBase {
 	}
 	
 	@Override
-	public boolean update(RulesByName symbols) {
+	public boolean update(RulesByName<T> symbols) {
 		this.leader.update(symbols);
 		this.factory.setLeader(this.leader.getTheFactory(symbols));		
 		this.factory.setSingleValid(this.singleValid);
-		for (FactorySupplyRule follower : this.followers) {
+		for (FactorySupplyRule<T> follower : this.followers) {
 			follower.update(symbols);
-			this.factory.addFollower((TFSequence) follower.getTheFactory(symbols));
+			this.factory.addFollower((TFSequence<T>) follower.getTheFactory(symbols));
 		}		
 		return true;
 	}

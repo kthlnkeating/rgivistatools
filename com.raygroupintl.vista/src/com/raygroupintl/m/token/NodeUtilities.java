@@ -23,7 +23,7 @@ import com.raygroupintl.parser.Token;
 import com.raygroupintl.parser.Tokens;
 
 class NodeUtilities {
-	static Nodes<Node> getNodes(Iterable<Token> iterable, int size) {
+	static Nodes<Node> getNodes(Iterable<MToken> iterable, int size) {
 		NodeList<Node> result = new NodeList<Node>(size);
 		for (Token t : iterable) {
 			if ((t != null) && (t instanceof MToken)) {
@@ -37,8 +37,8 @@ class NodeUtilities {
 		return result;		
 	}
 	
-	static NodeList<Node> getSubscriptNodes(Tokens subscriptTokens) {
-		Tokens subscripts = subscriptTokens.getTokens(1);
+	static NodeList<Node> getSubscriptNodes(Tokens<MToken> subscriptTokens) {
+		Tokens<MToken> subscripts = subscriptTokens.getTokens(1);
 		int size = subscripts.size();
 		NodeList<Node> nodes = new NodeList<>(size);
 		for (Token t : subscripts.toLogicalIterable()) {

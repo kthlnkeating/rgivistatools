@@ -17,17 +17,16 @@
 package com.raygroupintl.parsergen.ruledef;
 
 import com.raygroupintl.parser.DelimitedListOfTokens;
-import com.raygroupintl.parser.Token;
 import com.raygroupintl.parser.Tokens;
 
-public class TDelimitedList extends DelimitedListOfTokens implements RuleSupply {
-	public TDelimitedList(Token leadingToken, Tokens tailTokens) {
+public class TDelimitedList extends DelimitedListOfTokens<RuleSupply> implements RuleSupply {
+	public TDelimitedList(RuleSupply leadingToken, Tokens<RuleSupply> tailTokens) {
 		super(leadingToken, tailTokens);
 	}
 
 	@Override
 	public void beautify() {
-		for (Token token : this.toIterable()) {
+		for (RuleSupply token : this.toIterable()) {
 			token.beautify();
 		}
 	}

@@ -24,12 +24,12 @@ import com.raygroupintl.parser.TokenFactory;
 import com.raygroupintl.parsergen.AdapterSpecification;
 import com.raygroupintl.parsergen.ruledef.RuleSupplyFlag;
 
-public class FSRSequence extends FSRCollection {
-	private TFSequence factory;	
+public class FSRSequence<T extends Token> extends FSRCollection<T> {
+	private TFSequence<T> factory;	
 	
 	public FSRSequence(String name, RuleSupplyFlag flag) {
 		super(flag);
-		this.factory = new TFSequence(name);
+		this.factory = new TFSequence<T>(name);
 	}
 	
 	@Override
@@ -38,7 +38,7 @@ public class FSRSequence extends FSRCollection {
 	}
 	
 	@Override
-	public FactorySupplyRule getLeading(RulesByName names, int level) {
+	public FactorySupplyRule<T> getLeading(RulesByName<T> names, int level) {
 		if (level == 0) {
 			return this.list.get(0).getLeading(names, 1);
 		} else {
@@ -47,17 +47,17 @@ public class FSRSequence extends FSRCollection {
 	}
 	
 	@Override
-	public boolean update(RulesByName symbols) {
-		RulesByNameLocal localSymbols = new RulesByNameLocal(symbols, this);
+	public boolean update(RulesByName<T> symbols) {
+		RulesByNameLocal<T> localSymbols = new RulesByNameLocal<T>(symbols, this);
 		
 		this.factory.reset(this.list.size());
-		for (FactorySupplyRule spg : this.list) {
-			TokenFactory f = spg.getTheFactory(localSymbols);
+		for (FactorySupplyRule<T> spg : this.list) {
+			TokenFactory<T> f = spg.getTheFactory(localSymbols);
 			boolean b = spg.getRequired();
 			this.factory.add(f, b);
 		}
 
-		for (FactorySupplyRule spg : this.list) {
+		for (FactorySupplyRule<T> spg : this.list) {
 			spg.update(localSymbols);
 		}		
 		
@@ -66,7 +66,7 @@ public class FSRSequence extends FSRCollection {
 	}
 
 	@Override
-	public TFSequence getShellFactory() {
+	public TFSequence<T> getShellFactory() {
 		return this.factory;
 	}
 	
@@ -76,8 +76,8 @@ public class FSRSequence extends FSRCollection {
 	}
 
 	@Override
-	public void setAdapter(AdapterSpecification<Token> spec) {
-		 Constructor<? extends Token> a = spec.getSequenceTokenAdapter();
+	public void setAdapter(AdapterSpecification<T> spec) {
+		 Constructor<? extends T> a = spec.getSequenceTokenAdapter();
 		 if (a != null) this.factory.setSequenceTargetType(a);
 	}	
 }

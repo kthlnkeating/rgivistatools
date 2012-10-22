@@ -23,9 +23,9 @@ import java.util.logging.Logger;
 import com.raygroupintl.charlib.Predicate;
 import com.raygroupintl.parsergen.ObjectSupply;
 
-public class TFString extends TokenFactory {
+public class TFString<T extends Token> extends TokenFactory<T> {
 	private Predicate predicate;
-	private Constructor<? extends Token> constructor;
+	private Constructor<? extends T> constructor;
 	
 	public TFString(String name, Predicate predicate) {
 		super(name);
@@ -33,16 +33,16 @@ public class TFString extends TokenFactory {
 	}
 		
 	@Override
-	public Token tokenizeOnly(Text text, ObjectSupply objectSupply) {
+	public T tokenizeOnly(Text text, ObjectSupply<T> objectSupply) {
 		TextPiece p = text.extractPiece(this.predicate);
 		return this.convertString(p, objectSupply);
 	}
 
-	public void setStringTargetType(Constructor<? extends Token> constructor) {
+	public void setStringTargetType(Constructor<? extends T> constructor) {
 		this.constructor = constructor;		
 	}
 
-	public Token convertString(TextPiece p, ObjectSupply objectSupply) {
+	public T convertString(TextPiece p, ObjectSupply<T> objectSupply) {
 		if (p == null) {
 			return null;
 		} else if (this.constructor == null) {

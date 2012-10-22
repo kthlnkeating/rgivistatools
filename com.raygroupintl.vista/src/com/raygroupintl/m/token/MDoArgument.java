@@ -26,7 +26,7 @@ public class MDoArgument extends MSequence {
 		super(length);
 	}
 	
-	public MDoArgument(SequenceOfTokens tokens) {
+	public MDoArgument(SequenceOfTokens<MToken> tokens) {
 		super(tokens);
 	}
 	

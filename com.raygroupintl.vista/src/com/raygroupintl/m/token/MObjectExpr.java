@@ -25,7 +25,7 @@ public class MObjectExpr extends MSequence {
 		super(length);
 	}
 	
-	public MObjectExpr(SequenceOfTokens tokens) {
+	public MObjectExpr(SequenceOfTokens<MToken> tokens) {
 		super(tokens);
 	}
 	

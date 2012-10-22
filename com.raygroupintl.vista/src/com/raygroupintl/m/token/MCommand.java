@@ -19,10 +19,9 @@ package com.raygroupintl.m.token;
 import com.raygroupintl.m.parsetree.GenericCommand;
 import com.raygroupintl.m.parsetree.Node;
 import com.raygroupintl.parser.Empty;
-import com.raygroupintl.parser.Token;
 
 public abstract class MCommand extends MCommandBase {
-	public MCommand(Token token0, Token token1) {
+	public MCommand(MToken token0, MToken token1) {
 		super(token0, token1);
 	}
 	

@@ -16,7 +16,7 @@ import com.raygroupintl.parsergen.ObjectSupply;
 public class TFTest {
 	private static MTFSupply supplyStd95;
 	private static MTFSupply supplyCache;
-	private static ObjectSupply objectSupply;
+	private static ObjectSupply<MToken> objectSupply;
 	
 	@BeforeClass
 	public static void setUpBeforeClass() throws Exception {
@@ -33,7 +33,7 @@ public class TFTest {
 	}
 
 	public void testTFActual(MTFSupply m) {
-		TokenFactory f = m.actual;
+		TokenFactory<MToken> f = m.actual;
 		TFCommonTest.validCheck(f, objectSupply, ".57");
 		TFCommonTest.validCheck(f, objectSupply, ".57  ", ".57");
 		TFCommonTest.validCheck(f, objectSupply, ".INPUT");
@@ -52,7 +52,7 @@ public class TFTest {
 	}
 
 	private void testActualList(MTFSupply m) {
-		TokenFactory f = m.actuallist;
+		TokenFactory<MToken> f = m.actuallist;
 		TFCommonTest.validCheck(f, objectSupply, "()");		
 		TFCommonTest.validCheck(f, objectSupply, "(C'>3)");		
 		TFCommonTest.validCheck(f, objectSupply, "(C'>3,B>1)");		
@@ -70,7 +70,7 @@ public class TFTest {
 	}
 
 	public void testTFComment(MTFSupply m) {
-		TokenFactory f = m.comment;
+		TokenFactory<MToken> f = m.comment;
 		TFCommonTest.validCheck(f, objectSupply, ";", false);
 		TFCommonTest.validCheck(f, objectSupply, "; this is a comment", false);
 		TFCommonTest.nullCheck(f, objectSupply, "this is a comment");
@@ -87,7 +87,7 @@ public class TFTest {
 	}
 		
 	public void testTFEnvironment(MTFSupply m) {
-		TokenFactory f = m.environment;
+		TokenFactory<MToken> f = m.environment;
 		TFCommonTest.validCheck(f, objectSupply, "|A|");
 		TFCommonTest.validCheck(f, objectSupply, "|A+B|");
 		TFCommonTest.validCheck(f, objectSupply, "[A]");
@@ -106,7 +106,7 @@ public class TFTest {
 	}
 		
 	public void TFDeviceParams(MTFSupply m) {
-		TokenFactory f = m.deviceparams;
+		TokenFactory<MToken> f = m.deviceparams;
 		TFCommonTest.validCheck(f, objectSupply, "(:XOBPORT:\"AT\")");
 	}
 	
@@ -117,7 +117,7 @@ public class TFTest {
 	}
 
 	public void testTFExtDoArgument(MTFSupply m) {
-		TokenFactory f = m.extdoargument;
+		TokenFactory<MToken> f = m.extdoargument;
 		TFCommonTest.validCheck(f, objectSupply, "&ROUTINE");
 		TFCommonTest.validCheck(f, objectSupply, "&ROUTINE(P0,\"RGI\",13)");
 		TFCommonTest.validCheck(f, objectSupply, "&%^R5");
@@ -140,7 +140,7 @@ public class TFTest {
 	}
 	
 	public void testTFDoArgument(MTFSupply m) {
-		TokenFactory f = m.doargument;
+		TokenFactory<MToken> f = m.doargument;
 		TFCommonTest.validCheck(f, objectSupply, "T1:COND1", MDoArgument.class);
 		TFCommonTest.validCheck(f, objectSupply, "T2", MDoArgument.class);
 		TFCommonTest.validCheck(f, objectSupply, "T0", MDoArgument.class);
@@ -156,7 +156,7 @@ public class TFTest {
 	}
 	
 	public void testTFDoArguments(MTFSupply m) {
-		TokenFactory f = m.doarguments;
+		TokenFactory<MToken> f = m.doarguments;
 		Token t = TFCommonTest.validCheck(f, objectSupply, "T0,T1:COND1,T2", MDelimitedList.class);
 		Assert.assertNotNull(t);
 		MDelimitedList dl = (MDelimitedList) t;
@@ -173,7 +173,7 @@ public class TFTest {
 	}
 	
 	public void testTFExternal(MTFSupply m) {
-		TokenFactory f = m.external;
+		TokenFactory<MToken> f = m.external;
 		TFCommonTest.validCheck(f, objectSupply, "$&ZLIB.%GETDVI(%XX,\"DEVCLASS\")");
 	}
 
@@ -184,7 +184,7 @@ public class TFTest {
 	}
 
 	private void testTFExpr(MTFSupply m) {
-		TokenFactory f = m.expr;
+		TokenFactory<MToken> f = m.expr;
 		TFCommonTest.validCheck(f, objectSupply, "^A");
 		TFCommonTest.validCheck(f, objectSupply, "@^%ZOSF(\"TRAP\")");
 		TFCommonTest.validCheck(f, objectSupply, "^A(1)");
@@ -211,7 +211,7 @@ public class TFTest {
 	}
 
 	public void testTFExprItem(MTFSupply m) {
-		TokenFactory f = m.expritem;
+		TokenFactory<MToken> f = m.expritem;
 		TFCommonTest.validCheck(f, objectSupply, "$$TEST(A)");
 		TFCommonTest.validCheck(f, objectSupply, "$$TEST^DOHA");
 		TFCommonTest.validCheck(f, objectSupply, "$$TEST");
@@ -237,7 +237,7 @@ public class TFTest {
 	}
 
 	public void testTFGvn(MTFSupply m) {
-		TokenFactory f = m.gvn;
+		TokenFactory<MToken> f = m.gvn;
 		TFCommonTest.validCheck(f, objectSupply, "^PRCA(430,+$G(PRCABN),0)");
 	}
 
@@ -248,7 +248,7 @@ public class TFTest {
 	}
 
 	public void testTFGvnAll(MTFSupply m) {
-		TokenFactory f = m.gvnall;
+		TokenFactory<MToken> f = m.gvnall;
 		TFCommonTest.validCheck(f, objectSupply, "^(A)");
 		TFCommonTest.validCheck(f, objectSupply, "^A");
 		TFCommonTest.validCheck(f, objectSupply, "^PRCA(430,+$G(PRCABN),0)");
@@ -265,7 +265,7 @@ public class TFTest {
 	}
 
 	private void testTFIndirection(MTFSupply m) {
-		TokenFactory f = m.indirection;		
+		TokenFactory<MToken> f = m.indirection;		
 		TFCommonTest.validCheck(f, objectSupply, "@A");
 		TFCommonTest.validCheck(f, objectSupply, "@(+$P(LST,\",\",FLD))");
 		TFCommonTest.validCheck(f, objectSupply, "@H@(0)");
@@ -284,7 +284,7 @@ public class TFTest {
 	}
 
 	public void testTFLvn(MTFSupply m) {
-		TokenFactory f = m.lvn;
+		TokenFactory<MToken> f = m.lvn;
 		TFCommonTest.validCheck(f, objectSupply, "A");
 	}
 
@@ -295,7 +295,7 @@ public class TFTest {
 	}
 
 	public void testTFName(MTFSupply m) {
-		TokenFactory f = m.name;
+		TokenFactory<MToken> f = m.name;
 		TFCommonTest.validCheck(f, objectSupply, "RGI3");
 		TFCommonTest.validCheck(f, objectSupply, "%RGI");
 		TFCommonTest.validCheck(f, objectSupply, "rgi");
@@ -315,7 +315,7 @@ public class TFTest {
 	}
 
 	public void testTFNumLit(MTFSupply m) {
-		TokenFactory f = m.numlit;
+		TokenFactory<MToken> f = m.numlit;
 		TFCommonTest.validCheck(f, objectSupply, ".11");
 		TFCommonTest.validCheck(f, objectSupply, "1.11");
 		TFCommonTest.validCheck(f, objectSupply, "3.11");
@@ -332,7 +332,7 @@ public class TFTest {
 	}
 
 	public void testTFStringLiteral(MTFSupply m) {
-		TokenFactory f = m.strlit;
+		TokenFactory<MToken> f = m.strlit;
 		TFCommonTest.validCheck(f, objectSupply, "\"This is a comment\"");
 		TFCommonTest.validCheck(f, objectSupply, "\"Comment with quotes \"\" one\"");
 		TFCommonTest.validCheck(f, objectSupply, "\"Comment with quotes \"\" one \"\" two\"");
@@ -350,7 +350,7 @@ public class TFTest {
 	}
 
 	private void testPattern(MTFSupply m) {
-		TokenFactory f = m.pattern;
+		TokenFactory<MToken> f = m.pattern;
 		TFCommonTest.validCheck(f, objectSupply, "1\"C-\".E");
 		TFCommonTest.validCheck(f, objectSupply, "1\"C-\".E ","1\"C-\".E");
 		TFCommonTest.validCheck(f, objectSupply, ".P1N.NP");

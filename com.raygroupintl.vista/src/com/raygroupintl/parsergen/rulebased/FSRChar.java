@@ -24,16 +24,16 @@ import com.raygroupintl.parser.Token;
 import com.raygroupintl.parsergen.AdapterSpecification;
 import com.raygroupintl.parsergen.ruledef.RuleSupplyFlag;
 
-public class FSRChar extends FSRBase {
+public class FSRChar<T extends Token> extends FSRBase<T> {
 	private String expr;
 	private Predicate predicate;
-	private TFCharacter factory;
+	private TFCharacter<T> factory;
 	
 	public FSRChar(String expr, RuleSupplyFlag flag, Predicate predicate) {
 		super(flag);
 		this.expr = expr;
 		this.predicate = predicate;
-		this.factory = new TFCharacter(this.expr, this.predicate);
+		this.factory = new TFCharacter<T>(this.expr, this.predicate);
 	}
 	
 	@Override
@@ -42,7 +42,7 @@ public class FSRChar extends FSRBase {
 	}
 	
 	@Override
-	public boolean update(RulesByName symbols) {
+	public boolean update(RulesByName<T> symbols) {
 		if (! symbols.hasRule(expr)) {
 			symbols.put(this.expr, this);
 		}
@@ -50,21 +50,21 @@ public class FSRChar extends FSRBase {
 	}
 	
 	@Override
-	public TFCharacter getShellFactory() {
+	public TFCharacter<T> getShellFactory() {
 		return this.factory;
 	}
 	
 	@Override
-	public FactorySupplyRule formList(String name, RuleSupplyFlag flag, ListInfo info) {
+	public FactorySupplyRule<T> formList(String name, RuleSupplyFlag flag, ListInfo<T> info) {
 		if ((info.delimiter != null) || (info.left != null) || (info.right != null)) {
 			throw new UnsupportedOperationException("Delimiters and/or enclosers are not supported for list of character based symbols");
 		}		
-		return new FSRString("{" + this.expr + "}", flag, this.predicate);
+		return new FSRString<T>("{" + this.expr + "}", flag, this.predicate);
 	}
 
 	@Override
-	public void setAdapter(AdapterSpecification<Token> spec) {
-		 Constructor<? extends Token> constructor = spec.getTokenAdapter();
-		 if (constructor != null) this.factory.setTargetType(constructor);
+	public void setAdapter(AdapterSpecification<T> spec) {
+		 Constructor<? extends T> constructor = spec.getStringTokenAdapter();
+		 if (constructor != null) this.factory.setStringTargetType(constructor);
 	}
 }

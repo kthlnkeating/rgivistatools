@@ -5,6 +5,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import com.raygroupintl.charlib.Predicate;
+import com.raygroupintl.parser.Token;
 import com.raygroupintl.parsergen.ruledef.CharSymbol;
 import com.raygroupintl.parsergen.ruledef.ConstSymbol;
 import com.raygroupintl.parsergen.ruledef.RuleDefinitionVisitor;
@@ -14,17 +15,17 @@ import com.raygroupintl.parsergen.ruledef.RuleSupplyFlag;
 import com.raygroupintl.parsergen.ruledef.Symbol;
 import com.raygroupintl.parsergen.ruledef.SymbolList;
 
-public class DefinitionVisitor implements RuleDefinitionVisitor {
-	public Map<String, FactorySupplyRule> topRules  = new HashMap<String, FactorySupplyRule>();
-	private java.util.ArrayList<FactorySupplyRule> allRules  = new ArrayList<FactorySupplyRule>();
+public class DefinitionVisitor<T extends Token> implements RuleDefinitionVisitor {
+	public Map<String, FactorySupplyRule<T>> topRules  = new HashMap<String, FactorySupplyRule<T>>();
+	private java.util.ArrayList<FactorySupplyRule<T>> allRules  = new ArrayList<FactorySupplyRule<T>>();
 		
-	private FactorySupplyRule acceptAndReturn(RuleSupply rs, String name, RuleSupplyFlag flag) {
+	private FactorySupplyRule<T> acceptAndReturn(RuleSupply rs, String name, RuleSupplyFlag flag) {
 		rs.accept(this, name, flag);
 		int index = this.allRules.size();
 		return this.allRules.get(index-1);
 	}
 	
-	private FactorySupplyRule acceptAndReturn(RuleSupplies rss, int index, String name, RuleSupplyFlag flag) {
+	private FactorySupplyRule<T> acceptAndReturn(RuleSupplies rss, int index, String name, RuleSupplyFlag flag) {
 		rss.acceptElement(this, index, name, flag);
 		int rIndex = this.allRules.size();
 		return this.allRules.get(rIndex-1);
@@ -34,7 +35,7 @@ public class DefinitionVisitor implements RuleDefinitionVisitor {
 	public void visitCharSymbol(CharSymbol charSymbol, String name, RuleSupplyFlag flag) {
 		Predicate p = charSymbol.getPredicate();
 		String key = charSymbol.getKey();
-		FSRChar result = new FSRChar(key, flag, p);
+		FSRChar<T> result = new FSRChar<T>(key, flag, p);
 		if (flag == RuleSupplyFlag.TOP) {
 			this.topRules.put(name, result);
 		}
@@ -45,7 +46,7 @@ public class DefinitionVisitor implements RuleDefinitionVisitor {
 	public void visitConstSymbol(ConstSymbol constSymbol, String name, RuleSupplyFlag flag) {
 		String value = constSymbol.getValue();
 		boolean ignoreCase = constSymbol.getIgnoreCaseFlag();
-		FSRConst result = new FSRConst(value, ignoreCase, flag);
+		FSRConst<T> result = new FSRConst<T>(value, ignoreCase, flag);
 		if (flag == RuleSupplyFlag.TOP) {
 			this.topRules.put(name, result);
 		}		
@@ -55,11 +56,11 @@ public class DefinitionVisitor implements RuleDefinitionVisitor {
 	@Override
 	public void visitSymbol(Symbol symbol, String name, RuleSupplyFlag flag) {
 		String value = symbol.getValue();
-		FactorySupplyRule result = null;
+		FactorySupplyRule<T> result = null;
 		if (flag == RuleSupplyFlag.TOP) {
-			result = new FSRCopy(name, value);
+			result = new FSRCopy<T>(name, value);
 		} else {
-			result = new FSRSingle(name, value, flag);			
+			result = new FSRSingle<T>(name, value, flag);			
 		}
 		if (flag == RuleSupplyFlag.TOP) {
 			this.topRules.put(name, result);
@@ -67,8 +68,8 @@ public class DefinitionVisitor implements RuleDefinitionVisitor {
 		this.allRules.add(result);
 	}
 	
-	public ListInfo getListInfo(SymbolList symbolList, String name) {
-		ListInfo result = new ListInfo();
+	public ListInfo<T> getListInfo(SymbolList symbolList, String name) {
+		ListInfo<T> result = new ListInfo<T>();
 		RuleSupply delimiter = symbolList.getDelimiter();
 		if (delimiter != null) {		
 			result.delimiter = this.acceptAndReturn(delimiter, name + ".delimiter", RuleSupplyFlag.INNER_REQUIRED);
@@ -89,12 +90,12 @@ public class DefinitionVisitor implements RuleDefinitionVisitor {
 	public void visitSymbolList(SymbolList symbolList, String name, RuleSupplyFlag flag) {		
 		RuleSupplyFlag innerFlag = flag.demoteInner();
 		RuleSupply ers = symbolList.getElement();
-		FactorySupplyRule e = this.acceptAndReturn(ers, name + ".element", innerFlag);
-		ListInfo listInfo = this.getListInfo(symbolList, name);
+		FactorySupplyRule<T> e = this.acceptAndReturn(ers, name + ".element", innerFlag);
+		ListInfo<T> listInfo = this.getListInfo(symbolList, name);
 		if (listInfo == null) {
 			return;
 		}
-		FactorySupplyRule result = e.formList(name, innerFlag, listInfo);
+		FactorySupplyRule<T> result = e.formList(name, innerFlag, listInfo);
 
 		if (flag == RuleSupplyFlag.TOP) {
 			this.topRules.put(name, result);
@@ -102,10 +103,10 @@ public class DefinitionVisitor implements RuleDefinitionVisitor {
 		this.allRules.add(result);
 	}
 	
-	private void visitCollection(FSRCollection fsrCollection, RuleSupplies rss, String name, RuleSupplyFlag flag) {
+	private void visitCollection(FSRCollection<T> fsrCollection, RuleSupplies rss, String name, RuleSupplyFlag flag) {
 		int size = rss.getSize();
 		for (int index = 0; index<size; ++index) {
-			FactorySupplyRule fsr = acceptAndReturn(rss, index, name + "." + String.valueOf(index), RuleSupplyFlag.INNER_REQUIRED); 
+			FactorySupplyRule<T> fsr = acceptAndReturn(rss, index, name + "." + String.valueOf(index), RuleSupplyFlag.INNER_REQUIRED); 
 			fsrCollection.add(fsr);
 		}
 		if (flag == RuleSupplyFlag.TOP) {
@@ -116,17 +117,17 @@ public class DefinitionVisitor implements RuleDefinitionVisitor {
 	
 	@Override
 	public void visitChoiceOfSymbols(RuleSupplies choiceOfSymbols, String name, RuleSupplyFlag flag) {		
-		FSRChoice result = new FSRChoice(name, flag);
+		FSRChoice<T> result = new FSRChoice<T>(name, flag);
 		this.visitCollection(result, choiceOfSymbols, name, flag);
 	}
 	
 	@Override
 	public void visitSymbolSequence(RuleSupplies sequence, String name, RuleSupplyFlag flag) {
-		FSRSequence result = new FSRSequence(name, flag);
+		FSRSequence<T> result = new FSRSequence<T>(name, flag);
 		this.visitCollection(result, sequence, name, flag);
 	}
 	
-	public FactorySupplyRule getLastRule() {
+	public FactorySupplyRule<T> getLastRule() {
 		int length = this.allRules.size();
 		if (this.allRules.size() == 0) {
 			return null;

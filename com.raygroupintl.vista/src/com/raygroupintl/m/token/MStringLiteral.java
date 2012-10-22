@@ -25,7 +25,7 @@ public class MStringLiteral extends MSequence {
 		super(length);
 	}
 
-	public MStringLiteral(SequenceOfTokens tokens) {
+	public MStringLiteral(SequenceOfTokens<MToken> tokens) {
 		super(tokens);
 	}
 

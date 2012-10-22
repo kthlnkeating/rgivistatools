@@ -16,12 +16,10 @@
 
 package com.raygroupintl.parsergen.ruledef;
 
-import com.raygroupintl.parser.Token;
-
 public class TSymbol extends TString implements Symbol {
 	private static final long serialVersionUID = 1L;
 
-	public TSymbol(Token token) {
+	public TSymbol(RuleSupply token) {
 		super(token);
 	}
 	

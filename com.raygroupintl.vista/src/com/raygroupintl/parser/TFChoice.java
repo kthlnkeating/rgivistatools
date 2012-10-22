@@ -21,27 +21,27 @@ import java.util.List;
 
 import com.raygroupintl.parsergen.ObjectSupply;
 
-public class TFChoice extends TokenFactory {
-	private List<TokenFactory> factories;
+public class TFChoice<T extends Token> extends TokenFactory<T> {
+	private List<TokenFactory<T>> factories;
 	
 	public TFChoice(String name) {
 		super(name);
-		this.factories = new ArrayList<TokenFactory>();
+		this.factories = new ArrayList<TokenFactory<T>>();
 	}
 	
 	public void reset(int length) {
-		this.factories = new ArrayList<TokenFactory>(length);		
+		this.factories = new ArrayList<TokenFactory<T>>(length);		
 	}
 	
-	public void add(TokenFactory tf) {
+	public void add(TokenFactory<T> tf) {
 		this.factories.add(tf);
 	}
 	
 	@Override
-	public Token tokenizeOnly(Text text, ObjectSupply objectSupply) throws SyntaxErrorException {
+	public T tokenizeOnly(Text text, ObjectSupply<T> objectSupply) throws SyntaxErrorException {
 		if (text.onChar()) {
-			for (TokenFactory f : this.factories) {
-				Token result = f.tokenize(text, objectSupply);
+			for (TokenFactory<T> f : this.factories) {
+				T result = f.tokenize(text, objectSupply);
 				if (result != null) {
 					return result;
 				}

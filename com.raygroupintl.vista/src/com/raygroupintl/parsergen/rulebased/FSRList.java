@@ -24,14 +24,14 @@ import com.raygroupintl.parser.TokenFactory;
 import com.raygroupintl.parsergen.AdapterSpecification;
 import com.raygroupintl.parsergen.ruledef.RuleSupplyFlag;
 
-public class FSRList extends FSRBase {
-	private FactorySupplyRule element;
-	private TFList factory;
+public class FSRList<T extends Token> extends FSRBase<T> {
+	private FactorySupplyRule<T> element;
+	private TFList<T> factory;
 	
-	public FSRList(String name, RuleSupplyFlag flag, FactorySupplyRule element) {
+	public FSRList(String name, RuleSupplyFlag flag, FactorySupplyRule<T> element) {
 		super(flag);
 		this.element = element;
-		this.factory = new TFList(name);
+		this.factory = new TFList<T>(name);
 	}
 	
 	@Override
@@ -40,22 +40,22 @@ public class FSRList extends FSRBase {
 	}
 	
 	@Override
-	public boolean update(RulesByName symbols) {
-		RulesByNameLocal localSymbols = new RulesByNameLocal(symbols, this);
+	public boolean update(RulesByName<T> symbols) {
+		RulesByNameLocal<T> localSymbols = new RulesByNameLocal<T>(symbols, this);
 		this.element.update(localSymbols);
-		TokenFactory element = this.element.getTheFactory(localSymbols);
+		TokenFactory<T> element = this.element.getTheFactory(localSymbols);
 		this.factory.setElement(element);
 		return true;
 	}
 
 	@Override
-	public TFList getShellFactory() {
+	public TFList<T> getShellFactory() {
 		return this.factory;
 	}
 
 	@Override
-	public void setAdapter(AdapterSpecification<Token> spec) {
-		 Constructor<? extends Token> a = spec.getListTokenAdapter();
+	public void setAdapter(AdapterSpecification<T> spec) {
+		 Constructor<? extends T> a = spec.getListTokenAdapter();
 		 if (a != null) this.factory.setListTargetType(a);
 	}
 }

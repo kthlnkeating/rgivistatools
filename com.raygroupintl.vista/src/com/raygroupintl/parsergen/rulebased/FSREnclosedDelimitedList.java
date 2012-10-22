@@ -25,22 +25,22 @@ import com.raygroupintl.parser.TokenFactory;
 import com.raygroupintl.parsergen.AdapterSpecification;
 import com.raygroupintl.parsergen.ruledef.RuleSupplyFlag;
 
-public class FSREnclosedDelimitedList extends FSRBase {
-	private FactorySupplyRule element;
-	private FactorySupplyRule delimiter;
-	private FactorySupplyRule left;
-	private FactorySupplyRule right;
+public class FSREnclosedDelimitedList<T extends Token> extends FSRBase<T> {
+	private FactorySupplyRule<T> element;
+	private FactorySupplyRule<T> delimiter;
+	private FactorySupplyRule<T> left;
+	private FactorySupplyRule<T> right;
 	private boolean empty;
 	private boolean none;
-	private TFSequence factory;
+	private TFSequence<T> factory;
 	
-	public FSREnclosedDelimitedList(String name, RuleSupplyFlag flag, FactorySupplyRule element, FactorySupplyRule delimiter, FactorySupplyRule left, FactorySupplyRule right) {
+	public FSREnclosedDelimitedList(String name, RuleSupplyFlag flag, FactorySupplyRule<T> element, FactorySupplyRule<T> delimiter, FactorySupplyRule<T> left, FactorySupplyRule<T> right) {
 		super(flag);
 		this.element = element;
 		this.delimiter = delimiter;
 		this.left = left;
 		this.right = right;
-		this.factory = new TFSequence(name, 3);
+		this.factory = new TFSequence<T>(name, 3);
 	}
 	
 	public void setEmptyAllowed(boolean b) {
@@ -58,19 +58,19 @@ public class FSREnclosedDelimitedList extends FSRBase {
 	}
 	
 	@Override
-	public boolean update(RulesByName symbols) {
-		RulesByNameLocal localSymbols = new RulesByNameLocal(symbols, this);
+	public boolean update(RulesByName<T> symbols) {
+		RulesByNameLocal<T> localSymbols = new RulesByNameLocal<T>(symbols, this);
 		String name = this.factory.getName();
 		this.element.update(localSymbols);
 		this.delimiter.update(localSymbols);
-		TokenFactory e = this.element.getTheFactory(localSymbols);
-		TokenFactory d = this.delimiter.getTheFactory(localSymbols);
-		TFDelimitedList dl = new TFDelimitedList(name);		
+		TokenFactory<T> e = this.element.getTheFactory(localSymbols);
+		TokenFactory<T> d = this.delimiter.getTheFactory(localSymbols);
+		TFDelimitedList<T> dl = new TFDelimitedList<T>(name);		
 		dl.set(e, d, this.empty);
 		this.left.update(localSymbols);
 		this.right.update(localSymbols);
-		TokenFactory l = this.left.getTheFactory(localSymbols);
-		TokenFactory r = this.right.getTheFactory(localSymbols);
+		TokenFactory<T> l = this.left.getTheFactory(localSymbols);
+		TokenFactory<T> r = this.right.getTheFactory(localSymbols);
 		
 		this.factory.reset(4);
 		this.factory.add(l, true);
@@ -80,13 +80,13 @@ public class FSREnclosedDelimitedList extends FSRBase {
 	}
 
 	@Override
-	public TFSequence getShellFactory() {
+	public TFSequence<T> getShellFactory() {
 		return this.factory;
 	}
 
 	@Override
-	public void setAdapter(AdapterSpecification<Token> spec) {
-		 Constructor<? extends Token> a = spec.getSequenceTokenAdapter();
+	public void setAdapter(AdapterSpecification<T> spec) {
+		 Constructor<? extends T> a = spec.getSequenceTokenAdapter();
 		 if (a != null) this.factory.setSequenceTargetType(a);
 	}	
 }

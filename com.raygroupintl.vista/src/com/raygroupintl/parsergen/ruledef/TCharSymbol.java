@@ -27,7 +27,7 @@ public class TCharSymbol extends TSequence implements CharSymbol {
 		super(length);
 	}
 	
-	public TCharSymbol(SequenceOfTokens tokens) {
+	public TCharSymbol(SequenceOfTokens<RuleSupply> tokens) {
 		super(tokens);
 	}
 	
@@ -46,10 +46,10 @@ public class TCharSymbol extends TSequence implements CharSymbol {
 		}
 	}
 	
-	public static void update(PredicateFactory pf, Token sign, Tokens spec) {
+	public static void update(PredicateFactory pf, Token sign, Tokens<RuleSupply> spec) {
 		boolean exclude = (sign != null) && (sign.toValue().charAt(0) == '-');
 		char ch = getChar(spec.getToken(0).toValue().toString());
-		Tokens tRangeBound = spec.getTokens(1);
+		Tokens<RuleSupply> tRangeBound = spec.getTokens(1);
 		if (tRangeBound == null) {
 			if (exclude) {
 				pf.removeChar(ch);
@@ -75,9 +75,10 @@ public class TCharSymbol extends TSequence implements CharSymbol {
 	public Predicate getPredicate() {
 		PredicateFactory pf = new PredicateFactory();
 		TCharSymbol.update(pf, this.getToken(0), this.getTokens(1));
-		Tokens list = this.getTokens(2);
-		if (list != null) for (Token t : list.toIterable()) {
-			Tokens casted = (Tokens) t;
+		Tokens<RuleSupply> list = this.getTokens(2);
+		if (list != null) for (RuleSupply t : list.toIterable()) {
+			@SuppressWarnings("unchecked")
+			Tokens<RuleSupply> casted = (Tokens<RuleSupply>) t;
 			TCharSymbol.update(pf, casted.getToken(0), casted.getTokens(1));
 		}		
 		return pf.generate();		

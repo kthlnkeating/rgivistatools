@@ -18,7 +18,7 @@ package com.raygroupintl.parser;
 
 import com.raygroupintl.parsergen.ObjectSupply;
 
-public final class TFSyntaxError extends TokenFactory {
+public final class TFSyntaxError<T extends Token> extends TokenFactory<T> {
 	private int code;
 	
 	public TFSyntaxError(String name, int code) {
@@ -27,7 +27,7 @@ public final class TFSyntaxError extends TokenFactory {
 	}
 		
 	@Override
-	public Token tokenizeOnly(Text text, ObjectSupply objectSupply) throws SyntaxErrorException {
+	public T tokenizeOnly(Text text, ObjectSupply<T> objectSupply) throws SyntaxErrorException {
 		throw new SyntaxErrorException(this.code);
 	}
 }

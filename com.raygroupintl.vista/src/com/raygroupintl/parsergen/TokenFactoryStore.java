@@ -21,33 +21,34 @@ import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.Set;
 
+import com.raygroupintl.parser.Token;
 import com.raygroupintl.parser.TokenFactory;
 
-public abstract class TokenFactoryStore {		
-	protected abstract TokenFactory add(Field f);
+public abstract class TokenFactoryStore<T extends Token> {		
+	protected abstract TokenFactory<T> add(Field f, Class<T> tokenCls);
 	
-	protected abstract <T> boolean handleField(T target, Field f) throws IllegalAccessException;
+	protected abstract <M> boolean handleField(M target, Field f, Class<T> tokenCls) throws IllegalAccessException;
 
-	private <T> void handleWithRemaining(T target, Field f, Set<String> remainingNames, java.util.List<Field> remaining) throws IllegalAccessException{
+	private <M> void handleWithRemaining(M target, Field f, Set<String> remainingNames, java.util.List<Field> remaining, Class<T> tokenCls) throws IllegalAccessException{
 		String name = f.getName();
 		if (remainingNames.contains(name)) {
 			remaining.add(f);							
 			return;
 		}
-		if (! this.handleField(target, f)) {
+		if (! this.handleField(target, f, tokenCls)) {
 			remainingNames.add(name);
 			remaining.add(f);
 		}			
 	}
 	
-	public <T> void add(T target) throws ClassNotFoundException, IllegalAccessException, InstantiationException, NoSuchMethodException {
+	public <M> void add(M target, Class<T> tokenCls) throws ClassNotFoundException, IllegalAccessException, InstantiationException, NoSuchMethodException {
 		Set<String> remainingNames = new HashSet<String>();
 		java.util.List<Field> remaining = new ArrayList<Field>();
 		Class<?> cls = target.getClass();
 		while (! cls.equals(Object.class)) {
 			for (Field f : cls.getDeclaredFields()) {
 				if (TokenFactory.class.isAssignableFrom(f.getType())) {
-					this.handleWithRemaining(target, f, remainingNames, remaining);
+					this.handleWithRemaining(target, f, remainingNames, remaining, tokenCls);
 				}
 			}
 			cls = cls.getSuperclass();
@@ -56,7 +57,7 @@ public abstract class TokenFactoryStore {
 			remainingNames = new HashSet<String>();
 			java.util.List<Field> loopRemaining = new ArrayList<Field>();
 			for (Field f : remaining) {
-				this.handleWithRemaining(target, f, remainingNames, loopRemaining);
+				this.handleWithRemaining(target, f, remainingNames, loopRemaining, tokenCls);
 			}
 			if (remaining.size() == loopRemaining.size()) {
 				String symbols = "";

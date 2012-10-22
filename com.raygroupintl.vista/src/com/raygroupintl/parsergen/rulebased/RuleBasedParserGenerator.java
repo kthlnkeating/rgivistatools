@@ -16,12 +16,13 @@
 
 package com.raygroupintl.parsergen.rulebased;
 
+import com.raygroupintl.parser.Token;
 import com.raygroupintl.parsergen.ParserGenerator;
 import com.raygroupintl.parsergen.TokenFactoryStore;
 
-public class RuleBasedParserGenerator extends ParserGenerator {	
+public class RuleBasedParserGenerator<T extends Token> extends ParserGenerator<T> {	
 	@Override
-	protected TokenFactoryStore getStore() {
-		return new RuleStore();		
+	protected TokenFactoryStore<T> getStore() {
+		return new RuleStore<T>();		
 	}
 }

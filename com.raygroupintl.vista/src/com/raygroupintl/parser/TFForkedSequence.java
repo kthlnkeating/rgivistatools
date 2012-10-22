@@ -21,16 +21,16 @@ import java.util.List;
 
 import com.raygroupintl.parsergen.ObjectSupply;
 
-public class TFForkedSequence extends TokenFactory {
-	private TokenFactory leader;
-	private List<TFSequence> followers;
+public class TFForkedSequence<T extends Token> extends TokenFactory<T> {
+	private TokenFactory<T> leader;
+	private List<TFSequence<T>> followers;
 	private boolean singleValid;
 	
-	public TokenFactory getLeader() {
+	public TokenFactory<T> getLeader() {
 		return this.leader;
 	}
 	
-	public List<TFSequence> getFollowers() {
+	public List<TFSequence<T>> getFollowers() {
 		return this.followers;
 	}
 	
@@ -43,25 +43,25 @@ public class TFForkedSequence extends TokenFactory {
 		super(name);
 	}
 
-	public TFForkedSequence(String name, TokenFactory leader) {
+	public TFForkedSequence(String name, TokenFactory<T> leader) {
 		super(name);
 		this.leader = leader;
 	}
 	
-	public TFForkedSequence(String name, TokenFactory leader, boolean singleValid) {
+	public TFForkedSequence(String name, TokenFactory<T> leader, boolean singleValid) {
 		super(name);
 		this.leader = leader;
 		this.singleValid = singleValid;
 	}
 	
-	public void addFollower(TFSequence follower) {
+	public void addFollower(TFSequence<T> follower) {
 		if (this.followers == null) {
-			this.followers = new ArrayList<TFSequence>();
+			this.followers = new ArrayList<TFSequence<T>>();
 		}
 		this.followers.add(follower);
 	}
 	
-	public void setLeader(TokenFactory leader) {
+	public void setLeader(TokenFactory<T> leader) {
 		this.leader = leader;
 	}
 	
@@ -71,7 +71,7 @@ public class TFForkedSequence extends TokenFactory {
 	
 	private int getMaxSequenceCount() {
 		int result = 0;
-		for (TFSequence follower : this.followers) {
+		for (TFSequence<T> follower : this.followers) {
 			int count = follower.getSequenceCount();
 			if (count > result) return result;
 		}
@@ -79,21 +79,21 @@ public class TFForkedSequence extends TokenFactory {
 	}
 	
 	@Override
-	public Token tokenizeOnly(Text text, ObjectSupply objectSupply) throws SyntaxErrorException {
-		Token leading = this.leader.tokenizeOnly(text, objectSupply);
+	public T tokenizeOnly(Text text, ObjectSupply<T> objectSupply) throws SyntaxErrorException {
+		T leading = this.leader.tokenizeOnly(text, objectSupply);
 		if (leading == null) {
 			return null;
 		}
-		SequenceOfTokens foundTokens = new SequenceOfTokens(this.getMaxSequenceCount());
+		SequenceOfTokens<T> foundTokens = new SequenceOfTokens<T>(this.getMaxSequenceCount());
 		foundTokens.addToken(leading);
 		if (text.onChar()) {
 			int textIndex = text.getIndex();
-			for (TFSequence follower : this.followers) {
+			for (TFSequence<T> follower : this.followers) {
 				foundTokens.resetIndex(1);
-				SequenceOfTokens result = follower.tokenizeCommon(text, objectSupply, 1, foundTokens, true);
+				SequenceOfTokens<T> result = follower.tokenizeCommon(text, objectSupply, 1, foundTokens, true);
 				if (result != null) {
-					TokenFactory f0th = follower.getFactory(0);
-					Token replaced = f0th.convert(leading);
+					TokenFactory<T> f0th = follower.getFactory(0);
+					T replaced = f0th.convert(leading);
 					foundTokens.setToken(0, replaced);
 					foundTokens.setLength(follower.getSequenceCount());
 					return follower.convertSequence(result, objectSupply);
@@ -101,7 +101,7 @@ public class TFForkedSequence extends TokenFactory {
 				text.resetIndex(textIndex);				
 			}
 		} else {
-			for (TFSequence follower : this.followers) {
+			for (TFSequence<T> follower : this.followers) {
 				if (follower.validateEnd(0, foundTokens, true)) {
 					return follower.convertSequence(foundTokens, objectSupply);
 				}

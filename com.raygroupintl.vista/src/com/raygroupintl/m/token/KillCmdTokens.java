@@ -21,11 +21,10 @@ import com.raygroupintl.m.parsetree.KillCmdNodes;
 import com.raygroupintl.m.parsetree.Node;
 import com.raygroupintl.m.parsetree.Nodes;
 import com.raygroupintl.parser.SequenceOfTokens;
-import com.raygroupintl.parser.Token;
 
 public final class KillCmdTokens {
 	public static final class MKillCmd extends MCommand {
-		public MKillCmd(Token cmdName, Token cmdDependent) {
+		public MKillCmd(MToken cmdName, MToken cmdDependent) {
 			super(cmdName, cmdDependent);
 		}		
 		
@@ -49,7 +48,7 @@ public final class KillCmdTokens {
 			super(length);
 		}
 		
-		public MExclusiveAtomicKillCmd(SequenceOfTokens tokens) {
+		public MExclusiveAtomicKillCmd(SequenceOfTokens<MToken> tokens) {
 			super(tokens);
 		}
 		
@@ -62,7 +61,7 @@ public final class KillCmdTokens {
 	}
 
 	public static final class MAtomicKillCmd extends MTokenCopy {
-		public MAtomicKillCmd(Token token) {
+		public MAtomicKillCmd(MToken token) {
 			super(token);
 		}
 		
@@ -75,7 +74,7 @@ public final class KillCmdTokens {
 	public static final class MKilledLocal extends MString {
 		private static final long serialVersionUID = 1L;
 		
-		public MKilledLocal(Token token) {
+		public MKilledLocal(MToken token) {
 			super(token);
 		}
 

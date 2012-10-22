@@ -21,12 +21,12 @@ import com.raygroupintl.m.parsetree.Nodes;
 import com.raygroupintl.parser.ListOfTokens;
 import com.raygroupintl.parser.Token;
 
-public class MList extends ListOfTokens implements MToken {
+public class MList extends ListOfTokens<MToken> implements MToken {
 	public MList() {
 		super();
 	}
 
-	public MList(ListOfTokens tokens) {
+	public MList(ListOfTokens<MToken> tokens) {
 		super(tokens);
 	}
 

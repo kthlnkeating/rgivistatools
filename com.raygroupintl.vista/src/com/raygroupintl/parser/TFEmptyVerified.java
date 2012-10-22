@@ -18,7 +18,7 @@ package com.raygroupintl.parser;
 
 import com.raygroupintl.parsergen.ObjectSupply;
 
-public class TFEmptyVerified extends TokenFactory {
+public class TFEmptyVerified<T extends Token> extends TokenFactory<T> {
 	private char ch;
 	
 	public TFEmptyVerified(String name, char ch) {
@@ -31,7 +31,7 @@ public class TFEmptyVerified extends TokenFactory {
 	}
 		
 	@Override
-	protected Token tokenizeOnly(Text text, ObjectSupply objectSupply) throws SyntaxErrorException {
+	protected T tokenizeOnly(Text text, ObjectSupply<T> objectSupply) throws SyntaxErrorException {
 		if (text.onChar()) {
 			char ch = text.getChar();
 			if (this.isExpected(ch)) {

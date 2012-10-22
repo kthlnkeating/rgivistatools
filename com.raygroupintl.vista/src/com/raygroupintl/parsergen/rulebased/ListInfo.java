@@ -16,11 +16,13 @@
 
 package com.raygroupintl.parsergen.rulebased;
 
+import com.raygroupintl.parser.Token;
 
-public class ListInfo {
-	public FactorySupplyRule delimiter;
-	public FactorySupplyRule left;
-	public FactorySupplyRule right;
+
+public class ListInfo<T extends Token> {
+	public FactorySupplyRule<T> delimiter;
+	public FactorySupplyRule<T> left;
+	public FactorySupplyRule<T> right;
 	
 	public boolean emptyAllowed;
 	public boolean noneAllowed;

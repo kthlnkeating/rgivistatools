@@ -22,46 +22,46 @@ import java.util.logging.Logger;
 
 import com.raygroupintl.parsergen.ObjectSupply;
 
-public class TFDelimitedList extends TokenFactory {
-	private TFSequence effective;	
-	private Constructor<? extends Token> constructor;
+public class TFDelimitedList<T extends Token> extends TokenFactory<T> {
+	private TFSequence<T> effective;	
+	private Constructor<? extends T> constructor;
 	
 	public TFDelimitedList(String name) {
 		super(name);
 	}
 		
-	private TokenFactory getLeadingFactory(TokenFactory element, TokenFactory delimiter, boolean emptyAllowed) {
+	private TokenFactory<T> getLeadingFactory(TokenFactory<T> element, TokenFactory<T> delimiter, boolean emptyAllowed) {
 		if (emptyAllowed) {
 			String elementName = this.getName() + "." + element.getName();
 			String emptyName = this.getName() + "." + "empty";
-			TFChoice result = new TFChoice(elementName);
+			TFChoice<T> result = new TFChoice<T>(elementName);
 			result.add(element);
-			result.add(new TFEmpty(emptyName, delimiter));
+			result.add(new TFEmpty<T>(emptyName, delimiter));
 			return result;
 		} else {
 			return element;
 		}
 	}
 	
-	public void set(TokenFactory element, TokenFactory delimiter, boolean emptyAllowed) {
-		TokenFactory leadingElement = this.getLeadingFactory(element, delimiter, emptyAllowed);
+	public void set(TokenFactory<T> element, TokenFactory<T> delimiter, boolean emptyAllowed) {
+		TokenFactory<T> leadingElement = this.getLeadingFactory(element, delimiter, emptyAllowed);
 		String tailElementName = this.getName() + "." + "tailelement";
-		TFSequence tailElement = new TFSequence(tailElementName, 2);
+		TFSequence<T> tailElement = new TFSequence<T>(tailElementName, 2);
 		tailElement.add(delimiter, true);
 		tailElement.add(emptyAllowed ? leadingElement : element, !emptyAllowed);
 		String tailListName = this.getName() + "." + "taillist";
-		TokenFactory tail = new TFList(tailListName, tailElement);
+		TokenFactory<T> tail = new TFList<T>(tailListName, tailElement);
 		String name = this.getName() + "." + "effective";
-		this.effective = new TFSequence(name,2);
+		this.effective = new TFSequence<T>(name,2);
 		this.effective.add(leadingElement, true);
 		this.effective.add(tail, false);
 	}
 	
-	public void set(TokenFactory element, TokenFactory delimiter) {
+	public void set(TokenFactory<T> element, TokenFactory<T> delimiter) {
 		this.set(element, delimiter, false);
 	}
 
-	private Token convertList(ObjectSupply objectSupply, Token leadingToken, Tokens tailTokens) {
+	private T convertList(ObjectSupply<T> objectSupply, T leadingToken, Tokens<T> tailTokens) {
 		if (this.constructor == null) {
 			return objectSupply.newDelimitedList(leadingToken, tailTokens);			
 		} else {
@@ -76,21 +76,21 @@ public class TFDelimitedList extends TokenFactory {
 	}
 	
 	@Override
-	protected Token tokenizeOnly(Text text, ObjectSupply objectSupply) throws SyntaxErrorException {
+	protected T tokenizeOnly(Text text, ObjectSupply<T> objectSupply) throws SyntaxErrorException {
 		if (this.effective == null) {
 			throw new IllegalStateException("TFDelimitedList.set needs to be called before TFDelimitedList.tokenize");
 		} else {
-			SequenceOfTokens internalResult = this.effective.tokenizeCommon(text, objectSupply);
+			SequenceOfTokens<T> internalResult = this.effective.tokenizeCommon(text, objectSupply);
 			if (internalResult == null) {
 				return null;
 			} else {
-				Token leadingToken = internalResult.getToken(0);
-				Tokens tailTokens = internalResult.getTokens(1);
+				T leadingToken = internalResult.getToken(0);
+				Tokens<T> tailTokens = internalResult.getTokens(1);
 				if (tailTokens == null) {
 					return this.convertList(objectSupply, leadingToken, null);
 				} else {
 					int lastIndex = tailTokens.size() - 1;
-					Tokens lastToken = tailTokens.getTokens(lastIndex);
+					Tokens<T> lastToken = tailTokens.getTokens(lastIndex);
 					if (lastToken.getToken(1) == null) {
 						lastToken.setToken(1, objectSupply.newEmpty());
 					}
@@ -100,7 +100,7 @@ public class TFDelimitedList extends TokenFactory {
 		}
 	}
 	
-	public void setDelimitedListTargetType(Constructor<? extends Token> constructor) {
+	public void setDelimitedListTargetType(Constructor<? extends T> constructor) {
 		this.constructor = constructor;
 	}
 }

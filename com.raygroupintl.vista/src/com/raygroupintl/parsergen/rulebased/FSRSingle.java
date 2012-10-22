@@ -16,11 +16,12 @@
 
 package com.raygroupintl.parsergen.rulebased;
 
+import com.raygroupintl.parser.Token;
 import com.raygroupintl.parser.TokenFactory;
 import com.raygroupintl.parsergen.ParseErrorException;
 import com.raygroupintl.parsergen.ruledef.RuleSupplyFlag;
 
-public class FSRSingle extends FSRBase {
+public class FSRSingle<T extends Token> extends FSRBase<T> {
 	private String name;
 	private String value;
 		
@@ -36,13 +37,13 @@ public class FSRSingle extends FSRBase {
 	}
 	
 	@Override
-	public FactorySupplyRule getLeading(RulesByName names, int level) {
+	public FactorySupplyRule<T> getLeading(RulesByName<T> names, int level) {
 		return names.get(this.value).getLeading(names, level);
 	}	
 	
 	@Override
-	public FactorySupplyRule getActualRule(RulesByName symbols) {
-		FactorySupplyRule f = symbols.get(this.value);
+	public FactorySupplyRule<T> getActualRule(RulesByName<T> symbols) {
+		FactorySupplyRule<T> f = symbols.get(this.value);
 		if (f == null) {
 			throw new ParseErrorException("Undefined symbol " + value + " used in the rule");
 		}
@@ -50,7 +51,7 @@ public class FSRSingle extends FSRBase {
 	}
 	
 	@Override
-	public TokenFactory getShellFactory() {
+	public TokenFactory<T> getShellFactory() {
 		throw new ParseErrorException("Not a top rule.");
 	}
 }

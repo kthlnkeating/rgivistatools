@@ -42,14 +42,14 @@ public class MSsvn extends MSequence {
 		super(length);
 	}
 	
-	public MSsvn(SequenceOfTokens tokens) {
+	public MSsvn(SequenceOfTokens<MToken> tokens) {
 		super(tokens);
 	}
 	
 	@Override
 	public Node getNode() {
 		TextPiece name = this.getToken(1).toValue();
-		Tokens subsripts = this.getTokens(2);
+		Tokens<MToken> subsripts = this.getTokens(2);
 		NodeList<Node> nodes = NodeUtilities.getSubscriptNodes(subsripts);
 		return new StructuredSystemVariable(name, nodes);
 	}

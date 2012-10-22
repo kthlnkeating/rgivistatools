@@ -27,7 +27,7 @@ public class MLocalByRef extends MSequence {
 		super(length);
 	}
 
-	public MLocalByRef(SequenceOfTokens tokens) {
+	public MLocalByRef(SequenceOfTokens<MToken> tokens) {
 		super(tokens);
 	}
 

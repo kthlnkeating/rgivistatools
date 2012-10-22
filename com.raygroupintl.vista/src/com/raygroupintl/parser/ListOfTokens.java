@@ -19,31 +19,31 @@ package com.raygroupintl.parser;
 import java.util.ArrayList;
 import java.util.List;
 
-public class ListOfTokens extends CollectionOfTokens {
-	protected List<Token> tokens;
+public class ListOfTokens<T extends Token> extends CollectionOfTokens<T> {
+	protected List<T> tokens;
 
 	public ListOfTokens() {
 	}
 	
-	public ListOfTokens(ListOfTokens rhs) {
+	public ListOfTokens(ListOfTokens<T> rhs) {
 		this.tokens = rhs.tokens;
 	}
 
 	@Override
-	public void setToken(int index, Token token) {
+	public void setToken(int index, T token) {
 		this.tokens.set(index, token);
 	}
 
 	@Override
-	public void addToken(Token token) {
+	public void addToken(T token) {
 		if (this.tokens == null) {
-			this.tokens = new ArrayList<Token>();
+			this.tokens = new ArrayList<T>();
 		}
 		this.tokens.add(token);
 	}
 
 	@Override
-	public Token getToken(int index) {
+	public T getToken(int index) {
 		return this.tokens == null ? null : this.tokens.get(index);
 	}
 	
@@ -62,11 +62,11 @@ public class ListOfTokens extends CollectionOfTokens {
 		return TokenUtilities.toValue(this.tokens);
 	}
 
-	public Iterable<Token> toLogicalIterable() {
+	public Iterable<T> toLogicalIterable() {
 		return this.tokens;
 	}
 	
-	public Iterable<Token> toIterable() {
+	public Iterable<T> toIterable() {
 		return this.tokens;
 	}
 }

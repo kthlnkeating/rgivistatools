@@ -19,9 +19,9 @@ package com.raygroupintl.parsergen.ruledef;
 import com.raygroupintl.parsergen.ParserGenerator;
 import com.raygroupintl.parsergen.TokenFactoryStore;
 
-public class RuleDefinitionParserGenerator extends ParserGenerator {	
+public class RuleDefinitionParserGenerator extends ParserGenerator<RuleSupply> {	
 	@Override
-	protected TokenFactoryStore getStore() {
+	protected TokenFactoryStore<RuleSupply> getStore() {
 		return new RuleDefinitionStore();			
 	}
 }

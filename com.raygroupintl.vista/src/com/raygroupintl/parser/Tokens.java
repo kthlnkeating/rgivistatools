@@ -16,23 +16,23 @@
 
 package com.raygroupintl.parser;
 
-public interface Tokens {
-	void addToken(Token token);
-	void setToken(int index, Token token);
+public interface Tokens<T extends Token> {
+	void addToken(T token);
+	void setToken(int index, T token);
 	
-	Token getToken(int index);
-	Token getToken(int index0, int index1);	
-	Token getToken(int index0, int index1, int index2);	
+	T getToken(int index);
+	T getToken(int index0, int index1);	
+	T getToken(int index0, int index1, int index2);	
 	
-	Tokens getTokens(int index);
-	Tokens getTokens(int index0, int index1);
+	Tokens<T> getTokens(int index);
+	Tokens<T> getTokens(int index0, int index1);
 
 	boolean hasToken();
 		
 	TextPiece toValue();
 	
-	Iterable<Token> toLogicalIterable();
-	Iterable<Token> toIterable();
+	Iterable<T> toLogicalIterable();
+	Iterable<T> toIterable();
 	
 	int size();
 }

@@ -20,19 +20,20 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.raygroupintl.parser.TFSequence;
+import com.raygroupintl.parser.Token;
 import com.raygroupintl.parser.TokenFactory;
 import com.raygroupintl.parsergen.ruledef.RuleSupplyFlag;
 
-public class FSRStringSequence extends FSRBase {
-	private List<FactorySupplyRule> list = new ArrayList<FactorySupplyRule>();
-	private TFSequence factory;	
+public class FSRStringSequence<T extends Token> extends FSRBase<T> {
+	private List<FactorySupplyRule<T>> list = new ArrayList<FactorySupplyRule<T>>();
+	private TFSequence<T> factory;	
 	
 	public FSRStringSequence(String name, RuleSupplyFlag flag) {
 		super(flag);
-		this.factory = new TFSequence(name);
+		this.factory = new TFSequence<T>(name);
 	}
 	
-	public void add(FactorySupplyRule r) {
+	public void add(FactorySupplyRule<T> r) {
 		this.list.add(r);
 	}
 	
@@ -42,7 +43,7 @@ public class FSRStringSequence extends FSRBase {
 	}
 	
 	@Override
-	public FactorySupplyRule getLeading(RulesByName names, int level) {
+	public FactorySupplyRule<T> getLeading(RulesByName<T> names, int level) {
 		if (level == 0) {
 			return this.list.get(0).getLeading(names, 1);
 		} else {
@@ -51,17 +52,17 @@ public class FSRStringSequence extends FSRBase {
 	}
 	
 	@Override
-	public boolean update(RulesByName symbols) {
-		RulesByNameLocal localSymbols = new RulesByNameLocal(symbols, this);
+	public boolean update(RulesByName<T> symbols) {
+		RulesByNameLocal<T> localSymbols = new RulesByNameLocal<T>(symbols, this);
 		
 		this.factory.reset(this.list.size());
-		for (FactorySupplyRule spg : this.list) {
-			TokenFactory f = spg.getTheFactory(localSymbols);
+		for (FactorySupplyRule<T> spg : this.list) {
+			TokenFactory<T> f = spg.getTheFactory(localSymbols);
 			boolean b = spg.getRequired();
 			this.factory.add(f, b);
 		}
 
-		for (FactorySupplyRule spg : this.list) {
+		for (FactorySupplyRule<T> spg : this.list) {
 			spg.update(localSymbols);
 		}		
 		
@@ -69,7 +70,7 @@ public class FSRStringSequence extends FSRBase {
 	}
 
 	@Override
-	public TFSequence getShellFactory() {
+	public TFSequence<T> getShellFactory() {
 		return this.factory;
 	}
 	

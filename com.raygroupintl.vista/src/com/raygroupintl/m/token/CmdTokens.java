@@ -32,7 +32,7 @@ import com.raygroupintl.parser.Tokens;
 
 class CmdTokens {
 	static class B extends MCommand {
-		public B(Token cmdToken, Token cmdDependent) {
+		public B(MToken cmdToken, MToken cmdDependent) {
 			super(cmdToken, cmdDependent);
 		}		
 		
@@ -43,7 +43,7 @@ class CmdTokens {
 	}
 		
 	static class D extends MCommand {
-		public D(Token cmdToken, Token cmdDependent) {
+		public D(MToken cmdToken, MToken cmdDependent) {
 			super(cmdToken, cmdDependent);
 		}		
 		
@@ -66,7 +66,7 @@ class CmdTokens {
 	}
 
 	static class E extends MCommandBase {
-		public E(Token cmdToken, Token cmdDependent) {
+		public E(MToken cmdToken, MToken cmdDependent) {
 			super(cmdToken, cmdDependent);
 		}		
 		
@@ -82,7 +82,7 @@ class CmdTokens {
 	}
 
 	static class G extends MCommand {
-		public G(Token cmdToken, Token cmdDependent) {
+		public G(MToken cmdToken, MToken cmdDependent) {
 			super(cmdToken, cmdDependent);
 		}		
 		
@@ -97,7 +97,7 @@ class CmdTokens {
 	}
 
 	static class H extends MCommand {
-		public H(Token cmdToken, Token cmdDependent) {
+		public H(MToken cmdToken, MToken cmdDependent) {
 			super(cmdToken, cmdDependent);
 		}		
 		
@@ -113,7 +113,7 @@ class CmdTokens {
 	}
 
 	static class I extends MCommandBase {
-		public I(Token cmdToken, Token cmdDependent) {
+		public I(MToken cmdToken, MToken cmdDependent) {
 			super(cmdToken, cmdDependent);
 		}		
 		
@@ -124,7 +124,7 @@ class CmdTokens {
 
 		@Override
 		public Node getNode() {
-			Tokens argument = this.getTokens(1, 2);
+			Tokens<MToken> argument = this.getTokens(1, 2);
 			if (argument != null) {
 				Nodes<Node> node = NodeUtilities.getNodes(argument.toLogicalIterable(), argument.size());
 				return new IfCmd(node);
@@ -135,7 +135,7 @@ class CmdTokens {
 	}
 
 	static class J extends MCommand {
-		public J(Token cmdToken, Token cmdDependent) {
+		public J(MToken cmdToken, MToken cmdDependent) {
 			super(cmdToken, cmdDependent);
 		}		
 		
@@ -146,7 +146,7 @@ class CmdTokens {
 	}
 
 	static class L extends MCommand {
-		public L(Token cmdToken, Token cmdDependent) {
+		public L(MToken cmdToken, MToken cmdDependent) {
 			super(cmdToken, cmdDependent);
 		}		
 		
@@ -157,7 +157,7 @@ class CmdTokens {
 	}
 
 	static class Q extends MCommand {
-		public Q(Token cmdToken, Token cmdDependent) {
+		public Q(MToken cmdToken, MToken cmdDependent) {
 			super(cmdToken, cmdDependent);
 		}		
 		
@@ -172,7 +172,7 @@ class CmdTokens {
 	}
 
 	static class R extends MCommand {
-		public R(Token cmdToken, Token cmdDependent) {
+		public R(MToken cmdToken, MToken cmdDependent) {
 			super(cmdToken, cmdDependent);
 		}		
 		
@@ -187,7 +187,7 @@ class CmdTokens {
 	}
 
 	static class TC extends MCommand {
-		public TC(Token cmdToken, Token cmdDependent) {
+		public TC(MToken cmdToken, MToken cmdDependent) {
 			super(cmdToken, cmdDependent);
 		}		
 		
@@ -198,7 +198,7 @@ class CmdTokens {
 	}
 
 	static class TR extends MCommand {
-		public TR(Token cmdToken, Token cmdDependent) {
+		public TR(MToken cmdToken, MToken cmdDependent) {
 			super(cmdToken, cmdDependent);
 		}		
 		
@@ -209,7 +209,7 @@ class CmdTokens {
 	}
 
 	static class TRO extends MCommand {
-		public TRO(Token cmdToken, Token cmdDependent) {
+		public TRO(MToken cmdToken, MToken cmdDependent) {
 			super(cmdToken, cmdDependent);
 		}		
 		
@@ -220,7 +220,7 @@ class CmdTokens {
 	}
 
 	static class TS extends MCommand {
-		public TS(Token cmdToken, Token cmdDependent) {
+		public TS(MToken cmdToken, MToken cmdDependent) {
 			super(cmdToken, cmdDependent);
 		}		
 		
@@ -231,7 +231,7 @@ class CmdTokens {
 	}
 
 	static class W extends MCommand {
-		public W(Token cmdToken, Token cmdDependent) {
+		public W(MToken cmdToken, MToken cmdDependent) {
 			super(cmdToken, cmdDependent);
 		}		
 		
@@ -246,7 +246,7 @@ class CmdTokens {
 	}
 
 	static class V extends MCommand {
-		public V(Token cmdToken, Token cmdDependent) {
+		public V(MToken cmdToken, MToken cmdDependent) {
 			super(cmdToken, cmdDependent);
 		}		
 		
@@ -257,7 +257,7 @@ class CmdTokens {
 	}
 
 	static class X extends MCommand {
-		public X(Token cmdToken, Token cmdDependent) {
+		public X(MToken cmdToken, MToken cmdDependent) {
 			super(cmdToken, cmdDependent);
 		}		
 		
@@ -272,7 +272,7 @@ class CmdTokens {
 	}
 
 	static class Generic extends MCommand {
-		public Generic(Token cmdToken, Token cmdDependent) {
+		public Generic(MToken cmdToken, MToken cmdDependent) {
 			super(cmdToken, cmdDependent);
 		}		
 		

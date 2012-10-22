@@ -28,13 +28,13 @@ public class MActualList extends MSequence {
 		super(length);
 	}
 
-	public MActualList(SequenceOfTokens tokens) {
+	public MActualList(SequenceOfTokens<MToken> tokens) {
 		super(tokens);
 	}
 
 	@Override
 	public Node getNode() {		
-		Tokens tokens = this.getTokens(1);
+		Tokens<MToken> tokens = this.getTokens(1);
 		if (tokens == null) {
 			return new IgnorableNode();
 		} else {

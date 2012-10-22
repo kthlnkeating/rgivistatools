@@ -28,14 +28,14 @@ public class MLocal extends MSequence {
 		super(length);
 	}
 
-	public MLocal(SequenceOfTokens tokens) {
+	public MLocal(SequenceOfTokens<MToken> tokens) {
 		super(tokens);
 	}
 
 	@Override
 	public Node getNode() {
 		TextPiece name = this.getToken(0).toValue();
-		Tokens subsripts = this.getTokens(1);
+		Tokens<MToken> subsripts = this.getTokens(1);
 		if (subsripts == null) {
 			return new Local(name);
 		} else {

@@ -25,7 +25,7 @@ public class MCacheSystemCall extends MSequence {
 		super(length);
 	}
 	
-	public MCacheSystemCall(SequenceOfTokens tokens) {
+	public MCacheSystemCall(SequenceOfTokens<MToken> tokens) {
 		super(tokens);
 	}
 	

@@ -20,11 +20,10 @@ import com.raygroupintl.m.parsetree.Node;
 import com.raygroupintl.m.parsetree.Nodes;
 import com.raygroupintl.m.parsetree.OpenCloseUseCmdNodes;
 import com.raygroupintl.parser.SequenceOfTokens;
-import com.raygroupintl.parser.Token;
 
 public class OpenCloseUseCmdTokens {
 	public static final class MOpenCmd extends MCommand {
-		public MOpenCmd(Token cmdName, Token cmdDependent) {
+		public MOpenCmd(MToken cmdName, MToken cmdDependent) {
 			super(cmdName, cmdDependent);
 		}		
 		
@@ -40,7 +39,7 @@ public class OpenCloseUseCmdTokens {
 	}
 
 	public static final class MAtomicOpenCmd extends MSequence {
-		public MAtomicOpenCmd(SequenceOfTokens tokens) {
+		public MAtomicOpenCmd(SequenceOfTokens<MToken> tokens) {
 			super(tokens);
 		}
 		
@@ -52,7 +51,7 @@ public class OpenCloseUseCmdTokens {
 	}
 	
 	public static final class MCloseCmd extends MCommand {
-		public MCloseCmd(Token cmdName, Token cmdDependent) {
+		public MCloseCmd(MToken cmdName, MToken cmdDependent) {
 			super(cmdName, cmdDependent);
 		}		
 		
@@ -68,7 +67,7 @@ public class OpenCloseUseCmdTokens {
 	}
 
 	public static final class MAtomicCloseCmd extends MSequence {
-		public MAtomicCloseCmd(SequenceOfTokens tokens) {
+		public MAtomicCloseCmd(SequenceOfTokens<MToken> tokens) {
 			super(tokens);
 		}
 		
@@ -80,7 +79,7 @@ public class OpenCloseUseCmdTokens {
 	}
 
 	public static final class MUseCmd extends MCommand {
-		public MUseCmd(Token cmdName, Token cmdDependent) {
+		public MUseCmd(MToken cmdName, MToken cmdDependent) {
 			super(cmdName, cmdDependent);
 		}		
 		
@@ -96,7 +95,7 @@ public class OpenCloseUseCmdTokens {
 	}
 
 	public static final class MAtomicUseCmd extends MSequence {
-		public MAtomicUseCmd(SequenceOfTokens tokens) {
+		public MAtomicUseCmd(SequenceOfTokens<MToken> tokens) {
 			super(tokens);
 		}
 		
@@ -108,7 +107,7 @@ public class OpenCloseUseCmdTokens {
 	}
 
 	public static class MUseDeviceParameters extends MTokenCopy {
-		public MUseDeviceParameters(Token token) {
+		public MUseDeviceParameters(MToken token) {
 			super(token);
 		}
 		
@@ -123,7 +122,7 @@ public class OpenCloseUseCmdTokens {
 			super(length);
 		}
 		
-		public MDeviceParameters(SequenceOfTokens tokens) {
+		public MDeviceParameters(SequenceOfTokens<MToken> tokens) {
 			super(tokens);
 		}
 		

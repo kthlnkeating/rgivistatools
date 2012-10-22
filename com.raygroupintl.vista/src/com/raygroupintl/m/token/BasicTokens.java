@@ -25,11 +25,10 @@ import com.raygroupintl.m.parsetree.Node;
 import com.raygroupintl.m.parsetree.PostConditional;
 import com.raygroupintl.parser.SequenceOfTokens;
 import com.raygroupintl.parser.TextPiece;
-import com.raygroupintl.parser.Token;
 
 public class BasicTokens {
 	public static class MTFanoutLabelA extends MTokenCopy {
-		public MTFanoutLabelA(Token token) {
+		public MTFanoutLabelA(MToken token) {
 			super(token);
 		}
 		
@@ -41,7 +40,7 @@ public class BasicTokens {
 	}
 	
 	public static class MTFanoutLabelB extends MTokenCopy {
-		public MTFanoutLabelB(Token token) {
+		public MTFanoutLabelB(MToken token) {
 			super(token);
 		}
 		
@@ -53,7 +52,7 @@ public class BasicTokens {
 	}
 	
 	public static class MTIndirectFanoutLabel extends MTokenCopy {
-		public MTIndirectFanoutLabel(Token token) {
+		public MTIndirectFanoutLabel(MToken token) {
 			super(token);
 		}
 		
@@ -64,7 +63,7 @@ public class BasicTokens {
 	}
 	
 	public static class MTFanoutRoutine extends MTokenCopy {
-		public MTFanoutRoutine(Token token) {
+		public MTFanoutRoutine(MToken token) {
 			super(token);
 		}
 		
@@ -76,7 +75,7 @@ public class BasicTokens {
 	}
 	
 	public static class MTIndirectFanoutRoutine extends MTokenCopy {
-		public MTIndirectFanoutRoutine(Token token) {
+		public MTIndirectFanoutRoutine(MToken token) {
 			super(token);
 		}
 	
@@ -91,7 +90,7 @@ public class BasicTokens {
 			super(length);
 		}
 		
-		public MTEnvironmentFanoutRoutine(SequenceOfTokens tokens) {
+		public MTEnvironmentFanoutRoutine(SequenceOfTokens<MToken> tokens) {
 			super(tokens);
 		}
 		
@@ -107,7 +106,7 @@ public class BasicTokens {
 			super(length);
 		}
 		
-		public MPostCondition(SequenceOfTokens tokens) {
+		public MPostCondition(SequenceOfTokens<MToken> tokens) {
 			super(tokens);
 		}
 		

@@ -21,11 +21,10 @@ import com.raygroupintl.m.parsetree.NewCmdNodes;
 import com.raygroupintl.m.parsetree.Node;
 import com.raygroupintl.m.parsetree.Nodes;
 import com.raygroupintl.parser.SequenceOfTokens;
-import com.raygroupintl.parser.Token;
 
 public final class NewCmdTokens {
 	public static final class MNewCmd extends MCommand {
-		public MNewCmd(Token cmdName, Token cmdDependent) {
+		public MNewCmd(MToken cmdName, MToken cmdDependent) {
 			super(cmdName, cmdDependent);
 		}		
 		
@@ -49,7 +48,7 @@ public final class NewCmdTokens {
 			super(length);
 		}
 		
-		public MExclusiveAtomicNewCmd(SequenceOfTokens tokens) {
+		public MExclusiveAtomicNewCmd(SequenceOfTokens<MToken> tokens) {
 			super(tokens);
 		}
 		
@@ -62,7 +61,7 @@ public final class NewCmdTokens {
 	}
 
 	public static final class MAtomicNewCmd extends MTokenCopy {
-		public MAtomicNewCmd(Token token) {
+		public MAtomicNewCmd(MToken token) {
 			super(token);
 		}
 		
@@ -75,7 +74,7 @@ public final class NewCmdTokens {
 	public static final class MNewedLocal extends MString {
 		private static final long serialVersionUID = 1L;
 		
-		public MNewedLocal(Token token) {
+		public MNewedLocal(MToken token) {
 			super(token);
 		}
 

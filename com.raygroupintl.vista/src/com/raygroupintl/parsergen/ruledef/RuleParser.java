@@ -29,14 +29,14 @@ public class RuleParser {
 		if (this.grammar == null) {
 			try {
 				RuleDefinitionParserGenerator parserGen = new RuleDefinitionParserGenerator();
-				this.grammar = parserGen.generate(RuleGrammar.class);
+				this.grammar = parserGen.generate(RuleGrammar.class, RuleSupply.class);
 			} catch (ParseException e) {
 				throw new ParseErrorException("Error in rule grammar: " + e.getMessage());
 			}
 		}
 		Text text = new Text(ruleText);
 		try {
-			ObjectSupply objectSupply = new DefaultObjectSupply();
+			ObjectSupply<RuleSupply> objectSupply = new DefaultObjectSupply();
 			TSymbolSequence t = (TSymbolSequence) this.grammar.sequence.tokenize(text, objectSupply);
 			int tLength = t.toValue().length();
 			if (tLength != ruleText.length()) {

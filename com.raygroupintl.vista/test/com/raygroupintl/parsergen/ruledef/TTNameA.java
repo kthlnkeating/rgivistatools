@@ -2,8 +2,8 @@ package com.raygroupintl.parsergen.ruledef;
 
 import com.raygroupintl.parser.Token;
 
-public class TNameA extends TCopy {
-	public TNameA(Token token) {
+public class TTNameA extends TTCopy {
+	public TTNameA(Token token) {
 		super(token);
 	}
 }

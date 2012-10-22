@@ -18,20 +18,20 @@ package com.raygroupintl.parser;
 
 import com.raygroupintl.parsergen.ObjectSupply;
 
-public class TFEmpty extends TokenFactory {
-	private TokenFactory expected;
+public class TFEmpty<T extends Token> extends TokenFactory<T> {
+	private TokenFactory<T> expected;
 	
 	public TFEmpty(String name) {		
 		super(name);
 	}
 	
-	public TFEmpty(String name, TokenFactory expected) {
+	public TFEmpty(String name, TokenFactory<T> expected) {
 		super(name);
 		this.expected = expected;
 	}
 	
 	@Override
-	public Token tokenizeOnly(Text text, ObjectSupply objectSupply) throws SyntaxErrorException {
+	public T tokenizeOnly(Text text, ObjectSupply<T> objectSupply) throws SyntaxErrorException {
 		if (text.onChar()) {
 			if (this.expected == null) {
 				return objectSupply.newEmpty();

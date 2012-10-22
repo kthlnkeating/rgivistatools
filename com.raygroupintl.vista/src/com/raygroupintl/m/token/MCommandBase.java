@@ -18,10 +18,9 @@ package com.raygroupintl.m.token;
 
 import com.raygroupintl.parser.Empty;
 import com.raygroupintl.parser.TextPiece;
-import com.raygroupintl.parser.Token;
 
 public abstract class MCommandBase extends MSequence {
-	public MCommandBase(Token token0, Token token1) {
+	public MCommandBase(MToken token0, MToken token1) {
 		super(token0, token1);
 	}
 

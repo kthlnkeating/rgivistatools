@@ -25,7 +25,7 @@ public class MExtDoArgument extends MSequence {
 		super(length);
 	}
 	
-	public MExtDoArgument(SequenceOfTokens tokens) {
+	public MExtDoArgument(SequenceOfTokens<MToken> tokens) {
 		super(tokens);
 	}
 	

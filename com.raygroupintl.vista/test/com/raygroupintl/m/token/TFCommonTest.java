@@ -9,20 +9,19 @@ import com.raygroupintl.parser.SyntaxErrorException;
 import com.raygroupintl.parser.Text;
 import com.raygroupintl.parser.Token;
 import com.raygroupintl.parser.TokenFactory;
-import com.raygroupintl.parser.Tokens;
 import com.raygroupintl.parsergen.ObjectSupply;
 
 public class TFCommonTest {
 	private static void checkObjectType(Token t) {
 		Assert.assertTrue(t instanceof MToken);
 		if (t instanceof MSequence) {
-			for (Token r : ((Tokens) t).toIterable()) {
+			for (MToken r : ((MSequence) t).toIterable()) {
 				if (r != null) checkObjectType(r);
 			}
 			return;
 		}
 		if (t instanceof MList) {
-			for (Token r : ((Tokens) t).toIterable()) {
+			for (MToken r : ((MList) t).toIterable()) {
 				if (r != null) checkObjectType(r);
 			}
 			return;			
@@ -35,7 +34,7 @@ public class TFCommonTest {
 		checkObjectType(t);
 	}
 	
-	static Token validCheck(TokenFactory f, ObjectSupply objectSupply, String v, boolean checkWithSpace) {
+	static Token validCheck(TokenFactory<MToken> f, ObjectSupply<MToken> objectSupply, String v, boolean checkWithSpace) {
 		try {
 			Text text = new Text(v);
 			Token t = f.tokenize(text, objectSupply);
@@ -50,18 +49,18 @@ public class TFCommonTest {
 		}
 	}
 
-	static Token validCheck(TokenFactory f, ObjectSupply objectSupply, String v) {
+	static Token validCheck(TokenFactory<MToken> f, ObjectSupply<MToken> objectSupply, String v) {
 		return validCheck(f, objectSupply, v, true);
 	}
 
-	static Token validCheck(TokenFactory f, ObjectSupply objectSupply, String v, Class<? extends Token> cls) {
+	static Token validCheck(TokenFactory<MToken> f, ObjectSupply<MToken> objectSupply, String v, Class<? extends Token> cls) {
 		Token t = validCheck(f, objectSupply, v, true);
 		Assert.assertNotNull(t);
 		Assert.assertTrue(t.getClass().equals(cls));
 		return t;
 	}
 
-	static void nullCheck(TokenFactory f, ObjectSupply objectSupply, String v) {
+	static void nullCheck(TokenFactory<MToken> f, ObjectSupply<MToken> objectSupply, String v) {
 		try {
 			Text text = new Text(v);
 			Token t = f.tokenize(text, objectSupply);
@@ -71,11 +70,11 @@ public class TFCommonTest {
 		}
 	}
 	
-	static void validCheckNS(TokenFactory f, ObjectSupply objectSupply, String v) {
+	static void validCheckNS(TokenFactory<MToken> f, ObjectSupply<MToken> objectSupply, String v) {
 		validCheck(f, objectSupply, v, false);
 	}
 
-	static void auxErrorCheck(TokenFactory f, ObjectSupply objectSupply, String v, int errorCode, int location) {
+	static void auxErrorCheck(TokenFactory<MToken> f, ObjectSupply<MToken> objectSupply, String v, int errorCode, int location) {
 		Text text = new Text(v);
 		try {
 			f.tokenize(text, objectSupply);
@@ -87,14 +86,14 @@ public class TFCommonTest {
 		}
 	}
 
-	static void errorCheck(TokenFactory f, ObjectSupply objectSupply, String v, int errorCode, int location) {
+	static void errorCheck(TokenFactory<MToken> f, ObjectSupply<MToken> objectSupply, String v, int errorCode, int location) {
 		auxErrorCheck(f, objectSupply, v, errorCode, location);
 		if (v.length() > location) {
 			auxErrorCheck(f, objectSupply, v + " ", errorCode, location);
 		}
 	}
 	
-	static void validCheck(TokenFactory f, ObjectSupply objectSupply, String v, String compare) {
+	static void validCheck(TokenFactory<MToken> f, ObjectSupply<MToken> objectSupply, String v, String compare) {
 		try {
 			Text text = new Text(v);
 			Token t = f.tokenize(text, objectSupply);

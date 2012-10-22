@@ -20,122 +20,122 @@ import java.util.HashMap;
 import java.util.Map;
 
 
-public class TypeAwareTFStore {
-	private Map<String, TFCharacter> characters;
-	private Map<String, TFString> strings;
-	private Map<String, TFChoice> choices;
-	private Map<String, TFConstant> constants;
-	private Map<String, TFSequence> sequences;
-	private Map<String, TFList> lists;
-	private Map<String, TFDelimitedList> delimitedList;
-	private Map<String, TFForkedSequence> forkedSequences;
+public class TypeAwareTFStore<T extends Token> {
+	private Map<String, TFCharacter<T>> characters;
+	private Map<String, TFString<T>> strings;
+	private Map<String, TFChoice<T>> choices;
+	private Map<String, TFConstant<T>> constants;
+	private Map<String, TFSequence<T>> sequences;
+	private Map<String, TFList<T>> lists;
+	private Map<String, TFDelimitedList<T>> delimitedList;
+	private Map<String, TFForkedSequence<T>> forkedSequences;
 	
-	public void putCharacter(String name, TFCharacter tf) {
+	public void putCharacter(String name, TFCharacter<T> tf) {
 		if (this.characters == null) {
-			this.characters = new HashMap<String, TFCharacter>();
+			this.characters = new HashMap<String, TFCharacter<T>>();
 		}
 		this.characters.put(name, tf);
 	}
 	
-	public void putString(String name, TFString tf) {
+	public void putString(String name, TFString<T> tf) {
 		if (this.strings == null) {
-			this.strings = new HashMap<String, TFString>();
+			this.strings = new HashMap<String, TFString<T>>();
 		}
 		this.strings.put(name, tf);
 	}
 	
-	public void putChoice(String name, TFChoice tf) {
+	public void putChoice(String name, TFChoice<T> tf) {
 		if (this.choices == null) {
-			this.choices = new HashMap<String, TFChoice>();
+			this.choices = new HashMap<String, TFChoice<T>>();
 		}
 		this.choices.put(name, tf);
 	}
 	
-	public void putConstant(String name, TFConstant tf) {
+	public void putConstant(String name, TFConstant<T> tf) {
 		if (this.constants == null) {
-			this.constants = new HashMap<String, TFConstant>();
+			this.constants = new HashMap<String, TFConstant<T>>();
 		}
 		this.constants.put(name, tf);
 	}
 	
-	public void putSequence(String name, TFSequence tf) {
+	public void putSequence(String name, TFSequence<T> tf) {
 		if (this.sequences == null) {
-			this.sequences = new HashMap<String, TFSequence>();
+			this.sequences = new HashMap<String, TFSequence<T>>();
 		}
 		this.sequences.put(name, tf);
 	}
 	
-	public void putList(String name, TFList tf) {
+	public void putList(String name, TFList<T> tf) {
 		if (this.lists == null) {
-			this.lists = new HashMap<String, TFList>();
+			this.lists = new HashMap<String, TFList<T>>();
 		}
 		this.lists.put(name, tf);
 	}
 	
-	public void putDelimitedList(String name, TFDelimitedList tf) {
+	public void putDelimitedList(String name, TFDelimitedList<T> tf) {
 		if (this.delimitedList == null) {
-			this.delimitedList = new HashMap<String, TFDelimitedList>();
+			this.delimitedList = new HashMap<String, TFDelimitedList<T>>();
 		}
 		this.delimitedList.put(name, tf);
 	}
 	
-	public void putForkedSequence(String name, TFForkedSequence tf) {
+	public void putForkedSequence(String name, TFForkedSequence<T> tf) {
 		if (this.forkedSequences == null) {
-			this.forkedSequences = new HashMap<String, TFForkedSequence>();
+			this.forkedSequences = new HashMap<String, TFForkedSequence<T>>();
 		}
 		this.forkedSequences.put(name, tf);
 	}
 	
-	public TFCharacter getCharacter(String name) {
+	public TFCharacter<T> getCharacter(String name) {
 		if (this.characters == null) {
 			return null;
 		}
 		return this.characters.get(name);
 	}
 	
-	public TFString getString(String name) {
+	public TFString<T> getString(String name) {
 		if (this.strings == null) {
 			return null;
 		}
 		return this.strings.get(name);
 	}
 	
-	public TFChoice getChoice(String name) {
+	public TFChoice<T> getChoice(String name) {
 		if (this.choices == null) {
 			return null;
 		}
 		return this.choices.get(name);
 	}
 	
-	public TFConstant getConstant(String name) {
+	public TFConstant<T> getConstant(String name) {
 		if (this.constants == null) {
 			return null;
 		}
 		return this.constants.get(name);
 	}
 	
-	public TFSequence getSequence(String name) {
+	public TFSequence<T> getSequence(String name) {
 		if (this.sequences == null) {
 			return null;
 		}
 		return this.sequences.get(name);
 	}
 	
-	public TFList getList(String name) {
+	public TFList<T> getList(String name) {
 		if (this.lists == null) {
 			return null;
 		}
 		return this.lists.get(name);
 	}
 	
-	public TFDelimitedList geDelimitedList(String name) {
+	public TFDelimitedList<T> geDelimitedList(String name) {
 		if (this.delimitedList == null) {
 			return null;
 		}
 		return this.delimitedList.get(name);
 	}
 	
-	public TFForkedSequence getForkedSequence(String name) {
+	public TFForkedSequence<T> getForkedSequence(String name) {
 		if (this.forkedSequences == null) {
 			return null;
 		}

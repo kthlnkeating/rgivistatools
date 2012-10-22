@@ -16,11 +16,16 @@
 
 package com.raygroupintl.parser;
 
+import java.lang.reflect.Constructor;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
 import com.raygroupintl.charlib.Predicate;
 import com.raygroupintl.parsergen.ObjectSupply;
 
-public class TFCharacter extends TokenFactory {
+public class TFCharacter<T extends Token> extends TokenFactory<T> {
 	private Predicate predicate;
+	private Constructor<? extends T> constructor;
 	
 	public TFCharacter(String name, Predicate predicate) {
 		super(name);
@@ -28,8 +33,28 @@ public class TFCharacter extends TokenFactory {
 	}
 	
 	@Override
-	protected Token tokenizeOnly(Text text, ObjectSupply objectSupply) {
+	protected T tokenizeOnly(Text text, ObjectSupply<T> objectSupply) {
 		TextPiece p = text.extractChar(this.predicate);
-		return p == null ? null : objectSupply.newString(p);
+		return this.convertString(p, objectSupply);
+	}
+
+	public void setStringTargetType(Constructor<? extends T> constructor) {
+		this.constructor = constructor;		
+	}
+
+	public T convertString(TextPiece p, ObjectSupply<T> objectSupply) {
+		if (p == null) {
+			return null;
+		} else if (this.constructor == null) {
+			return objectSupply.newString(p);
+		} else {
+			try {
+				return this.constructor.newInstance(p);						
+			} catch (Throwable t) {
+				String clsName =  this.getClass().getName();
+				Logger.getLogger(clsName).log(Level.SEVERE, "Unable to instantiate " + clsName + ".", t);			
+			}
+			return null;
+		}
 	}
 }

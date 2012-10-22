@@ -24,20 +24,20 @@ import com.raygroupintl.parser.Token;
 import com.raygroupintl.parsergen.AdapterSpecification;
 import com.raygroupintl.parsergen.ruledef.RuleSupplyFlag;
 
-public class FSRString extends FSRBase {
+public class FSRString<T extends Token> extends FSRBase<T> {
 	private String expr;
 	private Predicate predicate;
-	private TFString factory;
+	private TFString<T> factory;
 	
 	public FSRString(String expr, RuleSupplyFlag flag, Predicate predicate) {
 		super(flag);
 		this.expr = expr;
 		this.predicate = predicate;
-		this.factory = new TFString(this.expr, this.predicate);
+		this.factory = new TFString<T>(this.expr, this.predicate);
 	}
 	
 	@Override
-	public boolean update(RulesByName symbols) {
+	public boolean update(RulesByName<T> symbols) {
 		if (! symbols.hasRule(expr)) {
 			symbols.put(this.expr, this);
 		}
@@ -50,13 +50,13 @@ public class FSRString extends FSRBase {
 	}
 	
 	@Override
-	public TFString getShellFactory() {
+	public TFString<T> getShellFactory() {
 		return this.factory;
 	}
 
 	@Override
-	public void setAdapter(AdapterSpecification<Token> spec) {
-		 Constructor<? extends Token> c = spec.getStringTokenAdapter();
+	public void setAdapter(AdapterSpecification<T> spec) {
+		 Constructor<? extends T> c = spec.getStringTokenAdapter();
 		 if (c != null) this.factory.setStringTargetType(c);
 	}
 }

@@ -23,20 +23,19 @@ import com.raygroupintl.m.struct.MRoutineContent;
 import com.raygroupintl.parser.TextPiece;
 import com.raygroupintl.parser.SyntaxErrorException;
 import com.raygroupintl.parser.Text;
-import com.raygroupintl.parser.Token;
 import com.raygroupintl.parser.TokenFactory;
 import com.raygroupintl.parsergen.ObjectSupply;
 
 public class TFRoutine {
-	private TokenFactory tfLine;
-	private ObjectSupply mAdapterSupply = new MObjectSupply();
+	private TokenFactory<MToken> tfLine;
+	private ObjectSupply<MToken> mAdapterSupply = new MObjectSupply();
 	
 	public TFRoutine(MTFSupply supply) {
 		this.tfLine = supply.line;
 	}
 	
 	public static MLine recoverFromError(String line, SyntaxErrorException e) {
-		Token error = new MSyntaxError(0, new TextPiece(line), 0);
+		MToken error = new MSyntaxError(0, new TextPiece(line), 0);
 		MSequence result = new MSequence(5);
 		result.addToken(error);
 		for (int i=0; i<4; ++i) result.addToken(null);

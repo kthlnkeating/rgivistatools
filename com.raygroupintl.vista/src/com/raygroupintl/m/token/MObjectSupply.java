@@ -19,28 +19,27 @@ package com.raygroupintl.m.token;
 import com.raygroupintl.parser.ListOfTokens;
 import com.raygroupintl.parser.SequenceOfTokens;
 import com.raygroupintl.parser.TextPiece;
-import com.raygroupintl.parser.Token;
 import com.raygroupintl.parser.Tokens;
 import com.raygroupintl.parsergen.ObjectSupply;
 
-public class MObjectSupply implements ObjectSupply {
+public class MObjectSupply implements ObjectSupply<MToken> {
 	@Override
 	public MString newString(TextPiece piece) {
 		return new MString(piece);
 	}
 	
 	@Override
-	public MSequence newSequence(SequenceOfTokens tokens) {
+	public MSequence newSequence(SequenceOfTokens<MToken> tokens) {
 		return new MSequence(tokens);
 	}
 	
 	@Override
-	public MList newList(ListOfTokens tokens) {
+	public MList newList(ListOfTokens<MToken> tokens) {
 		return new MList(tokens);
 	}
 	
 	@Override
-	public MDelimitedList newDelimitedList(Token leadingToken, Tokens tailTokens) {
+	public MDelimitedList newDelimitedList(MToken leadingToken, Tokens<MToken> tailTokens) {
 		return new MDelimitedList(leadingToken, tailTokens);
 	}
 	

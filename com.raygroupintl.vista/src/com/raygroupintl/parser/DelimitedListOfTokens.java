@@ -24,34 +24,34 @@ import com.raygroupintl.struct.IterableSingleAndList;
 import com.raygroupintl.struct.SingleAndListIterator;
 import com.raygroupintl.struct.SingleIterator;
 
-public class DelimitedListOfTokens extends CollectionOfTokens implements Iterable<Token> {
-	private static class TDelimitedListIterator extends SingleAndListIterator<Token> {
-		public TDelimitedListIterator(Token leading, Iterable<Token> iterable) {
+public class DelimitedListOfTokens<T extends Token> extends CollectionOfTokens<T> implements Iterable<T> {
+	private static class TDelimitedListIterator<T extends Token> extends SingleAndListIterator<T> {
+		public TDelimitedListIterator(T leading, Iterable<T> iterable) {
 			super(leading, iterable);
 		}
 		
 		@Override
-		public Token next() throws NoSuchElementException {
+		public T next() throws NoSuchElementException {
 			if (this.inInitialState()) {
 				return super.next();
 			} else {
-				//@SuppressWarnings("unchecked")
-				Tokens ts = (Tokens) super.next();
+				@SuppressWarnings("unchecked")
+				Tokens<T> ts = (Tokens<T>) super.next();
 				return ts.getToken(1);
 			}
 		}
 	}
 
-	private Token leadingToken;
-	private Tokens remainingTokens;
+	private T leadingToken;
+	private Tokens<T> remainingTokens;
 	
-	public DelimitedListOfTokens(Token leadingToken, Tokens tailTokens) {
+	public DelimitedListOfTokens(T leadingToken, Tokens<T> tailTokens) {
 		this.leadingToken = leadingToken;
 		this.remainingTokens = tailTokens;
 	}
 
 	@Override
-	public void setToken(int index, Token token) {
+	public void setToken(int index, T token) {
 		if (index == 0) {
 			this.leadingToken = token;
 		} else {
@@ -60,15 +60,15 @@ public class DelimitedListOfTokens extends CollectionOfTokens implements Iterabl
 	}
 
 	@Override
-	public void addToken(Token token) {
+	public void addToken(T token) {
 		if (this.remainingTokens == null) {
-			this.remainingTokens = new ListOfTokens();
+			this.remainingTokens = new ListOfTokens<T>();
 		}
 		this.remainingTokens.addToken(token);
 	}
 
 	@Override
-	public Token getToken(int index) {
+	public T getToken(int index) {
 		if (index == 0) {
 			return this.leadingToken;
 		} else if (this.remainingTokens != null) {
@@ -98,32 +98,32 @@ public class DelimitedListOfTokens extends CollectionOfTokens implements Iterabl
 		return result;
 	}
 
-	public Iterable<Token> toLogicalIterable() {
+	public Iterable<T> toLogicalIterable() {
 		return this;
 	}
 	
-	public Iterable<Token> toIterable() {
+	public Iterable<T> toIterable() {
 		if (this.remainingTokens == null) {
-			return new IterableSingle<Token>(this.leadingToken);
+			return new IterableSingle<T>(this.leadingToken);
 		} else {
-			return new IterableSingleAndList<Token>(this.leadingToken, this.remainingTokens.toIterable());
+			return new IterableSingleAndList<T>(this.leadingToken, this.remainingTokens.toIterable());
 		}
 	}
 	
 	@Override
-	public Iterator<Token> iterator() {
+	public Iterator<T> iterator() {
 		if (this.remainingTokens == null) {
-			return new SingleIterator<Token>(this.leadingToken);
+			return new SingleIterator<T>(this.leadingToken);
 		} else {
-			return new TDelimitedListIterator(this.leadingToken, this.remainingTokens.toIterable());
+			return new TDelimitedListIterator<T>(this.leadingToken, this.remainingTokens.toIterable());
 		}
 	}
 	
-	public Token getLogicalToken(int index) {
+	public T getLogicalToken(int index) {
 		if (index == 0) {
 			return this.getToken(0);
 		} else {
-			Tokens ts = this.getTokens(index);
+			Tokens<T> ts = this.getTokens(index);
 			return ts.getToken(1);
 		}
 	}

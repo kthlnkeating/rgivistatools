@@ -25,7 +25,7 @@ public class MNumLit extends MSequence {
 		super(length);
 	}
 
-	public MNumLit(SequenceOfTokens tokens) {
+	public MNumLit(SequenceOfTokens<MToken> tokens) {
 		super(tokens);
 	}
 

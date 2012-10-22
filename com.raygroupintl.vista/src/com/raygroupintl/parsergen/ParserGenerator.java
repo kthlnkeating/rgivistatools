@@ -16,15 +16,17 @@
 
 package com.raygroupintl.parsergen;
 
+import com.raygroupintl.parser.Token;
 
-public abstract class ParserGenerator {
-	protected abstract TokenFactoryStore getStore();
+
+public abstract class ParserGenerator<T extends Token> {
+	protected abstract TokenFactoryStore<T> getStore();
 	
-	public <T> T generate(Class<T> cls) throws ParseException {
+	public <M> M generate(Class<M> cls, Class<T> tokenCls) throws ParseException {
 		try {
-			T target = cls.newInstance();
-			TokenFactoryStore store = this.getStore();
-			store.add(target);
+			M target = cls.newInstance();
+			TokenFactoryStore<T> store = this.getStore();
+			store.add(target, tokenCls);
 			store.addAssumed();
 			store.update(cls);
 			return target;

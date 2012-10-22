@@ -20,14 +20,14 @@ import com.raygroupintl.parser.Token;
 import com.raygroupintl.parser.TokenFactory;
 import com.raygroupintl.parser.Tokens;
 import com.raygroupintl.parsergen.ObjectSupply;
-import com.raygroupintl.parsergen.ruledef.DefaultObjectSupply;
+import com.raygroupintl.parsergen.ruledef.TestObjectSupply;
 
 public class TFDelimitedListTest {
-	private static ObjectSupply objectSupply;
+	private static ObjectSupply<Token> objectSupply;
 	
 	@BeforeClass
 	public static void setUpBeforeClass() throws Exception {
-		objectSupply = new DefaultObjectSupply();
+		objectSupply = new TestObjectSupply();
 	}
 
 	@AfterClass
@@ -40,10 +40,11 @@ public class TFDelimitedListTest {
 		Assert.assertEquals(v.length(), t.length());		
 	}
 	
-	public static void validCheckBasic(TFDelimitedList f, String v, String expected, String[] iteratorResults) {
+	public static void validCheckBasic(TFDelimitedList<Token> f, String v, String expected, String[] iteratorResults) {
 		Text text = new Text(v);
 		try {
-			Tokens t = (Tokens) f.tokenize(text, objectSupply);
+			@SuppressWarnings("unchecked")
+			Tokens<Token> t = (Tokens<Token>) f.tokenize(text, objectSupply);
 			validTokenCheck(t.toValue(), expected);
 			int index = 0;
 			for (Token tit : t.toLogicalIterable()) {
@@ -57,12 +58,12 @@ public class TFDelimitedListTest {
 		}
 	}
 
-	public static void validCheck(TFDelimitedList f, String v, String addl, String[] iteratorResults) {
+	public static void validCheck(TFDelimitedList<Token> f, String v, String addl, String[] iteratorResults) {
 		validCheckBasic(f, v, v, iteratorResults);
 		validCheckBasic(f, v + addl, v, iteratorResults);
 	}
 
-	public static void errorCheck(TFDelimitedList f, String v, int errorLocation) {
+	public static void errorCheck(TFDelimitedList<Token> f, String v, int errorLocation) {
 		Text text = new Text(v);
 		try {
 			f.tokenize(text, objectSupply);
@@ -72,7 +73,7 @@ public class TFDelimitedListTest {
 		}
 	}
 
-	public static void nullCheck(TFDelimitedList f, String v) {
+	public static void nullCheck(TFDelimitedList<Token> f, String v) {
 		Text text = new Text(v);
 		try {
 			Token t = f.tokenize(text, objectSupply);
@@ -84,10 +85,10 @@ public class TFDelimitedListTest {
 
 	@Test
 	public void test() {
-		TokenFactory delimiter = new TFCharacter(",", new CharPredicate(','));
-		TokenFactory element = new TFString("e", new CharRangePredicate('a', 'z'));
+		TokenFactory<Token> delimiter = new TFCharacter<Token>(",", new CharPredicate(','));
+		TokenFactory<Token> element = new TFString<Token>("e", new CharRangePredicate('a', 'z'));
 		
-		TFDelimitedList dl = new TFDelimitedList("dl");
+		TFDelimitedList<Token> dl = new TFDelimitedList<Token>("dl");
 		try {
 			dl.tokenize(new Text("a"), objectSupply);
 			fail("Expected exception did not fire.");							
