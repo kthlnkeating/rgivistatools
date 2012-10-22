@@ -20,6 +20,7 @@ import com.raygroupintl.m.parsetree.Node;
 import com.raygroupintl.m.parsetree.Nodes;
 import com.raygroupintl.m.parsetree.SetCmdNodes;
 import com.raygroupintl.parser.SequenceOfTokens;
+import com.raygroupintl.parser.Tokens;
 
 public final class SetCmdTokens {
 	public static final class MSetCmd extends MCommand {
@@ -72,10 +73,9 @@ public final class SetCmdTokens {
 		
 		@Override
 		public Node getNode() {
-			MToken tokens = this.getSubNodeToken(0);			
-			MDelimitedList lhs = (MDelimitedList) tokens.getSubNodeToken(1);
-			MToken rhs = this.getSubNodeToken(2);
-			Nodes<Node> lhsNodes = NodeUtilities.getNodes(lhs, lhs.size());
+			Tokens<MToken> lhs = this.getTokens(0, 1);			
+			MToken rhs = this.getToken(2);
+			Nodes<Node> lhsNodes = NodeUtilities.getNodes(lhs.toLogicalIterable(), lhs.size());
 			return new SetCmdNodes.MultiAtomicSet(lhsNodes, rhs.getNode());
 		}		
 	}

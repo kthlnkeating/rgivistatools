@@ -1,6 +1,5 @@
 package com.raygroupintl.m.token;
 
-import java.io.InputStream;
 import java.util.List;
 import java.util.Map;
 
@@ -18,10 +17,7 @@ import com.raygroupintl.m.parsetree.visitor.OccuranceRecorder;
 import com.raygroupintl.m.struct.LineLocation;
 import com.raygroupintl.m.struct.MError;
 import com.raygroupintl.m.struct.ObjectInRoutine;
-import com.raygroupintl.m.struct.MRoutineContent;
 import com.raygroupintl.m.token.MVersion;
-import com.raygroupintl.m.token.TFRoutine;
-import com.raygroupintl.m.token.MLine;
 import com.raygroupintl.m.token.MRoutine;
 
 public class TRoutineTest {
@@ -40,50 +36,14 @@ public class TRoutineTest {
 		supplyCache = null;
 	}
 	
-	private MRoutine getRoutineToken(String fileName, MTFSupply m) {
-		TFRoutine tf = new TFRoutine(m);
-		InputStream is = this.getClass().getResourceAsStream(fileName);
-		MRoutineContent content = MRoutineContent.getInstance(fileName.split(".m")[0], is);
-		MRoutine r = tf.tokenize(content);
-		return r;
-	}
-	
 	private List<ObjectInRoutine<MError>> getErrors(String fileName, MTFSupply m) {
-		MRoutine token = this.getRoutineToken(fileName, m);
+		MRoutine token = TFCommonTest.getRoutineToken(this.getClass(), fileName, m);
 		Routine r = token.getNode();
 		ErrorRecorder v = new ErrorRecorder();
 		List<ObjectInRoutine<MError>> result = v.visitErrors(r);
 		return result;
 	}
 	
-	public void testBeautify(MTFSupply m) {
-		MRoutine original = this.getRoutineToken("resource/BEAT0SRC.m", m);
-		MRoutine source = this.getRoutineToken("resource/BEAT0SRC.m", m);
-		MRoutine result = this.getRoutineToken("resource/BEAT0RST.m", m);
-		
-		source.beautify();
-		List<MLine> originalLines = original.asList();
-		List<MLine> sourceLines = source.asList();
-		List<MLine> resultLines = result.asList();
-		int n = resultLines.size();
-		Assert.assertEquals( originalLines.size(), resultLines.size());
-		Assert.assertEquals(sourceLines.size(), resultLines.size());
-		for (int i=1; i<n; ++i) {
-			String sourceLineValue = sourceLines.get(i).toValue().toString();
-			String resultLineValue = resultLines.get(i).toValue().toString();
-			Assert.assertEquals(sourceLineValue, resultLineValue);
-			if ((i > 4) && (i < 12)) {
-				Assert.assertFalse(sourceLineValue.equals(originalLines.get(i).toValue().toString()));				
-			}
-		}
-	}
-	
-	@Test
-	public void testBeautify() {
-		testBeautify(supplyCache);
-		testBeautify(supplyStd95);
-	}
-		
 	public void testNonErrorFiles(MTFSupply m) {
 		String[] fileNames = {"resource/XRGITST0.m", "resource/CMDTEST0.m"};
 		for (String fileName : fileNames) {
@@ -142,7 +102,7 @@ public class TRoutineTest {
 	
 	private void testCmdTest0(MTFSupply m) {
 		String fileName = "resource/CMDTEST0.m";
-		MRoutine token = this.getRoutineToken(fileName, m);
+		MRoutine token = TFCommonTest.getRoutineToken(this.getClass(), fileName, m);
 		Routine r = token.getNode();
 
 		OccuranceRecorder or = OccuranceRecorder.record(r);		

@@ -43,7 +43,7 @@ public class TFIntrinsic extends TokenFactorySupply<MToken> {
 		
 		@Override
 		public Node getNode() {
-			TextPiece name = this.getSubNodeToken(0).getSubNodeToken(1).toValue();
+			TextPiece name = this.getToken(0, 1).toValue();
 			return new IntrinsicVariable(name.toString());
 		}
 	}
@@ -59,8 +59,8 @@ public class TFIntrinsic extends TokenFactorySupply<MToken> {
 		
 		@Override
 		public Node getNode() {
-			TextPiece name = this.getToken(0).getSubNodeToken(0).getSubNodeToken(1).toValue();
-			MToken arguments = this.getToken(1).getSubNodeToken(0);	
+			TextPiece name = this.getToken(0, 0, 1).toValue();
+			MToken arguments = this.getToken(1, 0);	
 			return new IntrinsicFunction(name.toString(), arguments == null ? null : arguments.getNode());
 		}
 

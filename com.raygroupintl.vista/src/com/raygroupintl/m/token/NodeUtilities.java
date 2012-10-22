@@ -19,7 +19,6 @@ package com.raygroupintl.m.token;
 import com.raygroupintl.m.parsetree.Node;
 import com.raygroupintl.m.parsetree.NodeList;
 import com.raygroupintl.m.parsetree.Nodes;
-import com.raygroupintl.parser.Token;
 import com.raygroupintl.parser.Tokens;
 
 class NodeUtilities {

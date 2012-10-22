@@ -42,17 +42,8 @@ public abstract class MCommand extends MCommandBase {
 	}
 
 	protected Node getPostConditionNode() {
-		MSequence nameFollowUp = (MSequence) this.getToken(1);
-		if (nameFollowUp == null) {
-			return null;
-		}
-		MSequence postConditionWithColon = (MSequence) nameFollowUp.getToken(0);
-		if (postConditionWithColon == null) {
-			return null;
-		} else {
-			MToken postConditionToken = postConditionWithColon.getToken(1);
-			return postConditionToken.getNode();
-		}
+		MToken t = this.getToken(1, 0, 1);
+		return (t == null) ? null : t.getNode();
 	}
 
 	protected Node getNode(Node postConditionNode, Node argumentNode) {

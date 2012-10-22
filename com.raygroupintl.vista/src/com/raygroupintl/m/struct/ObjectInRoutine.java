@@ -16,7 +16,6 @@
 
 package com.raygroupintl.m.struct;
 
-
 public class ObjectInRoutine<T> {
 	private T object;
 	private LineLocation location;

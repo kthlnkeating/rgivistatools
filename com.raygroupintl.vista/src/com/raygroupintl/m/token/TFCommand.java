@@ -704,9 +704,7 @@ public class TFCommand extends TokenFactorySupply<MToken> {
 	
 	@Override
 	public MToken getToken(MToken supplyToken, MToken nextToken) {
-		TextPiece cmdName = supplyToken.toValue();
-		TCSFactory tcs = this.commandSpecs.get(cmdName.toString().toUpperCase());
-		TCommandSpec spec = tcs.get(cmdName);
+		TCommandSpec spec = (TCommandSpec) supplyToken;
 		return spec.getToken(supplyToken, nextToken);
 	}
 }

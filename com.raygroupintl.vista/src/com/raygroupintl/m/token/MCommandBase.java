@@ -43,7 +43,7 @@ public abstract class MCommandBase extends MSequence {
 
 	@Override
 	public void beautify() {
-		TextPiece n = (TextPiece) this.getToken(0);
+		TextPiece n = this.getToken(0).toValue();
 		TextPiece newName = new TextPiece(getFullName());
 		n.set(newName);
 		super.beautify();

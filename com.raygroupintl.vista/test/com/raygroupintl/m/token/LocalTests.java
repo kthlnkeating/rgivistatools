@@ -8,7 +8,7 @@ import com.raygroupintl.parsergen.ruledef.TFDelimitedListTest;
 
 @RunWith(Suite.class)
 @SuiteClasses({
-		TFCommandTest.class, TFDelimitedListTest.class,
+		TFCommandTest.class, TFDelimitedListTest.class, RoutineBeautifyTest.class,
 		TFIntrinsicTest.class, TFTest.class, TFLineTest.class, TRoutineTest.class })
 public class LocalTests {
 
