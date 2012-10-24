@@ -23,22 +23,6 @@ import com.raygroupintl.parser.SequenceOfTokens;
 import com.raygroupintl.parser.Tokens;
 
 public final class SetCmdTokens {
-	public static final class MSetCmd extends MCommand {
-		public MSetCmd(MToken cmdName, MToken cmdDependent) {
-			super(cmdName, cmdDependent);
-		}		
-		
-		@Override
-		protected String getFullName() {		
-			return "SET";
-		}
-		
-		@Override
-		protected Node getNode(Node postConditionNode, Node argumentNode) {
-			return new SetCmdNodes.SetCmd(postConditionNode, argumentNode);	
-		}
-	}
-	
 	public static final class MSingleAtomicSetCmd extends MSequence {
 		public MSingleAtomicSetCmd(int length) {
 			super(length);

@@ -21,22 +21,6 @@ import com.raygroupintl.m.parsetree.MergeCmdNodes;
 import com.raygroupintl.parser.SequenceOfTokens;
 
 public final class MergeCmdTokens {
-	public static final class MMergeCmd extends MCommand {
-		public MMergeCmd(MToken cmdName, MToken cmdDependent) {
-			super(cmdName, cmdDependent);
-		}		
-		
-		@Override
-		protected String getFullName() {		
-			return "MERGE";
-		}
-		
-		@Override
-		protected Node getNode(Node postConditionNode, Node argumentNode) {
-			return new MergeCmdNodes.MergeCmd(postConditionNode, argumentNode);	
-		}
-	}
-	
 	public static final class MAtomicMergeCmd extends MSequence {
 		public MAtomicMergeCmd(int length) {
 			super(length);

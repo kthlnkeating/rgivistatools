@@ -23,26 +23,6 @@ import com.raygroupintl.m.parsetree.Nodes;
 import com.raygroupintl.parser.SequenceOfTokens;
 
 public final class NewCmdTokens {
-	public static final class MNewCmd extends MCommand {
-		public MNewCmd(MToken cmdName, MToken cmdDependent) {
-			super(cmdName, cmdDependent);
-		}		
-		
-		@Override
-		protected String getFullName() {		
-			return "NEW";
-		}
-		
-		@Override
-		protected Node getNode(Node postConditionNode, Node argumentNode) {
-			if (argumentNode == null) {
-				return new NewCmdNodes.AllNewCmd(postConditionNode);
-			} else {
-				return new NewCmdNodes.NewCmd(postConditionNode, argumentNode);				
-			}
-		}
-	}
-	
 	public static final class MExclusiveAtomicNewCmd extends MSequence {
 		public MExclusiveAtomicNewCmd(int length) {
 			super(length);

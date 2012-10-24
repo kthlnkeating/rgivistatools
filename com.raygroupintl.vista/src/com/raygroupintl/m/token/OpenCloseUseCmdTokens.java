@@ -22,22 +22,6 @@ import com.raygroupintl.m.parsetree.OpenCloseUseCmdNodes;
 import com.raygroupintl.parser.SequenceOfTokens;
 
 public class OpenCloseUseCmdTokens {
-	public static final class MOpenCmd extends MCommand {
-		public MOpenCmd(MToken cmdName, MToken cmdDependent) {
-			super(cmdName, cmdDependent);
-		}		
-		
-		@Override
-		protected String getFullName() {		
-			return "OPEN";
-		}
-		
-		@Override
-		protected Node getNode(Node postConditionNode, Node argumentNode) {
-			return new OpenCloseUseCmdNodes.OpenCmd(postConditionNode, argumentNode);				
-		}
-	}
-
 	public static final class MAtomicOpenCmd extends MSequence {
 		public MAtomicOpenCmd(SequenceOfTokens<MToken> tokens) {
 			super(tokens);
@@ -50,22 +34,6 @@ public class OpenCloseUseCmdTokens {
 		}		
 	}
 	
-	public static final class MCloseCmd extends MCommand {
-		public MCloseCmd(MToken cmdName, MToken cmdDependent) {
-			super(cmdName, cmdDependent);
-		}		
-		
-		@Override
-		protected String getFullName() {		
-			return "CLOSE";
-		}
-		
-		@Override
-		protected Node getNode(Node postConditionNode, Node argumentNode) {
-			return new OpenCloseUseCmdNodes.CloseCmd(postConditionNode, argumentNode);				
-		}
-	}
-
 	public static final class MAtomicCloseCmd extends MSequence {
 		public MAtomicCloseCmd(SequenceOfTokens<MToken> tokens) {
 			super(tokens);
@@ -76,22 +44,6 @@ public class OpenCloseUseCmdTokens {
 			Node subNode = super.getNode();
 			return new OpenCloseUseCmdNodes.AtomicCloseCmd(subNode);
 		}		
-	}
-
-	public static final class MUseCmd extends MCommand {
-		public MUseCmd(MToken cmdName, MToken cmdDependent) {
-			super(cmdName, cmdDependent);
-		}		
-		
-		@Override
-		protected String getFullName() {		
-			return "USE";
-		}
-		
-		@Override
-		protected Node getNode(Node postConditionNode, Node argumentNode) {
-			return new OpenCloseUseCmdNodes.UseCmd(postConditionNode, argumentNode);				
-		}
 	}
 
 	public static final class MAtomicUseCmd extends MSequence {

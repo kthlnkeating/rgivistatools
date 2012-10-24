@@ -23,26 +23,6 @@ import com.raygroupintl.m.parsetree.Nodes;
 import com.raygroupintl.parser.SequenceOfTokens;
 
 public final class KillCmdTokens {
-	public static final class MKillCmd extends MCommand {
-		public MKillCmd(MToken cmdName, MToken cmdDependent) {
-			super(cmdName, cmdDependent);
-		}		
-		
-		@Override
-		protected String getFullName() {		
-			return "KILL";
-		}
-		
-		@Override
-		protected Node getNode(Node postConditionNode, Node argumentNode) {
-			if (argumentNode == null) {
-				return new KillCmdNodes.AllKillCmd(postConditionNode);
-			} else {
-				return new KillCmdNodes.KillCmd(postConditionNode, argumentNode);				
-			}
-		}
-	}
-	
 	public static final class MExclusiveAtomicKillCmd extends MSequence {
 		public MExclusiveAtomicKillCmd(int length) {
 			super(length);

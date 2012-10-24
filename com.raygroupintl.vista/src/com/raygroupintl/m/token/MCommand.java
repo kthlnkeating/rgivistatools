@@ -20,6 +20,10 @@ import com.raygroupintl.m.parsetree.GenericCommand;
 import com.raygroupintl.m.parsetree.Node;
 
 public abstract class MCommand extends MCommandBase {
+	public MCommand() {
+		super();
+	}
+
 	public MCommand(MToken token0, MToken token1) {
 		super(token0, token1);
 	}
