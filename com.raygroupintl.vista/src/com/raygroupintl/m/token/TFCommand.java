@@ -12,10 +12,9 @@ import com.raygroupintl.parser.TFSequence;
 import com.raygroupintl.parser.Text;
 import com.raygroupintl.parser.Token;
 import com.raygroupintl.parser.TokenFactory;
-import com.raygroupintl.parser.TokenFactorySupply;
 import com.raygroupintl.parsergen.ObjectSupply;
 
-public class TFCommand extends TokenFactorySupply<MToken> {
+public class TFCommand extends TokenFactory<MToken> {
 	private Map<String, TCSFactory> commandSpecs = new HashMap<String, TCSFactory>();
 	private MTFSupply supply;
 	
@@ -56,7 +55,7 @@ public class TFCommand extends TokenFactorySupply<MToken> {
 
 	private static final TFEmptyVerified<MToken> TF_EMPTY = new TFEmptyVerified<MToken>("commandempty", ' ');
 	
-	private static abstract class TCommandSpec extends MString {
+	private abstract class TCommandSpec extends MString {
 		private static final long serialVersionUID = 1L;
 		
 		private TokenFactory<MToken> argumentFactory;
@@ -71,9 +70,20 @@ public class TFCommand extends TokenFactorySupply<MToken> {
 		}
 
 		public abstract MToken getToken(MToken cmdToken, MToken cmdDependentTokens);
+		
+		public MToken tokenizeWhatFollows(Text text, ObjectSupply<MToken> objectSupply) throws SyntaxErrorException {
+			TokenFactory<MToken> argumentFactory = this.getArgumentFactory();
+			TFSequence<MToken> tf = new TFCommandRest(TFCommand.this.getName());
+			tf.add(TFCommand.this.supply.postcondition, false);
+			tf.add(TFCommand.this.supply.space, false);
+			tf.add(argumentFactory, false);
+			tf.add(TFCommand.this.supply.commandend, false);
+			MToken nextToken = tf.tokenize(text, objectSupply);
+			return this.getToken(this, nextToken);
+		}
 	}
 		
-	private static class TBCommandSpec extends TCommandSpec {
+	private class TBCommandSpec extends TCommandSpec {
 		private static final long serialVersionUID = 1L;
 		
 		private TBCommandSpec(TextPiece value, MTFSupply supply) {
@@ -85,7 +95,7 @@ public class TFCommand extends TokenFactorySupply<MToken> {
 		}
 	}
 	
-	private static class TCCommandSpec extends TCommandSpec {
+	private class TCCommandSpec extends TCommandSpec {
 		private static final long serialVersionUID = 1L;
 		
 		private TCCommandSpec(TextPiece value, MTFSupply supply) {
@@ -97,7 +107,7 @@ public class TFCommand extends TokenFactorySupply<MToken> {
 		}
 	}
 	
-	private static class TDCommandSpec extends TCommandSpec {
+	private class TDCommandSpec extends TCommandSpec {
 		private static final long serialVersionUID = 1L;
 		
 		private TDCommandSpec(TextPiece value, MTFSupply supply) {
@@ -109,7 +119,7 @@ public class TFCommand extends TokenFactorySupply<MToken> {
 		}
 	}
 	
-	private static class TECommandSpec extends TCommandSpec {
+	private class TECommandSpec extends TCommandSpec {
 		private static final long serialVersionUID = 1L;
 		
 		private TECommandSpec(TextPiece value, MTFSupply supply) {
@@ -121,7 +131,7 @@ public class TFCommand extends TokenFactorySupply<MToken> {
 		}
 	}
 
-	private static class TFCommandSpec extends TCommandSpec {
+	private class TFCommandSpec extends TCommandSpec {
 		private static final long serialVersionUID = 1L;
 		
 		private TFCommandSpec(TextPiece value, MTFSupply supply) {
@@ -133,7 +143,7 @@ public class TFCommand extends TokenFactorySupply<MToken> {
 		}
 	}
 
-	private static class TGCommandSpec extends TCommandSpec {
+	private class TGCommandSpec extends TCommandSpec {
 		private static final long serialVersionUID = 1L;
 		
 		private TGCommandSpec(TextPiece value, MTFSupply supply) {
@@ -145,7 +155,7 @@ public class TFCommand extends TokenFactorySupply<MToken> {
 		}
 	}
 
-	private static class THCommandSpec extends TCommandSpec {
+	private class THCommandSpec extends TCommandSpec {
 		private static final long serialVersionUID = 1L;
 		
 		private THCommandSpec(TextPiece value, MTFSupply supply) {
@@ -157,7 +167,7 @@ public class TFCommand extends TokenFactorySupply<MToken> {
 		}
 	}
 
-	private static class TICommandSpec extends TCommandSpec {
+	private class TICommandSpec extends TCommandSpec {
 		private static final long serialVersionUID = 1L;
 		
 		private TICommandSpec(TextPiece value, MTFSupply supply) {
@@ -169,7 +179,7 @@ public class TFCommand extends TokenFactorySupply<MToken> {
 		}
 	}
 
-	private static class TJCommandSpec extends TCommandSpec {
+	private class TJCommandSpec extends TCommandSpec {
 		private static final long serialVersionUID = 1L;
 		
 		private TJCommandSpec(TextPiece value, MTFSupply supply) {
@@ -181,7 +191,7 @@ public class TFCommand extends TokenFactorySupply<MToken> {
 		}
 	}
 
-	private static class TKCommandSpec extends TCommandSpec {
+	private class TKCommandSpec extends TCommandSpec {
 		private static final long serialVersionUID = 1L;
 		
 		private TKCommandSpec(TextPiece value, MTFSupply supply) {
@@ -193,7 +203,7 @@ public class TFCommand extends TokenFactorySupply<MToken> {
 		}
 	}
 
-	private static class TLCommandSpec extends TCommandSpec {
+	private class TLCommandSpec extends TCommandSpec {
 		private static final long serialVersionUID = 1L;
 		
 		private TLCommandSpec(TextPiece value, MTFSupply supply) {
@@ -205,7 +215,7 @@ public class TFCommand extends TokenFactorySupply<MToken> {
 		}
 	}
 
-	private static class TMCommandSpec extends TCommandSpec {
+	private class TMCommandSpec extends TCommandSpec {
 		private static final long serialVersionUID = 1L;
 		
 		private TMCommandSpec(TextPiece value, MTFSupply supply) {
@@ -217,7 +227,7 @@ public class TFCommand extends TokenFactorySupply<MToken> {
 		}
 	}
 
-	private static class TNCommandSpec extends TCommandSpec {
+	private class TNCommandSpec extends TCommandSpec {
 		private static final long serialVersionUID = 1L;
 		
 		private TNCommandSpec(TextPiece value, MTFSupply supply) {
@@ -229,7 +239,7 @@ public class TFCommand extends TokenFactorySupply<MToken> {
 		}
 	}
 
-	private static class TOCommandSpec extends TCommandSpec {
+	private class TOCommandSpec extends TCommandSpec {
 		private static final long serialVersionUID = 1L;
 		
 		private TOCommandSpec(TextPiece value, MTFSupply supply) {
@@ -241,7 +251,7 @@ public class TFCommand extends TokenFactorySupply<MToken> {
 		}
 	}
 
-	private static class TQCommandSpec extends TCommandSpec {
+	private class TQCommandSpec extends TCommandSpec {
 		private static final long serialVersionUID = 1L;
 		
 		private TQCommandSpec(TextPiece value, MTFSupply supply) {
@@ -253,7 +263,7 @@ public class TFCommand extends TokenFactorySupply<MToken> {
 		}
 	}
 
-	private static class TRCommandSpec extends TCommandSpec {
+	private class TRCommandSpec extends TCommandSpec {
 		private static final long serialVersionUID = 1L;
 		
 		private TRCommandSpec(TextPiece value, MTFSupply supply) {
@@ -265,7 +275,7 @@ public class TFCommand extends TokenFactorySupply<MToken> {
 		}
 	}
 
-	private static class TSCommandSpec extends TCommandSpec {
+	private class TSCommandSpec extends TCommandSpec {
 		private static final long serialVersionUID = 1L;
 		
 		private TSCommandSpec(TextPiece value, MTFSupply supply) {
@@ -277,7 +287,7 @@ public class TFCommand extends TokenFactorySupply<MToken> {
 		}
 	}
 
-	private static class TTCCommandSpec extends TCommandSpec {
+	private class TTCCommandSpec extends TCommandSpec {
 		private static final long serialVersionUID = 1L;
 		
 		private TTCCommandSpec(TextPiece value, MTFSupply supply) {
@@ -289,7 +299,7 @@ public class TFCommand extends TokenFactorySupply<MToken> {
 		}
 	}
 
-	private static class TTRCommandSpec extends TCommandSpec {
+	private class TTRCommandSpec extends TCommandSpec {
 		private static final long serialVersionUID = 1L;
 		
 		private TTRCommandSpec(TextPiece value, MTFSupply supply) {
@@ -301,7 +311,7 @@ public class TFCommand extends TokenFactorySupply<MToken> {
 		}
 	}
 
-	private static class TTROCommandSpec extends TCommandSpec {
+	private class TTROCommandSpec extends TCommandSpec {
 		private static final long serialVersionUID = 1L;
 		
 		private TTROCommandSpec(TextPiece value, MTFSupply supply) {
@@ -313,7 +323,7 @@ public class TFCommand extends TokenFactorySupply<MToken> {
 		}
 	}
 
-	private static class TTSCommandSpec extends TCommandSpec {
+	private class TTSCommandSpec extends TCommandSpec {
 		private static final long serialVersionUID = 1L;
 		
 		private TTSCommandSpec(TextPiece value, MTFSupply supply) {
@@ -325,7 +335,7 @@ public class TFCommand extends TokenFactorySupply<MToken> {
 		}
 	}
 
-	private static class TUCommandSpec extends TCommandSpec {
+	private class TUCommandSpec extends TCommandSpec {
 		private static final long serialVersionUID = 1L;
 		
 		private TUCommandSpec(TextPiece value, MTFSupply supply) {
@@ -337,7 +347,7 @@ public class TFCommand extends TokenFactorySupply<MToken> {
 		}
 	}
 
-	private static class TWCommandSpec extends TCommandSpec {
+	private class TWCommandSpec extends TCommandSpec {
 		private static final long serialVersionUID = 1L;
 		
 		private TWCommandSpec(TextPiece value, MTFSupply supply) {
@@ -349,7 +359,7 @@ public class TFCommand extends TokenFactorySupply<MToken> {
 		}
 	}
 
-	private static class TVCommandSpec extends TCommandSpec {
+	private class TVCommandSpec extends TCommandSpec {
 		private static final long serialVersionUID = 1L;
 		
 		private TVCommandSpec(TextPiece value, MTFSupply supply) {
@@ -361,7 +371,7 @@ public class TFCommand extends TokenFactorySupply<MToken> {
 		}
 	}
 
-	private static class TXCommandSpec extends TCommandSpec {
+	private class TXCommandSpec extends TCommandSpec {
 		private static final long serialVersionUID = 1L;
 		
 		private TXCommandSpec(TextPiece value, MTFSupply supply) {
@@ -373,7 +383,7 @@ public class TFCommand extends TokenFactorySupply<MToken> {
 		}
 	}
 
-	private static class TGenericCommandSpec extends TCommandSpec {
+	private class TGenericCommandSpec extends TCommandSpec {
 		private static final long serialVersionUID = 1L;
 		
 		private TGenericCommandSpec(TextPiece value, MTFSupply supply) {
@@ -627,11 +637,6 @@ public class TFCommand extends TokenFactorySupply<MToken> {
 		this.commandSpecs.put(name, generic);
 	}
 	
-	@Override
-	public TokenFactory<MToken> getSupplyTokenFactory() {
-		return this.new TFCommandName("command.name", this.supply.ident);
-	}
-	
 	private class TFCommandRest extends TFSequence<MToken> {
 		public TFCommandRest(String name) {
 			super(name, 4);
@@ -657,7 +662,7 @@ public class TFCommand extends TokenFactorySupply<MToken> {
 		}
 		
 		@Override
-		public MToken tokenize(Text text, ObjectSupply<MToken> objectSupply) throws SyntaxErrorException {
+		public TCommandSpec tokenize(Text text, ObjectSupply<MToken> objectSupply) throws SyntaxErrorException {
 			Token token = this.slave.tokenize(text, objectSupply);
 			if (token == null) {
 				return null;
@@ -675,23 +680,10 @@ public class TFCommand extends TokenFactorySupply<MToken> {
 	}
 	
 	@Override
-	public TokenFactory<MToken> getNextTokenFactory(MToken token) throws SyntaxErrorException {
-		TCommandSpec spec = (TCommandSpec) token;
-		TokenFactory<MToken> argumentFactory = spec.getArgumentFactory();
-		TFSequence<MToken> tf = new TFCommandRest(this.getName());
-		tf.add(this.supply.postcondition, false);
-		tf.add(this.supply.space, false);
-		tf.add(argumentFactory, false);
-		tf.add(this.supply.commandend, false);
-		return tf;
-	}
-
-		
-	@Override
 	public MToken tokenize(Text text, ObjectSupply<MToken> objectSupply) {
 		Text textCopy = text.getCopy();
 		try {
-			return super.tokenize(text, objectSupply);
+			return this.tokenizePrivate(text, objectSupply);
 		} catch (SyntaxErrorException e) {
 			int errorIndex = text.getIndex();
 			int lengthToEOL = textCopy.findEOL();
@@ -700,9 +692,18 @@ public class TFCommand extends TokenFactorySupply<MToken> {
 			return new MSyntaxError(e.getCode(), t, errorIndex);
 		}
 	}
+
 	
-	
-	@Override
+	public MToken tokenizePrivate(Text text, ObjectSupply<MToken> objectSupply) throws SyntaxErrorException {
+		TFCommandName cmdSpecFactory = this.new TFCommandName("command.name", this.supply.ident);
+		TCommandSpec cmdSpec = cmdSpecFactory.tokenize(text, objectSupply);
+		if (cmdSpec == null) {
+			return null;
+		} else {
+			return cmdSpec.tokenizeWhatFollows(text, objectSupply);
+		}
+	}	
+		
 	public MToken getToken(MToken supplyToken, MToken nextToken) {
 		TCommandSpec spec = (TCommandSpec) supplyToken;
 		return spec.getToken(supplyToken, nextToken);
