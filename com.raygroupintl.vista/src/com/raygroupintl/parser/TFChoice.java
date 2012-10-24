@@ -21,7 +21,7 @@ import java.util.List;
 
 import com.raygroupintl.parsergen.ObjectSupply;
 
-public class TFChoice<T extends Token> extends TokenFactory<T> {
+public class TFChoice<T extends Token> extends TFWithAdaptor<T> {
 	private List<TokenFactory<T>> factories;
 	
 	public TFChoice(String name) {

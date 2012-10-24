@@ -127,7 +127,7 @@ public class TFSequence<T extends Token> extends TokenFactory<T> {
 	}
 	
 	@Override
-	public final T tokenizeOnly(Text text, ObjectSupply<T> objectSupply) throws SyntaxErrorException {
+	public final T tokenize(Text text, ObjectSupply<T> objectSupply) throws SyntaxErrorException {
 		if (text.onChar()) {
 			SequenceOfTokens<T> foundTokens = this.tokenizeCommon(text, objectSupply);
 			return this.convertSequence(foundTokens, objectSupply);

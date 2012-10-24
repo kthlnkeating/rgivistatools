@@ -19,7 +19,7 @@ package com.raygroupintl.parsergen.ruledef;
 import com.raygroupintl.parser.TokenFactory;
 import com.raygroupintl.parsergen.DelimitedListTokenType;
 import com.raygroupintl.parsergen.SequenceTokenType;
-import com.raygroupintl.parsergen.TokenType;
+import com.raygroupintl.parsergen.StringTokenType;
 
 public class RuleGrammar {
 	@CharSpecified(chars={','}, single=true)
@@ -75,7 +75,7 @@ public class RuleGrammar {
 	@CharSpecified(excludechars={'\''}, single=true)
 	public TokenFactory<RuleSupply> noquote;
 
-	@TokenType(TSymbol.class)
+	@StringTokenType(TSymbol.class)
 	@CharSpecified(ranges={'a', 'z'})
 	public TokenFactory<RuleSupply> specifiedsymbol; 
 

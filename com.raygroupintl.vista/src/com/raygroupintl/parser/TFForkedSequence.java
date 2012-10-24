@@ -79,8 +79,8 @@ public class TFForkedSequence<T extends Token> extends TokenFactory<T> {
 	}
 	
 	@Override
-	public T tokenizeOnly(Text text, ObjectSupply<T> objectSupply) throws SyntaxErrorException {
-		T leading = this.leader.tokenizeOnly(text, objectSupply);
+	public T tokenize(Text text, ObjectSupply<T> objectSupply) throws SyntaxErrorException {
+		T leading = (this.leader instanceof TFWithAdaptor) ? ((TFWithAdaptor<T>) this.leader).tokenizeOnly(text, objectSupply) : this.leader.tokenize(text, objectSupply);
 		if (leading == null) {
 			return null;
 		}
@@ -93,7 +93,7 @@ public class TFForkedSequence<T extends Token> extends TokenFactory<T> {
 				SequenceOfTokens<T> result = follower.tokenizeCommon(text, objectSupply, 1, foundTokens, true);
 				if (result != null) {
 					TokenFactory<T> f0th = follower.getFactory(0);
-					T replaced = f0th.convert(leading);
+					T replaced = f0th.convertToken(leading);
 					foundTokens.setToken(0, replaced);
 					foundTokens.setLength(follower.getSequenceCount());
 					return follower.convertSequence(result, objectSupply);
@@ -108,7 +108,7 @@ public class TFForkedSequence<T extends Token> extends TokenFactory<T> {
 			}
 		}
 		if (this.singleValid) {
-			return this.leader.convert(leading);
+			return this.leader.convertToken(leading);
 		}
 		throw new SyntaxErrorException();
 	}

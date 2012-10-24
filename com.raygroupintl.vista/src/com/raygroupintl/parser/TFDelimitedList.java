@@ -76,7 +76,7 @@ public class TFDelimitedList<T extends Token> extends TokenFactory<T> {
 	}
 	
 	@Override
-	protected T tokenizeOnly(Text text, ObjectSupply<T> objectSupply) throws SyntaxErrorException {
+	public T tokenize(Text text, ObjectSupply<T> objectSupply) throws SyntaxErrorException {
 		if (this.effective == null) {
 			throw new IllegalStateException("TFDelimitedList.set needs to be called before TFDelimitedList.tokenize");
 		} else {

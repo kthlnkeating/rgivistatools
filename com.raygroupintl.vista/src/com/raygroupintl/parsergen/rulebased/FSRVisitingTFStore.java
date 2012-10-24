@@ -3,52 +3,52 @@ package com.raygroupintl.parsergen.rulebased;
 import com.raygroupintl.parser.Token;
 import com.raygroupintl.parser.TypeAwareTFStore;
 
-public class FSRVisitingTFStore<T extends Token> extends TypeAwareTFStore<T> implements FSRVisitor<T> {
+public class FSRVisitingTFStore<T extends Token> extends TypeAwareTFStore<T> implements VisitorFSR<T> {
 	@Override
-	public void addChar(FSRChar<T> fsr) {		
+	public void visitChar(FSRChar<T> fsr) {		
 	}
 
 	@Override
-	public void addChoice(FSRChoice<T> fsr) {		
+	public void visitChoice(FSRChoice<T> fsr) {		
 	}
 
 	@Override
-	public void addConst(FSRConst<T> fsr) {		
+	public void visitConst(FSRConst<T> fsr) {		
 	}
 
 	@Override
-	public void addCopy(FSRCopy<T> copy) {		
+	public void visitCopy(FSRCopy<T> copy) {		
 	}
 
 	@Override
-	public void addCustom(FSRCustom<T> fsr) {		
+	public void visitCustom(FSRCustom<T> fsr) {		
 	}
 
 	@Override
-	public void addDelimitedList(FSRDelimitedList<T> fsr) {		
+	public void visitDelimitedList(FSRDelimitedList<T> fsr) {		
 	}
 
 	@Override
-	public void addEnclosedDelimitedList(FSREnclosedDelimitedList<T> fsr) {		
+	public void visitEnclosedDelimitedList(FSREnclosedDelimitedList<T> fsr) {		
 	}
 
 	@Override
-	public void addForkedSequence(FSRForkedSequence<T> fsr) {		
+	public void visitForkedSequence(FSRForkedSequence<T> fsr) {		
 	}
 
 	@Override
-	public void addList(FSRList<T> fsr) {		
+	public void visitList(FSRList<T> fsr) {		
 	}
 
 	@Override
-	public void addSequence(FSRSequence<T> fsr) {		
+	public void visitSequence(FSRSequence<T> fsr) {		
 	}
 
 	@Override
-	public void addString(FSRString<T> fsr) {		
+	public void visitString(FSRString<T> fsr) {		
 	}
 
 	@Override
-	public void addStringSequence(FSRStringSequence<T> fsr) {		
+	public void visitStringSequence(FSRStringSequence<T> fsr) {		
 	}
 }

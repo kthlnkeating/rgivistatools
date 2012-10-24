@@ -27,7 +27,7 @@ public final class TFSyntaxError<T extends Token> extends TokenFactory<T> {
 	}
 		
 	@Override
-	public T tokenizeOnly(Text text, ObjectSupply<T> objectSupply) throws SyntaxErrorException {
+	public T tokenize(Text text, ObjectSupply<T> objectSupply) throws SyntaxErrorException {
 		throw new SyntaxErrorException(this.code);
 	}
 }

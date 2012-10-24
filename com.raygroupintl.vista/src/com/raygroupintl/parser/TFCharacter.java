@@ -33,7 +33,7 @@ public class TFCharacter<T extends Token> extends TokenFactory<T> {
 	}
 	
 	@Override
-	protected T tokenizeOnly(Text text, ObjectSupply<T> objectSupply) {
+	public T tokenize(Text text, ObjectSupply<T> objectSupply) {
 		TextPiece p = text.extractChar(this.predicate);
 		return this.convertString(p, objectSupply);
 	}

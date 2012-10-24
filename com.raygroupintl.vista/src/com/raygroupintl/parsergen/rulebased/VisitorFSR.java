@@ -18,17 +18,17 @@ package com.raygroupintl.parsergen.rulebased;
 
 import com.raygroupintl.parser.Token;
 
-public interface FSRVisitor<T extends Token> {
-	void addChar(FSRChar<T> fsr);
-	void addChoice(FSRChoice<T> fsr);
-	void addConst(FSRConst<T> fsr);
-	void addCopy(FSRCopy<T> copy);
-	void addCustom(FSRCustom<T> fsr);
-	void addDelimitedList(FSRDelimitedList<T> fsr);
-	void addEnclosedDelimitedList(FSREnclosedDelimitedList<T> fsr);
-	void addForkedSequence(FSRForkedSequence<T> fsr);
-	void addList(FSRList<T> fsr);
-	void addSequence(FSRSequence<T> fsr);
-	void addString(FSRString<T> fsr);
-	void addStringSequence(FSRStringSequence<T> fsr);
+public interface VisitorFSR<T extends Token> {
+	void visitChar(FSRChar<T> fsr);
+	void visitChoice(FSRChoice<T> fsr);
+	void visitConst(FSRConst<T> fsr);
+	void visitCopy(FSRCopy<T> fsr);
+	void visitCustom(FSRCustom<T> fsr);
+	void visitDelimitedList(FSRDelimitedList<T> fsr);
+	void visitEnclosedDelimitedList(FSREnclosedDelimitedList<T> fsr);
+	void visitForkedSequence(FSRForkedSequence<T> fsr);
+	void visitList(FSRList<T> fsr);
+	void visitSequence(FSRSequence<T> fsr);
+	void visitString(FSRString<T> fsr);
+	void visitStringSequence(FSRStringSequence<T> fsr);
 }

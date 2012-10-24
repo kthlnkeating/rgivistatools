@@ -31,7 +31,7 @@ public class TFEmptyVerified<T extends Token> extends TokenFactory<T> {
 	}
 		
 	@Override
-	protected T tokenizeOnly(Text text, ObjectSupply<T> objectSupply) throws SyntaxErrorException {
+	public T tokenize(Text text, ObjectSupply<T> objectSupply) throws SyntaxErrorException {
 		if (text.onChar()) {
 			char ch = text.getChar();
 			if (this.isExpected(ch)) {

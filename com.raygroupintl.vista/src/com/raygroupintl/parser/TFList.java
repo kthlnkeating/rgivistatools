@@ -64,7 +64,7 @@ public final class TFList<T extends Token> extends TokenFactory<T> {
 	}
 	
 	@Override
-	public T tokenizeOnly(Text text, ObjectSupply<T> objectSupply) throws SyntaxErrorException {
+	public T tokenize(Text text, ObjectSupply<T> objectSupply) throws SyntaxErrorException {
 		if (elementFactory == null) throw new IllegalStateException("TFList.setElementFactory needs to be called before TFList.tokenize");
 		ListOfTokens<T> tokens = this.tokenizeCommon(text, objectSupply);
 		return this.convertList(tokens, objectSupply);

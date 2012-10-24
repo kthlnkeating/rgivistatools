@@ -30,7 +30,7 @@ public class TFCommand extends TokenFactorySupply<MToken> {
 		}
 		
 		@Override
-		public MToken tokenizeOnly(Text text, ObjectSupply<MToken> objectSupply) {
+		public MToken tokenize(Text text, ObjectSupply<MToken> objectSupply) {
 			int index = 0;
 			boolean inQuotes = false;
 			while (text.onChar(index)) {
@@ -657,7 +657,7 @@ public class TFCommand extends TokenFactorySupply<MToken> {
 		}
 		
 		@Override
-		public MToken tokenizeOnly(Text text, ObjectSupply<MToken> objectSupply) throws SyntaxErrorException {
+		public MToken tokenize(Text text, ObjectSupply<MToken> objectSupply) throws SyntaxErrorException {
 			Token token = this.slave.tokenize(text, objectSupply);
 			if (token == null) {
 				return null;
@@ -688,10 +688,10 @@ public class TFCommand extends TokenFactorySupply<MToken> {
 
 		
 	@Override
-	public MToken tokenizeOnly(Text text, ObjectSupply<MToken> objectSupply) {
+	public MToken tokenize(Text text, ObjectSupply<MToken> objectSupply) {
 		Text textCopy = text.getCopy();
 		try {
-			return super.tokenizeOnly(text, objectSupply);
+			return super.tokenize(text, objectSupply);
 		} catch (SyntaxErrorException e) {
 			int errorIndex = text.getIndex();
 			int lengthToEOL = textCopy.findEOL();

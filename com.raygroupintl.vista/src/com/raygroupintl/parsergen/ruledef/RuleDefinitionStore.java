@@ -86,7 +86,7 @@ public class RuleDefinitionStore extends TokenFactoryStore<RuleSupply> {
 			if ((left.length() == 0) || (right.length() == 0)) {
 				TFList<RuleSupply> value = new TFList<RuleSupply>(name);
 				Constructor<? extends RuleSupply> constructor = spec.getTokenAdapter();
-				if (constructor != null) value.setTargetType(constructor);
+				if (constructor != null) value.setListTargetType(constructor);
 				this.lists.add(new Triple<TFList<RuleSupply>, List>(value, list));
 				return value;
 			} else {
@@ -123,13 +123,13 @@ public class RuleDefinitionStore extends TokenFactoryStore<RuleSupply> {
 				
 		if (characters.single()) {
 			TFCharacter<RuleSupply> tf = new TFCharacter<RuleSupply>(name, result);
-			Constructor<? extends RuleSupply> constructor = spec.getTokenAdapter();
-			if (constructor != null) tf.setTargetType(constructor);
+			Constructor<? extends RuleSupply> constructor = spec.getStringTokenAdapter();
+			if (constructor != null) tf.setStringTargetType(constructor);
 			return tf;
 		} else {		
 			TFString<RuleSupply> tf = new TFString<RuleSupply>(name, result);
-			Constructor<? extends RuleSupply> constructor = spec.getTokenAdapter();
-			if (constructor != null) tf.setTargetType(constructor);
+			Constructor<? extends RuleSupply> constructor = spec.getStringTokenAdapter();
+			if (constructor != null) tf.setStringTargetType(constructor);
 			return tf;
 		}
 	}

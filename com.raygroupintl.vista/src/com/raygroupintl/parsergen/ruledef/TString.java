@@ -21,20 +21,8 @@ import com.raygroupintl.parser.TextPiece;
 public class TString extends TextPiece implements RuleSupply {
 	private static final long serialVersionUID = 1L;
 	
-	public TString() {
-		super();
-	}
-
 	public TString(TextPiece value) {
 		super(value);
-	}
-	
-	public TString(RuleSupply token) {
-		super(token.toValue());
-	}
-	
-	public TString(String data, int beginIndex, int endIndex) {
-		super(data, beginIndex, endIndex);
 	}
 	
 	@Override
@@ -42,10 +30,6 @@ public class TString extends TextPiece implements RuleSupply {
 		return this;
 	}
 	
-	public void setValue(TextPiece value) {
-		super.set(value);
-	}
-
 	@Override
 	public void accept(RuleDefinitionVisitor visitor, String name, RuleSupplyFlag flag) {		
 	}

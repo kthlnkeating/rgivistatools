@@ -24,7 +24,7 @@ public class TFEnd<T extends Token> extends TokenFactory<T> {
 	}
 	
 	@Override
-	public T tokenizeOnly(Text text, ObjectSupply<T> objectSupply) {
+	public T tokenize(Text text, ObjectSupply<T> objectSupply) {
 		if (text.onChar()) {
 			return null;
 		} else {

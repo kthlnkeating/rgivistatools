@@ -33,7 +33,7 @@ public class TFString<T extends Token> extends TokenFactory<T> {
 	}
 		
 	@Override
-	public T tokenizeOnly(Text text, ObjectSupply<T> objectSupply) {
+	public T tokenize(Text text, ObjectSupply<T> objectSupply) {
 		TextPiece p = text.extractPiece(this.predicate);
 		return this.convertString(p, objectSupply);
 	}

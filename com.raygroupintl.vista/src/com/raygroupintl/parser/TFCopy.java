@@ -2,7 +2,7 @@ package com.raygroupintl.parser;
 
 import com.raygroupintl.parsergen.ObjectSupply;
 
-public class TFCopy<T extends Token> extends TokenFactory<T> {
+public class TFCopy<T extends Token> extends TFWithAdaptor<T> {
 	private TokenFactory<T> tf;
 	
 	public TFCopy(String name) {

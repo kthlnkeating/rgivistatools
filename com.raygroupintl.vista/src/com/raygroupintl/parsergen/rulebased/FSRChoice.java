@@ -35,7 +35,7 @@ public class FSRChoice<T extends Token> extends FSRCollection<T> {
 		private List<FactorySupplyRule<T>> list = new ArrayList<FactorySupplyRule<T>>();
 		
 		private Map<String, Integer> choiceOrder = new HashMap<String, Integer>();
-		private Map<Integer, String> leadingShared = new HashMap<Integer, String>();
+		private Map<Integer, FSRForkedSequence<T>> leadingShared; 
 		
 		public ForkAlgorithm(String name) {
 			this.appliedOnName = name;
@@ -50,16 +50,20 @@ public class FSRChoice<T extends Token> extends FSRCollection<T> {
 				this.list.add(tf);
 				this.choiceOrder.put(name, n);
 			} else {
-				this.leadingShared.put(existing, name);
-				int n = existing.intValue();
-				FactorySupplyRule<T> current = this.list.get(n);
-				if (current instanceof FSRForkedSequence) {
-					((FSRForkedSequence<T>) current).addFollower(tf);
+				FSRForkedSequence<T> fseq = (this.leadingShared == null) ? null : this.leadingShared.get(existing);
+				if (fseq != null) {
+					fseq.addFollower(tf);
 				} else {
-					FSRForkedSequence<T> newForked = new FSRForkedSequence<T>(this.appliedOnName + "." + name, leading);
-					newForked.addFollower(current);
-					newForked.addFollower(tf);
-					this.list.set(n, newForked);
+					int n = existing.intValue();
+					fseq = new FSRForkedSequence<T>(this.appliedOnName + "." + name, leading);
+					FactorySupplyRule<T> current = this.list.get(n);
+					fseq.addFollower(current);
+					fseq.addFollower(tf);
+					this.list.set(n, fseq);
+					if (this.leadingShared == null) {
+						this.leadingShared = new HashMap<Integer, FSRForkedSequence<T>>();
+					}
+					this.leadingShared.put(existing, fseq);
 				}
 			}
 		}	

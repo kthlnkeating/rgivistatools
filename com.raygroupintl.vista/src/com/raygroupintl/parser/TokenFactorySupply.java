@@ -30,7 +30,7 @@ public abstract class TokenFactorySupply<T extends Token> extends TokenFactory<T
 	public abstract T getToken(T supplyToken, T nextToken);
 	
 	@Override
-	public T tokenizeOnly(Text text, ObjectSupply<T> objectSupply) throws SyntaxErrorException {
+	public T tokenize(Text text, ObjectSupply<T> objectSupply) throws SyntaxErrorException {
 		TokenFactory<T> supplyFactory = getSupplyTokenFactory();
 		T token = supplyFactory.tokenize(text, objectSupply);
 		if (token == null) {
