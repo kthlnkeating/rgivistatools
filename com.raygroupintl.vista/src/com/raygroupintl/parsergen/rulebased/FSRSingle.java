@@ -16,6 +16,7 @@
 
 package com.raygroupintl.parsergen.rulebased;
 
+import com.raygroupintl.parser.Adapter;
 import com.raygroupintl.parser.Token;
 import com.raygroupintl.parser.TokenFactory;
 import com.raygroupintl.parsergen.ParseErrorException;
@@ -53,5 +54,10 @@ public class FSRSingle<T extends Token> extends FSRBase<T> {
 	@Override
 	public TokenFactory<T> getShellFactory() {
 		throw new ParseErrorException("Not a top rule.");
+	}
+	
+	@Override
+	public Adapter<T> getAdapter(RulesByName<T> names) {
+		return names.get(this.value).getAdapter(names);
 	}
 }

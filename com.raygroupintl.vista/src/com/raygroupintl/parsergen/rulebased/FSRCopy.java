@@ -18,6 +18,7 @@ package com.raygroupintl.parsergen.rulebased;
 
 import java.lang.reflect.Constructor;
 
+import com.raygroupintl.parser.Adapter;
 import com.raygroupintl.parser.TFCopy;
 import com.raygroupintl.parser.Token;
 import com.raygroupintl.parser.TokenFactory;
@@ -70,5 +71,10 @@ public class FSRCopy<T extends Token> extends FSRBase<T> {
 	@Override
 	public String[] getNeededNames() {
 		return new String[]{this.masterName};
+	}
+	
+	@Override
+	public Adapter<T> getAdapter(RulesByName<T> names) {
+		return this.factory;
 	}
 }

@@ -16,18 +16,9 @@
 
 package com.raygroupintl.parser;
 
-import com.raygroupintl.parsergen.ObjectSupply;
-
-public abstract class TokenFactory<T extends Token> {
-	private String name;
-	
-	protected TokenFactory(String name) {
-		this.name = name;
+public class AdapterIdentity<T extends Token> implements Adapter<T> {
+	@Override
+	public T adapt(T t) {
+		return t;
 	}
-	
-	public String getName() {
-		return this.name;
-	}
-	
-	public abstract T tokenize(Text text, ObjectSupply<T> objectSupply) throws SyntaxErrorException;
 }

@@ -16,6 +16,8 @@
 
 package com.raygroupintl.parsergen.rulebased;
 
+import com.raygroupintl.parser.Adapter;
+import com.raygroupintl.parser.AdapterIdentity;
 import com.raygroupintl.parser.Token;
 import com.raygroupintl.parser.TokenFactory;
 import com.raygroupintl.parsergen.AdapterSpecification;
@@ -90,5 +92,10 @@ public abstract class FSRBase<T extends Token> implements FactorySupplyRule<T> {
 	@Override
 	public String[] getNeededNames() {
 		return new String[0];
+	}
+
+	@Override
+	public Adapter<T> getAdapter(RulesByName<T> names) {
+		return new AdapterIdentity<>();
 	}
 }

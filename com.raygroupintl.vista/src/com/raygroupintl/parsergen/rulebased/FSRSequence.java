@@ -61,15 +61,19 @@ public class FSRSequence<T extends Token> extends FSRCollection<T> {
 			spg.update(localSymbols);
 		}		
 		
-		
 		return true;		
 	}
-
+	
 	@Override
 	public TFSequence<T> getShellFactory() {
 		return this.factory;
 	}
 	
+	@Override
+	public TFSequence<T> getTheFactory(RulesByName<T> symbols) {
+		return this.factory;
+	}
+
 	@Override
 	public int getSequenceCount() {
 		return this.list.size();

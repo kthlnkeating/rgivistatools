@@ -19,6 +19,7 @@ package com.raygroupintl.parsergen.rulebased;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.raygroupintl.parser.Adapter;
 import com.raygroupintl.parser.TFForkedSequence;
 import com.raygroupintl.parser.TFSequence;
 import com.raygroupintl.parser.Token;
@@ -29,8 +30,8 @@ import com.raygroupintl.parsergen.ruledef.RuleSupplyFlag;
 public class FSRForkedSequence<T extends Token> extends FSRBase<T> {
 	private String name;
 	private FactorySupplyRule<T> leader;
-	private List<FactorySupplyRule<T>> followers = new ArrayList<FactorySupplyRule<T>>();
-	private boolean singleValid;
+	private List<FSRSequence<T>> followers = new ArrayList<FSRSequence<T>>();
+	private FactorySupplyRule<T> single;
 	private TFForkedSequence<T> factory;
 
 	public FSRForkedSequence(String name, FactorySupplyRule<T> leader) {
@@ -57,27 +58,39 @@ public class FSRForkedSequence<T extends Token> extends FSRBase<T> {
 		return 1;
 	}
 	
-	public void addFollower(FactorySupplyRule<T> follower) {
-		if (follower.getSequenceCount() == 1) {
-			this.singleValid = true;
-			this.leader = follower;
-			return;
+	private void addNonSequence(FactorySupplyRule<T> single) {
+		if (this.single != null) {
+			throw new ParseErrorException("Cannot have two rules that are not sequences in the same rule");
 		}
-		if ((follower instanceof FSRSequence) || (follower instanceof FSRCopy)) {			
-			this.followers.add(follower);		
+		this.single = single;
+	}
+	
+	private void addSequence(FSRSequence<T> sequence) {
+		this.followers.add(sequence);
+	}
+	
+	public void add(FactorySupplyRule<T> follower) {
+		if (follower.getSequenceCount() == 1) {
+			this.addNonSequence(follower);
 		} else {
-			throw new ParseErrorException("Unsupported token in the choices; " + follower.getName() + " must be either a sequence or copy of one");
+			FSRSequence<T> sequence = (FSRSequence<T>) follower;
+			this.addSequence(sequence);
 		}
 	}
 	
 	@Override
 	public boolean update(RulesByName<T> symbols) {
 		this.leader.update(symbols);
-		this.factory.setLeader(this.leader.getTheFactory(symbols));		
-		this.factory.setSingleValid(this.singleValid);
-		for (FactorySupplyRule<T> follower : this.followers) {
+		this.factory.setLeader(this.leader.getTheFactory(symbols));
+		if (this.single != null) {
+			if ((this.leader != this.single)) this.single.update(symbols);
+			this.factory.setSingleAdapter(this.single.getAdapter(symbols));
+		}
+		for (FSRSequence<T> follower : this.followers) {
 			follower.update(symbols);
-			this.factory.addFollower((TFSequence<T>) follower.getTheFactory(symbols));
+			TFSequence<T> tf = follower.getTheFactory(symbols);
+			Adapter<T> a = follower.get(0).getAdapter(symbols);
+			this.factory.addSequence(tf, a);
 		}		
 		return true;
 	}

@@ -20,24 +20,20 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.raygroupintl.parsergen.ObjectSupply;
+import com.raygroupintl.struct.Pair;
 
 public class TFForkedSequence<T extends Token> extends TokenFactory<T> {
 	private TokenFactory<T> leader;
-	private List<TFSequence<T>> followers;
-	private boolean singleValid;
+	private List<Pair<TFSequence<T>, Adapter<T>>> followers;
+	private Adapter<T> singleAdapter;
 	
 	public TokenFactory<T> getLeader() {
 		return this.leader;
 	}
 	
-	public List<TFSequence<T>> getFollowers() {
+	public List<Pair<TFSequence<T>, Adapter<T>>> getFollowers() {
 		return this.followers;
 	}
-	
-	public boolean isSingleValid() {
-		return this.singleValid;
-	}
-	
 	
 	public TFForkedSequence(String name) {
 		super(name);
@@ -48,31 +44,26 @@ public class TFForkedSequence<T extends Token> extends TokenFactory<T> {
 		this.leader = leader;
 	}
 	
-	public TFForkedSequence(String name, TokenFactory<T> leader, boolean singleValid) {
-		super(name);
-		this.leader = leader;
-		this.singleValid = singleValid;
-	}
-	
-	public void addFollower(TFSequence<T> follower) {
+	public void addSequence(TFSequence<T> sequence, Adapter<T> adapter) {
 		if (this.followers == null) {
-			this.followers = new ArrayList<TFSequence<T>>();
+			this.followers = new ArrayList<Pair<TFSequence<T>, Adapter<T>>>();
 		}
-		this.followers.add(follower);
+		Pair<TFSequence<T>, Adapter<T>> e = new Pair<TFSequence<T>, Adapter<T>>(sequence, adapter);
+		this.followers.add(e);
 	}
 	
 	public void setLeader(TokenFactory<T> leader) {
 		this.leader = leader;
 	}
 	
-	public void setSingleValid(boolean b) {
-		this.singleValid = b;
+	public void setSingleAdapter(Adapter<T> adapter) {
+		this.singleAdapter = adapter;
 	}
 	
 	private int getMaxSequenceCount() {
 		int result = 0;
-		for (TFSequence<T> follower : this.followers) {
-			int count = follower.getSequenceCount();
+		for (Pair<TFSequence<T>, Adapter<T>> pair : this.followers) {
+			int count = pair.first.getSequenceCount();
 			if (count > result) return result;
 		}
 		return result;
@@ -80,7 +71,7 @@ public class TFForkedSequence<T extends Token> extends TokenFactory<T> {
 	
 	@Override
 	public T tokenize(Text text, ObjectSupply<T> objectSupply) throws SyntaxErrorException {
-		T leading = (this.leader instanceof TFWithAdaptor) ? ((TFWithAdaptor<T>) this.leader).tokenizeOnly(text, objectSupply) : this.leader.tokenize(text, objectSupply);
+		T leading = this.leader.tokenize(text, objectSupply);
 		if (leading == null) {
 			return null;
 		}
@@ -88,27 +79,28 @@ public class TFForkedSequence<T extends Token> extends TokenFactory<T> {
 		foundTokens.addToken(leading);
 		if (text.onChar()) {
 			int textIndex = text.getIndex();
-			for (TFSequence<T> follower : this.followers) {
+			for (Pair<TFSequence<T>, Adapter<T>> pair : this.followers) {
 				foundTokens.resetIndex(1);
+				TFSequence<T> follower = pair.first;
 				SequenceOfTokens<T> result = follower.tokenizeCommon(text, objectSupply, 1, foundTokens, true);
 				if (result != null) {
-					TokenFactory<T> f0th = follower.getFactory(0);
-					T replaced = f0th.convertToken(leading);
-					foundTokens.setToken(0, replaced);
+					T t0th = result.getToken(0);
+					T adapted = pair.second.adapt(t0th);
+					foundTokens.setToken(0, adapted);
 					foundTokens.setLength(follower.getSequenceCount());
 					return follower.convertSequence(result, objectSupply);
 				}
 				text.resetIndex(textIndex);				
 			}
 		} else {
-			for (TFSequence<T> follower : this.followers) {
-				if (follower.validateEnd(0, foundTokens, true)) {
-					return follower.convertSequence(foundTokens, objectSupply);
+			for (Pair<TFSequence<T>, Adapter<T>> pair : this.followers) {
+				if (pair.first.validateEnd(0, foundTokens, true)) {
+					return pair.first.convertSequence(foundTokens, objectSupply);
 				}
 			}
 		}
-		if (this.singleValid) {
-			return this.leader.convertToken(leading);
+		if (this.singleAdapter != null) {
+			return this.singleAdapter.adapt(leading);
 		}
 		throw new SyntaxErrorException();
 	}

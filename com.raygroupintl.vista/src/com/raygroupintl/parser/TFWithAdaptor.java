@@ -20,7 +20,7 @@ import java.lang.reflect.Constructor;
 
 import com.raygroupintl.parsergen.ObjectSupply;
 
-public abstract class TFWithAdaptor<T extends Token> extends TokenFactory<T> {	
+public abstract class TFWithAdaptor<T extends Token> extends TokenFactory<T> implements Adapter<T >{	
 	private Constructor<? extends T> ctr;
 
 	public TFWithAdaptor(String name) {
@@ -30,12 +30,13 @@ public abstract class TFWithAdaptor<T extends Token> extends TokenFactory<T> {
 	@Override
 	public T tokenize(Text text, ObjectSupply<T> objectSupply) throws SyntaxErrorException {
 		T result = this.tokenizeOnly(text, objectSupply);
-		return this.convert(result);
+		return this.adapt(result);
 	}
 	
 	protected abstract T tokenizeOnly(Text text, ObjectSupply<T> objectSupply) throws SyntaxErrorException;
 	
-	protected final T convert(T token) {
+	@Override
+	public final T adapt(T token) {
 		if ((this.ctr != null) && (token != null)) {
 			try{
 				return this.ctr.newInstance(token); 
@@ -49,10 +50,5 @@ public abstract class TFWithAdaptor<T extends Token> extends TokenFactory<T> {
 
 	public <M extends Token> void setTargetType(Constructor<? extends T> constructor) {
 		this.ctr = constructor;
-	}
-	
-	@Override
-	public T convertToken(T token) {
-		return this.convert(token);
 	}
 }

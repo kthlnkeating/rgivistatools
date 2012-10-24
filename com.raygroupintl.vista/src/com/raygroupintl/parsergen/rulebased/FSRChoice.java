@@ -22,6 +22,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import com.raygroupintl.parser.Adapter;
 import com.raygroupintl.parser.TFChoice;
 import com.raygroupintl.parser.Token;
 import com.raygroupintl.parser.TokenFactory;
@@ -52,13 +53,13 @@ public class FSRChoice<T extends Token> extends FSRCollection<T> {
 			} else {
 				FSRForkedSequence<T> fseq = (this.leadingShared == null) ? null : this.leadingShared.get(existing);
 				if (fseq != null) {
-					fseq.addFollower(tf);
+					fseq.add(tf);
 				} else {
 					int n = existing.intValue();
 					fseq = new FSRForkedSequence<T>(this.appliedOnName + "." + name, leading);
 					FactorySupplyRule<T> current = this.list.get(n);
-					fseq.addFollower(current);
-					fseq.addFollower(tf);
+					fseq.add(current);
+					fseq.add(tf);
 					this.list.set(n, fseq);
 					if (this.leadingShared == null) {
 						this.leadingShared = new HashMap<Integer, FSRForkedSequence<T>>();
@@ -116,5 +117,10 @@ public class FSRChoice<T extends Token> extends FSRCollection<T> {
 	public void setAdapter(AdapterSpecification<T> spec) {
 		Constructor<? extends T> constructor = spec.getTokenAdapter();
 		if (constructor != null) this.factory.setTargetType(constructor);
+	}
+	
+	@Override
+	public Adapter<T> getAdapter(RulesByName<T> names) {
+		return this.factory;
 	}
 }

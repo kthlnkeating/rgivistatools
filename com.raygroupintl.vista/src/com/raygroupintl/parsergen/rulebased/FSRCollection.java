@@ -32,4 +32,8 @@ public abstract class FSRCollection<T extends Token> extends FSRBase<T> {
 	public void add(FactorySupplyRule<T> r) {
 		this.list.add(r);
 	}
+	
+	public FactorySupplyRule<T> get(int index) {
+		return this.list.get(index);
+	}
 }

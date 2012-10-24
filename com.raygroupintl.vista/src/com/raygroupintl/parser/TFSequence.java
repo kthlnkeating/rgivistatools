@@ -91,7 +91,6 @@ public class TFSequence<T extends Token> extends TokenFactory<T> {
 		this.requiredFlags.add(required);
 	}
 	
-	@Override
 	public int getSequenceCount() {
 		return this.factories.size();
 	}
