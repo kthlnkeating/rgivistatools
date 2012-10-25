@@ -41,12 +41,28 @@ public class MSsvn extends MSequence {
 		MNameWithMnemonic.update(SSVS, "W", "WINDOW"); 	
 	}
 	
+	private static class MSSVNKeyword extends MKeyWord {
+		private static final long serialVersionUID = 1L;
+
+		public MSSVNKeyword(TextPiece p) {
+			super(p);
+		}
+		
+		@Override
+		public MNameWithMnemonic getNameWithMnemonic(String name) {
+			return SSVS.get(name);
+		}		
+	}
+	
 	public MSsvn(int length) {
 		super(length);
 	}
 	
 	public MSsvn(SequenceOfTokens<MToken> tokens) {
 		super(tokens);
+		TextPiece name = this.getToken(1).toValue();
+		MSSVNKeyword newToken = new MSSVNKeyword(name);
+		this.setToken(1, newToken);
 	}
 	
 	@Override

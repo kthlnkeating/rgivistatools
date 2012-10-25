@@ -34,12 +34,12 @@ import com.raygroupintl.parser.TokenFactory;
 import com.raygroupintl.parsergen.ObjectSupply;
 
 public class TFIntrinsic extends TokenFactory<MToken> {		
-	private class TIntrinsicVariable extends MSequence {
-		public TIntrinsicVariable(int length) {
+	private static class TIVariable extends MSequence {
+		public TIVariable(int length) {
 			super(length);
 		}
 		
-		public TIntrinsicVariable(SequenceOfTokens<MToken> tokens) {
+		public TIVariable(SequenceOfTokens<MToken> tokens) {
 			super(tokens);
 		}
 		
@@ -49,19 +49,19 @@ public class TFIntrinsic extends TokenFactory<MToken> {
 			return new IntrinsicVariable(name.toString());
 		}
 	}
-
-	private static class TIntrinsicFunction extends MSequence {
-		private TIntrinsicFunction(int length) {
+	
+	private static class TIFunction extends MSequence {
+		private TIFunction(int length) {
 			super(length);
 		}
 		
-		private TIntrinsicFunction(SequenceOfTokens<MToken> tokens) {
+		private TIFunction(SequenceOfTokens<MToken> tokens) {
 			super(tokens);
 		}
 		
 		@Override
 		public Node getNode() {
-			TextPiece name = this.getToken(0, 1).toValue();
+			TextPiece name = this.getToken(1).toValue();
 			MToken arguments = this.getToken(3);	
 			return new IntrinsicFunction(name.toString(), arguments == null ? null : arguments.getNode());
 		}
@@ -126,6 +126,32 @@ public class TFIntrinsic extends TokenFactory<MToken> {
 	
 	private MTFSupply supply;
 	
+	private class TIVariableName extends MKeyWord {
+		private static final long serialVersionUID = 1L;
+
+		public TIVariableName(TextPiece p) {
+			super(p);
+		}
+		
+		@Override
+		public MNameWithMnemonic getNameWithMnemonic(String name) {
+			return TFIntrinsic.this.variables.get(name);			
+		}
+	}
+ 	
+	private class TIFunctionName extends MKeyWord {
+		private static final long serialVersionUID = 1L;
+
+		public TIFunctionName(TextPiece p) {
+			super(p);
+		}
+		
+		@Override
+		public MNameWithMnemonic getNameWithMnemonic(String name) {
+			return TFIntrinsic.this.functions.get(name);			
+		}
+	}
+ 	
 	public TFIntrinsic(String name, MTFSupply supply) {
 		super(name);
 		this.supply = supply;
@@ -179,7 +205,7 @@ public class TFIntrinsic extends TokenFactory<MToken> {
 		return this.addFunction(argumentFactory, name, 1, Integer.MAX_VALUE);
 	}
 
-	public void addFunctionTailTokens(String name, Text text, ObjectSupply<MToken> objectSupply, TIntrinsicFunction result) throws SyntaxErrorException {
+	public void addFunctionTailTokens(String name, Text text, ObjectSupply<MToken> objectSupply, TIFunction result) throws SyntaxErrorException {
 		FunctionInfo info = TFIntrinsic.this.functions.get(name);
 		if (info == null) {
 			throw new SyntaxErrorException(MError.ERR_UNKNOWN_INTRINSIC_FUNCTION);
@@ -193,9 +219,9 @@ public class TFIntrinsic extends TokenFactory<MToken> {
 		result.addToken(rpar);
 	}
 
-	private TIntrinsicVariable getVariableToken(String name, SequenceOfTokens<MToken> nameTokens) throws SyntaxErrorException {
+	private TIVariable getVariableToken(String name, SequenceOfTokens<MToken> nameTokens) throws SyntaxErrorException {
 		if (this.variables.containsKey(name)) {
-			return this.new TIntrinsicVariable(nameTokens);
+			return new TIVariable(nameTokens);
 		} else {
 			throw new SyntaxErrorException(MError.ERR_UNKNOWN_INTRINSIC_VARIABLE);
 		}						
@@ -205,14 +231,18 @@ public class TFIntrinsic extends TokenFactory<MToken> {
 	public MToken tokenize(Text text, ObjectSupply<MToken> objectSupply) throws SyntaxErrorException {
 		SequenceOfTokens<MToken> nameTokens = this.supply.intrinsicname.tokenizeCommon(text, objectSupply);
 		if (nameTokens != null) {
-			MToken lParToken = this.supply.lpar.tokenize(text, objectSupply);	
-			String name = nameTokens.getToken(1).toValue().toString().toUpperCase();
+			MToken lParToken = this.supply.lpar.tokenize(text, objectSupply);
+			TextPiece nameValue = nameTokens.getToken(1).toValue();
+			String name = nameValue.toString().toUpperCase();
 			if (lParToken == null) {
+				TIVariableName t = this.new TIVariableName(nameValue);
+				nameTokens.setToken(1, t);
 				return this.getVariableToken(name, nameTokens);
 			} else {
-				MSequence nameToken = new MSequence(nameTokens);
-				TIntrinsicFunction result = new TIntrinsicFunction(4);
-				result.addToken(nameToken);
+				TIFunction result = new TIFunction(6);
+				result.addToken(nameTokens.getToken(0));
+				result.addToken(this.new TIFunctionName(nameValue));
+				result.addToken(nameTokens.getToken(2));
 				result.addToken(lParToken);
 				this.addFunctionTailTokens(name, text, objectSupply, result);				
 				return result;

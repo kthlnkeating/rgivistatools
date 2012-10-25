@@ -10,6 +10,6 @@ SETUPS ; -- Lists forms/reports defined in print manager clinic setup
  DO DEVICE GOTO:IBQUIT EXIT
  DO DQ
  GOTO EXIT
- IF $P($ZVER,"/",2)<4 ZNSPACE X ZNSPACE CURUCI QUIT X
+ IF $PIECE($ZVER,"/",2)<4 ZNSPACE X ZNSPACE CURUCI QUIT X
  QUIT
  ;
