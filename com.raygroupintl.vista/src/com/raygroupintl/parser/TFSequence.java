@@ -127,11 +127,8 @@ public class TFSequence<T extends Token> extends TokenFactory<T> {
 	
 	@Override
 	public final T tokenize(Text text, ObjectSupply<T> objectSupply) throws SyntaxErrorException {
-		if (text.onChar()) {
-			SequenceOfTokens<T> foundTokens = this.tokenizeCommon(text, objectSupply);
-			return this.convertSequence(foundTokens, objectSupply);
-		}		
-		return null;
+		SequenceOfTokens<T> foundTokens = this.tokenizeCommon(text, objectSupply);
+		return this.convertSequence(foundTokens, objectSupply);
 	}
 	
 	public void setSequenceTargetType(Constructor<? extends T> constructor) {
@@ -154,9 +151,13 @@ public class TFSequence<T extends Token> extends TokenFactory<T> {
 	}
 	
 	final public SequenceOfTokens<T> tokenizeCommon(Text text, ObjectSupply<T> objectSupply) throws SyntaxErrorException {
-		int length = this.factories.size();
-		SequenceOfTokens<T> foundTokens = new SequenceOfTokens<T>(length);
-		return this.tokenizeCommon(text, objectSupply, 0, foundTokens, false);
+		if (text.onChar()) {
+			int length = this.factories.size();
+			SequenceOfTokens<T> foundTokens = new SequenceOfTokens<T>(length);
+			return this.tokenizeCommon(text, objectSupply, 0, foundTokens, false);
+		} else {
+			return null;
+		}
 	}
 	
 	final SequenceOfTokens<T> tokenizeCommon(Text text, ObjectSupply<T> objectSupply, int firstSeqIndex, SequenceOfTokens<T> foundTokens, boolean noException) throws SyntaxErrorException {

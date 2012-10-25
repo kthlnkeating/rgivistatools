@@ -18,36 +18,74 @@ package com.raygroupintl.m.token;
 
 import com.raygroupintl.m.parsetree.Node;
 import com.raygroupintl.parser.TextPiece;
+import com.raygroupintl.parser.Tokens;
 
-public abstract class MCommandBase extends MSequence {
-	public MCommandBase() {
-		super(2);
+public abstract class MCommandBase implements MToken {
+	private MToken name;
+	private MSequence whatFollows;
+	
+	public MCommandBase(MToken name) {
+		this.name = name;
 	}
 
-	public MCommandBase(MToken token0, MToken token1) {
-		super(token0, token1);
+	public MCommandBase(MToken name, MSequence whatFollows) {
+		this.name = name;
+		this.whatFollows = whatFollows;
 	}
 
 	protected abstract String getFullName();
 
+	protected void setName(MToken name) {
+		this.name = name;
+	}
+
+	protected void setWhatFollows(MSequence whatFollows) {
+		this.whatFollows = whatFollows;
+	}
+		
+	protected Node getArgumentNode() {
+		if (this.whatFollows == null) return null;
+		return this.whatFollows.getNode(2);
+	}
+
+	protected Node getPostConditionNode() {
+		if (this.whatFollows == null) return null;
+		return this.whatFollows.getNode(0, 1);
+	}
+
 	protected MToken getArgument() {
-		MToken argument = this.getToken(1, 2);
-		if ((argument == null) || (argument.toValue().length() == 0)) {
-			return null;
-		}
-		return argument;
+		if (this.whatFollows == null) return null;
+		return this.whatFollows.getToken(2);
+	}
+
+	protected Tokens<MToken> getArgumentTokens(int index) {
+		if (this.whatFollows == null) return null;
+		return this.whatFollows.getTokens(index);
 	}
 
 	protected Node getArgumentNode(int index) {
-		return this.getNode(1, 2, index);
+		if (this.whatFollows == null) return null;
+		return this.whatFollows.getNode(2, index);
 
 	}
-
+	
+	@Override 
+	public TextPiece toValue() {
+		TextPiece result = new TextPiece();
+		result.add(this.name.toValue());
+		if (this.whatFollows != null) {
+			result.add(this.whatFollows.toValue());
+		}
+		return result;
+	}
+	
 	@Override
 	public void beautify() {
-		TextPiece n = this.getToken(0).toValue();
+		TextPiece n = this.name.toValue();
 		TextPiece newName = new TextPiece(getFullName());
 		n.set(newName);
-		super.beautify();
+		if (this.whatFollows != null) {
+			this.whatFollows.beautify();
+		}
 	}
 }

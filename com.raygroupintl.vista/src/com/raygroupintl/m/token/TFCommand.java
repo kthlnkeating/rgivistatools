@@ -78,8 +78,7 @@ public class TFCommand extends TokenFactory<MToken> {
 		private TokenFactory<MToken> argumentFactory;
 		
 		public TCommandSpec(MToken name, TokenFactory<MToken> argumentFactory) {
-			super();
-			this.addToken(name);
+			super(name);
 			this.argumentFactory = argumentFactory;
 		}
 
@@ -94,8 +93,13 @@ public class TFCommand extends TokenFactory<MToken> {
 			tf.add(TFCommand.this.supply.space, false);
 			tf.add(argumentFactory, false);
 			tf.add(TFCommand.this.supply.commandend, false);
-			MToken nextToken = tf.tokenize(text, objectSupply);
-			this.addToken(nextToken);
+			SequenceOfTokens<MToken> whatFollowsTokens = tf.tokenizeCommon(text, objectSupply);
+			if (whatFollowsTokens == null) {
+				this.setWhatFollows(null);
+			} else {
+				MSequence whatFollows = new MSequence(whatFollowsTokens);
+				this.setWhatFollows(whatFollows);
+			}
 			return this;
 		}
 	}
@@ -211,7 +215,7 @@ public class TFCommand extends TokenFactory<MToken> {
 	
 		@Override
 		protected String getFullName() {
-			Token argument = this.getToken(3);
+			MToken argument = this.getArgument();
 			if (argument == null) {
 				return "HALT";
 			} else {
@@ -232,7 +236,7 @@ public class TFCommand extends TokenFactory<MToken> {
 
 		@Override
 		public Node getNode() {
-			Tokens<MToken> argument = this.getTokens(1, 2);
+			Tokens<MToken> argument = this.getArgumentTokens(2);
 			if (argument != null) {
 				Nodes<Node> node = NodeUtilities.getNodes(argument.toLogicalIterable(), argument.size());
 				return new IfCmd(node);

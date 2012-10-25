@@ -20,28 +20,14 @@ import com.raygroupintl.m.parsetree.GenericCommand;
 import com.raygroupintl.m.parsetree.Node;
 
 public abstract class MCommand extends MCommandBase {
-	public MCommand() {
-		super();
+	public MCommand(MToken name) {
+		super(name);
 	}
 
-	public MCommand(MToken token0, MToken token1) {
-		super(token0, token1);
+	public MCommand(MToken token0, MSequence whatFollows) {
+		super(token0, whatFollows);
 	}
 	
-	protected Node getArgumentNode() {
-		MToken a = this.getToken(1, 2);
-		if ((a == null) || (a.toValue().length() == 0)) {
-			return null;
-		} else {				
-			return a.getNode();
-		}
-	}
-
-	protected Node getPostConditionNode() {
-		MToken t = this.getToken(1, 0, 1);
-		return (t == null) ? null : t.getNode();
-	}
-
 	protected Node getNode(Node postConditionNode, Node argumentNode) {
 		return new GenericCommand(postConditionNode, argumentNode);	
 	}

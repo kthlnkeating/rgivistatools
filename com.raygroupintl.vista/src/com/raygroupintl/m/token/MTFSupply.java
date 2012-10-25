@@ -19,6 +19,7 @@ package com.raygroupintl.m.token;
 import com.raygroupintl.m.struct.MError;
 import com.raygroupintl.parser.TFDelimitedList;
 import com.raygroupintl.parser.TFSequence;
+import com.raygroupintl.parser.TFString;
 import com.raygroupintl.parser.TFSyntaxError;
 import com.raygroupintl.parser.TokenFactory;
 import com.raygroupintl.parsergen.ParseException;
@@ -65,7 +66,7 @@ public class MTFSupply {
 	
 	@StringTokenType(StringTokens.MIdent.class)
 	@Rule("{'a'...'z' + 'A'...'Z'}")
-	public TokenFactory<MToken> ident;
+	public TFString<MToken> ident;
 	
 	@StringTokenType(MIntLit.class)
 	@Rule("{'0'...'9'}")
