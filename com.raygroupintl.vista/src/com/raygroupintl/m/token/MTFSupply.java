@@ -430,7 +430,7 @@ public class MTFSupply {
 	@Rule("{closearg:','}")
 	public TokenFactory<MToken> closeargs;
 	
-	@SequenceTokenType(MForCmd.MForCmdEQRHS.class)
+	@SequenceTokenType(MForCmdEQRHS.class)
 	@Rule("expr, [':', expr], [':', expr]")
 	public TokenFactory<MToken> forrhs;
 	@Rule("{forrhs:','}")
