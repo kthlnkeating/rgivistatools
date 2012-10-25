@@ -28,7 +28,6 @@ import com.raygroupintl.parser.SyntaxErrorException;
 import com.raygroupintl.parser.TFEmptyVerified;
 import com.raygroupintl.parser.TFSequence;
 import com.raygroupintl.parser.Text;
-import com.raygroupintl.parser.Token;
 import com.raygroupintl.parser.TokenFactory;
 import com.raygroupintl.parser.Tokens;
 import com.raygroupintl.parsergen.ObjectSupply;
@@ -77,7 +76,7 @@ public class TFCommand extends TokenFactory<MToken> {
 	private abstract class TCommandSpec extends MCommand {
 		private TokenFactory<MToken> argumentFactory;
 		
-		public TCommandSpec(MToken name, TokenFactory<MToken> argumentFactory) {
+		public TCommandSpec(TextPiece name, TokenFactory<MToken> argumentFactory) {
 			super(name);
 			this.argumentFactory = argumentFactory;
 		}
@@ -105,24 +104,24 @@ public class TFCommand extends TokenFactory<MToken> {
 	}
 		
 	private class TBCommandSpec extends TCommandSpec {
-		private TBCommandSpec(MToken value, MTFSupply supply) {
+		private TBCommandSpec(TextPiece value, MTFSupply supply) {
 			super(value, supply.expr);
 		}
 	
 		@Override
-		protected String getFullName() {		
-			return "BREAK";
+		protected MNameWithMnemonic getNameWithMnemonic() {		
+			return new MNameWithMnemonic("B", "BREAK");
 		}			
 	}
 	
 	private class TCCommandSpec extends TCommandSpec {
-		private TCCommandSpec(MToken value, MTFSupply supply) {
+		private TCCommandSpec(TextPiece value, MTFSupply supply) {
 			super(value, supply.closearg);
 		}
 	
 		@Override
-		protected String getFullName() {		
-			return "CLOSE";
+		protected MNameWithMnemonic getNameWithMnemonic() {		
+			return new MNameWithMnemonic("C", "CLOSE");
 		}
 		
 		@Override
@@ -132,13 +131,13 @@ public class TFCommand extends TokenFactory<MToken> {
 	}
 	
 	private class TDCommandSpec extends TCommandSpec {
-		private TDCommandSpec(MToken value, MTFSupply supply) {
+		private TDCommandSpec(TextPiece value, MTFSupply supply) {
 			super(value, supply.doarguments);
 		}
 	
 		@Override
-		protected String getFullName() {		
-			return "DO";
+		protected MNameWithMnemonic getNameWithMnemonic() {		
+			return new MNameWithMnemonic("D", "DO");
 		}			
 
 		@Override
@@ -155,13 +154,13 @@ public class TFCommand extends TokenFactory<MToken> {
 	}
 	
 	private class TECommandSpec extends TCommandSpec {
-		private TECommandSpec(MToken value, MTFSupply supply) {
+		private TECommandSpec(TextPiece value, MTFSupply supply) {
 			super(value, TF_EMPTY);
 		}
 	
 		@Override
-		protected String getFullName() {		
-			return "ELSE";
+		protected MNameWithMnemonic getNameWithMnemonic() {		
+			return new MNameWithMnemonic("E", "ELSE");
 		}			
 		
 		@Override
@@ -171,13 +170,13 @@ public class TFCommand extends TokenFactory<MToken> {
 	}
 
 	private class TFCommandSpec extends TCommandSpec {
-		private TFCommandSpec(MToken value, MTFSupply supply) {
+		private TFCommandSpec(TextPiece value, MTFSupply supply) {
 			super(value, supply.forarg);
 		}
 	
 		@Override
-		protected String getFullName() {		
-			return "FOR";
+		protected MNameWithMnemonic getNameWithMnemonic() {		
+			return new MNameWithMnemonic("F", "FOR");
 		}			
 
 		@Override
@@ -194,13 +193,13 @@ public class TFCommand extends TokenFactory<MToken> {
 	}
 
 	private class TGCommandSpec extends TCommandSpec {
-		private TGCommandSpec(MToken value, MTFSupply supply) {
+		private TGCommandSpec(TextPiece value, MTFSupply supply) {
 			super(value, supply.gotoarguments);
 		}
 	
 		@Override
-		protected String getFullName() {		
-			return "GOTO";
+		protected MNameWithMnemonic getNameWithMnemonic() {		
+			return new MNameWithMnemonic("G", "GOTO");
 		}	
 		
 		protected Node getNode(Node postConditionNode, Node argumentNode) {
@@ -209,29 +208,29 @@ public class TFCommand extends TokenFactory<MToken> {
 	}
 
 	private class THCommandSpec extends TCommandSpec {
-		private THCommandSpec(MToken value, MTFSupply supply) {
+		private THCommandSpec(TextPiece value, MTFSupply supply) {
 			super(value, supply.expr);
 		}
 	
 		@Override
-		protected String getFullName() {
+		protected MNameWithMnemonic getNameWithMnemonic() {
 			MToken argument = this.getArgument();
 			if (argument == null) {
-				return "HALT";
+				return new MNameWithMnemonic("H", "HALT");
 			} else {
-				return "HANG";
+				return new MNameWithMnemonic("H", "HANG");
 			}
 		}			
 	}
 
 	private class TICommandSpec extends TCommandSpec {
-		private TICommandSpec(MToken value, MTFSupply supply) {
+		private TICommandSpec(TextPiece value, MTFSupply supply) {
 			super(value, supply.exprlist);
 		}
 	
 		@Override
-		protected String getFullName() {		
-			return "IF";
+		protected MNameWithMnemonic getNameWithMnemonic() {		
+			return new MNameWithMnemonic("I", "IF");
 		}			
 
 		@Override
@@ -247,24 +246,24 @@ public class TFCommand extends TokenFactory<MToken> {
 	}
 
 	private class TJCommandSpec extends TCommandSpec {
-		private TJCommandSpec(MToken value, MTFSupply supply) {
+		private TJCommandSpec(TextPiece value, MTFSupply supply) {
 			super(value, supply.cmdjargs);
 		}
 	
 		@Override
-		protected String getFullName() {		
-			return "JOB";
+		protected MNameWithMnemonic getNameWithMnemonic() {		
+			return new MNameWithMnemonic("J", "JOB");
 		}			
 	}
 
 	private class TKCommandSpec extends TCommandSpec {
-		private TKCommandSpec(MToken value, MTFSupply supply) {
+		private TKCommandSpec(TextPiece value, MTFSupply supply) {
 			super(value, supply.killargs);
 		}
 	
 		@Override
-		protected String getFullName() {		
-			return "KILL";
+		protected MNameWithMnemonic getNameWithMnemonic() {		
+			return new MNameWithMnemonic("K", "KILL");
 		}
 		
 		@Override
@@ -278,24 +277,24 @@ public class TFCommand extends TokenFactory<MToken> {
 	}
 
 	private class TLCommandSpec extends TCommandSpec {
-		private TLCommandSpec(MToken value, MTFSupply supply) {
+		private TLCommandSpec(TextPiece value, MTFSupply supply) {
 			super(value, supply.lockargs);
 		}
 	
 		@Override
-		protected String getFullName() {		
-			return "LOCK";
+		protected MNameWithMnemonic getNameWithMnemonic() {		
+			return new MNameWithMnemonic("L", "LOCK");
 		}			
 	}
 
 	private class TMCommandSpec extends TCommandSpec {
-		private TMCommandSpec(MToken value, MTFSupply supply) {
+		private TMCommandSpec(TextPiece value, MTFSupply supply) {
 			super(value, supply.mergeargs);
 		}
 	
 		@Override
-		protected String getFullName() {		
-			return "MERGE";
+		protected MNameWithMnemonic getNameWithMnemonic() {		
+			return new MNameWithMnemonic("M", "MERGE");
 		}
 		
 		@Override
@@ -305,13 +304,13 @@ public class TFCommand extends TokenFactory<MToken> {
 	}
 
 	private class TNCommandSpec extends TCommandSpec {
-		private TNCommandSpec(MToken value, MTFSupply supply) {
+		private TNCommandSpec(TextPiece value, MTFSupply supply) {
 			super(value, supply.newargs);
 		}
 	
 		@Override
-		protected String getFullName() {		
-			return "NEW";
+		protected MNameWithMnemonic getNameWithMnemonic() {		
+			return new MNameWithMnemonic("N", "NEW");
 		}
 		
 		@Override
@@ -325,13 +324,13 @@ public class TFCommand extends TokenFactory<MToken> {
 	}
 
 	private class TOCommandSpec extends TCommandSpec {
-		private TOCommandSpec(MToken value, MTFSupply supply) {
+		private TOCommandSpec(TextPiece value, MTFSupply supply) {
 			super(value, supply.cmdoargs);
 		}
 	
 		@Override
-		protected String getFullName() {		
-			return "OPEN";
+		protected MNameWithMnemonic getNameWithMnemonic() {		
+			return new MNameWithMnemonic("O", "OPEN");
 		}
 		
 		@Override
@@ -341,13 +340,13 @@ public class TFCommand extends TokenFactory<MToken> {
 	}
 
 	private class TQCommandSpec extends TCommandSpec {
-		private TQCommandSpec(MToken value, MTFSupply supply) {
+		private TQCommandSpec(TextPiece value, MTFSupply supply) {
 			super(value, supply.expr);
 		}
 	
 		@Override
-		protected String getFullName() {		
-			return "QUIT";
+		protected MNameWithMnemonic getNameWithMnemonic() {		
+			return new MNameWithMnemonic("Q", "QUIT");
 		}			
 
 		protected Node getNode(Node postConditionNode, Node argumentNode) {
@@ -356,13 +355,13 @@ public class TFCommand extends TokenFactory<MToken> {
 	}
 
 	private class TRCommandSpec extends TCommandSpec {
-		private TRCommandSpec(MToken value, MTFSupply supply) {
+		private TRCommandSpec(TextPiece value, MTFSupply supply) {
 			super(value, supply.cmdrargs);
 		}
 	
 		@Override
-		protected String getFullName() {		
-			return "READ";
+		protected MNameWithMnemonic getNameWithMnemonic() {		
+			return new MNameWithMnemonic("R", "READ");
 		}			
 
 		protected Node getNode(Node postConditionNode, Node argumentNode) {
@@ -371,13 +370,13 @@ public class TFCommand extends TokenFactory<MToken> {
 	}
 
 	private class TSCommandSpec extends TCommandSpec {
-		private TSCommandSpec(MToken value, MTFSupply supply) {
+		private TSCommandSpec(TextPiece value, MTFSupply supply) {
 			super(value, supply.setargs);
 		}
 	
 		@Override
-		protected String getFullName() {		
-			return "SET";
+		protected MNameWithMnemonic getNameWithMnemonic() {		
+			return new MNameWithMnemonic("S", "SET");
 		}
 		
 		@Override
@@ -387,57 +386,57 @@ public class TFCommand extends TokenFactory<MToken> {
 	}
 
 	private class TTCCommandSpec extends TCommandSpec {
-		private TTCCommandSpec(MToken value, MTFSupply supply) {
+		private TTCCommandSpec(TextPiece value, MTFSupply supply) {
 			super(value, TF_EMPTY);
 		}
 	
 		@Override
-		protected String getFullName() {		
-			return "TCOMMIT";
+		protected MNameWithMnemonic getNameWithMnemonic() {		
+			return new MNameWithMnemonic("TC", "TCOMMIT");
 		}			
 	}
 
 	private class TTRCommandSpec extends TCommandSpec {
-		private TTRCommandSpec(MToken value, MTFSupply supply) {
+		private TTRCommandSpec(TextPiece value, MTFSupply supply) {
 			super(value, TF_EMPTY);
 		}
 	
 		@Override
-		protected String getFullName() {		
-			return "TRESTART";
+		protected MNameWithMnemonic getNameWithMnemonic() {		
+			return new MNameWithMnemonic("TR", "TRESTART");
 		}			
 	}
 
 	private class TTROCommandSpec extends TCommandSpec {
-		private TTROCommandSpec(MToken value, MTFSupply supply) {
+		private TTROCommandSpec(TextPiece value, MTFSupply supply) {
 			super(value, TF_EMPTY);
 		}
 	
 		@Override
-		protected String getFullName() {		
-			return "TROLLBACK";
+		protected MNameWithMnemonic getNameWithMnemonic() {		
+			return new MNameWithMnemonic("TRO", "TROLLBACK");
 		}			
 	}
 
 	private class TTSCommandSpec extends TCommandSpec {
-		private TTSCommandSpec(MToken value, MTFSupply supply) {
+		private TTSCommandSpec(TextPiece value, MTFSupply supply) {
 			super(value, TF_EMPTY);
 		}
 	
 		@Override
-		protected String getFullName() {		
-			return "TSTART";
+		protected MNameWithMnemonic getNameWithMnemonic() {		
+			return new MNameWithMnemonic("TS", "TSTART");
 		}			
 	}
 
 	private class TUCommandSpec extends TCommandSpec {
-		private TUCommandSpec(MToken value, MTFSupply supply) {
+		private TUCommandSpec(TextPiece value, MTFSupply supply) {
 			super(value, supply.cmduargs);
 		}
 	
 		@Override
-		protected String getFullName() {		
-			return "USE";
+		protected MNameWithMnemonic getNameWithMnemonic() {		
+			return new MNameWithMnemonic("U", "USE");
 		}
 		
 		@Override
@@ -447,13 +446,13 @@ public class TFCommand extends TokenFactory<MToken> {
 	}
 
 	private class TWCommandSpec extends TCommandSpec {
-		private TWCommandSpec(MToken value, MTFSupply supply) {
+		private TWCommandSpec(TextPiece value, MTFSupply supply) {
 			super(value, supply.writeargs);
 		}
 	
 		@Override
-		protected String getFullName() {		
-			return "WRITE";
+		protected MNameWithMnemonic getNameWithMnemonic() {		
+			return new MNameWithMnemonic("W", "WRITE");
 		}			
 
 		protected Node getNode(Node postConditionNode, Node argumentNode) {
@@ -462,24 +461,24 @@ public class TFCommand extends TokenFactory<MToken> {
 	}
 
 	private class TVCommandSpec extends TCommandSpec {
-		private TVCommandSpec(MToken value, MTFSupply supply) {
+		private TVCommandSpec(TextPiece value, MTFSupply supply) {
 			super(value, new TFGenericArgument("vargument"));
 		}
 		
 		@Override
-		protected String getFullName() {		
-			return "VIEW";
+		protected MNameWithMnemonic getNameWithMnemonic() {		
+			return new MNameWithMnemonic("V", "VIEW");
 		}			
 	}
 
 	private class TXCommandSpec extends TCommandSpec {
-		private TXCommandSpec(MToken value, MTFSupply supply) {
+		private TXCommandSpec(TextPiece value, MTFSupply supply) {
 			super(value, supply.xecuteargs);
 		}
 	
 		@Override
-		protected String getFullName() {		
-			return "XECUTE";
+		protected MNameWithMnemonic getNameWithMnemonic() {		
+			return new MNameWithMnemonic("X", "XECUTE");
 		}			
 
 		protected Node getNode(Node postConditionNode, Node argumentNode) {
@@ -490,25 +489,25 @@ public class TFCommand extends TokenFactory<MToken> {
 	private class TGenericCommandSpec extends TCommandSpec {
 		private MNameWithMnemonic mnwm;
 		
-		private TGenericCommandSpec(MToken value, MNameWithMnemonic mnwm, MTFSupply supply) {
+		private TGenericCommandSpec(TextPiece value, MNameWithMnemonic mnwm, MTFSupply supply) {
 			super(value, new TFGenericArgument("genericargument"));
 			this.mnwm = mnwm;
 		}
 	
 		@Override
-		protected String getFullName() {		
-			return this.toValue().toString();
+		protected MNameWithMnemonic getNameWithMnemonic() {		
+			return this.mnwm;
 		}					
 	}
 	
 	private static abstract class TCSFactory {
-		public abstract TCommandSpec get(MToken name);
+		public abstract TCommandSpec get(TextPiece name);
 	}
 	
 	public void addCommands(final MTFSupply supply) {
 		TCSFactory b = new TCSFactory() {			
 			@Override
-			public TCommandSpec get(MToken name) {
+			public TCommandSpec get(TextPiece name) {
 				return new TBCommandSpec(name, supply);
 			}
 		};
@@ -517,7 +516,7 @@ public class TFCommand extends TokenFactory<MToken> {
 		
 		TCSFactory c = new TCSFactory() {			
 			@Override
-			public TCommandSpec get(MToken name) {
+			public TCommandSpec get(TextPiece name) {
 				return new TCCommandSpec(name, supply);
 			}
 		};
@@ -526,7 +525,7 @@ public class TFCommand extends TokenFactory<MToken> {
 		
 		TCSFactory d = new TCSFactory() {			
 			@Override
-			public TCommandSpec get(MToken name) {
+			public TCommandSpec get(TextPiece name) {
 				return new TDCommandSpec(name, supply);
 			}
 		};
@@ -535,7 +534,7 @@ public class TFCommand extends TokenFactory<MToken> {
 		
 		TCSFactory e = new TCSFactory() {			
 			@Override
-			public TCommandSpec get(MToken name) {
+			public TCommandSpec get(TextPiece name) {
 				return new TECommandSpec(name, supply);
 			}
 		};
@@ -544,7 +543,7 @@ public class TFCommand extends TokenFactory<MToken> {
 
 		TCSFactory f = new TCSFactory() {			
 			@Override
-			public TCommandSpec get(MToken name) {
+			public TCommandSpec get(TextPiece name) {
 				return new TFCommandSpec(name, supply);
 			}
 		};
@@ -553,7 +552,7 @@ public class TFCommand extends TokenFactory<MToken> {
 		
 		TCSFactory g = new TCSFactory() {			
 			@Override
-			public TCommandSpec get(MToken name) {
+			public TCommandSpec get(TextPiece name) {
 				return new TGCommandSpec(name, supply);
 			}
 		};
@@ -562,7 +561,7 @@ public class TFCommand extends TokenFactory<MToken> {
 		
 		TCSFactory h = new TCSFactory() {			
 			@Override
-			public TCommandSpec get(MToken name) {
+			public TCommandSpec get(TextPiece name) {
 				return new THCommandSpec(name, supply);
 			}
 		};
@@ -572,7 +571,7 @@ public class TFCommand extends TokenFactory<MToken> {
 		
 		TCSFactory i = new TCSFactory() {			
 			@Override
-			public TCommandSpec get(MToken name) {
+			public TCommandSpec get(TextPiece name) {
 				return new TICommandSpec(name, supply);
 			}
 		};
@@ -581,7 +580,7 @@ public class TFCommand extends TokenFactory<MToken> {
 		
 		TCSFactory j = new TCSFactory() {			
 			@Override
-			public TCommandSpec get(MToken name) {
+			public TCommandSpec get(TextPiece name) {
 				return new TJCommandSpec(name, supply);
 			}
 		};
@@ -590,7 +589,7 @@ public class TFCommand extends TokenFactory<MToken> {
 		
 		TCSFactory k = new TCSFactory() {			
 			@Override
-			public TCommandSpec get(MToken name) {
+			public TCommandSpec get(TextPiece name) {
 				return new TKCommandSpec(name, supply);
 			}
 		};
@@ -599,7 +598,7 @@ public class TFCommand extends TokenFactory<MToken> {
 		
 		TCSFactory l = new TCSFactory() {			
 			@Override
-			public TCommandSpec get(MToken name) {
+			public TCommandSpec get(TextPiece name) {
 				return new TLCommandSpec(name, supply);
 			}
 		};
@@ -608,7 +607,7 @@ public class TFCommand extends TokenFactory<MToken> {
 		
 		TCSFactory m = new TCSFactory() {			
 			@Override
-			public TCommandSpec get(MToken name) {
+			public TCommandSpec get(TextPiece name) {
 				return new TMCommandSpec(name, supply);
 			}
 		};
@@ -617,7 +616,7 @@ public class TFCommand extends TokenFactory<MToken> {
 		
 		TCSFactory n = new TCSFactory() {			
 			@Override
-			public TCommandSpec get(MToken name) {
+			public TCommandSpec get(TextPiece name) {
 				return new TNCommandSpec(name, supply);
 			}
 		};
@@ -626,7 +625,7 @@ public class TFCommand extends TokenFactory<MToken> {
 		
 		TCSFactory o = new TCSFactory() {			
 			@Override
-			public TCommandSpec get(MToken name) {
+			public TCommandSpec get(TextPiece name) {
 				return new TOCommandSpec(name, supply);
 			}
 		};
@@ -635,7 +634,7 @@ public class TFCommand extends TokenFactory<MToken> {
 		
 		TCSFactory q = new TCSFactory() {			
 			@Override
-			public TCommandSpec get(MToken name) {
+			public TCommandSpec get(TextPiece name) {
 				return new TQCommandSpec(name, supply);
 			}
 		};
@@ -644,7 +643,7 @@ public class TFCommand extends TokenFactory<MToken> {
 		
 		TCSFactory r = new TCSFactory() {			
 			@Override
-			public TCommandSpec get(MToken name) {
+			public TCommandSpec get(TextPiece name) {
 				return new TRCommandSpec(name, supply);
 			}
 		};
@@ -653,7 +652,7 @@ public class TFCommand extends TokenFactory<MToken> {
 		
 		TCSFactory s = new TCSFactory() {			
 			@Override
-			public TCommandSpec get(MToken name) {
+			public TCommandSpec get(TextPiece name) {
 				return new TSCommandSpec(name, supply);
 			}
 		};
@@ -662,7 +661,7 @@ public class TFCommand extends TokenFactory<MToken> {
 		
 		TCSFactory tc = new TCSFactory() {			
 			@Override
-			public TCommandSpec get(MToken name) {
+			public TCommandSpec get(TextPiece name) {
 				return new TTCCommandSpec(name, supply);
 			}
 		};
@@ -671,7 +670,7 @@ public class TFCommand extends TokenFactory<MToken> {
 		
 		TCSFactory tr = new TCSFactory() {			
 			@Override
-			public TCommandSpec get(MToken name) {
+			public TCommandSpec get(TextPiece name) {
 				return new TTRCommandSpec(name, supply);
 			}
 		};
@@ -680,7 +679,7 @@ public class TFCommand extends TokenFactory<MToken> {
 		
 		TCSFactory tro = new TCSFactory() {			
 			@Override
-			public TCommandSpec get(MToken name) {
+			public TCommandSpec get(TextPiece name) {
 				return new TTROCommandSpec(name, supply);
 			}
 		};
@@ -689,7 +688,7 @@ public class TFCommand extends TokenFactory<MToken> {
 		
 		TCSFactory ts = new TCSFactory() {			
 			@Override
-			public TCommandSpec get(MToken name) {
+			public TCommandSpec get(TextPiece name) {
 				return new TTSCommandSpec(name, supply);
 			}
 		};
@@ -698,7 +697,7 @@ public class TFCommand extends TokenFactory<MToken> {
 		
 		TCSFactory u = new TCSFactory() {			
 			@Override
-			public TCommandSpec get(MToken name) {
+			public TCommandSpec get(TextPiece name) {
 				return new TUCommandSpec(name, supply);
 			}
 		};
@@ -707,7 +706,7 @@ public class TFCommand extends TokenFactory<MToken> {
 		
 		TCSFactory v = new TCSFactory() {			
 			@Override
-			public TCommandSpec get(MToken name) {
+			public TCommandSpec get(TextPiece name) {
 				return new TVCommandSpec(name, supply);
 			}
 		};
@@ -716,7 +715,7 @@ public class TFCommand extends TokenFactory<MToken> {
 		
 		TCSFactory w = new TCSFactory() {			
 			@Override
-			public TCommandSpec get(MToken name) {
+			public TCommandSpec get(TextPiece name) {
 				return new TWCommandSpec(name, supply);
 			}
 		};
@@ -725,7 +724,7 @@ public class TFCommand extends TokenFactory<MToken> {
 		
 		TCSFactory x = new TCSFactory() {			
 			@Override
-			public TCommandSpec get(MToken name) {
+			public TCommandSpec get(TextPiece name) {
 				return new TXCommandSpec(name, supply);
 			}
 		};
@@ -736,7 +735,7 @@ public class TFCommand extends TokenFactory<MToken> {
 	public void addCommand(final String cmdName, final MTFSupply supply) {
 		TCSFactory generic = new TCSFactory() {		
 			@Override
-			public TCommandSpec get(MToken name) {
+			public TCommandSpec get(TextPiece name) {
 				return new TGenericCommandSpec(name, new MNameWithMnemonic(cmdName, cmdName), supply);
 			}
 		};
@@ -746,7 +745,7 @@ public class TFCommand extends TokenFactory<MToken> {
 	public void addCommand(final String mnemonic, final String cmdName, final MTFSupply supply) {
 		TCSFactory generic = new TCSFactory() {		
 			@Override
-			public TCommandSpec get(MToken name) {
+			public TCommandSpec get(TextPiece name) {
 				return new TGenericCommandSpec(name, new MNameWithMnemonic(mnemonic, cmdName), supply);
 			}
 		};
@@ -777,14 +776,13 @@ public class TFCommand extends TokenFactory<MToken> {
 		
 		@Override
 		public TCommandSpec tokenize(Text text, ObjectSupply<MToken> objectSupply) throws SyntaxErrorException {
-			MToken token = TFCommand.this.supply.ident.tokenize(text, objectSupply);
-			if (token != null) {
-				TextPiece cmdName = token.toValue();
+			TextPiece cmdName = TFCommand.this.supply.ident.tokenizeCommon(text, objectSupply);
+			if (cmdName != null) {
 				TCSFactory tcs = TFCommand.this.commandSpecs.get(cmdName.toString().toUpperCase());
 				if (tcs == null) {
 					throw new SyntaxErrorException(MError.ERR_UNDEFINED_COMMAND);					
 				} else {
-					TCommandSpec spec = tcs.get(token);
+					TCommandSpec spec = tcs.get(cmdName);
 					return spec;
 				}
 			}

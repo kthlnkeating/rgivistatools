@@ -18,16 +18,13 @@ package com.raygroupintl.m.token;
 
 import com.raygroupintl.m.parsetree.GenericCommand;
 import com.raygroupintl.m.parsetree.Node;
+import com.raygroupintl.parser.TextPiece;
 
 public abstract class MCommand extends MCommandBase {
-	public MCommand(MToken name) {
+	public MCommand(TextPiece name) {
 		super(name);
 	}
 
-	public MCommand(MToken token0, MSequence whatFollows) {
-		super(token0, whatFollows);
-	}
-	
 	protected Node getNode(Node postConditionNode, Node argumentNode) {
 		return new GenericCommand(postConditionNode, argumentNode);	
 	}

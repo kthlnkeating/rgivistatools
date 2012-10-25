@@ -17,25 +17,21 @@
 package com.raygroupintl.m.token;
 
 import com.raygroupintl.m.parsetree.Node;
+import com.raygroupintl.m.struct.MNameWithMnemonic;
 import com.raygroupintl.parser.TextPiece;
 import com.raygroupintl.parser.Tokens;
 
 public abstract class MCommandBase implements MToken {
-	private MToken name;
+	private TextPiece name;
 	private MSequence whatFollows;
 	
-	public MCommandBase(MToken name) {
+	public MCommandBase(TextPiece name) {
 		this.name = name;
 	}
 
-	public MCommandBase(MToken name, MSequence whatFollows) {
-		this.name = name;
-		this.whatFollows = whatFollows;
-	}
+	protected abstract MNameWithMnemonic getNameWithMnemonic();
 
-	protected abstract String getFullName();
-
-	protected void setName(MToken name) {
+	protected void setName(TextPiece name) {
 		this.name = name;
 	}
 
@@ -71,8 +67,7 @@ public abstract class MCommandBase implements MToken {
 	
 	@Override 
 	public TextPiece toValue() {
-		TextPiece result = new TextPiece();
-		result.add(this.name.toValue());
+		TextPiece result = new TextPiece(this.name);
 		if (this.whatFollows != null) {
 			result.add(this.whatFollows.toValue());
 		}
@@ -81,9 +76,10 @@ public abstract class MCommandBase implements MToken {
 	
 	@Override
 	public void beautify() {
-		TextPiece n = this.name.toValue();
-		TextPiece newName = new TextPiece(getFullName());
-		n.set(newName);
+		MNameWithMnemonic mnwm = this.getNameWithMnemonic();
+		String newExpression = mnwm.express();
+		TextPiece newName = new TextPiece(newExpression);
+		this.name.set(newName);
 		if (this.whatFollows != null) {
 			this.whatFollows.beautify();
 		}

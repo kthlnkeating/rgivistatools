@@ -35,6 +35,10 @@ public class MNameWithMnemonic {
 		return this.name;
 	}
 	
+	public String express() {
+		return this.name;
+	}
+	
 	public static <M extends Map<String, MNameWithMnemonic>> void update(M target, String mnemonic, String name) {
 		MNameWithMnemonic mnwm = new MNameWithMnemonic(mnemonic, name);
 		target.put(mnemonic, mnwm);

@@ -38,6 +38,10 @@ public class TFString<T extends Token> extends TokenFactory<T> {
 		return this.convertString(p, objectSupply);
 	}
 
+	public TextPiece tokenizeCommon(Text text, ObjectSupply<T> objectSupply) {
+		return text.extractPiece(this.predicate);		
+	}
+	
 	public void setStringTargetType(Constructor<? extends T> constructor) {
 		this.constructor = constructor;		
 	}

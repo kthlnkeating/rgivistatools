@@ -692,7 +692,6 @@ public class MTFSupply {
 		}
 	}
 	
-	
 	public static class CacheSupply extends MTFSupply {
 		@Rule("glvn | expritem | classmethod")
 		public TokenFactory<MToken> expratom;

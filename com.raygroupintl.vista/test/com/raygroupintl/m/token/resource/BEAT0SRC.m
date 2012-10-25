@@ -10,5 +10,6 @@ SETUPS ; -- Lists forms/reports defined in print manager clinic setup
  D DEVICE G:IBQUIT EXIT
  D DQ
  G EXIT
+ I $P($ZVER,"/",2)<4 ZN X ZNSPACE CURUCI Q X
  Q
  ;
