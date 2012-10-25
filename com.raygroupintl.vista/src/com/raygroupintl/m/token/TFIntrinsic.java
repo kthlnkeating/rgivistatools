@@ -22,8 +22,10 @@ import java.util.Map;
 import com.raygroupintl.m.parsetree.IntrinsicFunction;
 import com.raygroupintl.m.parsetree.IntrinsicVariable;
 import com.raygroupintl.m.parsetree.Node;
+import com.raygroupintl.m.struct.KeywordRefactorFlags;
 import com.raygroupintl.m.struct.MError;
 import com.raygroupintl.m.struct.MNameWithMnemonic;
+import com.raygroupintl.m.struct.MRefactorSettings;
 import com.raygroupintl.parser.DelimitedListOfTokens;
 import com.raygroupintl.parser.SequenceOfTokens;
 import com.raygroupintl.parser.TFDelimitedList;
@@ -134,6 +136,11 @@ public class TFIntrinsic extends TokenFactory<MToken> {
 		}
 		
 		@Override
+		public KeywordRefactorFlags getKeywordFlags(MRefactorSettings settings) {
+			return settings.instrinsicNameSettings;
+		}
+
+		@Override
 		public MNameWithMnemonic getNameWithMnemonic(String name) {
 			return TFIntrinsic.this.variables.get(name);			
 		}
@@ -146,6 +153,11 @@ public class TFIntrinsic extends TokenFactory<MToken> {
 			super(p);
 		}
 		
+		@Override
+		public KeywordRefactorFlags getKeywordFlags(MRefactorSettings settings) {
+			return settings.instrinsicNameSettings;
+		}
+
 		@Override
 		public MNameWithMnemonic getNameWithMnemonic(String name) {
 			return TFIntrinsic.this.functions.get(name);			

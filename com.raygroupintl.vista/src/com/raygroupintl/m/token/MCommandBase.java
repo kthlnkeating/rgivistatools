@@ -18,6 +18,7 @@ package com.raygroupintl.m.token;
 
 import com.raygroupintl.m.parsetree.Node;
 import com.raygroupintl.m.struct.MNameWithMnemonic;
+import com.raygroupintl.m.struct.MRefactorSettings;
 import com.raygroupintl.parser.TextPiece;
 import com.raygroupintl.parser.Tokens;
 
@@ -75,13 +76,13 @@ public abstract class MCommandBase implements MToken {
 	}
 	
 	@Override
-	public void beautify() {
+	public void refactor(MRefactorSettings settings) {
 		MNameWithMnemonic mnwm = this.getNameWithMnemonic();
-		String newExpression = mnwm.express();
+		String newExpression = mnwm.refactor(settings.commandNameSettings, this.name.toString());
 		TextPiece newName = new TextPiece(newExpression);
 		this.name.set(newName);
 		if (this.whatFollows != null) {
-			this.whatFollows.beautify();
+			this.whatFollows.refactor(settings);
 		}
 	}
 }

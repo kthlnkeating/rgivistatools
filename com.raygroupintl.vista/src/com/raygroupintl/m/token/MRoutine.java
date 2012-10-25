@@ -15,6 +15,7 @@ import com.raygroupintl.m.parsetree.ErrorNode;
 import com.raygroupintl.m.parsetree.Line;
 import com.raygroupintl.m.parsetree.Routine;
 import com.raygroupintl.m.struct.MError;
+import com.raygroupintl.m.struct.MRefactorSettings;
 import com.raygroupintl.parser.TextPiece;
 import com.raygroupintl.parser.Token;
 
@@ -48,9 +49,9 @@ public class MRoutine implements MToken {
 	}
 	
 	@Override
-	public void beautify() {		
+	public void refactor(MRefactorSettings settings) {		
 		for (MLine line : this.lines) {
-			line.beautify();
+			line.refactor(settings);
 		}	
 	}
 	

@@ -22,7 +22,9 @@ import java.util.Map;
 import com.raygroupintl.m.parsetree.Node;
 import com.raygroupintl.m.parsetree.NodeList;
 import com.raygroupintl.m.parsetree.StructuredSystemVariable;
+import com.raygroupintl.m.struct.KeywordRefactorFlags;
 import com.raygroupintl.m.struct.MNameWithMnemonic;
+import com.raygroupintl.m.struct.MRefactorSettings;
 import com.raygroupintl.parser.SequenceOfTokens;
 import com.raygroupintl.parser.TextPiece;
 import com.raygroupintl.parser.Tokens;
@@ -48,6 +50,11 @@ public class MSsvn extends MSequence {
 			super(p);
 		}
 		
+		@Override
+		public KeywordRefactorFlags getKeywordFlags(MRefactorSettings settings) {
+			return settings.ssvnNameSettings;
+		}
+
 		@Override
 		public MNameWithMnemonic getNameWithMnemonic(String name) {
 			return SSVS.get(name);

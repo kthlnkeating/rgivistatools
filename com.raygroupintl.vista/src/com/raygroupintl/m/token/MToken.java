@@ -17,9 +17,10 @@
 package com.raygroupintl.m.token;
 
 import com.raygroupintl.m.parsetree.Node;
+import com.raygroupintl.m.struct.MRefactorSettings;
 import com.raygroupintl.parser.Token;
 
 public interface MToken extends Token {
 	Node getNode();
-	void beautify();
+	void refactor(MRefactorSettings settings);
 }

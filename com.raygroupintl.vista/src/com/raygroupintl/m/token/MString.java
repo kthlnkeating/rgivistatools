@@ -17,6 +17,7 @@
 package com.raygroupintl.m.token;
 
 import com.raygroupintl.m.parsetree.Node;
+import com.raygroupintl.m.struct.MRefactorSettings;
 import com.raygroupintl.parser.SequenceOfTokens;
 import com.raygroupintl.parser.TextPiece;
 
@@ -50,6 +51,6 @@ public class MString extends TextPiece implements MToken {
 	}
 	
 	@Override
-	public void beautify() {		
+	public void refactor(MRefactorSettings settings) {		
 	}
 }

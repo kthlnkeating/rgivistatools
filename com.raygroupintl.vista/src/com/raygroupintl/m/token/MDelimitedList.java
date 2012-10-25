@@ -17,6 +17,7 @@
 package com.raygroupintl.m.token;
 
 import com.raygroupintl.m.parsetree.Node;
+import com.raygroupintl.m.struct.MRefactorSettings;
 import com.raygroupintl.parser.DelimitedListOfTokens;
 
 public class MDelimitedList extends DelimitedListOfTokens<MToken> implements MToken {
@@ -30,9 +31,9 @@ public class MDelimitedList extends DelimitedListOfTokens<MToken> implements MTo
 	}
 
 	@Override
-	public void beautify() {
+	public void refactor(MRefactorSettings settings) {
 		for (MToken token : this.toIterable()) {
-			token.beautify();
+			token.refactor(settings);
 		}
 	}
 }

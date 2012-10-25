@@ -18,6 +18,7 @@ package com.raygroupintl.m.token;
 
 import com.raygroupintl.m.parsetree.ErrorNode;
 import com.raygroupintl.m.struct.MError;
+import com.raygroupintl.m.struct.MRefactorSettings;
 import com.raygroupintl.parser.TextPiece;
 
 public class MSyntaxError implements MToken {	
@@ -41,7 +42,7 @@ public class MSyntaxError implements MToken {
 	}
 
 	@Override
-	public void beautify() {		
+	public void refactor(MRefactorSettings settings) {		
 	}
 	
 	@Override

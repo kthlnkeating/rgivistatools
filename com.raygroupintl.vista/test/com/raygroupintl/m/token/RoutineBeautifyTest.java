@@ -8,6 +8,8 @@ import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
+import com.raygroupintl.m.struct.MRefactorSettings;
+
 public class RoutineBeautifyTest {
 	private static MTFSupply supplyStd95;
 	private static MTFSupply supplyCache;
@@ -24,12 +26,12 @@ public class RoutineBeautifyTest {
 		supplyCache = null;
 	}
 
-	public void testBeautify(MTFSupply m) {
+	public void testrefactor(MTFSupply m) {
 		MRoutine original = TFCommonTest.getRoutineToken(this.getClass(), "resource/BEAT0SRC.m", m);
 		MRoutine source = TFCommonTest.getRoutineToken(this.getClass(), "resource/BEAT0SRC.m", m);
 		MRoutine result = TFCommonTest.getRoutineToken(this.getClass(), "resource/BEAT0RST.m", m);
 		
-		source.beautify();
+		source.refactor(new MRefactorSettings());
 		List<MLine> originalLines = original.asList();
 		List<MLine> sourceLines = source.asList();
 		List<MLine> resultLines = result.asList();
@@ -47,8 +49,8 @@ public class RoutineBeautifyTest {
 	}
 	
 	@Test
-	public void testBeautify() {
-		testBeautify(supplyCache);
-		testBeautify(supplyStd95);
+	public void testrefactor() {
+		testrefactor(supplyCache);
+		testrefactor(supplyStd95);
 	}
 }

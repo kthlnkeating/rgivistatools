@@ -17,6 +17,7 @@
 package com.raygroupintl.m.token;
 
 import com.raygroupintl.m.parsetree.Node;
+import com.raygroupintl.m.struct.MRefactorSettings;
 import com.raygroupintl.parser.TextPiece;
 
 public abstract class MTokenCopy implements MToken {
@@ -34,7 +35,8 @@ public abstract class MTokenCopy implements MToken {
 	}
 	
 	@Override
-	public void beautify() {		
+	public void refactor(MRefactorSettings settings) {
+		this.actual.refactor(settings);
 	}	
 	
 	

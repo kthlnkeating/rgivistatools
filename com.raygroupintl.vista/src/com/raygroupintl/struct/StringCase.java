@@ -14,31 +14,41 @@
 // limitations under the License.
 //---------------------------------------------------------------------------
 
-package com.raygroupintl.m.token;
+package com.raygroupintl.struct;
 
-import com.raygroupintl.m.parsetree.Node;
-import com.raygroupintl.m.parsetree.Nodes;
-import com.raygroupintl.m.struct.MRefactorSettings;
-import com.raygroupintl.parser.ListOfTokens;
-
-public class MList extends ListOfTokens<MToken> implements MToken {
-	public MList() {
-		super();
-	}
-
-	public MList(ListOfTokens<MToken> tokens) {
-		super(tokens);
-	}
-
-	@Override
-	public Nodes<Node> getNode() {
-		return NodeUtilities.getNodes(this.toIterable(), this.size());
-	}
-	
-	@Override
-	public void refactor(MRefactorSettings settings) {
-		for (MToken token : this.toIterable()) {
-			token.refactor(settings);
+public enum StringCase {
+	UPPER_CASE {
+		@Override
+		public String change(String input) {
+			return input.toUpperCase();
 		}
-	}
+	},
+	LOWER_CASE {
+		@Override
+		public String change(String input) {
+			return input.toLowerCase();
+		}
+	},
+	TITLE_CASE {
+		@Override
+		public String change(String input) {
+			if (input.length() > 0) {
+				char ch = Character.toTitleCase(input.charAt(0));				
+				if (input .length() == 1) {
+					return String.valueOf(ch);
+				} else {
+					return ch + input.toLowerCase().substring(1);
+				}
+			}
+			return "";
+		}
+	},
+	SAME_CASE {
+		@Override
+		public String change(String input) {
+			return input;
+		}
+	};
+	
+	public abstract String change(String input);
 }

@@ -14,31 +14,24 @@
 // limitations under the License.
 //---------------------------------------------------------------------------
 
-package com.raygroupintl.m.token;
+package com.raygroupintl.m.struct;
 
-import com.raygroupintl.m.parsetree.Node;
-import com.raygroupintl.m.parsetree.Nodes;
-import com.raygroupintl.m.struct.MRefactorSettings;
-import com.raygroupintl.parser.ListOfTokens;
-
-public class MList extends ListOfTokens<MToken> implements MToken {
-	public MList() {
-		super();
-	}
-
-	public MList(ListOfTokens<MToken> tokens) {
-		super(tokens);
-	}
-
-	@Override
-	public Nodes<Node> getNode() {
-		return NodeUtilities.getNodes(this.toIterable(), this.size());
-	}
-	
-	@Override
-	public void refactor(MRefactorSettings settings) {
-		for (MToken token : this.toIterable()) {
-			token.refactor(settings);
+public enum KeywordRefactorUseFlag {
+	USE_NAME {
+		public String change(MNameWithMnemonic mnwm, String current) {
+			return mnwm.getName();
 		}
-	}
+	},
+	USE_MNEMONIC {
+		public String change(MNameWithMnemonic mnwm, String current) {
+			return mnwm.getMnemonic();
+		}		
+	},
+	DO_NOT_CHANGE {
+		public String change(MNameWithMnemonic mnwm, String current) {
+			return current;
+		}				
+	};
+	
+	public abstract String change(MNameWithMnemonic mnwm, String current);
 }

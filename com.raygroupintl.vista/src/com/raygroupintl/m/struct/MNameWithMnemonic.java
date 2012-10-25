@@ -34,9 +34,10 @@ public class MNameWithMnemonic {
 	public String getName() {
 		return this.name;
 	}
-	
-	public String express() {
-		return this.name;
+		
+	public String refactor(KeywordRefactorFlags flags, String current) {
+		String result = flags.getUseFlag().change(this, current);
+		return flags.getStringCaseFlag().change(result);
 	}
 	
 	public static <M extends Map<String, MNameWithMnemonic>> void update(M target, String mnemonic, String name) {

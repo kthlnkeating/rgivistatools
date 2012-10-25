@@ -14,31 +14,32 @@
 // limitations under the License.
 //---------------------------------------------------------------------------
 
-package com.raygroupintl.m.token;
+package com.raygroupintl.m.struct;
 
-import com.raygroupintl.m.parsetree.Node;
-import com.raygroupintl.m.parsetree.Nodes;
-import com.raygroupintl.m.struct.MRefactorSettings;
-import com.raygroupintl.parser.ListOfTokens;
+import com.raygroupintl.struct.StringCase;
 
-public class MList extends ListOfTokens<MToken> implements MToken {
-	public MList() {
-		super();
-	}
-
-	public MList(ListOfTokens<MToken> tokens) {
-		super(tokens);
-	}
-
-	@Override
-	public Nodes<Node> getNode() {
-		return NodeUtilities.getNodes(this.toIterable(), this.size());
+public class KeywordRefactorFlags {
+	private StringCase caseFlag;
+	private KeywordRefactorUseFlag useFlag;
+	
+	public KeywordRefactorFlags(StringCase caseFlag, KeywordRefactorUseFlag useFlag) {
+		this.caseFlag = caseFlag;
+		this.useFlag = useFlag;
 	}
 	
-	@Override
-	public void refactor(MRefactorSettings settings) {
-		for (MToken token : this.toIterable()) {
-			token.refactor(settings);
-		}
+	public StringCase getStringCaseFlag() {
+		return this.caseFlag;
+	}
+	
+	public KeywordRefactorUseFlag getUseFlag() {
+		return this.useFlag;
+	}
+	
+	public void setStringCaseFlag(StringCase caseFlag) {
+		this.caseFlag = caseFlag;
+	}
+	
+	public void setUseFlag(KeywordRefactorUseFlag useFlag) {
+		this.useFlag = useFlag;
 	}
 }

@@ -17,6 +17,7 @@
 package com.raygroupintl.m.token;
 
 import com.raygroupintl.m.parsetree.Node;
+import com.raygroupintl.m.struct.MRefactorSettings;
 import com.raygroupintl.parser.Empty;
 
 public class MEmpty extends Empty implements MToken {
@@ -26,6 +27,6 @@ public class MEmpty extends Empty implements MToken {
 	}
 
 	@Override
-	public void beautify() {		
+	public void refactor(MRefactorSettings settings) {		
 	}
 }

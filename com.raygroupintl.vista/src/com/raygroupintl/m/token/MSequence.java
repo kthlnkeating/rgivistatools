@@ -17,6 +17,7 @@
 package com.raygroupintl.m.token;
 
 import com.raygroupintl.m.parsetree.Node;
+import com.raygroupintl.m.struct.MRefactorSettings;
 import com.raygroupintl.parser.SequenceOfTokens;
 
 public class MSequence extends SequenceOfTokens<MToken> implements MToken {
@@ -59,10 +60,10 @@ public class MSequence extends SequenceOfTokens<MToken> implements MToken {
 	}	
 
 	@Override
-	public void beautify() {		
-		for (MToken token : this) {
+	public void refactor(MRefactorSettings settings) {		
+		for (MToken token : this.toIterable()) {
 			if (token != null) {
-				token.beautify();
+				token.refactor(settings);
 			}
 		}
 	}

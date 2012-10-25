@@ -8,6 +8,8 @@ import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
+import com.raygroupintl.m.struct.KeywordRefactorUseFlag;
+import com.raygroupintl.m.struct.MRefactorSettings;
 import com.raygroupintl.m.token.MTFSupply;
 import com.raygroupintl.m.token.MVersion;
 import com.raygroupintl.m.token.TFRoutine;
@@ -17,6 +19,7 @@ import com.raygroupintl.parser.Token;
 import com.raygroupintl.parser.TokenFactory;
 import com.raygroupintl.parser.Tokens;
 import com.raygroupintl.parsergen.ObjectSupply;
+import com.raygroupintl.struct.StringCase;
 
 public class TFLineTest {
 	private static TokenFactory<MToken> fStd95;
@@ -161,17 +164,32 @@ public class TFLineTest {
 		testBasic(fStd95, false);
 	}
 	
-	public void testBeautify(TokenFactory<MToken> f) {
-		MToken l = lineTest(f, " S @A=\"S\"  S @H@(0)=3");
-		l.beautify();
-		String expected = " SET @A=\"S\"  SET @H@(0)=3";
+	public void testRefactor(TokenFactory<MToken> f, String current, String expected, MRefactorSettings settings) {
+		MToken l = lineTest(f, current);
+		l.refactor(settings);
 		String actual = l.toValue().toString();
 		Assert.assertEquals(expected, actual);
 	}
 
 	@Test
-	public void testBeautify() {
-		testBeautify(fCache);
-		testBeautify(fStd95);
+	public void testRefactor() {
+		MRefactorSettings settings = new MRefactorSettings();
+		testRefactor(fCache, " S @A=\"S\"  S @H@(0)=3", " SET @A=\"S\"  SET @H@(0)=3", settings);
+		testRefactor(fStd95, " S @A=\"S\"  S @H@(0)=3", " SET @A=\"S\"  SET @H@(0)=3", settings);
+		
+		settings.commandNameSettings.setStringCaseFlag(StringCase.TITLE_CASE);
+		testRefactor(fCache, " S @A=\"S\"  S @H@(0)=3", " Set @A=\"S\"  Set @H@(0)=3", settings);
+		testRefactor(fStd95, " S @A=\"S\"  S @H@(0)=3", " Set @A=\"S\"  Set @H@(0)=3", settings);
+
+		settings.commandNameSettings.setStringCaseFlag(StringCase.LOWER_CASE);
+		settings.commandNameSettings.setUseFlag(KeywordRefactorUseFlag.USE_MNEMONIC);		
+		testRefactor(fCache, " Set @A=\"S\"  Set @H@(0)=3", " s @A=\"S\"  s @H@(0)=3", settings);
+		testRefactor(fStd95, " Set @A=\"S\"  Set @H@(0)=3", " s @A=\"S\"  s @H@(0)=3", settings);
+
+		settings = new MRefactorSettings();
+		testRefactor(fCache, " S A=$P(B,\"^\",2)  S @H@(0)=3", " SET A=$PIECE(B,\"^\",2)  SET @H@(0)=3", settings);
+		settings.commandNameSettings.setUseFlag(KeywordRefactorUseFlag.DO_NOT_CHANGE);
+		settings.commandNameSettings.setStringCaseFlag(StringCase.SAME_CASE);
+		testRefactor(fCache, " Set A=$P(B,\"^\",2)  S @H@(0)=3", " Set A=$PIECE(B,\"^\",2)  S @H@(0)=3", settings);
 	}
 }

@@ -16,29 +16,28 @@
 
 package com.raygroupintl.m.token;
 
-import com.raygroupintl.m.parsetree.Node;
-import com.raygroupintl.m.parsetree.Nodes;
+import com.raygroupintl.m.struct.KeywordRefactorFlags;
+import com.raygroupintl.m.struct.MNameWithMnemonic;
 import com.raygroupintl.m.struct.MRefactorSettings;
-import com.raygroupintl.parser.ListOfTokens;
+import com.raygroupintl.parser.TextPiece;
 
-public class MList extends ListOfTokens<MToken> implements MToken {
-	public MList() {
-		super();
+public abstract class MKeyWord extends MString {
+	private static final long serialVersionUID = 1L;
+
+	public MKeyWord(TextPiece value) {
+		super(value);
 	}
 
-	public MList(ListOfTokens<MToken> tokens) {
-		super(tokens);
-	}
-
-	@Override
-	public Nodes<Node> getNode() {
-		return NodeUtilities.getNodes(this.toIterable(), this.size());
-	}
+	public abstract MNameWithMnemonic getNameWithMnemonic(String name);
 	
+	public abstract KeywordRefactorFlags getKeywordFlags(MRefactorSettings settings);
+
 	@Override
 	public void refactor(MRefactorSettings settings) {
-		for (MToken token : this.toIterable()) {
-			token.refactor(settings);
-		}
+		String value = this.toString();
+		MNameWithMnemonic mnwm = this.getNameWithMnemonic(value.toUpperCase());
+		KeywordRefactorFlags flags = this.getKeywordFlags(settings);
+		String newValue = mnwm.refactor(flags, value);
+		this.set(new TextPiece(newValue));
 	}
 }
