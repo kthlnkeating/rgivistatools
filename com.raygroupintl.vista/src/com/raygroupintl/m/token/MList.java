@@ -35,32 +35,6 @@ public class MList extends ListOfTokens<MToken> implements MToken {
 	}
 	
 	@Override
-	public Node getSubNode(int index) {
-		MToken subToken = this.getToken(index);
-		return subToken == null ? null : subToken.getNode();
-	}
-
-	@Override
-	public Node getSubNode(int index0, int index1) {
-		MToken subToken = this.getToken(index0);
-		if (subToken != null) {
-			subToken = this.getToken(index1);
-			if (subToken != null) return subToken.getNode();
-		}
-		return null;
-	}	
-	
-	@Override
-	public int getNumSubNodes() {
-		return this.size();
-	}
-
-	@Override
-	public MToken getSubNodeToken(int index) {
-		return this.getToken(index);
-	}
-
-	@Override
 	public void beautify() {
 		for (MToken token : this.toIterable()) {
 			token.beautify();

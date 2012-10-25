@@ -37,30 +37,26 @@ public class MSequence extends SequenceOfTokens<MToken> implements MToken {
 		return NodeUtilities.getNodes(this, this.size());
 	}
 
-	@Override
-	public Node getSubNode(int index) {
+	public Node getNode(int index) {
 		MToken subToken = this.getToken(index);
 		return subToken == null ? null : subToken.getNode();
 	}
 
-	@Override
-	public Node getSubNode(int index0, int index1) {
-		MToken subToken = this.getToken(index0);
-		if (subToken != null) {
-			return subToken.getSubNode(index1);
+	public Node getNode(int index0, int index1) {
+		MToken t = this.getToken(index0, index1);
+		if (t != null) {
+			return t.getNode();
 		}
 		return null;
 	}	
 
-	@Override
-	public int getNumSubNodes() {
-		return this.size();
-	}
-
-	@Override
-	public MToken getSubNodeToken(int index) {
-		return this.getToken(index);
-	}
+	public Node getNode(int index0, int index1, int index2) {
+		MToken t = this.getToken(index0, index1, index2);
+		if (t != null) {
+			return t.getNode();
+		}
+		return null;
+	}	
 
 	@Override
 	public void beautify() {		

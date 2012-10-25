@@ -30,43 +30,6 @@ public class MDelimitedList extends DelimitedListOfTokens<MToken> implements MTo
 	}
 
 	@Override
-	public Node getSubNode(int index) {
-		MToken subToken = this.getSubNodeToken(index);
-		if (subToken != null) {
-			return subToken.getNode();
-		}
-		return null;
-	}
-
-	@Override
-	public Node getSubNode(int index0, int index1) {
-		MToken subToken = this.getToken(index0);
-		if (subToken != null) {
-			subToken = this.getToken(index1);
-			if (subToken != null) return subToken.getNode();
-		}
-		return null;
-	}	
-
-	@Override
-	public int getNumSubNodes() {
-		return this.size();
-	}
-
-	@Override
-	public MToken getSubNodeToken(int index) {
-		MToken subToken = this.getToken(index);
-		if (subToken != null) {
-			if (index == 0) {
-				return subToken;
-			} else {
-				return subToken.getSubNodeToken(1);
-			}
-		}
-		return null;
-	}
-
-	@Override
 	public void beautify() {
 		for (MToken token : this.toIterable()) {
 			token.beautify();

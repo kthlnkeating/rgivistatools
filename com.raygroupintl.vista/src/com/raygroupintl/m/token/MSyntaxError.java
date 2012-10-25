@@ -17,7 +17,6 @@
 package com.raygroupintl.m.token;
 
 import com.raygroupintl.m.parsetree.ErrorNode;
-import com.raygroupintl.m.parsetree.Node;
 import com.raygroupintl.m.struct.MError;
 import com.raygroupintl.parser.TextPiece;
 
@@ -49,24 +48,4 @@ public class MSyntaxError implements MToken {
 	public ErrorNode getNode() {
 		return new ErrorNode(this.errorCode > 0 ? this.errorCode : MError.ERR_GENERAL_SYNTAX);
 	}
-
-	@Override
-	public Node getSubNode(int index) {
-		return null;
-	}
-
-	@Override
-	public Node getSubNode(int index0, int index1) {
-		return null;
-	}	
-
-	@Override
-	public int getNumSubNodes() {
-		return 0;
-	}
-	
-	@Override
-	public MToken getSubNodeToken(int index) {
-		return null;
-	}	
 }

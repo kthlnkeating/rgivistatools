@@ -45,26 +45,6 @@ public class MString extends TextPiece implements MToken {
 	}
 
 	@Override
-	public Node getSubNode(int index) {
-		return null;
-	}
-
-	@Override
-	public Node getSubNode(int index0, int index1) {
-		return null;
-	}	
-
-	@Override
-	public int getNumSubNodes() {
-		return 0;
-	}
-
-	@Override
-	public MToken getSubNodeToken(int index) {
-		return null;
-	}
-
-	@Override
 	public TextPiece toValue() {
 		return this;
 	}

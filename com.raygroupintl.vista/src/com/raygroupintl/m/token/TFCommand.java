@@ -182,7 +182,9 @@ public class TFCommand extends TokenFactory<MToken> {
 			if (argument == null) {
 				return new ForLoop();
 			} else {
-				return new ForLoop(argument.getSubNode(0), argument.getSubNode(2));
+				Node n0 = this.getArgumentNode(0);
+				Node n2 = this.getArgumentNode(2);
+				return new ForLoop(n0, n2);
 			}
 		}	
 	}

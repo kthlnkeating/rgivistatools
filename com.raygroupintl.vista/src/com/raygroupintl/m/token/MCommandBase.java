@@ -16,6 +16,7 @@
 
 package com.raygroupintl.m.token;
 
+import com.raygroupintl.m.parsetree.Node;
 import com.raygroupintl.parser.TextPiece;
 
 public abstract class MCommandBase extends MSequence {
@@ -35,6 +36,11 @@ public abstract class MCommandBase extends MSequence {
 			return null;
 		}
 		return argument;
+	}
+
+	protected Node getArgumentNode(int index) {
+		return this.getNode(1, 2, index);
+
 	}
 
 	@Override

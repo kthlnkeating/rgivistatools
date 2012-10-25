@@ -33,9 +33,9 @@ public class MForCmd extends MCommandBase {
 		
 		@Override
 		public Node getNode() {			
-			Node node0 = this.getSubNode(0);
-			Node node1 = this.getSubNode(1, 1);
-			Node node2 = node1 == null ? null : this.getSubNode(2, 1); 
+			Node node0 = this.getNode(0);
+			Node node1 = this.getNode(1, 1);
+			Node node2 = node1 == null ? null : this.getNode(2, 1); 
 			
 			int length = 1;
 			if (node1 != null) {
@@ -69,7 +69,9 @@ public class MForCmd extends MCommandBase {
 		if (argument == null) {
 			return new ForLoop();
 		} else {
-			return new ForLoop(argument.getSubNode(0), argument.getSubNode(2));
+			Node n0 = this.getArgumentNode(0);
+			Node n2 = this.getArgumentNode(2);		
+			return new ForLoop(n0, n2);
 		}
 	}	
 }
