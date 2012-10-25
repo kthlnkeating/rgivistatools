@@ -16,7 +16,7 @@
 
 package com.raygroupintl.m.struct;
 
-import java.util.HashMap;
+import java.util.Map;
 
 public class MNameWithMnemonic {
 	private String mnemonic;
@@ -35,14 +35,11 @@ public class MNameWithMnemonic {
 		return this.name;
 	}
 	
-	@SuppressWarnings("serial")
-	public static class Map extends HashMap<String, MNameWithMnemonic> {
-		public void update(String mnemonic, String name) {
-			MNameWithMnemonic iv = new MNameWithMnemonic(mnemonic, name);
-			this.put(mnemonic, iv);
-			if (! mnemonic.equals(name)) {
-				this.put(name, iv);			
-			}
-		}
+	public static <M extends Map<String, MNameWithMnemonic>> void update(M target, String mnemonic, String name) {
+		MNameWithMnemonic mnwm = new MNameWithMnemonic(mnemonic, name);
+		target.put(mnemonic, mnwm);
+		if (! mnemonic.equals(name)) {
+			target.put(name, mnwm);
+		}		
 	}
 }

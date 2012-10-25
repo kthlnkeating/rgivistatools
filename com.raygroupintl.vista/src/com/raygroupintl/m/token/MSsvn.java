@@ -16,6 +16,9 @@
 
 package com.raygroupintl.m.token;
 
+import java.util.HashMap;
+import java.util.Map;
+
 import com.raygroupintl.m.parsetree.Node;
 import com.raygroupintl.m.parsetree.NodeList;
 import com.raygroupintl.m.parsetree.StructuredSystemVariable;
@@ -25,17 +28,17 @@ import com.raygroupintl.parser.TextPiece;
 import com.raygroupintl.parser.Tokens;
 
 public class MSsvn extends MSequence {
-	private static final MNameWithMnemonic.Map SSVS = new MNameWithMnemonic.Map();
+	private static final Map<String, MNameWithMnemonic> SSVS = new HashMap<String, MNameWithMnemonic>();
 	static {
-		SSVS.update("D", "DEVICE"); 	
-		SSVS.update("DI", "DISPLAY"); 	
-		SSVS.update("E", "EVENT"); 	
-		SSVS.update("G", "GLOBAL"); 	
-		SSVS.update("J", "JOB"); 	
-		SSVS.update("L", "LOCK"); 	
-		SSVS.update("R", "ROUTINE"); 	
-		SSVS.update("S", "SYSTEM"); 	
-		SSVS.update("W", "WINDOW"); 	
+		MNameWithMnemonic.update(SSVS, "D", "DEVICE"); 	
+		MNameWithMnemonic.update(SSVS, "DI", "DISPLAY"); 	
+		MNameWithMnemonic.update(SSVS, "E", "EVENT"); 	
+		MNameWithMnemonic.update(SSVS, "G", "GLOBAL"); 	
+		MNameWithMnemonic.update(SSVS, "J", "JOB"); 	
+		MNameWithMnemonic.update(SSVS, "L", "LOCK"); 	
+		MNameWithMnemonic.update(SSVS, "R", "ROUTINE"); 	
+		MNameWithMnemonic.update(SSVS, "S", "SYSTEM"); 	
+		MNameWithMnemonic.update(SSVS, "W", "WINDOW"); 	
 	}
 	
 	public MSsvn(int length) {

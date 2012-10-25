@@ -16,11 +16,11 @@
 
 package com.raygroupintl.parsergen.ruledef;
 
+import com.raygroupintl.parser.DelimitedListOfTokens;
 import com.raygroupintl.parser.ListOfTokens;
 import com.raygroupintl.parser.SequenceOfTokens;
 import com.raygroupintl.parser.TextPiece;
 import com.raygroupintl.parser.Token;
-import com.raygroupintl.parser.Tokens;
 import com.raygroupintl.parsergen.ObjectSupply;
 
 public class TestObjectSupply implements ObjectSupply<Token> {
@@ -40,8 +40,8 @@ public class TestObjectSupply implements ObjectSupply<Token> {
 	}
 	
 	@Override
-	public TTDelimitedList newDelimitedList(Token leadingToken, Tokens<Token> tailTokens) {
-		return new TTDelimitedList(leadingToken, tailTokens);
+	public TTDelimitedList newDelimitedList(DelimitedListOfTokens<Token> tokens) {
+		return new TTDelimitedList(tokens);
 	}
 	
 	@Override

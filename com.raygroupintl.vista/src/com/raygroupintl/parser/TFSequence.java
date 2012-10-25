@@ -153,7 +153,7 @@ public class TFSequence<T extends Token> extends TokenFactory<T> {
 		}
 	}
 	
-	final SequenceOfTokens<T> tokenizeCommon(Text text, ObjectSupply<T> objectSupply) throws SyntaxErrorException {
+	final public SequenceOfTokens<T> tokenizeCommon(Text text, ObjectSupply<T> objectSupply) throws SyntaxErrorException {
 		int length = this.factories.size();
 		SequenceOfTokens<T> foundTokens = new SequenceOfTokens<T>(length);
 		return this.tokenizeCommon(text, objectSupply, 0, foundTokens, false);

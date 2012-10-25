@@ -16,10 +16,10 @@
 
 package com.raygroupintl.parsergen.ruledef;
 
+import com.raygroupintl.parser.DelimitedListOfTokens;
 import com.raygroupintl.parser.ListOfTokens;
 import com.raygroupintl.parser.SequenceOfTokens;
 import com.raygroupintl.parser.TextPiece;
-import com.raygroupintl.parser.Tokens;
 import com.raygroupintl.parsergen.ObjectSupply;
 
 public class DefaultObjectSupply implements ObjectSupply<RuleSupply> {
@@ -39,8 +39,8 @@ public class DefaultObjectSupply implements ObjectSupply<RuleSupply> {
 	}
 	
 	@Override
-	public RuleSupply newDelimitedList(RuleSupply leadingToken, Tokens<RuleSupply> tailTokens) {
-		return new TDelimitedList(leadingToken, tailTokens);
+	public RuleSupply newDelimitedList(DelimitedListOfTokens<RuleSupply> tokens) {
+		return new TDelimitedList(tokens);
 	}
 	
 	@Override

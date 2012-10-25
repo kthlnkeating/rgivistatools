@@ -18,11 +18,10 @@ package com.raygroupintl.m.token;
 
 import com.raygroupintl.m.parsetree.Node;
 import com.raygroupintl.parser.DelimitedListOfTokens;
-import com.raygroupintl.parser.Tokens;
 
 public class MDelimitedList extends DelimitedListOfTokens<MToken> implements MToken {
-	public MDelimitedList(MToken leadingToken, Tokens<MToken> tailTokens) {
-		super(leadingToken, tailTokens);
+	public MDelimitedList(DelimitedListOfTokens<MToken> tokens) {
+		super(tokens);
 	}
 
 	@Override

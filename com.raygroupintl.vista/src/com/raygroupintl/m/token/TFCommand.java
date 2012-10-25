@@ -21,6 +21,7 @@ import com.raygroupintl.m.parsetree.SetCmdNodes;
 import com.raygroupintl.m.parsetree.WriteCmd;
 import com.raygroupintl.m.parsetree.XecuteCmd;
 import com.raygroupintl.m.struct.MError;
+import com.raygroupintl.m.struct.MNameWithMnemonic;
 import com.raygroupintl.parser.SequenceOfTokens;
 import com.raygroupintl.parser.TextPiece;
 import com.raygroupintl.parser.SyntaxErrorException;
@@ -481,8 +482,11 @@ public class TFCommand extends TokenFactory<MToken> {
 	}
 
 	private class TGenericCommandSpec extends TCommandSpec {
-		private TGenericCommandSpec(MToken value, MTFSupply supply) {
+		private MNameWithMnemonic mnwm;
+		
+		private TGenericCommandSpec(MToken value, MNameWithMnemonic mnwm, MTFSupply supply) {
 			super(value, new TFGenericArgument("genericargument"));
+			this.mnwm = mnwm;
 		}
 	
 		@Override
@@ -723,14 +727,25 @@ public class TFCommand extends TokenFactory<MToken> {
 		this.commandSpecs.put("XECUTE", x);		
 	}
 	
-	public void addCommand(String name, final MTFSupply supply) {
+	public void addCommand(final String cmdName, final MTFSupply supply) {
 		TCSFactory generic = new TCSFactory() {		
 			@Override
 			public TCommandSpec get(MToken name) {
-				return new TGenericCommandSpec(name, supply);
+				return new TGenericCommandSpec(name, new MNameWithMnemonic(cmdName, cmdName), supply);
 			}
 		};
-		this.commandSpecs.put(name, generic);
+		this.commandSpecs.put(cmdName, generic);
+	}
+	
+	public void addCommand(final String mnemonic, final String cmdName, final MTFSupply supply) {
+		TCSFactory generic = new TCSFactory() {		
+			@Override
+			public TCommandSpec get(MToken name) {
+				return new TGenericCommandSpec(name, new MNameWithMnemonic(mnemonic, cmdName), supply);
+			}
+		};
+		this.commandSpecs.put(mnemonic, generic);
+		this.commandSpecs.put(cmdName, generic);
 	}
 	
 	private class TFCommandRest extends TFSequence<MToken> {

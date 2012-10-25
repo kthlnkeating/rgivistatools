@@ -50,6 +50,11 @@ public class DelimitedListOfTokens<T extends Token> extends CollectionOfTokens<T
 		this.remainingTokens = tailTokens;
 	}
 
+	public DelimitedListOfTokens(DelimitedListOfTokens<T> rhs) {
+		this.leadingToken = rhs.leadingToken;
+		this.remainingTokens = rhs.remainingTokens;
+	}
+
 	@Override
 	public void setToken(int index, T token) {
 		if (index == 0) {

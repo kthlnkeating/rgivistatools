@@ -16,10 +16,10 @@
 
 package com.raygroupintl.m.token;
 
+import com.raygroupintl.parser.DelimitedListOfTokens;
 import com.raygroupintl.parser.ListOfTokens;
 import com.raygroupintl.parser.SequenceOfTokens;
 import com.raygroupintl.parser.TextPiece;
-import com.raygroupintl.parser.Tokens;
 import com.raygroupintl.parsergen.ObjectSupply;
 
 public class MObjectSupply implements ObjectSupply<MToken> {
@@ -39,8 +39,8 @@ public class MObjectSupply implements ObjectSupply<MToken> {
 	}
 	
 	@Override
-	public MDelimitedList newDelimitedList(MToken leadingToken, Tokens<MToken> tailTokens) {
-		return new MDelimitedList(leadingToken, tailTokens);
+	public MDelimitedList newDelimitedList(DelimitedListOfTokens<MToken> tokens) {
+		return new MDelimitedList(tokens);
 	}
 	
 	@Override

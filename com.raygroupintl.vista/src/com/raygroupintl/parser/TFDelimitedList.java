@@ -61,12 +61,13 @@ public class TFDelimitedList<T extends Token> extends TokenFactory<T> {
 		this.set(element, delimiter, false);
 	}
 
-	private T convertList(ObjectSupply<T> objectSupply, T leadingToken, Tokens<T> tailTokens) {
+	public T convert(ObjectSupply<T> objectSupply, DelimitedListOfTokens<T> tokens) {
+		if (tokens == null) return null;
 		if (this.constructor == null) {
-			return objectSupply.newDelimitedList(leadingToken, tailTokens);			
+			return objectSupply.newDelimitedList(tokens);			
 		} else {
 			try {
-				return this.constructor.newInstance(leadingToken, tailTokens);						
+				return this.constructor.newInstance(tokens);						
 			} catch (Throwable t) {
 				String clsName =  this.getClass().getName();
 				Logger.getLogger(clsName).log(Level.SEVERE, "Unable to instantiate " + clsName + ".", t);			
@@ -74,9 +75,8 @@ public class TFDelimitedList<T extends Token> extends TokenFactory<T> {
 			return null;			
 		}
 	}
-	
-	@Override
-	public T tokenize(Text text, ObjectSupply<T> objectSupply) throws SyntaxErrorException {
+		
+	public DelimitedListOfTokens<T> tokenizeCommon(Text text, ObjectSupply<T> objectSupply) throws SyntaxErrorException {
 		if (this.effective == null) {
 			throw new IllegalStateException("TFDelimitedList.set needs to be called before TFDelimitedList.tokenize");
 		} else {
@@ -87,17 +87,23 @@ public class TFDelimitedList<T extends Token> extends TokenFactory<T> {
 				T leadingToken = internalResult.getToken(0);
 				Tokens<T> tailTokens = internalResult.getTokens(1);
 				if (tailTokens == null) {
-					return this.convertList(objectSupply, leadingToken, null);
+					return new DelimitedListOfTokens<T>(leadingToken, null);
 				} else {
 					int lastIndex = tailTokens.size() - 1;
 					Tokens<T> lastToken = tailTokens.getTokens(lastIndex);
 					if (lastToken.getToken(1) == null) {
 						lastToken.setToken(1, objectSupply.newEmpty());
 					}
-					return this.convertList(objectSupply, leadingToken, tailTokens);
+					return new DelimitedListOfTokens<T>(leadingToken, tailTokens);
 				}
 			}
-		}
+		}		
+	}
+	
+	@Override
+	public T tokenize(Text text, ObjectSupply<T> objectSupply) throws SyntaxErrorException {
+		DelimitedListOfTokens<T> result = this.tokenizeCommon(text, objectSupply);
+		return this.convert(objectSupply, result);
 	}
 	
 	public void setDelimitedListTargetType(Constructor<? extends T> constructor) {

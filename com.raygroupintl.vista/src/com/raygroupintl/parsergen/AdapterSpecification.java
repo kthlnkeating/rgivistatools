@@ -20,11 +20,11 @@ import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
 import java.lang.reflect.Modifier;
 
+import com.raygroupintl.parser.DelimitedListOfTokens;
 import com.raygroupintl.parser.ListOfTokens;
 import com.raygroupintl.parser.SequenceOfTokens;
 import com.raygroupintl.parser.TextPiece;
 import com.raygroupintl.parser.Token;
-import com.raygroupintl.parser.Tokens;
 
 public class AdapterSpecification<T extends Token> {
 	private Constructor<? extends T> token;
@@ -147,7 +147,7 @@ public class AdapterSpecification<T extends Token> {
 		if (dlTokenType != null) {
 			Class<? extends T> t = this.addGeneric(dlTokenType.value(), actualTokencls);
 			try {
-				Constructor<? extends T> constructor = t.getConstructor(new Class[]{actualTokencls, Tokens.class});
+				Constructor<? extends T> constructor = getConstructor(f.getName(), t, DelimitedListOfTokens.class);
 				this.delimitedList = constructor;
 			} catch (Throwable e) {
 				throw new ParseErrorException("Uncompatible adapter type.");			

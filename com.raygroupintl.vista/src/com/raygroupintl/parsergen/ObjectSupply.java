@@ -16,16 +16,16 @@
 
 package com.raygroupintl.parsergen;
 
+import com.raygroupintl.parser.DelimitedListOfTokens;
 import com.raygroupintl.parser.ListOfTokens;
 import com.raygroupintl.parser.SequenceOfTokens;
 import com.raygroupintl.parser.TextPiece;
 import com.raygroupintl.parser.Token;
-import com.raygroupintl.parser.Tokens;
 
 public interface ObjectSupply<T extends Token> {
 	T newString(TextPiece piece);
 	T newSequence(SequenceOfTokens<T> store);
 	T newList(ListOfTokens<T> tokens);
-	T newDelimitedList(T leadingToken, Tokens<T> tailTokens);
+	T newDelimitedList(DelimitedListOfTokens<T> tokens);
 	T newEmpty();
 }

@@ -18,11 +18,10 @@ package com.raygroupintl.parsergen.ruledef;
 
 import com.raygroupintl.parser.DelimitedListOfTokens;
 import com.raygroupintl.parser.Token;
-import com.raygroupintl.parser.Tokens;
 
 public class TTDelimitedList extends DelimitedListOfTokens<Token> implements Token {
-	public TTDelimitedList(Token leadingToken, Tokens<Token> tailTokens) {
-		super(leadingToken, tailTokens);
+	public TTDelimitedList(DelimitedListOfTokens<Token> tokens) {
+		super(tokens);
 	}
 }
 

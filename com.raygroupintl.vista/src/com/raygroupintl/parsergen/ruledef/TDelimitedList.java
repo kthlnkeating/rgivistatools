@@ -17,11 +17,10 @@
 package com.raygroupintl.parsergen.ruledef;
 
 import com.raygroupintl.parser.DelimitedListOfTokens;
-import com.raygroupintl.parser.Tokens;
 
 public class TDelimitedList extends DelimitedListOfTokens<RuleSupply> implements RuleSupply {
-	public TDelimitedList(RuleSupply leadingToken, Tokens<RuleSupply> tailTokens) {
-		super(leadingToken, tailTokens);
+	public TDelimitedList(DelimitedListOfTokens<RuleSupply> tokens) {
+		super(tokens);
 	}
 
 	@Override

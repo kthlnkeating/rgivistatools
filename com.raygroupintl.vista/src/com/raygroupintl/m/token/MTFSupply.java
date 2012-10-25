@@ -17,6 +17,8 @@
 package com.raygroupintl.m.token;
 
 import com.raygroupintl.m.struct.MError;
+import com.raygroupintl.parser.TFDelimitedList;
+import com.raygroupintl.parser.TFSequence;
 import com.raygroupintl.parser.TFSyntaxError;
 import com.raygroupintl.parser.TokenFactory;
 import com.raygroupintl.parsergen.ParseException;
@@ -110,7 +112,7 @@ public class MTFSupply {
 	public TokenFactory<MToken> exprtail;
 
 	@Rule("{expr:','}")
-	public TokenFactory<MToken> exprlist;
+	public TFDelimitedList<MToken> exprlist;
 	
 	@Rule("{expr:',':'(':')'}")
 	public TokenFactory<MToken> exprlistinparan;
@@ -149,7 +151,7 @@ public class MTFSupply {
 	@Rule("expr, ':', expr")
 	public TokenFactory<MToken> dselectarge;
 	@Rule("{dselectarge:','}")
-	public TokenFactory<MToken> dselectarg;
+	public TFDelimitedList<MToken> dselectarg;
 	
 	@Rule("gvnssvn | gvnnaked | gvn")
 	public TokenFactory<MToken> gvnall;
@@ -520,7 +522,7 @@ public class MTFSupply {
 	public TokenFactory<MToken> lineformal;
 		
 	@Rule("'$', ident")
-	public TokenFactory<MToken> intrinsicname;
+	public TFSequence<MToken> intrinsicname;
 
 	@Rule("{' '} | comment | end")
 	public TokenFactory<MToken> commandend;
@@ -659,23 +661,23 @@ public class MTFSupply {
 
 		this.command.addCommands(this);
 
-		this.command.addCommand("ZB", this);
-		this.command.addCommand("ZS", this);
-		this.command.addCommand("ZC", this);
+		this.command.addCommand("ZB", "ZBREAK", this);
+		this.command.addCommand("ZS", "ZSAVE", this);     // Cache only
+		this.command.addCommand("ZC", "ZCONTINUE", this); //GTM only
 		this.command.addCommand("ZR", this);
 		this.command.addCommand("ZI", this);
 		this.command.addCommand("ZQ", this);
 		this.command.addCommand("ZT", this);
 		this.command.addCommand("ZU", this);
-		this.command.addCommand("ZSHOW", this);
-		this.command.addCommand("ZNSPACE", this);
+		this.command.addCommand("ZSH", "ZSHOW", this);    // GTM only
+		this.command.addCommand("ZN", "ZNSPACE", this);   // CACHE only
 		this.command.addCommand("ZETRAP", this);
 		this.command.addCommand("ESTART", this);
 		this.command.addCommand("ESTOP", this);
 		this.command.addCommand("ABORT", this);
 		this.command.addCommand("ZRELPAGE", this);
 		this.command.addCommand("ZSYSTEM", this);
-		this.command.addCommand("ZLINK", this);		
+		this.command.addCommand("ZL", "ZLINK", this);    // GTM Only		
 		this.command.addCommand("ZESCAPE", this);
 		this.command.addCommand("ZITRAP", this);
 		this.command.addCommand("ZGETPAGE", this);
@@ -750,9 +752,6 @@ public class MTFSupply {
 		@Rule("fanoutlabel, ['^', ((envfanoutroutine | objdoroutine | fanoutroutine) , [actuallist]) | indfanoutroutine]")
 		public TokenFactory<MToken> exargument;
 		
-		
-		
-		
 		@Rule("classmethod | expr")
 		public TokenFactory<MToken> setrhs;
 		
@@ -760,7 +759,7 @@ public class MTFSupply {
 		public TokenFactory<MToken> dcasearg;
 	
 		@Rule("{actual:','}")
-		public TokenFactory<MToken> dsystemarg;
+		public TFDelimitedList<MToken> dsystemarg;
 		
 		@Rule("'$', ident, [methods]")
 		public TokenFactory<MToken> intrinsicname;
