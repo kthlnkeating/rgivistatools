@@ -359,7 +359,7 @@ public class RepositoryInfo {
 	public static RepositoryInfo getInstance(RoutineFactory rf) {
 		String root = RepositoryInfo.getLocation();
 		if ((root == null) || (root.isEmpty())) {
-			MRALogger.logError("Root directory for VistA-FOIA needs to be specified using environemnt variable VistA-FOIA");
+			MRALogger.logError("Root directory for VistA-FOIA needs to be specified using environment variable VistA-FOIA");
 			return null;
 		}
 		try {

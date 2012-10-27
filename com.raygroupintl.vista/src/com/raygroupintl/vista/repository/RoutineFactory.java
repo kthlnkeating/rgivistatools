@@ -19,7 +19,9 @@ package com.raygroupintl.vista.repository;
 import java.nio.file.Path;
 
 import com.raygroupintl.m.parsetree.Node;
+import com.raygroupintl.m.parsetree.Routine;
 
 public interface RoutineFactory {
 	Node getNode(Path path);
+	Routine getRoutineNode(Path path);
 }

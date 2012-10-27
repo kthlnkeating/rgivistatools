@@ -64,18 +64,33 @@ public class EntryWriter extends RepositoryVisitor {
 		routinePackage.acceptSubNodes(this);
 	}
 
+	private void writeEntries() {
+		List<EntryId> entries = new ArrayList<EntryId>(this.entryRecorder.getEntries());
+		Collections.sort(entries);
+		for (EntryId entry : entries) {
+			String entryString = entry.toString();
+			this.fileWrapper.writeEOL(entryString);
+		}		
+	}
+	
 	@Override
 	protected void visitRoutinePackages(VistaPackages rps) {
 		if (this.fileWrapper.start()) {
 			this.entryRecorder = new EntryRecorder();
 			super.visitRoutinePackages(rps);
-			List<EntryId> entries = new ArrayList<EntryId>(this.entryRecorder.getEntries());
-			Collections.sort(entries);
-			for (EntryId entry : entries) {
-				String entryString = entry.toString();
-				this.fileWrapper.writeEOL(entryString);
-			}
+			this.writeEntries();
 			this.fileWrapper.stop();
 		}
+	}
+	
+	public void writeForRoutines(List<Routine> routines) {
+		if (this.fileWrapper.start()) {
+			this.entryRecorder = new EntryRecorder();
+			for (Routine r : routines) {
+				this.visitRoutine(r);
+			}
+			this.writeEntries();
+			this.fileWrapper.stop();
+		}		
 	}
 }

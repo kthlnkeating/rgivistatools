@@ -410,7 +410,7 @@ public class Block {
 					}
 					if (tagBlock == null) {
 						if (! reported.contains(fout)) {						
-							LOGGER.log(Level.SEVERE, "Unable to find information about tag " + tagName + " in " + this.entryId.getRoutineName());
+							LOGGER.log(Level.WARNING, "Unable to find information about tag " + tagName + " in " + this.entryId.getRoutineName());
 							reported.add(fout);
 						}
 						continue;
@@ -445,7 +445,7 @@ public class Block {
 					}
 					if (tagBlock == null) {
 						if (! reported.contains(fout)) {
-							LOGGER.log(Level.SEVERE, "Unable to find information about tag " + fout.toString() + " in " + routineName);
+							LOGGER.log(Level.WARNING, "Unable to find information about tag " + fout.toString() + " in " + routineName);
 							reported.add(fout);
 						}
 						continue;

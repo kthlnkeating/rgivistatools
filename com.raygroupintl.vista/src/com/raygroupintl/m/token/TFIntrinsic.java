@@ -64,7 +64,7 @@ public class TFIntrinsic extends TokenFactory<MToken> {
 		@Override
 		public Node getNode() {
 			TextPiece name = this.getToken(1).toValue();
-			MToken arguments = this.getToken(3);	
+			MToken arguments = this.getToken(4);	
 			return new IntrinsicFunction(name.toString(), arguments == null ? null : arguments.getNode());
 		}
 	}

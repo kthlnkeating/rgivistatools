@@ -51,6 +51,22 @@ public class MRARoutineFactory implements RoutineFactory {
 		}
 	}	
 	
+	@Override
+	public Routine getRoutineNode(Path path) {
+		try {
+			MRoutine mr = this.tokenFactory.tokenize(path);
+			Routine node = mr.getNode();
+			return node;
+		} catch (SyntaxErrorException e) {
+			MError err = new MError(MError.ERR_BLOCK_STRUCTURE);
+			MRALogger.logError(err.getText());
+		} catch (IOException e) {
+			MError err = new MError(MError.ERR_ROUTINE_PATH);
+			MRALogger.logError(err.getText());
+		}
+		return null;
+	}	
+	
 	public static MRARoutineFactory getInstance(MVersion version) {
 		try {
 			MTFSupply supply = MTFSupply.getInstance(version);

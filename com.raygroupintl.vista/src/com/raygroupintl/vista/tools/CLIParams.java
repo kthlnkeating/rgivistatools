@@ -104,5 +104,18 @@ public class CLIParams {
 			return null;
 		}
 	}
+	
+	public String getPositional(int index, String defaultPositional) {
+		if ((this.positionals == null) || (this.positionals.size() <= index)) {
+			return null;
+		}
+		return this.positionals.get(index);
+	}
+	
+	public void popPositional() {
+		if (this.positionals.size() > 0) {
+			this.positionals.remove(0);
+		}
+	}
 }
 

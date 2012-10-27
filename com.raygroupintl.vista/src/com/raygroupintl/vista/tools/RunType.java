@@ -81,4 +81,8 @@ public abstract class RunType {
 		}
 		return new FileWrapper(this.params.outputFile);
 	}
+	
+	public static abstract class Factory {
+		public abstract RunType getInstance(CLIParams params);		
+	}
 }

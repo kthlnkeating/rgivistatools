@@ -35,5 +35,4 @@ public class ErrorNode extends TerminalNode {
 	public void accept(Visitor visitor) {
 		visitor.visitErrorNode(this);
 	}
-
 }

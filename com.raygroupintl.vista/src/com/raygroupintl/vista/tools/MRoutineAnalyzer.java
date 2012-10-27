@@ -16,105 +16,94 @@
 
 package com.raygroupintl.vista.tools;
 
-import java.nio.file.Path;
-import java.nio.file.Paths;
+import java.util.Set;
+import java.util.TreeSet;
 
-import com.raygroupintl.vista.repository.RepositoryInfo;
+import com.raygroupintl.util.CLIParamMgr;
 
 public class MRoutineAnalyzer {
-	private static String getArgument(String[] args, int index, String defaultArg) {
-		if ((args != null) && (args.length > index)) {
-			return args[index];
-		} else {
-			return defaultArg;
+	private static CLIParams getCommandLineParamaters(String[] args) {
+		try {
+			CLIParams params = CLIParamMgr.parse(CLIParams.class, args);
+			return params;
+		} catch (Throwable t) {
+			MRALogger.logError("Invalid command line options.", t);
+			return null;
 		}		
 	}
 	
-	private static void mRoutineAnalyzerTestBench(String[] args) {
-		String root = RepositoryInfo.getLocationWithLog();
-		if (root == null) return;
-		
-		String outputPath = getArgument(args, 1, "C:\\Sandbox");
-		String pathPrefix = getArgument(args, 2, "C:\\Sandbox\\m_");
-		
-		MRoutineAnalyzer.main(new String[]{"fanout", "-o", pathPrefix + "fo_all.txt"});				
-		MRoutineAnalyzer.main(new String[]{"fanout", "-o", pathPrefix + "fo_gmpl.txt", "-p", "GMPL"});				
-		MRoutineAnalyzer.main(new String[]{"fanout", "-o", pathPrefix + "fo_sd.txt", "-p", "SD"});				
-		
-		Path zgi = Paths.get(root, "Scripts", "ZGI.m");
-		Path zgo = Paths.get(root, "Scripts", "ZGO.m");
-		MRoutineAnalyzer.main(new String[]{"fanin", "-o", pathPrefix + "fi_all.txt",
-				"-mf", zgi.toString(), "-mf", zgo.toString(), "-pe", "DENTAL RECORD MANAGER"});				
-		MRoutineAnalyzer.main(new String[]{"fanin", "-o", pathPrefix + "fi_gmpl.txt", "-p", "GMPL"});				
-		MRoutineAnalyzer.main(new String[]{"fanin", "-o", pathPrefix + "fi_sd.txt", "-p", "SD"});				
-		
-		MRoutineAnalyzer.main(new String[]{"option", "-o", pathPrefix + "opt_all.txt", "-pe", "DENTAL RECORD MANAGER"});				
-		MRoutineAnalyzer.main(new String[]{"option", "-o", pathPrefix + "opt_gmpl.txt", "-p", "GMPL"});				
-		MRoutineAnalyzer.main(new String[]{"option", "-o", pathPrefix + "opt_sd.txt", "-p", "SD"});				
-		
-		MRoutineAnalyzer.main(new String[]{"rpc", "-o", pathPrefix + "rpc_all.txt", "-pe", "DENTAL RECORD MANAGER"});				
-		MRoutineAnalyzer.main(new String[]{"rpc", "-o", pathPrefix + "rpc_gmpl.txt", "-p", "GMPL"});				
-		MRoutineAnalyzer.main(new String[]{"rpc", "-o", pathPrefix + "rpc_sd.txt", "-p", "SD"});				
-		
-		MRoutineAnalyzer.main(new String[]{"usesglb", "-o", pathPrefix + "uses_gmpl.txt", "-p", "GMPL", "-ownf", outputPath + "\\Ownership.csv"});				
-		MRoutineAnalyzer.main(new String[]{"usesglb", "-o", pathPrefix + "uses_sd.txt", "-p", "SD", "-ownf", outputPath + "\\Ownership.csv"});				
-
-		MRoutineAnalyzer.main(new String[]{"usedglb", "-o", pathPrefix + "used_gmpl.txt", "-p", "GMPL", "-ownf", outputPath + "\\Ownership.csv"});				
-		MRoutineAnalyzer.main(new String[]{"usedglb", "-o", pathPrefix + "used_sd.txt", "-p", "SD", "-ownf", outputPath + "\\Ownership.csv"});				
-		
-		MRoutineAnalyzer.main(new String[]{"filemancall", "-o", pathPrefix + "fmc_all.txt"});	  //SPNRPC4 is due to error			
-
-		MRoutineAnalyzer.main(new String[]{"parsetreesave", "-ptd", outputPath + "\\serial"});		
-
-		MRoutineAnalyzer.main(new String[]{"entry", "-p", "OR", "-r", "ORQQPL.*", "-o", pathPrefix + "einfo_cprspl_tags.txt"});
-		
-		MRoutineAnalyzer.main(new String[]{"entryinfo", "-i", pathPrefix + "einfo_cprspl_tags.txt", "-o", pathPrefix + "einfo_cprspl_0.txt",
-					"-ptd", outputPath + "\\serial", "-f", "0"});
-		MRoutineAnalyzer.main(new String[]{"entryinfo", "-i", pathPrefix + "einfo_cprspl_tags.txt", "-o", pathPrefix + "einfo_cprspl_1.txt",
-					"-ptd", outputPath + "\\serial", "-f", "1"});
-		MRoutineAnalyzer.main(new String[]{"entryinfo", "-i", pathPrefix + "einfo_cprspl_tags.txt", "-o", pathPrefix + "einfo_cprspl_2.txt",
-					"-ptd", outputPath + "\\serial", "-f", "2"});
-		MRoutineAnalyzer.main(new String[]{"entryinfo", "-i", pathPrefix + "einfo_cprspl_tags.txt", "-o", pathPrefix + "einfo_cprspl_3.txt",
-					"-ptd", outputPath + "\\serial", "-f", "3"});
-
-
-		MRoutineAnalyzer.main(new String[]{"fanin", "-o", pathPrefix + "einfo_gmplfi_tags.txt", "--rawformat", "-p", "GMPL"});
-
-		MRoutineAnalyzer.main(new String[]{"entryinfo", "-i", pathPrefix + "einfo_gmplfi_tags.txt", "-o", pathPrefix + "einfo_gmplfi_0.txt",
-					"-ptd", outputPath + "\\serial", "-f", "0"});
-		MRoutineAnalyzer.main(new String[]{"entryinfo", "-i", pathPrefix + "einfo_gmplfi_tags.txt", "-o", pathPrefix + "einfo_gmplfi_1.txt",
-					"-ptd", outputPath + "\\serial", "-f", "1"});
-		MRoutineAnalyzer.main(new String[]{"entryinfo", "-i", pathPrefix + "einfo_gmplfi_tags.txt", "-o", pathPrefix + "einfo_gmplfi_2.txt",
-					"-ptd", outputPath + "\\serial", "-f", "2"});
-		MRoutineAnalyzer.main(new String[]{"entryinfo", "-i", pathPrefix + "einfo_gmplfi_tags.txt", "-o", pathPrefix + "einfo_gmplfi_3.txt",
-				"-ptd", outputPath + "\\serial", "-f", "3"});
-		
-		
-		MRoutineAnalyzer.main(new String[]{"fanin", "-o", pathPrefix + "einfo_sdfi_tags.txt", "--rawformat", "-p", "SD"});
-
-		MRoutineAnalyzer.main(new String[]{"entryinfo", "-i", pathPrefix + "einfo_sdfi_tags.txt", "-o", pathPrefix + "einfo_sdfi_0.txt",
-					"-ptd", outputPath + "\\serial", "-f", "0"});
-		MRoutineAnalyzer.main(new String[]{"entryinfo", "-i", pathPrefix + "einfo_sdfi_tags.txt", "-o", pathPrefix + "einfo_sdfi_1.txt",
-					"-ptd", outputPath + "\\serial", "-f", "1"});
-		MRoutineAnalyzer.main(new String[]{"entryinfo", "-i", pathPrefix + "einfo_sdfi_tags.txt", "-o", pathPrefix + "einfo_sdfi_2.txt",
-					"-ptd", outputPath + "\\serial", "-f", "2"});		
-		MRoutineAnalyzer.main(new String[]{"entryinfo", "-i", pathPrefix + "einfo_sdfi_tags.txt", "-o", pathPrefix + "einfo_sdfi_3.txt",
-				"-ptd", outputPath + "\\serial", "-f", "3"});		
-	}
-		
-	public static void main(String[] args) {
-		if ("mratb".equalsIgnoreCase(getArgument(args, 0, ""))) {
-			mRoutineAnalyzerTestBench(args);
-			return;
-		}
-				
-		try {
-			RunType runType = RunTypes.getRunType(args);
-			if (runType != null) {
-				runType.run();
+	private static String getOptionMsg(Set<String> options) {
+		String result = "";
+		for (String option : options) {
+			if (! result.isEmpty()) {
+				result += ", ";
 			}
+			result += option;
+		}
+		return "Possible run types: " + result;
+	}
+
+	private static String getRunTypeOptionsMsg(RunTypes[] rtss) {
+		TreeSet<String> allOptions = new TreeSet<String>();
+		for (RunTypes rts : rtss) {
+			Set<String > options = rts.getRunTypeOptions();
+			allOptions.addAll(options);
+		}
+		allOptions.add("file");
+		return getOptionMsg(allOptions);
+	}
+	
+	private static void logErrorWithOptions(String firstLineMsg, RunTypes[] rtss) {
+		String secondLineMsg = getRunTypeOptionsMsg(rtss);
+		MRALogger.logError(firstLineMsg + "\n" + secondLineMsg + "\n");
+	}
+
+	private static void logErrorWithOptions(String firstLineMsg, RunTypes rts) {
+		String secondLineMsg = getOptionMsg(rts.getRunTypeOptions());
+		MRALogger.logError(firstLineMsg + "\n" + secondLineMsg + "\n");
+	}
+
+	public static void main(String[] args) {
+		try {
+			RunTypes[] rtss = new RunTypes[]{new RepositoryRunTypes(), new MacroRunTypes(), new RoutineRunTypes()};
+		
+			CLIParams params = getCommandLineParamaters(args);	
+			String runTypeOption = params.getPositional(0, null);
+			if (runTypeOption == null) {				
+				logErrorWithOptions("A run type option needs to be specified as the first positional argument.", rtss);
+				return;				
+			}
+			
+			params.popPositional();
+			
+			if (runTypeOption.equals("file")) {
+				if (params.positionals.size() == 0) {
+					logErrorWithOptions("A addditional run type option needs to be specified following \"file\".", rtss[2]);
+					return;
+				}
+				runTypeOption = params.positionals.get(0);
+				params.popPositional();
+				
+				RunType rt = rtss[2].getRunType(runTypeOption, params);
+				if (rt != null) {
+					rt.run();
+					return;
+				}
+				logErrorWithOptions("Specified run type option " + runTypeOption + " is not know.", rtss[2]);					
+				return;
+			}
+			
+			for (RunTypes rts : rtss) {
+				RunType rt = rts.getRunType(runTypeOption, params);
+				if (rt != null) {
+					rt.run();
+					return;
+				}
+			}
+			
+			logErrorWithOptions("Specified run type option " + runTypeOption + " is not know.", rtss);
 		} catch (Throwable t) {
-			MRALogger.logError("Unexpected error", t);
+			MRALogger.logError("Unexpected error.", t);
 		}
 	}
 }

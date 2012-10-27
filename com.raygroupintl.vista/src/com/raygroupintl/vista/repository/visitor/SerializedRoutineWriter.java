@@ -20,8 +20,10 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.ObjectOutputStream;
 import java.io.Serializable;
+import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -67,16 +69,30 @@ public class SerializedRoutineWriter extends RepositoryVisitor {
 		LOGGER.info("..done.\n");
 	}
 
-	@Override
-	protected void visitRoutinePackages(VistaPackages rps) {
+	private boolean testFile() {
 		Path path = Paths.get(this.outputDirectory, "test.tst");
 		String fileName = path.toString();
 		try {
 			this.writeObject(fileName, "test");
-			super.visitRoutinePackages(rps);
+			Files.delete(path);
+			return true;
 		} catch (IOException ioException) {
 			String msg = "Unable to write object to directory " + this.outputDirectory;
 			LOGGER.log(Level.SEVERE, msg, ioException);
-		}		
+			return false;
+		}
+	}
+	
+	@Override
+	protected void visitRoutinePackages(VistaPackages rps) {
+		if (testFile()) {
+			super.visitRoutinePackages(rps);			
+		}
+	}
+	
+	public void visitRoutines(List<Routine> routines) {
+		for (Routine r : routines) {
+			this.visitRoutine(r);			
+		}
 	}
 }

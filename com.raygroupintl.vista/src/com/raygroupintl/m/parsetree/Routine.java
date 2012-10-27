@@ -82,7 +82,7 @@ public class Routine extends BasicNode {
 	public static Routine readSerialized(String directory, String routineName) {
 		File file = new File(directory, routineName + ".ser");
 		if (! file.isFile()) {
-			LOGGER.log(Level.WARNING, "File for routine " + routineName + "(" + file.toString() + ") does not exist.");
+			LOGGER.log(Level.WARNING, "File for routine " + routineName + " (" + file.toString() + ") does not exist.");
 			return null;
 		}		
 		try {
