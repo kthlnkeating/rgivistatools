@@ -165,7 +165,7 @@ public class RuleGrammarTest {
 			RulesMapByName<Token> map = this.getMap();
 			DefinitionVisitor<Token> dv = new DefinitionVisitor<Token>();
 			rule.accept(dv, "test", RuleSupplyFlag.TOP);
-			FactorySupplyRule<Token> r = dv.getLastRule();
+			FactorySupplyRule<Token> r = dv.topRules.get("test");
 			r.update(map);
 			TokenFactory<Token> f = r.getTheFactory(map);
 			Assert.assertNotNull(f);
@@ -197,7 +197,7 @@ public class RuleGrammarTest {
 			RulesMapByName<Token> map = this.getMap();
 			DefinitionVisitor<Token> dv = new DefinitionVisitor<Token>();
 			rule.accept(dv, "test", RuleSupplyFlag.TOP);
-			FactorySupplyRule<Token> r = dv.getLastRule();
+			FactorySupplyRule<Token> r = dv.topRules.get("test");
 			r.update(map);
 			TokenFactory<Token> f = r.getTheFactory(map);
 			Assert.assertNotNull(f);
@@ -248,7 +248,7 @@ public class RuleGrammarTest {
 			RulesMapByName<Token> map = this.getMap();
 			DefinitionVisitor<Token> dv = new DefinitionVisitor<Token>();
 			rule.accept(dv, "test", RuleSupplyFlag.TOP);
-			FactorySupplyRule<Token> r = dv.getLastRule();
+			FactorySupplyRule<Token> r = dv.topRules.get("test");
 			r.update(map);
 			TokenFactory<Token> f = r.getTheFactory(map);
 			Assert.assertNotNull(f);
@@ -272,7 +272,7 @@ public class RuleGrammarTest {
 			Assert.assertEquals(inputText, rule.toValue().toString());
 			DefinitionVisitor<Token> dv = new DefinitionVisitor<Token>();
 			rule.accept(dv, "test", RuleSupplyFlag.TOP);
-			FactorySupplyRule<Token> r = dv.getLastRule();
+			FactorySupplyRule<Token> r = dv.topRules.get("test");
 			r.update(map);
 			TokenFactory<Token> f = r.getTheFactory(map);
 			Assert.assertNotNull(f);

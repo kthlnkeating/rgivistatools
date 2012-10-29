@@ -1,6 +1,5 @@
 package com.raygroupintl.parsergen.rulebased;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -16,22 +15,22 @@ import com.raygroupintl.parsergen.ruledef.Symbol;
 import com.raygroupintl.parsergen.ruledef.SymbolList;
 
 public class DefinitionVisitor<T extends Token> implements RuleDefinitionVisitor {
-	public Map<String, FactorySupplyRule<T>> topRules  = new HashMap<String, FactorySupplyRule<T>>();
-	private java.util.ArrayList<FactorySupplyRule<T>> allRules  = new ArrayList<FactorySupplyRule<T>>();
-	
-	//private Pair<FSRContainer<T>, Integer> lastContainer;
+	private static class ContainerAndIndex<T extends Token> {
+		public FSRContainer<T> container;
+		public int index;
 		
-	private FactorySupplyRule<T> acceptAndReturn(RuleSupply rs, String name, RuleSupplyFlag flag) {
-		rs.accept(this, name, flag);
-		int index = this.allRules.size();
-		return this.allRules.get(index-1);
+		public ContainerAndIndex(FSRContainer<T> container, int index) {
+			this.container = container;
+			this.index = index;
+		}
+		
+		public void addToContainer(FactorySupplyRule<T> fsr) {
+			this.container.set(this.index, fsr);
+		}
 	}
 	
-	private FactorySupplyRule<T> acceptAndReturn(RuleSupplies rss, int index, String name, RuleSupplyFlag flag) {
-		rss.acceptElement(this, index, name, flag);
-		int rIndex = this.allRules.size();
-		return this.allRules.get(rIndex-1);
-	}
+	public Map<String, FactorySupplyRule<T>> topRules  = new HashMap<String, FactorySupplyRule<T>>();
+	private ContainerAndIndex<T> lastContainer;
 	
 	@Override
 	public void visitCharSymbol(CharSymbol charSymbol, String name, RuleSupplyFlag flag) {
@@ -42,7 +41,9 @@ public class DefinitionVisitor<T extends Token> implements RuleDefinitionVisitor
 			result = new FSRChar<T>(key, flag, p);
 			this.topRules.put(name, result);
 		}
-		this.allRules.add(result);
+		if (this.lastContainer != null) {
+			this.lastContainer.addToContainer(result);
+		}
 	}
 	
 	@Override
@@ -54,7 +55,9 @@ public class DefinitionVisitor<T extends Token> implements RuleDefinitionVisitor
 			result = new FSRConst<T>(value, ignoreCase, flag);
 			this.topRules.put(name, result);
 		}
-		this.allRules.add(result);
+		if (this.lastContainer != null) {
+			this.lastContainer.addToContainer(result);
+		}
 	}
 	
 	@Override
@@ -69,7 +72,9 @@ public class DefinitionVisitor<T extends Token> implements RuleDefinitionVisitor
 		if (flag == RuleSupplyFlag.TOP) {
 			this.topRules.put(name, result);
 		}		
-		this.allRules.add(result);
+		if (this.lastContainer != null) {
+			this.lastContainer.addToContainer(result);
+		}
 	}
 	
 	@Override
@@ -78,65 +83,83 @@ public class DefinitionVisitor<T extends Token> implements RuleDefinitionVisitor
 		if (flag == RuleSupplyFlag.TOP) {
 			this.topRules.put(name, result);
 		}
-		this.allRules.add(result);
+		if (this.lastContainer != null) {
+			this.lastContainer.addToContainer(result);
+		}
 	}
 	
 	@Override
 	public void visitSymbolList(RuleSupply ruleSupply, String name, RuleSupplyFlag flag) {		
 		RuleSupplyFlag innerFlag = flag.demoteInner();
-		FactorySupplyRule<T> e = this.acceptAndReturn(ruleSupply, name + ".element", innerFlag);
 		FSRList<T> result = new FSRList<T>(name, innerFlag);
-		result.set(0, e);
+		ContainerAndIndex<T> previousContPair = this.lastContainer;
+		this.lastContainer = new ContainerAndIndex<T>(result, 0);
+		ruleSupply.accept(this, name + ".element", innerFlag);
 		if (flag == RuleSupplyFlag.TOP) {
 			this.topRules.put(name, result);
 		}
-		this.allRules.add(result);
+		if (previousContPair != null) {
+			previousContPair.addToContainer(result);
+		}
+		this.lastContainer = previousContPair;
 	}
 	
 	@Override
 	public void visitDelimitedSymbolList(RuleSupply element, RuleSupply delimiter, String name, RuleSupplyFlag flag) {		
 		RuleSupplyFlag innerFlag = flag.demoteInner();
-		FactorySupplyRule<T> e = this.acceptAndReturn(element, name + ".element", innerFlag);
-		FactorySupplyRule<T> d = this.acceptAndReturn(delimiter, name + ".delimiter", RuleSupplyFlag.INNER_REQUIRED);
 		FSRDelimitedList<T> result = new FSRDelimitedList<T>(name, innerFlag);
-		result.set(0, e);
-		result.set(1, d);
+		ContainerAndIndex<T> previousContPair = this.lastContainer;
+		this.lastContainer = new ContainerAndIndex<T>(result, 0);
+		element.accept(this, name + ".element", innerFlag);
+		this.lastContainer = new ContainerAndIndex<T>(result, 1);
+		delimiter.accept(this, name + ".delimiter", RuleSupplyFlag.INNER_REQUIRED);
 		if (flag == RuleSupplyFlag.TOP) {
 			this.topRules.put(name, result);
 		}
-		this.allRules.add(result);
+		if (previousContPair != null) {
+			previousContPair.addToContainer(result);
+		}
+		this.lastContainer = previousContPair;
 	}
 	
 	@Override
 	public void visitEnclosedDelimitedSymbolList(SymbolList symbolList, String name, RuleSupplyFlag flag) {		
 		RuleSupplyFlag innerFlag = flag.demoteInner();
-		FactorySupplyRule<T> e = this.acceptAndReturn(symbolList.getElement(), name + ".element", innerFlag);
-		FactorySupplyRule<T> d = this.acceptAndReturn(symbolList.getDelimiter(), name + ".delimiter", RuleSupplyFlag.INNER_REQUIRED);
-		FactorySupplyRule<T> l = this.acceptAndReturn(symbolList.getLeftParanthesis(), name + ".left", RuleSupplyFlag.INNER_REQUIRED);
-		FactorySupplyRule<T> r = this.acceptAndReturn(symbolList.getRightParanthesis(), name + ".right", RuleSupplyFlag.INNER_REQUIRED);
-		FSREnclosedDelimitedList<T> result = new FSREnclosedDelimitedList<T>(name, innerFlag);
-		result.set(0, e);
-		result.set(1, d);
-		result.set(2, l);
-		result.set(3, r);
+ 	    FSREnclosedDelimitedList<T> result = new FSREnclosedDelimitedList<T>(name, innerFlag);
+ 	    ContainerAndIndex<T> previousContPair = this.lastContainer;
+		this.lastContainer = new ContainerAndIndex<T>(result, 0);
+		symbolList.getElement().accept(this, name + ".element", innerFlag);
+		this.lastContainer = new ContainerAndIndex<T>(result, 1);
+		symbolList.getDelimiter().accept(this, name + ".delimiter", RuleSupplyFlag.INNER_REQUIRED);
+		this.lastContainer = new ContainerAndIndex<T>(result, 2);
+		symbolList.getLeftParanthesis().accept(this, name + ".left", RuleSupplyFlag.INNER_REQUIRED);
+		this.lastContainer = new ContainerAndIndex<T>(result, 3);
+		symbolList.getRightParanthesis().accept(this, name + ".right", RuleSupplyFlag.INNER_REQUIRED);
 		result.setEmptyAllowed(symbolList.isEmptyAllowed());
 		result.setNoneAllowed(symbolList.isNoneAllowed());
 		if (flag == RuleSupplyFlag.TOP) {
 			this.topRules.put(name, result);
 		}
-		this.allRules.add(result);
+		if (previousContPair != null) {
+			previousContPair.addToContainer(result);
+		}
+		this.lastContainer = previousContPair;
 	}
 	
-	private void visitCollection(FSRCollection<T> fsrCollection, RuleSupplies rss, String name, RuleSupplyFlag flag) {		
+	private void visitCollection(FSRCollection<T> fsrCollection, RuleSupplies rss, String name, RuleSupplyFlag flag) {
+		ContainerAndIndex<T> previousContPair = this.lastContainer;
 		int size = rss.getSize();
 		for (int index = 0; index<size; ++index) {
-			FactorySupplyRule<T> fsr = acceptAndReturn(rss, index, name + "." + String.valueOf(index), RuleSupplyFlag.INNER_REQUIRED); 
-			fsrCollection.set(index, fsr);
+			this.lastContainer = new ContainerAndIndex<T>(fsrCollection, index);
+			rss.acceptElement(this, index, name + "." + String.valueOf(index), RuleSupplyFlag.INNER_REQUIRED);
 		}
 		if (flag == RuleSupplyFlag.TOP) {
 			this.topRules.put(name, fsrCollection);
 		}
-		this.allRules.add(fsrCollection);
+		if (previousContPair != null) {
+			previousContPair.addToContainer(fsrCollection);
+		}
+		this.lastContainer = previousContPair;
 	}
 	
 	@Override
@@ -149,14 +172,5 @@ public class DefinitionVisitor<T extends Token> implements RuleDefinitionVisitor
 	public void visitSymbolSequence(RuleSupplies sequence, String name, RuleSupplyFlag flag) {
 		FSRSequence<T> result = new FSRSequence<T>(name, sequence.getSize(), flag);
 		this.visitCollection(result, sequence, name, flag);
-	}
-	
-	public FactorySupplyRule<T> getLastRule() {
-		int length = this.allRules.size();
-		if (this.allRules.size() == 0) {
-			return null;
-		} else {
-			return this.allRules.get(length - 1);
-		}
 	}
 }
