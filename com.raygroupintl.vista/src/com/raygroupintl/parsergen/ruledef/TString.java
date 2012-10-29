@@ -33,4 +33,9 @@ public class TString extends TextPiece implements RuleSupply {
 	@Override
 	public void accept(RuleDefinitionVisitor visitor, String name, RuleSupplyFlag flag) {		
 	}
+
+	@Override
+	public void acceptAsList(RuleDefinitionVisitor visitor, String name, RuleSupplyFlag flag) {
+		visitor.visitSymbolList(this, name, flag);
+	}
 }

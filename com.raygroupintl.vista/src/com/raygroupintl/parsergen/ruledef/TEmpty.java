@@ -22,4 +22,9 @@ public class TEmpty extends Empty implements RuleSupply {
 	@Override
 	public void accept(RuleDefinitionVisitor visitor, String name, RuleSupplyFlag flag) {		
 	}
+	
+	@Override
+	public void acceptAsList(RuleDefinitionVisitor visitor, String name, RuleSupplyFlag flag) {
+		visitor.visitSymbolList(this, name, flag);
+	}
 }

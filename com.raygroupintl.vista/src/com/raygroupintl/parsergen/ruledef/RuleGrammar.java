@@ -142,7 +142,7 @@ public class RuleGrammar {
 	
 	@Sequence(value={"colon", "anysymbols", "colon", "anysymbols", "colon", "bool", "colon", "bool"}, required="rrrroooo")
 	public TokenFactory<RuleSupply> leftrightspec;
-	@Sequence(value={"colon", "anysymbols", "leftrightspec"}, required="roo")
+	@Sequence(value={"colon", "anysymbols", "leftrightspec"}, required="rro")
 	public TokenFactory<RuleSupply> delimleftrightspec;
 	@SequenceTokenType(TSymbolList.class)
 	@Sequence(value={"openlist", "symbolchoice", "delimleftrightspec", "closelist"}, required="rror")

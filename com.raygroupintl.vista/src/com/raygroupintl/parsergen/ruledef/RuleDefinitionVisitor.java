@@ -20,7 +20,10 @@ public interface RuleDefinitionVisitor {
 	void visitCharSymbol(CharSymbol charSymbol, String name, RuleSupplyFlag flag);
 	void visitConstSymbol(ConstSymbol constSymbol, String name, RuleSupplyFlag flag);
 	void visitSymbol(Symbol symbol, String name, RuleSupplyFlag flag);
-	void visitSymbolList(SymbolList symbolList, String name, RuleSupplyFlag flag);
+	void visitCharSymbolList(CharSymbol charSymbol, String name, RuleSupplyFlag flag);
+	void visitSymbolList(RuleSupply ruleSupply, String name, RuleSupplyFlag flag);
+	void visitDelimitedSymbolList(RuleSupply element, RuleSupply delimiter, String name, RuleSupplyFlag flag);
+	void visitEnclosedDelimitedSymbolList(SymbolList symbolList, String name, RuleSupplyFlag flag);
 	void visitChoiceOfSymbols(RuleSupplies choiceOfSymbols, String name, RuleSupplyFlag flag);
 	void visitSymbolSequence(RuleSupplies sequence, String name, RuleSupplyFlag flag);
 }

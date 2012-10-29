@@ -26,5 +26,14 @@ public class TDelimitedList extends DelimitedListOfTokens<RuleSupply> implements
 	@Override
 	public void accept(RuleDefinitionVisitor visitor, String name, RuleSupplyFlag flag) {		
 	}
+
+	@Override
+	public void acceptAsList(RuleDefinitionVisitor visitor, String name, RuleSupplyFlag flag) {
+		if (this.size() == 1) {
+			this.getToken(0).acceptAsList(visitor, name, flag);
+		} else {
+			visitor.visitSymbolList(this, name, flag);	
+		}
+	}
 }
 

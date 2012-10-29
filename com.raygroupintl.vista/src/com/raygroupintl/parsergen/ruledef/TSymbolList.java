@@ -18,6 +18,7 @@ package com.raygroupintl.parsergen.ruledef;
 
 import com.raygroupintl.parser.SequenceOfTokens;
 import com.raygroupintl.parser.Token;
+import com.raygroupintl.parser.Tokens;
 
 public class TSymbolList extends TSequence implements SymbolList {
 	public TSymbolList(int length) {
@@ -69,6 +70,16 @@ public class TSymbolList extends TSequence implements SymbolList {
 
 	@Override
 	public void accept(RuleDefinitionVisitor visitor, String name, RuleSupplyFlag flag) {
-		visitor.visitSymbolList(this, name, flag);
+		Tokens<RuleSupply> delimiterGroup = this.getTokens(2);
+		if (delimiterGroup == null) {
+			this.getElement().acceptAsList(visitor, name, flag);
+		} else {
+			RuleSupply enclosedGroup = delimiterGroup.getToken(2);
+			if (enclosedGroup == null) {
+				visitor.visitDelimitedSymbolList(this.getElement(), this.getDelimiter(), name, flag);
+			} else {
+				visitor.visitEnclosedDelimitedSymbolList(this, name, flag);				
+			}
+		}
 	}
 }

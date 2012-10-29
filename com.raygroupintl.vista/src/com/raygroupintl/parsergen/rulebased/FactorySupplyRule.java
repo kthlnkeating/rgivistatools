@@ -20,7 +20,6 @@ import com.raygroupintl.parser.Adapter;
 import com.raygroupintl.parser.Token;
 import com.raygroupintl.parser.TokenFactory;
 import com.raygroupintl.parsergen.AdapterSpecification;
-import com.raygroupintl.parsergen.ruledef.RuleSupplyFlag;
 
 public interface FactorySupplyRule<T extends Token> {
 	FactorySupplyRule<T> getActualRule(RulesByName<T> symbols);
@@ -29,7 +28,6 @@ public interface FactorySupplyRule<T extends Token> {
 	
 	String getName();
 	
-	FactorySupplyRule<T> formList(String name, RuleSupplyFlag flag, ListInfo<T> info);
 	int getSequenceCount();
 	boolean update(RulesByName<T> symbols);
 	TokenFactory<T> getTheFactory(RulesByName<T> symbols);

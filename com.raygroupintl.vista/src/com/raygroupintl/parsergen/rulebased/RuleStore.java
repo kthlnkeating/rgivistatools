@@ -18,6 +18,7 @@ package com.raygroupintl.parsergen.rulebased;
 
 import java.lang.reflect.Field;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -118,6 +119,8 @@ public class RuleStore<T extends Token> extends TokenFactoryStore<T>  {
 	public void update(Class<?> cls) throws ParseException {
 		RulesMapByName<T> tfby = new RulesMapByName<T>(this.dv.topRules);
 
+		//Collection<FactorySupplyRule<T>> rs = new ArrayList<FactorySupplyRule<T>>(this.dv.topRules.values())
+		
 		String errorSymbols = "";
 		for (FactorySupplyRule<T> r : this.rules) {
 			String[] neededs = r.getNeededNames();

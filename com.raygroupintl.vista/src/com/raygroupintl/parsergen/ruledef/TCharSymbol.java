@@ -88,4 +88,9 @@ public class TCharSymbol extends TSequence implements CharSymbol {
 	public void accept(RuleDefinitionVisitor visitor, String name, RuleSupplyFlag flag) {
 		visitor.visitCharSymbol(this, name, flag);
 	}
+
+	@Override
+	public void acceptAsList(RuleDefinitionVisitor visitor, String name, RuleSupplyFlag flag) {
+		visitor.visitCharSymbolList(this, name, flag);
+	}
 }

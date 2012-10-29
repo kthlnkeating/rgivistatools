@@ -55,14 +55,6 @@ public class FSRChar<T extends Token> extends FSRBase<T> {
 	}
 	
 	@Override
-	public FactorySupplyRule<T> formList(String name, RuleSupplyFlag flag, ListInfo<T> info) {
-		if ((info.delimiter != null) || (info.left != null) || (info.right != null)) {
-			throw new UnsupportedOperationException("Delimiters and/or enclosers are not supported for list of character based symbols");
-		}		
-		return new FSRString<T>("{" + this.expr + "}", flag, this.predicate);
-	}
-
-	@Override
 	public void setAdapter(AdapterSpecification<T> spec) {
 		 Constructor<? extends T> constructor = spec.getStringTokenAdapter();
 		 if (constructor != null) this.factory.setStringTargetType(constructor);

@@ -20,4 +20,5 @@ import com.raygroupintl.parser.Token;
 
 public interface RuleSupply extends Token {	
 	void accept(RuleDefinitionVisitor visitor, String name, RuleSupplyFlag flag);
+	void acceptAsList(RuleDefinitionVisitor visitor, String name, RuleSupplyFlag flag);
 }

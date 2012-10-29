@@ -44,22 +44,6 @@ public abstract class FSRBase<T extends Token> implements FactorySupplyRule<T> {
 	}
 	
 	@Override
-	public FactorySupplyRule<T> formList(String name, RuleSupplyFlag flag, ListInfo<T> info) {
-		if (info.delimiter == null) {
-			return new FSRList<T>(name, flag, this);
-		}
-		if ((info.left == null) || (info.right == null)) {
-			return new FSRDelimitedList<T>(name, flag, this, info.delimiter);		
-		}
-		{
-			FSREnclosedDelimitedList<T> result = new FSREnclosedDelimitedList<T>(name, flag, this, info.delimiter, info.left, info.right);
-			result.setEmptyAllowed(info.emptyAllowed);
-			result.setNoneAllowed(info.noneAllowed);
-			return result;
-		}		
-	}
-
-	@Override
 	public boolean update(RulesByName<T> symbols) {
 		return true;
 	}
