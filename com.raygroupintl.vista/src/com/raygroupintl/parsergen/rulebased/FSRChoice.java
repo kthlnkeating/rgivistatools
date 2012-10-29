@@ -72,8 +72,8 @@ public class FSRChoice<T extends Token> extends FSRCollection<T> {
 
 	private TFChoice<T> factory;
 	
-	public FSRChoice(String name, RuleSupplyFlag flag) {
-		super(flag);
+	public FSRChoice(String name, int length, RuleSupplyFlag flag) {
+		super(length, flag);
 		this.factory = new TFChoice<T>(name);
 	}
 	

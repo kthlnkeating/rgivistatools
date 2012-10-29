@@ -24,13 +24,12 @@ import com.raygroupintl.parser.TokenFactory;
 import com.raygroupintl.parsergen.AdapterSpecification;
 import com.raygroupintl.parsergen.ruledef.RuleSupplyFlag;
 
-public class FSRList<T extends Token> extends FSRBase<T> {
+public class FSRList<T extends Token> extends FSRContainer<T> {
 	private FactorySupplyRule<T> element;
 	private TFList<T> factory;
 	
-	public FSRList(String name, RuleSupplyFlag flag, FactorySupplyRule<T> element) {
+	public FSRList(String name, RuleSupplyFlag flag) {
 		super(flag);
-		this.element = element;
 		this.factory = new TFList<T>(name);
 	}
 	
@@ -57,5 +56,14 @@ public class FSRList<T extends Token> extends FSRBase<T> {
 	public void setAdapter(AdapterSpecification<T> spec) {
 		 Constructor<? extends T> a = spec.getListTokenAdapter();
 		 if (a != null) this.factory.setListTargetType(a);
+	}
+	
+	@Override
+	public void set(int index, FactorySupplyRule<T> r) {
+		if (index == 0) {
+			this.element = r;
+		} else {
+			throw new IndexOutOfBoundsException();
+		}
 	}
 }

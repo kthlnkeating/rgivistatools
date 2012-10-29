@@ -27,8 +27,8 @@ import com.raygroupintl.parsergen.ruledef.RuleSupplyFlag;
 public class FSRSequence<T extends Token> extends FSRCollection<T> {
 	private TFSequence<T> factory;	
 	
-	public FSRSequence(String name, RuleSupplyFlag flag) {
-		super(flag);
+	public FSRSequence(String name, int length, RuleSupplyFlag flag) {
+		super(length, flag);
 		this.factory = new TFSequence<T>(name);
 	}
 	

@@ -23,15 +23,13 @@ import com.raygroupintl.parser.Token;
 import com.raygroupintl.parsergen.AdapterSpecification;
 import com.raygroupintl.parsergen.ruledef.RuleSupplyFlag;
 
-public class FSRDelimitedList<T extends Token> extends FSRBase<T> {
+public class FSRDelimitedList<T extends Token> extends FSRContainer<T> {
 	private FactorySupplyRule<T> element;
 	private FactorySupplyRule<T> delimiter;
 	private TFDelimitedList<T> factory;
 	
-	public FSRDelimitedList(String name, RuleSupplyFlag flag, FactorySupplyRule<T> element, FactorySupplyRule<T> delimiter) {
+	public FSRDelimitedList(String name, RuleSupplyFlag flag) {
 		super(flag);
-		this.element = element;
-		this.delimiter = delimiter;
 		this.factory = new TFDelimitedList<T>(name);
 	}
 	
@@ -59,5 +57,16 @@ public class FSRDelimitedList<T extends Token> extends FSRBase<T> {
 	public void setAdapter(AdapterSpecification<T> spec) {
 		 Constructor<? extends T> a = spec.getDelimitedListTokenAdapter();
 		 if (a != null) this.factory.setDelimitedListTargetType(a);
+	}
+	
+	@Override
+	public void set(int index, FactorySupplyRule<T> r) {
+		if (index == 0) {
+			this.element = r;
+		} else if (index == 1){
+			this.delimiter = r;
+		} else {
+			throw new IndexOutOfBoundsException();
+		}
 	}	
 }

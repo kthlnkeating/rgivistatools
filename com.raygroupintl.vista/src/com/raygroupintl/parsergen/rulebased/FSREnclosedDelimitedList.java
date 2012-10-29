@@ -25,7 +25,7 @@ import com.raygroupintl.parser.TokenFactory;
 import com.raygroupintl.parsergen.AdapterSpecification;
 import com.raygroupintl.parsergen.ruledef.RuleSupplyFlag;
 
-public class FSREnclosedDelimitedList<T extends Token> extends FSRBase<T> {
+public class FSREnclosedDelimitedList<T extends Token> extends FSRContainer<T> {
 	private FactorySupplyRule<T> element;
 	private FactorySupplyRule<T> delimiter;
 	private FactorySupplyRule<T> left;
@@ -34,12 +34,8 @@ public class FSREnclosedDelimitedList<T extends Token> extends FSRBase<T> {
 	private boolean none;
 	private TFSequence<T> factory;
 	
-	public FSREnclosedDelimitedList(String name, RuleSupplyFlag flag, FactorySupplyRule<T> element, FactorySupplyRule<T> delimiter, FactorySupplyRule<T> left, FactorySupplyRule<T> right) {
+	public FSREnclosedDelimitedList(String name, RuleSupplyFlag flag) {
 		super(flag);
-		this.element = element;
-		this.delimiter = delimiter;
-		this.left = left;
-		this.right = right;
 		this.factory = new TFSequence<T>(name, 3);
 	}
 	
@@ -89,4 +85,24 @@ public class FSREnclosedDelimitedList<T extends Token> extends FSRBase<T> {
 		 Constructor<? extends T> a = spec.getSequenceTokenAdapter();
 		 if (a != null) this.factory.setSequenceTargetType(a);
 	}	
+	
+	@Override
+	public void set(int index, FactorySupplyRule<T> r) {
+		switch(index) {
+		case 0: 
+			this.element = r; 
+			break;
+		case 1: 
+			this.delimiter = r; 
+			break;
+		case 2:
+			this.left = r;
+			break;
+		case 3:
+			this.right = r;
+			break;
+		default:
+			throw new IndexOutOfBoundsException();				
+		}
+	}		
 }

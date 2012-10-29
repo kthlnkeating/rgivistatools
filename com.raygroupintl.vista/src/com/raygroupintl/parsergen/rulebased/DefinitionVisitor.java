@@ -18,6 +18,8 @@ import com.raygroupintl.parsergen.ruledef.SymbolList;
 public class DefinitionVisitor<T extends Token> implements RuleDefinitionVisitor {
 	public Map<String, FactorySupplyRule<T>> topRules  = new HashMap<String, FactorySupplyRule<T>>();
 	private java.util.ArrayList<FactorySupplyRule<T>> allRules  = new ArrayList<FactorySupplyRule<T>>();
+	
+	//private Pair<FSRContainer<T>, Integer> lastContainer;
 		
 	private FactorySupplyRule<T> acceptAndReturn(RuleSupply rs, String name, RuleSupplyFlag flag) {
 		rs.accept(this, name, flag);
@@ -33,10 +35,11 @@ public class DefinitionVisitor<T extends Token> implements RuleDefinitionVisitor
 	
 	@Override
 	public void visitCharSymbol(CharSymbol charSymbol, String name, RuleSupplyFlag flag) {
-		Predicate p = charSymbol.getPredicate();
-		String key = charSymbol.getKey();
-		FSRChar<T> result = new FSRChar<T>(key, flag, p);
-		if (flag == RuleSupplyFlag.TOP) {
+		FactorySupplyRule<T> result = this.topRules.get(name);
+		if (result == null) {
+			Predicate p = charSymbol.getPredicate();
+			String key = charSymbol.getKey();
+			result = new FSRChar<T>(key, flag, p);
 			this.topRules.put(name, result);
 		}
 		this.allRules.add(result);
@@ -44,12 +47,13 @@ public class DefinitionVisitor<T extends Token> implements RuleDefinitionVisitor
 	
 	@Override
 	public void visitConstSymbol(ConstSymbol constSymbol, String name, RuleSupplyFlag flag) {
-		String value = constSymbol.getValue();
-		boolean ignoreCase = constSymbol.getIgnoreCaseFlag();
-		FSRConst<T> result = new FSRConst<T>(value, ignoreCase, flag);
-		if (flag == RuleSupplyFlag.TOP) {
+		FactorySupplyRule<T> result = this.topRules.get(name);
+		if (result == null) {
+			String value = constSymbol.getValue();
+			boolean ignoreCase = constSymbol.getIgnoreCaseFlag();
+			result = new FSRConst<T>(value, ignoreCase, flag);
 			this.topRules.put(name, result);
-		}		
+		}
 		this.allRules.add(result);
 	}
 	
@@ -81,7 +85,8 @@ public class DefinitionVisitor<T extends Token> implements RuleDefinitionVisitor
 	public void visitSymbolList(RuleSupply ruleSupply, String name, RuleSupplyFlag flag) {		
 		RuleSupplyFlag innerFlag = flag.demoteInner();
 		FactorySupplyRule<T> e = this.acceptAndReturn(ruleSupply, name + ".element", innerFlag);
-		FactorySupplyRule<T> result = new FSRList<T>(name, innerFlag, e);
+		FSRList<T> result = new FSRList<T>(name, innerFlag);
+		result.set(0, e);
 		if (flag == RuleSupplyFlag.TOP) {
 			this.topRules.put(name, result);
 		}
@@ -93,7 +98,9 @@ public class DefinitionVisitor<T extends Token> implements RuleDefinitionVisitor
 		RuleSupplyFlag innerFlag = flag.demoteInner();
 		FactorySupplyRule<T> e = this.acceptAndReturn(element, name + ".element", innerFlag);
 		FactorySupplyRule<T> d = this.acceptAndReturn(delimiter, name + ".delimiter", RuleSupplyFlag.INNER_REQUIRED);
-		FactorySupplyRule<T> result = new FSRDelimitedList<T>(name, innerFlag, e, d);
+		FSRDelimitedList<T> result = new FSRDelimitedList<T>(name, innerFlag);
+		result.set(0, e);
+		result.set(1, d);
 		if (flag == RuleSupplyFlag.TOP) {
 			this.topRules.put(name, result);
 		}
@@ -107,7 +114,11 @@ public class DefinitionVisitor<T extends Token> implements RuleDefinitionVisitor
 		FactorySupplyRule<T> d = this.acceptAndReturn(symbolList.getDelimiter(), name + ".delimiter", RuleSupplyFlag.INNER_REQUIRED);
 		FactorySupplyRule<T> l = this.acceptAndReturn(symbolList.getLeftParanthesis(), name + ".left", RuleSupplyFlag.INNER_REQUIRED);
 		FactorySupplyRule<T> r = this.acceptAndReturn(symbolList.getRightParanthesis(), name + ".right", RuleSupplyFlag.INNER_REQUIRED);
-		FSREnclosedDelimitedList<T> result = new FSREnclosedDelimitedList<T>(name, innerFlag, e, d, l, r);
+		FSREnclosedDelimitedList<T> result = new FSREnclosedDelimitedList<T>(name, innerFlag);
+		result.set(0, e);
+		result.set(1, d);
+		result.set(2, l);
+		result.set(3, r);
 		result.setEmptyAllowed(symbolList.isEmptyAllowed());
 		result.setNoneAllowed(symbolList.isNoneAllowed());
 		if (flag == RuleSupplyFlag.TOP) {
@@ -116,11 +127,11 @@ public class DefinitionVisitor<T extends Token> implements RuleDefinitionVisitor
 		this.allRules.add(result);
 	}
 	
-	private void visitCollection(FSRCollection<T> fsrCollection, RuleSupplies rss, String name, RuleSupplyFlag flag) {
+	private void visitCollection(FSRCollection<T> fsrCollection, RuleSupplies rss, String name, RuleSupplyFlag flag) {		
 		int size = rss.getSize();
 		for (int index = 0; index<size; ++index) {
 			FactorySupplyRule<T> fsr = acceptAndReturn(rss, index, name + "." + String.valueOf(index), RuleSupplyFlag.INNER_REQUIRED); 
-			fsrCollection.add(fsr);
+			fsrCollection.set(index, fsr);
 		}
 		if (flag == RuleSupplyFlag.TOP) {
 			this.topRules.put(name, fsrCollection);
@@ -130,13 +141,13 @@ public class DefinitionVisitor<T extends Token> implements RuleDefinitionVisitor
 	
 	@Override
 	public void visitChoiceOfSymbols(RuleSupplies choiceOfSymbols, String name, RuleSupplyFlag flag) {		
-		FSRChoice<T> result = new FSRChoice<T>(name, flag);
+		FSRChoice<T> result = new FSRChoice<T>(name, choiceOfSymbols.getSize(), flag);
 		this.visitCollection(result, choiceOfSymbols, name, flag);
 	}
 	
 	@Override
 	public void visitSymbolSequence(RuleSupplies sequence, String name, RuleSupplyFlag flag) {
-		FSRSequence<T> result = new FSRSequence<T>(name, flag);
+		FSRSequence<T> result = new FSRSequence<T>(name, sequence.getSize(), flag);
 		this.visitCollection(result, sequence, name, flag);
 	}
 	

@@ -16,29 +16,13 @@
 
 package com.raygroupintl.parsergen.rulebased;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import com.raygroupintl.parser.Token;
 import com.raygroupintl.parsergen.ruledef.RuleSupplyFlag;
 
-public abstract class FSRCollection<T extends Token> extends FSRContainer<T> {
-	protected List<FactorySupplyRule<T>> list = new ArrayList<FactorySupplyRule<T>>();
-	
-	protected FSRCollection(int length, RuleSupplyFlag flag) {
+public abstract class FSRContainer<T extends Token> extends FSRBase<T> {
+	public FSRContainer(RuleSupplyFlag flag) {
 		super(flag);
-		this.list = new ArrayList<FactorySupplyRule<T>>();
-		for (int i=0; i<length; ++i) {
-			this.list.add(null);
-		}
-	}
-
-	@Override
-	public void set(int index, FactorySupplyRule<T> r) {
-		this.list.set(index, r);
 	}
 	
-	public FactorySupplyRule<T> get(int index) {
-		return this.list.get(index);
-	}
+	public abstract void set(int index, FactorySupplyRule<T> element);
 }
