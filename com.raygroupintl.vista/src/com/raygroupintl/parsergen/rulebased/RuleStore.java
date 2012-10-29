@@ -33,40 +33,24 @@ import com.raygroupintl.parsergen.ruledef.RuleSupply;
 import com.raygroupintl.parsergen.ruledef.RuleSupplyFlag;
 
 public class RuleStore<T extends Token> extends TokenFactoryStore<T>  {
-	private static RuleParser ruleParser;
+	private RuleParser ruleParser = new RuleParser();
 	
 	public Map<String, TokenFactory<T>> symbols = new HashMap<String, TokenFactory<T>>();
-	
-	private java.util.List<FactorySupplyRule<T>> rules  = new ArrayList<FactorySupplyRule<T>>();
-	private Map<String, RuleSupply> ruleSupplies  = new HashMap<String, RuleSupply>();
 	
 	private DefinitionVisitor<T> dv = new DefinitionVisitor<T>();
 	
 	public RuleStore() {
 	}
 	
-	private TokenFactory<T> addRule(String name, Rule ruleAnnotation, Field f, Class<T> tokenCls) {
-		if (ruleParser == null) {
-			ruleParser = new RuleParser();
-		}
-		RuleSupply ruleSupply = this.ruleSupplies.get(name);
-		if (ruleSupply == null) {
-			String ruleText = ruleAnnotation.value();
-			ruleSupply = ruleParser.getTopTFRule(name, ruleText);
-			if (ruleSupply == null) return null;
-			this.ruleSupplies.put(name, ruleSupply);
-		}
-		FactorySupplyRule<T> topRule = this.dv.topRules.get(name);	
-		if (topRule == null) {
-			ruleSupply.accept(this.dv, name, RuleSupplyFlag.TOP);
-			topRule = this.dv.topRules.get(name);
-		}
-
+	private FactorySupplyRule<T> addRule(String name, Rule ruleAnnotation, Field f, Class<T> tokenCls) {
+		String ruleText = ruleAnnotation.value();
+		RuleSupply ruleSupply = ruleParser.getTopTFRule(name, ruleText);
+		if (ruleSupply == null) return null;
+		ruleSupply.accept(this.dv, name, RuleSupplyFlag.TOP);
+		FactorySupplyRule<T> topRule = this.dv.topRules.get(name);
 		AdapterSpecification<T> spec = AdapterSpecification.getInstance(f, tokenCls);
 		topRule.setAdapter(spec);
-		TokenFactory<T> value = topRule.getShellFactory();
-		this.rules.add(topRule);
-		return value;
+		return topRule;
 	}
 	
 	@Override
@@ -74,7 +58,8 @@ public class RuleStore<T extends Token> extends TokenFactoryStore<T>  {
 		String name = f.getName();			
 		Rule description = f.getAnnotation(Rule.class);
 		if (description != null) {
-			return this.addRule(name, description, f, tokenCls);
+			FactorySupplyRule<T> topRule = this.addRule(name, description, f, tokenCls);
+			return topRule.getShellFactory();
 		} 
 		return null;
 	}
@@ -95,7 +80,6 @@ public class RuleStore<T extends Token> extends TokenFactoryStore<T>  {
 			} else {
 				FSRCustom<T> fsr = new FSRCustom<T>(value);
 				this.dv.topRules.put(name, fsr);
-				this.rules.add(fsr);
 			}
 			if (value != null) {
 				this.symbols.put(name, value);
@@ -111,7 +95,6 @@ public class RuleStore<T extends Token> extends TokenFactoryStore<T>  {
 		TokenFactory<T> end = new TFEnd<T>("end");
 		this.symbols.put("end", end);
 		FactorySupplyRule<T> fsr = new FSRCustom<T>(end);
-		this.rules.add(fsr);
 		this.dv.topRules.put("end", fsr);
 	}
 
@@ -119,10 +102,10 @@ public class RuleStore<T extends Token> extends TokenFactoryStore<T>  {
 	public void update(Class<?> cls) throws ParseException {
 		RulesMapByName<T> tfby = new RulesMapByName<T>(this.dv.topRules);
 
-		//Collection<FactorySupplyRule<T>> rs = new ArrayList<FactorySupplyRule<T>>(this.dv.topRules.values())
+		Collection<FactorySupplyRule<T>> rs = new ArrayList<FactorySupplyRule<T>>(this.dv.topRules.values());
 		
 		String errorSymbols = "";
-		for (FactorySupplyRule<T> r : this.rules) {
+		for (FactorySupplyRule<T> r : rs) {
 			String[] neededs = r.getNeededNames();
 			for (String needed : neededs) {
 				if (! tfby.hasRule(needed)) {
@@ -134,7 +117,7 @@ public class RuleStore<T extends Token> extends TokenFactoryStore<T>  {
 			throw new ParseException("Following symbols are not resolved: " + errorSymbols.substring(1));			
 		}
 		
-		for (FactorySupplyRule<T> r : this.rules) {
+		for (FactorySupplyRule<T> r : rs) {
 			boolean result = r.update(tfby);			
 			assert(result);
 		}
