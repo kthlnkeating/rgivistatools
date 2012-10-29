@@ -63,16 +63,11 @@ public class DefinitionVisitor<T extends Token> implements RuleDefinitionVisitor
 	@Override
 	public void visitSymbol(Symbol symbol, String name, RuleSupplyFlag flag) {
 		String value = symbol.getValue();
-		FactorySupplyRule<T> result = null;
 		if (flag == RuleSupplyFlag.TOP) {
-			result = new FSRCopy<T>(name, value);
-		} else {
-			result = new FSRSingle<T>(name, value, flag);			
-		}
-		if (flag == RuleSupplyFlag.TOP) {
+			FSRCopy<T> result = new FSRCopy<T>(name, value);
 			this.topRules.put(name, result);
-		}		
-		if (this.lastContainer != null) {
+		} else {		
+			FSRSingle<T> result = new FSRSingle<T>(name, value, flag);			
 			this.lastContainer.addToContainer(result);
 		}
 	}
