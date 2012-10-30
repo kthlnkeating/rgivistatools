@@ -1,5 +1,7 @@
 package com.raygroupintl.parsergen.rulebased;
 
+import java.util.ArrayList;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -29,8 +31,20 @@ public class DefinitionVisitor<T extends Token> implements RuleDefinitionVisitor
 		}
 	}
 	
-	public Map<String, FactorySupplyRule<T>> topRules  = new HashMap<String, FactorySupplyRule<T>>();
+	public Map<String, FactorySupplyRule<T>> topRules = new HashMap<String, FactorySupplyRule<T>>();
 	private ContainerAndIndex<T> lastContainer;
+	
+	public void addTopRule(String name, FactorySupplyRule<T> fsr) {
+		this.topRules.put(name, fsr);
+	}
+	
+	public FactorySupplyRule<T> getTopRule(String name) {
+		return this.topRules.get(name);
+	}
+	
+	public Collection<FactorySupplyRule<T>> getTopRules() {
+		return new ArrayList<FactorySupplyRule<T>>(this.topRules.values());
+	}
 	
 	@Override
 	public void visitCharSymbol(CharSymbol charSymbol, String name, RuleSupplyFlag flag) {

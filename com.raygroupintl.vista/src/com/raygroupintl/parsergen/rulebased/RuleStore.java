@@ -17,7 +17,6 @@
 package com.raygroupintl.parsergen.rulebased;
 
 import java.lang.reflect.Field;
-import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
@@ -47,7 +46,7 @@ public class RuleStore<T extends Token> extends TokenFactoryStore<T>  {
 		RuleSupply ruleSupply = ruleParser.getTopTFRule(name, ruleText);
 		if (ruleSupply == null) return null;
 		ruleSupply.accept(this.dv, name, RuleSupplyFlag.TOP);
-		FactorySupplyRule<T> topRule = this.dv.topRules.get(name);
+		FactorySupplyRule<T> topRule = this.dv.getTopRule(name);
 		AdapterSpecification<T> spec = AdapterSpecification.getInstance(f, tokenCls);
 		topRule.setAdapter(spec);
 		return topRule;
@@ -79,7 +78,7 @@ public class RuleStore<T extends Token> extends TokenFactoryStore<T>  {
 				}
 			} else {
 				FSRCustom<T> fsr = new FSRCustom<T>(value);
-				this.dv.topRules.put(name, fsr);
+				this.dv.addTopRule(name, fsr);
 			}
 			if (value != null) {
 				this.symbols.put(name, value);
@@ -95,14 +94,14 @@ public class RuleStore<T extends Token> extends TokenFactoryStore<T>  {
 		TokenFactory<T> end = new TFEnd<T>("end");
 		this.symbols.put("end", end);
 		FactorySupplyRule<T> fsr = new FSRCustom<T>(end);
-		this.dv.topRules.put("end", fsr);
+		this.dv.addTopRule("end", fsr);
 	}
 
 	@Override
 	public void update(Class<?> cls) throws ParseException {
 		RulesMapByName<T> tfby = new RulesMapByName<T>(this.dv.topRules);
 
-		Collection<FactorySupplyRule<T>> rs = new ArrayList<FactorySupplyRule<T>>(this.dv.topRules.values());
+		Collection<FactorySupplyRule<T>> rs = this.dv.getTopRules();
 		
 		String errorSymbols = "";
 		for (FactorySupplyRule<T> r : rs) {
