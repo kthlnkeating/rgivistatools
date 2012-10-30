@@ -31,11 +31,35 @@ public class DefinitionVisitor<T extends Token> implements RuleDefinitionVisitor
 		}
 	}
 	
+	//private static class ContainerIndexAndFlag<T extends Token> {
+	//	private ContainerAndIndex<T> containerNIndex;
+	//	private RuleSupplyFlag flag;
+	//	
+	//	public ContainerIndexAndFlag(ContainerAndIndex<T> containerNIndex, RuleSupplyFlag flag) {
+	//		this.containerNIndex = containerNIndex;
+	//		this.flag = flag;
+	//	}
+	//	
+	//	public void addToContainer(FactorySupplyRule<T> fsr) {
+	//		this.containerNIndex.addToContainer(this.flag, fsr);
+	//	}		
+	//}
+	
+	
 	public Map<String, FactorySupplyRule<T>> topRules = new HashMap<String, FactorySupplyRule<T>>();
 	private ContainerAndIndex<T> lastContainer;
 	
+	//private Map<String, List<ContainerIndexAndFlag<T>>> missing = new HashMap<String, List<ContainerIndexAndFlag<T>>>();
+	
 	public void addTopRule(String name, FactorySupplyRule<T> fsr) {
 		this.topRules.put(name, fsr);
+		//List<ContainerIndexAndFlag<T>> missingForName = missing.get(name);
+		//if (missingForName != null) {
+		//	for (ContainerIndexAndFlag<T> c : missingForName) {
+		//		c.addToContainer(fsr);
+		//	}
+		//	missingForName.remove(name);
+		//}
 	}
 	
 	public FactorySupplyRule<T> getTopRule(String name) {
@@ -53,7 +77,7 @@ public class DefinitionVisitor<T extends Token> implements RuleDefinitionVisitor
 			Predicate p = charSymbol.getPredicate();
 			String key = charSymbol.getKey();
 			result = new FSRChar<T>(key, p);
-			this.topRules.put(name, result);
+			this.addTopRule(name, result);
 		}
 		if (this.lastContainer != null) {
 			this.lastContainer.addToContainer(flag, result);
@@ -67,7 +91,7 @@ public class DefinitionVisitor<T extends Token> implements RuleDefinitionVisitor
 			String value = constSymbol.getValue();
 			boolean ignoreCase = constSymbol.getIgnoreCaseFlag();
 			result = new FSRConst<T>(value, ignoreCase);
-			this.topRules.put(name, result);
+			this.addTopRule(name, result);
 		}
 		if (this.lastContainer != null) {
 			this.lastContainer.addToContainer(flag, result);
@@ -79,8 +103,19 @@ public class DefinitionVisitor<T extends Token> implements RuleDefinitionVisitor
 		String value = symbol.getValue();
 		if (flag == RuleSupplyFlag.TOP) {
 			FSRCopy<T> result = new FSRCopy<T>(name, value);
-			this.topRules.put(name, result);
-		} else {		
+			this.addTopRule(name, result);
+		} else {
+			//FactorySupplyRule<T> topRule = this.topRules.get(value);
+			//if (topRule != null) {
+			//	this.lastContainer.addToContainer(flag, topRule);
+			//} else {
+			//	List<ContainerIndexAndFlag<T>> missingForName = missing.get(value);
+			//	if (missingForName == null) {
+			//		missingForName = new ArrayList<ContainerIndexAndFlag<T>>();
+			//		this.missing.put(value, missingForName);
+			//	}
+			//	missingForName.add(new ContainerIndexAndFlag<T>(this.lastContainer, flag));
+			//}			
 			FSRSingle<T> result = new FSRSingle<T>(name, value);			
 			this.lastContainer.addToContainer(flag, result);
 		}
@@ -90,7 +125,7 @@ public class DefinitionVisitor<T extends Token> implements RuleDefinitionVisitor
 	public void visitCharSymbolList(CharSymbol charSymbol, String name, RuleSupplyFlag flag) {		
 		FactorySupplyRule<T> result = new FSRString<T>("{" + charSymbol.getKey() + "}", flag, charSymbol.getPredicate());
 		if (flag == RuleSupplyFlag.TOP) {
-			this.topRules.put(name, result);
+			this.addTopRule(name, result);
 		}
 		if (this.lastContainer != null) {
 			this.lastContainer.addToContainer(flag, result);
@@ -105,7 +140,7 @@ public class DefinitionVisitor<T extends Token> implements RuleDefinitionVisitor
 		this.lastContainer = new ContainerAndIndex<T>(result, 0);
 		ruleSupply.accept(this, name + ".element", innerFlag);
 		if (flag == RuleSupplyFlag.TOP) {
-			this.topRules.put(name, result);
+			this.addTopRule(name, result);
 		}
 		if (previousContPair != null) {
 			previousContPair.addToContainer(flag, result);
@@ -123,7 +158,7 @@ public class DefinitionVisitor<T extends Token> implements RuleDefinitionVisitor
 		this.lastContainer = new ContainerAndIndex<T>(result, 1);
 		delimiter.accept(this, name + ".delimiter", RuleSupplyFlag.INNER_REQUIRED);
 		if (flag == RuleSupplyFlag.TOP) {
-			this.topRules.put(name, result);
+			this.addTopRule(name, result);
 		}
 		if (previousContPair != null) {
 			previousContPair.addToContainer(flag, result);
@@ -147,7 +182,7 @@ public class DefinitionVisitor<T extends Token> implements RuleDefinitionVisitor
 		result.setEmptyAllowed(symbolList.isEmptyAllowed());
 		result.setNoneAllowed(symbolList.isNoneAllowed());
 		if (flag == RuleSupplyFlag.TOP) {
-			this.topRules.put(name, result);
+			this.addTopRule(name, result);
 		}
 		if (previousContPair != null) {
 			previousContPair.addToContainer(flag, result);
@@ -163,7 +198,7 @@ public class DefinitionVisitor<T extends Token> implements RuleDefinitionVisitor
 			rss.acceptElement(this, index, name + "." + String.valueOf(index), RuleSupplyFlag.INNER_REQUIRED);
 		}
 		if (flag == RuleSupplyFlag.TOP) {
-			this.topRules.put(name, fsrCollection);
+			this.addTopRule(name, fsrCollection);
 		}
 		if (previousContPair != null) {
 			previousContPair.addToContainer(flag, fsrCollection);
