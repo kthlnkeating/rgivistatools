@@ -90,7 +90,7 @@ public class FSRChoice<T extends Token> extends FSRCollection<T> {
 			algorithm.add(ar, symbols);
 		}
 		for (FactorySupplyRule<T> on : algorithm.list) {
-			on.update(symbols);
+			if (on instanceof FSRForkedSequence) on.update(symbols);
 			result.add(on.getTheFactory(symbols));
 		}
 		return result;

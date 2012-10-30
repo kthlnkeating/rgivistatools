@@ -56,14 +56,10 @@ public class FSREnclosedDelimitedList<T extends Token> extends FSRContainer<T> {
 	public boolean update(RulesByName<T> symbols) {
 		RulesByNameLocal<T> localSymbols = new RulesByNameLocal<T>(symbols, this);
 		String name = this.factory.getName();
-		this.element.update(localSymbols);
-		this.delimiter.update(localSymbols);
 		TokenFactory<T> e = this.element.getTheFactory(localSymbols);
 		TokenFactory<T> d = this.delimiter.getTheFactory(localSymbols);
 		TFDelimitedList<T> dl = new TFDelimitedList<T>(name);		
 		dl.set(e, d, this.empty);
-		this.left.update(localSymbols);
-		this.right.update(localSymbols);
 		TokenFactory<T> l = this.left.getTheFactory(localSymbols);
 		TokenFactory<T> r = this.right.getTheFactory(localSymbols);
 		

@@ -120,7 +120,7 @@ public class RuleStore<T extends Token> extends TokenFactoryStore<T>  {
 			throw new ParseException("Following symbols are not resolved: " + errorSymbols.substring(1));			
 		}
 		
-		for (FactorySupplyRule<T> r : rs) {
+		for (FactorySupplyRule<T> r : this.dv.toBeUpdated) {
 			boolean result = r.update(tfby);			
 			assert(result);
 		}

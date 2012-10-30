@@ -49,6 +49,7 @@ public class DefinitionVisitor<T extends Token> implements RuleDefinitionVisitor
 	
 	public Map<String, FactorySupplyRule<T>> topRules = new HashMap<String, FactorySupplyRule<T>>();
 	private ContainerAndIndex<T> lastContainer;
+	public List<FactorySupplyRule<T>> toBeUpdated = new ArrayList<FactorySupplyRule<T>>();
 	
 	private Map<String, List<ContainerIndexAndFlag<T>>> missing = new HashMap<String, List<ContainerIndexAndFlag<T>>>();
 	
@@ -115,6 +116,7 @@ public class DefinitionVisitor<T extends Token> implements RuleDefinitionVisitor
 		FactorySupplyRule<T> topRule = this.topRules.get(value);
 		if (flag == RuleSupplyFlag.TOP) {
 			FSRCopy<T> result = new FSRCopy<T>(name);
+			this.toBeUpdated.add(result);
 			if (topRule != null) {
 				result.set(0, RuleSupplyFlag.INNER_REQUIRED, topRule);
 			} else {
@@ -165,6 +167,7 @@ public class DefinitionVisitor<T extends Token> implements RuleDefinitionVisitor
 	public void visitSymbolList(RuleSupply ruleSupply, String name, RuleSupplyFlag flag) {		
 		RuleSupplyFlag innerFlag = flag.demoteInner();
 		FSRList<T> result = new FSRList<T>(name);
+		this.toBeUpdated.add(result);
 		ContainerAndIndex<T> previousContPair = this.lastContainer;
 		this.lastContainer = new ContainerAndIndex<T>(result, 0);
 		ruleSupply.accept(this, name + ".element", innerFlag);
@@ -181,6 +184,7 @@ public class DefinitionVisitor<T extends Token> implements RuleDefinitionVisitor
 	public void visitDelimitedSymbolList(RuleSupply element, RuleSupply delimiter, String name, RuleSupplyFlag flag) {		
 		RuleSupplyFlag innerFlag = flag.demoteInner();
 		FSRDelimitedList<T> result = new FSRDelimitedList<T>(name);
+		this.toBeUpdated.add(result);
 		ContainerAndIndex<T> previousContPair = this.lastContainer;
 		this.lastContainer = new ContainerAndIndex<T>(result, 0);
 		element.accept(this, name + ".element", innerFlag);
@@ -199,6 +203,7 @@ public class DefinitionVisitor<T extends Token> implements RuleDefinitionVisitor
 	public void visitEnclosedDelimitedSymbolList(SymbolList symbolList, String name, RuleSupplyFlag flag) {		
 		RuleSupplyFlag innerFlag = flag.demoteInner();
  	    FSREnclosedDelimitedList<T> result = new FSREnclosedDelimitedList<T>(name);
+		this.toBeUpdated.add(result);
  	    ContainerAndIndex<T> previousContPair = this.lastContainer;
 		this.lastContainer = new ContainerAndIndex<T>(result, 0);
 		symbolList.getElement().accept(this, name + ".element", innerFlag);
@@ -238,12 +243,14 @@ public class DefinitionVisitor<T extends Token> implements RuleDefinitionVisitor
 	@Override
 	public void visitChoiceOfSymbols(RuleSupplies choiceOfSymbols, String name, RuleSupplyFlag flag) {		
 		FSRChoice<T> result = new FSRChoice<T>(name, choiceOfSymbols.getSize());
+		this.toBeUpdated.add(result);
 		this.visitCollection(result, choiceOfSymbols, name, flag);
 	}
 	
 	@Override
 	public void visitSymbolSequence(RuleSupplies sequence, String name, RuleSupplyFlag flag) {
 		FSRSequence<T> result = new FSRSequence<T>(name, sequence.getSize());
+		this.toBeUpdated.add(result);
 		this.visitCollection(result, sequence, name, flag);
 	}
 	

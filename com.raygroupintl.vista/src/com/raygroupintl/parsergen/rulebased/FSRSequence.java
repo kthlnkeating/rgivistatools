@@ -71,10 +71,6 @@ public class FSRSequence<T extends Token> extends FSRCollection<T> {
 			++index;
 		}
 
-		for (FactorySupplyRule<T> spg : this.list) {
-			spg.update(localSymbols);
-		}		
-		
 		return true;		
 	}
 	

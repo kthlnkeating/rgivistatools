@@ -40,7 +40,6 @@ public class FSRList<T extends Token> extends FSRContainer<T> {
 	@Override
 	public boolean update(RulesByName<T> symbols) {
 		RulesByNameLocal<T> localSymbols = new RulesByNameLocal<T>(symbols, this);
-		this.element.update(localSymbols);
 		TokenFactory<T> element = this.element.getTheFactory(localSymbols);
 		this.factory.setElement(element);
 		return true;

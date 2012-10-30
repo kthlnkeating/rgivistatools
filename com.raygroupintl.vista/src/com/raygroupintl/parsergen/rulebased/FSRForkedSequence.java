@@ -78,14 +78,11 @@ public class FSRForkedSequence<T extends Token> extends FSRBase<T> {
 	
 	@Override
 	public boolean update(RulesByName<T> symbols) {
-		this.leader.update(symbols);
 		this.factory.setLeader(this.leader.getTheFactory(symbols));
 		if (this.single != null) {
-			if ((this.leader != this.single)) this.single.update(symbols);
 			this.factory.setSingleAdapter(this.single.getAdapter(symbols));
 		}
 		for (FSRSequence<T> follower : this.followers) {
-			follower.update(symbols);
 			TFSequence<T> tf = follower.getTheFactory(symbols);
 			Adapter<T> a = follower.get(0).getAdapter(symbols);
 			this.factory.addSequence(tf, a);
