@@ -72,13 +72,18 @@ public class DefinitionVisitor<T extends Token> implements RuleDefinitionVisitor
 	
 	@Override
 	public void visitCharSymbol(CharSymbol charSymbol, String name, RuleSupplyFlag flag) {
-		FactorySupplyRule<T> result = this.topRules.get(name);
+		String key = charSymbol.getKey();
+		FactorySupplyRule<T> result = this.topRules.get(key);
 		if (result == null) {
 			Predicate p = charSymbol.getPredicate();
-			String key = charSymbol.getKey();
 			result = new FSRChar<T>(key, p);
-			this.addTopRule(name, result);
+			this.addTopRule(key, result);
 		}
+		if (flag == RuleSupplyFlag.TOP) {
+			if (! this.topRules.containsKey(name)) {
+				this.addTopRule(name, result);
+			}
+		}		
 		if (this.lastContainer != null) {
 			this.lastContainer.addToContainer(flag, result);
 		}
@@ -86,13 +91,18 @@ public class DefinitionVisitor<T extends Token> implements RuleDefinitionVisitor
 	
 	@Override
 	public void visitConstSymbol(ConstSymbol constSymbol, String name, RuleSupplyFlag flag) {
-		FactorySupplyRule<T> result = this.topRules.get(name);
+		String value = constSymbol.getValue();
+		FactorySupplyRule<T> result = this.topRules.get(value);
 		if (result == null) {
-			String value = constSymbol.getValue();
 			boolean ignoreCase = constSymbol.getIgnoreCaseFlag();
 			result = new FSRConst<T>(value, ignoreCase);
-			this.addTopRule(name, result);
+			this.addTopRule(value, result);
 		}
+		if (flag == RuleSupplyFlag.TOP) {
+			if (! this.topRules.containsKey(name)) {
+				this.addTopRule(name, result);
+			}
+		}		
 		if (this.lastContainer != null) {
 			this.lastContainer.addToContainer(flag, result);
 		}
@@ -122,10 +132,18 @@ public class DefinitionVisitor<T extends Token> implements RuleDefinitionVisitor
 	}
 	
 	@Override
-	public void visitCharSymbolList(CharSymbol charSymbol, String name, RuleSupplyFlag flag) {		
-		FactorySupplyRule<T> result = new FSRString<T>("{" + charSymbol.getKey() + "}", flag, charSymbol.getPredicate());
-		if (flag == RuleSupplyFlag.TOP) {
+	public void visitCharSymbolList(CharSymbol charSymbol, String name, RuleSupplyFlag flag) {	
+		String key = "{" + charSymbol.getKey() + "}";
+		FactorySupplyRule<T> result = this.topRules.get(key);
+		if (result == null) {
+			Predicate p = charSymbol.getPredicate();
+			result = new FSRString<T>(key, flag, p);
 			this.addTopRule(name, result);
+		}
+		if (flag == RuleSupplyFlag.TOP) {
+			if (! this.topRules.containsKey(name)) {
+				this.addTopRule(name, result);
+			}
 		}
 		if (this.lastContainer != null) {
 			this.lastContainer.addToContainer(flag, result);

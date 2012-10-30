@@ -36,14 +36,6 @@ public class FSRString<T extends Token> extends FSRBase<T> {
 	}
 	
 	@Override
-	public boolean update(RulesByName<T> symbols) {
-		if (! symbols.hasRule(expr)) {
-			symbols.put(this.expr, this);
-		}
-		return true;
-	}
-	
-	@Override
 	public String getName() {
 		return this.expr;
 	}
