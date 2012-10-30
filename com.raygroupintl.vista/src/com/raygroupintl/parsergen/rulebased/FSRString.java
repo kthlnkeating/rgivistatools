@@ -30,7 +30,6 @@ public class FSRString<T extends Token> extends FSRBase<T> {
 	private TFString<T> factory;
 	
 	public FSRString(String expr, RuleSupplyFlag flag, Predicate predicate) {
-		super(flag);
 		this.expr = expr;
 		this.predicate = predicate;
 		this.factory = new TFString<T>(this.expr, this.predicate);

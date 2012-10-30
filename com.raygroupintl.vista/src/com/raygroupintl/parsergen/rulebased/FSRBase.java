@@ -21,28 +21,8 @@ import com.raygroupintl.parser.AdapterIdentity;
 import com.raygroupintl.parser.Token;
 import com.raygroupintl.parser.TokenFactory;
 import com.raygroupintl.parsergen.AdapterSpecification;
-import com.raygroupintl.parsergen.ParseErrorException;
-import com.raygroupintl.parsergen.ruledef.RuleSupplyFlag;
 
 public abstract class FSRBase<T extends Token> implements FactorySupplyRule<T> {
-	private RuleSupplyFlag flag;
-	
-	public FSRBase(RuleSupplyFlag flag) {
-		this.flag = flag;
-	}
-	
-	@Override
-	public boolean getRequired() {
-		switch (this.flag) {
-			case INNER_OPTIONAL: 
-				return false;
-			case INNER_REQUIRED: 
-				return true;
-			default:
-				throw new ParseErrorException("Internal error: attempt to get required flag for a top symbol.");
-		}
-	}
-	
 	@Override
 	public boolean update(RulesByName<T> symbols) {
 		return true;

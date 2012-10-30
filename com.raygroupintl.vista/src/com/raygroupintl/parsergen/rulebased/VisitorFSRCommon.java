@@ -65,8 +65,4 @@ public abstract class VisitorFSRCommon<T extends Token> {
 	public void visitString(FSRString<T> fsr) {		
 		this.visitDefault(fsr);
 	}
-
-	public void visitStringSequence(FSRStringSequence<T> fsr) {		
-		this.visitDefault(fsr);
-	}
 }

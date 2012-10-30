@@ -24,8 +24,8 @@ public class DefinitionVisitor<T extends Token> implements RuleDefinitionVisitor
 			this.index = index;
 		}
 		
-		public void addToContainer(FactorySupplyRule<T> fsr) {
-			this.container.set(this.index, fsr);
+		public void addToContainer(RuleSupplyFlag flag, FactorySupplyRule<T> fsr) {
+			this.container.set(this.index, flag, fsr);
 		}
 	}
 	
@@ -38,11 +38,11 @@ public class DefinitionVisitor<T extends Token> implements RuleDefinitionVisitor
 		if (result == null) {
 			Predicate p = charSymbol.getPredicate();
 			String key = charSymbol.getKey();
-			result = new FSRChar<T>(key, flag, p);
+			result = new FSRChar<T>(key, p);
 			this.topRules.put(name, result);
 		}
 		if (this.lastContainer != null) {
-			this.lastContainer.addToContainer(result);
+			this.lastContainer.addToContainer(flag, result);
 		}
 	}
 	
@@ -52,11 +52,11 @@ public class DefinitionVisitor<T extends Token> implements RuleDefinitionVisitor
 		if (result == null) {
 			String value = constSymbol.getValue();
 			boolean ignoreCase = constSymbol.getIgnoreCaseFlag();
-			result = new FSRConst<T>(value, ignoreCase, flag);
+			result = new FSRConst<T>(value, ignoreCase);
 			this.topRules.put(name, result);
 		}
 		if (this.lastContainer != null) {
-			this.lastContainer.addToContainer(result);
+			this.lastContainer.addToContainer(flag, result);
 		}
 	}
 	
@@ -67,8 +67,8 @@ public class DefinitionVisitor<T extends Token> implements RuleDefinitionVisitor
 			FSRCopy<T> result = new FSRCopy<T>(name, value);
 			this.topRules.put(name, result);
 		} else {		
-			FSRSingle<T> result = new FSRSingle<T>(name, value, flag);			
-			this.lastContainer.addToContainer(result);
+			FSRSingle<T> result = new FSRSingle<T>(name, value);			
+			this.lastContainer.addToContainer(flag, result);
 		}
 	}
 	
@@ -79,14 +79,14 @@ public class DefinitionVisitor<T extends Token> implements RuleDefinitionVisitor
 			this.topRules.put(name, result);
 		}
 		if (this.lastContainer != null) {
-			this.lastContainer.addToContainer(result);
+			this.lastContainer.addToContainer(flag, result);
 		}
 	}
 	
 	@Override
 	public void visitSymbolList(RuleSupply ruleSupply, String name, RuleSupplyFlag flag) {		
 		RuleSupplyFlag innerFlag = flag.demoteInner();
-		FSRList<T> result = new FSRList<T>(name, innerFlag);
+		FSRList<T> result = new FSRList<T>(name);
 		ContainerAndIndex<T> previousContPair = this.lastContainer;
 		this.lastContainer = new ContainerAndIndex<T>(result, 0);
 		ruleSupply.accept(this, name + ".element", innerFlag);
@@ -94,7 +94,7 @@ public class DefinitionVisitor<T extends Token> implements RuleDefinitionVisitor
 			this.topRules.put(name, result);
 		}
 		if (previousContPair != null) {
-			previousContPair.addToContainer(result);
+			previousContPair.addToContainer(flag, result);
 		}
 		this.lastContainer = previousContPair;
 	}
@@ -102,7 +102,7 @@ public class DefinitionVisitor<T extends Token> implements RuleDefinitionVisitor
 	@Override
 	public void visitDelimitedSymbolList(RuleSupply element, RuleSupply delimiter, String name, RuleSupplyFlag flag) {		
 		RuleSupplyFlag innerFlag = flag.demoteInner();
-		FSRDelimitedList<T> result = new FSRDelimitedList<T>(name, innerFlag);
+		FSRDelimitedList<T> result = new FSRDelimitedList<T>(name);
 		ContainerAndIndex<T> previousContPair = this.lastContainer;
 		this.lastContainer = new ContainerAndIndex<T>(result, 0);
 		element.accept(this, name + ".element", innerFlag);
@@ -112,7 +112,7 @@ public class DefinitionVisitor<T extends Token> implements RuleDefinitionVisitor
 			this.topRules.put(name, result);
 		}
 		if (previousContPair != null) {
-			previousContPair.addToContainer(result);
+			previousContPair.addToContainer(flag, result);
 		}
 		this.lastContainer = previousContPair;
 	}
@@ -120,7 +120,7 @@ public class DefinitionVisitor<T extends Token> implements RuleDefinitionVisitor
 	@Override
 	public void visitEnclosedDelimitedSymbolList(SymbolList symbolList, String name, RuleSupplyFlag flag) {		
 		RuleSupplyFlag innerFlag = flag.demoteInner();
- 	    FSREnclosedDelimitedList<T> result = new FSREnclosedDelimitedList<T>(name, innerFlag);
+ 	    FSREnclosedDelimitedList<T> result = new FSREnclosedDelimitedList<T>(name);
  	    ContainerAndIndex<T> previousContPair = this.lastContainer;
 		this.lastContainer = new ContainerAndIndex<T>(result, 0);
 		symbolList.getElement().accept(this, name + ".element", innerFlag);
@@ -136,7 +136,7 @@ public class DefinitionVisitor<T extends Token> implements RuleDefinitionVisitor
 			this.topRules.put(name, result);
 		}
 		if (previousContPair != null) {
-			previousContPair.addToContainer(result);
+			previousContPair.addToContainer(flag, result);
 		}
 		this.lastContainer = previousContPair;
 	}
@@ -152,20 +152,20 @@ public class DefinitionVisitor<T extends Token> implements RuleDefinitionVisitor
 			this.topRules.put(name, fsrCollection);
 		}
 		if (previousContPair != null) {
-			previousContPair.addToContainer(fsrCollection);
+			previousContPair.addToContainer(flag, fsrCollection);
 		}
 		this.lastContainer = previousContPair;
 	}
 	
 	@Override
 	public void visitChoiceOfSymbols(RuleSupplies choiceOfSymbols, String name, RuleSupplyFlag flag) {		
-		FSRChoice<T> result = new FSRChoice<T>(name, choiceOfSymbols.getSize(), flag);
+		FSRChoice<T> result = new FSRChoice<T>(name, choiceOfSymbols.getSize());
 		this.visitCollection(result, choiceOfSymbols, name, flag);
 	}
 	
 	@Override
 	public void visitSymbolSequence(RuleSupplies sequence, String name, RuleSupplyFlag flag) {
-		FSRSequence<T> result = new FSRSequence<T>(name, sequence.getSize(), flag);
+		FSRSequence<T> result = new FSRSequence<T>(name, sequence.getSize());
 		this.visitCollection(result, sequence, name, flag);
 	}
 }

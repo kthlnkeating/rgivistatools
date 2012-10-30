@@ -28,8 +28,7 @@ public class FSRDelimitedList<T extends Token> extends FSRContainer<T> {
 	private FactorySupplyRule<T> delimiter;
 	private TFDelimitedList<T> factory;
 	
-	public FSRDelimitedList(String name, RuleSupplyFlag flag) {
-		super(flag);
+	public FSRDelimitedList(String name) {
 		this.factory = new TFDelimitedList<T>(name);
 	}
 	
@@ -60,7 +59,7 @@ public class FSRDelimitedList<T extends Token> extends FSRContainer<T> {
 	}
 	
 	@Override
-	public void set(int index, FactorySupplyRule<T> r) {
+	public void set(int index, RuleSupplyFlag flag, FactorySupplyRule<T> r) {
 		if (index == 0) {
 			this.element = r;
 		} else if (index == 1){

@@ -30,5 +30,4 @@ public interface VisitorFSR<T extends Token> {
 	void visitList(FSRList<T> fsr);
 	void visitSequence(FSRSequence<T> fsr);
 	void visitString(FSRString<T> fsr);
-	void visitStringSequence(FSRStringSequence<T> fsr);
 }

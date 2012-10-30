@@ -18,13 +18,11 @@ package com.raygroupintl.parsergen.rulebased;
 
 import com.raygroupintl.parser.Token;
 import com.raygroupintl.parser.TokenFactory;
-import com.raygroupintl.parsergen.ruledef.RuleSupplyFlag;
 
 public class FSRCustom<T extends Token> extends FSRBase<T> {
 	private TokenFactory<T> factory;
 	
 	public FSRCustom(TokenFactory<T> factory) {
-		super(RuleSupplyFlag.TOP);
 		this.factory = factory;
 	}
 		

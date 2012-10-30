@@ -27,7 +27,6 @@ import com.raygroupintl.parser.TFChoice;
 import com.raygroupintl.parser.Token;
 import com.raygroupintl.parser.TokenFactory;
 import com.raygroupintl.parsergen.AdapterSpecification;
-import com.raygroupintl.parsergen.ruledef.RuleSupplyFlag;
 
 public class FSRChoice<T extends Token> extends FSRCollection<T> {
 	private static class ForkAlgorithm<T extends Token> {	
@@ -72,8 +71,8 @@ public class FSRChoice<T extends Token> extends FSRCollection<T> {
 
 	private TFChoice<T> factory;
 	
-	public FSRChoice(String name, int length, RuleSupplyFlag flag) {
-		super(length, flag);
+	public FSRChoice(String name, int length) {
+		super(length);
 		this.factory = new TFChoice<T>(name);
 	}
 	

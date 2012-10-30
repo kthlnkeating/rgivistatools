@@ -25,8 +25,7 @@ import com.raygroupintl.parsergen.ruledef.RuleSupplyFlag;
 public abstract class FSRCollection<T extends Token> extends FSRContainer<T> {
 	protected List<FactorySupplyRule<T>> list = new ArrayList<FactorySupplyRule<T>>();
 	
-	protected FSRCollection(int length, RuleSupplyFlag flag) {
-		super(flag);
+	protected FSRCollection(int length) {
 		this.list = new ArrayList<FactorySupplyRule<T>>();
 		for (int i=0; i<length; ++i) {
 			this.list.add(null);
@@ -34,7 +33,7 @@ public abstract class FSRCollection<T extends Token> extends FSRContainer<T> {
 	}
 
 	@Override
-	public void set(int index, FactorySupplyRule<T> r) {
+	public void set(int index, RuleSupplyFlag flag, FactorySupplyRule<T> r) {
 		this.list.set(index, r);
 	}
 	

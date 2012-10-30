@@ -34,8 +34,7 @@ public class FSREnclosedDelimitedList<T extends Token> extends FSRContainer<T> {
 	private boolean none;
 	private TFSequence<T> factory;
 	
-	public FSREnclosedDelimitedList(String name, RuleSupplyFlag flag) {
-		super(flag);
+	public FSREnclosedDelimitedList(String name) {
 		this.factory = new TFSequence<T>(name, 3);
 	}
 	
@@ -87,7 +86,7 @@ public class FSREnclosedDelimitedList<T extends Token> extends FSRContainer<T> {
 	}	
 	
 	@Override
-	public void set(int index, FactorySupplyRule<T> r) {
+	public void set(int index, RuleSupplyFlag flag, FactorySupplyRule<T> r) {
 		switch(index) {
 		case 0: 
 			this.element = r; 

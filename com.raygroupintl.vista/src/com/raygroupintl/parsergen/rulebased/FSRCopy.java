@@ -23,14 +23,12 @@ import com.raygroupintl.parser.TFCopy;
 import com.raygroupintl.parser.Token;
 import com.raygroupintl.parser.TokenFactory;
 import com.raygroupintl.parsergen.AdapterSpecification;
-import com.raygroupintl.parsergen.ruledef.RuleSupplyFlag;
 
 public class FSRCopy<T extends Token> extends FSRBase<T> {
 	private String masterName;
 	private TFCopy<T> factory;
 	
 	public FSRCopy(String name, String masterName) {
-		super(RuleSupplyFlag.TOP);
 		this.masterName = masterName;
 		this.factory = new TFCopy<T>(name);
 	}

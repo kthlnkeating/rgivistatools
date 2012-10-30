@@ -22,15 +22,13 @@ import com.raygroupintl.charlib.Predicate;
 import com.raygroupintl.parser.TFCharacter;
 import com.raygroupintl.parser.Token;
 import com.raygroupintl.parsergen.AdapterSpecification;
-import com.raygroupintl.parsergen.ruledef.RuleSupplyFlag;
 
 public class FSRChar<T extends Token> extends FSRBase<T> {
 	private String expr;
 	private Predicate predicate;
 	private TFCharacter<T> factory;
 	
-	public FSRChar(String expr, RuleSupplyFlag flag, Predicate predicate) {
-		super(flag);
+	public FSRChar(String expr, Predicate predicate) {
 		this.expr = expr;
 		this.predicate = predicate;
 		this.factory = new TFCharacter<T>(this.expr, this.predicate);

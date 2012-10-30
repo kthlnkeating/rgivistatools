@@ -28,8 +28,7 @@ public class FSRList<T extends Token> extends FSRContainer<T> {
 	private FactorySupplyRule<T> element;
 	private TFList<T> factory;
 	
-	public FSRList(String name, RuleSupplyFlag flag) {
-		super(flag);
+	public FSRList(String name) {
 		this.factory = new TFList<T>(name);
 	}
 	
@@ -59,7 +58,7 @@ public class FSRList<T extends Token> extends FSRContainer<T> {
 	}
 	
 	@Override
-	public void set(int index, FactorySupplyRule<T> r) {
+	public void set(int index, RuleSupplyFlag flag, FactorySupplyRule<T> r) {
 		if (index == 0) {
 			this.element = r;
 		} else {

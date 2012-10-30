@@ -25,7 +25,6 @@ import com.raygroupintl.parser.TFSequence;
 import com.raygroupintl.parser.Token;
 import com.raygroupintl.parser.TokenFactory;
 import com.raygroupintl.parsergen.ParseErrorException;
-import com.raygroupintl.parsergen.ruledef.RuleSupplyFlag;
 
 public class FSRForkedSequence<T extends Token> extends FSRBase<T> {
 	private String name;
@@ -35,7 +34,6 @@ public class FSRForkedSequence<T extends Token> extends FSRBase<T> {
 	private TFForkedSequence<T> factory;
 
 	public FSRForkedSequence(String name, FactorySupplyRule<T> leader) {
-		super(RuleSupplyFlag.INNER_REQUIRED);
 		this.name = name;
 		this.leader = leader;
 		this.factory = new TFForkedSequence<T>(name);

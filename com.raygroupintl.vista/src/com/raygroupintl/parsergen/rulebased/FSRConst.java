@@ -18,14 +18,12 @@ package com.raygroupintl.parsergen.rulebased;
 
 import com.raygroupintl.parser.TFConstant;
 import com.raygroupintl.parser.Token;
-import com.raygroupintl.parsergen.ruledef.RuleSupplyFlag;
 
 public class FSRConst<T extends Token> extends FSRBase<T >{
 	private String value;
 	private TFConstant<T> factory;
 	
-	public FSRConst(String value, boolean ignoreCase, RuleSupplyFlag flag) {
-		super(flag);
+	public FSRConst(String value, boolean ignoreCase) {
 		this.value = value;
 		String key = "\"" + this.value + "\"";
 		this.factory = new TFConstant<T>(key, this.value, ignoreCase);

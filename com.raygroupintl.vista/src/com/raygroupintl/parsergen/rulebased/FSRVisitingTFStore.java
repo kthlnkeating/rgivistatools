@@ -47,8 +47,4 @@ public class FSRVisitingTFStore<T extends Token> extends TypeAwareTFStore<T> imp
 	@Override
 	public void visitString(FSRString<T> fsr) {		
 	}
-
-	@Override
-	public void visitStringSequence(FSRStringSequence<T> fsr) {		
-	}
 }

@@ -23,7 +23,6 @@ import com.raygroupintl.parsergen.AdapterSpecification;
 
 public interface FactorySupplyRule<T extends Token> {
 	FactorySupplyRule<T> getActualRule(RulesByName<T> symbols);
-	boolean getRequired();
 	TokenFactory<T> getShellFactory();
 	
 	String getName();

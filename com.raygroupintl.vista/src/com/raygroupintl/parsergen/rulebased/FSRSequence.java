@@ -22,14 +22,26 @@ import com.raygroupintl.parser.TFSequence;
 import com.raygroupintl.parser.Token;
 import com.raygroupintl.parser.TokenFactory;
 import com.raygroupintl.parsergen.AdapterSpecification;
+import com.raygroupintl.parsergen.ParseErrorException;
 import com.raygroupintl.parsergen.ruledef.RuleSupplyFlag;
 
 public class FSRSequence<T extends Token> extends FSRCollection<T> {
-	private TFSequence<T> factory;	
+	private TFSequence<T> factory;
+	private boolean[] required;
 	
-	public FSRSequence(String name, int length, RuleSupplyFlag flag) {
-		super(length, flag);
+	public FSRSequence(String name, int length) {
+		super(length);
 		this.factory = new TFSequence<T>(name);
+		this.required = new boolean[length];
+	}
+	
+	@Override
+	public void set(int index, RuleSupplyFlag flag, FactorySupplyRule<T> r) {
+		super.set(index, flag, r);
+		this.required[index] = (flag != RuleSupplyFlag.INNER_OPTIONAL);
+		if (flag == RuleSupplyFlag.TOP) {
+			throw new ParseErrorException("Internal error: attempt to get required flag for a top symbol.");			
+		}
 	}
 	
 	@Override
@@ -51,10 +63,12 @@ public class FSRSequence<T extends Token> extends FSRCollection<T> {
 		RulesByNameLocal<T> localSymbols = new RulesByNameLocal<T>(symbols, this);
 		
 		this.factory.reset(this.list.size());
+		int index = 0;
 		for (FactorySupplyRule<T> spg : this.list) {
 			TokenFactory<T> f = spg.getTheFactory(localSymbols);
-			boolean b = spg.getRequired();
+			boolean b = this.required[index];
 			this.factory.add(f, b);
+			++index;
 		}
 
 		for (FactorySupplyRule<T> spg : this.list) {

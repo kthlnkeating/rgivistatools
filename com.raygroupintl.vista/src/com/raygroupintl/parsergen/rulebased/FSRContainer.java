@@ -20,9 +20,5 @@ import com.raygroupintl.parser.Token;
 import com.raygroupintl.parsergen.ruledef.RuleSupplyFlag;
 
 public abstract class FSRContainer<T extends Token> extends FSRBase<T> {
-	public FSRContainer(RuleSupplyFlag flag) {
-		super(flag);
-	}
-	
-	public abstract void set(int index, FactorySupplyRule<T> element);
+	public abstract void set(int index, RuleSupplyFlag flag, FactorySupplyRule<T> element);
 }

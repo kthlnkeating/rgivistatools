@@ -20,14 +20,12 @@ import com.raygroupintl.parser.Adapter;
 import com.raygroupintl.parser.Token;
 import com.raygroupintl.parser.TokenFactory;
 import com.raygroupintl.parsergen.ParseErrorException;
-import com.raygroupintl.parsergen.ruledef.RuleSupplyFlag;
 
 public class FSRSingle<T extends Token> extends FSRBase<T> {
 	private String name;
 	private String value;
 		
-	public FSRSingle(String name, String value, RuleSupplyFlag flag) {
-		super(flag);
+	public FSRSingle(String name, String value) {
 		this.name = name;
 		this.value = value;
 	}
