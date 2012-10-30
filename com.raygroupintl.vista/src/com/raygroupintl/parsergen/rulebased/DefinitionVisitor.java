@@ -3,6 +3,7 @@ package com.raygroupintl.parsergen.rulebased;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import com.raygroupintl.charlib.Predicate;
@@ -31,35 +32,35 @@ public class DefinitionVisitor<T extends Token> implements RuleDefinitionVisitor
 		}
 	}
 	
-	//private static class ContainerIndexAndFlag<T extends Token> {
-	//	private ContainerAndIndex<T> containerNIndex;
-	//	private RuleSupplyFlag flag;
-	//	
-	//	public ContainerIndexAndFlag(ContainerAndIndex<T> containerNIndex, RuleSupplyFlag flag) {
-	//		this.containerNIndex = containerNIndex;
-	//		this.flag = flag;
-	//	}
-	//	
-	//	public void addToContainer(FactorySupplyRule<T> fsr) {
-	//		this.containerNIndex.addToContainer(this.flag, fsr);
-	//	}		
-	//}
+	private static class ContainerIndexAndFlag<T extends Token> {
+		private ContainerAndIndex<T> containerNIndex;
+		private RuleSupplyFlag flag;
+		
+		public ContainerIndexAndFlag(ContainerAndIndex<T> containerNIndex, RuleSupplyFlag flag) {
+			this.containerNIndex = containerNIndex;
+			this.flag = flag;
+		}
+		
+		public void addToContainer(FactorySupplyRule<T> fsr) {
+			this.containerNIndex.addToContainer(this.flag, fsr);
+		}		
+	}
 	
 	
 	public Map<String, FactorySupplyRule<T>> topRules = new HashMap<String, FactorySupplyRule<T>>();
 	private ContainerAndIndex<T> lastContainer;
 	
-	//private Map<String, List<ContainerIndexAndFlag<T>>> missing = new HashMap<String, List<ContainerIndexAndFlag<T>>>();
+	private Map<String, List<ContainerIndexAndFlag<T>>> missing = new HashMap<String, List<ContainerIndexAndFlag<T>>>();
 	
 	public void addTopRule(String name, FactorySupplyRule<T> fsr) {
 		this.topRules.put(name, fsr);
-		//List<ContainerIndexAndFlag<T>> missingForName = missing.get(name);
-		//if (missingForName != null) {
-		//	for (ContainerIndexAndFlag<T> c : missingForName) {
-		//		c.addToContainer(fsr);
-		//	}
-		//	missingForName.remove(name);
-		//}
+		List<ContainerIndexAndFlag<T>> missingForName = missing.get(name);
+		if (missingForName != null) {
+			for (ContainerIndexAndFlag<T> c : missingForName) {
+				c.addToContainer(fsr);
+			}
+			missingForName.remove(name);
+		}
 	}
 	
 	public FactorySupplyRule<T> getTopRule(String name) {
@@ -111,11 +112,21 @@ public class DefinitionVisitor<T extends Token> implements RuleDefinitionVisitor
 	@Override
 	public void visitSymbol(Symbol symbol, String name, RuleSupplyFlag flag) {
 		String value = symbol.getValue();
+		FactorySupplyRule<T> topRule = this.topRules.get(value);
 		if (flag == RuleSupplyFlag.TOP) {
-			FSRCopy<T> result = new FSRCopy<T>(name, value);
+			FSRCopy<T> result = new FSRCopy<T>(name);
+			if (topRule != null) {
+				result.set(0, RuleSupplyFlag.INNER_REQUIRED, topRule);
+			} else {
+				List<ContainerIndexAndFlag<T>> missingForName = missing.get(value);
+				if (missingForName == null) {
+					missingForName = new ArrayList<ContainerIndexAndFlag<T>>();
+					this.missing.put(value, missingForName);
+				}
+				missingForName.add(new ContainerIndexAndFlag<T>(new ContainerAndIndex<>(result, 0), flag));				
+			}			
 			this.addTopRule(name, result);
 		} else {
-			//FactorySupplyRule<T> topRule = this.topRules.get(value);
 			//if (topRule != null) {
 			//	this.lastContainer.addToContainer(flag, topRule);
 			//} else {
@@ -234,5 +245,9 @@ public class DefinitionVisitor<T extends Token> implements RuleDefinitionVisitor
 	public void visitSymbolSequence(RuleSupplies sequence, String name, RuleSupplyFlag flag) {
 		FSRSequence<T> result = new FSRSequence<T>(name, sequence.getSize());
 		this.visitCollection(result, sequence, name, flag);
+	}
+	
+	public Collection <String> getMissing() {
+		return this.missing.keySet();
 	}
 }

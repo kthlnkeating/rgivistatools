@@ -112,6 +112,10 @@ public class RuleStore<T extends Token> extends TokenFactoryStore<T>  {
 				}
 			}
 		}
+		for (String name : this.dv.getMissing()) {
+			errorSymbols += ", " + name;								
+		}
+				
 		if (! errorSymbols.isEmpty()) {
 			throw new ParseException("Following symbols are not resolved: " + errorSymbols.substring(1));			
 		}
