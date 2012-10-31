@@ -139,8 +139,6 @@ public class DefinitionVisitor<T extends Token> implements RuleDefinitionVisitor
 				}
 				missingForName.add(new ContainerIndexAndFlag<T>(this.lastContainer, flag));
 			}			
-			//FSRSingle<T> result = new FSRSingle<T>(name, value);			
-			//this.lastContainer.addToContainer(flag, result);
 		}
 	}
 	

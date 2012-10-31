@@ -103,13 +103,6 @@ public class RuleGrammarTest {
 		}
 	}
 
-	private void updateMap(RulesMapByName<Token> map, char ch) {
-		Predicate p = new CharPredicate(ch);
-		TokenFactory<Token> f = new TFCharacter<Token>(String.valueOf(ch), p);
-		FSRCustom<Token> r = new FSRCustom<Token>(f);
-		map.put(String.valueOf(ch), r);		
-	}
-	
 	private void updateMap(DefinitionVisitor<Token> dv, char ch) {
 		Predicate p = new CharPredicate(ch);
 		TokenFactory<Token> f = new TFCharacter<Token>(String.valueOf(ch), p);
@@ -152,15 +145,6 @@ public class RuleGrammarTest {
 		}
 	}
 	
-	private RulesMapByName<Token> getMap() {
-		RulesMapByName<Token> map = new RulesMapByName<Token>(new HashMap<String, FactorySupplyRule<Token>>());
-		char[] chs = {'x', 'y', 'a', 'b', 'c', 'd', 'e'};
-		for (char ch : chs) {
-			updateMap(map, ch);
-		}
-		return map;
-	}
-	
 	private void addMap(DefinitionVisitor<Token> dv) {
 		char[] chs = {'x', 'y', 'a', 'b', 'c', 'd', 'e'};
 		for (char ch : chs) {
@@ -184,7 +168,7 @@ public class RuleGrammarTest {
 			for (FactorySupplyRule<Token> v : dv.toBeUpdated) {
 				v.update(tfby);
 			}
-			TokenFactory<Token> f = r.getTheFactory(tfby);
+			TokenFactory<Token> f = r.getShellFactory();
 			Assert.assertNotNull(f);
 			Assert.assertTrue(f instanceof TFSequence);
 			testRule(f, "x(y)e"); 
@@ -211,7 +195,6 @@ public class RuleGrammarTest {
 			Assert.assertNotNull(rule);
 			Assert.assertTrue(rule instanceof TSymbolSequence);
 			Assert.assertEquals("{y:',':'(':')'}, {a}", rule.toValue().toString());
-			RulesMapByName<Token> map = this.getMap();
 			DefinitionVisitor<Token> dv = new DefinitionVisitor<Token>();
 			this.addMap(dv);
 			rule.accept(dv, "test", RuleSupplyFlag.TOP);
@@ -220,7 +203,7 @@ public class RuleGrammarTest {
 			for (FactorySupplyRule<Token> v : dv.toBeUpdated) {
 				v.update(tfby);
 			}
-			TokenFactory<Token> f = r.getTheFactory(map);
+			TokenFactory<Token> f = r.getShellFactory();
 			Assert.assertNotNull(f);
 			Assert.assertTrue(f instanceof TFSequence);
 			testRule(f, "(y)a"); 
@@ -266,7 +249,6 @@ public class RuleGrammarTest {
 			Assert.assertNotNull(rule);
 			Assert.assertTrue(rule instanceof TSymbolSequence);
 			Assert.assertEquals("x, y, [(a, b), [c], d], e", rule.toValue().toString());
-			RulesMapByName<Token> map = this.getMap();
 			DefinitionVisitor<Token> dv = new DefinitionVisitor<Token>();
 			this.addMap(dv);
 			rule.accept(dv, "test", RuleSupplyFlag.TOP);
@@ -275,7 +257,7 @@ public class RuleGrammarTest {
 			for (FactorySupplyRule<Token> v : dv.toBeUpdated) {
 				v.update(tfby);
 			}
-			TokenFactory<Token> f = r.getTheFactory(map);
+			TokenFactory<Token> f = r.getShellFactory();
 			Assert.assertNotNull(f);
 			Assert.assertTrue(f instanceof TFSequence);
 			testRule(f, "xye"); 
@@ -302,7 +284,7 @@ public class RuleGrammarTest {
 			for (FactorySupplyRule<Token> v : dv.toBeUpdated) {
 				v.update(tfby);
 			}
-			TokenFactory<Token> f = r.getTheFactory(map);
+			TokenFactory<Token> f = r.getShellFactory();
 			Assert.assertNotNull(f);
 			dv.addTopRule(name, r);
 			return f;

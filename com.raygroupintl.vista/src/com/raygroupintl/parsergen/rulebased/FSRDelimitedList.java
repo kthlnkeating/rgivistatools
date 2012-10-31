@@ -39,7 +39,7 @@ public class FSRDelimitedList<T extends Token> extends FSRContainer<T> {
 	
 	@Override
 	public boolean update(RulesByName<T> symbols) {
-		this.factory.set(this.element.getTheFactory(symbols), this.delimiter.getTheFactory(symbols), false);				
+		this.factory.set(this.element.getShellFactory(), this.delimiter.getShellFactory(), false);				
 		return true;
 	}
 

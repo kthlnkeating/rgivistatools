@@ -22,14 +22,12 @@ import com.raygroupintl.parser.TokenFactory;
 import com.raygroupintl.parsergen.AdapterSpecification;
 
 public interface FactorySupplyRule<T extends Token> {
-	FactorySupplyRule<T> getActualRule(RulesByName<T> symbols);
 	TokenFactory<T> getShellFactory();
 	
 	String getName();
 	
 	int getSequenceCount();
 	boolean update(RulesByName<T> symbols);
-	TokenFactory<T> getTheFactory(RulesByName<T> symbols);
 	
 	FactorySupplyRule<T> getLeading(RulesByName<T> names, int level);
 	void setAdapter(AdapterSpecification<T> spec);

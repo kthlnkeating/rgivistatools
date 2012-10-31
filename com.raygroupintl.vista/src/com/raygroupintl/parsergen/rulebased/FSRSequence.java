@@ -60,12 +60,10 @@ public class FSRSequence<T extends Token> extends FSRCollection<T> {
 	
 	@Override
 	public boolean update(RulesByName<T> symbols) {
-		RulesByNameLocal<T> localSymbols = new RulesByNameLocal<T>(symbols, this);
-		
 		this.factory.reset(this.list.size());
 		int index = 0;
 		for (FactorySupplyRule<T> spg : this.list) {
-			TokenFactory<T> f = spg.getTheFactory(localSymbols);
+			TokenFactory<T> f = spg.getShellFactory();
 			boolean b = this.required[index];
 			this.factory.add(f, b);
 			++index;

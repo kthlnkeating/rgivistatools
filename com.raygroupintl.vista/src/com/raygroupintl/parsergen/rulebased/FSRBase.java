@@ -29,17 +29,11 @@ public abstract class FSRBase<T extends Token> implements FactorySupplyRule<T> {
 	}
 
 	public TokenFactory<T> getTheFactory(RulesByName<T> symbols) {
-		FactorySupplyRule<T> af = this.getActualRule(symbols);
-		return af.getShellFactory();
+		return this.getShellFactory();
 	}
 
 	@Override
 	public FactorySupplyRule<T> getLeading(RulesByName<T> names, int level) {
-		return this;
-	}
-	
-	@Override
-	public FactorySupplyRule<T> getActualRule(RulesByName<T> symbols) {
 		return this;
 	}
 	

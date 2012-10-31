@@ -78,7 +78,7 @@ public class FSRForkedSequence<T extends Token> extends FSRBase<T> {
 	
 	@Override
 	public boolean update(RulesByName<T> symbols) {
-		this.factory.setLeader(this.leader.getTheFactory(symbols));
+		this.factory.setLeader(this.leader.getShellFactory());
 		if (this.single != null) {
 			this.factory.setSingleAdapter(this.single.getAdapter(symbols));
 		}

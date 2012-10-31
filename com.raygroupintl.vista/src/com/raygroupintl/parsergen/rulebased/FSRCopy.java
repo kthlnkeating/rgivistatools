@@ -50,8 +50,7 @@ public class FSRCopy<T extends Token> extends FSRContainer<T> {
 	
 	@Override
 	public boolean update(RulesByName<T> symbols) {
-		RulesByNameLocal<T> localSymbols = new RulesByNameLocal<T>(symbols, this);
-		TokenFactory<T> f = this.master.getTheFactory(localSymbols);
+		TokenFactory<T> f = this.master.getShellFactory();
 		this.factory.setMaster(f);
 		return true;
 	}

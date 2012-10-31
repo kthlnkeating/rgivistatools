@@ -86,12 +86,11 @@ public class FSRChoice<T extends Token> extends FSRCollection<T> {
 		
 		ForkAlgorithm<T> algorithm = new ForkAlgorithm<T>(this.getName());
 		for (FactorySupplyRule<T> r : this.list) {
-			FactorySupplyRule<T> ar = r.getActualRule(symbols);
-			algorithm.add(ar, symbols);
+			algorithm.add(r, symbols);
 		}
 		for (FactorySupplyRule<T> on : algorithm.list) {
 			if (on instanceof FSRForkedSequence) on.update(symbols);
-			result.add(on.getTheFactory(symbols));
+			result.add(on.getShellFactory());
 		}
 		return result;
 	}
