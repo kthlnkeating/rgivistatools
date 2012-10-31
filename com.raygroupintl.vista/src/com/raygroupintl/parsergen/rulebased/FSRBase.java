@@ -19,21 +19,16 @@ package com.raygroupintl.parsergen.rulebased;
 import com.raygroupintl.parser.Adapter;
 import com.raygroupintl.parser.AdapterIdentity;
 import com.raygroupintl.parser.Token;
-import com.raygroupintl.parser.TokenFactory;
 import com.raygroupintl.parsergen.AdapterSpecification;
 
 public abstract class FSRBase<T extends Token> implements FactorySupplyRule<T> {
 	@Override
-	public boolean update(RulesByName<T> symbols) {
+	public boolean update() {
 		return true;
 	}
 
-	public TokenFactory<T> getTheFactory(RulesByName<T> symbols) {
-		return this.getShellFactory();
-	}
-
 	@Override
-	public FactorySupplyRule<T> getLeading(RulesByName<T> names, int level) {
+	public FactorySupplyRule<T> getLeading(int level) {
 		return this;
 	}
 	
@@ -48,12 +43,7 @@ public abstract class FSRBase<T extends Token> implements FactorySupplyRule<T> {
 	}
 	
 	@Override
-	public String[] getNeededNames() {
-		return new String[0];
-	}
-
-	@Override
-	public Adapter<T> getAdapter(RulesByName<T> names) {
+	public Adapter<T> getAdapter() {
 		return new AdapterIdentity<>();
 	}
 }

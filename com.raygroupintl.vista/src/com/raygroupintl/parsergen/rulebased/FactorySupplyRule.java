@@ -27,11 +27,10 @@ public interface FactorySupplyRule<T extends Token> {
 	String getName();
 	
 	int getSequenceCount();
-	boolean update(RulesByName<T> symbols);
+	boolean update();
 	
-	FactorySupplyRule<T> getLeading(RulesByName<T> names, int level);
+	FactorySupplyRule<T> getLeading(int level);
 	void setAdapter(AdapterSpecification<T> spec);
 	
-	String[] getNeededNames();
-	Adapter<T> getAdapter(RulesByName<T> names);
+	Adapter<T> getAdapter();
 }

@@ -53,7 +53,7 @@ public class FSREnclosedDelimitedList<T extends Token> extends FSRContainer<T> {
 	}
 	
 	@Override
-	public boolean update(RulesByName<T> symbols) {
+	public boolean update() {
 		String name = this.factory.getName();
 		TokenFactory<T> e = this.element.getShellFactory();
 		TokenFactory<T> d = this.delimiter.getShellFactory();

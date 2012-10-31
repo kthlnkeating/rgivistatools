@@ -39,7 +39,7 @@ public class FSRCopy<T extends Token> extends FSRContainer<T> {
 	}
 	
 	@Override
-	public FactorySupplyRule<T> getLeading(RulesByName<T> names, int level) {
+	public FactorySupplyRule<T> getLeading(int level) {
 		return this.master;
 	}
 	
@@ -49,7 +49,7 @@ public class FSRCopy<T extends Token> extends FSRContainer<T> {
 	}
 	
 	@Override
-	public boolean update(RulesByName<T> symbols) {
+	public boolean update() {
 		TokenFactory<T> f = this.master.getShellFactory();
 		this.factory.setMaster(f);
 		return true;
@@ -62,12 +62,7 @@ public class FSRCopy<T extends Token> extends FSRContainer<T> {
 	}
 	
 	@Override
-	public String[] getNeededNames() {
-		return new String[0];
-	}
-	
-	@Override
-	public Adapter<T> getAdapter(RulesByName<T> names) {
+	public Adapter<T> getAdapter() {
 		return this.factory;
 	}
 

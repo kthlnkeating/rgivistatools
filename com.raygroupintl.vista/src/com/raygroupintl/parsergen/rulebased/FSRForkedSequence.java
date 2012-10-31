@@ -48,7 +48,8 @@ public class FSRForkedSequence<T extends Token> extends FSRBase<T> {
 		return this.name;
 	}
 	
-	public FactorySupplyRule<T> getLeading(RulesByName<T> names) {
+	@Override
+	public FactorySupplyRule<T> getLeading(int level) {
 		return null;
 	}
 	
@@ -77,14 +78,14 @@ public class FSRForkedSequence<T extends Token> extends FSRBase<T> {
 	}
 	
 	@Override
-	public boolean update(RulesByName<T> symbols) {
+	public boolean update() {
 		this.factory.setLeader(this.leader.getShellFactory());
 		if (this.single != null) {
-			this.factory.setSingleAdapter(this.single.getAdapter(symbols));
+			this.factory.setSingleAdapter(this.single.getAdapter());
 		}
 		for (FSRSequence<T> follower : this.followers) {
-			TFSequence<T> tf = follower.getTheFactory(symbols);
-			Adapter<T> a = follower.get(0).getAdapter(symbols);
+			TFSequence<T> tf = follower.getShellFactory();
+			Adapter<T> a = follower.get(0).getAdapter();
 			this.factory.addSequence(tf, a);
 		}		
 		return true;

@@ -38,7 +38,7 @@ public class FSRList<T extends Token> extends FSRContainer<T> {
 	}
 	
 	@Override
-	public boolean update(RulesByName<T> symbols) {
+	public boolean update() {
 		TokenFactory<T> element = this.element.getShellFactory();
 		this.factory.setElement(element);
 		return true;

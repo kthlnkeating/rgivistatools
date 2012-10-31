@@ -41,8 +41,8 @@ public class FSRChoice<T extends Token> extends FSRCollection<T> {
 			this.appliedOnName = name;
 		}
 	 	
-		public void add(FactorySupplyRule<T> tf, RulesByName<T> symbols) {
-			FactorySupplyRule<T> leading = tf.getLeading(symbols, 0);
+		public void add(FactorySupplyRule<T> tf) {
+			FactorySupplyRule<T> leading = tf.getLeading(0);
 			String name = leading.getName();
 			Integer existing = this.choiceOrder.get(name);
 			if (existing == null) {
@@ -81,24 +81,23 @@ public class FSRChoice<T extends Token> extends FSRCollection<T> {
 		return this.factory.getName();
 	}
 	
-	private List<TokenFactory<T>> getChoiceFactories(RulesByName<T> symbols) {
+	private List<TokenFactory<T>> getChoiceFactories() {
 		List<TokenFactory<T>> result = new ArrayList<TokenFactory<T>>();
 		
 		ForkAlgorithm<T> algorithm = new ForkAlgorithm<T>(this.getName());
 		for (FactorySupplyRule<T> r : this.list) {
-			algorithm.add(r, symbols);
+			algorithm.add(r);
 		}
 		for (FactorySupplyRule<T> on : algorithm.list) {
-			if (on instanceof FSRForkedSequence) on.update(symbols);
+			if (on instanceof FSRForkedSequence) on.update();
 			result.add(on.getShellFactory());
 		}
 		return result;
 	}
 	
 	@Override
-	public boolean update(RulesByName<T> symbols) {
-		RulesByNameLocal<T> localSymbols = new RulesByNameLocal<T>(symbols, this);
-		List<TokenFactory<T>> fs = this.getChoiceFactories(localSymbols);
+	public boolean update() {
+		List<TokenFactory<T>> fs = this.getChoiceFactories();
 		this.factory.reset(fs.size());
 		for (TokenFactory<T> f : fs) {
 			this.factory.add(f);
@@ -118,7 +117,7 @@ public class FSRChoice<T extends Token> extends FSRCollection<T> {
 	}
 	
 	@Override
-	public Adapter<T> getAdapter(RulesByName<T> names) {
+	public Adapter<T> getAdapter() {
 		return this.factory;
 	}
 }

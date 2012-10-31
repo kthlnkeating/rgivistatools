@@ -50,16 +50,16 @@ public class FSRSequence<T extends Token> extends FSRCollection<T> {
 	}
 	
 	@Override
-	public FactorySupplyRule<T> getLeading(RulesByName<T> names, int level) {
+	public FactorySupplyRule<T> getLeading(int level) {
 		if (level == 0) {
-			return this.list.get(0).getLeading(names, 1);
+			return this.list.get(0).getLeading(1);
 		} else {
 			return this;
 		}
 	}
 	
 	@Override
-	public boolean update(RulesByName<T> symbols) {
+	public boolean update() {
 		this.factory.reset(this.list.size());
 		int index = 0;
 		for (FactorySupplyRule<T> spg : this.list) {
@@ -77,11 +77,6 @@ public class FSRSequence<T extends Token> extends FSRCollection<T> {
 		return this.factory;
 	}
 	
-	@Override
-	public TFSequence<T> getTheFactory(RulesByName<T> symbols) {
-		return this.factory;
-	}
-
 	@Override
 	public int getSequenceCount() {
 		return this.list.size();

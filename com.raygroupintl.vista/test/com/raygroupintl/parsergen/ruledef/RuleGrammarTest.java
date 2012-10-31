@@ -2,8 +2,6 @@ package com.raygroupintl.parsergen.ruledef;
 
 import static org.junit.Assert.*;
 
-import java.util.HashMap;
-
 import junit.framework.Assert;
 
 import org.junit.AfterClass;
@@ -22,7 +20,6 @@ import com.raygroupintl.parsergen.ObjectSupply;
 import com.raygroupintl.parsergen.rulebased.DefinitionVisitor;
 import com.raygroupintl.parsergen.rulebased.FSRCustom;
 import com.raygroupintl.parsergen.rulebased.FactorySupplyRule;
-import com.raygroupintl.parsergen.rulebased.RulesMapByName;
 import com.raygroupintl.parsergen.ruledef.RuleDefinitionParserGenerator;
 import com.raygroupintl.parsergen.ruledef.RuleGrammar;
 import com.raygroupintl.parsergen.ruledef.RuleSupplyFlag;
@@ -164,9 +161,8 @@ public class RuleGrammarTest {
 			this.addMap(dv);
 			rule.accept(dv, "test", RuleSupplyFlag.TOP);
 			FactorySupplyRule<Token> r = dv.topRules.get("test");
-			RulesMapByName<Token> tfby = new RulesMapByName<Token>(dv.topRules);
 			for (FactorySupplyRule<Token> v : dv.toBeUpdated) {
-				v.update(tfby);
+				v.update();
 			}
 			TokenFactory<Token> f = r.getShellFactory();
 			Assert.assertNotNull(f);
@@ -199,9 +195,8 @@ public class RuleGrammarTest {
 			this.addMap(dv);
 			rule.accept(dv, "test", RuleSupplyFlag.TOP);
 			FactorySupplyRule<Token> r = dv.topRules.get("test");
-			RulesMapByName<Token> tfby = new RulesMapByName<Token>(dv.topRules);
 			for (FactorySupplyRule<Token> v : dv.toBeUpdated) {
-				v.update(tfby);
+				v.update();
 			}
 			TokenFactory<Token> f = r.getShellFactory();
 			Assert.assertNotNull(f);
@@ -253,9 +248,8 @@ public class RuleGrammarTest {
 			this.addMap(dv);
 			rule.accept(dv, "test", RuleSupplyFlag.TOP);
 			FactorySupplyRule<Token> r = dv.topRules.get("test");
-			RulesMapByName<Token> tfby = new RulesMapByName<Token>(dv.topRules);
 			for (FactorySupplyRule<Token> v : dv.toBeUpdated) {
-				v.update(tfby);
+				v.update();
 			}
 			TokenFactory<Token> f = r.getShellFactory();
 			Assert.assertNotNull(f);
@@ -270,7 +264,7 @@ public class RuleGrammarTest {
 		}
 	}
 	
-	private TokenFactory<Token> getFactory(DefinitionVisitor<Token> dv, String inputText, RulesMapByName<Token> map, String name) {
+	private TokenFactory<Token> getFactory(DefinitionVisitor<Token> dv, String inputText, String name) {
 		try {
 			Text text = new Text(inputText);
 			TSymbolSequence rule = (TSymbolSequence) spec.sequence.tokenize(text, objectSupply);
@@ -280,9 +274,8 @@ public class RuleGrammarTest {
 			this.addMap(dv);			
 			rule.accept(dv, "test", RuleSupplyFlag.TOP);
 			FactorySupplyRule<Token> r = dv.topRules.get("test");
-			RulesMapByName<Token> tfby = new RulesMapByName<Token>(dv.topRules);
 			for (FactorySupplyRule<Token> v : dv.toBeUpdated) {
-				v.update(tfby);
+				v.update();
 			}
 			TokenFactory<Token> f = r.getShellFactory();
 			Assert.assertNotNull(f);
@@ -296,17 +289,16 @@ public class RuleGrammarTest {
 	
 	@Test
 	public void testCharSpecified() {
-		RulesMapByName<Token> map = new RulesMapByName<Token>(new HashMap<String, FactorySupplyRule<Token>>());
 		DefinitionVisitor<Token> dv = new DefinitionVisitor<Token>();
-		TokenFactory<Token> namea = getFactory(dv, "{'a' + 'c' + 'd'...'f'}", map, "namea");
+		TokenFactory<Token> namea = getFactory(dv, "{'a' + 'c' + 'd'...'f'}", "namea");
 		dv = new DefinitionVisitor<Token>();
-		TokenFactory<Token> nameb = getFactory(dv, "{'a'...'z' - 'd'...'f'}", map, "nameb");
+		TokenFactory<Token> nameb = getFactory(dv, "{'a'...'z' - 'd'...'f'}", "nameb");
 		dv = new DefinitionVisitor<Token>();
-		TokenFactory<Token> namec = getFactory(dv, "{'a'...'m' + 'q' - 'd'...'f' - 'i'}", map, "namec");
+		TokenFactory<Token> namec = getFactory(dv, "{'a'...'m' + 'q' - 'd'...'f' - 'i'}", "namec");
 		dv = new DefinitionVisitor<Token>();
-		TokenFactory<Token> named = getFactory(dv, "{- 'b' + 'a'...'z'}", map, "named");
+		TokenFactory<Token> named = getFactory(dv, "{- 'b' + 'a'...'z'}", "named");
 		dv = new DefinitionVisitor<Token>();
-		TokenFactory<Token> namee = getFactory(dv, "'%' + 'a'...'z' + 'A'...'Z', [{'a'...'z' + 'A'...'Z' + '0'...'9'}]", map, "namee");
+		TokenFactory<Token> namee = getFactory(dv, "'%' + 'a'...'z' + 'A'...'Z', [{'a'...'z' + 'A'...'Z' + '0'...'9'}]", "namee");
 		
 		testRule(namea, "accdd"); 
 		testRule(namea, "efcdd"); 
@@ -338,18 +330,17 @@ public class RuleGrammarTest {
 	
 	@Test
 	public void testListInChoice() {
-		RulesMapByName<Token> map = new RulesMapByName<Token>(new HashMap<String, FactorySupplyRule<Token>>());
 		DefinitionVisitor<Token> dv = new DefinitionVisitor<Token>();
-		TokenFactory<Token> name = getFactory(dv, "{'a'...'z'}", map, "name");
+		TokenFactory<Token> name = getFactory(dv, "{'a'...'z'}", "name");
 		testRule(name, "rgi");
 		dv = new DefinitionVisitor<Token>();
 		dv.addTopRule("name", new FSRCustom<Token>(name));	
-		TokenFactory<Token> number = getFactory(dv, "{'0'...'9'}", map, "number");
+		TokenFactory<Token> number = getFactory(dv, "{'0'...'9'}", "number");
 		testRule(number, "232");
 		dv = new DefinitionVisitor<Token>();
 		dv.addTopRule("name", new FSRCustom<Token>(name));	
 		dv.addTopRule("number", new FSRCustom<Token>(number));			
-		TokenFactory<Token> rule = getFactory(dv, "{name:',':'(':')'} | number", map, "rule");		
+		TokenFactory<Token> rule = getFactory(dv, "{name:',':'(':')'} | number", "rule");		
 		testRule(rule, "(rgi,dc)");
 		testRule(rule, "1235");
 		testRuleNull(rule, "RGI"); 
