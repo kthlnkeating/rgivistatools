@@ -78,26 +78,24 @@ public class Block {
 		
 		public void add(Block fanin, Block fanout, int fanoutIndex, List<Indexed<String>> byRefs) {
 			Integer fanoutId = System.identityHashCode(fanout);
-			//if (fanoutId != this.rootId) {
-				APIData storedData = this.store == null ? null : this.store.get(fanout);
-				if (storedData != null) {
-					FaninList faninList = this.storedMap.get(fanoutId);
-					if (faninList == null) {
-						this.storedList.add(fanout);
-						faninList = new FaninList(fanout);
-						this.storedMap.put(fanoutId, faninList);						
-					}					
-					faninList.addFanin(fanin, fanoutIndex, byRefs);
-				} else {
-					FaninList faninList = this.map.get(fanoutId);
-					if (faninList == null) {
-						this.list.add(fanout);
-						faninList = new FaninList(fanout);
-						this.map.put(fanoutId, faninList);
-					}
-					faninList.addFanin(fanin, fanoutIndex, byRefs);
+			APIData storedData = this.store == null ? null : this.store.get(fanout);
+			if (storedData != null) {
+				FaninList faninList = this.storedMap.get(fanoutId);
+				if (faninList == null) {
+					this.storedList.add(fanout);
+					faninList = new FaninList(fanout);
+					this.storedMap.put(fanoutId, faninList);						
+				}					
+				faninList.addFanin(fanin, fanoutIndex, byRefs);
+			} else {
+				FaninList faninList = this.map.get(fanoutId);
+				if (faninList == null) {
+					this.list.add(fanout);
+					faninList = new FaninList(fanout);
+					this.map.put(fanoutId, faninList);
 				}
-			//}
+				faninList.addFanin(fanin, fanoutIndex, byRefs);
+			}
 		}
 		
 		public Block getBlock(int index) {
@@ -322,14 +320,11 @@ public class Block {
 		return this.filemanCalls;
 	}
 	
-	public void addFanout(int index, EntryId fanout, boolean shouldClose, CallArgument[] arguments) {
+	public void addFanout(int index, EntryId fanout, CallArgument[] arguments) {
 		if (! this.closed) {
 			IndexedFanout ifo = new IndexedFanout(index, fanout);			
 			ifo.setByRefs(arguments);
 			this.fanouts.add(ifo);
-			if (shouldClose) {
-				this.close();
-			}
 		}
 	}	
 	
@@ -456,7 +451,7 @@ public class Block {
 		}
 	}
 	
-	public APIData auxGetAPIData(BlocksSupply blocksSupply, APIDataStore store, SourcedFanoutFilter filter, Map<String, String> replacedRoutines) {
+	private APIData auxGetAPIData(BlocksSupply blocksSupply, APIDataStore store, SourcedFanoutFilter filter, Map<String, String> replacedRoutines) {
 		APIData result = store.get(this);
 		if (result != null) {
 			return result;

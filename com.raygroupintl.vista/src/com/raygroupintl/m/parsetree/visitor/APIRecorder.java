@@ -225,7 +225,7 @@ public class APIRecorder extends FanoutRecorder {
 		if (fanout != null) {
 			++this.index;
 			CallArgument[] callArguments = this.getLastArguments();
-			this.currentBlock.addFanout(index, fanout, shouldClose, callArguments);
+			this.currentBlock.addFanout(index, fanout, callArguments);
 			if ((callArguments != null) && (callArguments.length > 0) && ! inFilemanRoutine(this.currentRoutineName, true)) {
 				CallArgument ca = callArguments[0];
 				if (ca != null) {
@@ -242,7 +242,8 @@ public class APIRecorder extends FanoutRecorder {
 					}
 				}
 			}
-		} else if (shouldClose) {
+		} 
+		if (shouldClose) {
 			this.currentBlock.close();
 		}
 	}
@@ -330,7 +331,8 @@ public class APIRecorder extends FanoutRecorder {
 			}
 			this.currentBlocks.put(tag, this.currentBlock);
 			EntryId defaultGoto = new EntryId(null, tag);
-			lastBlock.addFanout(this.index, defaultGoto, true, null);
+			lastBlock.addFanout(this.index, defaultGoto, null);
+			lastBlock.close();
 		}
 		String[] params = entry.getParameters();
 		this.currentBlock.setFormals(params);
@@ -359,7 +361,7 @@ public class APIRecorder extends FanoutRecorder {
 			this.currentBlock = lastBlock;
 			String tag = ":" + String.valueOf(this.index);
 			EntryId defaultDo = new EntryId(null, tag);		
-			lastBlock.addFanout(this.index, defaultDo, false, null);
+			lastBlock.addFanout(this.index, defaultDo, null);
 			this.currentBlocks.put(tag, firstBlock);
 			--this.inDoBlock;
 		}

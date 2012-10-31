@@ -22,7 +22,6 @@ import java.util.List;
 
 import com.raygroupintl.m.parsetree.Routine;
 import com.raygroupintl.m.parsetree.data.EntryId;
-import com.raygroupintl.m.parsetree.visitor.EntryRecorder;
 import com.raygroupintl.output.FileWrapper;
 import com.raygroupintl.vista.repository.RepositoryVisitor;
 import com.raygroupintl.vista.repository.VistaPackage;
@@ -30,8 +29,8 @@ import com.raygroupintl.vista.repository.VistaPackages;
 
 public class EntryWriter extends RepositoryVisitor {
 	private FileWrapper fileWrapper;
-	private EntryRecorder entryRecorder;
 	private List<String> nameRegexs;
+	private List<EntryId> allEntries = new ArrayList<EntryId>();
 	
 	public EntryWriter(FileWrapper fileWrapper) {
 		this.fileWrapper = fileWrapper;
@@ -44,7 +43,6 @@ public class EntryWriter extends RepositoryVisitor {
 		this.nameRegexs.add(regex);
 	}
 	
-	
 	private boolean matches(String name) {
 		for (String nameRegex : this.nameRegexs) {
 			if (name.matches(nameRegex)) return true;
@@ -55,7 +53,8 @@ public class EntryWriter extends RepositoryVisitor {
 	@Override
 	protected void visitRoutine(Routine routine) {
 		if ((this.nameRegexs == null) || (this.matches(routine.getName()))) {
-			this.entryRecorder.visitRoutine(routine);
+			List<EntryId> routineEntries = routine.getEntryIdList();
+			this.allEntries.addAll(routineEntries);
 		}
 	}
 	
@@ -65,7 +64,7 @@ public class EntryWriter extends RepositoryVisitor {
 	}
 
 	private void writeEntries() {
-		List<EntryId> entries = new ArrayList<EntryId>(this.entryRecorder.getEntries());
+		List<EntryId> entries = new ArrayList<EntryId>(this.allEntries);
 		Collections.sort(entries);
 		for (EntryId entry : entries) {
 			String entryString = entry.toString();
@@ -76,7 +75,6 @@ public class EntryWriter extends RepositoryVisitor {
 	@Override
 	protected void visitRoutinePackages(VistaPackages rps) {
 		if (this.fileWrapper.start()) {
-			this.entryRecorder = new EntryRecorder();
 			super.visitRoutinePackages(rps);
 			this.writeEntries();
 			this.fileWrapper.stop();
@@ -85,7 +83,6 @@ public class EntryWriter extends RepositoryVisitor {
 	
 	public void writeForRoutines(List<Routine> routines) {
 		if (this.fileWrapper.start()) {
-			this.entryRecorder = new EntryRecorder();
 			for (Routine r : routines) {
 				this.visitRoutine(r);
 			}

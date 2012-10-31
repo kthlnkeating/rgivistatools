@@ -20,8 +20,13 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.ObjectInputStream;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+
+import com.raygroupintl.m.parsetree.data.EntryId;
 
 public class Routine extends BasicNode {
 	private static final long serialVersionUID = 1L;
@@ -44,12 +49,18 @@ public class Routine extends BasicNode {
 		return this.name;
 	}
 	
-	public EntryList getEntryList() {
-		return this.entryList;
-	}
-	
-	public ErrorNode getErrorNode() {
-		return this.errorNode;
+	public List<EntryId> getEntryIdList() {
+		if (this.entryList == null) {
+			return Collections.emptyList();
+		} else {
+			List<EntryId> result = new ArrayList<EntryId>(this.entryList.size());
+			for (Entry e : this.entryList.getNodes()) {
+				String tag = e.getName();
+				EntryId entryId = new EntryId(this.name, tag);
+				result.add(entryId);				
+			}
+			return result;
+		}
 	}
 	
 	public void acceptSubNodes(Visitor visitor) {
