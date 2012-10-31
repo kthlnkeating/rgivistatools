@@ -55,12 +55,12 @@ public class DefinitionVisitor<T extends Token> implements RuleDefinitionVisitor
 	
 	public void addTopRule(String name, FactorySupplyRule<T> fsr) {
 		this.topRules.put(name, fsr);
-		List<ContainerIndexAndFlag<T>> missingForName = missing.get(name);
+		List<ContainerIndexAndFlag<T>> missingForName = this.missing.get(name);
 		if (missingForName != null) {
 			for (ContainerIndexAndFlag<T> c : missingForName) {
 				c.addToContainer(fsr);
 			}
-			missingForName.remove(name);
+			this.missing.remove(name);
 		}
 	}
 	
@@ -129,18 +129,18 @@ public class DefinitionVisitor<T extends Token> implements RuleDefinitionVisitor
 			}			
 			this.addTopRule(name, result);
 		} else {
-			//if (topRule != null) {
-			//	this.lastContainer.addToContainer(flag, topRule);
-			//} else {
-			//	List<ContainerIndexAndFlag<T>> missingForName = missing.get(value);
-			//	if (missingForName == null) {
-			//		missingForName = new ArrayList<ContainerIndexAndFlag<T>>();
-			//		this.missing.put(value, missingForName);
-			//	}
-			//	missingForName.add(new ContainerIndexAndFlag<T>(this.lastContainer, flag));
-			//}			
-			FSRSingle<T> result = new FSRSingle<T>(name, value);			
-			this.lastContainer.addToContainer(flag, result);
+			if (topRule != null) {
+				this.lastContainer.addToContainer(flag, topRule);
+			} else {
+				List<ContainerIndexAndFlag<T>> missingForName = missing.get(value);
+				if (missingForName == null) {
+					missingForName = new ArrayList<ContainerIndexAndFlag<T>>();
+					this.missing.put(value, missingForName);
+				}
+				missingForName.add(new ContainerIndexAndFlag<T>(this.lastContainer, flag));
+			}			
+			//FSRSingle<T> result = new FSRSingle<T>(name, value);			
+			//this.lastContainer.addToContainer(flag, result);
 		}
 	}
 	
