@@ -78,7 +78,7 @@ public class APIRecorder extends FanoutRecorder {
 	
 	private void addOutput(Local local) {
 		++this.index;
-		this.currentBlock.addOutput(index, local);
+		if (! this.currentBlock.isClosed()) this.currentBlock.getStaticData().addLocal(index, local);
 	}
 	
 	private static String removeDoubleQuote(String input) {
@@ -140,7 +140,7 @@ public class APIRecorder extends FanoutRecorder {
 										result += subscripts[0];									
 									}
 								}
-								this.currentBlock.addFilemanGlobal(result);
+								if (! this.currentBlock.isClosed()) this.currentBlock.getStaticData().addFilemanGlobal(result);
 							}
 						}
 					}
@@ -162,7 +162,7 @@ public class APIRecorder extends FanoutRecorder {
 	@Override
 	protected void newLocal(Local local) {
 		++this.index;
-		this.currentBlock.addNewed(this.index, local);
+		if (! this.currentBlock.isClosed()) this.currentBlock.getStaticData().addNewed(this.index, local);
 	}
 	
 	private static Set<String> DEVICE_PARAMS = new HashSet<String>();
@@ -189,19 +189,19 @@ public class APIRecorder extends FanoutRecorder {
 		if ((! this.underDeviceParameter) || (! isDeviceParameter(local))) { 
 			super.visitLocal(local);
 			++this.index;
-			this.currentBlock.addInput(index, local);
+			if (! this.currentBlock.isClosed()) this.currentBlock.getStaticData().addLocal(index, local);
 		}
 	}
 
 	protected void passLocalByVal(Local local, int index) {		
 		++this.index;
-		this.currentBlock.addInput(index, local);
+		if (! this.currentBlock.isClosed()) this.currentBlock.getStaticData().addLocal(index, local);
 	}
 	
 	@Override
 	protected void passLocalByRef(Local local, int index) {
 		++this.index;
-		this.currentBlock.addOutput(index, local);
+		if (! this.currentBlock.isClosed()) this.currentBlock.getStaticData().addLocal(index, local);
 		super.passLocalByRef(local, index);
 	}
 
@@ -216,7 +216,7 @@ public class APIRecorder extends FanoutRecorder {
 				name += constValue;
 			}
 		}
-		this.currentBlock.addGlobal(name);		
+		if (! this.currentBlock.isClosed()) this.currentBlock.getStaticData().addGlobal(name);		
 	}
 	
 	protected void updateFanout(boolean isGoto, boolean conditional) {
@@ -236,7 +236,7 @@ public class APIRecorder extends FanoutRecorder {
 							String cleanValue = removeDoubleQuote(ca.getValue());
 							if (cleanValue.length() > 0 && validate(cleanValue)) {
 								String value = fanout.toString() + "(" + cleanValue;
-								this.currentBlock.addFilemanCalls(value);
+								if (! this.currentBlock.isClosed()) this.currentBlock.getStaticData().addFilemanCalls(value);
 							}
 						}
 					}
@@ -267,21 +267,21 @@ public class APIRecorder extends FanoutRecorder {
 	@Override
 	protected void visitReadCmd(ReadCmd readCmd) {
 		super.visitReadCmd(readCmd);
-		this.currentBlock.incrementRead();
+		if (! this.currentBlock.isClosed()) this.currentBlock.getStaticData().incrementRead();
 	}
 
 	
 	@Override
 	protected void visitWriteCmd(WriteCmd writeCmd) {
 		super.visitWriteCmd(writeCmd);
-		this.currentBlock.incrementWrite();
+		if (! this.currentBlock.isClosed()) this.currentBlock.getStaticData().incrementWrite();
 	}
 
 	
 	@Override
 	protected void visitXecuteCmd(XecuteCmd xecuteCmd) {
 		super.visitXecuteCmd(xecuteCmd);
-		this.currentBlock.incrementExecute();
+		if (! this.currentBlock.isClosed()) this.currentBlock.getStaticData().incrementExecute();
 	}
 
 	protected void visitForLoop(ForLoop forLoop) {
@@ -335,13 +335,13 @@ public class APIRecorder extends FanoutRecorder {
 			lastBlock.close();
 		}
 		String[] params = entry.getParameters();
-		this.currentBlock.setFormals(params);
+		this.currentBlock.getStaticData().setFormals(params);
 		++this.index;
 		super.visitEntry(entry);	
 	}
 			
 	protected void visitIndirection(Indirection indirection) {
-		this.currentBlock.incrementIndirection();
+		if (! this.currentBlock.isClosed()) this.currentBlock.getStaticData().incrementIndirection();
 		super.visitIndirection(indirection);
 	}
 

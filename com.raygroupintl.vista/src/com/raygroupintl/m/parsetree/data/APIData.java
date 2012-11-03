@@ -54,7 +54,7 @@ public class APIData {
 	}
 	
 	private boolean mergeAssumed(Block thisBlock, String name, int sourceIndex) {
-		if ((! thisBlock.isDefined(name, sourceIndex) && (! this.assumeds.contains(name)))) {
+		if ((! thisBlock.getStaticData().isDefined(name, sourceIndex) && (! this.assumeds.contains(name)))) {
 			this.assumeds.add(name);
 			return true;
 		}
@@ -72,7 +72,7 @@ public class APIData {
 	}
 	
 	public void mergeGlobals(APIData source) {
-		this.mergeGlobals(source.globals);
+		if (source.globals != null) this.mergeGlobals(source.globals);
 	}
 	
 	public void mergeGlobals(Set<String> globals) {
@@ -84,7 +84,7 @@ public class APIData {
 	}
 	
 	public void mergeFilemanGlobals(APIData source) {
-		this.mergeFilemanGlobals(source.filemanGlobals);
+		if (filemanGlobals != null) this.mergeFilemanGlobals(source.filemanGlobals);
 	}
 	
 	public void mergeFilemanGlobals(Set<String> filemanGlobals) {
@@ -96,7 +96,7 @@ public class APIData {
 	}
 	
 	public void mergeFilemanCalls(APIData source) {
-		this.mergeFilemanCalls(source.filemanCalls);
+		if (source.filemanCalls != null) this.mergeFilemanCalls(source.filemanCalls);
 	}
 	
 	public void mergeFilemanCalls(Set<String> filemanCalls) {
@@ -107,7 +107,11 @@ public class APIData {
 		}
 	}
 	
-	public void mergeCounts(Block b) {
+	public void merge(BlockStaticAPIData b) {
+		this.mergeGlobals(b.getGlobals());
+		this.mergeFilemanGlobals(b.getFilemanGlobals());
+		this.mergeFilemanCalls(b.getFilemanCalls());
+		
 		this.indirectionCount += b.getIndirectionCount();
 		this.readCount += b.getReadCount();
 		this.writeCount += b.getWriteCount();

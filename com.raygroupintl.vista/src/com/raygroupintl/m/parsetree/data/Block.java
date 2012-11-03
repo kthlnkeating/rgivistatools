@@ -25,7 +25,6 @@ import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import com.raygroupintl.m.parsetree.Local;
 import com.raygroupintl.m.parsetree.filter.SourcedFanoutFilter;
 import com.raygroupintl.m.parsetree.visitor.APIRecorder;
 import com.raygroupintl.m.struct.LineLocation;
@@ -154,19 +153,6 @@ public class Block {
 			int id = System.identityHashCode(b);
 			APIData result = datas.get(id);
 		
-			for (int i=this.list.size()-1; i>0; --i) {
-				Block bi = this.list.get(i);
-				result.mergeGlobals(bi.getGlobals());
-				result.mergeFilemanGlobals(bi.getFilemanGlobals());
-				result.mergeFilemanCalls(bi.getFilemanCalls());
-			}
-
-			for (Block bi : this.storedList) {
-				result.mergeGlobals(bi.getGlobals());
-				result.mergeFilemanGlobals(bi.getFilemanGlobals());
-				result.mergeFilemanCalls(bi.getFilemanCalls());
-			}			
-			
 			for (Block bi : this.list) {
 				int idi = System.identityHashCode(bi);
 				APIData data = datas.get(idi);
@@ -189,21 +175,9 @@ public class Block {
 	private EntryId entryId;
 	private Blocks siblings;
 	
-	private String[] formals;
-	private Map<String, Integer> formalsMap;
-	private Map<String, Integer> newedLocals = new HashMap<String, Integer>();
-	private Map<String, Integer> inputLocals = new HashMap<String, Integer>();
-	private Map<String, Integer> outputLocals = new HashMap<String, Integer>();
-	private Set<String> globals = new HashSet<String>();
-	private Set<String> filemanGlobals = new HashSet<String>();
-	private Set<String> filemanCalls = new HashSet<String>();
-	
-	int indirectionCount;
-	int writeCount;
-	int readCount;
-	int executeCount;
-	
 	LineLocation location;
+	
+	private BlockStaticAPIData staticData = new BlockStaticAPIData();
 	
 	private List<IndexedFanout> fanouts = new ArrayList<IndexedFanout>();
 	private boolean closed;
@@ -214,6 +188,10 @@ public class Block {
 		this.siblings = siblings;
 	}
 	
+	public BlockStaticAPIData getStaticData() {
+		return this.staticData;
+	}
+		
 	public void setLineLocation(LineLocation location) {
 		this.location = location;
 	}
@@ -233,91 +211,16 @@ public class Block {
 		this.closed = true;
 	}
 	
+	public boolean isClosed() {
+		return this.closed;
+	}
+	
 	public int getIndex() {
 		return this.index;
 	}
 	
 	public EntryId getEntryId() {
 		return this.entryId;
-	}
-	
-	public void setFormals(String[] formals) {
-		this.formals = formals;
-		if (formals != null) {
-			this.formalsMap = new HashMap<String, Integer>(formals.length*2);
-			int index = 0;
-			for (String formal : formals) {
-				formalsMap.put(formal, index);
-				++index;
-			}
-		} else {
-			this.formalsMap=null;
-		}
-	}
-	
-	public String[] getFormals() {
-		return this.formals;
-	}
-	
-	public void addNewed(int index, Local local) {
-		if (! this.closed) {
-			String label = local.getName().toString();
-			if (! this.newedLocals.containsKey(label)) {
-				this.newedLocals.put(label, index);
-			}
-		}
-	}		
-	
-	public void addInput(int index, Local local) {
-		if (! this.closed) {
-			String label = local.getName().toString();
-			if ((! this.newedLocals.containsKey(label)) && (! this.outputLocals.containsKey(label))) {
-				if (! this.inputLocals.containsKey(label)) {
-					this.inputLocals.put(label, index);
-				}
-			}
-		}
-	}
-
-	public void addOutput(int index, Local local) {
-		if (! this.closed) {
-			String label = local.getName().toString();
-			if (! this.newedLocals.containsKey(label)) {
-				if (! this.outputLocals.containsKey(label)) {
-					this.outputLocals.put(label, index);
-				}
-			}
-		}
-	}
-
-	public void addGlobal(String value) {
-		if (! this.closed) {
-			this.globals.add(value);
-		}
-	}
-
-	public Set<String> getGlobals() {
-		return this.globals;
-	}
-	
-	public void addFilemanGlobal(String value) {
-		if (! this.closed) {
-			this.filemanGlobals.add(value);
-		}
-	}
-
-	public Set<String> getFilemanGlobals() {
-		return this.filemanGlobals;
-	}
-	
-	public void addFilemanCalls(String value) {
-		if (! this.closed) {
-			this.filemanCalls.add(value);
-		}
-	}
-
-	public Set<String> getFilemanCalls() {
-		return this.filemanCalls;
 	}
 	
 	public void addFanout(int index, EntryId fanout, CallArgument[] arguments) {
@@ -328,58 +231,10 @@ public class Block {
 		}
 	}	
 	
-	public Integer getAsFormal(String name) {
-		if (this.formalsMap != null) {
-			return this.formalsMap.get(name);			
-		} else {
-			return null;
-		}
-	}
-	
-	public boolean isNewed(String name, int sourceIndex) {
-		Integer index = this.newedLocals.get(name);
-		if (index == null) {
-			return false;
-		} else if (index.intValue() > sourceIndex) {
-			return false;
-		}
-		return true;
-	}
-	
-	public boolean isDefined(String name, int sourceIndex) {
-		if ((this.formalsMap != null) && (this.formalsMap.containsKey(name))) {
-			return true;
-		}
-		return this.isNewed(name, sourceIndex);
-	}
-	
-	public boolean isAssigned(String name, int sourceIndex) {
-		Integer index = this.outputLocals.get(name);
-		if (index == null) {
-			return false;
-		} else if (index.intValue() > sourceIndex) {
-			return false;
-		}
-		return true;
-	}
-	
-	public Map<String, Integer> getNewedLocals() {
-		return this.newedLocals;
-	}
-	
-	private void updateAssumeds(Set<String> assumeds, Map<String, Integer> source) {
-		for (String name : source.keySet()) {
-			if ((this.formalsMap == null) || (! this.formalsMap.containsKey(name))) {
-				assumeds.add(name);
-			}
-		}		
-	}
-	
 	public APIData toAPIData() {
 		APIData result = new APIData(this);
 		HashSet<String> assumeds = new HashSet<String>();
-		this.updateAssumeds(assumeds, this.inputLocals);
-		this.updateAssumeds(assumeds, this.outputLocals);
+		this.staticData.updateAssumeds(assumeds);
 		result.setAssumeds(assumeds);
 		return result;
 	}
@@ -471,6 +326,9 @@ public class Block {
 		APIData forAssumeds = this.auxGetAPIData(blocksSupply, store, filter, replacedRoutines);
 		APIData result = new APIData(this);
 		result.setAssumeds(forAssumeds);
+		result.mergeFilemanCalls(forAssumeds);
+		result.mergeGlobals(forAssumeds);
+		result.mergeFilemanGlobals(forAssumeds);
 		FanoutBlocks fanoutBlocks = new FanoutBlocks(this, null);
 		int index = 0;	
 		while (index < fanoutBlocks.getSize()) {
@@ -480,51 +338,8 @@ public class Block {
 		}
 		List<Block> blocks = fanoutBlocks.getAllBlocks();
 		for (Block b : blocks) {
-			result.mergeGlobals(b.getGlobals());
-			result.mergeFilemanGlobals(b.getFilemanGlobals());
-			result.mergeFilemanCalls(b.getFilemanCalls());
-			result.mergeCounts(b);
+			result.merge(b.getStaticData());
 		}
 		return result;		
-	}
-
-	public void incrementIndirection() {
-		if (! this.closed) {
-			++this.indirectionCount;
-		}
-	}
-	
-	public int getIndirectionCount() {
-		return this.indirectionCount;
-	}
-	
-	public void incrementWrite() {
-		if (! this.closed) {
-			++this.writeCount;
-		}
-	}
-	
-	public int getWriteCount() {
-		return this.writeCount;
-	}
-	
-	public void incrementRead() {
-		if (! this.closed) {
-			++this.readCount;
-		}
-	}
-	
-	public int getReadCount() {
-		return this.readCount;
-	}
-	
-	public void incrementExecute() {
-		if (! this.closed) {
-			++this.executeCount;
-		}
-	}
-	
-	public int getExecuteCount() {
-		return this.executeCount;
 	}
 }

@@ -30,6 +30,11 @@ public class MRALogger {
 		logger.log(Level.SEVERE, msg);			
 	}
 
+	public static <T> void logInfo(Class<T> cls, String msg) {
+		Logger logger = Logger.getLogger(cls.getName());
+		logger.log(Level.INFO, msg);			
+	}
+
 	public static <T> void logError(Object obj, String msg, Throwable t) {
 		MRALogger.logError(obj.getClass(), msg, t);	
 	}
@@ -43,6 +48,11 @@ public class MRALogger {
 	}
 	
 	public static <T> void logError(String msg) {
-		MRALogger.logError(MRoutineAnalyzer.class.getClass(), msg);	
+		MRALogger.logError(MRoutineAnalyzer.class, msg);	
 	}
+
+	public static <T> void logInfo(String msg) {
+		MRALogger.logInfo(MRoutineAnalyzer.class, msg);	
+	}
+
 }

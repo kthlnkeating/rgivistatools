@@ -73,10 +73,6 @@ public class APIWriter {
 	private void write(EntryId entryId, APIDataStore store, String[] linePieces) {
 		String routineName = entryId.getRoutineName();
 		this.fileWrapper.writeEOL(" " + entryId.toString2());
-		//this.tf.setTab(21);
-		//this.write(linePieces, 1, "CALLING PACKAGES ");
-		//this.write(linePieces, 3, "CALLING RPC's    ");
-		//this.write(linePieces, 2, "CALLING OPTIONS  ");
 		this.tf.setTab(12);
 		Blocks rbs = this.blocksSupply.getBlocks(routineName);
 		if (rbs == null) {
@@ -87,7 +83,7 @@ public class APIWriter {
 			if (lb == null) {
 				this.fileWrapper.writeEOL("  ERROR: Invalid entry point");
 			} else {
-				String[] formals = lb.getFormals();
+				String[] formals = lb.getStaticData().getFormals();
 				this.fileWrapper.write(this.tf.startList("FORMAL"));
 				if ((formals == null) || (formals.length == 0)) {
 					this.fileWrapper.write("--");
@@ -150,16 +146,6 @@ public class APIWriter {
 		}
 	}
 		
-	public void writeEntry(String entryIdValue) {
-		if (this.fileWrapper.start()) {
-			EntryId entryId = EntryId.getInstance(entryIdValue);
-			String[] input = new String[]{entryIdValue, "", "", ""};
-			APIDataStore store = new APIDataStore();
-			this.write(entryId, store, input);
-			this.fileWrapper.stop();
-		}
-	}
-
 	public void writeEntries(List<String> entries) {
 		if (this.fileWrapper.start()) {
 			APIDataStore store = new APIDataStore();

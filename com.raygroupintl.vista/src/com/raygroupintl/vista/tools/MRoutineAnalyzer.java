@@ -63,11 +63,24 @@ public class MRoutineAnalyzer {
 		MRALogger.logError(firstLineMsg + "\n" + secondLineMsg + "\n");
 	}
 
+	private static boolean run(RunTypes rts, String runTypeOption, CLIParams params) {
+		RunType rt = rts.getRunType(runTypeOption, params);
+		if (rt != null) {
+			MRALogger.logInfo("Started " + runTypeOption + ".");
+			rt.run();
+			MRALogger.logInfo("Ended " + runTypeOption + ".");
+		    return true;
+		} else {
+			return false;
+		}
+	}
+	
 	public static void main(String[] args) {
 		try {
 			RunTypes[] rtss = new RunTypes[]{new RepositoryRunTypes(), new MacroRunTypes(), new RoutineRunTypes()};
 		
 			CLIParams params = getCommandLineParamaters(args);	
+			if (params == null) return;
 			String runTypeOption = params.getPositional(0, null);
 			if (runTypeOption == null) {				
 				logErrorWithOptions("A run type option needs to be specified as the first positional argument.", rtss);
@@ -84,24 +97,15 @@ public class MRoutineAnalyzer {
 				runTypeOption = params.positionals.get(0);
 				params.popPositional();
 				
-				RunType rt = rtss[2].getRunType(runTypeOption, params);
-				if (rt != null) {
-					rt.run();
-					return;
-				}
+				if (run(rtss[2], runTypeOption, params)) return;
 				logErrorWithOptions("Specified run type option " + runTypeOption + " is not know.", rtss[2]);					
-				return;
-			}
-			
-			for (RunTypes rts : rtss) {
-				RunType rt = rts.getRunType(runTypeOption, params);
-				if (rt != null) {
-					rt.run();
-					return;
+			} else {
+				for (RunTypes rts : rtss) {
+					if (run(rts, runTypeOption, params)) return;
 				}
+				logErrorWithOptions("Specified run type option " + runTypeOption + " is not know.", rtss);					
 			}
 			
-			logErrorWithOptions("Specified run type option " + runTypeOption + " is not know.", rtss);
 		} catch (Throwable t) {
 			MRALogger.logError("Unexpected error.", t);
 		}
