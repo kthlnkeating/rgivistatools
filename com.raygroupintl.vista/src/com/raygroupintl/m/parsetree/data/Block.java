@@ -27,7 +27,7 @@ import java.util.logging.Logger;
 
 import com.raygroupintl.m.parsetree.filter.SourcedFanoutFilter;
 import com.raygroupintl.m.parsetree.visitor.APIRecorder;
-import com.raygroupintl.m.struct.LineLocation;
+import com.raygroupintl.struct.Indexed;
 
 public abstract class Block {
 	private final static Logger LOGGER = Logger.getLogger(APIRecorder.class.getName());
@@ -35,7 +35,7 @@ public abstract class Block {
 
 	private static class FaninList {
 		private Block block;
-		private List<IndexedBlock> faninBlocks = new ArrayList<IndexedBlock>();
+		private List<Indexed<Block>> faninBlocks = new ArrayList<Indexed<Block>>();
 		private Set<Integer> existing = new HashSet<Integer>();
 		
 		public FaninList(Block block) {
@@ -46,14 +46,14 @@ public abstract class Block {
 			int faninId = System.identityHashCode(faninBlock);
 			if (faninId != System.identityHashCode(this.block)) {
 				if (! this.existing.contains(faninId)) {
-					IndexedBlock e = new IndexedBlock(index, faninBlock);
+					Indexed<Block> e = new Indexed<Block>(faninBlock, index);
 					this.faninBlocks.add(e);
 					this.existing.add(faninId);
 				}
 			}
 		}
 		
-		public List<IndexedBlock> getFaninBlocks() {
+		public List<Indexed<Block>> getFaninBlocks() {
 			return this.faninBlocks;
 		}
 	}
@@ -120,9 +120,9 @@ public abstract class Block {
 				int id = System.identityHashCode(b);
 				APIData data = this.store.get(b);
 				FaninList faninList = this.storedMap.get(id);
-				List<IndexedBlock> faninBlocks = faninList.getFaninBlocks();
-				for (IndexedBlock ib : faninBlocks) {
-					Block faninBlock = ib.getBlock();
+				List<Indexed<Block>> faninBlocks = faninList.getFaninBlocks();
+				for (Indexed<Block> ib : faninBlocks) {
+					Block faninBlock = ib.getObject();
 					int faninId = System.identityHashCode(faninBlock);
 					APIData faninData = datas.get(faninId);
 					faninBlock.mergeAccumulative(faninData, data, ib.getIndex());
@@ -138,9 +138,9 @@ public abstract class Block {
 					int id = System.identityHashCode(b);
 					APIData data = datas.get(id);
 					FaninList faninList = this.map.get(id);
-					List<IndexedBlock> faninBlocks = faninList.getFaninBlocks();
-					for (IndexedBlock ib : faninBlocks) {
-						Block faninBlock = ib.getBlock();
+					List<Indexed<Block>> faninBlocks = faninList.getFaninBlocks();
+					for (Indexed<Block> ib : faninBlocks) {
+						Block faninBlock = ib.getObject();
 						int faninId = System.identityHashCode(faninBlock);
 						APIData faninData = datas.get(faninId);
 						totalChange += faninBlock.mergeAccumulative(faninData, data, ib.getIndex());
@@ -167,8 +167,6 @@ public abstract class Block {
 	private EntryId entryId;
 	private Blocks siblings;
 	
-	LineLocation location;
-	
 	private List<IndexedFanout> fanouts = new ArrayList<IndexedFanout>();
 	private boolean closed;
 	
@@ -176,21 +174,6 @@ public abstract class Block {
 		this.index = index;
 		this.entryId = entryId;
 		this.siblings = siblings;
-	}
-	
-	public void setLineLocation(LineLocation location) {
-		this.location = location;
-	}
-	
-	public LineLocation getLineLocation() {
-		return this.location;
-	}
-	
-	public String getLocationTitle() {
-		String result = this.entryId.getRoutineName();
-		result += "^" + this.location.getTag();
-		result += "^" + this.location.getOffset();
-		return result;
 	}
 	
 	public void close() {
@@ -208,7 +191,7 @@ public abstract class Block {
 	public EntryId getEntryId() {
 		return this.entryId;
 	}
-	
+		
 	public void addFanout(int index, EntryId fanout, CallArgument[] arguments) {
 		if (! this.closed) {
 			IndexedFanout ifo = new IndexedFanout(index, fanout);			

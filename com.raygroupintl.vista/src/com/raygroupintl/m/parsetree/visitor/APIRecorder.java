@@ -19,67 +19,35 @@ package com.raygroupintl.m.parsetree.visitor;
 import java.util.HashSet;
 import java.util.Set;
 
-import com.raygroupintl.m.parsetree.DoBlock;
-import com.raygroupintl.m.parsetree.ElseCmd;
-import com.raygroupintl.m.parsetree.Entry;
-import com.raygroupintl.m.parsetree.ForLoop;
 import com.raygroupintl.m.parsetree.Global;
-import com.raygroupintl.m.parsetree.IfCmd;
 import com.raygroupintl.m.parsetree.Indirection;
-import com.raygroupintl.m.parsetree.Line;
 import com.raygroupintl.m.parsetree.Local;
 import com.raygroupintl.m.parsetree.Node;
 import com.raygroupintl.m.parsetree.OpenCloseUseCmdNodes;
-import com.raygroupintl.m.parsetree.QuitCmd;
-import com.raygroupintl.m.parsetree.ReadCmd;
-import com.raygroupintl.m.parsetree.Routine;
-import com.raygroupintl.m.parsetree.WriteCmd;
-import com.raygroupintl.m.parsetree.XecuteCmd;
-import com.raygroupintl.m.parsetree.data.Block;
 import com.raygroupintl.m.parsetree.data.BlockWithAPIData;
-import com.raygroupintl.m.parsetree.data.Blocks;
 import com.raygroupintl.m.parsetree.data.CallArgument;
 import com.raygroupintl.m.parsetree.data.CallArgumentType;
 import com.raygroupintl.m.parsetree.data.EntryId;
-import com.raygroupintl.m.struct.LineLocation;
 import com.raygroupintl.vista.repository.RepositoryInfo;
 import com.raygroupintl.vista.repository.VistaPackage;
 
-public class APIRecorder extends FanoutRecorder {
+public class APIRecorder extends BlockRecorder {
 	private RepositoryInfo repositoryInfo;
-	
-	private Blocks currentBlocks;
-	
-	private BlockWithAPIData currentBlock;
-	private String currentRoutineName;
-	private int inDoBlock;
-	
-	private int index;
-	
-	private int underCondition;
-	private int underFor;
 	private boolean underDeviceParameter;
 	
-	private Set<Integer> doBlockHash = new HashSet<Integer>();
-
 	public APIRecorder(RepositoryInfo ri) {
 		this.repositoryInfo = ri;
 	}
-		
-	private void reset() {
-		this.currentBlocks = null;
-		this.currentBlock = null;
-		this.currentRoutineName = null;
-		this.index = 0;		
-		this.inDoBlock = 0;
-		this.underCondition = 0;
-		this.underFor = 0;
+
+	protected void reset() {
 		this.underDeviceParameter = false;
+		super.reset();
 	}
 	
 	private void addOutput(Local local) {
-		++this.index;
-		if (! this.currentBlock.isClosed()) this.currentBlock.getStaticData().addLocal(index, local);
+		int i = this.incrementIndex();
+		BlockWithAPIData cb = this.getCurrentBlock();
+		if (! cb.isClosed()) cb.getStaticData().addLocal(i, local);
 	}
 	
 	private static String removeDoubleQuote(String input) {
@@ -120,10 +88,44 @@ public class APIRecorder extends FanoutRecorder {
 		}
 	}
 	
+	protected void updateFanout(EntryId fanout) {
+		BlockWithAPIData cb = this.getCurrentBlock();
+		int i = this.incrementIndex();
+		CallArgument[] callArguments = this.getLastArguments();
+		cb.addFanout(i, fanout, callArguments);
+		String rn = this.getCurrentRoutineName();
+		if ((callArguments != null) && (callArguments.length > 0) && ! inFilemanRoutine(rn, true)) {
+			CallArgument ca = callArguments[0];
+			if (ca != null) {
+				CallArgumentType caType = ca.getType();
+				if ((caType == CallArgumentType.STRING_LITERAL) || (caType == CallArgumentType.NUMBER_LITERAL)) {
+					String routineName = fanout.getRoutineName();						
+					if ((routineName != null) && (routineName.length() > 1) && inFilemanRoutine(routineName, false)) {
+						String cleanValue = removeDoubleQuote(ca.getValue());
+						if (cleanValue.length() > 0 && validate(cleanValue)) {
+							String value = fanout.toString() + "(" + cleanValue;
+							if (! cb.isClosed()) cb.getStaticData().addFilemanCalls(value);
+						}
+					}
+				}
+			}
+		}		
+	}
+	
+	@Override
+	protected void visitDeviceParameters(OpenCloseUseCmdNodes.DeviceParameters deviceParameters) {
+		boolean current = this.underDeviceParameter;
+		this.underDeviceParameter = true;
+		super.visitDeviceParameters(deviceParameters);
+		this.underDeviceParameter = current;
+	}
+		
 	@Override
 	protected void setLocal(Local local, Node rhs) {
+		BlockWithAPIData cb = this.getCurrentBlock();
+		String rn = this.getCurrentRoutineName();
 		this.addOutput(local);
-		if ((rhs != null) && ! inFilemanRoutine(this.currentRoutineName, true)) {
+		if ((rhs != null) && ! inFilemanRoutine(rn, true)) {
 			String rhsAsConst = rhs.getAsConstExpr();
 			if (rhsAsConst != null) {
 				String name = local.getName().toString();
@@ -141,7 +143,7 @@ public class APIRecorder extends FanoutRecorder {
 										result += subscripts[0];									
 									}
 								}
-								if (! this.currentBlock.isClosed()) this.currentBlock.getStaticData().addFilemanGlobal(result);
+								if (! cb.isClosed()) cb.getStaticData().addFilemanGlobal(result);
 							}
 						}
 					}
@@ -162,8 +164,9 @@ public class APIRecorder extends FanoutRecorder {
 	
 	@Override
 	protected void newLocal(Local local) {
-		++this.index;
-		if (! this.currentBlock.isClosed()) this.currentBlock.getStaticData().addNewed(this.index, local);
+		int i = this.incrementIndex();
+		BlockWithAPIData cb = this.getCurrentBlock();
+		if (! cb.isClosed()) cb.getStaticData().addNewed(i, local);
 	}
 	
 	private static Set<String> DEVICE_PARAMS = new HashSet<String>();
@@ -189,23 +192,28 @@ public class APIRecorder extends FanoutRecorder {
 	protected void visitLocal(Local local) {
 		if ((! this.underDeviceParameter) || (! isDeviceParameter(local))) { 
 			super.visitLocal(local);
-			++this.index;
-			if (! this.currentBlock.isClosed()) this.currentBlock.getStaticData().addLocal(index, local);
+			int i = this.incrementIndex();
+			BlockWithAPIData cb = this.getCurrentBlock();
+			if (! cb.isClosed()) cb.getStaticData().addLocal(i, local);
 		}
 	}
 
+	@Override
 	protected void passLocalByVal(Local local, int index) {		
-		++this.index;
-		if (! this.currentBlock.isClosed()) this.currentBlock.getStaticData().addLocal(index, local);
+		int i = this.incrementIndex();
+		BlockWithAPIData cb = this.getCurrentBlock();
+		if (! cb.isClosed()) cb.getStaticData().addLocal(i, local);
 	}
 	
 	@Override
 	protected void passLocalByRef(Local local, int index) {
-		++this.index;
-		if (! this.currentBlock.isClosed()) this.currentBlock.getStaticData().addLocal(index, local);
+		int i = this.incrementIndex();
+		BlockWithAPIData cb = this.getCurrentBlock();
+		if (! cb.isClosed()) cb.getStaticData().addLocal(i, local);
 		super.passLocalByRef(local, index);
 	}
 
+	@Override
 	protected void visitGlobal(Global global) {
 		super.visitGlobal(global);
 		String name = '^' + global.getName().toString();
@@ -217,175 +225,14 @@ public class APIRecorder extends FanoutRecorder {
 				name += constValue;
 			}
 		}
-		if (! this.currentBlock.isClosed()) this.currentBlock.getStaticData().addGlobal(name);		
+		BlockWithAPIData cb = this.getCurrentBlock();
+		if (! cb.isClosed()) cb.getStaticData().addGlobal(name);		
 	}
-	
-	protected void updateFanout(boolean isGoto, boolean conditional) {
-		EntryId fanout = this.getLastFanout();
-		boolean shouldClose = isGoto && (! conditional) && (this.underCondition < 1);
-		if (fanout != null) {
-			++this.index;
-			CallArgument[] callArguments = this.getLastArguments();
-			this.currentBlock.addFanout(index, fanout, callArguments);
-			if ((callArguments != null) && (callArguments.length > 0) && ! inFilemanRoutine(this.currentRoutineName, true)) {
-				CallArgument ca = callArguments[0];
-				if (ca != null) {
-					CallArgumentType caType = ca.getType();
-					if ((caType == CallArgumentType.STRING_LITERAL) || (caType == CallArgumentType.NUMBER_LITERAL)) {
-						String routineName = fanout.getRoutineName();						
-						if ((routineName != null) && (routineName.length() > 1) && inFilemanRoutine(routineName, false)) {
-							String cleanValue = removeDoubleQuote(ca.getValue());
-							if (cleanValue.length() > 0 && validate(cleanValue)) {
-								String value = fanout.toString() + "(" + cleanValue;
-								if (! this.currentBlock.isClosed()) this.currentBlock.getStaticData().addFilemanCalls(value);
-							}
-						}
-					}
-				}
-			}
-		} 
-		if (shouldClose) {
-			this.currentBlock.close();
-		}
-	}
-
-	@Override
-	protected void visitDeviceParameters(OpenCloseUseCmdNodes.DeviceParameters deviceParameters) {
-		boolean current = this.underDeviceParameter;
-		this.underDeviceParameter = true;
-		super.visitDeviceParameters(deviceParameters);
-		this.underDeviceParameter = current;
-	}
-		
-	protected void visitQuit(QuitCmd quitCmd) {
-		quitCmd.acceptSubNodes(this);
-		boolean quitConditional = (quitCmd.getPostCondition() != null);
-		if ((! quitConditional) && (this.underFor < 1) && (this.underCondition < 1)) {
-			this.currentBlock.close();			
-		}
-	}
-
-	@Override
-	protected void visitReadCmd(ReadCmd readCmd) {
-		super.visitReadCmd(readCmd);
-		if (! this.currentBlock.isClosed()) this.currentBlock.getStaticData().incrementRead();
-	}
-
 	
 	@Override
-	protected void visitWriteCmd(WriteCmd writeCmd) {
-		super.visitWriteCmd(writeCmd);
-		if (! this.currentBlock.isClosed()) this.currentBlock.getStaticData().incrementWrite();
-	}
-
-	
-	@Override
-	protected void visitXecuteCmd(XecuteCmd xecuteCmd) {
-		super.visitXecuteCmd(xecuteCmd);
-		if (! this.currentBlock.isClosed()) this.currentBlock.getStaticData().incrementExecute();
-	}
-
-	protected void visitForLoop(ForLoop forLoop) {
-		++this.underFor;
-		super.visitForLoop(forLoop);
-		--this.underFor;
-	}
-	
-	protected void visitIf(IfCmd ifCmd) {
-		++this.underCondition;
-		super.visitIf(ifCmd);
-		--this.underCondition;
-	}
-	
-	protected void visitElse(ElseCmd elseCmd) {
-		++this.underCondition;
-		super.visitElse(elseCmd);
-		--this.underCondition;
-	}
-
-	private EntryId getEntryId(String tag) {
-		if ((tag == null) || tag.isEmpty()) {
-			if (this.inDoBlock > 0) {
-				return new EntryId(this.currentRoutineName, ":" + String.valueOf(this.index));
-			} else {
-				return new EntryId(this.currentRoutineName, this.currentRoutineName);
-			}
-		} else {
-			return new EntryId(this.currentRoutineName, tag);
-		}
-	}
-	
-	protected void visitEntry(Entry entry) {
-		Block lastBlock = this.currentBlock;
-		++this.index;
-		String tag = entry.getName();
-		EntryId entryId = this.getEntryId(tag);		
-		this.currentBlock = new BlockWithAPIData(this.index, entryId, this.currentBlocks);
-		if (lastBlock == null) {
-			this.currentBlocks.setFirst(this.currentBlock);
-			if ((tag != null) && (! tag.isEmpty())) {
-				this.currentBlocks.put(tag, this.currentBlock);
-			}
-		} else {
-			if ((tag == null) || tag.isEmpty()) {
-				tag = ":" + String.valueOf(this.index);
-			}
-			this.currentBlocks.put(tag, this.currentBlock);
-			EntryId defaultGoto = new EntryId(null, tag);
-			lastBlock.addFanout(this.index, defaultGoto, null);
-			lastBlock.close();
-		}
-		String[] params = entry.getParameters();
-		this.currentBlock.getStaticData().setFormals(params);
-		++this.index;
-		super.visitEntry(entry);	
-	}
-			
 	protected void visitIndirection(Indirection indirection) {
-		if (! this.currentBlock.isClosed()) this.currentBlock.getStaticData().incrementIndirection();
+		BlockWithAPIData cb = this.getCurrentBlock();
+		if (! cb.isClosed()) cb.getStaticData().incrementIndirection();
 		super.visitIndirection(indirection);
-	}
-
-	protected void visitDoBlock(DoBlock doBlock) {
-		int id = doBlock.getUniqueId();
-		if (! this.doBlockHash.contains(id)) {
-			doBlockHash.add(id);
-			++this.inDoBlock;
-			doBlock.acceptPostCondition(this);
-			Blocks lastBlocks = this.currentBlocks;
-			BlockWithAPIData lastBlock = this.currentBlock;
-			this.currentBlock = null;
-			this.currentBlocks = new Blocks(lastBlocks);
-			doBlock.acceptEntryList(this);
-			BlockWithAPIData firstBlock = this.currentBlocks.getFirstBlock();
-			this.currentBlocks = lastBlocks;
-			this.currentBlock = lastBlock;
-			String tag = ":" + String.valueOf(this.index);
-			EntryId defaultDo = new EntryId(null, tag);		
-			lastBlock.addFanout(this.index, defaultDo, null);
-			this.currentBlocks.put(tag, firstBlock);
-			--this.inDoBlock;
-		}
-	}
-	
-	public Blocks getBlocks() {
-		return this.currentBlocks;
-	}
-	
-	@Override
-	protected void visitLine(Line line) {
-		if (this.currentBlock.getLineLocation() == null) {
-			String tag = line.getTag();
-			int index = line.getIndex();
-			this.currentBlock.setLineLocation(new LineLocation(tag, index));
-		}
-		super.visitLine(line);
-	}
-
-	protected void visitRoutine(Routine routine) {
-		this.reset();
-		this.currentBlocks = new Blocks();
-		this.currentRoutineName = routine.getName();
-		super.visitRoutine(routine);
 	}
 }
