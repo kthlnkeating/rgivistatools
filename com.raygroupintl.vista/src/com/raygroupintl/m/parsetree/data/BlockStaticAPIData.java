@@ -132,8 +132,8 @@ public class BlockStaticAPIData {
 		assumeds.addAll(this.assumedLocals);
 	}
 	
-	public APIData getDynamicData(BlockWithAPIData block) {
-		APIData result = new APIData(block);
+	public APIData getDynamicData() {
+		APIData result = new APIData();
 		HashSet<String> assumeds = new HashSet<String>(this.assumedLocals);
 		result.setAssumeds(assumeds);
 		return result;		

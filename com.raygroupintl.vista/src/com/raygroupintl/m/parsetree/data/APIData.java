@@ -23,8 +23,6 @@ import java.util.List;
 import java.util.Set;
 
 public class APIData {
-	private BlockWithAPIData sourceBlock;
-	
 	private Set<String> assumeds;
 	private Set<String> globals;
 	private Set<String> filemanGlobals = new HashSet<String>();
@@ -34,10 +32,6 @@ public class APIData {
 	int writeCount;
 	int readCount;
 	int executeCount;
-		
-	public APIData(BlockWithAPIData source) {
-		this.sourceBlock = source;
-	}
 		
 	public void setAssumeds(Set<String> assumeds) {
 		this.assumeds = new HashSet<String>(assumeds);
@@ -49,23 +43,18 @@ public class APIData {
 		}
 	}
 	
-	public BlockWithAPIData getSourceBlock() {
-		return this.sourceBlock;
-	}
-	
-	private boolean mergeAssumed(BlockWithAPIData thisBlock, String name, int sourceIndex) {
-		if ((! thisBlock.getStaticData().isDefined(name, sourceIndex) && (! this.assumeds.contains(name)))) {
+	private boolean mergeAssumed(BlockStaticAPIData staticData, String name, int sourceIndex) {
+		if ((! staticData.isDefined(name, sourceIndex) && (! this.assumeds.contains(name)))) {
 			this.assumeds.add(name);
 			return true;
 		}
 		return false;
 	}
 	
-	public int mergeAccumulative(APIData source, int sourceIndex) {
-		BlockWithAPIData thisBlock = this.getSourceBlock();
+	public int mergeAccumulative(BlockStaticAPIData staticData, APIData source, int sourceIndex) {
 		int result = 0;
 		for (String name : source.assumeds) {
-			boolean b = this.mergeAssumed(thisBlock, name, sourceIndex);
+			boolean b = this.mergeAssumed(staticData, name, sourceIndex);
 			if (b) ++result;
 		}
 		return result;

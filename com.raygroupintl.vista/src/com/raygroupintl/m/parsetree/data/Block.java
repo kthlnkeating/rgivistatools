@@ -149,18 +149,11 @@ public abstract class Block {
 				}
 			}
 						
-			Block b = this.list.get(0);
-			int id = System.identityHashCode(b);
-			APIData result = datas.get(id);
-		
 			for (Block bi : this.list) {
-				int idi = System.identityHashCode(bi);
-				APIData data = datas.get(idi);
-				store.put(data);
+				store.put(bi, datas);
 			}
-			store.put(result);
-						
-			return result;
+			Block b = this.list.get(0);
+			return store.put(b, datas);
 		}
 		
 		public List<Block> getAllBlocks() {

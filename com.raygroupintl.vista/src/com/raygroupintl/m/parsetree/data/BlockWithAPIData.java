@@ -29,12 +29,12 @@ public class BlockWithAPIData extends Block {
 		
 	@Override
 	public APIData getInitialAccumulativeData() {
-		return this.staticData.getDynamicData(this);
+		return this.staticData.getDynamicData();
 	}
 		
 	@Override
 	public APIData getInitialAdditiveData() {
-		return new APIData(this);
+		return new APIData();
 	}
 		
 	@Override
@@ -44,7 +44,7 @@ public class BlockWithAPIData extends Block {
 
 	@Override
 	public int mergeAccumulative(APIData target, APIData source, int sourceIndex) {
-		return target.mergeAccumulative(source, sourceIndex);
+		return target.mergeAccumulative(this.getStaticData(), source, sourceIndex);
 	}
 	
 	@Override

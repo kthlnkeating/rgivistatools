@@ -31,9 +31,10 @@ public class APIDataStore {
 		return this.map.get(id);
 	}
 
-	public void put(APIData data) {
-		Block block = data.getSourceBlock();
+	public APIData put(Block block, Map<Integer, APIData> datas) {
 		int id = System.identityHashCode(block);
+		APIData data = datas.get(id);
 		this.map.put(id, data);
+		return data;
 	}
 }
