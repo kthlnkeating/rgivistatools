@@ -23,7 +23,7 @@ import java.util.List;
 import java.util.Set;
 
 public class APIData {
-	private Block sourceBlock;
+	private BlockWithAPIData sourceBlock;
 	
 	private Set<String> assumeds;
 	private Set<String> globals;
@@ -35,7 +35,7 @@ public class APIData {
 	int readCount;
 	int executeCount;
 		
-	public APIData(Block source) {
+	public APIData(BlockWithAPIData source) {
 		this.sourceBlock = source;
 	}
 		
@@ -49,11 +49,11 @@ public class APIData {
 		}
 	}
 	
-	public Block getSourceBlock() {
+	public BlockWithAPIData getSourceBlock() {
 		return this.sourceBlock;
 	}
 	
-	private boolean mergeAssumed(Block thisBlock, String name, int sourceIndex) {
+	private boolean mergeAssumed(BlockWithAPIData thisBlock, String name, int sourceIndex) {
 		if ((! thisBlock.getStaticData().isDefined(name, sourceIndex) && (! this.assumeds.contains(name)))) {
 			this.assumeds.add(name);
 			return true;
@@ -61,8 +61,8 @@ public class APIData {
 		return false;
 	}
 	
-	public int mergeAssumeds(APIData source, int sourceIndex) {
-		Block thisBlock = this.getSourceBlock();
+	public int mergeAccumulative(APIData source, int sourceIndex) {
+		BlockWithAPIData thisBlock = this.getSourceBlock();
 		int result = 0;
 		for (String name : source.assumeds) {
 			boolean b = this.mergeAssumed(thisBlock, name, sourceIndex);
@@ -107,7 +107,7 @@ public class APIData {
 		}
 	}
 	
-	public void merge(BlockStaticAPIData b) {
+	public void mergeAdditive(BlockStaticAPIData b) {
 		this.mergeGlobals(b.getGlobals());
 		this.mergeFilemanGlobals(b.getFilemanGlobals());
 		this.mergeFilemanCalls(b.getFilemanCalls());

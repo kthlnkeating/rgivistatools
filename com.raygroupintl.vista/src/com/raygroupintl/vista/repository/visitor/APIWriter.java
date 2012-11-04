@@ -25,7 +25,7 @@ import java.util.Scanner;
 
 import com.raygroupintl.m.parsetree.data.APIData;
 import com.raygroupintl.m.parsetree.data.APIDataStore;
-import com.raygroupintl.m.parsetree.data.Block;
+import com.raygroupintl.m.parsetree.data.BlockWithAPIData;
 import com.raygroupintl.m.parsetree.data.Blocks;
 import com.raygroupintl.m.parsetree.data.BlocksSupply;
 import com.raygroupintl.m.parsetree.data.EntryId;
@@ -79,7 +79,7 @@ public class APIWriter {
 			this.fileWrapper.writeEOL("  ERROR: Invalid entry point");
 		} else {
 			String label = entryId.getLabelOrDefault();
-			Block lb = rbs.get(label);
+			BlockWithAPIData lb = rbs.get(label);
 			if (lb == null) {
 				this.fileWrapper.writeEOL("  ERROR: Invalid entry point");
 			} else {

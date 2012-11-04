@@ -123,9 +123,20 @@ public class BlockStaticAPIData {
 	public Map<String, Integer> getNewedLocals() {
 		return this.newedLocals;
 	}
-		
+	
+	public Set<String> getAssumedLocals() {
+		return this.assumedLocals;
+	}
+	
 	public void updateAssumeds(Set<String> assumeds) {
 		assumeds.addAll(this.assumedLocals);
+	}
+	
+	public APIData getDynamicData(BlockWithAPIData block) {
+		APIData result = new APIData(block);
+		HashSet<String> assumeds = new HashSet<String>(this.assumedLocals);
+		result.setAssumeds(assumeds);
+		return result;		
 	}
 	
 	public void incrementIndirection() {

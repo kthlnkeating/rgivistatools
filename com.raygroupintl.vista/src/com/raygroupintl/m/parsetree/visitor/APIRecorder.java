@@ -36,6 +36,7 @@ import com.raygroupintl.m.parsetree.Routine;
 import com.raygroupintl.m.parsetree.WriteCmd;
 import com.raygroupintl.m.parsetree.XecuteCmd;
 import com.raygroupintl.m.parsetree.data.Block;
+import com.raygroupintl.m.parsetree.data.BlockWithAPIData;
 import com.raygroupintl.m.parsetree.data.Blocks;
 import com.raygroupintl.m.parsetree.data.CallArgument;
 import com.raygroupintl.m.parsetree.data.CallArgumentType;
@@ -49,7 +50,7 @@ public class APIRecorder extends FanoutRecorder {
 	
 	private Blocks currentBlocks;
 	
-	private Block currentBlock;
+	private BlockWithAPIData currentBlock;
 	private String currentRoutineName;
 	private int inDoBlock;
 	
@@ -319,7 +320,7 @@ public class APIRecorder extends FanoutRecorder {
 		++this.index;
 		String tag = entry.getName();
 		EntryId entryId = this.getEntryId(tag);		
-		this.currentBlock = new Block(this.index, entryId, this.currentBlocks);
+		this.currentBlock = new BlockWithAPIData(this.index, entryId, this.currentBlocks);
 		if (lastBlock == null) {
 			this.currentBlocks.setFirst(this.currentBlock);
 			if ((tag != null) && (! tag.isEmpty())) {
@@ -352,11 +353,11 @@ public class APIRecorder extends FanoutRecorder {
 			++this.inDoBlock;
 			doBlock.acceptPostCondition(this);
 			Blocks lastBlocks = this.currentBlocks;
-			Block lastBlock = this.currentBlock;
+			BlockWithAPIData lastBlock = this.currentBlock;
 			this.currentBlock = null;
 			this.currentBlocks = new Blocks(lastBlocks);
 			doBlock.acceptEntryList(this);
-			Block firstBlock = this.currentBlocks.getFirstBlock();
+			BlockWithAPIData firstBlock = this.currentBlocks.getFirstBlock();
 			this.currentBlocks = lastBlocks;
 			this.currentBlock = lastBlock;
 			String tag = ":" + String.valueOf(this.index);

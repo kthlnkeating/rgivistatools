@@ -30,7 +30,7 @@ import com.raygroupintl.m.parsetree.visitor.APIRecorder;
 import com.raygroupintl.m.struct.LineLocation;
 import com.raygroupintl.struct.Indexed;
 
-public class Block {
+public abstract class Block {
 	private final static Logger LOGGER = Logger.getLogger(APIRecorder.class.getName());
 	private static Set<EntryId> reported = new HashSet<EntryId>();
 
@@ -113,7 +113,7 @@ public class Block {
 			Map<Integer, APIData> datas = new HashMap<Integer, APIData>();
 			for (Block b : this.list) {
 				int id = System.identityHashCode(b);
-				APIData data = b.toAPIData();
+				APIData data = b.getInitialAccumulativeData();
 				datas.put(id, data);
 			}
 			
@@ -126,7 +126,7 @@ public class Block {
 					Block faninBlock = ib.getBlock();
 					int faninId = System.identityHashCode(faninBlock);
 					APIData faninData = datas.get(faninId);
-					faninData.mergeAssumeds(data, ib.getIndex());
+					faninBlock.mergeAccumulative(faninData, data, ib.getIndex());
 				}
 			}
 			
@@ -144,7 +144,7 @@ public class Block {
 						Block faninBlock = ib.getBlock();
 						int faninId = System.identityHashCode(faninBlock);
 						APIData faninData = datas.get(faninId);
-						totalChange += faninData.mergeAssumeds(data, ib.getIndex());
+						totalChange += faninBlock.mergeAccumulative(faninData, data, ib.getIndex());
 					}
 				}
 			}
@@ -177,8 +177,6 @@ public class Block {
 	
 	LineLocation location;
 	
-	private BlockStaticAPIData staticData = new BlockStaticAPIData();
-	
 	private List<IndexedFanout> fanouts = new ArrayList<IndexedFanout>();
 	private boolean closed;
 	
@@ -188,10 +186,6 @@ public class Block {
 		this.siblings = siblings;
 	}
 	
-	public BlockStaticAPIData getStaticData() {
-		return this.staticData;
-	}
-		
 	public void setLineLocation(LineLocation location) {
 		this.location = location;
 	}
@@ -230,14 +224,6 @@ public class Block {
 			this.fanouts.add(ifo);
 		}
 	}	
-	
-	public APIData toAPIData() {
-		APIData result = new APIData(this);
-		HashSet<String> assumeds = new HashSet<String>();
-		this.staticData.updateAssumeds(assumeds);
-		result.setAssumeds(assumeds);
-		return result;
-	}
 	
 	public void update(FanoutBlocks fanoutBlocks, BlocksSupply blocksSupply, SourcedFanoutFilter filter, Map<String, String> replacedRoutines) {
 		for (IndexedFanout ifout : this.fanouts) {
@@ -324,11 +310,8 @@ public class Block {
 	public APIData getAPIData(BlocksSupply blocksSupply, APIDataStore store, SourcedFanoutFilter filter, Map<String, String> replacedRoutines) {
 		if (filter != null) filter.setSource(this.entryId);
 		APIData forAssumeds = this.auxGetAPIData(blocksSupply, store, filter, replacedRoutines);
-		APIData result = new APIData(this);
-		result.setAssumeds(forAssumeds);
-		result.mergeFilemanCalls(forAssumeds);
-		result.mergeGlobals(forAssumeds);
-		result.mergeFilemanGlobals(forAssumeds);
+		APIData result = this.getInitialAdditiveData();
+		this.mergeAccumulativeToAdditive(result,  forAssumeds);
 		FanoutBlocks fanoutBlocks = new FanoutBlocks(this, null);
 		int index = 0;	
 		while (index < fanoutBlocks.getSize()) {
@@ -338,8 +321,18 @@ public class Block {
 		}
 		List<Block> blocks = fanoutBlocks.getAllBlocks();
 		for (Block b : blocks) {
-			result.merge(b.getStaticData());
+			b.mergeAdditiveTo(result);
 		}
 		return result;		
 	}
+	
+	public abstract APIData getInitialAccumulativeData();
+		
+	public abstract APIData getInitialAdditiveData();
+		
+	public abstract void mergeAccumulativeToAdditive(APIData target, APIData source);
+
+	public abstract int mergeAccumulative(APIData target, APIData source, int sourceIndex);
+	
+	public abstract void mergeAdditiveTo(APIData target);
 }
