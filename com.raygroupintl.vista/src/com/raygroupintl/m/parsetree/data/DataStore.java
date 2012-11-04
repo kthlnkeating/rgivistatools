@@ -19,21 +19,26 @@ package com.raygroupintl.m.parsetree.data;
 import java.util.HashMap;
 import java.util.Map;
 
-public class APIDataStore {
-	private Map<Integer, APIData> map = new HashMap<Integer, APIData>();
+public class DataStore<T> {
+	private Map<Integer, T> map = new HashMap<Integer, T>();
 
 	public void reset() {
-		this.map = new HashMap<Integer, APIData>();
+		this.map = new HashMap<Integer, T>();
 	}
 
-	public APIData get(Block block) {
-		int id = System.identityHashCode(block);
+	public T get(Object obj) {
+		int id = System.identityHashCode(obj);
 		return this.map.get(id);
 	}
+	
+	public boolean contains(Object obj) {
+		int id = System.identityHashCode(obj);
+		return this.map.containsKey(id);		
+	}
 
-	public APIData put(Block block, Map<Integer, APIData> datas) {
-		int id = System.identityHashCode(block);
-		APIData data = datas.get(id);
+	public T put(Object obj, Map<Integer, T> datas) {
+		int id = System.identityHashCode(obj);
+		T data = datas.get(id);
 		this.map.put(id, data);
 		return data;
 	}

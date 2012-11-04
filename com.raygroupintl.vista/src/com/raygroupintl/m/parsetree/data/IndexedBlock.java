@@ -16,19 +16,13 @@
 
 package com.raygroupintl.m.parsetree.data;
 
-import java.util.List;
-
-import com.raygroupintl.struct.Indexed;
-
 public class IndexedBlock {
 	private int index;
 	private Block block;
-	private List<Indexed<String>> byRefs;
 		
-	public IndexedBlock(int index, Block block, List<Indexed<String>> byRefs) {
+	public IndexedBlock(int index, Block block) {
 		this.index = index;
 		this.block = block;
-		this.byRefs = byRefs;
 	}
 
 	public int getIndex() {
@@ -37,9 +31,5 @@ public class IndexedBlock {
 		
 	public Block getBlock() {
 		return this.block;
-	}
-	
-	public List<Indexed<String>> getByRefs() {
-		return this.byRefs;
 	}
 }

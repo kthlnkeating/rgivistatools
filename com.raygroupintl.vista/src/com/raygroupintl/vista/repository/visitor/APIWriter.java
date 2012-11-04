@@ -24,7 +24,7 @@ import java.util.Map;
 import java.util.Scanner;
 
 import com.raygroupintl.m.parsetree.data.APIData;
-import com.raygroupintl.m.parsetree.data.APIDataStore;
+import com.raygroupintl.m.parsetree.data.DataStore;
 import com.raygroupintl.m.parsetree.data.BlockWithAPIData;
 import com.raygroupintl.m.parsetree.data.Blocks;
 import com.raygroupintl.m.parsetree.data.BlocksSupply;
@@ -70,7 +70,7 @@ public class APIWriter {
 		this.fileWrapper.writeEOL();		
 	}
 	
-	private void write(EntryId entryId, APIDataStore store, String[] linePieces) {
+	private void write(EntryId entryId, DataStore<APIData> store, String[] linePieces) {
 		String routineName = entryId.getRoutineName();
 		this.fileWrapper.writeEOL(" " + entryId.toString2());
 		this.tf.setTab(12);
@@ -110,7 +110,7 @@ public class APIWriter {
 	
 	public void auxWrite(String fanInFileName) {		
 		try {
-			APIDataStore store = new APIDataStore();
+			DataStore<APIData> store = new DataStore<APIData>();
 			int packageCount = 0;
 			Path path = Paths.get(fanInFileName);
 			Scanner scanner = new Scanner(path);
@@ -148,7 +148,7 @@ public class APIWriter {
 		
 	public void writeEntries(List<String> entries) {
 		if (this.fileWrapper.start()) {
-			APIDataStore store = new APIDataStore();
+			DataStore<APIData> store = new DataStore<APIData>();
 			for (String entry : entries) {
 				EntryId entryId = EntryId.getInstance(entry);
 				String[] input = new String[]{entry, "", "", ""};

@@ -14,7 +14,7 @@ import org.junit.Test;
 
 import com.raygroupintl.m.parsetree.Routine;
 import com.raygroupintl.m.parsetree.data.APIData;
-import com.raygroupintl.m.parsetree.data.APIDataStore;
+import com.raygroupintl.m.parsetree.data.DataStore;
 import com.raygroupintl.m.parsetree.data.Block;
 import com.raygroupintl.m.parsetree.data.Blocks;
 import com.raygroupintl.m.parsetree.data.EntryId;
@@ -56,7 +56,7 @@ public class APITest {
 	private void usedTest(MapBlocksSupply blocksMap, String routineName, String tag, String[] expectedAssumeds, String[] expectedGlobals) {
 		Blocks rbs = blocksMap.get(routineName);
 		Block lb = rbs.get(tag);
-		APIData apiData = lb.getAPIData(blocksMap, new APIDataStore(), new BasicSourcedFanoutFilter(new PassFilter<EntryId>()), replacement);
+		APIData apiData = lb.getAPIData(blocksMap, new DataStore<APIData>(), new BasicSourcedFanoutFilter(new PassFilter<EntryId>()), replacement);
 		
 		Set<String> assumeds = new HashSet<String>(apiData.getAssumed());
 		Assert.assertEquals(expectedAssumeds.length, assumeds.size());
@@ -74,7 +74,7 @@ public class APITest {
 	private void filemanTest(MapBlocksSupply blocksMap, String routineName, String tag, String[] expectedGlobals, String[] expectedCalls) {
 		Blocks rbs = blocksMap.get(routineName);
 		Block lb = rbs.get(tag);
-		APIData apiData = lb.getAPIData(blocksMap, new APIDataStore(), new BasicSourcedFanoutFilter(new PassFilter<EntryId>()), replacement);
+		APIData apiData = lb.getAPIData(blocksMap, new DataStore<APIData>(), new BasicSourcedFanoutFilter(new PassFilter<EntryId>()), replacement);
 		
 		Set<String> globals = new HashSet<String>(apiData.getFilemanGlobals());
 		Assert.assertEquals(expectedGlobals.length, globals.size());

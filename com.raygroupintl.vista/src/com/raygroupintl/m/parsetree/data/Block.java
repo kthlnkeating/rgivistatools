@@ -28,7 +28,6 @@ import java.util.logging.Logger;
 import com.raygroupintl.m.parsetree.filter.SourcedFanoutFilter;
 import com.raygroupintl.m.parsetree.visitor.APIRecorder;
 import com.raygroupintl.m.struct.LineLocation;
-import com.raygroupintl.struct.Indexed;
 
 public abstract class Block {
 	private final static Logger LOGGER = Logger.getLogger(APIRecorder.class.getName());
@@ -43,11 +42,11 @@ public abstract class Block {
 			this.block = block;
 		}
 				
-		public void addFanin(Block faninBlock, int index, List<Indexed<String>> byRefs) {
+		public void addFanin(Block faninBlock, int index) {
 			int faninId = System.identityHashCode(faninBlock);
 			if (faninId != System.identityHashCode(this.block)) {
 				if (! this.existing.contains(faninId)) {
-					IndexedBlock e = new IndexedBlock(index, faninBlock, byRefs);
+					IndexedBlock e = new IndexedBlock(index, faninBlock);
 					this.faninBlocks.add(e);
 					this.existing.add(faninId);
 				}
@@ -65,9 +64,9 @@ public abstract class Block {
 		private List<Block> list = new ArrayList<Block>();
 		private List<Block> storedList = new ArrayList<Block>();
 		private int rootId;
-		private APIDataStore store;
+		private DataStore<APIData> store;
 		
-		public FanoutBlocks(Block root, APIDataStore store) {
+		public FanoutBlocks(Block root, DataStore<APIData> store) {
 			this.list.add(root);
 			this.rootId = System.identityHashCode(root);
 			FaninList faninList = new FaninList(root);
@@ -75,17 +74,17 @@ public abstract class Block {
 			this.store = store;
 		}
 		
-		public void add(Block fanin, Block fanout, int fanoutIndex, List<Indexed<String>> byRefs) {
+		public void add(Block fanin, Block fanout, int fanoutIndex) {
 			Integer fanoutId = System.identityHashCode(fanout);
-			APIData storedData = this.store == null ? null : this.store.get(fanout);
-			if (storedData != null) {
+			boolean stored = this.store == null ? false : this.store.contains(fanout);
+			if (stored) {
 				FaninList faninList = this.storedMap.get(fanoutId);
 				if (faninList == null) {
 					this.storedList.add(fanout);
 					faninList = new FaninList(fanout);
 					this.storedMap.put(fanoutId, faninList);						
 				}					
-				faninList.addFanin(fanin, fanoutIndex, byRefs);
+				faninList.addFanin(fanin, fanoutIndex);
 			} else {
 				FaninList faninList = this.map.get(fanoutId);
 				if (faninList == null) {
@@ -93,7 +92,7 @@ public abstract class Block {
 					faninList = new FaninList(fanout);
 					this.map.put(fanoutId, faninList);
 				}
-				faninList.addFanin(fanin, fanoutIndex, byRefs);
+				faninList.addFanin(fanin, fanoutIndex);
 			}
 		}
 		
@@ -218,7 +217,7 @@ public abstract class Block {
 		}
 	}	
 	
-	public void update(FanoutBlocks fanoutBlocks, BlocksSupply blocksSupply, SourcedFanoutFilter filter, Map<String, String> replacedRoutines) {
+	private void update(FanoutBlocks fanoutBlocks, BlocksSupply blocksSupply, SourcedFanoutFilter filter, Map<String, String> replacedRoutines) {
 		for (IndexedFanout ifout : this.fanouts) {
 			EntryId fout = ifout.getFanout();
 			if ((filter != null) && (! filter.isValid(fout))) continue;
@@ -245,7 +244,7 @@ public abstract class Block {
 						continue;
 					}
 				}
-				fanoutBlocks.add(this, tagBlock, ifout.getIndex(), ifout.getByRefs());
+				fanoutBlocks.add(this, tagBlock, ifout.getIndex());
 			} else {
 				Blocks routineBlocks = blocksSupply.getBlocks(routineName);
 				String originalTagName = tagName;
@@ -280,38 +279,37 @@ public abstract class Block {
 						continue;
 					}
 				}
-				fanoutBlocks.add(this, tagBlock, ifout.getIndex(), ifout.getByRefs());
+				fanoutBlocks.add(this, tagBlock, ifout.getIndex());
 			}				 
 		}
 	}
 	
-	private APIData auxGetAPIData(BlocksSupply blocksSupply, APIDataStore store, SourcedFanoutFilter filter, Map<String, String> replacedRoutines) {
+	private void updateFanoutBlocks(FanoutBlocks fanoutBlocks, BlocksSupply blocksSupply, SourcedFanoutFilter filter, Map<String, String> replacedRoutines) {
+		int index = 0;	
+		while (index < fanoutBlocks.getSize()) {
+			Block b = fanoutBlocks.getBlock(index);
+			b.update(fanoutBlocks, blocksSupply, filter, replacedRoutines);
+			++index;
+		}		
+	}
+	
+	private APIData auxGetAPIData(BlocksSupply blocksSupply, DataStore<APIData> store, SourcedFanoutFilter filter, Map<String, String> replacedRoutines) {
 		APIData result = store.get(this);
 		if (result != null) {
 			return result;
 		}		
 		FanoutBlocks fanoutBlocks = new FanoutBlocks(this, store);
-		int index = 0;	
-		while (index < fanoutBlocks.getSize()) {
-			Block b = fanoutBlocks.getBlock(index);
-			b.update(fanoutBlocks, blocksSupply, filter, replacedRoutines);
-			++index;
-		}
+		this.updateFanoutBlocks(fanoutBlocks, blocksSupply, filter, replacedRoutines);
 		return fanoutBlocks.getAPI();
 	}
 	
-	public APIData getAPIData(BlocksSupply blocksSupply, APIDataStore store, SourcedFanoutFilter filter, Map<String, String> replacedRoutines) {
+	public APIData getAPIData(BlocksSupply blocksSupply, DataStore<APIData> store, SourcedFanoutFilter filter, Map<String, String> replacedRoutines) {
 		if (filter != null) filter.setSource(this.entryId);
 		APIData forAssumeds = this.auxGetAPIData(blocksSupply, store, filter, replacedRoutines);
 		APIData result = this.getInitialAdditiveData();
 		this.mergeAccumulativeToAdditive(result,  forAssumeds);
 		FanoutBlocks fanoutBlocks = new FanoutBlocks(this, null);
-		int index = 0;	
-		while (index < fanoutBlocks.getSize()) {
-			Block b = fanoutBlocks.getBlock(index);
-			b.update(fanoutBlocks, blocksSupply, filter, replacedRoutines);
-			++index;
-		}
+		this.updateFanoutBlocks(fanoutBlocks, blocksSupply, filter, replacedRoutines);
 		List<Block> blocks = fanoutBlocks.getAllBlocks();
 		for (Block b : blocks) {
 			b.mergeAdditiveTo(result);
