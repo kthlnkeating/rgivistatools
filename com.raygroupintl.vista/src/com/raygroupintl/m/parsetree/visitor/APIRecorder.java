@@ -24,6 +24,9 @@ import com.raygroupintl.m.parsetree.Indirection;
 import com.raygroupintl.m.parsetree.Local;
 import com.raygroupintl.m.parsetree.Node;
 import com.raygroupintl.m.parsetree.OpenCloseUseCmdNodes;
+import com.raygroupintl.m.parsetree.ReadCmd;
+import com.raygroupintl.m.parsetree.WriteCmd;
+import com.raygroupintl.m.parsetree.XecuteCmd;
 import com.raygroupintl.m.parsetree.data.BlockWithAPIData;
 import com.raygroupintl.m.parsetree.data.CallArgument;
 import com.raygroupintl.m.parsetree.data.CallArgumentType;
@@ -47,7 +50,7 @@ public class APIRecorder extends BlockRecorder {
 	private void addOutput(Local local) {
 		int i = this.incrementIndex();
 		BlockWithAPIData cb = this.getCurrentBlock();
-		if (! cb.isClosed()) cb.getStaticData().addLocal(i, local);
+		if (! cb.isClosed()) cb.getData().addLocal(i, local);
 	}
 	
 	private static String removeDoubleQuote(String input) {
@@ -104,7 +107,7 @@ public class APIRecorder extends BlockRecorder {
 						String cleanValue = removeDoubleQuote(ca.getValue());
 						if (cleanValue.length() > 0 && validate(cleanValue)) {
 							String value = fanout.toString() + "(" + cleanValue;
-							if (! cb.isClosed()) cb.getStaticData().addFilemanCalls(value);
+							if (! cb.isClosed()) cb.getData().addFilemanCalls(value);
 						}
 					}
 				}
@@ -112,6 +115,29 @@ public class APIRecorder extends BlockRecorder {
 		}		
 	}
 	
+	@Override
+	protected void visitReadCmd(ReadCmd readCmd) {
+		super.visitReadCmd(readCmd);
+		BlockWithAPIData cb = this.getCurrentBlock();
+		if (! cb.isClosed()) cb.getData().incrementRead();
+	}
+
+	
+	@Override
+	protected void visitWriteCmd(WriteCmd writeCmd) {
+		super.visitWriteCmd(writeCmd);
+		BlockWithAPIData cb = this.getCurrentBlock();
+		if (! cb.isClosed()) cb.getData().incrementWrite();
+	}
+
+	
+	@Override
+	protected void visitXecuteCmd(XecuteCmd xecuteCmd) {
+		super.visitXecuteCmd(xecuteCmd);
+		BlockWithAPIData cb = this.getCurrentBlock();
+		if (! cb.isClosed()) cb.getData().incrementExecute();
+	}
+
 	@Override
 	protected void visitDeviceParameters(OpenCloseUseCmdNodes.DeviceParameters deviceParameters) {
 		boolean current = this.underDeviceParameter;
@@ -143,7 +169,7 @@ public class APIRecorder extends BlockRecorder {
 										result += subscripts[0];									
 									}
 								}
-								if (! cb.isClosed()) cb.getStaticData().addFilemanGlobal(result);
+								if (! cb.isClosed()) cb.getData().addFilemanGlobal(result);
 							}
 						}
 					}
@@ -166,7 +192,7 @@ public class APIRecorder extends BlockRecorder {
 	protected void newLocal(Local local) {
 		int i = this.incrementIndex();
 		BlockWithAPIData cb = this.getCurrentBlock();
-		if (! cb.isClosed()) cb.getStaticData().addNewed(i, local);
+		if (! cb.isClosed()) cb.getData().addNewed(i, local);
 	}
 	
 	private static Set<String> DEVICE_PARAMS = new HashSet<String>();
@@ -194,7 +220,7 @@ public class APIRecorder extends BlockRecorder {
 			super.visitLocal(local);
 			int i = this.incrementIndex();
 			BlockWithAPIData cb = this.getCurrentBlock();
-			if (! cb.isClosed()) cb.getStaticData().addLocal(i, local);
+			if (! cb.isClosed()) cb.getData().addLocal(i, local);
 		}
 	}
 
@@ -202,14 +228,14 @@ public class APIRecorder extends BlockRecorder {
 	protected void passLocalByVal(Local local, int index) {		
 		int i = this.incrementIndex();
 		BlockWithAPIData cb = this.getCurrentBlock();
-		if (! cb.isClosed()) cb.getStaticData().addLocal(i, local);
+		if (! cb.isClosed()) cb.getData().addLocal(i, local);
 	}
 	
 	@Override
 	protected void passLocalByRef(Local local, int index) {
 		int i = this.incrementIndex();
 		BlockWithAPIData cb = this.getCurrentBlock();
-		if (! cb.isClosed()) cb.getStaticData().addLocal(i, local);
+		if (! cb.isClosed()) cb.getData().addLocal(i, local);
 		super.passLocalByRef(local, index);
 	}
 
@@ -226,13 +252,13 @@ public class APIRecorder extends BlockRecorder {
 			}
 		}
 		BlockWithAPIData cb = this.getCurrentBlock();
-		if (! cb.isClosed()) cb.getStaticData().addGlobal(name);		
+		if (! cb.isClosed()) cb.getData().addGlobal(name);		
 	}
 	
 	@Override
 	protected void visitIndirection(Indirection indirection) {
 		BlockWithAPIData cb = this.getCurrentBlock();
-		if (! cb.isClosed()) cb.getStaticData().incrementIndirection();
+		if (! cb.isClosed()) cb.getData().incrementIndirection();
 		super.visitIndirection(indirection);
 	}
 }

@@ -132,7 +132,7 @@ public class BlockAPIData {
 		assumeds.addAll(this.assumedLocals);
 	}
 	
-	public APIData getDynamicData() {
+	public APIData getAPIData() {
 		APIData result = new APIData();
 		HashSet<String> assumeds = new HashSet<String>(this.assumedLocals);
 		result.setAssumeds(assumeds);

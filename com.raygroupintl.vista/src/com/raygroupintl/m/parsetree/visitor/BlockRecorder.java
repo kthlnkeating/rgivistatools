@@ -25,10 +25,7 @@ import com.raygroupintl.m.parsetree.Entry;
 import com.raygroupintl.m.parsetree.ForLoop;
 import com.raygroupintl.m.parsetree.IfCmd;
 import com.raygroupintl.m.parsetree.QuitCmd;
-import com.raygroupintl.m.parsetree.ReadCmd;
 import com.raygroupintl.m.parsetree.Routine;
-import com.raygroupintl.m.parsetree.WriteCmd;
-import com.raygroupintl.m.parsetree.XecuteCmd;
 import com.raygroupintl.m.parsetree.data.Block;
 import com.raygroupintl.m.parsetree.data.BlockWithAPIData;
 import com.raygroupintl.m.parsetree.data.Blocks;
@@ -93,26 +90,6 @@ public class BlockRecorder extends FanoutRecorder {
 		}
 	}
 
-	@Override
-	protected void visitReadCmd(ReadCmd readCmd) {
-		super.visitReadCmd(readCmd);
-		if (! this.currentBlock.isClosed()) this.currentBlock.getStaticData().incrementRead();
-	}
-
-	
-	@Override
-	protected void visitWriteCmd(WriteCmd writeCmd) {
-		super.visitWriteCmd(writeCmd);
-		if (! this.currentBlock.isClosed()) this.currentBlock.getStaticData().incrementWrite();
-	}
-
-	
-	@Override
-	protected void visitXecuteCmd(XecuteCmd xecuteCmd) {
-		super.visitXecuteCmd(xecuteCmd);
-		if (! this.currentBlock.isClosed()) this.currentBlock.getStaticData().incrementExecute();
-	}
-
 	protected void visitForLoop(ForLoop forLoop) {
 		++this.underFor;
 		super.visitForLoop(forLoop);
@@ -151,7 +128,7 @@ public class BlockRecorder extends FanoutRecorder {
 		EntryId entryId = this.getEntryId(tag);		
 		this.currentBlock = new BlockWithAPIData(this.index, entryId, this.currentBlocks);
 		String[] params = entry.getParameters();
-		this.currentBlock.getStaticData().setFormals(params);
+		this.currentBlock.getData().setFormals(params);
 		if (lastBlock == null) {
 			this.currentBlocks.setFirst(this.currentBlock);
 			if ((tag != null) && (! tag.isEmpty())) {
@@ -181,7 +158,7 @@ public class BlockRecorder extends FanoutRecorder {
 			this.currentBlock = null;
 			this.currentBlocks = new Blocks(lastBlocks);
 			doBlock.acceptEntryList(this);
-			BlockWithAPIData firstBlock = this.currentBlocks.getFirstBlock();
+			Block firstBlock = this.currentBlocks.getFirstBlock();
 			this.currentBlocks = lastBlocks;
 			this.currentBlock = lastBlock;
 			String tag = ":" + String.valueOf(this.index);

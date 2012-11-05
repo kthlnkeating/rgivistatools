@@ -20,8 +20,8 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class Blocks {
-	private Map<String, BlockWithAPIData> blocks = new HashMap<String, BlockWithAPIData>();
-	private BlockWithAPIData firstBlock;
+	private Map<String, Block> blocks = new HashMap<String, Block>();
+	private Block firstBlock;
 	private Blocks parent;
 	
 	public Blocks() {		
@@ -31,8 +31,8 @@ public class Blocks {
 		this.parent = parent;
 	}
 	
-	public BlockWithAPIData get(String name) {
-		BlockWithAPIData result = this.blocks.get(name);
+	public Block get(String name) {
+		Block result = this.blocks.get(name);
 		if ((result == null) && (this.parent != null)) {
 			return this.parent.get(name);
 		} else {
@@ -40,15 +40,15 @@ public class Blocks {
 		}
 	}
 	
-	public void put(String name, BlockWithAPIData block) {
+	public void put(String name, Block block) {
 		this.blocks.put(name, block);
 	}
 	
-	public void setFirst(BlockWithAPIData block) {
+	public void setFirst(Block block) {
 		this.firstBlock = block;
 	}
 	
-	public BlockWithAPIData getFirstBlock() {
+	public Block getFirstBlock() {
 		return this.firstBlock;
 	}
 }

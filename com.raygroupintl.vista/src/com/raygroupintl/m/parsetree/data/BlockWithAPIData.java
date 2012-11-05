@@ -37,7 +37,7 @@ public class BlockWithAPIData extends Block {
 		Map<Integer, APIData> datas = new HashMap<Integer, APIData>();
 		for (Block b : blocks) {
 			int id = System.identityHashCode(b);
-			APIData data = b.getInitialAccumulativeData();
+			APIData data = b.getData().getAPIData();
 			datas.put(id, data);
 		}
 		
@@ -49,7 +49,7 @@ public class BlockWithAPIData extends Block {
 				Block faninBlock = ib.getObject();
 				int faninId = System.identityHashCode(faninBlock);
 				APIData faninData = datas.get(faninId);
-				faninBlock.mergeAccumulative(faninData, data, ib.getIndex());
+				faninData.mergeAccumulative(faninBlock.getData(), data, ib.getIndex());
 			}
 		}
 		
@@ -67,7 +67,7 @@ public class BlockWithAPIData extends Block {
 					Block faninBlock = ib.getObject();
 					int faninId = System.identityHashCode(faninBlock);
 					APIData faninData = datas.get(faninId);
-					totalChange += faninBlock.mergeAccumulative(faninData, data, ib.getIndex());
+					totalChange += faninData.mergeAccumulative(faninBlock.getData(), data, ib.getIndex());
 				}
 			}
 		}
@@ -91,36 +91,17 @@ public class BlockWithAPIData extends Block {
 	
 	public APIData getAPIData(BlocksSupply blocksSupply, SourcedFanoutFilter filter, Map<String, String> replacedRoutines) {
 		if (filter != null) filter.setSource(this.getEntryId());
-		APIData result = this.getInitialAdditiveData();
+		APIData result = new APIData();
 		FanoutBlocks fanoutBlocks = this.getFanoutBlocks(blocksSupply, filter, replacedRoutines);
-		List<Block> blocks = fanoutBlocks.getAllBlocks();
+		List<Block> blocks = fanoutBlocks.getBlocks();
 		for (Block b : blocks) {
-			b.mergeAdditiveTo(result);
+			result.mergeAdditive(b.getData());
 		}
 		return result;		
 	}
 	
-	public BlockAPIData getStaticData() {
+	@Override
+	public BlockAPIData getData() {
 		return this.staticData;
-	}
-		
-	@Override
-	public APIData getInitialAccumulativeData() {
-		return this.staticData.getDynamicData();
-	}
-		
-	@Override
-	public APIData getInitialAdditiveData() {
-		return new APIData();
-	}
-		
-	@Override
-	public int mergeAccumulative(APIData target, APIData source, int sourceIndex) {
-		return target.mergeAccumulative(this.getStaticData(), source, sourceIndex);
-	}
-	
-	@Override
-	public void mergeAdditiveTo(APIData target) {
-		target.mergeAdditive(this.getStaticData());		
 	}
 }

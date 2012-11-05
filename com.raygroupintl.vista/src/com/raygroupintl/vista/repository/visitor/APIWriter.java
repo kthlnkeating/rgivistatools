@@ -79,11 +79,11 @@ public class APIWriter {
 			this.fileWrapper.writeEOL("  ERROR: Invalid entry point");
 		} else {
 			String label = entryId.getLabelOrDefault();
-			BlockWithAPIData lb = rbs.get(label);
+			BlockWithAPIData lb = (BlockWithAPIData) rbs.get(label);
 			if (lb == null) {
 				this.fileWrapper.writeEOL("  ERROR: Invalid entry point");
 			} else {
-				String[] formals = lb.getStaticData().getFormals();
+				String[] formals = lb.getData().getFormals();
 				this.fileWrapper.write(this.tf.startList("FORMAL"));
 				if ((formals == null) || (formals.length == 0)) {
 					this.fileWrapper.write("--");

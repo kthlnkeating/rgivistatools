@@ -156,11 +156,5 @@ public abstract class Block {
 		return fanoutBlocks;
 	}
 	
-	public abstract APIData getInitialAccumulativeData();
-		
-	public abstract APIData getInitialAdditiveData();
-		
-	public abstract int mergeAccumulative(APIData target, APIData source, int sourceIndex);
-	
-	public abstract void mergeAdditiveTo(APIData target);
+	public abstract BlockAPIData getData();
 }

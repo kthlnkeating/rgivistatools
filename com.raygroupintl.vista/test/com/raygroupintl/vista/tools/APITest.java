@@ -55,7 +55,7 @@ public class APITest {
 		
 	private void usedTest(MapBlocksSupply blocksMap, String routineName, String tag, String[] expectedAssumeds, String[] expectedGlobals) {
 		Blocks rbs = blocksMap.get(routineName);
-		BlockWithAPIData lb = rbs.get(tag);
+		BlockWithAPIData lb = (BlockWithAPIData) rbs.get(tag);
 		APIData apiDataForAssumed = lb.getAssumedLocals(blocksMap, new DataStore<APIData>(), new BasicSourcedFanoutFilter(new PassFilter<EntryId>()), replacement);
 		
 		Set<String> assumeds = new HashSet<String>(apiDataForAssumed.getAssumed());
@@ -74,7 +74,7 @@ public class APITest {
 	
 	private void filemanTest(MapBlocksSupply blocksMap, String routineName, String tag, String[] expectedGlobals, String[] expectedCalls) {
 		Blocks rbs = blocksMap.get(routineName);
-		BlockWithAPIData lb = rbs.get(tag);
+		BlockWithAPIData lb = (BlockWithAPIData) rbs.get(tag);
 		APIData apiData = lb.getAPIData(blocksMap, new BasicSourcedFanoutFilter(new PassFilter<EntryId>()), replacement);
 		
 		Set<String> globals = new HashSet<String>(apiData.getFilemanGlobals());

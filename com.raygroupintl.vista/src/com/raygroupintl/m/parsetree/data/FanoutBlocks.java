@@ -88,11 +88,5 @@ public class FanoutBlocks {
 	public List<Block> getEvaludatedBlocks() {
 		return this.storedList;
 	}
-			
-	public List<Block> getAllBlocks() {
-		List<Block> result = new ArrayList<Block>(this.list);
-		result.addAll(this.storedList);
-		return result;
-	}	
 }
 	
