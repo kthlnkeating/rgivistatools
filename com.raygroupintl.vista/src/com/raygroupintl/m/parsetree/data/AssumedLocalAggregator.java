@@ -23,13 +23,15 @@ import java.util.Map;
 import com.raygroupintl.m.parsetree.filter.SourcedFanoutFilter;
 import com.raygroupintl.struct.Indexed;
 
-public class BlockWithAPIData extends Block<BlockAPIData> {
-	private BlockAPIData staticData = new BlockAPIData();
+public class AssumedLocalAggregator {
+	Block<BlockAPIData> block;
+	BlocksSupply<BlockAPIData> supply;
 	
-	public BlockWithAPIData(int index, EntryId entryId, Blocks<BlockAPIData> siblings) {
-		super(index, entryId, siblings);
+	public AssumedLocalAggregator(Block<BlockAPIData> block, BlocksSupply<BlockAPIData> supply) {
+		this.block = block;
+		this.supply = supply;
 	}
-
+	
 	public APIData getAPI(FanoutBlocks<BlockAPIData> fanoutBlocks, DataStore<APIData> apiDataStore) {			
 		List<Block<BlockAPIData>> blocks = fanoutBlocks.getBlocks();
 		List<Block<BlockAPIData>> evaluatedBlocks = fanoutBlocks.getEvaludatedBlocks();
@@ -79,29 +81,13 @@ public class BlockWithAPIData extends Block<BlockAPIData> {
 		return apiDataStore.put(b, datas);
 	}
 		
-	public APIData getAssumedLocals(BlocksSupply<BlockAPIData> blocksSupply, DataStore<APIData> store, SourcedFanoutFilter filter, Map<String, String> replacedRoutines) {
-		if (filter != null) filter.setSource(this.getEntryId());
+	public APIData getAssumedLocals(DataStore<APIData> store, SourcedFanoutFilter filter, Map<String, String> replacedRoutines) {
+		if (filter != null) filter.setSource(this.block.getEntryId());
 		APIData result = store.get(this);
 		if (result != null) {
 			return result;
 		}
-		FanoutBlocks<BlockAPIData> fanoutBlocks = this.getFanoutBlocks(blocksSupply, store, filter, replacedRoutines);
+		FanoutBlocks<BlockAPIData> fanoutBlocks = this.block.getFanoutBlocks(this.supply, store, filter, replacedRoutines);
 		return this.getAPI(fanoutBlocks, store);
-	}
-	
-	public APIData getAPIData(BlocksSupply<BlockAPIData> blocksSupply, SourcedFanoutFilter filter, Map<String, String> replacedRoutines) {
-		if (filter != null) filter.setSource(this.getEntryId());
-		APIData result = new APIData();
-		FanoutBlocks<BlockAPIData> fanoutBlocks = this.getFanoutBlocks(blocksSupply, filter, replacedRoutines);
-		List<Block<BlockAPIData>> blocks = fanoutBlocks.getBlocks();
-		for (Block<BlockAPIData> b : blocks) {
-			result.mergeAdditive(b.getData());
-		}
-		return result;		
-	}
-	
-	@Override
-	public BlockAPIData getData() {
-		return this.staticData;
 	}
 }

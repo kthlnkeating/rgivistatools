@@ -24,9 +24,11 @@ import java.util.Map;
 import java.util.Scanner;
 
 import com.raygroupintl.m.parsetree.data.APIData;
+import com.raygroupintl.m.parsetree.data.AssumedLocalAggregator;
+import com.raygroupintl.m.parsetree.data.BasicCodeInfoAggregator;
+import com.raygroupintl.m.parsetree.data.Block;
 import com.raygroupintl.m.parsetree.data.BlockAPIData;
 import com.raygroupintl.m.parsetree.data.DataStore;
-import com.raygroupintl.m.parsetree.data.BlockWithAPIData;
 import com.raygroupintl.m.parsetree.data.Blocks;
 import com.raygroupintl.m.parsetree.data.BlocksSupply;
 import com.raygroupintl.m.parsetree.data.EntryId;
@@ -80,7 +82,7 @@ public class APIWriter {
 			this.fileWrapper.writeEOL("  ERROR: Invalid entry point");
 		} else {
 			String label = entryId.getLabelOrDefault();
-			BlockWithAPIData lb = (BlockWithAPIData) rbs.get(label);
+			Block<BlockAPIData> lb = rbs.get(label);
 			if (lb == null) {
 				this.fileWrapper.writeEOL("  ERROR: Invalid entry point");
 			} else {
@@ -95,10 +97,12 @@ public class APIWriter {
 				}
 				this.fileWrapper.writeEOL();
 
-				APIData apiDataForAssumed = lb.getAssumedLocals(this.blocksSupply, store, this.filter, this.replacementRoutines);
+				AssumedLocalAggregator ala = new AssumedLocalAggregator(lb, this.blocksSupply);
+				APIData apiDataForAssumed = ala.getAssumedLocals(store, this.filter, this.replacementRoutines);
 				this.writeAPIData(apiDataForAssumed.getAssumed(), "ASSUMED");
 				
-				APIData apiData = lb.getAPIData(this.blocksSupply, this.filter, this.replacementRoutines);
+				BasicCodeInfoAggregator bcia = new BasicCodeInfoAggregator(lb, this.blocksSupply);
+				APIData apiData = bcia.getAPIData(this.filter, this.replacementRoutines);
 				
 				this.writeAPIData(apiData.getGlobals(), "GLBS");
 				this.writeAPIData(apiData.getReadCount(), "READ");

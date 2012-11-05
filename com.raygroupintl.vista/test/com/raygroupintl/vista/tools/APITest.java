@@ -14,8 +14,10 @@ import org.junit.Test;
 
 import com.raygroupintl.m.parsetree.Routine;
 import com.raygroupintl.m.parsetree.data.APIData;
+import com.raygroupintl.m.parsetree.data.AssumedLocalAggregator;
+import com.raygroupintl.m.parsetree.data.BasicCodeInfoAggregator;
+import com.raygroupintl.m.parsetree.data.Block;
 import com.raygroupintl.m.parsetree.data.BlockAPIData;
-import com.raygroupintl.m.parsetree.data.BlockWithAPIData;
 import com.raygroupintl.m.parsetree.data.DataStore;
 import com.raygroupintl.m.parsetree.data.Blocks;
 import com.raygroupintl.m.parsetree.data.EntryId;
@@ -56,8 +58,9 @@ public class APITest {
 		
 	private void usedTest(MapBlocksSupply<BlockAPIData> blocksMap, String routineName, String tag, String[] expectedAssumeds, String[] expectedGlobals) {
 		Blocks<BlockAPIData> rbs = blocksMap.get(routineName);
-		BlockWithAPIData lb = (BlockWithAPIData) rbs.get(tag);
-		APIData apiDataForAssumed = lb.getAssumedLocals(blocksMap, new DataStore<APIData>(), new BasicSourcedFanoutFilter(new PassFilter<EntryId>()), replacement);
+		Block<BlockAPIData> lb = rbs.get(tag);
+		AssumedLocalAggregator ala = new AssumedLocalAggregator(lb, blocksMap);
+		APIData apiDataForAssumed = ala.getAssumedLocals(new DataStore<APIData>(), new BasicSourcedFanoutFilter(new PassFilter<EntryId>()), replacement);
 		
 		Set<String> assumeds = new HashSet<String>(apiDataForAssumed.getAssumed());
 		Assert.assertEquals(expectedAssumeds.length, assumeds.size());
@@ -65,7 +68,8 @@ public class APITest {
 			Assert.assertTrue(assumeds.contains(expectedOutput));			
 		}				
 
-		APIData apiData = lb.getAPIData(blocksMap, new BasicSourcedFanoutFilter(new PassFilter<EntryId>()), replacement);
+		BasicCodeInfoAggregator bcia = new BasicCodeInfoAggregator(lb, blocksMap);
+		APIData apiData = bcia.getAPIData(new BasicSourcedFanoutFilter(new PassFilter<EntryId>()), replacement);
 		Set<String> globals = new HashSet<String>(apiData.getGlobals());
 		Assert.assertEquals(expectedGlobals.length, globals.size());
 		for (String expectedGlobal : expectedGlobals) {
@@ -75,8 +79,9 @@ public class APITest {
 	
 	private void filemanTest(MapBlocksSupply<BlockAPIData> blocksMap, String routineName, String tag, String[] expectedGlobals, String[] expectedCalls) {
 		Blocks<BlockAPIData> rbs = blocksMap.get(routineName);
-		BlockWithAPIData lb = (BlockWithAPIData) rbs.get(tag);
-		APIData apiData = lb.getAPIData(blocksMap, new BasicSourcedFanoutFilter(new PassFilter<EntryId>()), replacement);
+		Block<BlockAPIData> lb = rbs.get(tag);
+		BasicCodeInfoAggregator bcia = new BasicCodeInfoAggregator(lb, blocksMap);
+		APIData apiData = bcia.getAPIData(new BasicSourcedFanoutFilter(new PassFilter<EntryId>()), replacement);
 		
 		Set<String> globals = new HashSet<String>(apiData.getFilemanGlobals());
 		Assert.assertEquals(expectedGlobals.length, globals.size());

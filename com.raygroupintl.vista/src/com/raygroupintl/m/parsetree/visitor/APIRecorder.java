@@ -29,7 +29,6 @@ import com.raygroupintl.m.parsetree.WriteCmd;
 import com.raygroupintl.m.parsetree.XecuteCmd;
 import com.raygroupintl.m.parsetree.data.Block;
 import com.raygroupintl.m.parsetree.data.BlockAPIData;
-import com.raygroupintl.m.parsetree.data.BlockWithAPIData;
 import com.raygroupintl.m.parsetree.data.Blocks;
 import com.raygroupintl.m.parsetree.data.CallArgument;
 import com.raygroupintl.m.parsetree.data.CallArgumentType;
@@ -267,7 +266,7 @@ public class APIRecorder extends BlockRecorder<BlockAPIData> {
 
 	@Override
 	protected Block<BlockAPIData> getNewBlock(int index, EntryId entryId, Blocks<BlockAPIData> blocks, String[] params) {
-		Block<BlockAPIData> result = new BlockWithAPIData(index, entryId, blocks);
+		Block<BlockAPIData> result = new Block<BlockAPIData>(index, entryId, blocks, new BlockAPIData());
 		result.getData().setFormals(params);
 		return result;
 	}

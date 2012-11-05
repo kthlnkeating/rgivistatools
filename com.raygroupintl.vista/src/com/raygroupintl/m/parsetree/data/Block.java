@@ -27,21 +27,23 @@ import java.util.logging.Logger;
 import com.raygroupintl.m.parsetree.filter.SourcedFanoutFilter;
 import com.raygroupintl.m.parsetree.visitor.APIRecorder;
 
-public abstract class Block<T> {
+public class Block<T> {
 	private final static Logger LOGGER = Logger.getLogger(APIRecorder.class.getName());
 	private static Set<EntryId> reported = new HashSet<EntryId>();
 
 	private int index;
 	private EntryId entryId;
 	private Blocks<T> siblings;
+	private T data;
 	
 	private List<IndexedFanout> fanouts = new ArrayList<IndexedFanout>();
 	private boolean closed;
 	
-	public Block(int index, EntryId entryId, Blocks<T> siblings) {
+	public Block(int index, EntryId entryId, Blocks<T> siblings, T data) {
 		this.index = index;
 		this.entryId = entryId;
 		this.siblings = siblings;
+		this.data = data;
 	}
 	
 	public void close() {
@@ -156,5 +158,7 @@ public abstract class Block<T> {
 		return fanoutBlocks;
 	}
 	
-	public abstract BlockAPIData getData();
+	public T getData() {
+		return this.data;
+	}
 }
