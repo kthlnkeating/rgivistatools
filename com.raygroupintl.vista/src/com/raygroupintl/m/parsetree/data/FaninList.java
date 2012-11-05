@@ -16,36 +16,34 @@
 
 package com.raygroupintl.m.parsetree.data;
 
-import java.util.HashMap;
-import java.util.Map;
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
 
-import com.raygroupintl.struct.ObjectIdContainer;
+import com.raygroupintl.struct.Indexed;
 
-public class DataStore<T> implements ObjectIdContainer {
-	private Map<Integer, T> map = new HashMap<Integer, T>();
-
-	public void reset() {
-		this.map = new HashMap<Integer, T>();
+public class FaninList {
+	private Block block;
+	private List<Indexed<Block>> faninBlocks = new ArrayList<Indexed<Block>>();
+	private Set<Integer> existing = new HashSet<Integer>();
+	
+	public FaninList(Block block) {
+		this.block = block;
 	}
-
-	public T get(Object obj) {
-		int id = System.identityHashCode(obj);
-		return this.map.get(id);
+			
+	public void addFanin(Block faninBlock, int index) {
+		int faninId = System.identityHashCode(faninBlock);
+		if (faninId != System.identityHashCode(this.block)) {
+			if (! this.existing.contains(faninId)) {
+				Indexed<Block> e = new Indexed<Block>(faninBlock, index);
+				this.faninBlocks.add(e);
+				this.existing.add(faninId);
+			}
+		}
 	}
 	
-	public boolean contains(int id) {
-		return this.map.containsKey(id);				
-	}
-	
-	public boolean contains(Object obj) {
-		int id = System.identityHashCode(obj);
-		return this.map.containsKey(id);		
-	}
-
-	public T put(Object obj, Map<Integer, T> datas) {
-		int id = System.identityHashCode(obj);
-		T data = datas.get(id);
-		this.map.put(id, data);
-		return data;
+	public List<Indexed<Block>> getFaninBlocks() {
+		return this.faninBlocks;
 	}
 }

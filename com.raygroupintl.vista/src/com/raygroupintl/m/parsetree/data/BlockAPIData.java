@@ -23,7 +23,7 @@ import java.util.Set;
 
 import com.raygroupintl.m.parsetree.Local;
 
-public class BlockStaticAPIData {
+public class BlockAPIData {
 	private String[] formals;
 	private Map<String, Integer> formalsMap;
 	private Map<String, Integer> newedLocals = new HashMap<String, Integer>();

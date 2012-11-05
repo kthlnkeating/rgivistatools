@@ -14,8 +14,8 @@ import org.junit.Test;
 
 import com.raygroupintl.m.parsetree.Routine;
 import com.raygroupintl.m.parsetree.data.APIData;
+import com.raygroupintl.m.parsetree.data.BlockWithAPIData;
 import com.raygroupintl.m.parsetree.data.DataStore;
-import com.raygroupintl.m.parsetree.data.Block;
 import com.raygroupintl.m.parsetree.data.Blocks;
 import com.raygroupintl.m.parsetree.data.EntryId;
 import com.raygroupintl.m.parsetree.data.MapBlocksSupply;
@@ -55,15 +55,16 @@ public class APITest {
 		
 	private void usedTest(MapBlocksSupply blocksMap, String routineName, String tag, String[] expectedAssumeds, String[] expectedGlobals) {
 		Blocks rbs = blocksMap.get(routineName);
-		Block lb = rbs.get(tag);
-		APIData apiData = lb.getAPIData(blocksMap, new DataStore<APIData>(), new BasicSourcedFanoutFilter(new PassFilter<EntryId>()), replacement);
+		BlockWithAPIData lb = rbs.get(tag);
+		APIData apiDataForAssumed = lb.getAssumedLocals(blocksMap, new DataStore<APIData>(), new BasicSourcedFanoutFilter(new PassFilter<EntryId>()), replacement);
 		
-		Set<String> assumeds = new HashSet<String>(apiData.getAssumed());
+		Set<String> assumeds = new HashSet<String>(apiDataForAssumed.getAssumed());
 		Assert.assertEquals(expectedAssumeds.length, assumeds.size());
 		for (String expectedOutput : expectedAssumeds) {
 			Assert.assertTrue(assumeds.contains(expectedOutput));			
 		}				
 
+		APIData apiData = lb.getAPIData(blocksMap, new BasicSourcedFanoutFilter(new PassFilter<EntryId>()), replacement);
 		Set<String> globals = new HashSet<String>(apiData.getGlobals());
 		Assert.assertEquals(expectedGlobals.length, globals.size());
 		for (String expectedGlobal : expectedGlobals) {
@@ -73,8 +74,8 @@ public class APITest {
 	
 	private void filemanTest(MapBlocksSupply blocksMap, String routineName, String tag, String[] expectedGlobals, String[] expectedCalls) {
 		Blocks rbs = blocksMap.get(routineName);
-		Block lb = rbs.get(tag);
-		APIData apiData = lb.getAPIData(blocksMap, new DataStore<APIData>(), new BasicSourcedFanoutFilter(new PassFilter<EntryId>()), replacement);
+		BlockWithAPIData lb = rbs.get(tag);
+		APIData apiData = lb.getAPIData(blocksMap, new BasicSourcedFanoutFilter(new PassFilter<EntryId>()), replacement);
 		
 		Set<String> globals = new HashSet<String>(apiData.getFilemanGlobals());
 		Assert.assertEquals(expectedGlobals.length, globals.size());

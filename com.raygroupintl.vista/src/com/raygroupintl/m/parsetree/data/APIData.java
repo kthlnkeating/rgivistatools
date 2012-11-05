@@ -43,7 +43,7 @@ public class APIData {
 		}
 	}
 	
-	private boolean mergeAssumed(BlockStaticAPIData staticData, String name, int sourceIndex) {
+	private boolean mergeAssumed(BlockAPIData staticData, String name, int sourceIndex) {
 		if ((! staticData.isDefined(name, sourceIndex) && (! this.assumeds.contains(name)))) {
 			this.assumeds.add(name);
 			return true;
@@ -51,7 +51,7 @@ public class APIData {
 		return false;
 	}
 	
-	public int mergeAccumulative(BlockStaticAPIData staticData, APIData source, int sourceIndex) {
+	public int mergeAccumulative(BlockAPIData staticData, APIData source, int sourceIndex) {
 		int result = 0;
 		for (String name : source.assumeds) {
 			boolean b = this.mergeAssumed(staticData, name, sourceIndex);
@@ -96,7 +96,7 @@ public class APIData {
 		}
 	}
 	
-	public void mergeAdditive(BlockStaticAPIData b) {
+	public void mergeAdditive(BlockAPIData b) {
 		this.mergeGlobals(b.getGlobals());
 		this.mergeFilemanGlobals(b.getFilemanGlobals());
 		this.mergeFilemanCalls(b.getFilemanCalls());
