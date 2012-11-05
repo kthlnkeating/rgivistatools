@@ -23,6 +23,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import com.raygroupintl.m.parsetree.data.BlockAPIData;
 import com.raygroupintl.m.parsetree.data.BlocksSupply;
 import com.raygroupintl.m.parsetree.data.SerializedBlocksSupply;
 import com.raygroupintl.m.parsetree.filter.BasicSourcedFanoutFilter;
@@ -31,6 +32,7 @@ import com.raygroupintl.m.parsetree.filter.ExcludeNonPkgCallFanoutFilter;
 import com.raygroupintl.m.parsetree.filter.ExcludeNonRtnFanoutFilter;
 import com.raygroupintl.m.parsetree.filter.PercentRoutineFanoutFilter;
 import com.raygroupintl.m.parsetree.filter.SourcedFanoutFilter;
+import com.raygroupintl.m.parsetree.visitor.APIRecorderFactory;
 import com.raygroupintl.output.FileWrapper;
 import com.raygroupintl.vista.repository.RepositoryInfo;
 import com.raygroupintl.vista.repository.VistaPackage;
@@ -403,7 +405,7 @@ public class RepositoryRunTypes extends RunTypes {
 			}
 		}
 		
-		private void auxRun(RepositoryInfo ri, FileWrapper fr, BlocksSupply blocks) {
+		private void auxRun(RepositoryInfo ri, FileWrapper fr, BlocksSupply<BlockAPIData> blocks) {
 			APIWriter apiw = new APIWriter(fr, blocks, REPLACEMENT_ROUTINES);
 			SourcedFanoutFilter filter = this.getFilter(ri);
 			apiw.setFilter(filter);
@@ -424,10 +426,10 @@ public class RepositoryRunTypes extends RunTypes {
 						APIOverallRecorder api = new APIOverallRecorder(ri);
 						VistaPackages vps = new VistaPackages(ri.getAllPackages());
 						vps.accept(api);
-						BlocksSupply blocks = api.getBlocks();
+						BlocksSupply<BlockAPIData> blocks = api.getBlocks();
 						this.auxRun(ri, fr, blocks);
 					} else {
-						BlocksSupply blocks = new SerializedBlocksSupply(this.params.parseTreeDirectory, ri);
+						BlocksSupply<BlockAPIData> blocks = new SerializedBlocksSupply<BlockAPIData>(this.params.parseTreeDirectory, new APIRecorderFactory(ri));
 						this.auxRun(ri, fr, blocks);
 					}
 				}

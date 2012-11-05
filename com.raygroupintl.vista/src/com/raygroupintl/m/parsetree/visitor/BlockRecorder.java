@@ -27,14 +27,13 @@ import com.raygroupintl.m.parsetree.IfCmd;
 import com.raygroupintl.m.parsetree.QuitCmd;
 import com.raygroupintl.m.parsetree.Routine;
 import com.raygroupintl.m.parsetree.data.Block;
-import com.raygroupintl.m.parsetree.data.BlockWithAPIData;
 import com.raygroupintl.m.parsetree.data.Blocks;
 import com.raygroupintl.m.parsetree.data.EntryId;
 
-public class BlockRecorder extends FanoutRecorder {
-	private Blocks currentBlocks;
+public abstract class BlockRecorder<T> extends FanoutRecorder {
+	private Blocks<T> currentBlocks;
 	
-	private BlockWithAPIData currentBlock;
+	private Block<T> currentBlock;
 	private String currentRoutineName;
 	private int inDoBlock;
 	
@@ -45,7 +44,7 @@ public class BlockRecorder extends FanoutRecorder {
 	
 	private Set<Integer> doBlockHash = new HashSet<Integer>();
 
-	protected BlockWithAPIData getCurrentBlock() {
+	protected Block<T> getCurrentBlock() {
 		return this.currentBlock;
 	}
 	
@@ -120,15 +119,15 @@ public class BlockRecorder extends FanoutRecorder {
 		}
 	}
 	
+	protected abstract Block<T> getNewBlock(int index, EntryId entryId, Blocks<T> blocks, String[] params);
+ 	
 	@Override
 	protected void visitEntry(Entry entry) {
-		Block lastBlock = this.currentBlock;
+		Block<T> lastBlock = this.currentBlock;
 		++this.index;
 		String tag = entry.getName();
 		EntryId entryId = this.getEntryId(tag);		
-		this.currentBlock = new BlockWithAPIData(this.index, entryId, this.currentBlocks);
-		String[] params = entry.getParameters();
-		this.currentBlock.getData().setFormals(params);
+		this.currentBlock = this.getNewBlock(this.index, entryId, this.currentBlocks, entry.getParameters());
 		if (lastBlock == null) {
 			this.currentBlocks.setFirst(this.currentBlock);
 			if ((tag != null) && (! tag.isEmpty())) {
@@ -153,12 +152,12 @@ public class BlockRecorder extends FanoutRecorder {
 			doBlockHash.add(id);
 			++this.inDoBlock;
 			doBlock.acceptPostCondition(this);
-			Blocks lastBlocks = this.currentBlocks;
-			BlockWithAPIData lastBlock = this.currentBlock;
+			Blocks<T> lastBlocks = this.currentBlocks;
+			Block<T> lastBlock = this.currentBlock;
 			this.currentBlock = null;
-			this.currentBlocks = new Blocks(lastBlocks);
+			this.currentBlocks = new Blocks<T>(lastBlocks);
 			doBlock.acceptEntryList(this);
-			Block firstBlock = this.currentBlocks.getFirstBlock();
+			Block<T> firstBlock = this.currentBlocks.getFirstBlock();
 			this.currentBlocks = lastBlocks;
 			this.currentBlock = lastBlock;
 			String tag = ":" + String.valueOf(this.index);
@@ -169,14 +168,14 @@ public class BlockRecorder extends FanoutRecorder {
 		}
 	}
 	
-	public Blocks getBlocks() {
+	public Blocks<T> getBlocks() {
 		return this.currentBlocks;
 	}
 	
 	@Override
 	protected void visitRoutine(Routine routine) {
 		this.reset();
-		this.currentBlocks = new Blocks();
+		this.currentBlocks = new Blocks<T>();
 		this.currentRoutineName = routine.getName();
 		super.visitRoutine(routine);
 	}

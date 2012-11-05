@@ -27,14 +27,17 @@ import com.raygroupintl.m.parsetree.OpenCloseUseCmdNodes;
 import com.raygroupintl.m.parsetree.ReadCmd;
 import com.raygroupintl.m.parsetree.WriteCmd;
 import com.raygroupintl.m.parsetree.XecuteCmd;
+import com.raygroupintl.m.parsetree.data.Block;
+import com.raygroupintl.m.parsetree.data.BlockAPIData;
 import com.raygroupintl.m.parsetree.data.BlockWithAPIData;
+import com.raygroupintl.m.parsetree.data.Blocks;
 import com.raygroupintl.m.parsetree.data.CallArgument;
 import com.raygroupintl.m.parsetree.data.CallArgumentType;
 import com.raygroupintl.m.parsetree.data.EntryId;
 import com.raygroupintl.vista.repository.RepositoryInfo;
 import com.raygroupintl.vista.repository.VistaPackage;
 
-public class APIRecorder extends BlockRecorder {
+public class APIRecorder extends BlockRecorder<BlockAPIData> {
 	private RepositoryInfo repositoryInfo;
 	private boolean underDeviceParameter;
 	
@@ -49,7 +52,7 @@ public class APIRecorder extends BlockRecorder {
 	
 	private void addOutput(Local local) {
 		int i = this.incrementIndex();
-		BlockWithAPIData cb = this.getCurrentBlock();
+		Block<BlockAPIData> cb = this.getCurrentBlock();
 		if (! cb.isClosed()) cb.getData().addLocal(i, local);
 	}
 	
@@ -92,7 +95,7 @@ public class APIRecorder extends BlockRecorder {
 	}
 	
 	protected void updateFanout(EntryId fanout) {
-		BlockWithAPIData cb = this.getCurrentBlock();
+		Block<BlockAPIData> cb = this.getCurrentBlock();
 		int i = this.incrementIndex();
 		CallArgument[] callArguments = this.getLastArguments();
 		cb.addFanout(i, fanout, callArguments);
@@ -118,7 +121,7 @@ public class APIRecorder extends BlockRecorder {
 	@Override
 	protected void visitReadCmd(ReadCmd readCmd) {
 		super.visitReadCmd(readCmd);
-		BlockWithAPIData cb = this.getCurrentBlock();
+		Block<BlockAPIData> cb = this.getCurrentBlock();
 		if (! cb.isClosed()) cb.getData().incrementRead();
 	}
 
@@ -126,7 +129,7 @@ public class APIRecorder extends BlockRecorder {
 	@Override
 	protected void visitWriteCmd(WriteCmd writeCmd) {
 		super.visitWriteCmd(writeCmd);
-		BlockWithAPIData cb = this.getCurrentBlock();
+		Block<BlockAPIData> cb = this.getCurrentBlock();
 		if (! cb.isClosed()) cb.getData().incrementWrite();
 	}
 
@@ -134,7 +137,7 @@ public class APIRecorder extends BlockRecorder {
 	@Override
 	protected void visitXecuteCmd(XecuteCmd xecuteCmd) {
 		super.visitXecuteCmd(xecuteCmd);
-		BlockWithAPIData cb = this.getCurrentBlock();
+		Block<BlockAPIData> cb = this.getCurrentBlock();
 		if (! cb.isClosed()) cb.getData().incrementExecute();
 	}
 
@@ -148,7 +151,7 @@ public class APIRecorder extends BlockRecorder {
 		
 	@Override
 	protected void setLocal(Local local, Node rhs) {
-		BlockWithAPIData cb = this.getCurrentBlock();
+		Block<BlockAPIData> cb = this.getCurrentBlock();
 		String rn = this.getCurrentRoutineName();
 		this.addOutput(local);
 		if ((rhs != null) && ! inFilemanRoutine(rn, true)) {
@@ -191,7 +194,7 @@ public class APIRecorder extends BlockRecorder {
 	@Override
 	protected void newLocal(Local local) {
 		int i = this.incrementIndex();
-		BlockWithAPIData cb = this.getCurrentBlock();
+		Block<BlockAPIData> cb = this.getCurrentBlock();
 		if (! cb.isClosed()) cb.getData().addNewed(i, local);
 	}
 	
@@ -219,7 +222,7 @@ public class APIRecorder extends BlockRecorder {
 		if ((! this.underDeviceParameter) || (! isDeviceParameter(local))) { 
 			super.visitLocal(local);
 			int i = this.incrementIndex();
-			BlockWithAPIData cb = this.getCurrentBlock();
+			Block<BlockAPIData> cb = this.getCurrentBlock();
 			if (! cb.isClosed()) cb.getData().addLocal(i, local);
 		}
 	}
@@ -227,14 +230,14 @@ public class APIRecorder extends BlockRecorder {
 	@Override
 	protected void passLocalByVal(Local local, int index) {		
 		int i = this.incrementIndex();
-		BlockWithAPIData cb = this.getCurrentBlock();
+		Block<BlockAPIData> cb = this.getCurrentBlock();
 		if (! cb.isClosed()) cb.getData().addLocal(i, local);
 	}
 	
 	@Override
 	protected void passLocalByRef(Local local, int index) {
 		int i = this.incrementIndex();
-		BlockWithAPIData cb = this.getCurrentBlock();
+		Block<BlockAPIData> cb = this.getCurrentBlock();
 		if (! cb.isClosed()) cb.getData().addLocal(i, local);
 		super.passLocalByRef(local, index);
 	}
@@ -251,14 +254,21 @@ public class APIRecorder extends BlockRecorder {
 				name += constValue;
 			}
 		}
-		BlockWithAPIData cb = this.getCurrentBlock();
+		Block<BlockAPIData> cb = this.getCurrentBlock();
 		if (! cb.isClosed()) cb.getData().addGlobal(name);		
 	}
 	
 	@Override
 	protected void visitIndirection(Indirection indirection) {
-		BlockWithAPIData cb = this.getCurrentBlock();
+		Block<BlockAPIData> cb = this.getCurrentBlock();
 		if (! cb.isClosed()) cb.getData().incrementIndirection();
 		super.visitIndirection(indirection);
+	}
+
+	@Override
+	protected Block<BlockAPIData> getNewBlock(int index, EntryId entryId, Blocks<BlockAPIData> blocks, String[] params) {
+		Block<BlockAPIData> result = new BlockWithAPIData(index, entryId, blocks);
+		result.getData().setFormals(params);
+		return result;
 	}
 }

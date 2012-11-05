@@ -18,11 +18,11 @@ package com.raygroupintl.m.parsetree.data;
 
 import java.util.HashMap;
 
-public class MapBlocksSupply extends HashMap<String, Blocks> implements BlocksSupply {
+public class MapBlocksSupply<T> extends HashMap<String, Blocks<T>> implements BlocksSupply<T> {
 	private static final long serialVersionUID = 1L;
 
 	@Override
-	public Blocks getBlocks(String routineName) {
+	public Blocks<T> getBlocks(String routineName) {
 		return this.get(routineName);
 	}
 }

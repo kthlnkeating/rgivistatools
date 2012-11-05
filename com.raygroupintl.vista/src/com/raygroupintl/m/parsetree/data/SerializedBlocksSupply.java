@@ -19,26 +19,26 @@ package com.raygroupintl.m.parsetree.data;
 import java.util.HashMap;
 
 import com.raygroupintl.m.parsetree.Routine;
-import com.raygroupintl.m.parsetree.visitor.APIRecorder;
-import com.raygroupintl.vista.repository.RepositoryInfo;
+import com.raygroupintl.m.parsetree.visitor.BlockRecorder;
+import com.raygroupintl.m.parsetree.visitor.BlockRecorderFactory;
 
-public class SerializedBlocksSupply implements BlocksSupply {
+public class SerializedBlocksSupply<T> implements BlocksSupply<T> {
 	private String inputPath;
-	private HashMap<String, Blocks> blocks = new HashMap<String, Blocks>();
-	private RepositoryInfo repositoryInfo;
+	private HashMap<String, Blocks<T>> blocks = new HashMap<String, Blocks<T>>();
+	private BlockRecorderFactory<T> blockRecorder;
 	
-	public SerializedBlocksSupply(String inputPath, RepositoryInfo ri) {
+	public SerializedBlocksSupply(String inputPath, BlockRecorderFactory<T> brf) {
 		this.inputPath = inputPath;
-		this.repositoryInfo = ri;
+		this.blockRecorder = brf;
 	}
 	
 	@Override
-	public Blocks getBlocks(String routineName) {
+	public Blocks<T> getBlocks(String routineName) {
 		if (! this.blocks.containsKey(routineName)) {			
-			Blocks result = null;
+			Blocks<T> result = null;
 			Routine routine = Routine.readSerialized(this.inputPath, routineName);
 			if (routine != null) {
-				APIRecorder recorder = new APIRecorder(this.repositoryInfo);
+				BlockRecorder<T> recorder = this.blockRecorder.getRecorder();
 				routine.accept(recorder);
 				result = recorder.getBlocks();
 			}

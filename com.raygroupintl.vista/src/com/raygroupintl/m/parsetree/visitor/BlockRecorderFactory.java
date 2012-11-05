@@ -14,8 +14,8 @@
 // limitations under the License.
 //---------------------------------------------------------------------------
 
-package com.raygroupintl.m.parsetree.data;
+package com.raygroupintl.m.parsetree.visitor;
 
-public interface BlocksSupply<T> {
-	Blocks<T> getBlocks(String routineName);
+public interface BlockRecorderFactory<T> {
+	BlockRecorder<T> getRecorder();
 }

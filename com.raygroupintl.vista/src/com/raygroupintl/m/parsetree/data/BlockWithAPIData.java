@@ -23,30 +23,30 @@ import java.util.Map;
 import com.raygroupintl.m.parsetree.filter.SourcedFanoutFilter;
 import com.raygroupintl.struct.Indexed;
 
-public class BlockWithAPIData extends Block {
+public class BlockWithAPIData extends Block<BlockAPIData> {
 	private BlockAPIData staticData = new BlockAPIData();
 	
-	public BlockWithAPIData(int index, EntryId entryId, Blocks siblings) {
+	public BlockWithAPIData(int index, EntryId entryId, Blocks<BlockAPIData> siblings) {
 		super(index, entryId, siblings);
 	}
 
-	public APIData getAPI(FanoutBlocks fanoutBlocks, DataStore<APIData> apiDataStore) {			
-		List<Block> blocks = fanoutBlocks.getBlocks();
-		List<Block> evaluatedBlocks = fanoutBlocks.getEvaludatedBlocks();
+	public APIData getAPI(FanoutBlocks<BlockAPIData> fanoutBlocks, DataStore<APIData> apiDataStore) {			
+		List<Block<BlockAPIData>> blocks = fanoutBlocks.getBlocks();
+		List<Block<BlockAPIData>> evaluatedBlocks = fanoutBlocks.getEvaludatedBlocks();
 		
 		Map<Integer, APIData> datas = new HashMap<Integer, APIData>();
-		for (Block b : blocks) {
+		for (Block<BlockAPIData> b : blocks) {
 			int id = System.identityHashCode(b);
 			APIData data = b.getData().getAPIData();
 			datas.put(id, data);
 		}
 		
-		for (Block b : evaluatedBlocks) {
+		for (Block<BlockAPIData> b : evaluatedBlocks) {
 			APIData data = apiDataStore.get(b);
-			FaninList faninList = fanoutBlocks.getFaninList(b);
-			List<Indexed<Block>> faninBlocks = faninList.getFaninBlocks();
-			for (Indexed<Block> ib : faninBlocks) {
-				Block faninBlock = ib.getObject();
+			FaninList<BlockAPIData> faninList = fanoutBlocks.getFaninList(b);
+			List<Indexed<Block<BlockAPIData>>> faninBlocks = faninList.getFaninBlocks();
+			for (Indexed<Block<BlockAPIData>> ib : faninBlocks) {
+				Block<BlockAPIData> faninBlock = ib.getObject();
 				int faninId = System.identityHashCode(faninBlock);
 				APIData faninData = datas.get(faninId);
 				faninData.mergeAccumulative(faninBlock.getData(), data, ib.getIndex());
@@ -58,13 +58,13 @@ public class BlockWithAPIData extends Block {
 		while (totalChange > 0) {
 			totalChange = 0;
 			for (int i=blocks.size()-1; i>=0; --i) {
-				Block b = blocks.get(i);
+				Block<BlockAPIData> b = blocks.get(i);
 				int id = System.identityHashCode(b);
 				APIData data = datas.get(id);
-				FaninList faninList = fanoutBlocks.getFaninList(id);
-				List<Indexed<Block>> faninBlocks = faninList.getFaninBlocks();
-				for (Indexed<Block> ib : faninBlocks) {
-					Block faninBlock = ib.getObject();
+				FaninList<BlockAPIData> faninList = fanoutBlocks.getFaninList(id);
+				List<Indexed<Block<BlockAPIData>>> faninBlocks = faninList.getFaninBlocks();
+				for (Indexed<Block<BlockAPIData>> ib : faninBlocks) {
+					Block<BlockAPIData> faninBlock = ib.getObject();
 					int faninId = System.identityHashCode(faninBlock);
 					APIData faninData = datas.get(faninId);
 					totalChange += faninData.mergeAccumulative(faninBlock.getData(), data, ib.getIndex());
@@ -72,29 +72,29 @@ public class BlockWithAPIData extends Block {
 			}
 		}
 					
-		for (Block bi : blocks) {
+		for (Block<BlockAPIData> bi : blocks) {
 			apiDataStore.put(bi, datas);
 		}
-		Block b = blocks.get(0);
+		Block<BlockAPIData> b = blocks.get(0);
 		return apiDataStore.put(b, datas);
 	}
 		
-	public APIData getAssumedLocals(BlocksSupply blocksSupply, DataStore<APIData> store, SourcedFanoutFilter filter, Map<String, String> replacedRoutines) {
+	public APIData getAssumedLocals(BlocksSupply<BlockAPIData> blocksSupply, DataStore<APIData> store, SourcedFanoutFilter filter, Map<String, String> replacedRoutines) {
 		if (filter != null) filter.setSource(this.getEntryId());
 		APIData result = store.get(this);
 		if (result != null) {
 			return result;
 		}
-		FanoutBlocks fanoutBlocks = this.getFanoutBlocks(blocksSupply, store, filter, replacedRoutines);
+		FanoutBlocks<BlockAPIData> fanoutBlocks = this.getFanoutBlocks(blocksSupply, store, filter, replacedRoutines);
 		return this.getAPI(fanoutBlocks, store);
 	}
 	
-	public APIData getAPIData(BlocksSupply blocksSupply, SourcedFanoutFilter filter, Map<String, String> replacedRoutines) {
+	public APIData getAPIData(BlocksSupply<BlockAPIData> blocksSupply, SourcedFanoutFilter filter, Map<String, String> replacedRoutines) {
 		if (filter != null) filter.setSource(this.getEntryId());
 		APIData result = new APIData();
-		FanoutBlocks fanoutBlocks = this.getFanoutBlocks(blocksSupply, filter, replacedRoutines);
-		List<Block> blocks = fanoutBlocks.getBlocks();
-		for (Block b : blocks) {
+		FanoutBlocks<BlockAPIData> fanoutBlocks = this.getFanoutBlocks(blocksSupply, filter, replacedRoutines);
+		List<Block<BlockAPIData>> blocks = fanoutBlocks.getBlocks();
+		for (Block<BlockAPIData> b : blocks) {
 			result.mergeAdditive(b.getData());
 		}
 		return result;		

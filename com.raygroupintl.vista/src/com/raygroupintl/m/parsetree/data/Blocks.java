@@ -19,20 +19,20 @@ package com.raygroupintl.m.parsetree.data;
 import java.util.HashMap;
 import java.util.Map;
 
-public class Blocks {
-	private Map<String, Block> blocks = new HashMap<String, Block>();
-	private Block firstBlock;
-	private Blocks parent;
+public class Blocks<T> {
+	private Map<String, Block<T>> blocks = new HashMap<String, Block<T>>();
+	private Block<T> firstBlock;
+	private Blocks<T> parent;
 	
 	public Blocks() {		
 	}
 	
-	public Blocks(Blocks parent) {
+	public Blocks(Blocks<T> parent) {
 		this.parent = parent;
 	}
 	
-	public Block get(String name) {
-		Block result = this.blocks.get(name);
+	public Block<T> get(String name) {
+		Block<T> result = this.blocks.get(name);
 		if ((result == null) && (this.parent != null)) {
 			return this.parent.get(name);
 		} else {
@@ -40,15 +40,15 @@ public class Blocks {
 		}
 	}
 	
-	public void put(String name, Block block) {
+	public void put(String name, Block<T> block) {
 		this.blocks.put(name, block);
 	}
 	
-	public void setFirst(Block block) {
+	public void setFirst(Block<T> block) {
 		this.firstBlock = block;
 	}
 	
-	public Block getFirstBlock() {
+	public Block<T> getFirstBlock() {
 		return this.firstBlock;
 	}
 }

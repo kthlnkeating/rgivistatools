@@ -23,44 +23,44 @@ import java.util.Map;
 
 import com.raygroupintl.struct.ObjectIdContainer;
 
-public class FanoutBlocks {
-	private Map<Integer, FaninList> faninListMap = new HashMap<Integer, FaninList>();
-	private List<Block> list = new ArrayList<Block>();
-	private List<Block> storedList = new ArrayList<Block>();
+public class FanoutBlocks<T> {
+	private Map<Integer, FaninList<T>> faninListMap = new HashMap<Integer, FaninList<T>>();
+	private List<Block<T>> list = new ArrayList<Block<T>>();
+	private List<Block<T>> storedList = new ArrayList<Block<T>>();
 	private int rootId;
 	private ObjectIdContainer blockIdContainer;
 	
-	public FanoutBlocks(Block root, ObjectIdContainer blockIdContainer) {
+	public FanoutBlocks(Block<T> root, ObjectIdContainer blockIdContainer) {
 		this.list.add(root);
 		this.rootId = System.identityHashCode(root);
-		FaninList faninList = new FaninList(root);
+		FaninList<T> faninList = new FaninList<T>(root);
 		this.faninListMap.put(this.rootId, faninList);
 		this.blockIdContainer = blockIdContainer;
 	}
 	
-	public void add(Block fanin, Block fanout, int fanoutIndex) {
+	public void add(Block<T> fanin, Block<T> fanout, int fanoutIndex) {
 		Integer fanoutId = System.identityHashCode(fanout);
 		boolean stored = this.blockIdContainer == null ? false : this.blockIdContainer.contains(fanoutId);
 		if (stored) {
-			FaninList faninList = this.faninListMap.get(fanoutId);
+			FaninList<T> faninList = this.faninListMap.get(fanoutId);
 			if (faninList == null) {
 				this.storedList.add(fanout);
-				faninList = new FaninList(fanout);
+				faninList = new FaninList<T>(fanout);
 				this.faninListMap.put(fanoutId, faninList);						
 			}					
 			faninList.addFanin(fanin, fanoutIndex);
 		} else {
-			FaninList faninList = this.faninListMap.get(fanoutId);
+			FaninList<T> faninList = this.faninListMap.get(fanoutId);
 			if (faninList == null) {
 				this.list.add(fanout);
-				faninList = new FaninList(fanout);
+				faninList = new FaninList<T>(fanout);
 				this.faninListMap.put(fanoutId, faninList);
 			}
 			faninList.addFanin(fanin, fanoutIndex);
 		}
 	}
 	
-	public Block getBlock(int index) {
+	public Block<T> getBlock(int index) {
 		if (index < this.list.size()) {
 			return this.list.get(index);
 		} else {
@@ -72,20 +72,20 @@ public class FanoutBlocks {
 		return this.list.size();
 	}
 	
-	public FaninList getFaninList(int id) {
+	public FaninList<T> getFaninList(int id) {
 		return this.faninListMap.get(id);	
 	}
 	
-	public FaninList getFaninList(Block block) {
+	public FaninList<T> getFaninList(Block<T> block) {
 		int id = System.identityHashCode(block);
 		return this.faninListMap.get(id);	
 	}
 	
-	public List<Block> getBlocks() {
+	public List<Block<T>> getBlocks() {
 		return this.list;
 	}
 	
-	public List<Block> getEvaludatedBlocks() {
+	public List<Block<T>> getEvaludatedBlocks() {
 		return this.storedList;
 	}
 }

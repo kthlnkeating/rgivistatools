@@ -27,18 +27,18 @@ import java.util.logging.Logger;
 import com.raygroupintl.m.parsetree.filter.SourcedFanoutFilter;
 import com.raygroupintl.m.parsetree.visitor.APIRecorder;
 
-public abstract class Block {
+public abstract class Block<T> {
 	private final static Logger LOGGER = Logger.getLogger(APIRecorder.class.getName());
 	private static Set<EntryId> reported = new HashSet<EntryId>();
 
 	private int index;
 	private EntryId entryId;
-	private Blocks siblings;
+	private Blocks<T> siblings;
 	
 	private List<IndexedFanout> fanouts = new ArrayList<IndexedFanout>();
 	private boolean closed;
 	
-	public Block(int index, EntryId entryId, Blocks siblings) {
+	public Block(int index, EntryId entryId, Blocks<T> siblings) {
 		this.index = index;
 		this.entryId = entryId;
 		this.siblings = siblings;
@@ -68,7 +68,7 @@ public abstract class Block {
 		}
 	}	
 	
-	private void update(FanoutBlocks fanoutBlocks, BlocksSupply blocksSupply, SourcedFanoutFilter filter, Map<String, String> replacedRoutines) {
+	private void update(FanoutBlocks<T> fanoutBlocks, BlocksSupply<T> blocksSupply, SourcedFanoutFilter filter, Map<String, String> replacedRoutines) {
 		for (IndexedFanout ifout : this.fanouts) {
 			EntryId fout = ifout.getFanout();
 			if ((filter != null) && (! filter.isValid(fout))) continue;
@@ -78,7 +78,7 @@ public abstract class Block {
 				tagName = routineName;
 			}			
 			if (routineName == null) {
-				Block tagBlock = this.siblings.get(tagName);
+				Block<T> tagBlock = this.siblings.get(tagName);
 				if (tagBlock == null) {
 					String inRoutineName = this.entryId.getRoutineName();
 					if (inRoutineName != null) {
@@ -97,7 +97,7 @@ public abstract class Block {
 				}
 				fanoutBlocks.add(this, tagBlock, ifout.getIndex());
 			} else {
-				Blocks routineBlocks = blocksSupply.getBlocks(routineName);
+				Blocks<T> routineBlocks = blocksSupply.getBlocks(routineName);
 				String originalTagName = tagName;
 				if (routineBlocks == null) {
 					if (replacedRoutines != null) {
@@ -117,7 +117,7 @@ public abstract class Block {
 						continue;
 					}
 				}
-				Block tagBlock = routineBlocks.get(tagName);
+				Block<T> tagBlock = routineBlocks.get(tagName);
 				if (tagBlock == null) {
 					if (! originalTagName.equals(tagName)) {
 						tagBlock = routineBlocks.get(originalTagName);
@@ -135,23 +135,23 @@ public abstract class Block {
 		}
 	}
 	
-	private void updateFanoutBlocks(FanoutBlocks fanoutBlocks, BlocksSupply blocksSupply, SourcedFanoutFilter filter, Map<String, String> replacedRoutines) {
+	private void updateFanoutBlocks(FanoutBlocks<T> fanoutBlocks, BlocksSupply<T> blocksSupply, SourcedFanoutFilter filter, Map<String, String> replacedRoutines) {
 		int index = 0;	
 		while (index < fanoutBlocks.getSize()) {
-			Block b = fanoutBlocks.getBlock(index);
+			Block<T> b = fanoutBlocks.getBlock(index);
 			b.update(fanoutBlocks, blocksSupply, filter, replacedRoutines);
 			++index;
 		}		
 	}
 	
-	public FanoutBlocks getFanoutBlocks(BlocksSupply blocksSupply, DataStore<APIData> store, SourcedFanoutFilter filter, Map<String, String> replacedRoutines) {
-		FanoutBlocks fanoutBlocks = new FanoutBlocks(this, store);
+	public FanoutBlocks<T> getFanoutBlocks(BlocksSupply<T> blocksSupply, DataStore<APIData> store, SourcedFanoutFilter filter, Map<String, String> replacedRoutines) {
+		FanoutBlocks<T> fanoutBlocks = new FanoutBlocks<T>(this, store);
 		this.updateFanoutBlocks(fanoutBlocks, blocksSupply, filter, replacedRoutines);
 		return fanoutBlocks;
 	}
 	
-	public FanoutBlocks getFanoutBlocks(BlocksSupply blocksSupply, SourcedFanoutFilter filter, Map<String, String> replacedRoutines) {
-		FanoutBlocks fanoutBlocks = new FanoutBlocks(this, null);
+	public FanoutBlocks<T> getFanoutBlocks(BlocksSupply<T> blocksSupply, SourcedFanoutFilter filter, Map<String, String> replacedRoutines) {
+		FanoutBlocks<T> fanoutBlocks = new FanoutBlocks<T>(this, null);
 		this.updateFanoutBlocks(fanoutBlocks, blocksSupply, filter, replacedRoutines);
 		return fanoutBlocks;
 	}

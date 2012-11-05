@@ -23,27 +23,27 @@ import java.util.Set;
 
 import com.raygroupintl.struct.Indexed;
 
-public class FaninList {
-	private Block block;
-	private List<Indexed<Block>> faninBlocks = new ArrayList<Indexed<Block>>();
+public class FaninList<T> {
+	private Block<T> block;
+	private List<Indexed<Block<T>>> faninBlocks = new ArrayList<Indexed<Block<T>>>();
 	private Set<Integer> existing = new HashSet<Integer>();
 	
-	public FaninList(Block block) {
+	public FaninList(Block<T> block) {
 		this.block = block;
 	}
 			
-	public void addFanin(Block faninBlock, int index) {
+	public void addFanin(Block<T> faninBlock, int index) {
 		int faninId = System.identityHashCode(faninBlock);
 		if (faninId != System.identityHashCode(this.block)) {
 			if (! this.existing.contains(faninId)) {
-				Indexed<Block> e = new Indexed<Block>(faninBlock, index);
+				Indexed<Block<T>> e = new Indexed<Block<T>>(faninBlock, index);
 				this.faninBlocks.add(e);
 				this.existing.add(faninId);
 			}
 		}
 	}
 	
-	public List<Indexed<Block>> getFaninBlocks() {
+	public List<Indexed<Block<T>>> getFaninBlocks() {
 		return this.faninBlocks;
 	}
 }

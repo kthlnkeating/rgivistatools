@@ -14,6 +14,7 @@ import org.junit.Test;
 
 import com.raygroupintl.m.parsetree.Routine;
 import com.raygroupintl.m.parsetree.data.APIData;
+import com.raygroupintl.m.parsetree.data.BlockAPIData;
 import com.raygroupintl.m.parsetree.data.BlockWithAPIData;
 import com.raygroupintl.m.parsetree.data.DataStore;
 import com.raygroupintl.m.parsetree.data.Blocks;
@@ -53,8 +54,8 @@ public class APITest {
 		return r.getNode();
 	}
 		
-	private void usedTest(MapBlocksSupply blocksMap, String routineName, String tag, String[] expectedAssumeds, String[] expectedGlobals) {
-		Blocks rbs = blocksMap.get(routineName);
+	private void usedTest(MapBlocksSupply<BlockAPIData> blocksMap, String routineName, String tag, String[] expectedAssumeds, String[] expectedGlobals) {
+		Blocks<BlockAPIData> rbs = blocksMap.get(routineName);
 		BlockWithAPIData lb = (BlockWithAPIData) rbs.get(tag);
 		APIData apiDataForAssumed = lb.getAssumedLocals(blocksMap, new DataStore<APIData>(), new BasicSourcedFanoutFilter(new PassFilter<EntryId>()), replacement);
 		
@@ -72,8 +73,8 @@ public class APITest {
 		}				
 	}
 	
-	private void filemanTest(MapBlocksSupply blocksMap, String routineName, String tag, String[] expectedGlobals, String[] expectedCalls) {
-		Blocks rbs = blocksMap.get(routineName);
+	private void filemanTest(MapBlocksSupply<BlockAPIData> blocksMap, String routineName, String tag, String[] expectedGlobals, String[] expectedCalls) {
+		Blocks<BlockAPIData> rbs = blocksMap.get(routineName);
 		BlockWithAPIData lb = (BlockWithAPIData) rbs.get(tag);
 		APIData apiData = lb.getAPIData(blocksMap, new BasicSourcedFanoutFilter(new PassFilter<EntryId>()), replacement);
 		
@@ -109,10 +110,10 @@ public class APITest {
 			Assert.assertEquals(0, er.getLastErrors().size());
 		}
 		APIRecorder recorder = new APIRecorder(null);
-		MapBlocksSupply blocksMap = new MapBlocksSupply();
+		MapBlocksSupply<BlockAPIData> blocksMap = new MapBlocksSupply<BlockAPIData>();
 		for (int i=0; i<routines.length; ++i) {			
 			routines[i].accept(recorder);
-			Blocks blocks = recorder.getBlocks();
+			Blocks<BlockAPIData> blocks = recorder.getBlocks();
 			blocksMap.put(routines[i].getName(), blocks);
 		}
 		this.usedTest(blocksMap, "APIROU00", "FACT", new String[]{"I"}, new String[0]);

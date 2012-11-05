@@ -24,6 +24,7 @@ import java.util.Map;
 import java.util.Scanner;
 
 import com.raygroupintl.m.parsetree.data.APIData;
+import com.raygroupintl.m.parsetree.data.BlockAPIData;
 import com.raygroupintl.m.parsetree.data.DataStore;
 import com.raygroupintl.m.parsetree.data.BlockWithAPIData;
 import com.raygroupintl.m.parsetree.data.Blocks;
@@ -37,12 +38,12 @@ import com.raygroupintl.struct.PassFilter;
 
 public class APIWriter {	
 	private FileWrapper fileWrapper;
-	private BlocksSupply blocksSupply;
+	private BlocksSupply<BlockAPIData> blocksSupply;
 	private TerminalFormatter tf = new TerminalFormatter();
 	private Map<String, String> replacementRoutines;
 	private SourcedFanoutFilter filter = new BasicSourcedFanoutFilter(new PassFilter<EntryId>());
 	
-	public APIWriter(FileWrapper fileWrapper, BlocksSupply blocksSupply, Map<String, String> replacementRoutines) {
+	public APIWriter(FileWrapper fileWrapper, BlocksSupply<BlockAPIData> blocksSupply, Map<String, String> replacementRoutines) {
 		this.fileWrapper = fileWrapper;
 		this.blocksSupply = blocksSupply;
 		this.replacementRoutines = replacementRoutines;
@@ -74,7 +75,7 @@ public class APIWriter {
 		String routineName = entryId.getRoutineName();
 		this.fileWrapper.writeEOL(" " + entryId.toString2());
 		this.tf.setTab(12);
-		Blocks rbs = this.blocksSupply.getBlocks(routineName);
+		Blocks<BlockAPIData> rbs = this.blocksSupply.getBlocks(routineName);
 		if (rbs == null) {
 			this.fileWrapper.writeEOL("  ERROR: Invalid entry point");
 		} else {

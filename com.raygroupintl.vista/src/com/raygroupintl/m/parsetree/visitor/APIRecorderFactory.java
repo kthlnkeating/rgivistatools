@@ -14,8 +14,21 @@
 // limitations under the License.
 //---------------------------------------------------------------------------
 
-package com.raygroupintl.m.parsetree.data;
+package com.raygroupintl.m.parsetree.visitor;
 
-public interface BlocksSupply<T> {
-	Blocks<T> getBlocks(String routineName);
+import com.raygroupintl.m.parsetree.data.BlockAPIData;
+import com.raygroupintl.vista.repository.RepositoryInfo;
+
+public class APIRecorderFactory implements BlockRecorderFactory<BlockAPIData> {
+	private RepositoryInfo repositoryInfo;
+	
+	public APIRecorderFactory(RepositoryInfo repositoryInfo) {
+		this.repositoryInfo = repositoryInfo;
+	}
+	
+	@Override
+	public BlockRecorder<BlockAPIData> getRecorder() {
+		return new APIRecorder(this.repositoryInfo);
+	}
+
 }
