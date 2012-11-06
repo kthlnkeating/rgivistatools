@@ -17,42 +17,51 @@
 package com.raygroupintl.m.parsetree.data;
 
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import com.raygroupintl.m.parsetree.filter.SourcedFanoutFilter;
 import com.raygroupintl.struct.Indexed;
 
 public class AssumedLocalAggregator {
-	Block<BlockAPIData> block;
-	BlocksSupply<BlockAPIData> supply;
+	Block<BlockCodeInfo> block;
+	BlocksSupply<BlockCodeInfo> supply;
 	
-	public AssumedLocalAggregator(Block<BlockAPIData> block, BlocksSupply<BlockAPIData> supply) {
+	public AssumedLocalAggregator(Block<BlockCodeInfo> block, BlocksSupply<BlockCodeInfo> supply) {
 		this.block = block;
 		this.supply = supply;
 	}
 	
-	public APIData getAPI(FanoutBlocks<BlockAPIData> fanoutBlocks, DataStore<APIData> apiDataStore) {			
-		List<Block<BlockAPIData>> blocks = fanoutBlocks.getBlocks();
-		List<Block<BlockAPIData>> evaluatedBlocks = fanoutBlocks.getEvaludatedBlocks();
-		
-		Map<Integer, APIData> datas = new HashMap<Integer, APIData>();
-		for (Block<BlockAPIData> b : blocks) {
+	private int updateFaninData(Set<String> data, Block<BlockCodeInfo> b, FanoutBlocks<BlockCodeInfo> fanoutBlocks, Map<Integer, Set<String>> datas) {
+		int numChange = 0;
+		FaninList<BlockCodeInfo> faninList = fanoutBlocks.getFaninList(b);
+		List<Indexed<Block<BlockCodeInfo>>> faninBlocks = faninList.getFaninBlocks();
+		for (Indexed<Block<BlockCodeInfo>> ib : faninBlocks) {
+			Block<BlockCodeInfo> faninBlock = ib.getObject();
+			int faninId = System.identityHashCode(faninBlock);
+			Set<String> faninData = datas.get(faninId);
+			numChange += faninBlock.getData().updateAssumed(faninData, data, ib.getIndex());
+		}		
+		return numChange;
+	}
+	
+	private Set<String> getAssumedLocals(FanoutBlocks<BlockCodeInfo> fanoutBlocks, DataStore<Set<String>> apiDataStore) {			
+		Map<Integer, Set<String>> datas = new HashMap<Integer, Set<String>>();
+
+		List<Block<BlockCodeInfo>> blocks = fanoutBlocks.getBlocks();
+		for (Block<BlockCodeInfo> b : blocks) {
 			int id = System.identityHashCode(b);
-			APIData data = b.getData().getAPIData();
+			BlockCodeInfo bd = b.getData();
+			Set<String> data = new HashSet<>(bd.getAssumedLocals());
 			datas.put(id, data);
 		}
 		
-		for (Block<BlockAPIData> b : evaluatedBlocks) {
-			APIData data = apiDataStore.get(b);
-			FaninList<BlockAPIData> faninList = fanoutBlocks.getFaninList(b);
-			List<Indexed<Block<BlockAPIData>>> faninBlocks = faninList.getFaninBlocks();
-			for (Indexed<Block<BlockAPIData>> ib : faninBlocks) {
-				Block<BlockAPIData> faninBlock = ib.getObject();
-				int faninId = System.identityHashCode(faninBlock);
-				APIData faninData = datas.get(faninId);
-				faninData.mergeAccumulative(faninBlock.getData(), data, ib.getIndex());
-			}
+		List<Block<BlockCodeInfo>> evaluatedBlocks = fanoutBlocks.getEvaludatedBlocks();
+		for (Block<BlockCodeInfo> b : evaluatedBlocks) {
+			Set<String> data = apiDataStore.get(b);
+			this.updateFaninData(data, b, fanoutBlocks, datas);
 		}
 		
 		int totalChange = Integer.MAX_VALUE;
@@ -60,34 +69,27 @@ public class AssumedLocalAggregator {
 		while (totalChange > 0) {
 			totalChange = 0;
 			for (int i=blocks.size()-1; i>=0; --i) {
-				Block<BlockAPIData> b = blocks.get(i);
+				Block<BlockCodeInfo> b = blocks.get(i);
 				int id = System.identityHashCode(b);
-				APIData data = datas.get(id);
-				FaninList<BlockAPIData> faninList = fanoutBlocks.getFaninList(id);
-				List<Indexed<Block<BlockAPIData>>> faninBlocks = faninList.getFaninBlocks();
-				for (Indexed<Block<BlockAPIData>> ib : faninBlocks) {
-					Block<BlockAPIData> faninBlock = ib.getObject();
-					int faninId = System.identityHashCode(faninBlock);
-					APIData faninData = datas.get(faninId);
-					totalChange += faninData.mergeAccumulative(faninBlock.getData(), data, ib.getIndex());
-				}
+				Set<String> data = datas.get(id);
+				totalChange += this.updateFaninData(data, b, fanoutBlocks, datas);
 			}
 		}
 					
-		for (Block<BlockAPIData> bi : blocks) {
+		for (Block<BlockCodeInfo> bi : blocks) {
 			apiDataStore.put(bi, datas);
 		}
-		Block<BlockAPIData> b = blocks.get(0);
+		Block<BlockCodeInfo> b = blocks.get(0);
 		return apiDataStore.put(b, datas);
 	}
 		
-	public APIData getAssumedLocals(DataStore<APIData> store, SourcedFanoutFilter filter, Map<String, String> replacedRoutines) {
+	public Set<String> getAssumedLocals(DataStore<Set<String>> store, SourcedFanoutFilter filter, Map<String, String> replacedRoutines) {
 		if (filter != null) filter.setSource(this.block.getEntryId());
-		APIData result = store.get(this);
+		Set<String> result = store.get(this);
 		if (result != null) {
 			return result;
 		}
-		FanoutBlocks<BlockAPIData> fanoutBlocks = this.block.getFanoutBlocks(this.supply, store, filter, replacedRoutines);
-		return this.getAPI(fanoutBlocks, store);
+		FanoutBlocks<BlockCodeInfo> fanoutBlocks = this.block.getFanoutBlocks(this.supply, store, filter, replacedRoutines);
+		return this.getAssumedLocals(fanoutBlocks, store);
 	}
 }

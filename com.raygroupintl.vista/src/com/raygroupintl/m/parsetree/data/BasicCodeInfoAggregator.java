@@ -22,20 +22,20 @@ import java.util.Map;
 import com.raygroupintl.m.parsetree.filter.SourcedFanoutFilter;
 
 public class BasicCodeInfoAggregator {
-	Block<BlockAPIData> block;
-	BlocksSupply<BlockAPIData> supply;
+	Block<BlockCodeInfo> block;
+	BlocksSupply<BlockCodeInfo> supply;
 	
-	public BasicCodeInfoAggregator(Block<BlockAPIData> block, BlocksSupply<BlockAPIData> supply) {
+	public BasicCodeInfoAggregator(Block<BlockCodeInfo> block, BlocksSupply<BlockCodeInfo> supply) {
 		this.block = block;
 		this.supply = supply;
 	}
 	
-	public APIData getAPIData(SourcedFanoutFilter filter, Map<String, String> replacedRoutines) {
+	public BasicCodeInfo getAPIData(SourcedFanoutFilter filter, Map<String, String> replacedRoutines) {
 		if (filter != null) filter.setSource(this.block.getEntryId());
-		APIData result = new APIData();
-		FanoutBlocks<BlockAPIData> fanoutBlocks = this.block.getFanoutBlocks(this.supply, filter, replacedRoutines);
-		List<Block<BlockAPIData>> blocks = fanoutBlocks.getBlocks();
-		for (Block<BlockAPIData> b : blocks) {
+		BasicCodeInfo result = new BasicCodeInfo();
+		FanoutBlocks<BlockCodeInfo> fanoutBlocks = this.block.getFanoutBlocks(this.supply, filter, replacedRoutines);
+		List<Block<BlockCodeInfo>> blocks = fanoutBlocks.getBlocks();
+		for (Block<BlockCodeInfo> b : blocks) {
 			result.mergeAdditive(b.getData());
 		}
 		return result;		

@@ -22,8 +22,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-public class APIData {
-	private Set<String> assumeds;
+public class BasicCodeInfo {
 	private Set<String> globals;
 	private Set<String> filemanGlobals = new HashSet<String>();
 	private Set<String> filemanCalls = new HashSet<String>();
@@ -33,34 +32,7 @@ public class APIData {
 	int readCount;
 	int executeCount;
 		
-	public void setAssumeds(Set<String> assumeds) {
-		this.assumeds = new HashSet<String>(assumeds);
-	}
-	
-	public void setAssumeds(APIData rhs) {
-		if (rhs != null) {
-			this.setAssumeds(rhs.assumeds);
-		}
-	}
-	
-	private boolean mergeAssumed(BlockAPIData staticData, String name, int sourceIndex) {
-		if ((! staticData.isDefined(name, sourceIndex) && (! this.assumeds.contains(name)))) {
-			this.assumeds.add(name);
-			return true;
-		}
-		return false;
-	}
-	
-	public int mergeAccumulative(BlockAPIData staticData, APIData source, int sourceIndex) {
-		int result = 0;
-		for (String name : source.assumeds) {
-			boolean b = this.mergeAssumed(staticData, name, sourceIndex);
-			if (b) ++result;
-		}
-		return result;
-	}
-	
-	public void mergeGlobals(APIData source) {
+	public void mergeGlobals(BasicCodeInfo source) {
 		if (source.globals != null) this.mergeGlobals(source.globals);
 	}
 	
@@ -72,7 +44,7 @@ public class APIData {
 		}
 	}
 	
-	public void mergeFilemanGlobals(APIData source) {
+	public void mergeFilemanGlobals(BasicCodeInfo source) {
 		if (filemanGlobals != null) this.mergeFilemanGlobals(source.filemanGlobals);
 	}
 	
@@ -84,7 +56,7 @@ public class APIData {
 		}
 	}
 	
-	public void mergeFilemanCalls(APIData source) {
+	public void mergeFilemanCalls(BasicCodeInfo source) {
 		if (source.filemanCalls != null) this.mergeFilemanCalls(source.filemanCalls);
 	}
 	
@@ -96,7 +68,7 @@ public class APIData {
 		}
 	}
 	
-	public void mergeAdditive(BlockAPIData b) {
+	public void mergeAdditive(BlockCodeInfo b) {
 		this.mergeGlobals(b.getGlobals());
 		this.mergeFilemanGlobals(b.getFilemanGlobals());
 		this.mergeFilemanCalls(b.getFilemanCalls());
@@ -118,10 +90,6 @@ public class APIData {
 		
 	}
 	
-	public List<String> getAssumed() {
-		return getIO(this.assumeds);
-	}
- 	
 	public List<String> getGlobals() {
 		return getIO(this.globals);
 	}

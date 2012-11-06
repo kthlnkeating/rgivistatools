@@ -23,7 +23,7 @@ import java.util.Set;
 
 import com.raygroupintl.m.parsetree.Local;
 
-public class BlockAPIData {
+public class BlockCodeInfo {
 	private String[] formals;
 	private Map<String, Integer> formalsMap;
 	private Map<String, Integer> newedLocals = new HashMap<String, Integer>();
@@ -132,13 +132,6 @@ public class BlockAPIData {
 		assumeds.addAll(this.assumedLocals);
 	}
 	
-	public APIData getAPIData() {
-		APIData result = new APIData();
-		HashSet<String> assumeds = new HashSet<String>(this.assumedLocals);
-		result.setAssumeds(assumeds);
-		return result;		
-	}
-	
 	public void incrementIndirection() {
 		++this.indirectionCount;
 	}
@@ -171,4 +164,16 @@ public class BlockAPIData {
 		return this.executeCount;
 	}
 
+	public int updateAssumed(Set<String> target, Set<String> source, int sourceIndex) {
+		int result = 0;
+		for (String name : source) {
+			if (! this.isDefined(name, sourceIndex)) {
+				if (! target.contains(name)) {
+					target.add(name);
+					++result;
+				}
+			}
+		}
+		return result;
+	}
 }

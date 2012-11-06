@@ -19,15 +19,18 @@ package com.raygroupintl.vista.repository.visitor;
 import java.io.IOException;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.Scanner;
+import java.util.Set;
 
-import com.raygroupintl.m.parsetree.data.APIData;
+import com.raygroupintl.m.parsetree.data.BasicCodeInfo;
 import com.raygroupintl.m.parsetree.data.AssumedLocalAggregator;
 import com.raygroupintl.m.parsetree.data.BasicCodeInfoAggregator;
 import com.raygroupintl.m.parsetree.data.Block;
-import com.raygroupintl.m.parsetree.data.BlockAPIData;
+import com.raygroupintl.m.parsetree.data.BlockCodeInfo;
 import com.raygroupintl.m.parsetree.data.DataStore;
 import com.raygroupintl.m.parsetree.data.Blocks;
 import com.raygroupintl.m.parsetree.data.BlocksSupply;
@@ -40,12 +43,12 @@ import com.raygroupintl.struct.PassFilter;
 
 public class APIWriter {	
 	private FileWrapper fileWrapper;
-	private BlocksSupply<BlockAPIData> blocksSupply;
+	private BlocksSupply<BlockCodeInfo> blocksSupply;
 	private TerminalFormatter tf = new TerminalFormatter();
 	private Map<String, String> replacementRoutines;
 	private SourcedFanoutFilter filter = new BasicSourcedFanoutFilter(new PassFilter<EntryId>());
 	
-	public APIWriter(FileWrapper fileWrapper, BlocksSupply<BlockAPIData> blocksSupply, Map<String, String> replacementRoutines) {
+	public APIWriter(FileWrapper fileWrapper, BlocksSupply<BlockCodeInfo> blocksSupply, Map<String, String> replacementRoutines) {
 		this.fileWrapper = fileWrapper;
 		this.blocksSupply = blocksSupply;
 		this.replacementRoutines = replacementRoutines;
@@ -73,16 +76,16 @@ public class APIWriter {
 		this.fileWrapper.writeEOL();		
 	}
 	
-	private void write(EntryId entryId, DataStore<APIData> store, String[] linePieces) {
+	private void write(EntryId entryId, DataStore<Set<String>> store, String[] linePieces) {
 		String routineName = entryId.getRoutineName();
 		this.fileWrapper.writeEOL(" " + entryId.toString2());
 		this.tf.setTab(12);
-		Blocks<BlockAPIData> rbs = this.blocksSupply.getBlocks(routineName);
+		Blocks<BlockCodeInfo> rbs = this.blocksSupply.getBlocks(routineName);
 		if (rbs == null) {
 			this.fileWrapper.writeEOL("  ERROR: Invalid entry point");
 		} else {
 			String label = entryId.getLabelOrDefault();
-			Block<BlockAPIData> lb = rbs.get(label);
+			Block<BlockCodeInfo> lb = rbs.get(label);
 			if (lb == null) {
 				this.fileWrapper.writeEOL("  ERROR: Invalid entry point");
 			} else {
@@ -98,11 +101,13 @@ public class APIWriter {
 				this.fileWrapper.writeEOL();
 
 				AssumedLocalAggregator ala = new AssumedLocalAggregator(lb, this.blocksSupply);
-				APIData apiDataForAssumed = ala.getAssumedLocals(store, this.filter, this.replacementRoutines);
-				this.writeAPIData(apiDataForAssumed.getAssumed(), "ASSUMED");
+				Set<String> assumedLocals = ala.getAssumedLocals(store, this.filter, this.replacementRoutines);
+				List<String> assumedLocalsSorted = new ArrayList<String>(assumedLocals);
+				Collections.sort(assumedLocalsSorted);			
+				this.writeAPIData(assumedLocalsSorted, "ASSUMED");
 				
 				BasicCodeInfoAggregator bcia = new BasicCodeInfoAggregator(lb, this.blocksSupply);
-				APIData apiData = bcia.getAPIData(this.filter, this.replacementRoutines);
+				BasicCodeInfo apiData = bcia.getAPIData(this.filter, this.replacementRoutines);
 				
 				this.writeAPIData(apiData.getGlobals(), "GLBS");
 				this.writeAPIData(apiData.getReadCount(), "READ");
@@ -118,7 +123,7 @@ public class APIWriter {
 	
 	public void auxWrite(String fanInFileName) {		
 		try {
-			DataStore<APIData> store = new DataStore<APIData>();
+			DataStore<Set<String>> store = new DataStore<Set<String>>();
 			int packageCount = 0;
 			Path path = Paths.get(fanInFileName);
 			Scanner scanner = new Scanner(path);
@@ -156,7 +161,7 @@ public class APIWriter {
 		
 	public void writeEntries(List<String> entries) {
 		if (this.fileWrapper.start()) {
-			DataStore<APIData> store = new DataStore<APIData>();
+			DataStore<Set<String>> store = new DataStore<Set<String>>();
 			for (String entry : entries) {
 				EntryId entryId = EntryId.getInstance(entry);
 				String[] input = new String[]{entry, "", "", ""};

@@ -16,10 +16,10 @@
 
 package com.raygroupintl.m.parsetree.visitor;
 
-import com.raygroupintl.m.parsetree.data.BlockAPIData;
+import com.raygroupintl.m.parsetree.data.BlockCodeInfo;
 import com.raygroupintl.vista.repository.RepositoryInfo;
 
-public class APIRecorderFactory implements BlockRecorderFactory<BlockAPIData> {
+public class APIRecorderFactory implements BlockRecorderFactory<BlockCodeInfo> {
 	private RepositoryInfo repositoryInfo;
 	
 	public APIRecorderFactory(RepositoryInfo repositoryInfo) {
@@ -27,7 +27,7 @@ public class APIRecorderFactory implements BlockRecorderFactory<BlockAPIData> {
 	}
 	
 	@Override
-	public BlockRecorder<BlockAPIData> getRecorder() {
+	public BlockRecorder<BlockCodeInfo> getRecorder() {
 		return new APIRecorder(this.repositoryInfo);
 	}
 

@@ -13,11 +13,11 @@ import org.junit.BeforeClass;
 import org.junit.Test;
 
 import com.raygroupintl.m.parsetree.Routine;
-import com.raygroupintl.m.parsetree.data.APIData;
+import com.raygroupintl.m.parsetree.data.BasicCodeInfo;
 import com.raygroupintl.m.parsetree.data.AssumedLocalAggregator;
 import com.raygroupintl.m.parsetree.data.BasicCodeInfoAggregator;
 import com.raygroupintl.m.parsetree.data.Block;
-import com.raygroupintl.m.parsetree.data.BlockAPIData;
+import com.raygroupintl.m.parsetree.data.BlockCodeInfo;
 import com.raygroupintl.m.parsetree.data.DataStore;
 import com.raygroupintl.m.parsetree.data.Blocks;
 import com.raygroupintl.m.parsetree.data.EntryId;
@@ -56,20 +56,18 @@ public class APITest {
 		return r.getNode();
 	}
 		
-	private void usedTest(MapBlocksSupply<BlockAPIData> blocksMap, String routineName, String tag, String[] expectedAssumeds, String[] expectedGlobals) {
-		Blocks<BlockAPIData> rbs = blocksMap.get(routineName);
-		Block<BlockAPIData> lb = rbs.get(tag);
+	private void usedTest(MapBlocksSupply<BlockCodeInfo> blocksMap, String routineName, String tag, String[] expectedAssumeds, String[] expectedGlobals) {
+		Blocks<BlockCodeInfo> rbs = blocksMap.get(routineName);
+		Block<BlockCodeInfo> lb = rbs.get(tag);
 		AssumedLocalAggregator ala = new AssumedLocalAggregator(lb, blocksMap);
-		APIData apiDataForAssumed = ala.getAssumedLocals(new DataStore<APIData>(), new BasicSourcedFanoutFilter(new PassFilter<EntryId>()), replacement);
-		
-		Set<String> assumeds = new HashSet<String>(apiDataForAssumed.getAssumed());
+		Set<String> assumeds = ala.getAssumedLocals(new DataStore<Set<String>>(), new BasicSourcedFanoutFilter(new PassFilter<EntryId>()), replacement);
 		Assert.assertEquals(expectedAssumeds.length, assumeds.size());
 		for (String expectedOutput : expectedAssumeds) {
 			Assert.assertTrue(assumeds.contains(expectedOutput));			
 		}				
 
 		BasicCodeInfoAggregator bcia = new BasicCodeInfoAggregator(lb, blocksMap);
-		APIData apiData = bcia.getAPIData(new BasicSourcedFanoutFilter(new PassFilter<EntryId>()), replacement);
+		BasicCodeInfo apiData = bcia.getAPIData(new BasicSourcedFanoutFilter(new PassFilter<EntryId>()), replacement);
 		Set<String> globals = new HashSet<String>(apiData.getGlobals());
 		Assert.assertEquals(expectedGlobals.length, globals.size());
 		for (String expectedGlobal : expectedGlobals) {
@@ -77,11 +75,11 @@ public class APITest {
 		}				
 	}
 	
-	private void filemanTest(MapBlocksSupply<BlockAPIData> blocksMap, String routineName, String tag, String[] expectedGlobals, String[] expectedCalls) {
-		Blocks<BlockAPIData> rbs = blocksMap.get(routineName);
-		Block<BlockAPIData> lb = rbs.get(tag);
+	private void filemanTest(MapBlocksSupply<BlockCodeInfo> blocksMap, String routineName, String tag, String[] expectedGlobals, String[] expectedCalls) {
+		Blocks<BlockCodeInfo> rbs = blocksMap.get(routineName);
+		Block<BlockCodeInfo> lb = rbs.get(tag);
 		BasicCodeInfoAggregator bcia = new BasicCodeInfoAggregator(lb, blocksMap);
-		APIData apiData = bcia.getAPIData(new BasicSourcedFanoutFilter(new PassFilter<EntryId>()), replacement);
+		BasicCodeInfo apiData = bcia.getAPIData(new BasicSourcedFanoutFilter(new PassFilter<EntryId>()), replacement);
 		
 		Set<String> globals = new HashSet<String>(apiData.getFilemanGlobals());
 		Assert.assertEquals(expectedGlobals.length, globals.size());
@@ -115,10 +113,10 @@ public class APITest {
 			Assert.assertEquals(0, er.getLastErrors().size());
 		}
 		APIRecorder recorder = new APIRecorder(null);
-		MapBlocksSupply<BlockAPIData> blocksMap = new MapBlocksSupply<BlockAPIData>();
+		MapBlocksSupply<BlockCodeInfo> blocksMap = new MapBlocksSupply<BlockCodeInfo>();
 		for (int i=0; i<routines.length; ++i) {			
 			routines[i].accept(recorder);
-			Blocks<BlockAPIData> blocks = recorder.getBlocks();
+			Blocks<BlockCodeInfo> blocks = recorder.getBlocks();
 			blocksMap.put(routines[i].getName(), blocks);
 		}
 		this.usedTest(blocksMap, "APIROU00", "FACT", new String[]{"I"}, new String[0]);

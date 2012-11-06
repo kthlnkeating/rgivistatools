@@ -26,6 +26,7 @@ import java.util.logging.Logger;
 
 import com.raygroupintl.m.parsetree.filter.SourcedFanoutFilter;
 import com.raygroupintl.m.parsetree.visitor.APIRecorder;
+import com.raygroupintl.struct.ObjectIdContainer;
 
 public class Block<T> {
 	private final static Logger LOGGER = Logger.getLogger(APIRecorder.class.getName());
@@ -146,8 +147,8 @@ public class Block<T> {
 		}		
 	}
 	
-	public FanoutBlocks<T> getFanoutBlocks(BlocksSupply<T> blocksSupply, DataStore<APIData> store, SourcedFanoutFilter filter, Map<String, String> replacedRoutines) {
-		FanoutBlocks<T> fanoutBlocks = new FanoutBlocks<T>(this, store);
+	public FanoutBlocks<T> getFanoutBlocks(BlocksSupply<T> blocksSupply, ObjectIdContainer blockIdContainer, SourcedFanoutFilter filter, Map<String, String> replacedRoutines) {
+		FanoutBlocks<T> fanoutBlocks = new FanoutBlocks<T>(this, blockIdContainer);
 		this.updateFanoutBlocks(fanoutBlocks, blocksSupply, filter, replacedRoutines);
 		return fanoutBlocks;
 	}

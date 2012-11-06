@@ -19,7 +19,7 @@ package com.raygroupintl.vista.repository.visitor;
 import java.util.logging.Logger;
 
 import com.raygroupintl.m.parsetree.Routine;
-import com.raygroupintl.m.parsetree.data.BlockAPIData;
+import com.raygroupintl.m.parsetree.data.BlockCodeInfo;
 import com.raygroupintl.m.parsetree.data.Blocks;
 import com.raygroupintl.m.parsetree.data.BlocksSupply;
 import com.raygroupintl.m.parsetree.data.MapBlocksSupply;
@@ -35,7 +35,7 @@ public class APIOverallRecorder extends RepositoryVisitor {
 	private RepositoryInfo repositoryInfo;
 	private int packageCount;
 	private APIRecorder recorder;
-	private MapBlocksSupply<BlockAPIData> blocksMap = new MapBlocksSupply<BlockAPIData>();
+	private MapBlocksSupply<BlockCodeInfo> blocksMap = new MapBlocksSupply<BlockCodeInfo>();
 	
 	public APIOverallRecorder(RepositoryInfo ri) {
 		this.repositoryInfo = ri;
@@ -51,7 +51,7 @@ public class APIOverallRecorder extends RepositoryVisitor {
 	@Override
 	public void visitRoutine(Routine routine) {
 		routine.accept(this.recorder);
-		Blocks<BlockAPIData> blocks = this.recorder.getBlocks();
+		Blocks<BlockCodeInfo> blocks = this.recorder.getBlocks();
 		this.blocksMap.put(routine.getName(), blocks);
 	}
 	
@@ -61,7 +61,7 @@ public class APIOverallRecorder extends RepositoryVisitor {
 		rps.acceptSubNodes(this);
 	}
 	
-	public BlocksSupply<BlockAPIData> getBlocks() {
+	public BlocksSupply<BlockCodeInfo> getBlocks() {
 		return this.blocksMap;
 	}
 }
