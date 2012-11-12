@@ -51,8 +51,10 @@ public class APIRecorder extends BlockRecorder<BlockCodeInfo> {
 	
 	private void addOutput(Local local) {
 		int i = this.incrementIndex();
-		Block<BlockCodeInfo> cb = this.getCurrentBlock();
-		if (! cb.isClosed()) cb.getData().addLocal(i, local);
+		BlockCodeInfo d = this.getCurrentData();
+		if (d != null) {
+			d.addLocal(i, local);	
+		}
 	}
 	
 	private static String removeDoubleQuote(String input) {
@@ -99,7 +101,8 @@ public class APIRecorder extends BlockRecorder<BlockCodeInfo> {
 		CallArgument[] callArguments = this.getLastArguments();
 		cb.addFanout(i, fanout, callArguments);
 		String rn = this.getCurrentRoutineName();
-		if ((callArguments != null) && (callArguments.length > 0) && ! inFilemanRoutine(rn, true)) {
+		BlockCodeInfo d = this.getCurrentData();
+		if ((d != null) && (callArguments != null) && (callArguments.length > 0) && ! inFilemanRoutine(rn, true)) {
 			CallArgument ca = callArguments[0];
 			if (ca != null) {
 				CallArgumentType caType = ca.getType();
@@ -109,7 +112,7 @@ public class APIRecorder extends BlockRecorder<BlockCodeInfo> {
 						String cleanValue = removeDoubleQuote(ca.getValue());
 						if (cleanValue.length() > 0 && validate(cleanValue)) {
 							String value = fanout.toString() + "(" + cleanValue;
-							if (! cb.isClosed()) cb.getData().addFilemanCalls(value);
+							d.addFilemanCalls(value);
 						}
 					}
 				}
@@ -120,24 +123,24 @@ public class APIRecorder extends BlockRecorder<BlockCodeInfo> {
 	@Override
 	protected void visitReadCmd(ReadCmd readCmd) {
 		super.visitReadCmd(readCmd);
-		Block<BlockCodeInfo> cb = this.getCurrentBlock();
-		if (! cb.isClosed()) cb.getData().incrementRead();
+		BlockCodeInfo d = this.getCurrentData();
+		if (d != null) d.incrementRead();
 	}
 
 	
 	@Override
 	protected void visitWriteCmd(WriteCmd writeCmd) {
 		super.visitWriteCmd(writeCmd);
-		Block<BlockCodeInfo> cb = this.getCurrentBlock();
-		if (! cb.isClosed()) cb.getData().incrementWrite();
+		BlockCodeInfo d = this.getCurrentData();
+		if (d != null) d.incrementWrite();
 	}
 
 	
 	@Override
 	protected void visitXecuteCmd(XecuteCmd xecuteCmd) {
 		super.visitXecuteCmd(xecuteCmd);
-		Block<BlockCodeInfo> cb = this.getCurrentBlock();
-		if (! cb.isClosed()) cb.getData().incrementExecute();
+		BlockCodeInfo d = this.getCurrentData();
+		if (d != null) d.incrementExecute();
 	}
 
 	@Override
@@ -150,28 +153,30 @@ public class APIRecorder extends BlockRecorder<BlockCodeInfo> {
 		
 	@Override
 	protected void setLocal(Local local, Node rhs) {
-		Block<BlockCodeInfo> cb = this.getCurrentBlock();
-		String rn = this.getCurrentRoutineName();
-		this.addOutput(local);
-		if ((rhs != null) && ! inFilemanRoutine(rn, true)) {
-			String rhsAsConst = rhs.getAsConstExpr();
-			if (rhsAsConst != null) {
-				String name = local.getName().toString();
-				if (name.startsWith("DI") && (name.length() == 3)) {
-					char ch = name.charAt(2);
-					if ((ch == 'E') || (ch == 'K') || (ch == 'C')) {
-						rhsAsConst = removeDoubleQuote(rhsAsConst);
-						if ((rhsAsConst.length() > 0) && (rhsAsConst.charAt(0) == '^')) {
-							String[] namePieces = rhsAsConst.split("\\(");
-							if ((namePieces[0].length() > 0)) {
-								String result = namePieces[0] + "(";
-								if ((namePieces.length > 1) && (namePieces[1] != null) && (namePieces[1].length() > 0)) {
-									String[] subscripts = namePieces[1].split("\\,");
-									if ((subscripts.length > 0) && (subscripts[0].length() > 0) && validate(subscripts[0])) {
-										result += subscripts[0];									
+		BlockCodeInfo d = this.getCurrentData();
+		if (d != null) {
+			String rn = this.getCurrentRoutineName();
+			this.addOutput(local);
+			if ((rhs != null) && ! inFilemanRoutine(rn, true)) {
+				String rhsAsConst = rhs.getAsConstExpr();
+				if (rhsAsConst != null) {
+					String name = local.getName().toString();
+					if (name.startsWith("DI") && (name.length() == 3)) {
+						char ch = name.charAt(2);
+						if ((ch == 'E') || (ch == 'K') || (ch == 'C')) {
+							rhsAsConst = removeDoubleQuote(rhsAsConst);
+							if ((rhsAsConst.length() > 0) && (rhsAsConst.charAt(0) == '^')) {
+								String[] namePieces = rhsAsConst.split("\\(");
+								if ((namePieces[0].length() > 0)) {
+									String result = namePieces[0] + "(";
+									if ((namePieces.length > 1) && (namePieces[1] != null) && (namePieces[1].length() > 0)) {
+										String[] subscripts = namePieces[1].split("\\,");
+										if ((subscripts.length > 0) && (subscripts[0].length() > 0) && validate(subscripts[0])) {
+											result += subscripts[0];									
+										}
 									}
+									d.addFilemanGlobal(result);
 								}
-								if (! cb.isClosed()) cb.getData().addFilemanGlobal(result);
 							}
 						}
 					}
@@ -193,8 +198,8 @@ public class APIRecorder extends BlockRecorder<BlockCodeInfo> {
 	@Override
 	protected void newLocal(Local local) {
 		int i = this.incrementIndex();
-		Block<BlockCodeInfo> cb = this.getCurrentBlock();
-		if (! cb.isClosed()) cb.getData().addNewed(i, local);
+		BlockCodeInfo d = this.getCurrentData();
+		if (d != null) d.addNewed(i, local);
 	}
 	
 	private static Set<String> DEVICE_PARAMS = new HashSet<String>();
@@ -221,23 +226,23 @@ public class APIRecorder extends BlockRecorder<BlockCodeInfo> {
 		if ((! this.underDeviceParameter) || (! isDeviceParameter(local))) { 
 			super.visitLocal(local);
 			int i = this.incrementIndex();
-			Block<BlockCodeInfo> cb = this.getCurrentBlock();
-			if (! cb.isClosed()) cb.getData().addLocal(i, local);
+			BlockCodeInfo d = this.getCurrentData();
+			if (d != null) d.addLocal(i, local);
 		}
 	}
 
 	@Override
 	protected void passLocalByVal(Local local, int index) {		
 		int i = this.incrementIndex();
-		Block<BlockCodeInfo> cb = this.getCurrentBlock();
-		if (! cb.isClosed()) cb.getData().addLocal(i, local);
+		BlockCodeInfo d = this.getCurrentData();
+		if (d != null) d.addLocal(i, local);
 	}
 	
 	@Override
 	protected void passLocalByRef(Local local, int index) {
 		int i = this.incrementIndex();
-		Block<BlockCodeInfo> cb = this.getCurrentBlock();
-		if (! cb.isClosed()) cb.getData().addLocal(i, local);
+		BlockCodeInfo d = this.getCurrentData();
+		if (d != null) d.addLocal(i, local);
 		super.passLocalByRef(local, index);
 	}
 
@@ -253,14 +258,14 @@ public class APIRecorder extends BlockRecorder<BlockCodeInfo> {
 				name += constValue;
 			}
 		}
-		Block<BlockCodeInfo> cb = this.getCurrentBlock();
-		if (! cb.isClosed()) cb.getData().addGlobal(name);		
+		BlockCodeInfo d = this.getCurrentData();
+		if (d != null) d.addGlobal(name);		
 	}
 	
 	@Override
 	protected void visitIndirection(Indirection indirection) {
-		Block<BlockCodeInfo> cb = this.getCurrentBlock();
-		if (! cb.isClosed()) cb.getData().incrementIndirection();
+		BlockCodeInfo d = this.getCurrentData();
+		if (d != null) d.incrementIndirection();
 		super.visitIndirection(indirection);
 	}
 

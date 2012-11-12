@@ -67,9 +67,9 @@ public abstract class BlockRecorder<T> extends FanoutRecorder {
 		this.underFor = 0;
 	}
 	
-	protected void updateFanout(EntryId fanout) {		
-	}
+	protected abstract void updateFanout(EntryId fanout);
 	
+	@Override
 	protected void updateFanout(boolean isGoto, boolean conditional) {
 		EntryId fanout = this.getLastFanout();
 		boolean shouldClose = isGoto && (! conditional) && (this.underCondition < 1);
@@ -81,6 +81,7 @@ public abstract class BlockRecorder<T> extends FanoutRecorder {
 		}
 	}
 
+	@Override
 	protected void visitQuit(QuitCmd quitCmd) {
 		quitCmd.acceptSubNodes(this);
 		boolean quitConditional = (quitCmd.getPostCondition() != null);
@@ -89,18 +90,21 @@ public abstract class BlockRecorder<T> extends FanoutRecorder {
 		}
 	}
 
+	@Override
 	protected void visitForLoop(ForLoop forLoop) {
 		++this.underFor;
 		super.visitForLoop(forLoop);
 		--this.underFor;
 	}
 	
+	@Override
 	protected void visitIf(IfCmd ifCmd) {
 		++this.underCondition;
 		super.visitIf(ifCmd);
 		--this.underCondition;
 	}
 	
+	@Override
 	protected void visitElse(ElseCmd elseCmd) {
 		++this.underCondition;
 		super.visitElse(elseCmd);
@@ -146,6 +150,7 @@ public abstract class BlockRecorder<T> extends FanoutRecorder {
 		super.visitEntry(entry);	
 	}
 			
+	@Override
 	protected void visitDoBlock(DoBlock doBlock) {
 		int id = doBlock.getUniqueId();
 		if (! this.doBlockHash.contains(id)) {
@@ -170,6 +175,14 @@ public abstract class BlockRecorder<T> extends FanoutRecorder {
 	
 	public Blocks<T> getBlocks() {
 		return this.currentBlocks;
+	}
+	
+	public T getCurrentData() {
+		if ((this.currentBlock != null) && (! this.currentBlock.isClosed())) {			
+			return this.currentBlock.getData();
+		} else {
+			return null;
+		}
 	}
 	
 	@Override
