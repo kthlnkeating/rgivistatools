@@ -19,40 +19,29 @@ package com.raygroupintl.m.parsetree.data.aggregator;
 import java.util.List;
 import java.util.Map;
 
-import com.raygroupintl.m.parsetree.data.BasicCodeInfo;
+import com.raygroupintl.m.parsetree.data.AdditiveDataHandler;
 import com.raygroupintl.m.parsetree.data.Block;
-import com.raygroupintl.m.parsetree.data.BlockCodeInfo;
 import com.raygroupintl.m.parsetree.data.BlocksSupply;
 import com.raygroupintl.m.parsetree.data.FanoutBlocks;
 import com.raygroupintl.m.parsetree.filter.SourcedFanoutFilter;
 
-public class BasicCodeInfoAggregator {
-	Block<BlockCodeInfo> block;
-	BlocksSupply<BlockCodeInfo> supply;
+public class AdditiveDataAggregator<T, U extends AdditiveDataHandler<T>> {
+	Block<U> block;
+	BlocksSupply<U> supply;
 	
-	public BasicCodeInfoAggregator(Block<BlockCodeInfo> block, BlocksSupply<BlockCodeInfo> supply) {
+	public AdditiveDataAggregator(Block<U> block, BlocksSupply<U> supply) {
 		this.block = block;
 		this.supply = supply;
 	}
 	
-	private void updateResult(BlockCodeInfo source, BasicCodeInfo result) {
-		result.mergeGlobals(source.getGlobals());
-		result.mergeFilemanGlobals(source.getFilemanGlobals());
-		result.mergeFilemanCalls(source.getFilemanCalls());
-		
-		result.incrementIndirectionCount(source.getIndirectionCount());
-		result.incrementReadCount(source.getReadCount());
-		result.incrementWriteCount(source.getWriteCount());
-		result.incrementExecuteCount(source.getExecuteCount());		
-	}
-	
-	public BasicCodeInfo getCodeInfo(SourcedFanoutFilter filter, Map<String, String> replacedRoutines) {
+	public T getCodeInfo(SourcedFanoutFilter filter, Map<String, String> replacedRoutines) {
 		if (filter != null) filter.setSource(this.block.getEntryId());
-		BasicCodeInfo result = new BasicCodeInfo();
-		FanoutBlocks<BlockCodeInfo> fanoutBlocks = this.block.getFanoutBlocks(this.supply, filter, replacedRoutines);
-		List<Block<BlockCodeInfo>> blocks = fanoutBlocks.getBlocks();
-		for (Block<BlockCodeInfo> b : blocks) {
-			this.updateResult(b.getData(), result);
+		FanoutBlocks<U> fanoutBlocks = this.block.getFanoutBlocks(this.supply, filter, replacedRoutines);
+		List<Block<U>> blocks = fanoutBlocks.getBlocks();
+		T result = this.block.getData().getNewInstance();
+		for (Block<U> b : blocks) {
+			U dataHandler = b.getData();
+			dataHandler.update(result);
 		}
 		return result;		
 	}

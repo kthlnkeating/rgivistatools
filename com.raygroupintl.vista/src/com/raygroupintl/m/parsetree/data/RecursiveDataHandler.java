@@ -14,21 +14,9 @@
 // limitations under the License.
 //---------------------------------------------------------------------------
 
-package com.raygroupintl.m.parsetree.visitor;
+package com.raygroupintl.m.parsetree.data;
 
-import com.raygroupintl.m.parsetree.data.BlockWCodeInfo;
-import com.raygroupintl.vista.repository.RepositoryInfo;
-
-public class APIRecorderFactory implements BlockRecorderFactory<BlockWCodeInfo> {
-	private RepositoryInfo repositoryInfo;
-	
-	public APIRecorderFactory(RepositoryInfo repositoryInfo) {
-		this.repositoryInfo = repositoryInfo;
-	}
-	
-	@Override
-	public BlockRecorder<BlockWCodeInfo> getRecorder() {
-		return new APIRecorder(this.repositoryInfo);
-	}
-
+public interface RecursiveDataHandler<T> {
+	T getLocalCopy();
+	int update(T target, T source, int sourceIndex);
 }

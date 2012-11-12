@@ -15,13 +15,13 @@ import org.junit.Test;
 import com.raygroupintl.m.parsetree.Routine;
 import com.raygroupintl.m.parsetree.data.BasicCodeInfo;
 import com.raygroupintl.m.parsetree.data.Block;
-import com.raygroupintl.m.parsetree.data.BlockCodeInfo;
+import com.raygroupintl.m.parsetree.data.BlockWCodeInfo;
 import com.raygroupintl.m.parsetree.data.DataStore;
 import com.raygroupintl.m.parsetree.data.Blocks;
 import com.raygroupintl.m.parsetree.data.EntryId;
 import com.raygroupintl.m.parsetree.data.MapBlocksSupply;
-import com.raygroupintl.m.parsetree.data.aggregator.AssumedLocalAggregator;
-import com.raygroupintl.m.parsetree.data.aggregator.BasicCodeInfoAggregator;
+import com.raygroupintl.m.parsetree.data.aggregator.RecursiveDataAggregator;
+import com.raygroupintl.m.parsetree.data.aggregator.AdditiveDataAggregator;
 import com.raygroupintl.m.parsetree.filter.BasicSourcedFanoutFilter;
 import com.raygroupintl.m.parsetree.visitor.APIRecorder;
 import com.raygroupintl.m.parsetree.visitor.ErrorRecorder;
@@ -68,17 +68,17 @@ public class APITest {
 		return r.getNode();
 	}
 		
-	private void testAssumedLocal(MapBlocksSupply<BlockCodeInfo> blocksMap, String routineName, String tag, String[] expectedAssumeds, String[] expectedGlobals) {
-		Blocks<BlockCodeInfo> rbs = blocksMap.get(routineName);
-		Block<BlockCodeInfo> lb = rbs.get(tag);
-		AssumedLocalAggregator ala = new AssumedLocalAggregator(lb, blocksMap);
-		Set<String> assumeds = ala.getAssumedLocals(new DataStore<Set<String>>(), new BasicSourcedFanoutFilter(new PassFilter<EntryId>()), replacement);
+	private void testAssumedLocal(MapBlocksSupply<BlockWCodeInfo> blocksMap, String routineName, String tag, String[] expectedAssumeds, String[] expectedGlobals) {
+		Blocks<BlockWCodeInfo> rbs = blocksMap.get(routineName);
+		Block<BlockWCodeInfo> lb = rbs.get(tag);
+		RecursiveDataAggregator<Set<String>, BlockWCodeInfo> ala = new RecursiveDataAggregator<Set<String>, BlockWCodeInfo>(lb, blocksMap);
+		Set<String> assumeds = ala.get(new DataStore<Set<String>>(), new BasicSourcedFanoutFilter(new PassFilter<EntryId>()), replacement);
 		Assert.assertEquals(expectedAssumeds.length, assumeds.size());
 		for (String expectedOutput : expectedAssumeds) {
 			Assert.assertTrue(assumeds.contains(expectedOutput));			
 		}				
 
-		BasicCodeInfoAggregator bcia = new BasicCodeInfoAggregator(lb, blocksMap);
+		AdditiveDataAggregator<BasicCodeInfo, BlockWCodeInfo> bcia = new AdditiveDataAggregator<BasicCodeInfo, BlockWCodeInfo>(lb, blocksMap);
 		BasicCodeInfo apiData = bcia.getCodeInfo(new BasicSourcedFanoutFilter(new PassFilter<EntryId>()), replacement);
 		Set<String> globals = new HashSet<String>(apiData.getGlobals());
 		Assert.assertEquals(expectedGlobals.length, globals.size());
@@ -87,10 +87,10 @@ public class APITest {
 		}				
 	}
 	
-	private void filemanTest(MapBlocksSupply<BlockCodeInfo> blocksMap, String routineName, String tag, String[] expectedGlobals, String[] expectedCalls) {
-		Blocks<BlockCodeInfo> rbs = blocksMap.get(routineName);
-		Block<BlockCodeInfo> lb = rbs.get(tag);
-		BasicCodeInfoAggregator bcia = new BasicCodeInfoAggregator(lb, blocksMap);
+	private void filemanTest(MapBlocksSupply<BlockWCodeInfo> blocksMap, String routineName, String tag, String[] expectedGlobals, String[] expectedCalls) {
+		Blocks<BlockWCodeInfo> rbs = blocksMap.get(routineName);
+		Block<BlockWCodeInfo> lb = rbs.get(tag);
+		AdditiveDataAggregator<BasicCodeInfo, BlockWCodeInfo> bcia = new AdditiveDataAggregator<BasicCodeInfo, BlockWCodeInfo>(lb, blocksMap);
 		BasicCodeInfo apiData = bcia.getCodeInfo(new BasicSourcedFanoutFilter(new PassFilter<EntryId>()), replacement);
 		
 		Set<String> globals = new HashSet<String>(apiData.getFilemanGlobals());
@@ -119,10 +119,10 @@ public class APITest {
 	@Test
 	public void testAssumedLocals() {
 		APIRecorder recorder = new APIRecorder(null);
-		MapBlocksSupply<BlockCodeInfo> blocksMap = new MapBlocksSupply<BlockCodeInfo>();
+		MapBlocksSupply<BlockWCodeInfo> blocksMap = new MapBlocksSupply<BlockWCodeInfo>();
 		for (int i=0; i<ROUTINES.length; ++i) {			
 			ROUTINES[i].accept(recorder);
-			Blocks<BlockCodeInfo> blocks = recorder.getBlocks();
+			Blocks<BlockWCodeInfo> blocks = recorder.getBlocks();
 			blocksMap.put(ROUTINES[i].getName(), blocks);
 		}
 		this.testAssumedLocal(blocksMap, "APIROU00", "FACT", new String[]{"I"}, new String[0]);

@@ -23,7 +23,7 @@ import java.util.Set;
 
 import com.raygroupintl.m.parsetree.Local;
 
-public class BlockCodeInfo {
+public class BlockWCodeInfo implements RecursiveDataHandler<Set<String>>, AdditiveDataHandler<BasicCodeInfo> {
 	private String[] formals;
 	private Map<String, Integer> formalsMap;
 	private Map<String, Integer> newedLocals = new HashMap<String, Integer>();
@@ -164,7 +164,30 @@ public class BlockCodeInfo {
 		return this.executeCount;
 	}
 
-	public int updateAssumed(Set<String> target, Set<String> source, int sourceIndex) {
+	@Override
+	public BasicCodeInfo getNewInstance() {
+		return new BasicCodeInfo();
+	}
+
+	@Override
+	public void update(BasicCodeInfo target) {
+		target.mergeGlobals(this.getGlobals());
+		target.mergeFilemanGlobals(this.getFilemanGlobals());
+		target.mergeFilemanCalls(this.getFilemanCalls());
+		
+		target.incrementIndirectionCount(this.getIndirectionCount());
+		target.incrementReadCount(this.getReadCount());
+		target.incrementWriteCount(this.getWriteCount());
+		target.incrementExecuteCount(this.getExecuteCount());		
+	}
+	
+	@Override
+	public Set<String> getLocalCopy()  {
+		return new HashSet<>(this.getAssumedLocals());		
+	}
+	
+	@Override
+	public int update(Set<String> target, Set<String> source, int sourceIndex) {
 		int result = 0;
 		for (String name : source) {
 			if (! this.isDefined(name, sourceIndex)) {

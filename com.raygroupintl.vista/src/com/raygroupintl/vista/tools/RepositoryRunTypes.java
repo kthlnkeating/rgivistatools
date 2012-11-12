@@ -23,7 +23,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import com.raygroupintl.m.parsetree.data.BlockCodeInfo;
+import com.raygroupintl.m.parsetree.data.BlockWCodeInfo;
 import com.raygroupintl.m.parsetree.data.BlocksSupply;
 import com.raygroupintl.m.parsetree.data.SerializedBlocksSupply;
 import com.raygroupintl.m.parsetree.filter.BasicSourcedFanoutFilter;
@@ -405,7 +405,7 @@ public class RepositoryRunTypes extends RunTypes {
 			}
 		}
 		
-		private void auxRun(RepositoryInfo ri, FileWrapper fr, BlocksSupply<BlockCodeInfo> blocks) {
+		private void auxRun(RepositoryInfo ri, FileWrapper fr, BlocksSupply<BlockWCodeInfo> blocks) {
 			APIWriter apiw = new APIWriter(fr, blocks, REPLACEMENT_ROUTINES);
 			SourcedFanoutFilter filter = this.getFilter(ri);
 			apiw.setFilter(filter);
@@ -426,10 +426,10 @@ public class RepositoryRunTypes extends RunTypes {
 						APIOverallRecorder api = new APIOverallRecorder(ri);
 						VistaPackages vps = new VistaPackages(ri.getAllPackages());
 						vps.accept(api);
-						BlocksSupply<BlockCodeInfo> blocks = api.getBlocks();
+						BlocksSupply<BlockWCodeInfo> blocks = api.getBlocks();
 						this.auxRun(ri, fr, blocks);
 					} else {
-						BlocksSupply<BlockCodeInfo> blocks = new SerializedBlocksSupply<BlockCodeInfo>(this.params.parseTreeDirectory, new APIRecorderFactory(ri));
+						BlocksSupply<BlockWCodeInfo> blocks = new SerializedBlocksSupply<BlockWCodeInfo>(this.params.parseTreeDirectory, new APIRecorderFactory(ri));
 						this.auxRun(ri, fr, blocks);
 					}
 				}
