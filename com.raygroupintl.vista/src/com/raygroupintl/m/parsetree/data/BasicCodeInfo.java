@@ -68,17 +68,6 @@ public class BasicCodeInfo {
 		}
 	}
 	
-	public void mergeAdditive(BlockCodeInfo b) {
-		this.mergeGlobals(b.getGlobals());
-		this.mergeFilemanGlobals(b.getFilemanGlobals());
-		this.mergeFilemanCalls(b.getFilemanCalls());
-		
-		this.indirectionCount += b.getIndirectionCount();
-		this.readCount += b.getReadCount();
-		this.writeCount += b.getWriteCount();
-		this.executeCount += b.getExecuteCount();
-	}
-		
 	private List<String> getIO(Set<String> source) {
 		if (source == null) {
 			return Collections.emptyList();
@@ -88,6 +77,22 @@ public class BasicCodeInfo {
 			return result;
 		}
 		
+	}
+	
+	public void incrementIndirectionCount(int count) {
+		this.indirectionCount += count;
+	}
+	
+	public void incrementWriteCount(int count) {
+		this.writeCount += count;
+	}
+	
+	public void incrementReadCount(int count) {
+		this.readCount += count;
+	}
+	
+	public void incrementExecuteCount(int count) {
+		this.executeCount += count;
 	}
 	
 	public List<String> getGlobals() {

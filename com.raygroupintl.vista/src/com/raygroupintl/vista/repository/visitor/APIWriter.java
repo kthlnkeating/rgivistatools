@@ -27,14 +27,14 @@ import java.util.Scanner;
 import java.util.Set;
 
 import com.raygroupintl.m.parsetree.data.BasicCodeInfo;
-import com.raygroupintl.m.parsetree.data.AssumedLocalAggregator;
-import com.raygroupintl.m.parsetree.data.BasicCodeInfoAggregator;
 import com.raygroupintl.m.parsetree.data.Block;
 import com.raygroupintl.m.parsetree.data.BlockCodeInfo;
 import com.raygroupintl.m.parsetree.data.DataStore;
 import com.raygroupintl.m.parsetree.data.Blocks;
 import com.raygroupintl.m.parsetree.data.BlocksSupply;
 import com.raygroupintl.m.parsetree.data.EntryId;
+import com.raygroupintl.m.parsetree.data.aggregator.AssumedLocalAggregator;
+import com.raygroupintl.m.parsetree.data.aggregator.BasicCodeInfoAggregator;
 import com.raygroupintl.m.parsetree.filter.BasicSourcedFanoutFilter;
 import com.raygroupintl.m.parsetree.filter.SourcedFanoutFilter;
 import com.raygroupintl.output.FileWrapper;
@@ -107,7 +107,7 @@ public class APIWriter {
 				this.writeAPIData(assumedLocalsSorted, "ASSUMED");
 				
 				BasicCodeInfoAggregator bcia = new BasicCodeInfoAggregator(lb, this.blocksSupply);
-				BasicCodeInfo apiData = bcia.getAPIData(this.filter, this.replacementRoutines);
+				BasicCodeInfo apiData = bcia.getCodeInfo(this.filter, this.replacementRoutines);
 				
 				this.writeAPIData(apiData.getGlobals(), "GLBS");
 				this.writeAPIData(apiData.getReadCount(), "READ");

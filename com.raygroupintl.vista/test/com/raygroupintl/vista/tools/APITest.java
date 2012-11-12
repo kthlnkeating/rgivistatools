@@ -14,14 +14,14 @@ import org.junit.Test;
 
 import com.raygroupintl.m.parsetree.Routine;
 import com.raygroupintl.m.parsetree.data.BasicCodeInfo;
-import com.raygroupintl.m.parsetree.data.AssumedLocalAggregator;
-import com.raygroupintl.m.parsetree.data.BasicCodeInfoAggregator;
 import com.raygroupintl.m.parsetree.data.Block;
 import com.raygroupintl.m.parsetree.data.BlockCodeInfo;
 import com.raygroupintl.m.parsetree.data.DataStore;
 import com.raygroupintl.m.parsetree.data.Blocks;
 import com.raygroupintl.m.parsetree.data.EntryId;
 import com.raygroupintl.m.parsetree.data.MapBlocksSupply;
+import com.raygroupintl.m.parsetree.data.aggregator.AssumedLocalAggregator;
+import com.raygroupintl.m.parsetree.data.aggregator.BasicCodeInfoAggregator;
 import com.raygroupintl.m.parsetree.filter.BasicSourcedFanoutFilter;
 import com.raygroupintl.m.parsetree.visitor.APIRecorder;
 import com.raygroupintl.m.parsetree.visitor.ErrorRecorder;
@@ -35,11 +35,23 @@ import com.raygroupintl.struct.PassFilter;
 public class APITest {
 	private static MTFSupply supply;
 	private static Map<String, String> replacement = new HashMap<String, String>();
+	private static Routine[] ROUTINES;
 	
 	@BeforeClass
 	public static void setUpBeforeClass() throws Exception {
 		supply = MTFSupply.getInstance(MVersion.CACHE);
 		replacement.put("%DTC", "APIROU02");
+		String[] fileNames = {
+				"resource/APIROU00.m", "resource/APIROU01.m", "resource/APIROU02.m", "resource/APIROU03.m", 
+				"resource/DMI.m", "resource/DDI.m", "resource/DIE.m", "resource/FIE.m"};
+		ROUTINES = new Routine[fileNames.length];
+		{
+			int i = 0;
+			for (String fileName : fileNames) {
+				ROUTINES[i] = getRoutineToken(fileName, supply);
+				++i;
+			}
+		}
 	}
 
 	@AfterClass
@@ -47,16 +59,16 @@ public class APITest {
 		supply = null;
 	}
 
-	private Routine getRoutineToken(String fileName, MTFSupply m) {
+	private static Routine getRoutineToken(String fileName, MTFSupply m) {
 		TFRoutine tf = new TFRoutine(m);
-		InputStream is = this.getClass().getResourceAsStream(fileName);
+		InputStream is = APITest.class.getResourceAsStream(fileName);
 		String fn = (fileName.split(".m")[0]).split("/")[1];
 		MRoutineContent content = MRoutineContent.getInstance(fn, is);
 		MRoutine r = tf.tokenize(content);
 		return r.getNode();
 	}
 		
-	private void usedTest(MapBlocksSupply<BlockCodeInfo> blocksMap, String routineName, String tag, String[] expectedAssumeds, String[] expectedGlobals) {
+	private void testAssumedLocal(MapBlocksSupply<BlockCodeInfo> blocksMap, String routineName, String tag, String[] expectedAssumeds, String[] expectedGlobals) {
 		Blocks<BlockCodeInfo> rbs = blocksMap.get(routineName);
 		Block<BlockCodeInfo> lb = rbs.get(tag);
 		AssumedLocalAggregator ala = new AssumedLocalAggregator(lb, blocksMap);
@@ -67,7 +79,7 @@ public class APITest {
 		}				
 
 		BasicCodeInfoAggregator bcia = new BasicCodeInfoAggregator(lb, blocksMap);
-		BasicCodeInfo apiData = bcia.getAPIData(new BasicSourcedFanoutFilter(new PassFilter<EntryId>()), replacement);
+		BasicCodeInfo apiData = bcia.getCodeInfo(new BasicSourcedFanoutFilter(new PassFilter<EntryId>()), replacement);
 		Set<String> globals = new HashSet<String>(apiData.getGlobals());
 		Assert.assertEquals(expectedGlobals.length, globals.size());
 		for (String expectedGlobal : expectedGlobals) {
@@ -79,7 +91,7 @@ public class APITest {
 		Blocks<BlockCodeInfo> rbs = blocksMap.get(routineName);
 		Block<BlockCodeInfo> lb = rbs.get(tag);
 		BasicCodeInfoAggregator bcia = new BasicCodeInfoAggregator(lb, blocksMap);
-		BasicCodeInfo apiData = bcia.getAPIData(new BasicSourcedFanoutFilter(new PassFilter<EntryId>()), replacement);
+		BasicCodeInfo apiData = bcia.getCodeInfo(new BasicSourcedFanoutFilter(new PassFilter<EntryId>()), replacement);
 		
 		Set<String> globals = new HashSet<String>(apiData.getFilemanGlobals());
 		Assert.assertEquals(expectedGlobals.length, globals.size());
@@ -96,44 +108,37 @@ public class APITest {
 	
 	@Test
 	public void testError() {
-		String[] fileNames = {"resource/APIROU00.m", "resource/APIROU01.m", "resource/APIROU02.m", "resource/APIROU03.m", 
-				"resource/DMI.m", "resource/DDI.m", "resource/DIE.m", "resource/FIE.m"};
-		Routine[] routines = new Routine[fileNames.length];
-		{
-			int i = 0;
-			for (String fileName : fileNames) {
-				routines[i] = this.getRoutineToken(fileName, supply);
-				++i;
-			}
-		}
 		ErrorRecorder er = new ErrorRecorder();
-		for (int i=0; i<routines.length; ++i) {			
-			Routine r = routines[i];
+		for (int i=0; i<ROUTINES.length; ++i) {			
+			Routine r = ROUTINES[i];
 			r.accept(er);
 			Assert.assertEquals(0, er.getLastErrors().size());
 		}
+	}
+	
+	@Test
+	public void testAssumedLocals() {
 		APIRecorder recorder = new APIRecorder(null);
 		MapBlocksSupply<BlockCodeInfo> blocksMap = new MapBlocksSupply<BlockCodeInfo>();
-		for (int i=0; i<routines.length; ++i) {			
-			routines[i].accept(recorder);
+		for (int i=0; i<ROUTINES.length; ++i) {			
+			ROUTINES[i].accept(recorder);
 			Blocks<BlockCodeInfo> blocks = recorder.getBlocks();
-			blocksMap.put(routines[i].getName(), blocks);
+			blocksMap.put(ROUTINES[i].getName(), blocks);
 		}
-		this.usedTest(blocksMap, "APIROU00", "FACT", new String[]{"I"}, new String[0]);
-		this.usedTest(blocksMap, "APIROU00", "SUM", new String[]{"M", "R", "I"}, new String[]{"^RGI0(\"EF\""});
-		this.usedTest(blocksMap, "APIROU00", "SUMFACT", new String[]{"S", "P"}, new String[]{"^RGI0(\"EF\""});
-		this.usedTest(blocksMap, "APIROU00", "STORE", new String[]{"K", "D", "R"}, new String[0]);
-		this.usedTest(blocksMap, "APIROU00", "STOREG", new String[]{"K", "A", "D", "R"}, new String[0]);
-		this.usedTest(blocksMap, "APIROU00", "TOOTHER", new String[]{"I", "M"}, new String[0]);
-		this.usedTest(blocksMap, "APIROU00", "TONONE", new String[]{"A", "D", "ME", "NE", "HR"}, new String[0]);
-		this.usedTest(blocksMap, "APIROU00", "ZZ", new String[]{"A", "D"}, new String[0]);
-		this.usedTest(blocksMap, "APIROU01", "SUMFACT", new String[]{"S", "P"}, new String[]{"^RGI0(\"EF\"", "^UD(", "^UD(5", "^UM"});
-		this.usedTest(blocksMap, "APIROU01", "STORE", new String[]{"K", "D", "R"}, new String[0]);
-		this.usedTest(blocksMap, "APIROU01", "LOOP", new String[]{"S", "A", "C", "I", "J", "B", "D", "P"}, new String[]{"^RGI0(\"EF\"", "^UD(", "^UD(5", "^UM"});
-		this.usedTest(blocksMap, "APIROU03", "GPIND", new String[]{"B", "A"}, new String[0]);
-		this.usedTest(blocksMap, "APIROU03", "CALL1", new String[]{"A", "B"}, new String[0]);
+		this.testAssumedLocal(blocksMap, "APIROU00", "FACT", new String[]{"I"}, new String[0]);
+		this.testAssumedLocal(blocksMap, "APIROU00", "SUM", new String[]{"M", "R", "I"}, new String[]{"^RGI0(\"EF\""});
+		this.testAssumedLocal(blocksMap, "APIROU00", "SUMFACT", new String[]{"S", "P"}, new String[]{"^RGI0(\"EF\""});
+		this.testAssumedLocal(blocksMap, "APIROU00", "STORE", new String[]{"K", "D", "R"}, new String[0]);
+		this.testAssumedLocal(blocksMap, "APIROU00", "STOREG", new String[]{"K", "A", "D", "R"}, new String[0]);
+		this.testAssumedLocal(blocksMap, "APIROU00", "TOOTHER", new String[]{"I", "M"}, new String[0]);
+		this.testAssumedLocal(blocksMap, "APIROU00", "TONONE", new String[]{"A", "D", "ME", "NE", "HR"}, new String[0]);
+		this.testAssumedLocal(blocksMap, "APIROU00", "ZZ", new String[]{"A", "D"}, new String[0]);
+		this.testAssumedLocal(blocksMap, "APIROU01", "SUMFACT", new String[]{"S", "P"}, new String[]{"^RGI0(\"EF\"", "^UD(", "^UD(5", "^UM"});
+		this.testAssumedLocal(blocksMap, "APIROU01", "STORE", new String[]{"K", "D", "R"}, new String[0]);
+		this.testAssumedLocal(blocksMap, "APIROU01", "LOOP", new String[]{"S", "A", "C", "I", "J", "B", "D", "P"}, new String[]{"^RGI0(\"EF\"", "^UD(", "^UD(5", "^UM"});
+		this.testAssumedLocal(blocksMap, "APIROU03", "GPIND", new String[]{"B", "A"}, new String[0]);
+		this.testAssumedLocal(blocksMap, "APIROU03", "CALL1", new String[]{"A", "B"}, new String[0]);
 		
-		this.filemanTest(blocksMap, "APIROU03", "FILEMAN", new String[]{"^DIC(9.4","^DIE(9.5", "^DIK(9.6"}, new String[]{"CHK^DIE(10.1", "CHK^DMI(10.2", "CHK^DDI(10.3"});
-		
+		this.filemanTest(blocksMap, "APIROU03", "FILEMAN", new String[]{"^DIC(9.4","^DIE(9.5", "^DIK(9.6"}, new String[]{"CHK^DIE(10.1", "CHK^DMI(10.2", "CHK^DDI(10.3"});				
 	}
 }

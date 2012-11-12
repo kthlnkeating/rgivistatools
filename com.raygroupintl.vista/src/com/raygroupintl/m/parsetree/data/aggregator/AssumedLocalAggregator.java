@@ -14,7 +14,7 @@
 // limitations under the License.
 //---------------------------------------------------------------------------
 
-package com.raygroupintl.m.parsetree.data;
+package com.raygroupintl.m.parsetree.data.aggregator;
 
 import java.util.HashMap;
 import java.util.HashSet;
@@ -22,6 +22,12 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import com.raygroupintl.m.parsetree.data.Block;
+import com.raygroupintl.m.parsetree.data.BlockCodeInfo;
+import com.raygroupintl.m.parsetree.data.BlocksSupply;
+import com.raygroupintl.m.parsetree.data.DataStore;
+import com.raygroupintl.m.parsetree.data.FaninList;
+import com.raygroupintl.m.parsetree.data.FanoutBlocks;
 import com.raygroupintl.m.parsetree.filter.SourcedFanoutFilter;
 import com.raygroupintl.struct.Indexed;
 
