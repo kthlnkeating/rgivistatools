@@ -76,7 +76,7 @@ public class APIWriter {
 		this.fileWrapper.writeEOL();		
 	}
 	
-	private void write(EntryId entryId, DataStore<Set<String>> store, String[] linePieces) {
+	private void write(EntryId entryId, DataStore<Set<String>> store) {
 		String routineName = entryId.getRoutineName();
 		this.fileWrapper.writeEOL(" " + entryId.toString2());
 		this.tf.setTab(12);
@@ -145,7 +145,7 @@ public class APIWriter {
 						if ((label != null) && (label.isEmpty())) label = null;
 						String routineName = pieces.length > 1 ? pieces[1] : null;
 						EntryId entryId = new EntryId(routineName, label);
-						this.write(entryId, store, linePieces);
+						this.write(entryId, store);
 					}
 				}
 			}		
@@ -164,8 +164,7 @@ public class APIWriter {
 			DataStore<Set<String>> store = new DataStore<Set<String>>();
 			for (String entry : entries) {
 				EntryId entryId = EntryId.getInstance(entry);
-				String[] input = new String[]{entry, "", "", ""};
-				this.write(entryId, store, input);
+				this.write(entryId, store);
 			}
 			this.fileWrapper.stop();
 		}

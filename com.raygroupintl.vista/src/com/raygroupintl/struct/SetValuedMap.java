@@ -14,33 +14,33 @@
 // limitations under the License.
 //---------------------------------------------------------------------------
 
-package com.raygroupintl.m.parsetree.data;
+package com.raygroupintl.struct;
 
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Set;
+import java.util.TreeSet;
 
-import com.raygroupintl.struct.ObjectIdContainer;
-
-public class DataStore<T> implements ObjectIdContainer {
-	private Map<Integer, T> map = new HashMap<Integer, T>();
-
-	public void reset() {
-		this.map = new HashMap<Integer, T>();
-	}
-
-	public T get(Object obj) {
-		int id = System.identityHashCode(obj);
-		return this.map.get(id);
-	}
+public class SetValuedMap<K, V> {
+	private Map<K, Set<V>> map = new HashMap<K, Set<V>>();
 	
-	public boolean contains(int id) {
-		return this.map.containsKey(id);				
+	public void put(K key, V value) {
+		Set<V> set = this.map.get(key);
+		if (set == null) {
+			set = new TreeSet<V>();
+			this.map.put(key, set);
+		}
+		set.add(value);
 	}
-	
-	public T put(Object obj, Map<Integer, T> datas) {
-		int id = System.identityHashCode(obj);
-		T data = datas.get(id);
-		this.map.put(id, data);
-		return data;
+
+	public Set<V> get(K key) {
+		Set<V> set = this.map.get(key);
+		if (set == null) {
+			return null;
+		} else {
+			return Collections.unmodifiableSet(set);
+		}
 	}
 }
+
