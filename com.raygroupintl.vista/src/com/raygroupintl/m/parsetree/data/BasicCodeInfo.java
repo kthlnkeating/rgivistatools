@@ -32,10 +32,6 @@ public class BasicCodeInfo {
 	int readCount;
 	int executeCount;
 		
-	public void mergeGlobals(BasicCodeInfo source) {
-		if (source.globals != null) this.mergeGlobals(source.globals);
-	}
-	
 	public void mergeGlobals(Set<String> globals) {
 		if (this.globals == null) {
 			this.globals = new HashSet<String>(globals);	
@@ -44,20 +40,12 @@ public class BasicCodeInfo {
 		}
 	}
 	
-	public void mergeFilemanGlobals(BasicCodeInfo source) {
-		if (filemanGlobals != null) this.mergeFilemanGlobals(source.filemanGlobals);
-	}
-	
 	public void mergeFilemanGlobals(Set<String> filemanGlobals) {
 		if (this.filemanGlobals == null) {
 			this.filemanGlobals = new HashSet<String>(filemanGlobals);	
 		} else {
 			this.filemanGlobals.addAll(filemanGlobals);		
 		}
-	}
-	
-	public void mergeFilemanCalls(BasicCodeInfo source) {
-		if (source.filemanCalls != null) this.mergeFilemanCalls(source.filemanCalls);
 	}
 	
 	public void mergeFilemanCalls(Set<String> filemanCalls) {

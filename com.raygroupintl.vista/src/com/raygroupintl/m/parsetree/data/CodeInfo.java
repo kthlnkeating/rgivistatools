@@ -23,7 +23,7 @@ import java.util.Set;
 
 import com.raygroupintl.m.parsetree.Local;
 
-public class BlockWCodeInfo implements RecursiveDataHandler<Set<String>>, AdditiveDataHandler<BasicCodeInfo> {
+public class CodeInfo implements RecursiveDataHandler<Set<String>>, AdditiveDataHandler<BasicCodeInfo> {
 	private String[] formals;
 	private Map<String, Integer> formalsMap;
 	private Map<String, Integer> newedLocals = new HashMap<String, Integer>();
@@ -126,10 +126,6 @@ public class BlockWCodeInfo implements RecursiveDataHandler<Set<String>>, Additi
 	
 	public Set<String> getAssumedLocals() {
 		return this.assumedLocals;
-	}
-	
-	public void updateAssumeds(Set<String> assumeds) {
-		assumeds.addAll(this.assumedLocals);
 	}
 	
 	public void incrementIndirection() {

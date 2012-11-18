@@ -26,15 +26,15 @@ import java.util.Map;
 import java.util.Scanner;
 import java.util.Set;
 
+import com.raygroupintl.m.parsetree.data.AdditiveDataAggregator;
 import com.raygroupintl.m.parsetree.data.BasicCodeInfo;
 import com.raygroupintl.m.parsetree.data.Block;
-import com.raygroupintl.m.parsetree.data.BlockWCodeInfo;
+import com.raygroupintl.m.parsetree.data.CodeInfo;
 import com.raygroupintl.m.parsetree.data.DataStore;
 import com.raygroupintl.m.parsetree.data.Blocks;
 import com.raygroupintl.m.parsetree.data.BlocksSupply;
 import com.raygroupintl.m.parsetree.data.EntryId;
-import com.raygroupintl.m.parsetree.data.aggregator.RecursiveDataAggregator;
-import com.raygroupintl.m.parsetree.data.aggregator.AdditiveDataAggregator;
+import com.raygroupintl.m.parsetree.data.RecursiveDataAggregator;
 import com.raygroupintl.m.parsetree.filter.BasicSourcedFanoutFilter;
 import com.raygroupintl.m.parsetree.filter.SourcedFanoutFilter;
 import com.raygroupintl.output.FileWrapper;
@@ -43,12 +43,12 @@ import com.raygroupintl.struct.PassFilter;
 
 public class APIWriter {	
 	private FileWrapper fileWrapper;
-	private BlocksSupply<BlockWCodeInfo> blocksSupply;
+	private BlocksSupply<CodeInfo> blocksSupply;
 	private TerminalFormatter tf = new TerminalFormatter();
 	private Map<String, String> replacementRoutines;
 	private SourcedFanoutFilter filter = new BasicSourcedFanoutFilter(new PassFilter<EntryId>());
 	
-	public APIWriter(FileWrapper fileWrapper, BlocksSupply<BlockWCodeInfo> blocksSupply, Map<String, String> replacementRoutines) {
+	public APIWriter(FileWrapper fileWrapper, BlocksSupply<CodeInfo> blocksSupply, Map<String, String> replacementRoutines) {
 		this.fileWrapper = fileWrapper;
 		this.blocksSupply = blocksSupply;
 		this.replacementRoutines = replacementRoutines;
@@ -80,16 +80,16 @@ public class APIWriter {
 		String routineName = entryId.getRoutineName();
 		this.fileWrapper.writeEOL(" " + entryId.toString2());
 		this.tf.setTab(12);
-		Blocks<BlockWCodeInfo> rbs = this.blocksSupply.getBlocks(routineName);
+		Blocks<CodeInfo> rbs = this.blocksSupply.getBlocks(routineName);
 		if (rbs == null) {
 			this.fileWrapper.writeEOL("  ERROR: Invalid entry point");
 		} else {
 			String label = entryId.getLabelOrDefault();
-			Block<BlockWCodeInfo> lb = rbs.get(label);
+			Block<CodeInfo> lb = rbs.get(label);
 			if (lb == null) {
 				this.fileWrapper.writeEOL("  ERROR: Invalid entry point");
 			} else {
-				String[] formals = lb.getData().getFormals();
+				String[] formals = lb.getAttachedObject().getFormals();
 				this.fileWrapper.write(this.tf.startList("FORMAL"));
 				if ((formals == null) || (formals.length == 0)) {
 					this.fileWrapper.write("--");
@@ -100,13 +100,13 @@ public class APIWriter {
 				}
 				this.fileWrapper.writeEOL();
 
-				RecursiveDataAggregator<Set<String>, BlockWCodeInfo> ala = new RecursiveDataAggregator<Set<String>, BlockWCodeInfo>(lb, this.blocksSupply);
+				RecursiveDataAggregator<Set<String>, CodeInfo> ala = new RecursiveDataAggregator<Set<String>, CodeInfo>(lb, this.blocksSupply);
 				Set<String> assumedLocals = ala.get(store, this.filter, this.replacementRoutines);
 				List<String> assumedLocalsSorted = new ArrayList<String>(assumedLocals);
 				Collections.sort(assumedLocalsSorted);			
 				this.writeAPIData(assumedLocalsSorted, "ASSUMED");
 				
-				AdditiveDataAggregator<BasicCodeInfo, BlockWCodeInfo> bcia = new AdditiveDataAggregator<BasicCodeInfo, BlockWCodeInfo>(lb, this.blocksSupply);
+				AdditiveDataAggregator<BasicCodeInfo, CodeInfo> bcia = new AdditiveDataAggregator<BasicCodeInfo, CodeInfo>(lb, this.blocksSupply);
 				BasicCodeInfo apiData = bcia.getCodeInfo(this.filter, this.replacementRoutines);
 				
 				this.writeAPIData(apiData.getGlobals(), "GLBS");

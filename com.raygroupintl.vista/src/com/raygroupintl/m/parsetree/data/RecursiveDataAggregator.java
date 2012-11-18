@@ -14,18 +14,12 @@
 // limitations under the License.
 //---------------------------------------------------------------------------
 
-package com.raygroupintl.m.parsetree.data.aggregator;
+package com.raygroupintl.m.parsetree.data;
 
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import com.raygroupintl.m.parsetree.data.Block;
-import com.raygroupintl.m.parsetree.data.BlocksSupply;
-import com.raygroupintl.m.parsetree.data.DataStore;
-import com.raygroupintl.m.parsetree.data.FaninList;
-import com.raygroupintl.m.parsetree.data.FanoutBlocks;
-import com.raygroupintl.m.parsetree.data.RecursiveDataHandler;
 import com.raygroupintl.m.parsetree.filter.SourcedFanoutFilter;
 import com.raygroupintl.struct.Indexed;
 
@@ -46,7 +40,7 @@ public class RecursiveDataAggregator<T, U extends RecursiveDataHandler<T>> {
 			Block<U> faninBlock = ib.getObject();
 			int faninId = System.identityHashCode(faninBlock);
 			T faninData = datas.get(faninId);
-			numChange += faninBlock.getData().update(faninData, data, ib.getIndex());
+			numChange += faninBlock.getAttachedObject().update(faninData, data, ib.getIndex());
 		}		
 		return numChange;
 	}
@@ -57,7 +51,7 @@ public class RecursiveDataAggregator<T, U extends RecursiveDataHandler<T>> {
 		List<Block<U>> blocks = fanoutBlocks.getBlocks();
 		for (Block<U> b : blocks) {
 			int id = System.identityHashCode(b);
-			U bd = b.getData();
+			U bd = b.getAttachedObject();
 			T data = bd.getLocalCopy();
 			datas.put(id, data);
 		}

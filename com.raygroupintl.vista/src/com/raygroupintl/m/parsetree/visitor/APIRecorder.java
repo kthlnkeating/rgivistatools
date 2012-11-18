@@ -28,7 +28,7 @@ import com.raygroupintl.m.parsetree.ReadCmd;
 import com.raygroupintl.m.parsetree.WriteCmd;
 import com.raygroupintl.m.parsetree.XecuteCmd;
 import com.raygroupintl.m.parsetree.data.Block;
-import com.raygroupintl.m.parsetree.data.BlockWCodeInfo;
+import com.raygroupintl.m.parsetree.data.CodeInfo;
 import com.raygroupintl.m.parsetree.data.Blocks;
 import com.raygroupintl.m.parsetree.data.CallArgument;
 import com.raygroupintl.m.parsetree.data.CallArgumentType;
@@ -36,7 +36,7 @@ import com.raygroupintl.m.parsetree.data.EntryId;
 import com.raygroupintl.vista.repository.RepositoryInfo;
 import com.raygroupintl.vista.repository.VistaPackage;
 
-public class APIRecorder extends BlockRecorder<BlockWCodeInfo> {
+public class APIRecorder extends BlockRecorder<CodeInfo> {
 	private RepositoryInfo repositoryInfo;
 	private boolean underDeviceParameter;
 	
@@ -51,7 +51,7 @@ public class APIRecorder extends BlockRecorder<BlockWCodeInfo> {
 	
 	private void addOutput(Local local) {
 		int i = this.incrementIndex();
-		BlockWCodeInfo d = this.getCurrentData();
+		CodeInfo d = this.getCurrentBlockAttachedObject();
 		if (d != null) {
 			d.addLocal(i, local);	
 		}
@@ -96,12 +96,12 @@ public class APIRecorder extends BlockRecorder<BlockWCodeInfo> {
 	}
 	
 	protected void updateFanout(EntryId fanout) {
-		Block<BlockWCodeInfo> cb = this.getCurrentBlock();
+		Block<CodeInfo> cb = this.getCurrentBlock();
 		int i = this.incrementIndex();
 		CallArgument[] callArguments = this.getLastArguments();
 		cb.addFanout(i, fanout, callArguments);
 		String rn = this.getCurrentRoutineName();
-		BlockWCodeInfo d = this.getCurrentData();
+		CodeInfo d = this.getCurrentBlockAttachedObject();
 		if ((d != null) && (callArguments != null) && (callArguments.length > 0) && ! inFilemanRoutine(rn, true)) {
 			CallArgument ca = callArguments[0];
 			if (ca != null) {
@@ -123,7 +123,7 @@ public class APIRecorder extends BlockRecorder<BlockWCodeInfo> {
 	@Override
 	protected void visitReadCmd(ReadCmd readCmd) {
 		super.visitReadCmd(readCmd);
-		BlockWCodeInfo d = this.getCurrentData();
+		CodeInfo d = this.getCurrentBlockAttachedObject();
 		if (d != null) d.incrementRead();
 	}
 
@@ -131,7 +131,7 @@ public class APIRecorder extends BlockRecorder<BlockWCodeInfo> {
 	@Override
 	protected void visitWriteCmd(WriteCmd writeCmd) {
 		super.visitWriteCmd(writeCmd);
-		BlockWCodeInfo d = this.getCurrentData();
+		CodeInfo d = this.getCurrentBlockAttachedObject();
 		if (d != null) d.incrementWrite();
 	}
 
@@ -139,7 +139,7 @@ public class APIRecorder extends BlockRecorder<BlockWCodeInfo> {
 	@Override
 	protected void visitXecuteCmd(XecuteCmd xecuteCmd) {
 		super.visitXecuteCmd(xecuteCmd);
-		BlockWCodeInfo d = this.getCurrentData();
+		CodeInfo d = this.getCurrentBlockAttachedObject();
 		if (d != null) d.incrementExecute();
 	}
 
@@ -153,7 +153,7 @@ public class APIRecorder extends BlockRecorder<BlockWCodeInfo> {
 		
 	@Override
 	protected void setLocal(Local local, Node rhs) {
-		BlockWCodeInfo d = this.getCurrentData();
+		CodeInfo d = this.getCurrentBlockAttachedObject();
 		if (d != null) {
 			String rn = this.getCurrentRoutineName();
 			this.addOutput(local);
@@ -198,7 +198,7 @@ public class APIRecorder extends BlockRecorder<BlockWCodeInfo> {
 	@Override
 	protected void newLocal(Local local) {
 		int i = this.incrementIndex();
-		BlockWCodeInfo d = this.getCurrentData();
+		CodeInfo d = this.getCurrentBlockAttachedObject();
 		if (d != null) d.addNewed(i, local);
 	}
 	
@@ -226,7 +226,7 @@ public class APIRecorder extends BlockRecorder<BlockWCodeInfo> {
 		if ((! this.underDeviceParameter) || (! isDeviceParameter(local))) { 
 			super.visitLocal(local);
 			int i = this.incrementIndex();
-			BlockWCodeInfo d = this.getCurrentData();
+			CodeInfo d = this.getCurrentBlockAttachedObject();
 			if (d != null) d.addLocal(i, local);
 		}
 	}
@@ -234,14 +234,14 @@ public class APIRecorder extends BlockRecorder<BlockWCodeInfo> {
 	@Override
 	protected void passLocalByVal(Local local, int index) {		
 		int i = this.incrementIndex();
-		BlockWCodeInfo d = this.getCurrentData();
+		CodeInfo d = this.getCurrentBlockAttachedObject();
 		if (d != null) d.addLocal(i, local);
 	}
 	
 	@Override
 	protected void passLocalByRef(Local local, int index) {
 		int i = this.incrementIndex();
-		BlockWCodeInfo d = this.getCurrentData();
+		CodeInfo d = this.getCurrentBlockAttachedObject();
 		if (d != null) d.addLocal(i, local);
 		super.passLocalByRef(local, index);
 	}
@@ -258,21 +258,21 @@ public class APIRecorder extends BlockRecorder<BlockWCodeInfo> {
 				name += constValue;
 			}
 		}
-		BlockWCodeInfo d = this.getCurrentData();
+		CodeInfo d = this.getCurrentBlockAttachedObject();
 		if (d != null) d.addGlobal(name);		
 	}
 	
 	@Override
 	protected void visitIndirection(Indirection indirection) {
-		BlockWCodeInfo d = this.getCurrentData();
+		CodeInfo d = this.getCurrentBlockAttachedObject();
 		if (d != null) d.incrementIndirection();
 		super.visitIndirection(indirection);
 	}
 
 	@Override
-	protected Block<BlockWCodeInfo> getNewBlock(int index, EntryId entryId, Blocks<BlockWCodeInfo> blocks, String[] params) {
-		Block<BlockWCodeInfo> result = new Block<BlockWCodeInfo>(index, entryId, blocks, new BlockWCodeInfo());
-		result.getData().setFormals(params);
+	protected Block<CodeInfo> getNewBlock(int index, EntryId entryId, Blocks<CodeInfo> blocks, String[] params) {
+		Block<CodeInfo> result = new Block<CodeInfo>(index, entryId, blocks, new CodeInfo());
+		result.getAttachedObject().setFormals(params);
 		return result;
 	}
 }

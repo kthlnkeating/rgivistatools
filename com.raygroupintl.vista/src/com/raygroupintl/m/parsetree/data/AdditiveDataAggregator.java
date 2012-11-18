@@ -14,15 +14,11 @@
 // limitations under the License.
 //---------------------------------------------------------------------------
 
-package com.raygroupintl.m.parsetree.data.aggregator;
+package com.raygroupintl.m.parsetree.data;
 
 import java.util.List;
 import java.util.Map;
 
-import com.raygroupintl.m.parsetree.data.AdditiveDataHandler;
-import com.raygroupintl.m.parsetree.data.Block;
-import com.raygroupintl.m.parsetree.data.BlocksSupply;
-import com.raygroupintl.m.parsetree.data.FanoutBlocks;
 import com.raygroupintl.m.parsetree.filter.SourcedFanoutFilter;
 
 public class AdditiveDataAggregator<T, U extends AdditiveDataHandler<T>> {
@@ -38,9 +34,9 @@ public class AdditiveDataAggregator<T, U extends AdditiveDataHandler<T>> {
 		if (filter != null) filter.setSource(this.block.getEntryId());
 		FanoutBlocks<U> fanoutBlocks = this.block.getFanoutBlocks(this.supply, filter, replacedRoutines);
 		List<Block<U>> blocks = fanoutBlocks.getBlocks();
-		T result = this.block.getData().getNewInstance();
+		T result = this.block.getAttachedObject().getNewInstance();
 		for (Block<U> b : blocks) {
-			U dataHandler = b.getData();
+			U dataHandler = b.getAttachedObject();
 			dataHandler.update(result);
 		}
 		return result;		

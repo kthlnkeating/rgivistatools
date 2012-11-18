@@ -35,16 +35,16 @@ public class Block<T> {
 	private int index;
 	private EntryId entryId;
 	private Blocks<T> siblings;
-	private T data;
+	private T attachedObject;
 	
 	private List<IndexedFanout> fanouts = new ArrayList<IndexedFanout>();
 	private boolean closed;
 	
-	public Block(int index, EntryId entryId, Blocks<T> siblings, T data) {
+	public Block(int index, EntryId entryId, Blocks<T> siblings, T attachedObject) {
 		this.index = index;
 		this.entryId = entryId;
 		this.siblings = siblings;
-		this.data = data;
+		this.attachedObject = attachedObject;
 	}
 	
 	public void close() {
@@ -159,7 +159,7 @@ public class Block<T> {
 		return fanoutBlocks;
 	}
 	
-	public T getData() {
-		return this.data;
+	public T getAttachedObject() {
+		return this.attachedObject;
 	}
 }

@@ -177,9 +177,9 @@ public abstract class BlockRecorder<T> extends FanoutRecorder {
 		return this.currentBlocks;
 	}
 	
-	public T getCurrentData() {
+	public T getCurrentBlockAttachedObject() {
 		if ((this.currentBlock != null) && (! this.currentBlock.isClosed())) {			
-			return this.currentBlock.getData();
+			return this.currentBlock.getAttachedObject();
 		} else {
 			return null;
 		}
