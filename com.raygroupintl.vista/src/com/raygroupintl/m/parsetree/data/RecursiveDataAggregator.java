@@ -83,7 +83,7 @@ public class RecursiveDataAggregator<T, U extends RecursiveDataHandler<T>> {
 		
 	public T get(DataStore<T> store, SourcedFanoutFilter filter, Map<String, String> replacedRoutines) {
 		if (filter != null) filter.setSource(this.block.getEntryId());
-		T result = store.get(this);
+		T result = store.get(this.block);
 		if (result != null) {
 			return result;
 		}

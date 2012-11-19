@@ -28,8 +28,8 @@ public class DataStore<T> implements ObjectIdContainer {
 		this.map = new HashMap<Integer, T>();
 	}
 
-	public T get(Object obj) {
-		int id = System.identityHashCode(obj);
+	public <U> T get(Block<U> block) {
+		int id = System.identityHashCode(block);
 		return this.map.get(id);
 	}
 	
@@ -37,8 +37,8 @@ public class DataStore<T> implements ObjectIdContainer {
 		return this.map.containsKey(id);				
 	}
 	
-	public T put(Object obj, Map<Integer, T> datas) {
-		int id = System.identityHashCode(obj);
+	public <U> T put(Block<U> block, Map<Integer, T> datas) {
+		int id = System.identityHashCode(block);
 		T data = datas.get(id);
 		this.map.put(id, data);
 		return data;
