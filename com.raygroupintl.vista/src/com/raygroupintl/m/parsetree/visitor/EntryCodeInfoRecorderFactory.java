@@ -14,15 +14,20 @@
 // limitations under the License.
 //---------------------------------------------------------------------------
 
-package com.raygroupintl.m.parsetree.data;
+package com.raygroupintl.m.parsetree.visitor;
 
-import java.util.HashMap;
+import com.raygroupintl.m.parsetree.data.CodeInfo;
+import com.raygroupintl.vista.repository.RepositoryInfo;
 
-public class MapBlocksSupply<T> extends HashMap<String, Blocks<T>> implements BlocksSupply<T> {
-	private static final long serialVersionUID = 1L;
-
+public class EntryCodeInfoRecorderFactory implements BlockRecorderFactory<CodeInfo> {
+	private RepositoryInfo repositoryInfo;
+	
+	public EntryCodeInfoRecorderFactory(RepositoryInfo repositoryInfo) {
+		this.repositoryInfo = repositoryInfo;
+	}
+	
 	@Override
-	public Blocks<T> getBlocks(String routineName) {
-		return this.get(routineName);
+	public BlockRecorder<CodeInfo> getRecorder() {
+		return new EntryCodeInfoRecorder(this.repositoryInfo);
 	}
 }

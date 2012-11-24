@@ -41,14 +41,14 @@ import com.raygroupintl.output.FileWrapper;
 import com.raygroupintl.output.TerminalFormatter;
 import com.raygroupintl.struct.PassFilter;
 
-public class APIWriter {	
+public class EntryCodeInfoWriter {	
 	private FileWrapper fileWrapper;
 	private BlocksSupply<CodeInfo> blocksSupply;
 	private TerminalFormatter tf = new TerminalFormatter();
 	private Map<String, String> replacementRoutines;
 	private SourcedFanoutFilter filter = new BasicSourcedFanoutFilter(new PassFilter<EntryId>());
 	
-	public APIWriter(FileWrapper fileWrapper, BlocksSupply<CodeInfo> blocksSupply, Map<String, String> replacementRoutines) {
+	public EntryCodeInfoWriter(FileWrapper fileWrapper, BlocksSupply<CodeInfo> blocksSupply, Map<String, String> replacementRoutines) {
 		this.fileWrapper = fileWrapper;
 		this.blocksSupply = blocksSupply;
 		this.replacementRoutines = replacementRoutines;

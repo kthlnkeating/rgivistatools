@@ -57,7 +57,7 @@ public abstract class BlockRecorder<T> extends FanoutRecorder {
 		return this.index;
 	}
 	
-	protected void reset() {
+	public void reset() {
 		this.currentBlocks = null;
 		this.currentBlock = null;
 		this.currentRoutineName = null;
@@ -65,6 +65,7 @@ public abstract class BlockRecorder<T> extends FanoutRecorder {
 		this.inDoBlock = 0;
 		this.underCondition = 0;
 		this.underFor = 0;
+		this.doBlockHash = new HashSet<Integer>();
 	}
 	
 	protected abstract void updateFanout(EntryId fanout);

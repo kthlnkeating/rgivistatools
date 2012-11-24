@@ -25,11 +25,33 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import com.raygroupintl.m.parsetree.filter.SourcedFanoutFilter;
-import com.raygroupintl.m.parsetree.visitor.APIRecorder;
+import com.raygroupintl.m.parsetree.visitor.EntryCodeInfoRecorder;
 import com.raygroupintl.struct.ObjectIdContainer;
 
+/***
+ * Block represents a piece of a custom partition of an M Routine. Each block
+ * in this partition is closely related but not identical to an M execution 
+ * block and is more granular.  
+ * <p>
+ * Every routine tag and the first line of a set of higher level M routine 
+ * lines marks the starting point of a block.  An unconditional QUIT or GOTO
+ * command, start of an other block of the same or lower level, or end
+ * of the routine marks the end of a block. A block can contain other blocks
+ * of higher level in which case the higher level block is simply considered
+ * a fanout.  Explicit M DO and GOTO commands are also fanouts.  A new block 
+ * that starts with a routine tag is implicitly considered to be a fanout
+ * for the previous block if the previous block does not end with an 
+ * unconditional QUIT or GOTO command.
+ * <p> 
+ * In addition to the standard information, Block can contain custom 
+ * information of type T for various analysis needs.
+ * 
+ * @param <T> The type of additional analysis information.
+ * @see com.raygroupintl.m.parsetree.visitor.BlockRecorder
+ *           
+ */
 public class Block<T> {
-	private final static Logger LOGGER = Logger.getLogger(APIRecorder.class.getName());
+	private final static Logger LOGGER = Logger.getLogger(EntryCodeInfoRecorder.class.getName());
 	private static Set<EntryId> reported = new HashSet<EntryId>();
 
 	private int index;

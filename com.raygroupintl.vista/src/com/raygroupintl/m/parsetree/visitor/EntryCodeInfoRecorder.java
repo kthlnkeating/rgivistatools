@@ -36,15 +36,15 @@ import com.raygroupintl.m.parsetree.data.EntryId;
 import com.raygroupintl.vista.repository.RepositoryInfo;
 import com.raygroupintl.vista.repository.VistaPackage;
 
-public class APIRecorder extends BlockRecorder<CodeInfo> {
+public class EntryCodeInfoRecorder extends BlockRecorder<CodeInfo> {
 	private RepositoryInfo repositoryInfo;
 	private boolean underDeviceParameter;
 	
-	public APIRecorder(RepositoryInfo ri) {
+	public EntryCodeInfoRecorder(RepositoryInfo ri) {
 		this.repositoryInfo = ri;
 	}
 
-	protected void reset() {
+	public void reset() {
 		this.underDeviceParameter = false;
 		super.reset();
 	}

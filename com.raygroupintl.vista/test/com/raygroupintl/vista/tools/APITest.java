@@ -20,10 +20,10 @@ import com.raygroupintl.m.parsetree.data.CodeInfo;
 import com.raygroupintl.m.parsetree.data.DataStore;
 import com.raygroupintl.m.parsetree.data.Blocks;
 import com.raygroupintl.m.parsetree.data.EntryId;
-import com.raygroupintl.m.parsetree.data.MapBlocksSupply;
+import com.raygroupintl.m.parsetree.data.BlocksInMap;
 import com.raygroupintl.m.parsetree.data.RecursiveDataAggregator;
 import com.raygroupintl.m.parsetree.filter.BasicSourcedFanoutFilter;
-import com.raygroupintl.m.parsetree.visitor.APIRecorder;
+import com.raygroupintl.m.parsetree.visitor.EntryCodeInfoRecorder;
 import com.raygroupintl.m.parsetree.visitor.ErrorRecorder;
 import com.raygroupintl.m.struct.MRoutineContent;
 import com.raygroupintl.m.token.MRoutine;
@@ -68,7 +68,7 @@ public class APITest {
 		return r.getNode();
 	}
 		
-	private void testAssumedLocal(MapBlocksSupply<CodeInfo> blocksMap, String routineName, String tag, String[] expectedAssumeds, String[] expectedGlobals) {
+	private void testAssumedLocal(BlocksInMap<CodeInfo> blocksMap, String routineName, String tag, String[] expectedAssumeds, String[] expectedGlobals) {
 		Blocks<CodeInfo> rbs = blocksMap.get(routineName);
 		Block<CodeInfo> lb = rbs.get(tag);
 		RecursiveDataAggregator<Set<String>, CodeInfo> ala = new RecursiveDataAggregator<Set<String>, CodeInfo>(lb, blocksMap);
@@ -87,7 +87,7 @@ public class APITest {
 		}				
 	}
 	
-	private void filemanTest(MapBlocksSupply<CodeInfo> blocksMap, String routineName, String tag, String[] expectedGlobals, String[] expectedCalls) {
+	private void filemanTest(BlocksInMap<CodeInfo> blocksMap, String routineName, String tag, String[] expectedGlobals, String[] expectedCalls) {
 		Blocks<CodeInfo> rbs = blocksMap.get(routineName);
 		Block<CodeInfo> lb = rbs.get(tag);
 		AdditiveDataAggregator<BasicCodeInfo, CodeInfo> bcia = new AdditiveDataAggregator<BasicCodeInfo, CodeInfo>(lb, blocksMap);
@@ -118,8 +118,8 @@ public class APITest {
 	
 	@Test
 	public void testAssumedLocals() {
-		APIRecorder recorder = new APIRecorder(null);
-		MapBlocksSupply<CodeInfo> blocksMap = new MapBlocksSupply<CodeInfo>();
+		EntryCodeInfoRecorder recorder = new EntryCodeInfoRecorder(null);
+		BlocksInMap<CodeInfo> blocksMap = new BlocksInMap<CodeInfo>();
 		for (int i=0; i<ROUTINES.length; ++i) {			
 			ROUTINES[i].accept(recorder);
 			Blocks<CodeInfo> blocks = recorder.getBlocks();

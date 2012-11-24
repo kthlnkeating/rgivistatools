@@ -32,13 +32,14 @@ import com.raygroupintl.m.parsetree.filter.ExcludeNonPkgCallFanoutFilter;
 import com.raygroupintl.m.parsetree.filter.ExcludeNonRtnFanoutFilter;
 import com.raygroupintl.m.parsetree.filter.PercentRoutineFanoutFilter;
 import com.raygroupintl.m.parsetree.filter.SourcedFanoutFilter;
-import com.raygroupintl.m.parsetree.visitor.APIRecorderFactory;
+import com.raygroupintl.m.parsetree.visitor.EntryCodeInfoRecorder;
+import com.raygroupintl.m.parsetree.visitor.EntryCodeInfoRecorderFactory;
 import com.raygroupintl.output.FileWrapper;
 import com.raygroupintl.vista.repository.RepositoryInfo;
 import com.raygroupintl.vista.repository.VistaPackage;
 import com.raygroupintl.vista.repository.VistaPackages;
-import com.raygroupintl.vista.repository.visitor.APIOverallRecorder;
-import com.raygroupintl.vista.repository.visitor.APIWriter;
+import com.raygroupintl.vista.repository.visitor.BlocksInMapFactory;
+import com.raygroupintl.vista.repository.visitor.EntryCodeInfoWriter;
 import com.raygroupintl.vista.repository.visitor.CacheOccuranceWriter;
 import com.raygroupintl.vista.repository.visitor.DTFilemanCallWriter;
 import com.raygroupintl.vista.repository.visitor.DTUsedGlobalWriter;
@@ -406,7 +407,7 @@ public class RepositoryRunTypes extends RunTypes {
 		}
 		
 		private void auxRun(RepositoryInfo ri, FileWrapper fr, BlocksSupply<CodeInfo> blocks) {
-			APIWriter apiw = new APIWriter(fr, blocks, REPLACEMENT_ROUTINES);
+			EntryCodeInfoWriter apiw = new EntryCodeInfoWriter(fr, blocks, REPLACEMENT_ROUTINES);
 			SourcedFanoutFilter filter = this.getFilter(ri);
 			apiw.setFilter(filter);
 			if (this.params.inputFile != null) {
@@ -423,13 +424,13 @@ public class RepositoryRunTypes extends RunTypes {
 				RepositoryInfo ri = this.getRepositoryInfo();
 				if (ri != null) {
 					if ((this.params.parseTreeDirectory == null) || this.params.parseTreeDirectory.isEmpty()) {
-						APIOverallRecorder api = new APIOverallRecorder(ri);
+						BlocksInMapFactory<CodeInfo> api = new BlocksInMapFactory<CodeInfo>(new EntryCodeInfoRecorder(ri));
 						VistaPackages vps = new VistaPackages(ri.getAllPackages());
 						vps.accept(api);
 						BlocksSupply<CodeInfo> blocks = api.getBlocks();
 						this.auxRun(ri, fr, blocks);
 					} else {
-						BlocksSupply<CodeInfo> blocks = new SerializedBlocksSupply<CodeInfo>(this.params.parseTreeDirectory, new APIRecorderFactory(ri));
+						BlocksSupply<CodeInfo> blocks = new SerializedBlocksSupply<CodeInfo>(this.params.parseTreeDirectory, new EntryCodeInfoRecorderFactory(ri));
 						this.auxRun(ri, fr, blocks);
 					}
 				}

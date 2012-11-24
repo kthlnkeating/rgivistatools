@@ -19,26 +19,23 @@ package com.raygroupintl.vista.repository.visitor;
 import java.util.logging.Logger;
 
 import com.raygroupintl.m.parsetree.Routine;
-import com.raygroupintl.m.parsetree.data.CodeInfo;
 import com.raygroupintl.m.parsetree.data.Blocks;
 import com.raygroupintl.m.parsetree.data.BlocksSupply;
-import com.raygroupintl.m.parsetree.data.MapBlocksSupply;
-import com.raygroupintl.m.parsetree.visitor.APIRecorder;
-import com.raygroupintl.vista.repository.RepositoryInfo;
+import com.raygroupintl.m.parsetree.data.BlocksInMap;
+import com.raygroupintl.m.parsetree.visitor.BlockRecorder;
 import com.raygroupintl.vista.repository.RepositoryVisitor;
 import com.raygroupintl.vista.repository.VistaPackages;
 import com.raygroupintl.vista.repository.VistaPackage;
 
-public class APIOverallRecorder extends RepositoryVisitor {
-	private final static Logger LOGGER = Logger.getLogger(APIOverallRecorder.class.getName());
+public class BlocksInMapFactory<T> extends RepositoryVisitor {
+	private final static Logger LOGGER = Logger.getLogger(BlocksInMapFactory.class.getName());
 
-	private RepositoryInfo repositoryInfo;
 	private int packageCount;
-	private APIRecorder recorder;
-	private MapBlocksSupply<CodeInfo> blocksMap = new MapBlocksSupply<CodeInfo>();
+	private BlockRecorder<T> recorder;
+	private BlocksInMap<T> blocksMap = new BlocksInMap<T>();
 	
-	public APIOverallRecorder(RepositoryInfo ri) {
-		this.repositoryInfo = ri;
+	public BlocksInMapFactory(BlockRecorder<T> br) {
+		this.recorder= br;
 	}
 	
 	@Override
@@ -51,17 +48,17 @@ public class APIOverallRecorder extends RepositoryVisitor {
 	@Override
 	public void visitRoutine(Routine routine) {
 		routine.accept(this.recorder);
-		Blocks<CodeInfo> blocks = this.recorder.getBlocks();
+		Blocks<T> blocks = this.recorder.getBlocks();
 		this.blocksMap.put(routine.getName(), blocks);
 	}
 	
 	@Override
 	protected void visitRoutinePackages(VistaPackages rps) {
-		this.recorder = new APIRecorder(this.repositoryInfo);
+		this.recorder.reset();
 		rps.acceptSubNodes(this);
 	}
 	
-	public BlocksSupply<CodeInfo> getBlocks() {
+	public BlocksSupply<T> getBlocks() {
 		return this.blocksMap;
 	}
 }
