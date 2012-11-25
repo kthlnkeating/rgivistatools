@@ -16,24 +16,29 @@
 
 package com.raygroupintl.vista.tools;
 
+import java.util.HashMap;
 import java.util.Set;
 import java.util.Map;
 
-public abstract class RunTypes {
-	private Map<String, RunType.Factory> runTypes;
-	
-	protected RunTypes() {
-		this.runTypes = this.createRunTypes();
+public abstract class Tools {	
+	protected static interface MemberFactory {
+		Tool getInstance(CLIParams params);		
 	}
 
-	protected abstract Map<String, RunType.Factory> createRunTypes();
+	private Map<String, MemberFactory> tools = new HashMap<String, MemberFactory>();
+	
+	protected Tools() {
+		this.updateTools(this.tools);
+	}
+
+	protected abstract void updateTools(Map<String, MemberFactory> tools);
 
 	public Set<String> getRunTypeOptions() {
-		return this.runTypes.keySet();
+		return this.tools.keySet();
 	}
 		
-	public RunType getRunType(String runTypeOption, CLIParams params) {
-		RunType.Factory specifiedFactory = this.runTypes.get(runTypeOption);
+	public Tool getRunType(String runTypeOption, CLIParams params) {
+		MemberFactory specifiedFactory = this.tools.get(runTypeOption);
 		if (specifiedFactory == null) {
 			return null;
 		}

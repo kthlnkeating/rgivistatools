@@ -14,7 +14,7 @@
 // limitations under the License.
 //---------------------------------------------------------------------------
 
-package com.raygroupintl.vista.repository.visitor;
+package com.raygroupintl.vista.tools;
 
 import java.io.IOException;
 import java.nio.file.Path;
@@ -41,14 +41,26 @@ import com.raygroupintl.output.FileWrapper;
 import com.raygroupintl.output.TerminalFormatter;
 import com.raygroupintl.struct.PassFilter;
 
-public class EntryCodeInfoWriter {	
+public class EntryCodeInfoTool {	
+	public static class EntryCodeInfo {
+		public String[] formals;
+		public Set<String> assumedLocals;
+		public BasicCodeInfo otherCodeInfo;
+	
+		public EntryCodeInfo(String[] formals, Set<String> assumedLocals, BasicCodeInfo otherCodeInfo) {
+			this.formals = formals;
+			this.assumedLocals = assumedLocals;
+			this.otherCodeInfo = otherCodeInfo;
+		}
+	}
+		
 	private FileWrapper fileWrapper;
 	private BlocksSupply<CodeInfo> blocksSupply;
 	private TerminalFormatter tf = new TerminalFormatter();
 	private Map<String, String> replacementRoutines;
 	private SourcedFanoutFilter filter = new BasicSourcedFanoutFilter(new PassFilter<EntryId>());
 	
-	public EntryCodeInfoWriter(FileWrapper fileWrapper, BlocksSupply<CodeInfo> blocksSupply, Map<String, String> replacementRoutines) {
+	public EntryCodeInfoTool(FileWrapper fileWrapper, BlocksSupply<CodeInfo> blocksSupply, Map<String, String> replacementRoutines) {
 		this.fileWrapper = fileWrapper;
 		this.blocksSupply = blocksSupply;
 		this.replacementRoutines = replacementRoutines;
@@ -77,48 +89,61 @@ public class EntryCodeInfoWriter {
 	}
 	
 	private void write(EntryId entryId, DataStore<Set<String>> store) {
-		String routineName = entryId.getRoutineName();
 		this.fileWrapper.writeEOL(" " + entryId.toString2());
 		this.tf.setTab(12);
+		
+		EntryCodeInfo result = this.getEntryCodeInfo(entryId, store);
+		if (result == null) {
+			this.fileWrapper.writeEOL("  ERROR: Invalid entry point");
+			return;
+		} 
+
+		this.fileWrapper.write(this.tf.startList("FORMAL"));
+		if ((result.formals == null) || (result.formals.length == 0)) {
+			this.fileWrapper.write("--");
+		} else {
+			for (String formal : result.formals) {
+				this.fileWrapper.write(this.tf.addToList(formal));					
+			}
+		}
+		this.fileWrapper.writeEOL();
+
+		List<String> assumedLocalsSorted = new ArrayList<String>(result.assumedLocals);
+		Collections.sort(assumedLocalsSorted);			
+		this.writeAPIData(assumedLocalsSorted, "ASSUMED");
+		
+		BasicCodeInfo apiData = result.otherCodeInfo;
+		
+		this.writeAPIData(apiData.getGlobals(), "GLBS");
+		this.writeAPIData(apiData.getReadCount(), "READ");
+		this.writeAPIData(apiData.getWriteCount(), "WRITE");
+		this.writeAPIData(apiData.getExecuteCount(), "EXEC");
+		this.writeAPIData(apiData.getIndirectionCount(), "IND");
+		this.writeAPIData(apiData.getFilemanGlobals(), "FMGLBS");
+		this.writeAPIData(apiData.getFilemanCalls(), "FMCALLS");
+
+		this.fileWrapper.writeEOL();
+	}
+	
+	public EntryCodeInfo getEntryCodeInfo(EntryId entryId, DataStore<Set<String>> store) {
+		String routineName = entryId.getRoutineName();
 		Blocks<CodeInfo> rbs = this.blocksSupply.getBlocks(routineName);
 		if (rbs == null) {
-			this.fileWrapper.writeEOL("  ERROR: Invalid entry point");
-		} else {
-			String label = entryId.getLabelOrDefault();
-			Block<CodeInfo> lb = rbs.get(label);
-			if (lb == null) {
-				this.fileWrapper.writeEOL("  ERROR: Invalid entry point");
-			} else {
-				String[] formals = lb.getAttachedObject().getFormals();
-				this.fileWrapper.write(this.tf.startList("FORMAL"));
-				if ((formals == null) || (formals.length == 0)) {
-					this.fileWrapper.write("--");
-				} else {
-					for (String formal : formals) {
-						this.fileWrapper.write(this.tf.addToList(formal));					
-					}
-				}
-				this.fileWrapper.writeEOL();
+			return null;
+		} 
+		String label = entryId.getLabelOrDefault();
+		Block<CodeInfo> lb = rbs.get(label);
+		if (lb == null) {
+			return null;
+		} 
+		
+		RecursiveDataAggregator<Set<String>, CodeInfo> ala = new RecursiveDataAggregator<Set<String>, CodeInfo>(lb, this.blocksSupply);
+		Set<String> assumedLocals = ala.get(store, this.filter, this.replacementRoutines);
+		
+		AdditiveDataAggregator<BasicCodeInfo, CodeInfo> bcia = new AdditiveDataAggregator<BasicCodeInfo, CodeInfo>(lb, this.blocksSupply);
+		BasicCodeInfo apiData = bcia.getCodeInfo(this.filter, this.replacementRoutines);
 
-				RecursiveDataAggregator<Set<String>, CodeInfo> ala = new RecursiveDataAggregator<Set<String>, CodeInfo>(lb, this.blocksSupply);
-				Set<String> assumedLocals = ala.get(store, this.filter, this.replacementRoutines);
-				List<String> assumedLocalsSorted = new ArrayList<String>(assumedLocals);
-				Collections.sort(assumedLocalsSorted);			
-				this.writeAPIData(assumedLocalsSorted, "ASSUMED");
-				
-				AdditiveDataAggregator<BasicCodeInfo, CodeInfo> bcia = new AdditiveDataAggregator<BasicCodeInfo, CodeInfo>(lb, this.blocksSupply);
-				BasicCodeInfo apiData = bcia.getCodeInfo(this.filter, this.replacementRoutines);
-				
-				this.writeAPIData(apiData.getGlobals(), "GLBS");
-				this.writeAPIData(apiData.getReadCount(), "READ");
-				this.writeAPIData(apiData.getWriteCount(), "WRITE");
-				this.writeAPIData(apiData.getExecuteCount(), "EXEC");
-				this.writeAPIData(apiData.getIndirectionCount(), "IND");
-				this.writeAPIData(apiData.getFilemanGlobals(), "FMGLBS");
-				this.writeAPIData(apiData.getFilemanCalls(), "FMCALLS");
-			}
-		}				
-		this.fileWrapper.writeEOL();
+		return new EntryCodeInfo(lb.getAttachedObject().getFormals(), assumedLocals, apiData);
 	}
 	
 	public void auxWrite(String fanInFileName) {		

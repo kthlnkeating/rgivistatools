@@ -27,10 +27,10 @@ public class BasicCodeInfo {
 	private Set<String> filemanGlobals = new HashSet<String>();
 	private Set<String> filemanCalls = new HashSet<String>();
 	
-	int indirectionCount;
-	int writeCount;
-	int readCount;
-	int executeCount;
+	private int indirectionCount;
+	private int writeCount;
+	private int readCount;
+	private int executeCount;
 		
 	public void mergeGlobals(Set<String> globals) {
 		if (this.globals == null) {

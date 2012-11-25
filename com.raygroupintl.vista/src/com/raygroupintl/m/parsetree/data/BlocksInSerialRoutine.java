@@ -22,12 +22,12 @@ import com.raygroupintl.m.parsetree.Routine;
 import com.raygroupintl.m.parsetree.visitor.BlockRecorder;
 import com.raygroupintl.m.parsetree.visitor.BlockRecorderFactory;
 
-public class SerializedBlocksSupply<T> implements BlocksSupply<T> {
+public class BlocksInSerialRoutine<T> implements BlocksSupply<T> {
 	private String inputPath;
 	private HashMap<String, Blocks<T>> blocks = new HashMap<String, Blocks<T>>();
 	private BlockRecorderFactory<T> blockRecorder;
 	
-	public SerializedBlocksSupply(String inputPath, BlockRecorderFactory<T> brf) {
+	public BlocksInSerialRoutine(String inputPath, BlockRecorderFactory<T> brf) {
 		this.inputPath = inputPath;
 		this.blockRecorder = brf;
 	}

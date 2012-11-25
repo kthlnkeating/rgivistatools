@@ -14,9 +14,8 @@
 // limitations under the License.
 //---------------------------------------------------------------------------
 
-package com.raygroupintl.vista.repository.visitor;
+package com.raygroupintl.vista.tools;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -36,9 +35,8 @@ import com.raygroupintl.m.parsetree.filter.BasicSourcedFanoutFilter;
 import com.raygroupintl.m.parsetree.filter.SourcedFanoutFilter;
 import com.raygroupintl.struct.PassFilter;
 import com.raygroupintl.vista.repository.RepositoryVisitor;
-import com.raygroupintl.vista.tools.MRALogger;
 
-public class EntryFaninRecorder extends RepositoryVisitor  {
+public class EntryFaninTool extends RepositoryVisitor  {
 	private static class PathsToEntry {
 		private EntryId start;
 		private SortedSet<EntryId> firstEntriesInPaths;
@@ -58,9 +56,9 @@ public class EntryFaninRecorder extends RepositoryVisitor  {
 			this.firstEntriesInPaths.add(firstEntryInPath);
 		}
 		
-		public SortedSet<EntryId> getAll() {
-			return this.firstEntriesInPaths;
-		}
+		//public SortedSet<EntryId> getAll() {
+		//	return this.firstEntriesInPaths;
+		//}
 	}
 		
 	private static class PTEDataStore extends DataStore<PathsToEntry> {
@@ -84,9 +82,9 @@ public class EntryFaninRecorder extends RepositoryVisitor  {
 	private static class PrivateRecursiveDataHandler implements RecursiveDataHandler<PathsToEntry> {
 		private EntryId start;
 		
-		public PrivateRecursiveDataHandler(EntryId start) {
-			this.start = start;
-		}
+		//public PrivateRecursiveDataHandler(EntryId start) {
+		//	this.start = start;
+		//}
 		
 		@Override
 		public PathsToEntry getLocalCopy() {
@@ -111,7 +109,7 @@ public class EntryFaninRecorder extends RepositoryVisitor  {
 
 	PTEDataStore store = new PTEDataStore();
 
-	public EntryFaninRecorder(BlocksSupply<PrivateRecursiveDataHandler> blocksSupply, Map<String, String> replacementRoutines) {
+	public EntryFaninTool(BlocksSupply<PrivateRecursiveDataHandler> blocksSupply, Map<String, String> replacementRoutines) {
 		this.blocksSupply = blocksSupply;
 		this.replacementRoutines = replacementRoutines;
 	}

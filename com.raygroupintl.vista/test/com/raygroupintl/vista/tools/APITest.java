@@ -69,7 +69,7 @@ public class APITest {
 	}
 		
 	private void testAssumedLocal(BlocksInMap<CodeInfo> blocksMap, String routineName, String tag, String[] expectedAssumeds, String[] expectedGlobals) {
-		Blocks<CodeInfo> rbs = blocksMap.get(routineName);
+		Blocks<CodeInfo> rbs = blocksMap.getBlocks(routineName);
 		Block<CodeInfo> lb = rbs.get(tag);
 		RecursiveDataAggregator<Set<String>, CodeInfo> ala = new RecursiveDataAggregator<Set<String>, CodeInfo>(lb, blocksMap);
 		Set<String> assumeds = ala.get(new DataStore<Set<String>>(), new BasicSourcedFanoutFilter(new PassFilter<EntryId>()), replacement);
@@ -88,7 +88,7 @@ public class APITest {
 	}
 	
 	private void filemanTest(BlocksInMap<CodeInfo> blocksMap, String routineName, String tag, String[] expectedGlobals, String[] expectedCalls) {
-		Blocks<CodeInfo> rbs = blocksMap.get(routineName);
+		Blocks<CodeInfo> rbs = blocksMap.getBlocks(routineName);
 		Block<CodeInfo> lb = rbs.get(tag);
 		AdditiveDataAggregator<BasicCodeInfo, CodeInfo> bcia = new AdditiveDataAggregator<BasicCodeInfo, CodeInfo>(lb, blocksMap);
 		BasicCodeInfo apiData = bcia.getCodeInfo(new BasicSourcedFanoutFilter(new PassFilter<EntryId>()), replacement);

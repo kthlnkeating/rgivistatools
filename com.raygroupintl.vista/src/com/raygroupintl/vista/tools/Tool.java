@@ -24,10 +24,10 @@ import com.raygroupintl.vista.repository.RepositoryInfo;
 import com.raygroupintl.vista.repository.VistaPackage;
 import com.raygroupintl.vista.repository.VistaPackages;
 
-public abstract class RunType {
+public abstract class Tool {
 	protected CLIParams params;
 	
-	protected RunType(CLIParams params) {
+	protected Tool(CLIParams params) {
 		this.params = params;
 	}
 		
@@ -80,9 +80,5 @@ public abstract class RunType {
 			return null;
 		}
 		return new FileWrapper(this.params.outputFile);
-	}
-	
-	public static abstract class Factory {
-		public abstract RunType getInstance(CLIParams params);		
 	}
 }

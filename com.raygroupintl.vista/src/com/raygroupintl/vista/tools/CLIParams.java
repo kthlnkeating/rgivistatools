@@ -82,12 +82,6 @@ public class CLIParams {
 			CLIParams.logError("No output path is specified.");
 			return false;
 		}
-		if (this.analysisType.equals("api")) {
-			if (this.inputFile == null) {
-				CLIParams.logError("No input file is specified.");
-				return false;				
-			}
-		}
 		return true;
 	}
 	

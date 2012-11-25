@@ -43,9 +43,9 @@ public class MRoutineAnalyzer {
 		return "Possible run types: " + result;
 	}
 
-	private static String getRunTypeOptionsMsg(RunTypes[] rtss) {
+	private static String getRunTypeOptionsMsg(Tools[] rtss) {
 		TreeSet<String> allOptions = new TreeSet<String>();
-		for (RunTypes rts : rtss) {
+		for (Tools rts : rtss) {
 			Set<String > options = rts.getRunTypeOptions();
 			allOptions.addAll(options);
 		}
@@ -53,18 +53,18 @@ public class MRoutineAnalyzer {
 		return getOptionMsg(allOptions);
 	}
 	
-	private static void logErrorWithOptions(String firstLineMsg, RunTypes[] rtss) {
+	private static void logErrorWithOptions(String firstLineMsg, Tools[] rtss) {
 		String secondLineMsg = getRunTypeOptionsMsg(rtss);
 		MRALogger.logError(firstLineMsg + "\n" + secondLineMsg + "\n");
 	}
 
-	private static void logErrorWithOptions(String firstLineMsg, RunTypes rts) {
+	private static void logErrorWithOptions(String firstLineMsg, Tools rts) {
 		String secondLineMsg = getOptionMsg(rts.getRunTypeOptions());
 		MRALogger.logError(firstLineMsg + "\n" + secondLineMsg + "\n");
 	}
 
-	private static boolean run(RunTypes rts, String runTypeOption, CLIParams params) {
-		RunType rt = rts.getRunType(runTypeOption, params);
+	private static boolean run(Tools rts, String runTypeOption, CLIParams params) {
+		Tool rt = rts.getRunType(runTypeOption, params);
 		if (rt != null) {
 			MRALogger.logInfo("Started " + runTypeOption + ".");
 			rt.run();
@@ -77,7 +77,7 @@ public class MRoutineAnalyzer {
 	
 	public static void main(String[] args) {
 		try {
-			RunTypes[] rtss = new RunTypes[]{new RepositoryRunTypes(), new MacroRunTypes(), new RoutineRunTypes()};
+			Tools[] rtss = new Tools[]{new RepositoryTools(), new MacroTools(), new RoutineTools()};
 		
 			CLIParams params = getCommandLineParamaters(args);	
 			if (params == null) return;
@@ -100,7 +100,7 @@ public class MRoutineAnalyzer {
 				if (run(rtss[2], runTypeOption, params)) return;
 				logErrorWithOptions("Specified run type option " + runTypeOption + " is not know.", rtss[2]);					
 			} else {
-				for (RunTypes rts : rtss) {
+				for (Tools rts : rtss) {
 					if (run(rts, runTypeOption, params)) return;
 				}
 				logErrorWithOptions("Specified run type option " + runTypeOption + " is not know.", rtss);					

@@ -20,7 +20,6 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -30,8 +29,8 @@ import com.raygroupintl.output.FileWrapper;
 import com.raygroupintl.vista.repository.visitor.EntryWriter;
 import com.raygroupintl.vista.repository.visitor.SerializedRoutineWriter;
 
-public class RoutineRunTypes extends RunTypes {
-	protected static abstract class RoutineRunType extends RunType {
+public class RoutineTools extends Tools {
+	protected static abstract class RoutineRunType extends Tool {
 		public RoutineRunType(CLIParams params) {
 			super(params);
 		}
@@ -121,20 +120,18 @@ public class RoutineRunTypes extends RunTypes {
 	}
 
 	@Override
-	protected Map<String, RunType.Factory> createRunTypes() {
-		Map<String, RunType.Factory> result = new HashMap<String, RunType.Factory>();
-		result.put("entry", new RunType.Factory() {				
+	protected void updateTools(Map<String, MemberFactory> tools) {
+		tools.put("entry", new MemberFactory() {				
 			@Override
-			public RunType getInstance(CLIParams params) {
+			public Tool getInstance(CLIParams params) {
 				return new Entry(params);
 			}
 		});
-		result.put("parsetreesave", new RunType.Factory() {				
+		tools.put("parsetreesave", new MemberFactory() {				
 			@Override
-			public RunType getInstance(CLIParams params) {
+			public Tool getInstance(CLIParams params) {
 				return new ParseTreeSave(params);
 			}
 		});
-		return result;
 	}
 }

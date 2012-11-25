@@ -23,9 +23,10 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import com.raygroupintl.m.parsetree.data.BlocksInMap;
 import com.raygroupintl.m.parsetree.data.CodeInfo;
 import com.raygroupintl.m.parsetree.data.BlocksSupply;
-import com.raygroupintl.m.parsetree.data.SerializedBlocksSupply;
+import com.raygroupintl.m.parsetree.data.BlocksInSerialRoutine;
 import com.raygroupintl.m.parsetree.filter.BasicSourcedFanoutFilter;
 import com.raygroupintl.m.parsetree.filter.ExcludeFilemanCallFanoutFilter;
 import com.raygroupintl.m.parsetree.filter.ExcludeNonPkgCallFanoutFilter;
@@ -38,8 +39,6 @@ import com.raygroupintl.output.FileWrapper;
 import com.raygroupintl.vista.repository.RepositoryInfo;
 import com.raygroupintl.vista.repository.VistaPackage;
 import com.raygroupintl.vista.repository.VistaPackages;
-import com.raygroupintl.vista.repository.visitor.BlocksInMapFactory;
-import com.raygroupintl.vista.repository.visitor.EntryCodeInfoWriter;
 import com.raygroupintl.vista.repository.visitor.CacheOccuranceWriter;
 import com.raygroupintl.vista.repository.visitor.DTFilemanCallWriter;
 import com.raygroupintl.vista.repository.visitor.DTUsedGlobalWriter;
@@ -52,7 +51,7 @@ import com.raygroupintl.vista.repository.visitor.OptionWriter;
 import com.raygroupintl.vista.repository.visitor.RPCWriter;
 import com.raygroupintl.vista.repository.visitor.SerializedRoutineWriter;
 
-public class RepositoryRunTypes extends RunTypes {
+public class RepositoryTools extends Tools {
 	private static Map<String, String> REPLACEMENT_ROUTINES = new HashMap<String, String>();
 	static {
 		REPLACEMENT_ROUTINES.put("%ZOSV", "ZOSVONT");
@@ -126,7 +125,7 @@ public class RepositoryRunTypes extends RunTypes {
 		REPLACEMENT_ROUTINES.put("%ZISUTL", "ZISUTL");
 	}
 	
-	private static class Fanout extends RunType {		
+	private static class Fanout extends Tool {		
 		public Fanout(CLIParams params) {
 			super(params);
 		}
@@ -147,7 +146,7 @@ public class RepositoryRunTypes extends RunTypes {
 		}
 	}
 
-	private static class Fanin extends RunType {		
+	private static class Fanin extends Tool {		
 		public Fanin(CLIParams params) {
 			super(params);
 		}
@@ -168,7 +167,7 @@ public class RepositoryRunTypes extends RunTypes {
 		}
 	}
 		
-	private static class Option extends RunType {		
+	private static class Option extends Tool {		
 		public Option(CLIParams params) {
 			super(params);
 		}
@@ -189,7 +188,7 @@ public class RepositoryRunTypes extends RunTypes {
 		}
 	}
 			
-	private static class RPC extends RunType {		
+	private static class RPC extends Tool {		
 		public RPC(CLIParams params) {
 			super(params);
 		}
@@ -210,7 +209,7 @@ public class RepositoryRunTypes extends RunTypes {
 		}
 	}
 	
-	private static class MError extends RunType {		
+	private static class MError extends Tool {		
 		public MError(CLIParams params) {
 			super(params);
 		}
@@ -232,7 +231,7 @@ public class RepositoryRunTypes extends RunTypes {
 		}
 	}
 	
-	private static class RoutineInfo extends RunType {		
+	private static class RoutineInfo extends Tool {		
 		public RoutineInfo(CLIParams params) {
 			super(params);
 		}
@@ -270,7 +269,7 @@ public class RepositoryRunTypes extends RunTypes {
 		}
 	}
 	
-	private static class UsesGlobal extends RunType {		
+	private static class UsesGlobal extends Tool {		
 		public UsesGlobal(CLIParams params) {
 			super(params);
 		}
@@ -291,7 +290,7 @@ public class RepositoryRunTypes extends RunTypes {
 		}
 	}
 			
-	private static class UsedGlobal extends RunType {		
+	private static class UsedGlobal extends Tool {		
 		public UsedGlobal(CLIParams params) {
 			super(params);
 		}
@@ -312,7 +311,7 @@ public class RepositoryRunTypes extends RunTypes {
 		}
 	}
 			
-	private static class FilemanCallGlobal extends RunType {		
+	private static class FilemanCallGlobal extends Tool {		
 		public FilemanCallGlobal(CLIParams params) {
 			super(params);
 		}
@@ -333,7 +332,7 @@ public class RepositoryRunTypes extends RunTypes {
 		}
 	}
 			
-	private static class ParseTreeSave extends RunType {		
+	private static class ParseTreeSave extends Tool {		
 		public ParseTreeSave(CLIParams params) {
 			super(params);
 		}
@@ -351,7 +350,7 @@ public class RepositoryRunTypes extends RunTypes {
 		}
 	}
 
-	private static class Entry extends RunType {		
+	private static class Entry extends Tool {		
 		public Entry(CLIParams params) {
 			super(params);
 		}
@@ -375,7 +374,7 @@ public class RepositoryRunTypes extends RunTypes {
 		}
 	}
 
-	private static class EntryInfo extends RunType {		
+	private static class EntryInfo extends Tool {		
 		public EntryInfo(CLIParams params) {
 			super(params);
 		}
@@ -406,8 +405,8 @@ public class RepositoryRunTypes extends RunTypes {
 			}
 		}
 		
-		private void auxRun(RepositoryInfo ri, FileWrapper fr, BlocksSupply<CodeInfo> blocks) {
-			EntryCodeInfoWriter apiw = new EntryCodeInfoWriter(fr, blocks, REPLACEMENT_ROUTINES);
+		private void run(RepositoryInfo ri, FileWrapper fr, BlocksSupply<CodeInfo> blocks) {
+			EntryCodeInfoTool apiw = new EntryCodeInfoTool(fr, blocks, REPLACEMENT_ROUTINES);
 			SourcedFanoutFilter filter = this.getFilter(ri);
 			apiw.setFilter(filter);
 			if (this.params.inputFile != null) {
@@ -424,21 +423,18 @@ public class RepositoryRunTypes extends RunTypes {
 				RepositoryInfo ri = this.getRepositoryInfo();
 				if (ri != null) {
 					if ((this.params.parseTreeDirectory == null) || this.params.parseTreeDirectory.isEmpty()) {
-						BlocksInMapFactory<CodeInfo> api = new BlocksInMapFactory<CodeInfo>(new EntryCodeInfoRecorder(ri));
-						VistaPackages vps = new VistaPackages(ri.getAllPackages());
-						vps.accept(api);
-						BlocksSupply<CodeInfo> blocks = api.getBlocks();
-						this.auxRun(ri, fr, blocks);
+						BlocksSupply<CodeInfo> blocks = BlocksInMap.getInstance(new EntryCodeInfoRecorder(ri), ri);
+						this.run(ri, fr, blocks);
 					} else {
-						BlocksSupply<CodeInfo> blocks = new SerializedBlocksSupply<CodeInfo>(this.params.parseTreeDirectory, new EntryCodeInfoRecorderFactory(ri));
-						this.auxRun(ri, fr, blocks);
+						BlocksSupply<CodeInfo> blocks = new BlocksInSerialRoutine<CodeInfo>(this.params.parseTreeDirectory, new EntryCodeInfoRecorderFactory(ri));
+						this.run(ri, fr, blocks);
 					}
 				}
 			}
 		}
 	}	
 	
-	private static class CacheUsage extends RunType {		
+	private static class CacheUsage extends Tool {		
 		public CacheUsage(CLIParams params) {
 			super(params);
 		}
@@ -460,86 +456,84 @@ public class RepositoryRunTypes extends RunTypes {
 	}
 
 	@Override
-	protected Map<String, RunType.Factory> createRunTypes() {
-		Map<String, RunType.Factory> result = new HashMap<String, RunType.Factory>();
-		result.put("fanout", new RunType.Factory() {				
+	protected void updateTools(Map<String, MemberFactory> tools) {
+		tools.put("fanout", new MemberFactory() {				
 			@Override
-			public RunType getInstance(CLIParams params) {
+			public Tool getInstance(CLIParams params) {
 				return new Fanout(params);
 			}
 		});
-		result.put("fanin", new RunType.Factory() {				
+		tools.put("fanin", new MemberFactory() {				
 			@Override
-			public RunType getInstance(CLIParams params) {
+			public Tool getInstance(CLIParams params) {
 				return  new Fanin(params);
 			}
 		});
-		result.put("option", new RunType.Factory() {				
+		tools.put("option", new MemberFactory() {				
 			@Override
-			public RunType getInstance(CLIParams params) {
+			public Tool getInstance(CLIParams params) {
 				return new Option(params);
 			}
 		});
-		result.put("rpc", new RunType.Factory() {				
+		tools.put("rpc", new MemberFactory() {				
 			@Override
-			public RunType getInstance(CLIParams params) {
+			public Tool getInstance(CLIParams params) {
 				return new RPC(params);
 			}
 		});
-		result.put("usesglb", new RunType.Factory() {				
+		tools.put("usesglb", new MemberFactory() {				
 			@Override
-			public RunType getInstance(CLIParams params) {
+			public Tool getInstance(CLIParams params) {
 				return new UsesGlobal(params);
 			}
 		});
-		result.put("usedglb", new RunType.Factory() {				
+		tools.put("usedglb", new MemberFactory() {				
 			@Override
-			public RunType getInstance(CLIParams params) {
+			public Tool getInstance(CLIParams params) {
 				return new UsedGlobal(params);
 			}
 		});
-		result.put("parsetreesave", new RunType.Factory() {				
+		tools.put("parsetreesave", new MemberFactory() {				
 			@Override
-			public RunType getInstance(CLIParams params) {
+			public Tool getInstance(CLIParams params) {
 				return new ParseTreeSave(params);
 			}
 		});
-		result.put("entry", new RunType.Factory() {				
+		tools.put("entry", new MemberFactory() {				
 			@Override
-			public RunType getInstance(CLIParams params) {
+			public Tool getInstance(CLIParams params) {
 				return new Entry(params);
 			}
 		});
-		result.put("entryinfo", new RunType.Factory() {				
+		tools.put("entryinfo", new MemberFactory() {				
 			@Override
-			public RunType getInstance(CLIParams params) {
+			public Tool getInstance(CLIParams params) {
 				return new EntryInfo(params);
 			}
 		});
-		result.put("error", new RunType.Factory() {				
+		tools.put("error", new MemberFactory() {				
 			@Override
-			public RunType getInstance(CLIParams params) {
+			public Tool getInstance(CLIParams params) {
 				return new MError(params);
 			}
 		});
-		result.put("routineinfo", new RunType.Factory() {				
+		tools.put("routineinfo", new MemberFactory() {				
 			@Override
-			public RunType getInstance(CLIParams params) {
+			public Tool getInstance(CLIParams params) {
 				return new RoutineInfo(params);
 			}
 		});
-		result.put("filemancall", new RunType.Factory() {				
+		tools.put("filemancall", new MemberFactory() {				
 			@Override
-			public RunType getInstance(CLIParams params) {
+			public Tool getInstance(CLIParams params) {
 				return new FilemanCallGlobal(params);
 			}
 		});
-		result.put("cacheusage", new RunType.Factory() {				
+		tools.put("cacheusage", new MemberFactory() {				
 			@Override
-			public RunType getInstance(CLIParams params) {
+			public Tool getInstance(CLIParams params) {
 				return new CacheUsage(params);
 			}
 		});
-		return result;
 	}
 }

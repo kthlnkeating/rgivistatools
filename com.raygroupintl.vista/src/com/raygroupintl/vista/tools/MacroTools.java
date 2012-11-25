@@ -18,13 +18,12 @@ package com.raygroupintl.vista.tools;
 
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.util.HashMap;
 import java.util.Map;
 
 import com.raygroupintl.vista.repository.RepositoryInfo;
 
-public class MacroRunTypes extends RunTypes {	
-	private static class MRoutineAnalyzerTestbench extends RunType {		
+public class MacroTools extends Tools {	
+	private static class MRoutineAnalyzerTestbench extends Tool {		
 		public MRoutineAnalyzerTestbench(CLIParams params) {
 			super(params);
 		}
@@ -104,14 +103,12 @@ public class MacroRunTypes extends RunTypes {
 	}
 
 	@Override
-	protected Map<String, RunType.Factory> createRunTypes() {
-		Map<String, RunType.Factory> result = new HashMap<String, RunType.Factory>();
-		result.put("mratb", new RunType.Factory() {				
+	protected void updateTools(Map<String, MemberFactory> tools) {
+		tools.put("mratb", new MemberFactory() {				
 			@Override
-			public RunType getInstance(CLIParams params) {
+			public Tool getInstance(CLIParams params) {
 				return new MRoutineAnalyzerTestbench(params);
 			}
 		});
-		return result;
 	}
 }
