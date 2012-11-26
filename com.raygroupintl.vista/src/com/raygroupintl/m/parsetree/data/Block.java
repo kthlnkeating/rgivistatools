@@ -24,7 +24,6 @@ import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import com.raygroupintl.m.parsetree.visitor.EntryCodeInfoRecorder;
 import com.raygroupintl.struct.Filter;
 import com.raygroupintl.struct.ObjectIdContainer;
 
@@ -51,7 +50,7 @@ import com.raygroupintl.struct.ObjectIdContainer;
  *           
  */
 public class Block<T> {
-	private final static Logger LOGGER = Logger.getLogger(EntryCodeInfoRecorder.class.getName());
+	private final static Logger LOGGER = Logger.getLogger(Block.class.getName());
 	private static Set<EntryId> reported = new HashSet<EntryId>();
 
 	private int index;
