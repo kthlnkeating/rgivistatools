@@ -24,13 +24,13 @@ import java.util.List;
 import java.util.Scanner;
 
 import com.raygroupintl.m.parsetree.data.EntryId;
-import com.raygroupintl.m.parsetree.filter.BasicSourcedFanoutFilter;
 import com.raygroupintl.m.parsetree.filter.ExcludeFilemanCallFanoutFilter;
 import com.raygroupintl.m.parsetree.filter.ExcludeNonPkgCallFanoutFilter;
 import com.raygroupintl.m.parsetree.filter.ExcludeNonRtnFanoutFilter;
 import com.raygroupintl.m.parsetree.filter.PercentRoutineFanoutFilter;
-import com.raygroupintl.m.parsetree.filter.SourcedFanoutFilter;
+import com.raygroupintl.struct.Filter;
 import com.raygroupintl.vista.repository.RepositoryInfo;
+import com.raygroupintl.vista.repository.VistaPackage;
 
 public abstract class EntryInfoTool extends Tool {
 	public EntryInfoTool(CLIParams params) {
@@ -48,18 +48,27 @@ public abstract class EntryInfoTool extends Tool {
 		return 0;
 	}
 	
-	protected SourcedFanoutFilter getFilter(RepositoryInfo ri, EntryId entryId) {
+	protected Filter<EntryId> getFilter(RepositoryInfo ri, EntryId entryId) {
 		int flag = this.getFanoutFlag();
 		switch (flag) {
-			case 1:
-				return new ExcludeFilemanCallFanoutFilter(ri);
-			case 2:
-				return new ExcludeNonPkgCallFanoutFilter(ri);
+			case 1: {
+				String routineName = entryId.getRoutineName();
+				VistaPackage vp = ri.getPackageFromRoutineName(routineName);
+				return new ExcludeFilemanCallFanoutFilter(ri, vp.getDefaultPrefix());
+			}
+			case 2: {
+				String routineName = entryId.getRoutineName();
+				if (routineName == null) {
+					return new ExcludeNonPkgCallFanoutFilter(ri, null);
+				} else {
+					VistaPackage vp = ri.getPackageFromRoutineName(routineName);
+					return new ExcludeNonPkgCallFanoutFilter(ri, vp.getDefaultPrefix());
+				}
+			}
 			case 3:
-				return new ExcludeNonRtnFanoutFilter();
+				return new ExcludeNonRtnFanoutFilter(entryId);
 			default:
-				PercentRoutineFanoutFilter filter = new PercentRoutineFanoutFilter();
-				return new BasicSourcedFanoutFilter(filter);
+				return new PercentRoutineFanoutFilter();
 		}
 	}
 	

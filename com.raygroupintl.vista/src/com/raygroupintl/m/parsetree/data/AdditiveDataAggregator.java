@@ -18,7 +18,7 @@ package com.raygroupintl.m.parsetree.data;
 
 import java.util.List;
 
-import com.raygroupintl.m.parsetree.filter.SourcedFanoutFilter;
+import com.raygroupintl.struct.Filter;
 
 public class AdditiveDataAggregator<T, U extends AdditiveDataHandler<T>> {
 	Block<U> block;
@@ -29,8 +29,7 @@ public class AdditiveDataAggregator<T, U extends AdditiveDataHandler<T>> {
 		this.supply = supply;
 	}
 	
-	public T get(SourcedFanoutFilter filter) {
-		if (filter != null) filter.setSource(this.block.getEntryId());
+	public T get(Filter<EntryId> filter) {
 		FanoutBlocks<U> fanoutBlocks = this.block.getFanoutBlocks(this.supply, filter);
 		List<Block<U>> blocks = fanoutBlocks.getBlocks();
 		T result = this.block.getAttachedObject().getNewInstance();

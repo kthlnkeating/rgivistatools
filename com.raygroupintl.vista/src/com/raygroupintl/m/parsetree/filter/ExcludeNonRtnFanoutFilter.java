@@ -16,14 +16,13 @@
 package com.raygroupintl.m.parsetree.filter;
 
 import com.raygroupintl.m.parsetree.data.EntryId;
+import com.raygroupintl.struct.Filter;
 
-public class ExcludeNonRtnFanoutFilter extends SourcedFanoutFilter {
+public class ExcludeNonRtnFanoutFilter implements Filter<EntryId> {
 	private String sourceRoutineName;
 	
-	@Override
-	public void setSource(EntryId source) {
-		this.sourceRoutineName = source.getRoutineName();
-		super.setSource(source);
+	public ExcludeNonRtnFanoutFilter(EntryId source) {
+		this.sourceRoutineName = source.getRoutineName();		
 	}
 	
 	@Override

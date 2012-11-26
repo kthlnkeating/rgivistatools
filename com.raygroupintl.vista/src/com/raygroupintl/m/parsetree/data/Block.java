@@ -24,8 +24,8 @@ import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import com.raygroupintl.m.parsetree.filter.SourcedFanoutFilter;
 import com.raygroupintl.m.parsetree.visitor.EntryCodeInfoRecorder;
+import com.raygroupintl.struct.Filter;
 import com.raygroupintl.struct.ObjectIdContainer;
 
 /***
@@ -93,7 +93,7 @@ public class Block<T> {
 		}
 	}	
 	
-	private void update(FanoutBlocks<T> fanoutBlocks, BlocksSupply<T> blocksSupply, SourcedFanoutFilter filter) {
+	private void update(FanoutBlocks<T> fanoutBlocks, BlocksSupply<T> blocksSupply, Filter<EntryId> filter) {
 		for (IndexedFanout ifout : this.fanouts) {
 			EntryId fout = ifout.getFanout();
 			if ((filter != null) && (! filter.isValid(fout))) continue;
@@ -162,7 +162,7 @@ public class Block<T> {
 		}
 	}
 	
-	private void updateFanoutBlocks(FanoutBlocks<T> fanoutBlocks, BlocksSupply<T> blocksSupply, SourcedFanoutFilter filter) {
+	private void updateFanoutBlocks(FanoutBlocks<T> fanoutBlocks, BlocksSupply<T> blocksSupply, Filter<EntryId> filter) {
 		int index = 0;	
 		while (index < fanoutBlocks.getSize()) {
 			Block<T> b = fanoutBlocks.getBlock(index);
@@ -171,13 +171,13 @@ public class Block<T> {
 		}		
 	}
 	
-	public FanoutBlocks<T> getFanoutBlocks(BlocksSupply<T> blocksSupply, ObjectIdContainer blockIdContainer, SourcedFanoutFilter filter) {
+	public FanoutBlocks<T> getFanoutBlocks(BlocksSupply<T> blocksSupply, ObjectIdContainer blockIdContainer, Filter<EntryId> filter) {
 		FanoutBlocks<T> fanoutBlocks = new FanoutBlocks<T>(this, blockIdContainer);
 		this.updateFanoutBlocks(fanoutBlocks, blocksSupply, filter);
 		return fanoutBlocks;
 	}
 	
-	public FanoutBlocks<T> getFanoutBlocks(BlocksSupply<T> blocksSupply, SourcedFanoutFilter filter) {
+	public FanoutBlocks<T> getFanoutBlocks(BlocksSupply<T> blocksSupply, Filter<EntryId> filter) {
 		FanoutBlocks<T> fanoutBlocks = new FanoutBlocks<T>(this, null);
 		this.updateFanoutBlocks(fanoutBlocks, blocksSupply, filter);
 		return fanoutBlocks;

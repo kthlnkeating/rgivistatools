@@ -33,12 +33,12 @@ import com.raygroupintl.m.parsetree.data.DataStore;
 import com.raygroupintl.m.parsetree.data.BlocksSupply;
 import com.raygroupintl.m.parsetree.data.EntryId;
 import com.raygroupintl.m.parsetree.data.RecursiveDataAggregator;
-import com.raygroupintl.m.parsetree.filter.SourcedFanoutFilter;
 import com.raygroupintl.m.parsetree.visitor.EntryCodeInfoRecorder;
 import com.raygroupintl.m.parsetree.visitor.EntryCodeInfoRecorderFactory;
 import com.raygroupintl.output.FileWrapper;
 import com.raygroupintl.output.Terminal;
 import com.raygroupintl.output.TerminalFormatter;
+import com.raygroupintl.struct.Filter;
 import com.raygroupintl.vista.repository.RepositoryInfo;
 
 public class EntryCodeInfoTool extends EntryInfoTool {	
@@ -144,7 +144,7 @@ public class EntryCodeInfoTool extends EntryInfoTool {
 		}
 	}
 	
-	private void write(BlocksSupply<CodeInfo> blocksSupply, Terminal t, TerminalFormatter tf, EntryId entryId, SourcedFanoutFilter filter) {
+	private void write(BlocksSupply<CodeInfo> blocksSupply, Terminal t, TerminalFormatter tf, EntryId entryId, Filter<EntryId> filter) {
 		t.writeEOL(" " + entryId.toString2());
 		tf.setTab(12);
 		
@@ -156,7 +156,7 @@ public class EntryCodeInfoTool extends EntryInfoTool {
 		result.write(t, tf);
 	}
 	
-	public EntryCodeInfo getEntryCodeInfo(BlocksSupply<CodeInfo> blocksSupply, EntryId entryId, SourcedFanoutFilter filter) {
+	public EntryCodeInfo getEntryCodeInfo(BlocksSupply<CodeInfo> blocksSupply, EntryId entryId, Filter<EntryId> filter) {
 		Block<CodeInfo> lb = blocksSupply.getBlock(entryId);
 		if (lb == null) {
 			return null;
@@ -175,7 +175,7 @@ public class EntryCodeInfoTool extends EntryInfoTool {
 			TerminalFormatter tf = new TerminalFormatter();
 			for (String entry : entries) {
 				EntryId entryId = EntryId.getInstance(entry);
-				SourcedFanoutFilter filter = EntryCodeInfoTool.this.getFilter(ri, entryId);
+				Filter<EntryId> filter = this.getFilter(ri, entryId);
 				this.write(blocksSupply, fr, tf, entryId, filter);
 			}
 			fr.stop();

@@ -16,23 +16,17 @@
 package com.raygroupintl.m.parsetree.filter;
 
 import com.raygroupintl.m.parsetree.data.EntryId;
+import com.raygroupintl.struct.Filter;
 import com.raygroupintl.vista.repository.RepositoryInfo;
 import com.raygroupintl.vista.repository.VistaPackage;
 
-public class ExcludeFilemanCallFanoutFilter extends SourcedFanoutFilter {
+public class ExcludeFilemanCallFanoutFilter implements Filter<EntryId> {
 	private String sourcePackagePrefix;
 	private RepositoryInfo repositoryInfo;
 	
-	public ExcludeFilemanCallFanoutFilter(RepositoryInfo repositoryInfo) {
+	public ExcludeFilemanCallFanoutFilter(RepositoryInfo repositoryInfo, String sourcePackageString) {
 		this.repositoryInfo = repositoryInfo;
-	}
-	
-	@Override
-	public void setSource(EntryId source) {
-		String routineName = source.getRoutineName();
-		VistaPackage vp = this.repositoryInfo.getPackageFromRoutineName(routineName);
-		this.sourcePackagePrefix = vp.getDefaultPrefix();
-		super.setSource(source);
+		this.sourcePackagePrefix = sourcePackageString;
 	}
 	
 	@Override

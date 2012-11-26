@@ -22,7 +22,6 @@ import com.raygroupintl.m.parsetree.data.Blocks;
 import com.raygroupintl.m.parsetree.data.EntryId;
 import com.raygroupintl.m.parsetree.data.BlocksInMap;
 import com.raygroupintl.m.parsetree.data.RecursiveDataAggregator;
-import com.raygroupintl.m.parsetree.filter.BasicSourcedFanoutFilter;
 import com.raygroupintl.m.parsetree.visitor.EntryCodeInfoRecorder;
 import com.raygroupintl.m.parsetree.visitor.ErrorRecorder;
 import com.raygroupintl.m.struct.MRoutineContent;
@@ -72,14 +71,14 @@ public class APITest {
 		Blocks<CodeInfo> rbs = blocksMap.getBlocks(routineName);
 		Block<CodeInfo> lb = rbs.get(tag);
 		RecursiveDataAggregator<Set<String>, CodeInfo> ala = new RecursiveDataAggregator<Set<String>, CodeInfo>(lb, blocksMap);
-		Set<String> assumeds = ala.get(new DataStore<Set<String>>(), new BasicSourcedFanoutFilter(new PassFilter<EntryId>()));
+		Set<String> assumeds = ala.get(new DataStore<Set<String>>(), new PassFilter<EntryId>());
 		Assert.assertEquals(expectedAssumeds.length, assumeds.size());
 		for (String expectedOutput : expectedAssumeds) {
 			Assert.assertTrue(assumeds.contains(expectedOutput));			
 		}				
 
 		AdditiveDataAggregator<BasicCodeInfo, CodeInfo> bcia = new AdditiveDataAggregator<BasicCodeInfo, CodeInfo>(lb, blocksMap);
-		BasicCodeInfo apiData = bcia.get(new BasicSourcedFanoutFilter(new PassFilter<EntryId>()));
+		BasicCodeInfo apiData = bcia.get(new PassFilter<EntryId>());
 		Set<String> globals = new HashSet<String>(apiData.getGlobals());
 		Assert.assertEquals(expectedGlobals.length, globals.size());
 		for (String expectedGlobal : expectedGlobals) {
@@ -91,7 +90,7 @@ public class APITest {
 		Blocks<CodeInfo> rbs = blocksMap.getBlocks(routineName);
 		Block<CodeInfo> lb = rbs.get(tag);
 		AdditiveDataAggregator<BasicCodeInfo, CodeInfo> bcia = new AdditiveDataAggregator<BasicCodeInfo, CodeInfo>(lb, blocksMap);
-		BasicCodeInfo apiData = bcia.get(new BasicSourcedFanoutFilter(new PassFilter<EntryId>()));
+		BasicCodeInfo apiData = bcia.get(new PassFilter<EntryId>());
 		
 		Set<String> globals = new HashSet<String>(apiData.getFilemanGlobals());
 		Assert.assertEquals(expectedGlobals.length, globals.size());

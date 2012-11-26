@@ -31,8 +31,7 @@ import com.raygroupintl.m.parsetree.data.DataStore;
 import com.raygroupintl.m.parsetree.data.EntryId;
 import com.raygroupintl.m.parsetree.data.RecursiveDataAggregator;
 import com.raygroupintl.m.parsetree.data.RecursiveDataHandler;
-import com.raygroupintl.m.parsetree.filter.BasicSourcedFanoutFilter;
-import com.raygroupintl.m.parsetree.filter.SourcedFanoutFilter;
+import com.raygroupintl.struct.Filter;
 import com.raygroupintl.struct.PassFilter;
 import com.raygroupintl.vista.repository.RepositoryVisitor;
 
@@ -104,7 +103,7 @@ public class EntryFaninTool extends RepositoryVisitor  {
 	}
 	
 	private BlocksSupply<PrivateRecursiveDataHandler> blocksSupply;
-	private SourcedFanoutFilter filter = new BasicSourcedFanoutFilter(new PassFilter<EntryId>());
+	private Filter<EntryId> filter = new PassFilter<EntryId>();
 
 	PTEDataStore store = new PTEDataStore();
 

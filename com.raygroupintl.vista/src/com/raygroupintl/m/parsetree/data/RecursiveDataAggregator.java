@@ -20,7 +20,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import com.raygroupintl.m.parsetree.filter.SourcedFanoutFilter;
+import com.raygroupintl.struct.Filter;
 import com.raygroupintl.struct.Indexed;
 
 public class RecursiveDataAggregator<T, U extends RecursiveDataHandler<T>> {
@@ -81,8 +81,7 @@ public class RecursiveDataAggregator<T, U extends RecursiveDataHandler<T>> {
 		return store.put(b, datas);
 	}
 		
-	public T get(DataStore<T> store, SourcedFanoutFilter filter) {
-		if (filter != null) filter.setSource(this.block.getEntryId());
+	public T get(DataStore<T> store, Filter<EntryId> filter) {
 		T result = store.get(this.block);
 		if (result != null) {
 			return result;
