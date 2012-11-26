@@ -31,7 +31,7 @@ import com.raygroupintl.m.token.MVersion;
 import com.raygroupintl.m.token.TFRoutine;
 import com.raygroupintl.struct.PassFilter;
 
-public class APITest {
+public class EntryCodeInfoToolTest {
 	private static MTFSupply supply;
 	private static Map<String, String> replacement = new HashMap<String, String>();
 	private static Routine[] ROUTINES;
@@ -60,7 +60,7 @@ public class APITest {
 
 	private static Routine getRoutineToken(String fileName, MTFSupply m) {
 		TFRoutine tf = new TFRoutine(m);
-		InputStream is = APITest.class.getResourceAsStream(fileName);
+		InputStream is = EntryCodeInfoToolTest.class.getResourceAsStream(fileName);
 		String fn = (fileName.split(".m")[0]).split("/")[1];
 		MRoutineContent content = MRoutineContent.getInstance(fn, is);
 		MRoutine r = tf.tokenize(content);

@@ -5,7 +5,7 @@ import org.junit.runners.Suite;
 import org.junit.runners.Suite.SuiteClasses;
 
 @RunWith(Suite.class)
-@SuiteClasses({ APITest.class, ErrorExemptionsTest.class })
+@SuiteClasses({ EntryCodeInfoToolTest.class, ErrorExemptionsTest.class })
 public class AllTests {
 
 }

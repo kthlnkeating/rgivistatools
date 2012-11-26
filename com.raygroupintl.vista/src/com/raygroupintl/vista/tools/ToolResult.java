@@ -14,20 +14,11 @@
 // limitations under the License.
 //---------------------------------------------------------------------------
 
-package com.raygroupintl.m.parsetree.visitor;
+package com.raygroupintl.vista.tools;
 
-import com.raygroupintl.m.parsetree.data.CodeInfo;
-import com.raygroupintl.vista.repository.RepositoryInfo;
+import com.raygroupintl.output.Terminal;
+import com.raygroupintl.output.TerminalFormatter;
 
-public class EntryCodeInfoRecorderFactory implements BlockRecorderFactory<CodeInfo> {
-	private RepositoryInfo repositoryInfo;
-	
-	public EntryCodeInfoRecorderFactory(RepositoryInfo repositoryInfo) {
-		this.repositoryInfo = repositoryInfo;
-	}
-	
-	@Override
-	public BlockRecorder<CodeInfo> getRecorder() {
-		return new EntryCodeInfoRecorder(this.repositoryInfo);
-	}
+public interface ToolResult {
+	void write(Terminal t, TerminalFormatter tf);
 }
