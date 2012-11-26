@@ -23,6 +23,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
 
+import com.raygroupintl.m.parsetree.data.EntryId;
 import com.raygroupintl.m.parsetree.filter.BasicSourcedFanoutFilter;
 import com.raygroupintl.m.parsetree.filter.ExcludeFilemanCallFanoutFilter;
 import com.raygroupintl.m.parsetree.filter.ExcludeNonPkgCallFanoutFilter;
@@ -47,7 +48,7 @@ public abstract class EntryInfoTool extends Tool {
 		return 0;
 	}
 	
-	protected SourcedFanoutFilter getFilter(RepositoryInfo ri) {
+	protected SourcedFanoutFilter getFilter(RepositoryInfo ri, EntryId entryId) {
 		int flag = this.getFanoutFlag();
 		switch (flag) {
 			case 1:

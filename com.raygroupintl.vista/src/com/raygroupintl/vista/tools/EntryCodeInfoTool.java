@@ -33,14 +33,12 @@ import com.raygroupintl.m.parsetree.data.DataStore;
 import com.raygroupintl.m.parsetree.data.BlocksSupply;
 import com.raygroupintl.m.parsetree.data.EntryId;
 import com.raygroupintl.m.parsetree.data.RecursiveDataAggregator;
-import com.raygroupintl.m.parsetree.filter.BasicSourcedFanoutFilter;
 import com.raygroupintl.m.parsetree.filter.SourcedFanoutFilter;
 import com.raygroupintl.m.parsetree.visitor.EntryCodeInfoRecorder;
 import com.raygroupintl.m.parsetree.visitor.EntryCodeInfoRecorderFactory;
 import com.raygroupintl.output.FileWrapper;
 import com.raygroupintl.output.Terminal;
 import com.raygroupintl.output.TerminalFormatter;
-import com.raygroupintl.struct.PassFilter;
 import com.raygroupintl.vista.repository.RepositoryInfo;
 
 public class EntryCodeInfoTool extends EntryInfoTool {	
@@ -146,52 +144,41 @@ public class EntryCodeInfoTool extends EntryInfoTool {
 		}
 	}
 	
-	private class Writer {		
-		private BlocksSupply<CodeInfo> blocksSupply;
-		private SourcedFanoutFilter filter = new BasicSourcedFanoutFilter(new PassFilter<EntryId>());
+	private void write(BlocksSupply<CodeInfo> blocksSupply, Terminal t, TerminalFormatter tf, EntryId entryId, SourcedFanoutFilter filter) {
+		t.writeEOL(" " + entryId.toString2());
+		tf.setTab(12);
 		
-		public Writer(BlocksSupply<CodeInfo> blocksSupply) {
-			this.blocksSupply = blocksSupply;
-		}
+		EntryCodeInfo result = this.getEntryCodeInfo(blocksSupply, entryId, filter);
+		if (result == null) {
+			t.writeEOL("  ERROR: Invalid entry point");
+			return;
+		} 
+		result.write(t, tf);
+	}
 	
-		public void setFilter(SourcedFanoutFilter filter) {
-			this.filter = filter;
-		}
+	public EntryCodeInfo getEntryCodeInfo(BlocksSupply<CodeInfo> blocksSupply, EntryId entryId, SourcedFanoutFilter filter) {
+		Block<CodeInfo> lb = blocksSupply.getBlock(entryId);
+		if (lb == null) {
+			return null;
+		} 			
+		RecursiveDataAggregator<Set<String>, CodeInfo> ala = new RecursiveDataAggregator<Set<String>, CodeInfo>(lb, blocksSupply);
+		Set<String> assumedLocals = ala.get(store, filter);
 		
-		private void write(Terminal t, TerminalFormatter tf, EntryId entryId) {
-			t.writeEOL(" " + entryId.toString2());
-			tf.setTab(12);
-			
-			EntryCodeInfo result = this.getEntryCodeInfo(entryId);
-			if (result == null) {
-				t.writeEOL("  ERROR: Invalid entry point");
-				return;
-			} 
-			result.write(t, tf);
-		}
-		
-		public EntryCodeInfo getEntryCodeInfo(EntryId entryId) {
-			Block<CodeInfo> lb = this.blocksSupply.getBlock(entryId);
-			if (lb == null) {
-				return null;
-			} 			
-			RecursiveDataAggregator<Set<String>, CodeInfo> ala = new RecursiveDataAggregator<Set<String>, CodeInfo>(lb, this.blocksSupply);
-			Set<String> assumedLocals = ala.get(store, this.filter);
-			
-			AdditiveDataAggregator<BasicCodeInfo, CodeInfo> bcia = new AdditiveDataAggregator<BasicCodeInfo, CodeInfo>(lb, this.blocksSupply);
-			BasicCodeInfo apiData = bcia.get(this.filter);
+		AdditiveDataAggregator<BasicCodeInfo, CodeInfo> bcia = new AdditiveDataAggregator<BasicCodeInfo, CodeInfo>(lb, blocksSupply);
+		BasicCodeInfo apiData = bcia.get(filter);
+
+		return new EntryCodeInfo(lb.getAttachedObject().getFormals(), assumedLocals, apiData);
+	}
 	
-			return new EntryCodeInfo(lb.getAttachedObject().getFormals(), assumedLocals, apiData);
-		}
-		
-		public void writeEntries(FileWrapper fr, TerminalFormatter tf, List<String> entries) {
-			if (fr.start()) {
-				for (String entry : entries) {
-					EntryId entryId = EntryId.getInstance(entry);
-					this.write(fr, tf, entryId);
-				}
-				fr.stop();
+	public void writeEntries(FileWrapper fr, RepositoryInfo ri, List<String> entries, BlocksSupply<CodeInfo> blocksSupply) {
+		if (fr.start()) {
+			TerminalFormatter tf = new TerminalFormatter();
+			for (String entry : entries) {
+				EntryId entryId = EntryId.getInstance(entry);
+				SourcedFanoutFilter filter = EntryCodeInfoTool.this.getFilter(ri, entryId);
+				this.write(blocksSupply, fr, tf, entryId, filter);
 			}
+			fr.stop();
 		}
 	}
 	
@@ -202,11 +189,7 @@ public class EntryCodeInfoTool extends EntryInfoTool {
 	DataStore<Set<String>> store = new DataStore<Set<String>>();
 	
 	protected void run(List<String> entries, RepositoryInfo ri, FileWrapper fr, BlocksSupply<CodeInfo> blocks) {
-		EntryCodeInfoTool.Writer apiw = new EntryCodeInfoTool.Writer(blocks);
-		SourcedFanoutFilter filter = this.getFilter(ri);
-		apiw.setFilter(filter);
-		TerminalFormatter tf = new TerminalFormatter();
-		apiw.writeEntries(fr, tf, entries);
+		this.writeEntries(fr, ri, entries, blocks);
 	}
 	
 	@Override
