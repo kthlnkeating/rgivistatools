@@ -81,13 +81,13 @@ public class RecursiveDataAggregator<T, U extends RecursiveDataHandler<T>> {
 		return store.put(b, datas);
 	}
 		
-	public T get(DataStore<T> store, SourcedFanoutFilter filter, Map<String, String> replacedRoutines) {
+	public T get(DataStore<T> store, SourcedFanoutFilter filter) {
 		if (filter != null) filter.setSource(this.block.getEntryId());
 		T result = store.get(this.block);
 		if (result != null) {
 			return result;
 		}
-		FanoutBlocks<U> fanoutBlocks = this.block.getFanoutBlocks(this.supply, store, filter, replacedRoutines);
+		FanoutBlocks<U> fanoutBlocks = this.block.getFanoutBlocks(this.supply, store, filter);
 		return this.get(fanoutBlocks, store);
 	}
 }

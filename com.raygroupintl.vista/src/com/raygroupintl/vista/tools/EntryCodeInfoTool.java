@@ -147,32 +147,27 @@ public class EntryCodeInfoTool extends EntryInfoTool {
 	}
 	
 	private class Writer {		
-		private FileWrapper fileWrapper;
 		private BlocksSupply<CodeInfo> blocksSupply;
-		private TerminalFormatter tf = new TerminalFormatter();
-		private Map<String, String> replacementRoutines;
 		private SourcedFanoutFilter filter = new BasicSourcedFanoutFilter(new PassFilter<EntryId>());
 		
-		public Writer(FileWrapper fileWrapper, BlocksSupply<CodeInfo> blocksSupply, Map<String, String> replacementRoutines) {
-			this.fileWrapper = fileWrapper;
+		public Writer(BlocksSupply<CodeInfo> blocksSupply) {
 			this.blocksSupply = blocksSupply;
-			this.replacementRoutines = replacementRoutines;
 		}
 	
 		public void setFilter(SourcedFanoutFilter filter) {
 			this.filter = filter;
 		}
 		
-		private void write(EntryId entryId) {
-			this.fileWrapper.writeEOL(" " + entryId.toString2());
-			this.tf.setTab(12);
+		private void write(Terminal t, TerminalFormatter tf, EntryId entryId) {
+			t.writeEOL(" " + entryId.toString2());
+			tf.setTab(12);
 			
 			EntryCodeInfo result = this.getEntryCodeInfo(entryId);
 			if (result == null) {
-				this.fileWrapper.writeEOL("  ERROR: Invalid entry point");
+				t.writeEOL("  ERROR: Invalid entry point");
 				return;
 			} 
-			result.write(this.fileWrapper, this.tf);
+			result.write(t, tf);
 		}
 		
 		public EntryCodeInfo getEntryCodeInfo(EntryId entryId) {
@@ -181,21 +176,21 @@ public class EntryCodeInfoTool extends EntryInfoTool {
 				return null;
 			} 			
 			RecursiveDataAggregator<Set<String>, CodeInfo> ala = new RecursiveDataAggregator<Set<String>, CodeInfo>(lb, this.blocksSupply);
-			Set<String> assumedLocals = ala.get(store, this.filter, this.replacementRoutines);
+			Set<String> assumedLocals = ala.get(store, this.filter);
 			
 			AdditiveDataAggregator<BasicCodeInfo, CodeInfo> bcia = new AdditiveDataAggregator<BasicCodeInfo, CodeInfo>(lb, this.blocksSupply);
-			BasicCodeInfo apiData = bcia.getCodeInfo(this.filter, this.replacementRoutines);
+			BasicCodeInfo apiData = bcia.get(this.filter);
 	
 			return new EntryCodeInfo(lb.getAttachedObject().getFormals(), assumedLocals, apiData);
 		}
 		
-		public void writeEntries(List<String> entries) {
-			if (this.fileWrapper.start()) {
+		public void writeEntries(FileWrapper fr, TerminalFormatter tf, List<String> entries) {
+			if (fr.start()) {
 				for (String entry : entries) {
 					EntryId entryId = EntryId.getInstance(entry);
-					this.write(entryId);
+					this.write(fr, tf, entryId);
 				}
-				this.fileWrapper.stop();
+				fr.stop();
 			}
 		}
 	}
@@ -207,10 +202,11 @@ public class EntryCodeInfoTool extends EntryInfoTool {
 	DataStore<Set<String>> store = new DataStore<Set<String>>();
 	
 	protected void run(List<String> entries, RepositoryInfo ri, FileWrapper fr, BlocksSupply<CodeInfo> blocks) {
-		EntryCodeInfoTool.Writer apiw = new EntryCodeInfoTool.Writer(fr, blocks, REPLACEMENT_ROUTINES);
+		EntryCodeInfoTool.Writer apiw = new EntryCodeInfoTool.Writer(blocks);
 		SourcedFanoutFilter filter = this.getFilter(ri);
 		apiw.setFilter(filter);
-		apiw.writeEntries(entries);
+		TerminalFormatter tf = new TerminalFormatter();
+		apiw.writeEntries(fr, tf, entries);
 	}
 	
 	@Override
@@ -222,10 +218,10 @@ public class EntryCodeInfoTool extends EntryInfoTool {
 				List<String> entries = this.getEntries();
 				if (entries == null) return;
 				if ((this.params.parseTreeDirectory == null) || this.params.parseTreeDirectory.isEmpty()) {
-					BlocksSupply<CodeInfo> blocks = BlocksInMap.getInstance(new EntryCodeInfoRecorder(ri), ri);
+					BlocksSupply<CodeInfo> blocks = BlocksInMap.getInstance(new EntryCodeInfoRecorder(ri), ri, REPLACEMENT_ROUTINES);
 					this.run(entries, ri, fr, blocks);
 				} else {
-					BlocksSupply<CodeInfo> blocks = new BlocksInSerialRoutine<CodeInfo>(this.params.parseTreeDirectory, new EntryCodeInfoRecorderFactory(ri));
+					BlocksSupply<CodeInfo> blocks = new BlocksInSerialRoutine<CodeInfo>(this.params.parseTreeDirectory, new EntryCodeInfoRecorderFactory(ri), REPLACEMENT_ROUTINES);
 					this.run(entries, ri, fr, blocks);
 				}
 			}

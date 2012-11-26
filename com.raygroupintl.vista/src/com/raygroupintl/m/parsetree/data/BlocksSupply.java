@@ -16,7 +16,16 @@
 
 package com.raygroupintl.m.parsetree.data;
 
+import java.util.Collections;
+import java.util.Map;
+
 public abstract class BlocksSupply<T> {
+	Map<String, String> replacementRoutines;
+	
+	public BlocksSupply(Map<String, String> replacementRoutines) {
+		this.replacementRoutines = replacementRoutines;
+	}
+	
 	public abstract Blocks<T> getBlocks(String routineName);
 	
 	public Block<T> getBlock(EntryId entryId) {
@@ -27,5 +36,13 @@ public abstract class BlocksSupply<T> {
 			return rbs.get(label);
 		} 
 		return null;		
+	}
+	
+	public Map<String, String> getReplacementRoutines() {
+		if (this.replacementRoutines == null) {
+			return Collections.emptyMap();
+		} else {
+			return this.replacementRoutines;
+		}
 	}
 }

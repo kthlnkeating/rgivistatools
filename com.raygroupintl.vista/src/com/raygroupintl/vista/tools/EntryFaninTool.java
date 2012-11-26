@@ -104,14 +104,12 @@ public class EntryFaninTool extends RepositoryVisitor  {
 	}
 	
 	private BlocksSupply<PrivateRecursiveDataHandler> blocksSupply;
-	private Map<String, String> replacementRoutines;
 	private SourcedFanoutFilter filter = new BasicSourcedFanoutFilter(new PassFilter<EntryId>());
 
 	PTEDataStore store = new PTEDataStore();
 
-	public EntryFaninTool(BlocksSupply<PrivateRecursiveDataHandler> blocksSupply, Map<String, String> replacementRoutines) {
+	public EntryFaninTool(BlocksSupply<PrivateRecursiveDataHandler> blocksSupply) {
 		this.blocksSupply = blocksSupply;
-		this.replacementRoutines = replacementRoutines;
 	}
 	
 	private void update(EntryId entryId) {
@@ -128,7 +126,7 @@ public class EntryFaninTool extends RepositoryVisitor  {
 			return;
 		}
 		RecursiveDataAggregator<PathsToEntry, PrivateRecursiveDataHandler> ala = new RecursiveDataAggregator<PathsToEntry, PrivateRecursiveDataHandler>(lb, this.blocksSupply);
-		ala.get(this.store, this.filter, this.replacementRoutines);
+		ala.get(this.store, this.filter);
 	}
 		
 	@Override

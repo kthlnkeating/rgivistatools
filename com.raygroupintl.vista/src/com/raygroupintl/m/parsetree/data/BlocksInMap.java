@@ -33,10 +33,11 @@ public class BlocksInMap<T> extends BlocksSupply<T> {
 	private static class Factory<T> extends RepositoryVisitor {
 		private int packageCount;
 		private BlockRecorder<T> recorder;
-		private BlocksInMap<T> blocksMap = new BlocksInMap<T>();
+		private BlocksInMap<T> blocksMap;
 		
-		public Factory(BlockRecorder<T> br) {
+		public Factory(BlockRecorder<T> br, Map<String, String> replacementRoutines) {
 			this.recorder= br;
+			this.blocksMap = new BlocksInMap<T>(replacementRoutines);
 		}
 		
 		@Override
@@ -66,6 +67,10 @@ public class BlocksInMap<T> extends BlocksSupply<T> {
 
 	private Map<String, Blocks<T>> map = new HashMap<String, Blocks<T>>();
 	
+	public BlocksInMap(Map<String, String> replacementRoutines) {
+		super(replacementRoutines);
+	}
+	
 	public Blocks<T> put(String routineName,  Blocks<T> blocks) {
 		return this.map.put(routineName, blocks);
 	}
@@ -75,8 +80,8 @@ public class BlocksInMap<T> extends BlocksSupply<T> {
 		return this.map.get(routineName);
 	}
 		
-	public static <T> BlocksInMap<T> getInstance(BlockRecorder<T> br, RepositoryInfo ri) {
-		Factory<T> f = new Factory<T>(br);
+	public static <T> BlocksInMap<T> getInstance(BlockRecorder<T> br, RepositoryInfo ri, Map<String, String> replacementRoutines) {
+		Factory<T> f = new Factory<T>(br, replacementRoutines);
 		VistaPackages vps = new VistaPackages(ri.getAllPackages());
 		vps.accept(f);
 		return f.getBlocks();		

@@ -72,14 +72,14 @@ public class APITest {
 		Blocks<CodeInfo> rbs = blocksMap.getBlocks(routineName);
 		Block<CodeInfo> lb = rbs.get(tag);
 		RecursiveDataAggregator<Set<String>, CodeInfo> ala = new RecursiveDataAggregator<Set<String>, CodeInfo>(lb, blocksMap);
-		Set<String> assumeds = ala.get(new DataStore<Set<String>>(), new BasicSourcedFanoutFilter(new PassFilter<EntryId>()), replacement);
+		Set<String> assumeds = ala.get(new DataStore<Set<String>>(), new BasicSourcedFanoutFilter(new PassFilter<EntryId>()));
 		Assert.assertEquals(expectedAssumeds.length, assumeds.size());
 		for (String expectedOutput : expectedAssumeds) {
 			Assert.assertTrue(assumeds.contains(expectedOutput));			
 		}				
 
 		AdditiveDataAggregator<BasicCodeInfo, CodeInfo> bcia = new AdditiveDataAggregator<BasicCodeInfo, CodeInfo>(lb, blocksMap);
-		BasicCodeInfo apiData = bcia.getCodeInfo(new BasicSourcedFanoutFilter(new PassFilter<EntryId>()), replacement);
+		BasicCodeInfo apiData = bcia.get(new BasicSourcedFanoutFilter(new PassFilter<EntryId>()));
 		Set<String> globals = new HashSet<String>(apiData.getGlobals());
 		Assert.assertEquals(expectedGlobals.length, globals.size());
 		for (String expectedGlobal : expectedGlobals) {
@@ -91,7 +91,7 @@ public class APITest {
 		Blocks<CodeInfo> rbs = blocksMap.getBlocks(routineName);
 		Block<CodeInfo> lb = rbs.get(tag);
 		AdditiveDataAggregator<BasicCodeInfo, CodeInfo> bcia = new AdditiveDataAggregator<BasicCodeInfo, CodeInfo>(lb, blocksMap);
-		BasicCodeInfo apiData = bcia.getCodeInfo(new BasicSourcedFanoutFilter(new PassFilter<EntryId>()), replacement);
+		BasicCodeInfo apiData = bcia.get(new BasicSourcedFanoutFilter(new PassFilter<EntryId>()));
 		
 		Set<String> globals = new HashSet<String>(apiData.getFilemanGlobals());
 		Assert.assertEquals(expectedGlobals.length, globals.size());
@@ -119,7 +119,7 @@ public class APITest {
 	@Test
 	public void testAssumedLocals() {
 		EntryCodeInfoRecorder recorder = new EntryCodeInfoRecorder(null);
-		BlocksInMap<CodeInfo> blocksMap = new BlocksInMap<CodeInfo>();
+		BlocksInMap<CodeInfo> blocksMap = new BlocksInMap<CodeInfo>(replacement);
 		for (int i=0; i<ROUTINES.length; ++i) {			
 			ROUTINES[i].accept(recorder);
 			Blocks<CodeInfo> blocks = recorder.getBlocks();

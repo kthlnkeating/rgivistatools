@@ -93,7 +93,7 @@ public class Block<T> {
 		}
 	}	
 	
-	private void update(FanoutBlocks<T> fanoutBlocks, BlocksSupply<T> blocksSupply, SourcedFanoutFilter filter, Map<String, String> replacedRoutines) {
+	private void update(FanoutBlocks<T> fanoutBlocks, BlocksSupply<T> blocksSupply, SourcedFanoutFilter filter) {
 		for (IndexedFanout ifout : this.fanouts) {
 			EntryId fout = ifout.getFanout();
 			if ((filter != null) && (! filter.isValid(fout))) continue;
@@ -107,6 +107,7 @@ public class Block<T> {
 				if (tagBlock == null) {
 					String inRoutineName = this.entryId.getRoutineName();
 					if (inRoutineName != null) {
+						Map<String, String> replacedRoutines = blocksSupply.getReplacementRoutines();
 						String replacement = replacedRoutines.get(tagName);
 						if ((replacement != null) && (replacement.equals(inRoutineName))) {
 							tagBlock = this.siblings.get(replacement);
@@ -125,6 +126,7 @@ public class Block<T> {
 				Blocks<T> routineBlocks = blocksSupply.getBlocks(routineName);
 				String originalTagName = tagName;
 				if (routineBlocks == null) {
+					Map<String, String> replacedRoutines = blocksSupply.getReplacementRoutines();
 					if (replacedRoutines != null) {
 						String replacement = replacedRoutines.get(routineName);
 						if (replacement != null) {
@@ -160,24 +162,24 @@ public class Block<T> {
 		}
 	}
 	
-	private void updateFanoutBlocks(FanoutBlocks<T> fanoutBlocks, BlocksSupply<T> blocksSupply, SourcedFanoutFilter filter, Map<String, String> replacedRoutines) {
+	private void updateFanoutBlocks(FanoutBlocks<T> fanoutBlocks, BlocksSupply<T> blocksSupply, SourcedFanoutFilter filter) {
 		int index = 0;	
 		while (index < fanoutBlocks.getSize()) {
 			Block<T> b = fanoutBlocks.getBlock(index);
-			b.update(fanoutBlocks, blocksSupply, filter, replacedRoutines);
+			b.update(fanoutBlocks, blocksSupply, filter);
 			++index;
 		}		
 	}
 	
-	public FanoutBlocks<T> getFanoutBlocks(BlocksSupply<T> blocksSupply, ObjectIdContainer blockIdContainer, SourcedFanoutFilter filter, Map<String, String> replacedRoutines) {
+	public FanoutBlocks<T> getFanoutBlocks(BlocksSupply<T> blocksSupply, ObjectIdContainer blockIdContainer, SourcedFanoutFilter filter) {
 		FanoutBlocks<T> fanoutBlocks = new FanoutBlocks<T>(this, blockIdContainer);
-		this.updateFanoutBlocks(fanoutBlocks, blocksSupply, filter, replacedRoutines);
+		this.updateFanoutBlocks(fanoutBlocks, blocksSupply, filter);
 		return fanoutBlocks;
 	}
 	
-	public FanoutBlocks<T> getFanoutBlocks(BlocksSupply<T> blocksSupply, SourcedFanoutFilter filter, Map<String, String> replacedRoutines) {
+	public FanoutBlocks<T> getFanoutBlocks(BlocksSupply<T> blocksSupply, SourcedFanoutFilter filter) {
 		FanoutBlocks<T> fanoutBlocks = new FanoutBlocks<T>(this, null);
-		this.updateFanoutBlocks(fanoutBlocks, blocksSupply, filter, replacedRoutines);
+		this.updateFanoutBlocks(fanoutBlocks, blocksSupply, filter);
 		return fanoutBlocks;
 	}
 	
