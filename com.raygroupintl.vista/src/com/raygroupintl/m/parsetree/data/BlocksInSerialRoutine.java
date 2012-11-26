@@ -22,7 +22,7 @@ import com.raygroupintl.m.parsetree.Routine;
 import com.raygroupintl.m.parsetree.visitor.BlockRecorder;
 import com.raygroupintl.m.parsetree.visitor.BlockRecorderFactory;
 
-public class BlocksInSerialRoutine<T> implements BlocksSupply<T> {
+public class BlocksInSerialRoutine<T> extends BlocksSupply<T> {
 	private String inputPath;
 	private HashMap<String, Blocks<T>> blocks = new HashMap<String, Blocks<T>>();
 	private BlockRecorderFactory<T> blockRecorder;

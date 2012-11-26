@@ -16,6 +16,16 @@
 
 package com.raygroupintl.m.parsetree.data;
 
-public interface BlocksSupply<T> {
-	Blocks<T> getBlocks(String routineName);
+public abstract class BlocksSupply<T> {
+	public abstract Blocks<T> getBlocks(String routineName);
+	
+	public Block<T> getBlock(EntryId entryId) {
+		String routineName = entryId.getRoutineName();
+		Blocks<T> rbs = this.getBlocks(routineName);
+		if (rbs != null) {
+			String label = entryId.getLabelOrDefault();
+			return rbs.get(label);
+		} 
+		return null;		
+	}
 }

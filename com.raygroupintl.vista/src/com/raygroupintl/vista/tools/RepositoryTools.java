@@ -19,22 +19,9 @@ package com.raygroupintl.vista.tools;
 import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import com.raygroupintl.m.parsetree.data.BlocksInMap;
-import com.raygroupintl.m.parsetree.data.CodeInfo;
-import com.raygroupintl.m.parsetree.data.BlocksSupply;
-import com.raygroupintl.m.parsetree.data.BlocksInSerialRoutine;
-import com.raygroupintl.m.parsetree.filter.BasicSourcedFanoutFilter;
-import com.raygroupintl.m.parsetree.filter.ExcludeFilemanCallFanoutFilter;
-import com.raygroupintl.m.parsetree.filter.ExcludeNonPkgCallFanoutFilter;
-import com.raygroupintl.m.parsetree.filter.ExcludeNonRtnFanoutFilter;
-import com.raygroupintl.m.parsetree.filter.PercentRoutineFanoutFilter;
-import com.raygroupintl.m.parsetree.filter.SourcedFanoutFilter;
-import com.raygroupintl.m.parsetree.visitor.EntryCodeInfoRecorder;
-import com.raygroupintl.m.parsetree.visitor.EntryCodeInfoRecorderFactory;
 import com.raygroupintl.output.FileWrapper;
 import com.raygroupintl.vista.repository.RepositoryInfo;
 import com.raygroupintl.vista.repository.VistaPackage;
@@ -52,79 +39,6 @@ import com.raygroupintl.vista.repository.visitor.RPCWriter;
 import com.raygroupintl.vista.repository.visitor.SerializedRoutineWriter;
 
 public class RepositoryTools extends Tools {
-	private static Map<String, String> REPLACEMENT_ROUTINES = new HashMap<String, String>();
-	static {
-		REPLACEMENT_ROUTINES.put("%ZOSV", "ZOSVONT");
-		REPLACEMENT_ROUTINES.put("%ZIS4", "ZIS4ONT");
-		REPLACEMENT_ROUTINES.put("%ZISF", "ZISFONT");
-		REPLACEMENT_ROUTINES.put("%ZISH", "ZISHONT");
-		REPLACEMENT_ROUTINES.put("%XUCI", "ZISHONT");
-
-		REPLACEMENT_ROUTINES.put("%ZISTCPS", "ZISTCPS");
-		REPLACEMENT_ROUTINES.put("%ZTMDCL", "ZTMDCL");
-		
-		REPLACEMENT_ROUTINES.put("%ZOSVKR", "ZOSVKRO");
-		REPLACEMENT_ROUTINES.put("%ZOSVKSE", "ZOSVKSOE");
-		REPLACEMENT_ROUTINES.put("%ZOSVKSS", "ZOSVKSOS");
-		REPLACEMENT_ROUTINES.put("%ZOSVKSD", "ZOSVKSD");
-
-		REPLACEMENT_ROUTINES.put("%ZTLOAD", "ZTLOAD");
-		REPLACEMENT_ROUTINES.put("%ZTLOAD1", "ZTLOAD1");
-		REPLACEMENT_ROUTINES.put("%ZTLOAD2", "ZTLOAD2");
-		REPLACEMENT_ROUTINES.put("%ZTLOAD3", "ZTLOAD3");
-		REPLACEMENT_ROUTINES.put("%ZTLOAD4", "ZTLOAD4");
-		REPLACEMENT_ROUTINES.put("%ZTLOAD5", "ZTLOAD5");
-		REPLACEMENT_ROUTINES.put("%ZTLOAD6", "ZTLOAD6");
-		REPLACEMENT_ROUTINES.put("%ZTLOAD7", "ZTLOAD7");
-		
-		REPLACEMENT_ROUTINES.put("%ZTM", "ZTM");
-		REPLACEMENT_ROUTINES.put("%ZTM0", "ZTM0");
-		REPLACEMENT_ROUTINES.put("%ZTM1", "ZTM1");
-		REPLACEMENT_ROUTINES.put("%ZTM2", "ZTM2");
-		REPLACEMENT_ROUTINES.put("%ZTM3", "ZTM3");
-		REPLACEMENT_ROUTINES.put("%ZTM4", "ZTM4");
-		REPLACEMENT_ROUTINES.put("%ZTM5", "ZTM5");
-		REPLACEMENT_ROUTINES.put("%ZTM6", "ZTM6");
-		
-		REPLACEMENT_ROUTINES.put("%ZTMS", "ZTMS");
-		REPLACEMENT_ROUTINES.put("%ZTMS0", "ZTMS0");
-		REPLACEMENT_ROUTINES.put("%ZTMS1", "ZTMS1");
-		REPLACEMENT_ROUTINES.put("%ZTMS2", "ZTMS2");
-		REPLACEMENT_ROUTINES.put("%ZTMS3", "ZTMS3");
-		REPLACEMENT_ROUTINES.put("%ZTMS4", "ZTMS4");
-		REPLACEMENT_ROUTINES.put("%ZTMS5", "ZTMS5");
-		REPLACEMENT_ROUTINES.put("%ZTMS7", "ZTMS7");
-		REPLACEMENT_ROUTINES.put("%ZTMSH", "ZTMSH");
-
-		REPLACEMENT_ROUTINES.put("%DT", "DIDT");
-		REPLACEMENT_ROUTINES.put("%DTC", "DIDTC");
-		REPLACEMENT_ROUTINES.put("%RCR", "DIRCR");
-
-		REPLACEMENT_ROUTINES.put("%ZTER", "ZTER");
-		REPLACEMENT_ROUTINES.put("%ZTER1", "ZTER1");
-
-		REPLACEMENT_ROUTINES.put("%ZTPP", "ZTPP");
-		REPLACEMENT_ROUTINES.put("%ZTP1", "ZTP1");
-		REPLACEMENT_ROUTINES.put("%ZTPTCH", "ZTPTCH");
-		REPLACEMENT_ROUTINES.put("%ZTRDE", "ZTRDE");
-		REPLACEMENT_ROUTINES.put("%ZTMOVE", "ZTMOVE");
-		
-		REPLACEMENT_ROUTINES.put("%ZIS", "ZIS");
-		REPLACEMENT_ROUTINES.put("%ZIS1", "ZIS1");
-		REPLACEMENT_ROUTINES.put("%ZIS2", "ZIS2");
-		REPLACEMENT_ROUTINES.put("%ZIS3", "ZIS3");
-		REPLACEMENT_ROUTINES.put("%ZIS5", "ZIS5");
-		REPLACEMENT_ROUTINES.put("%ZIS6", "ZIS6");
-		REPLACEMENT_ROUTINES.put("%ZIS7", "ZIS7");
-		REPLACEMENT_ROUTINES.put("%ZISC", "ZISC");
-		REPLACEMENT_ROUTINES.put("%ZISP", "ZISP");
-		REPLACEMENT_ROUTINES.put("%ZISS", "ZISS");
-		REPLACEMENT_ROUTINES.put("%ZISS1", "ZISS1");
-		REPLACEMENT_ROUTINES.put("%ZISS2", "ZISS2");
-		REPLACEMENT_ROUTINES.put("%ZISTCP", "ZISTCP");
-		REPLACEMENT_ROUTINES.put("%ZISUTL", "ZISUTL");
-	}
-	
 	private static class Fanout extends Tool {		
 		public Fanout(CLIParams params) {
 			super(params);
@@ -374,66 +288,6 @@ public class RepositoryTools extends Tools {
 		}
 	}
 
-	private static class EntryInfo extends Tool {		
-		public EntryInfo(CLIParams params) {
-			super(params);
-		}
-		
-		private int getFanoutFlag() {
-			try {
-				int result = Integer.parseInt(this.params.flag);
-				if (result < 0) return 0;
-				if (result > 3) return 3;
-				return result;
-			} catch(Throwable t) {
-			}
-			return 0;
-		}
-		
-		private SourcedFanoutFilter getFilter(RepositoryInfo ri) {
-			int flag = this.getFanoutFlag();
-			switch (flag) {
-				case 1:
-					return new ExcludeFilemanCallFanoutFilter(ri);
-				case 2:
-					return new ExcludeNonPkgCallFanoutFilter(ri);
-				case 3:
-					return new ExcludeNonRtnFanoutFilter();
-				default:
-					PercentRoutineFanoutFilter filter = new PercentRoutineFanoutFilter();
-					return new BasicSourcedFanoutFilter(filter);
-			}
-		}
-		
-		private void run(RepositoryInfo ri, FileWrapper fr, BlocksSupply<CodeInfo> blocks) {
-			EntryCodeInfoTool apiw = new EntryCodeInfoTool(fr, blocks, REPLACEMENT_ROUTINES);
-			SourcedFanoutFilter filter = this.getFilter(ri);
-			apiw.setFilter(filter);
-			if (this.params.inputFile != null) {
-				apiw.write(this.params.inputFile);					
-			} else {
-				apiw.writeEntries(this.params.entries);
-			}			
-		}
-		
-		@Override
-		public void run() {
-			FileWrapper fr = this.getOutputFile();
-			if (fr != null) {
-				RepositoryInfo ri = this.getRepositoryInfo();
-				if (ri != null) {
-					if ((this.params.parseTreeDirectory == null) || this.params.parseTreeDirectory.isEmpty()) {
-						BlocksSupply<CodeInfo> blocks = BlocksInMap.getInstance(new EntryCodeInfoRecorder(ri), ri);
-						this.run(ri, fr, blocks);
-					} else {
-						BlocksSupply<CodeInfo> blocks = new BlocksInSerialRoutine<CodeInfo>(this.params.parseTreeDirectory, new EntryCodeInfoRecorderFactory(ri));
-						this.run(ri, fr, blocks);
-					}
-				}
-			}
-		}
-	}	
-	
 	private static class CacheUsage extends Tool {		
 		public CacheUsage(CLIParams params) {
 			super(params);
@@ -508,7 +362,7 @@ public class RepositoryTools extends Tools {
 		tools.put("entryinfo", new MemberFactory() {				
 			@Override
 			public Tool getInstance(CLIParams params) {
-				return new EntryInfo(params);
+				return new EntryCodeInfoTool(params);
 			}
 		});
 		tools.put("error", new MemberFactory() {				

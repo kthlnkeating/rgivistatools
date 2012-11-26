@@ -24,7 +24,7 @@ import java.util.logging.Logger;
 
 import com.raygroupintl.vista.repository.visitor.FanoutWriter;
 
-public class FileWrapper {
+public class FileWrapper extends Terminal {
 	private final static Logger LOGGER = Logger.getLogger(FanoutWriter.class.getName());
 
 	private String outputFileName;
@@ -74,13 +74,6 @@ public class FileWrapper {
 		return false;
 	}
 	
-	public boolean writeEOL(String data) {
-		if (this.write(data)) {
-			return this.write(this.eol);
-		}
-		return false;
-	}
-
 	public boolean writeEOL() {
 		return this.write(this.eol);
 	}

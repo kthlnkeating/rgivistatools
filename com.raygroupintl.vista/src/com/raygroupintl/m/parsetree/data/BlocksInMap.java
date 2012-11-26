@@ -27,7 +27,7 @@ import com.raygroupintl.vista.repository.RepositoryVisitor;
 import com.raygroupintl.vista.repository.VistaPackage;
 import com.raygroupintl.vista.repository.VistaPackages;
 
-public class BlocksInMap<T> implements BlocksSupply<T> {
+public class BlocksInMap<T> extends BlocksSupply<T> {
 	private final static Logger LOGGER = Logger.getLogger(BlocksInMap.class.getName());
 
 	private static class Factory<T> extends RepositoryVisitor {

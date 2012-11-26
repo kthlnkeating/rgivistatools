@@ -16,32 +16,107 @@
 
 package com.raygroupintl.vista.tools;
 
-import java.io.IOException;
-import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Scanner;
 import java.util.Set;
 
 import com.raygroupintl.m.parsetree.data.AdditiveDataAggregator;
 import com.raygroupintl.m.parsetree.data.BasicCodeInfo;
 import com.raygroupintl.m.parsetree.data.Block;
+import com.raygroupintl.m.parsetree.data.BlocksInMap;
+import com.raygroupintl.m.parsetree.data.BlocksInSerialRoutine;
 import com.raygroupintl.m.parsetree.data.CodeInfo;
 import com.raygroupintl.m.parsetree.data.DataStore;
-import com.raygroupintl.m.parsetree.data.Blocks;
 import com.raygroupintl.m.parsetree.data.BlocksSupply;
 import com.raygroupintl.m.parsetree.data.EntryId;
 import com.raygroupintl.m.parsetree.data.RecursiveDataAggregator;
 import com.raygroupintl.m.parsetree.filter.BasicSourcedFanoutFilter;
 import com.raygroupintl.m.parsetree.filter.SourcedFanoutFilter;
+import com.raygroupintl.m.parsetree.visitor.EntryCodeInfoRecorder;
+import com.raygroupintl.m.parsetree.visitor.EntryCodeInfoRecorderFactory;
 import com.raygroupintl.output.FileWrapper;
+import com.raygroupintl.output.Terminal;
 import com.raygroupintl.output.TerminalFormatter;
 import com.raygroupintl.struct.PassFilter;
+import com.raygroupintl.vista.repository.RepositoryInfo;
 
-public class EntryCodeInfoTool {	
+public class EntryCodeInfoTool extends EntryInfoTool {	
+	private static Map<String, String> REPLACEMENT_ROUTINES = new HashMap<String, String>();
+	static {
+		REPLACEMENT_ROUTINES.put("%ZOSV", "ZOSVONT");
+		REPLACEMENT_ROUTINES.put("%ZIS4", "ZIS4ONT");
+		REPLACEMENT_ROUTINES.put("%ZISF", "ZISFONT");
+		REPLACEMENT_ROUTINES.put("%ZISH", "ZISHONT");
+		REPLACEMENT_ROUTINES.put("%XUCI", "ZISHONT");
+
+		REPLACEMENT_ROUTINES.put("%ZISTCPS", "ZISTCPS");
+		REPLACEMENT_ROUTINES.put("%ZTMDCL", "ZTMDCL");
+		
+		REPLACEMENT_ROUTINES.put("%ZOSVKR", "ZOSVKRO");
+		REPLACEMENT_ROUTINES.put("%ZOSVKSE", "ZOSVKSOE");
+		REPLACEMENT_ROUTINES.put("%ZOSVKSS", "ZOSVKSOS");
+		REPLACEMENT_ROUTINES.put("%ZOSVKSD", "ZOSVKSD");
+
+		REPLACEMENT_ROUTINES.put("%ZTLOAD", "ZTLOAD");
+		REPLACEMENT_ROUTINES.put("%ZTLOAD1", "ZTLOAD1");
+		REPLACEMENT_ROUTINES.put("%ZTLOAD2", "ZTLOAD2");
+		REPLACEMENT_ROUTINES.put("%ZTLOAD3", "ZTLOAD3");
+		REPLACEMENT_ROUTINES.put("%ZTLOAD4", "ZTLOAD4");
+		REPLACEMENT_ROUTINES.put("%ZTLOAD5", "ZTLOAD5");
+		REPLACEMENT_ROUTINES.put("%ZTLOAD6", "ZTLOAD6");
+		REPLACEMENT_ROUTINES.put("%ZTLOAD7", "ZTLOAD7");
+		
+		REPLACEMENT_ROUTINES.put("%ZTM", "ZTM");
+		REPLACEMENT_ROUTINES.put("%ZTM0", "ZTM0");
+		REPLACEMENT_ROUTINES.put("%ZTM1", "ZTM1");
+		REPLACEMENT_ROUTINES.put("%ZTM2", "ZTM2");
+		REPLACEMENT_ROUTINES.put("%ZTM3", "ZTM3");
+		REPLACEMENT_ROUTINES.put("%ZTM4", "ZTM4");
+		REPLACEMENT_ROUTINES.put("%ZTM5", "ZTM5");
+		REPLACEMENT_ROUTINES.put("%ZTM6", "ZTM6");
+		
+		REPLACEMENT_ROUTINES.put("%ZTMS", "ZTMS");
+		REPLACEMENT_ROUTINES.put("%ZTMS0", "ZTMS0");
+		REPLACEMENT_ROUTINES.put("%ZTMS1", "ZTMS1");
+		REPLACEMENT_ROUTINES.put("%ZTMS2", "ZTMS2");
+		REPLACEMENT_ROUTINES.put("%ZTMS3", "ZTMS3");
+		REPLACEMENT_ROUTINES.put("%ZTMS4", "ZTMS4");
+		REPLACEMENT_ROUTINES.put("%ZTMS5", "ZTMS5");
+		REPLACEMENT_ROUTINES.put("%ZTMS7", "ZTMS7");
+		REPLACEMENT_ROUTINES.put("%ZTMSH", "ZTMSH");
+
+		REPLACEMENT_ROUTINES.put("%DT", "DIDT");
+		REPLACEMENT_ROUTINES.put("%DTC", "DIDTC");
+		REPLACEMENT_ROUTINES.put("%RCR", "DIRCR");
+
+		REPLACEMENT_ROUTINES.put("%ZTER", "ZTER");
+		REPLACEMENT_ROUTINES.put("%ZTER1", "ZTER1");
+
+		REPLACEMENT_ROUTINES.put("%ZTPP", "ZTPP");
+		REPLACEMENT_ROUTINES.put("%ZTP1", "ZTP1");
+		REPLACEMENT_ROUTINES.put("%ZTPTCH", "ZTPTCH");
+		REPLACEMENT_ROUTINES.put("%ZTRDE", "ZTRDE");
+		REPLACEMENT_ROUTINES.put("%ZTMOVE", "ZTMOVE");
+		
+		REPLACEMENT_ROUTINES.put("%ZIS", "ZIS");
+		REPLACEMENT_ROUTINES.put("%ZIS1", "ZIS1");
+		REPLACEMENT_ROUTINES.put("%ZIS2", "ZIS2");
+		REPLACEMENT_ROUTINES.put("%ZIS3", "ZIS3");
+		REPLACEMENT_ROUTINES.put("%ZIS5", "ZIS5");
+		REPLACEMENT_ROUTINES.put("%ZIS6", "ZIS6");
+		REPLACEMENT_ROUTINES.put("%ZIS7", "ZIS7");
+		REPLACEMENT_ROUTINES.put("%ZISC", "ZISC");
+		REPLACEMENT_ROUTINES.put("%ZISP", "ZISP");
+		REPLACEMENT_ROUTINES.put("%ZISS", "ZISS");
+		REPLACEMENT_ROUTINES.put("%ZISS1", "ZISS1");
+		REPLACEMENT_ROUTINES.put("%ZISS2", "ZISS2");
+		REPLACEMENT_ROUTINES.put("%ZISTCP", "ZISTCP");
+		REPLACEMENT_ROUTINES.put("%ZISUTL", "ZISUTL");
+	}
+	
 	public static class EntryCodeInfo {
 		public String[] formals;
 		public Set<String> assumedLocals;
@@ -52,153 +127,108 @@ public class EntryCodeInfoTool {
 			this.assumedLocals = assumedLocals;
 			this.otherCodeInfo = otherCodeInfo;
 		}
-	}
 		
-	private FileWrapper fileWrapper;
-	private BlocksSupply<CodeInfo> blocksSupply;
-	private TerminalFormatter tf = new TerminalFormatter();
-	private Map<String, String> replacementRoutines;
-	private SourcedFanoutFilter filter = new BasicSourcedFanoutFilter(new PassFilter<EntryId>());
-	
-	public EntryCodeInfoTool(FileWrapper fileWrapper, BlocksSupply<CodeInfo> blocksSupply, Map<String, String> replacementRoutines) {
-		this.fileWrapper = fileWrapper;
-		this.blocksSupply = blocksSupply;
-		this.replacementRoutines = replacementRoutines;
-	}
-
-	public void setFilter(SourcedFanoutFilter filter) {
-		this.filter = filter;
-	}
-	
-	private void writeAPIData(List<String> dataList, String title) {
-		this.fileWrapper.write(this.tf.startList(title));
-		if (dataList.size() > 0) {
-			for (String data : dataList) {
-				this.fileWrapper.write(this.tf.addToList(data));
-			}
-		} else {
-			this.fileWrapper.write("--");
+		public void write(Terminal t, TerminalFormatter tf) {
+			t.writeFormatted("FORMAL", this.formals, tf);
+			
+			List<String> assumedLocalsSorted = new ArrayList<String>(this.assumedLocals);
+			Collections.sort(assumedLocalsSorted);			
+			t.writeFormatted("ASSUMED", assumedLocalsSorted, tf);
+			
+			t.writeFormatted("GLBS", this.otherCodeInfo.getGlobals(), tf);
+			t.writeFormatted("READ" , this.otherCodeInfo.getReadCount(), tf);
+			t.writeFormatted("WRITE", this.otherCodeInfo.getWriteCount(), tf);
+			t.writeFormatted("EXEC", this.otherCodeInfo.getExecuteCount(), tf);
+			t.writeFormatted("IND", this.otherCodeInfo.getIndirectionCount(), tf);
+			t.writeFormatted("FMGLBS", this.otherCodeInfo.getFilemanGlobals(), tf);
+			t.writeFormatted("FMCALLS", this.otherCodeInfo.getFilemanCalls(), tf);
+			t.writeEOL();			
 		}
-		this.fileWrapper.writeEOL();		
 	}
 	
-	private void writeAPIData(int count, String title) {
-		this.fileWrapper.write(this.tf.startList(title));
-		this.fileWrapper.write(String.valueOf(count));
-		this.fileWrapper.writeEOL();		
-	}
-	
-	private void write(EntryId entryId, DataStore<Set<String>> store) {
-		this.fileWrapper.writeEOL(" " + entryId.toString2());
-		this.tf.setTab(12);
+	private class Writer {		
+		private FileWrapper fileWrapper;
+		private BlocksSupply<CodeInfo> blocksSupply;
+		private TerminalFormatter tf = new TerminalFormatter();
+		private Map<String, String> replacementRoutines;
+		private SourcedFanoutFilter filter = new BasicSourcedFanoutFilter(new PassFilter<EntryId>());
 		
-		EntryCodeInfo result = this.getEntryCodeInfo(entryId, store);
-		if (result == null) {
-			this.fileWrapper.writeEOL("  ERROR: Invalid entry point");
-			return;
-		} 
-
-		this.fileWrapper.write(this.tf.startList("FORMAL"));
-		if ((result.formals == null) || (result.formals.length == 0)) {
-			this.fileWrapper.write("--");
-		} else {
-			for (String formal : result.formals) {
-				this.fileWrapper.write(this.tf.addToList(formal));					
-			}
+		public Writer(FileWrapper fileWrapper, BlocksSupply<CodeInfo> blocksSupply, Map<String, String> replacementRoutines) {
+			this.fileWrapper = fileWrapper;
+			this.blocksSupply = blocksSupply;
+			this.replacementRoutines = replacementRoutines;
 		}
-		this.fileWrapper.writeEOL();
-
-		List<String> assumedLocalsSorted = new ArrayList<String>(result.assumedLocals);
-		Collections.sort(assumedLocalsSorted);			
-		this.writeAPIData(assumedLocalsSorted, "ASSUMED");
-		
-		BasicCodeInfo apiData = result.otherCodeInfo;
-		
-		this.writeAPIData(apiData.getGlobals(), "GLBS");
-		this.writeAPIData(apiData.getReadCount(), "READ");
-		this.writeAPIData(apiData.getWriteCount(), "WRITE");
-		this.writeAPIData(apiData.getExecuteCount(), "EXEC");
-		this.writeAPIData(apiData.getIndirectionCount(), "IND");
-		this.writeAPIData(apiData.getFilemanGlobals(), "FMGLBS");
-		this.writeAPIData(apiData.getFilemanCalls(), "FMCALLS");
-
-		this.fileWrapper.writeEOL();
-	}
 	
-	public EntryCodeInfo getEntryCodeInfo(EntryId entryId, DataStore<Set<String>> store) {
-		String routineName = entryId.getRoutineName();
-		Blocks<CodeInfo> rbs = this.blocksSupply.getBlocks(routineName);
-		if (rbs == null) {
-			return null;
-		} 
-		String label = entryId.getLabelOrDefault();
-		Block<CodeInfo> lb = rbs.get(label);
-		if (lb == null) {
-			return null;
-		} 
+		public void setFilter(SourcedFanoutFilter filter) {
+			this.filter = filter;
+		}
 		
-		RecursiveDataAggregator<Set<String>, CodeInfo> ala = new RecursiveDataAggregator<Set<String>, CodeInfo>(lb, this.blocksSupply);
-		Set<String> assumedLocals = ala.get(store, this.filter, this.replacementRoutines);
+		private void write(EntryId entryId) {
+			this.fileWrapper.writeEOL(" " + entryId.toString2());
+			this.tf.setTab(12);
+			
+			EntryCodeInfo result = this.getEntryCodeInfo(entryId);
+			if (result == null) {
+				this.fileWrapper.writeEOL("  ERROR: Invalid entry point");
+				return;
+			} 
+			result.write(this.fileWrapper, this.tf);
+		}
 		
-		AdditiveDataAggregator<BasicCodeInfo, CodeInfo> bcia = new AdditiveDataAggregator<BasicCodeInfo, CodeInfo>(lb, this.blocksSupply);
-		BasicCodeInfo apiData = bcia.getCodeInfo(this.filter, this.replacementRoutines);
-
-		return new EntryCodeInfo(lb.getAttachedObject().getFormals(), assumedLocals, apiData);
-	}
+		public EntryCodeInfo getEntryCodeInfo(EntryId entryId) {
+			Block<CodeInfo> lb = this.blocksSupply.getBlock(entryId);
+			if (lb == null) {
+				return null;
+			} 			
+			RecursiveDataAggregator<Set<String>, CodeInfo> ala = new RecursiveDataAggregator<Set<String>, CodeInfo>(lb, this.blocksSupply);
+			Set<String> assumedLocals = ala.get(store, this.filter, this.replacementRoutines);
+			
+			AdditiveDataAggregator<BasicCodeInfo, CodeInfo> bcia = new AdditiveDataAggregator<BasicCodeInfo, CodeInfo>(lb, this.blocksSupply);
+			BasicCodeInfo apiData = bcia.getCodeInfo(this.filter, this.replacementRoutines);
 	
-	public void auxWrite(String fanInFileName) {		
-		try {
-			DataStore<Set<String>> store = new DataStore<Set<String>>();
-			int packageCount = 0;
-			Path path = Paths.get(fanInFileName);
-			Scanner scanner = new Scanner(path);
-			while (scanner.hasNextLine()) {
-				String line = scanner.nextLine();
-				if (line.endsWith(":")) {
-					++packageCount;
-					String name = line.substring(0, line.length()-1);
-					this.fileWrapper.writeEOL();
-					this.fileWrapper.writeEOL("--------------------------------------------------------------");
-					this.fileWrapper.writeEOL();
-					this.fileWrapper.writeEOL(String.valueOf(packageCount) + ". PACKAGE NAME: " + name);
-					this.fileWrapper.writeEOL();
-				} else {
-					String[] linePieces = line.split("\\|");
-					String[] pieces = linePieces[0].split("\\^");
-					if ((pieces != null) && (pieces.length > 0)) {
-						String label = pieces[0];
-						if ((label != null) && (label.isEmpty())) label = null;
-						String routineName = pieces.length > 1 ? pieces[1] : null;
-						EntryId entryId = new EntryId(routineName, label);
-						this.write(entryId, store);
-					}
+			return new EntryCodeInfo(lb.getAttachedObject().getFormals(), assumedLocals, apiData);
+		}
+		
+		public void writeEntries(List<String> entries) {
+			if (this.fileWrapper.start()) {
+				for (String entry : entries) {
+					EntryId entryId = EntryId.getInstance(entry);
+					this.write(entryId);
 				}
-			}		
-			if (packageCount > 0) {
-				this.fileWrapper.writeEOL();
-				this.fileWrapper.writeEOL("--------------------------------------------------------------");
+				this.fileWrapper.stop();
 			}
-			scanner.close();
-		} catch (IOException e) {
-			this.fileWrapper.writeEOL("Unable to open file " + fanInFileName);
 		}
 	}
-		
-	public void writeEntries(List<String> entries) {
-		if (this.fileWrapper.start()) {
-			DataStore<Set<String>> store = new DataStore<Set<String>>();
-			for (String entry : entries) {
-				EntryId entryId = EntryId.getInstance(entry);
-				this.write(entryId, store);
-			}
-			this.fileWrapper.stop();
-		}
+	
+	public EntryCodeInfoTool(CLIParams params) {
+		super(params);
 	}
-
-	public void write(String fanInFileName) {
-		if (this.fileWrapper.start()) {
-			this.auxWrite(fanInFileName);
-			this.fileWrapper.stop();
+	
+	DataStore<Set<String>> store = new DataStore<Set<String>>();
+	
+	protected void run(List<String> entries, RepositoryInfo ri, FileWrapper fr, BlocksSupply<CodeInfo> blocks) {
+		EntryCodeInfoTool.Writer apiw = new EntryCodeInfoTool.Writer(fr, blocks, REPLACEMENT_ROUTINES);
+		SourcedFanoutFilter filter = this.getFilter(ri);
+		apiw.setFilter(filter);
+		apiw.writeEntries(entries);
+	}
+	
+	@Override
+	public void run() {
+		FileWrapper fr = this.getOutputFile();
+		if (fr != null) {
+			RepositoryInfo ri = this.getRepositoryInfo();
+			if (ri != null) {			
+				List<String> entries = this.getEntries();
+				if (entries == null) return;
+				if ((this.params.parseTreeDirectory == null) || this.params.parseTreeDirectory.isEmpty()) {
+					BlocksSupply<CodeInfo> blocks = BlocksInMap.getInstance(new EntryCodeInfoRecorder(ri), ri);
+					this.run(entries, ri, fr, blocks);
+				} else {
+					BlocksSupply<CodeInfo> blocks = new BlocksInSerialRoutine<CodeInfo>(this.params.parseTreeDirectory, new EntryCodeInfoRecorderFactory(ri));
+					this.run(entries, ri, fr, blocks);
+				}
+			}
 		}
 	}
 }
