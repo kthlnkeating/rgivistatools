@@ -14,9 +14,7 @@
 // limitations under the License.
 //---------------------------------------------------------------------------
 
-package com.raygroupintl.m.parsetree;
-
-import com.raygroupintl.vista.repository.RepositoryVisitor;
+package com.raygroupintl.vista.repository;
 
 public interface RepositoryNode {
 	void accept(RepositoryVisitor visitor);

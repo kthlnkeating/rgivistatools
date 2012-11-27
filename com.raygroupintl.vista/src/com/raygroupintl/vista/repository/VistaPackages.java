@@ -18,7 +18,6 @@ package com.raygroupintl.vista.repository;
 
 import java.util.List;
 
-import com.raygroupintl.m.parsetree.RepositoryNode;
 
 public class VistaPackages implements RepositoryNode {
 	private List<VistaPackage> packages;

@@ -16,11 +16,11 @@
 
 package com.raygroupintl.vista.tools;
 
-import java.util.HashMap;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 import java.util.SortedSet;
+import java.util.TreeMap;
 import java.util.TreeSet;
 
 import com.raygroupintl.m.parsetree.Routine;
@@ -31,11 +31,17 @@ import com.raygroupintl.m.parsetree.data.DataStore;
 import com.raygroupintl.m.parsetree.data.EntryId;
 import com.raygroupintl.m.parsetree.data.RecursiveDataAggregator;
 import com.raygroupintl.m.parsetree.data.RecursiveDataHandler;
+import com.raygroupintl.m.parsetree.visitor.BlockRecorder;
+import com.raygroupintl.m.parsetree.visitor.BlockRecorderFactory;
+import com.raygroupintl.output.Terminal;
+import com.raygroupintl.output.TerminalFormatter;
 import com.raygroupintl.struct.Filter;
-import com.raygroupintl.struct.PassFilter;
+import com.raygroupintl.vista.repository.RepositoryInfo;
 import com.raygroupintl.vista.repository.RepositoryVisitor;
+import com.raygroupintl.vista.repository.VistaPackage;
+import com.raygroupintl.vista.repository.VistaPackages;
 
-public class EntryFaninTool extends RepositoryVisitor  {
+public class EntryFaninTool extends EntryInfoTool  {
 	private static class PathsToEntry {
 		private EntryId start;
 		private SortedSet<EntryId> firstEntriesInPaths;
@@ -48,95 +54,161 @@ public class EntryFaninTool extends RepositoryVisitor  {
 			return this.firstEntriesInPaths != null;
 		}
 		
-		public void add(EntryId firstEntryInPath) {
+		public boolean add(EntryId firstEntryInPath) {
 			if (this.firstEntriesInPaths == null) {
 				this.firstEntriesInPaths = new TreeSet<EntryId>();
 			}
-			this.firstEntriesInPaths.add(firstEntryInPath);
-		}
-		
-		//public SortedSet<EntryId> getAll() {
-		//	return this.firstEntriesInPaths;
-		//}
-	}
-		
-	private static class PTEDataStore extends DataStore<PathsToEntry> {
-		private Map<EntryId, PathsToEntry> path = new HashMap<EntryId, PathsToEntry>();
-		
-		@Override
-		public <U> PathsToEntry put(Block<U> block, Map<Integer, PathsToEntry> datas) {
-			EntryId eid = block.getEntryId();
-			PathsToEntry entries = super.put(block, datas);
-			if (entries != null) {
-				this.path.put(eid, entries);
+			if (! this.firstEntriesInPaths.contains(firstEntryInPath)) {
+				this.firstEntriesInPaths.add(firstEntryInPath);
+				return true;
 			}
-			return entries;
+			return false;
 		}
 		
-		public Set<EntryId> getFanins() {
-			return this.path.keySet();
+		public SortedSet<EntryId> getAll() {
+			return this.firstEntriesInPaths;
 		}
 	}
-
-	private static class PrivateRecursiveDataHandler implements RecursiveDataHandler<PathsToEntry> {
-		private EntryId start;
 		
-		//public PrivateRecursiveDataHandler(EntryId start) {
-		//	this.start = start;
-		//}
+	public static class AllPaths implements ToolResult {
+		public EntryId endPoint;
+		Map<EntryId, SortedSet<EntryId>> pathStart = new TreeMap<EntryId, SortedSet<EntryId>>();
+	
+		public AllPaths(EntryId endPoint) {
+			this.endPoint = endPoint;
+		}
+
+		public void add(PathsToEntry pte) {
+			this.pathStart.put(pte.start, pte.getAll());
+		}
 		
 		@Override
-		public PathsToEntry getLocalCopy() {
-			return new PathsToEntry(this.start);
+		public void write(Terminal t, TerminalFormatter tf) {
+			t.writeEOL(" " + this.endPoint.toString2());
+		}
+	}
+	
+	private static class SettableBoolean implements RecursiveDataHandler<PathsToEntry> {
+		private EntryId startNode;
+		private EntryId endNode;
+		
+		public SettableBoolean(EntryId startNode) {
+			this.startNode = startNode;			
+		}
+		
+		public void set(EntryId endNode) {
+			this.endNode = endNode;
+		}
+		
+		@Override
+		public PathsToEntry getLocalCopy()  {
+			return new PathsToEntry(this.startNode);
 		}
 		
 		@Override
 		public int update(PathsToEntry target, PathsToEntry source, int sourceIndex) {
+			int changeCount = 0;
 			if (source.exist()) {
 				EntryId sourceStart = source.start;
-				target.add(sourceStart);
-				return 1;
-			} else {
-				return 0;
+				if (target.add(sourceStart)) {
+					++changeCount;
+				}
+			} 
+			if (this.endNode != null) {
+				if (target.add(this.endNode)) {
+					++changeCount;
+				}
+			}
+			return changeCount;
+		}
+	}
+	
+	public static class Recorder extends BlockRecorder<SettableBoolean> {
+		private EntryId entryId;
+		
+		public Recorder(EntryId entryId) {
+			this.entryId = entryId;
+		}
+	
+		protected void updateFanout(EntryId fanout) {
+			if (this.entryId.equals(fanout)) {
+				SettableBoolean b = this.getCurrentBlockAttachedObject();
+				b.set(entryId);
 			}
 		}
-	}
-	
-	private BlocksSupply<PrivateRecursiveDataHandler> blocksSupply;
-	private Filter<EntryId> filter = new PassFilter<EntryId>();
-
-	PTEDataStore store = new PTEDataStore();
-
-	public EntryFaninTool(BlocksSupply<PrivateRecursiveDataHandler> blocksSupply) {
-		this.blocksSupply = blocksSupply;
-	}
-	
-	private void update(EntryId entryId) {
-		String routineName = entryId.getRoutineName();
-		Blocks<PrivateRecursiveDataHandler> rbs = this.blocksSupply.getBlocks(routineName);
-		if (rbs == null) {
-			MRALogger.logError("Invalid entry point: " + entryId.toString2());
-			return;
-		} 
-		String label = entryId.getLabelOrDefault();
-		Block<PrivateRecursiveDataHandler> lb = rbs.get(label);
-		if (lb == null) {
-			MRALogger.logError("Invalid entry point: " + entryId.toString2());
-			return;
-		}
-		RecursiveDataAggregator<PathsToEntry, PrivateRecursiveDataHandler> ala = new RecursiveDataAggregator<PathsToEntry, PrivateRecursiveDataHandler>(lb, this.blocksSupply);
-		ala.get(this.store, this.filter);
-	}
 		
-	@Override
-	public void visitRoutine(Routine routine) {
-		List<EntryId> entryIds = routine.getEntryIdList();
-		for (EntryId entryId : entryIds) {
-			this.update(entryId);
+		@Override
+		protected Block<SettableBoolean> getNewBlock(int index, EntryId entryId, Blocks<SettableBoolean> blocks, String[] params) {
+			return new Block<SettableBoolean>(index, entryId, blocks, new SettableBoolean(entryId));
 		}
 	}
 	
-	public Set<EntryId> getFanins() {
-		return this.store.getFanins();
+	private static class RecorderFactory implements BlockRecorderFactory<SettableBoolean> {
+		private EntryId entryId;
+		
+		public RecorderFactory(EntryId entryId) {
+			this.entryId = entryId;
+		}
+		
+		@Override
+		public BlockRecorder<SettableBoolean> getRecorder() {
+			return new Recorder(this.entryId);
+		}
+	}
+	
+	public EntryFaninTool(CLIParams params) {
+		super(params);
+	}
+	
+	private class FaninAccumulator extends RepositoryVisitor {
+		private DataStore<PathsToEntry> store = new DataStore<PathsToEntry>();					
+		private BlocksSupply<SettableBoolean> blocksSupply;
+		private RepositoryInfo ri;
+		private EntryId endNode;
+		
+		public FaninAccumulator(RepositoryInfo ri, EntryId endNode) {
+			this.ri = ri;
+			this.endNode = endNode;
+			this.blocksSupply = EntryFaninTool.this.getBlocksSupply(ri, new RecorderFactory(endNode));		
+		}
+		
+		@Override
+		protected void visitRoutine(Routine routine) {
+			List<EntryId> routineEntryTags = routine.getEntryIdList();
+			for (EntryId routineEntryTag : routineEntryTags) {
+				Filter<EntryId> filter = EntryFaninTool.this.getFilter(this.ri, routineEntryTag);
+				Block<SettableBoolean> b = blocksSupply.getBlock(routineEntryTag);
+				RecursiveDataAggregator<PathsToEntry, SettableBoolean> ala = new RecursiveDataAggregator<PathsToEntry, SettableBoolean>(b, blocksSupply);
+				ala.get(store, filter);				
+			}
+		}		
+
+		@Override
+		protected void visitVistaPackage(VistaPackage routinePackage) {
+			MRALogger.logInfo(routinePackage.getPackageName() + "...writing");
+			super.visitVistaPackage(routinePackage);
+			MRALogger.logInfo("..done.\n");
+		}
+
+		public AllPaths getResult() {
+			this.store = new DataStore<PathsToEntry>();
+			VistaPackages vps = EntryFaninTool.this.getVistaPackages(this.ri);
+			vps.accept(this);
+			AllPaths result = new AllPaths(this.endNode);
+			for (PathsToEntry p : this.store.values()) {
+				result.add(p);
+			}
+			return result;
+		}	
+	}
+	
+	public List<ToolResult> getResult(RepositoryInfo ri, List<EntryId> entries) {
+		List<ToolResult> resultList = new ArrayList<ToolResult>();
+		for (EntryId entryId : entries) {
+			FaninAccumulator fia = new FaninAccumulator(ri, entryId);
+			ToolResult result = fia.getResult();
+			resultList.add(result);
+		}
+		return resultList;
 	}
 }

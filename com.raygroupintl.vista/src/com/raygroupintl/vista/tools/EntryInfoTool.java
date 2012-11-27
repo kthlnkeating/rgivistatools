@@ -118,7 +118,7 @@ public abstract class EntryInfoTool extends Tool {
 		super(params);
 	}
 	
-	protected int getFanoutFlag() {
+	private int getFanoutFlag() {
 		try {
 			int result = Integer.parseInt(this.params.flag);
 			if (result < 0) return 0;
@@ -187,7 +187,7 @@ public abstract class EntryInfoTool extends Tool {
 		return null;
 	}
 		
-	public void writeEntries(FileWrapper fr, List<ToolResult> resultList) {
+	private void writeEntries(FileWrapper fr, List<ToolResult> resultList) {
 		if (fr.start()) {
 			TerminalFormatter tf = new TerminalFormatter();
 			tf.setTab(12);

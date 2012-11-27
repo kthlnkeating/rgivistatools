@@ -16,6 +16,7 @@
 
 package com.raygroupintl.m.parsetree.data;
 
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -43,4 +44,8 @@ public class DataStore<T> implements ObjectIdContainer {
 		this.map.put(id, data);
 		return data;
 	}
+	
+	public Collection<T> values() {
+		return this.map.values();
+	} 	
 }

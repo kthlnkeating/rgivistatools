@@ -365,6 +365,12 @@ public class RepositoryTools extends Tools {
 				return new EntryCodeInfoTool(params);
 			}
 		});
+		tools.put("entryfanin", new MemberFactory() {				
+			@Override
+			public Tool getInstance(CLIParams params) {
+				return new EntryFaninTool(params);
+			}
+		});
 		tools.put("error", new MemberFactory() {				
 			@Override
 			public Tool getInstance(CLIParams params) {
