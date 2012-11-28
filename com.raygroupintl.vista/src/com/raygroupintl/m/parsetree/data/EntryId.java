@@ -56,6 +56,14 @@ public class EntryId implements Comparable<EntryId> {
 		return false;
 	}
 	
+	public boolean equals(EntryId rhs, String routineName) {
+		if ((rhs.routineName == null) && (this.routineName != null)) {
+			return this.routineName.equals(routineName) && this.getLabelOrDefault().equals(rhs.label);
+		} else {
+			return this.equals(rhs);
+		}
+	}
+	
 	@Override
 	public int hashCode() {
 		int result = this.toString().hashCode(); 

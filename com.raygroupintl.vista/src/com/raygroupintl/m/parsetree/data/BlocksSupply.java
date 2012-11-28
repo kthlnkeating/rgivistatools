@@ -20,7 +20,10 @@ import java.util.Collections;
 import java.util.Map;
 
 public abstract class BlocksSupply<T> {
-	Map<String, String> replacementRoutines;
+	Map<String, String> replacementRoutines = Collections.emptyMap();
+	
+	public BlocksSupply() {
+	}
 	
 	public BlocksSupply(Map<String, String> replacementRoutines) {
 		this.replacementRoutines = replacementRoutines;

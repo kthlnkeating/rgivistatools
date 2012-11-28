@@ -1,6 +1,5 @@
 package com.raygroupintl.vista.tools;
 
-import java.io.InputStream;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
@@ -21,21 +20,15 @@ import com.raygroupintl.m.parsetree.data.EntryId;
 import com.raygroupintl.m.parsetree.data.BlocksInMap;
 import com.raygroupintl.m.parsetree.data.RecursiveDataAggregator;
 import com.raygroupintl.m.parsetree.visitor.ErrorRecorder;
-import com.raygroupintl.m.struct.MRoutineContent;
-import com.raygroupintl.m.token.MRoutine;
-import com.raygroupintl.m.token.MTFSupply;
 import com.raygroupintl.m.token.MVersion;
-import com.raygroupintl.m.token.TFRoutine;
 import com.raygroupintl.struct.PassFilter;
 
 public class EntryCodeInfoToolTest {
-	private static MTFSupply supply;
 	private static Map<String, String> replacement = new HashMap<String, String>();
 	private static Routine[] ROUTINES;
 	
 	@BeforeClass
 	public static void setUpBeforeClass() throws Exception {
-		supply = MTFSupply.getInstance(MVersion.CACHE);
 		replacement.put("%DTC", "APIROU02");
 		String[] fileNames = {
 				"resource/APIROU00.m", "resource/APIROU01.m", "resource/APIROU02.m", "resource/APIROU03.m", 
@@ -44,7 +37,7 @@ public class EntryCodeInfoToolTest {
 		{
 			int i = 0;
 			for (String fileName : fileNames) {
-				ROUTINES[i] = getRoutineToken(fileName, supply);
+				ROUTINES[i] = getRoutineToken(fileName);
 				++i;
 			}
 		}
@@ -52,16 +45,13 @@ public class EntryCodeInfoToolTest {
 
 	@AfterClass
 	public static void tearDownAfterClass() throws Exception {
-		supply = null;
+		replacement = null;
+		ROUTINES = null;
 	}
 
-	private static Routine getRoutineToken(String fileName, MTFSupply m) {
-		TFRoutine tf = new TFRoutine(m);
-		InputStream is = EntryCodeInfoToolTest.class.getResourceAsStream(fileName);
-		String fn = (fileName.split(".m")[0]).split("/")[1];
-		MRoutineContent content = MRoutineContent.getInstance(fn, is);
-		MRoutine r = tf.tokenize(content);
-		return r.getNode();
+	private static Routine getRoutineToken(String fileName) {
+		MRARoutineFactory rf = MRARoutineFactory.getInstance(MVersion.CACHE);
+		return rf.getRoutineFromResource(EntryCodeInfoToolTest.class, fileName);
 	}
 		
 	private void testAssumedLocal(BlocksInMap<EntryCodeInfoTool.CodeInfo> blocksMap, String routineName, String tag, String[] expectedAssumeds, String[] expectedGlobals) {
@@ -115,12 +105,7 @@ public class EntryCodeInfoToolTest {
 	@Test
 	public void testAssumedLocals() {
 		EntryCodeInfoTool.EntryCodeInfoRecorder recorder = new EntryCodeInfoTool.EntryCodeInfoRecorder(null);
-		BlocksInMap<EntryCodeInfoTool.CodeInfo> blocksMap = new BlocksInMap<EntryCodeInfoTool.CodeInfo>(replacement);
-		for (int i=0; i<ROUTINES.length; ++i) {			
-			ROUTINES[i].accept(recorder);
-			Blocks<EntryCodeInfoTool.CodeInfo> blocks = recorder.getBlocks();
-			blocksMap.put(ROUTINES[i].getName(), blocks);
-		}
+		BlocksInMap<EntryCodeInfoTool.CodeInfo> blocksMap = BlocksInMap.getInstance(recorder, ROUTINES, replacement);
 		this.testAssumedLocal(blocksMap, "APIROU00", "FACT", new String[]{"I"}, new String[0]);
 		this.testAssumedLocal(blocksMap, "APIROU00", "SUM", new String[]{"M", "R", "I"}, new String[]{"^RGI0(\"EF\""});
 		this.testAssumedLocal(blocksMap, "APIROU00", "SUMFACT", new String[]{"S", "P"}, new String[]{"^RGI0(\"EF\""});

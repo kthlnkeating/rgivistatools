@@ -50,6 +50,7 @@ import com.raygroupintl.output.TerminalFormatter;
 import com.raygroupintl.struct.Filter;
 import com.raygroupintl.vista.repository.RepositoryInfo;
 import com.raygroupintl.vista.repository.VistaPackage;
+import com.raygroupintl.vista.tools.fnds.ToolResult;
 
 public class EntryCodeInfoTool extends EntryInfoTool {	
 	public static class BasicCodeInfo {
@@ -413,11 +414,8 @@ public class EntryCodeInfoTool extends EntryInfoTool {
 			}
 		}
 		
-		protected void updateFanout(EntryId fanout) {
-			Block<CodeInfo> cb = this.getCurrentBlock();
-			int i = this.incrementIndex();
-			CallArgument[] callArguments = this.getLastArguments();
-			cb.addFanout(i, fanout, callArguments);
+		@Override
+		protected void postUpdateFanout(EntryId fanout, CallArgument[] callArguments) {
 			String rn = this.getCurrentRoutineName();
 			CodeInfo d = this.getCurrentBlockAttachedObject();
 			if ((d != null) && (callArguments != null) && (callArguments.length > 0) && ! inFilemanRoutine(rn, true)) {

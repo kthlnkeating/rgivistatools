@@ -67,6 +67,10 @@ public class BlocksInMap<T> extends BlocksSupply<T> {
 
 	private Map<String, Blocks<T>> map = new HashMap<String, Blocks<T>>();
 	
+	public BlocksInMap() {
+		super();
+	}
+	
 	public BlocksInMap(Map<String, String> replacementRoutines) {
 		super(replacementRoutines);
 	}
@@ -85,5 +89,16 @@ public class BlocksInMap<T> extends BlocksSupply<T> {
 		VistaPackages vps = new VistaPackages(ri.getAllPackages());
 		vps.accept(f);
 		return f.getBlocks();		
+	}
+	
+	public static <T> BlocksInMap<T> getInstance(BlockRecorder<T> br, Routine[] routines, Map<String, String> replacementRoutines) {
+		BlocksInMap<T> result = new BlocksInMap<T>(replacementRoutines);
+		for (Routine r : routines) {
+			br.reset();
+			r.accept(br);
+			Blocks<T> blocks = br.getBlocks();
+			result.put(r.getName(), blocks);
+		}
+		return result;
 	}
 }

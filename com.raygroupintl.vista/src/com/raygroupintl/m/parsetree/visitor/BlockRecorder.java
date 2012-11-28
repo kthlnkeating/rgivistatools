@@ -28,6 +28,7 @@ import com.raygroupintl.m.parsetree.QuitCmd;
 import com.raygroupintl.m.parsetree.Routine;
 import com.raygroupintl.m.parsetree.data.Block;
 import com.raygroupintl.m.parsetree.data.Blocks;
+import com.raygroupintl.m.parsetree.data.CallArgument;
 import com.raygroupintl.m.parsetree.data.EntryId;
 
 public abstract class BlockRecorder<T> extends FanoutRecorder {
@@ -68,14 +69,17 @@ public abstract class BlockRecorder<T> extends FanoutRecorder {
 		this.doBlockHash = new HashSet<Integer>();
 	}
 	
-	protected abstract void updateFanout(EntryId fanout);
+	protected abstract void postUpdateFanout(EntryId fanout, CallArgument[] callArguments);
 	
 	@Override
 	protected void updateFanout(boolean isGoto, boolean conditional) {
 		EntryId fanout = this.getLastFanout();
 		boolean shouldClose = isGoto && (! conditional) && (this.underCondition < 1);
 		if (fanout != null) {
-			this.updateFanout(fanout);
+			int i = this.incrementIndex();
+			CallArgument[] callArguments = this.getLastArguments();
+			this.currentBlock.addFanout(i, fanout, callArguments);	
+			this.postUpdateFanout(fanout, callArguments);
 		} 
 		if (shouldClose) {
 			this.currentBlock.close();

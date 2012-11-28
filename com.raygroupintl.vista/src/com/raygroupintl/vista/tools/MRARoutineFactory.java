@@ -17,12 +17,14 @@
 package com.raygroupintl.vista.tools;
 
 import java.io.IOException;
+import java.io.InputStream;
 import java.nio.file.Path;
 
 import com.raygroupintl.m.parsetree.ErrorNode;
 import com.raygroupintl.m.parsetree.Node;
 import com.raygroupintl.m.parsetree.Routine;
 import com.raygroupintl.m.struct.MError;
+import com.raygroupintl.m.struct.MRoutineContent;
 import com.raygroupintl.m.token.MRoutine;
 import com.raygroupintl.m.token.MTFSupply;
 import com.raygroupintl.m.token.MVersion;
@@ -65,7 +67,15 @@ public class MRARoutineFactory implements RoutineFactory {
 			MRALogger.logError(err.getText());
 		}
 		return null;
-	}	
+	}
+	
+	public <T> Routine getRoutineFromResource(Class<T> resourceClass, String resourcePath) {
+		InputStream is = resourceClass.getResourceAsStream(resourcePath);
+		String name = (resourcePath.split(".m")[0]).split("/")[1];
+		MRoutineContent content = MRoutineContent.getInstance(name, is);
+		MRoutine r = this.tokenFactory.tokenize(content);
+		return r.getNode();		
+	}
 	
 	public static MRARoutineFactory getInstance(MVersion version) {
 		try {

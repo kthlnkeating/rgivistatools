@@ -14,11 +14,8 @@
 // limitations under the License.
 //---------------------------------------------------------------------------
 
-package com.raygroupintl.vista.tools;
+package com.raygroupintl.struct;
 
-import com.raygroupintl.output.Terminal;
-import com.raygroupintl.output.TerminalFormatter;
-
-public interface ToolResult {
-	void write(Terminal t, TerminalFormatter tf);
+public interface FilterFactory<F, P> {
+	Filter<F> getFilter(P parameter);
 }

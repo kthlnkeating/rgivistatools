@@ -10,7 +10,8 @@ import org.junit.runners.Suite.SuiteClasses;
 	com.raygroupintl.m.token.AllTests.class, 
 	com.raygroupintl.vista.repository.AllTests.class, 
 	com.raygroupintl.m.struct.AllTests.class, 
-	com.raygroupintl.vista.tools.AllTests.class 
+	com.raygroupintl.vista.tools.AllTests.class, 
+	com.raygroupintl.vista.tools.entryfanin.AllTests.class 
 	})
 public class AllTests {
 }

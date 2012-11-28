@@ -22,8 +22,14 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 
+import com.raygroupintl.m.parsetree.Routine;
+import com.raygroupintl.m.parsetree.data.BlocksSupply;
+import com.raygroupintl.m.parsetree.data.EntryId;
 import com.raygroupintl.output.FileWrapper;
+import com.raygroupintl.struct.Filter;
+import com.raygroupintl.struct.FilterFactory;
 import com.raygroupintl.vista.repository.RepositoryInfo;
+import com.raygroupintl.vista.repository.RepositoryVisitor;
 import com.raygroupintl.vista.repository.VistaPackage;
 import com.raygroupintl.vista.repository.VistaPackages;
 import com.raygroupintl.vista.repository.visitor.CacheOccuranceWriter;
@@ -37,6 +43,10 @@ import com.raygroupintl.vista.repository.visitor.FanoutWriter;
 import com.raygroupintl.vista.repository.visitor.OptionWriter;
 import com.raygroupintl.vista.repository.visitor.RPCWriter;
 import com.raygroupintl.vista.repository.visitor.SerializedRoutineWriter;
+import com.raygroupintl.vista.tools.entryfanin.EntryFaninAccumulator;
+import com.raygroupintl.vista.tools.entryfanin.MarkedAsFaninBRF;
+import com.raygroupintl.vista.tools.entryfanin.FaninMark;
+import com.raygroupintl.vista.tools.fnds.ToolResult;
 
 public class RepositoryTools extends Tools {
 	private static class Fanout extends Tool {		
@@ -117,6 +127,54 @@ public class RepositoryTools extends Tools {
 					if (vps != null) {						
 						RPCWriter rw = new RPCWriter(ri, fr);
 						rw.write(vps);
+					}
+				}
+			}
+		}
+	}
+	
+	private static class EntryFanin extends EntryInfoTool {		
+		public EntryFanin(CLIParams params) {
+			super(params);
+		}
+		
+		public List<ToolResult> getResult(final RepositoryInfo ri, List<EntryId> entries) {
+			List<ToolResult> resultList = new ArrayList<ToolResult>();
+			for (EntryId entryId : entries) {
+				BlocksSupply<FaninMark> blocksSupply = this.getBlocksSupply(ri, new MarkedAsFaninBRF(entryId));		
+				final EntryFaninAccumulator efit = new EntryFaninAccumulator(entryId, blocksSupply);
+				FilterFactory<EntryId, EntryId> filterFactory = new FilterFactory<EntryId, EntryId>() {
+					@Override
+					public Filter<EntryId> getFilter(EntryId parameter) {
+						return EntryFanin.this.getFilter(ri, parameter);
+					}
+				}; 
+				efit.setFilterFactory(filterFactory);
+				RepositoryVisitor rv = new RepositoryVisitor() {					
+					@Override
+					protected void visitRoutine(Routine routine) {
+						efit.addRoutine(routine);
+					}
+				};
+				VistaPackages vps = this.getVistaPackages(ri);
+				vps.accept(rv);
+				ToolResult result = efit.getResult();
+				resultList.add(result);
+			}
+			return resultList;
+		}
+
+		@Override
+		public void run() {
+			FileWrapper fr = this.getOutputFile();
+			if (fr != null) {
+				RepositoryInfo ri = this.getRepositoryInfo();
+				if (ri != null) {
+					VistaPackages vps = this.getVistaPackages(ri);
+					if (vps != null) {						
+						ErrorExemptions exemptions = ErrorExemptions.getVistAFOIAInstance();
+						ErrorWriter ew = new ErrorWriter(exemptions, fr);
+						vps.accept(ew);
 					}
 				}
 			}
@@ -368,7 +426,7 @@ public class RepositoryTools extends Tools {
 		tools.put("entryfanin", new MemberFactory() {				
 			@Override
 			public Tool getInstance(CLIParams params) {
-				return new EntryFaninTool(params);
+				return new EntryFanin(params);
 			}
 		});
 		tools.put("error", new MemberFactory() {				
