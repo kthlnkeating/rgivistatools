@@ -54,6 +54,14 @@ public class EntryFanins implements ToolResult {
 	
 	@Override
 	public void write(Terminal t, TerminalFormatter tf) {
-		t.writeEOL(" " + this.entryUnderTest.toString2());
+		t.writeEOL(" " + this.entryUnderTest.toString2());				
+		Set<EntryId> starts = this.pathPieces.keySet();
+		for (EntryId start : starts) {
+			Set<EntryId> nextUps = this.pathPieces.get(start);
+			for (EntryId nextUp : nextUps) {
+				t.write("   " + start.toString2() + " thru ");
+				t.writeEOL(nextUp.toString2());
+			}
+		}	
 	}
 }

@@ -31,6 +31,10 @@ public class FaninMark implements RecursiveDataHandler<PathPieceToEntry> {
 		this.endNode = endNode;
 	}
 	
+	public boolean isFanin() {
+		return this.endNode != null;
+	}
+
 	@Override
 	public PathPieceToEntry getLocalCopy()  {
 		return new PathPieceToEntry(this.startNode);

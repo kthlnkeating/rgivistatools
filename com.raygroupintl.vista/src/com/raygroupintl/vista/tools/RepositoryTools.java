@@ -150,10 +150,18 @@ public class RepositoryTools extends Tools {
 					}
 				}; 
 				efit.setFilterFactory(filterFactory);
-				RepositoryVisitor rv = new RepositoryVisitor() {					
+				RepositoryVisitor rv = new RepositoryVisitor() {
+					int packageCount;
 					@Override
 					protected void visitRoutine(Routine routine) {
 						efit.addRoutine(routine);
+					}
+					@Override
+					protected void visitVistaPackage(VistaPackage routinePackage) {
+						++this.packageCount;
+						MRALogger.logInfo(RepositoryTools.class, String.valueOf(this.packageCount) + ". " + routinePackage.getPackageName() + "...writing");
+						super.visitVistaPackage(routinePackage);
+						MRALogger.logInfo(RepositoryTools.class, "..done.\n");
 					}
 				};
 				VistaPackages vps = this.getVistaPackages(ri);
@@ -162,22 +170,6 @@ public class RepositoryTools extends Tools {
 				resultList.add(result);
 			}
 			return resultList;
-		}
-
-		@Override
-		public void run() {
-			FileWrapper fr = this.getOutputFile();
-			if (fr != null) {
-				RepositoryInfo ri = this.getRepositoryInfo();
-				if (ri != null) {
-					VistaPackages vps = this.getVistaPackages(ri);
-					if (vps != null) {						
-						ErrorExemptions exemptions = ErrorExemptions.getVistAFOIAInstance();
-						ErrorWriter ew = new ErrorWriter(exemptions, fr);
-						vps.accept(ew);
-					}
-				}
-			}
 		}
 	}
 	

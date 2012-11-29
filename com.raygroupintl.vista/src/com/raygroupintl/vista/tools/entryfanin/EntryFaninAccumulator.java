@@ -23,7 +23,6 @@ import com.raygroupintl.m.parsetree.data.Block;
 import com.raygroupintl.m.parsetree.data.BlocksSupply;
 import com.raygroupintl.m.parsetree.data.DataStore;
 import com.raygroupintl.m.parsetree.data.EntryId;
-import com.raygroupintl.m.parsetree.data.RecursiveDataAggregator;
 import com.raygroupintl.struct.ConstFilterFactory;
 import com.raygroupintl.struct.Filter;
 import com.raygroupintl.struct.FilterFactory;
@@ -49,8 +48,10 @@ public class EntryFaninAccumulator  {
 		for (EntryId routineEntryTag : routineEntryTags) {
 			Filter<EntryId> filter = this.filterFactory.getFilter(routineEntryTag);
 			Block<FaninMark> b = this.blocksSupply.getBlock(routineEntryTag);
-			RecursiveDataAggregator<PathPieceToEntry, FaninMark> ala = new RecursiveDataAggregator<PathPieceToEntry, FaninMark>(b, blocksSupply);
-			ala.get(store, filter);				
+			if (b != null) {
+				EntryFaninsAggregator ag = new EntryFaninsAggregator(b, this.blocksSupply);
+				ag.get(store, filter);
+			}
 		}		
 	}
 	
