@@ -22,6 +22,7 @@ import java.util.Set;
 import com.raygroupintl.m.parsetree.DoBlock;
 import com.raygroupintl.m.parsetree.ElseCmd;
 import com.raygroupintl.m.parsetree.Entry;
+import com.raygroupintl.m.parsetree.EntryList;
 import com.raygroupintl.m.parsetree.ForLoop;
 import com.raygroupintl.m.parsetree.IfCmd;
 import com.raygroupintl.m.parsetree.QuitCmd;
@@ -36,7 +37,6 @@ public abstract class BlockRecorder<T> extends FanoutRecorder {
 	
 	private Block<T> currentBlock;
 	private String currentRoutineName;
-	private int inDoBlock;
 	
 	private int index;
 	
@@ -63,7 +63,6 @@ public abstract class BlockRecorder<T> extends FanoutRecorder {
 		this.currentBlock = null;
 		this.currentRoutineName = null;
 		this.index = 0;		
-		this.inDoBlock = 0;
 		this.underCondition = 0;
 		this.underFor = 0;
 		this.doBlockHash = new HashSet<Integer>();
@@ -116,18 +115,6 @@ public abstract class BlockRecorder<T> extends FanoutRecorder {
 		--this.underCondition;
 	}
 
-	private EntryId getEntryId(String tag) {
-		if ((tag == null) || tag.isEmpty()) {
-			if (this.inDoBlock > 0) {
-				return new EntryId(this.currentRoutineName, ":" + String.valueOf(this.index));
-			} else {
-				return new EntryId(this.currentRoutineName, this.currentRoutineName);
-			}
-		} else {
-			return new EntryId(this.currentRoutineName, tag);
-		}
-	}
-	
 	protected abstract Block<T> getNewBlock(int index, EntryId entryId, Blocks<T> blocks, String[] params);
  	
 	@Override
@@ -135,7 +122,7 @@ public abstract class BlockRecorder<T> extends FanoutRecorder {
 		Block<T> lastBlock = this.currentBlock;
 		++this.index;
 		String tag = entry.getName();
-		EntryId entryId = this.getEntryId(tag);		
+		EntryId entryId = entry.getFullEntryId();		
 		this.currentBlock = this.getNewBlock(this.index, entryId, this.currentBlocks, entry.getParameters());
 		if (lastBlock == null) {
 			this.currentBlocks.setFirst(this.currentBlock);
@@ -143,9 +130,6 @@ public abstract class BlockRecorder<T> extends FanoutRecorder {
 				this.currentBlocks.put(tag, this.currentBlock);
 			}
 		} else {
-			if ((tag == null) || tag.isEmpty()) {
-				tag = ":" + String.valueOf(this.index);
-			}
 			this.currentBlocks.put(tag, this.currentBlock);
 			EntryId defaultGoto = new EntryId(null, tag);
 			lastBlock.addFanout(this.index, defaultGoto, null);
@@ -156,11 +140,21 @@ public abstract class BlockRecorder<T> extends FanoutRecorder {
 	}
 			
 	@Override
+	protected void visitEntryList(EntryList entryList) {
+		super.visitEntryList(entryList);
+	}
+
+	@Override
 	protected void visitDoBlock(DoBlock doBlock) {
+		EntryList entryList = doBlock.getEntryList();
+		if (entryList == null) {
+			doBlock.acceptPostCondition(this);			
+			return;
+		}
+		
 		int id = doBlock.getUniqueId();
 		if (! this.doBlockHash.contains(id)) {
 			doBlockHash.add(id);
-			++this.inDoBlock;
 			doBlock.acceptPostCondition(this);
 			Blocks<T> lastBlocks = this.currentBlocks;
 			Block<T> lastBlock = this.currentBlock;
@@ -170,11 +164,10 @@ public abstract class BlockRecorder<T> extends FanoutRecorder {
 			Block<T> firstBlock = this.currentBlocks.getFirstBlock();
 			this.currentBlocks = lastBlocks;
 			this.currentBlock = lastBlock;
-			String tag = ":" + String.valueOf(this.index);
+			String tag = entryList.getNodes().get(0).getName();
 			EntryId defaultDo = new EntryId(null, tag);		
 			lastBlock.addFanout(this.index, defaultDo, null);
 			this.currentBlocks.put(tag, firstBlock);
-			--this.inDoBlock;
 		}
 	}
 	

@@ -62,10 +62,6 @@ public class DoBlock extends BasicNode {
 		return true;
 	}
 	
-	public boolean isEquivalent(DoBlock doBlock) {
-		return this.entryList == doBlock.entryList;
-	}
-	
 	public int getUniqueId() {
 		if (this.entryList == null) {
 			return 0;

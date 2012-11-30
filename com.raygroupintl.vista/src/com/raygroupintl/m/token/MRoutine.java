@@ -111,6 +111,7 @@ public class MRoutine implements MToken {
 				errorNode = new ErrorNode(MError.ERR_BLOCK_STRUCTURE);
 			}
 
+			String tag = line.getTag();
 			if (errorNode == null) {
 				if (lineLevel < level) {
 					for (int j=level; j>lineLevel; --j) {
@@ -129,6 +130,7 @@ public class MRoutine implements MToken {
 						entryLists.push(entryList);
 						entryList = newEntryList;
 						entry = null;
+						if (tag == null) tag = ":"  + String.valueOf(i);
 						level = lineLevel;				
 					} else {
 						errorNode = new ErrorNode(MError.ERR_BLOCK_STRUCTURE);
@@ -136,7 +138,6 @@ public class MRoutine implements MToken {
 				}	
 			}
 			
-			String tag = line.getTag();
 			if ((tag != null) || (entry == null)) {
 				entry = new Entry(tag == null ? "" : tag, this.name, index, line.getParameters());
 				entryList.add(entry);

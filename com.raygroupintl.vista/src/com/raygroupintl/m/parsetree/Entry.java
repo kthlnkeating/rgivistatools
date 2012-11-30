@@ -16,6 +16,8 @@
 
 package com.raygroupintl.m.parsetree;
 
+import com.raygroupintl.m.parsetree.data.EntryId;
+
 public class Entry extends NodeList<Node> {
 	private static final long serialVersionUID = 1L;
 
@@ -43,6 +45,15 @@ public class Entry extends NodeList<Node> {
 		return this.parameters;
 	}
 
+	public EntryId getFullEntryId() {
+		if ((this.name == null) || this.name.isEmpty()) {
+			return new EntryId(this.routineName, this.routineName);
+		} else {
+			return new EntryId(this.routineName, this.name);
+		}
+		
+	}
+	
 	@Override
 	public void accept(Visitor visitor) {
 		visitor.visitEntry(this);

@@ -301,6 +301,10 @@ public class Visitor {
 		entry.acceptSubNodes(this);
 	}
 		
+	protected void visitEntryList(EntryList entryList) {
+		entryList.acceptSubNodes(this);
+	}
+		
 	protected void visitDoBlock(DoBlock doBlock) {
 		doBlock.acceptSubNodes(this);
 	}
