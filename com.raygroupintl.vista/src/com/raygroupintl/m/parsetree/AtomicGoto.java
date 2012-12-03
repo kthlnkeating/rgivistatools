@@ -26,12 +26,12 @@ public class AtomicGoto extends AtomicCommand {
 		this.postConditional = postConditional;
 	}
 
-	public boolean getPostConditional() {
-		return this.postConditional;
-	}
-			
 	@Override
 	public void accept(Visitor visitor) {
 		visitor.visitAtomicGoto(this);
+	}
+
+	public boolean hasPostCondition() {
+		return this.postConditional;
 	}
 }

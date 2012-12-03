@@ -45,4 +45,21 @@ public class Line extends ParentNode {
 	public void accept(Visitor visitor) {
 		visitor.visitLine(this);
 	}
+	
+	@Override
+	public boolean isCloseble() {
+		return true;
+	}
+	
+	public boolean isClosed() {
+		return this.getLastNode() instanceof DeadCmds;
+	}
+	
+	public void tranformToClosed() {
+		DeadCmds cmds = new DeadCmds(this.level);
+		cmds.setNodes(this.nodes);
+		NodeList<Node> newNodes = new NodeList<Node>(1);
+		newNodes.add(cmds);
+		this.setNodes(newNodes);
+	}
 }

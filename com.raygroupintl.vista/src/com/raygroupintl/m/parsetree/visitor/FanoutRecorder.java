@@ -184,7 +184,7 @@ public class FanoutRecorder extends LocationMarker {
 	protected void visitAtomicGoto(AtomicGoto atomicGoto) {
 		this.lastInfo.reset();
 		super.visitAtomicGoto(atomicGoto);
-		boolean b = this.conditional || atomicGoto.getPostConditional();
+		boolean b = this.conditional || atomicGoto.hasPostCondition();
 		this.updateFanout(true, b);
 	}
 	

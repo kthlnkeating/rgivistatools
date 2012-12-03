@@ -25,6 +25,14 @@ public abstract class ParentNode extends BasicNode {
 		this.nodes = nodes;
 	}
 	
+	public Node getLastNode() {
+		if (this.nodes == null) {
+			return null;
+		} else {
+			return this.nodes.getLastNode();
+		}
+	}
+	
 	public void acceptSubNodes(Visitor visitor) {
 		if (this.nodes != null) for (Node node : this.nodes.getNodes()) {
 			if (node != null) {
@@ -44,10 +52,14 @@ public abstract class ParentNode extends BasicNode {
 	}
 	
 	@Override
-	public ParentNode addSelf(ParentNode current, NodeList<Node> nodes) {
+	public ParentNode addSelf(ParentNode current, NodeList<Node> nodes, int level) {
 		nodes.add(this);
 		current.setNodes(nodes.copy());
 		nodes.clear();
 		return this;
+	}
+	
+	public boolean isCloseble() {
+		return false;
 	}
 }

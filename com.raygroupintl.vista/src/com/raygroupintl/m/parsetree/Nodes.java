@@ -21,6 +21,8 @@ public abstract class Nodes<T extends Node> extends BasicNode {
 
 	public abstract Iterable<T> getNodes();
 
+	public abstract T getLastNode();
+	
 	protected void acceptElements(Visitor visitor) {
 		for (Node node : this.getNodes()) {
 			if (node != null) node.accept(visitor);

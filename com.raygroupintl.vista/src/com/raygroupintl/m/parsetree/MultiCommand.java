@@ -43,4 +43,8 @@ public abstract class MultiCommand extends BasicNode {
 			this.argument.accept(visitor);
 		}
 	}
+	
+	public boolean hasPostCondition() {
+		return this.postCondition != null;
+	}
 }

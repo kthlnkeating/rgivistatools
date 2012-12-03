@@ -89,7 +89,8 @@ public class MLine extends MSequence {
 	
 	@Override
 	public Line getNode() {
-		Line result = new Line(this.tagName, this.index, this.getLevel());
+		int level = this.getLevel();
+		Line result = new Line(this.tagName, this.index, level);
 		ParentNode currentParent = result;
 		Tokens<MToken> cmds = this.getTokens(4);
 		if (cmds != null) {
@@ -98,7 +99,7 @@ public class MLine extends MSequence {
 				Node node = t.getNode();
 				if (node != null) {
 					if (nodes == null) nodes = new NodeList<Node>(cmds.size());
-					currentParent = node.addSelf(currentParent, nodes);
+					currentParent = node.addSelf(currentParent, nodes, level);
 				}
 			}
 			if ((nodes != null) && (nodes.size() > 0)) {

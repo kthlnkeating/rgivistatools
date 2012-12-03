@@ -293,6 +293,10 @@ public class Visitor {
 		g.acceptSubNodes(this);
 	}
 	
+	protected void visitDeadCmds(DeadCmds deadCmds) {
+		deadCmds.acceptSubNodes(this);
+	}
+	
 	protected void visitLine(Line line) {
 		line.acceptSubNodes(this);
 	}

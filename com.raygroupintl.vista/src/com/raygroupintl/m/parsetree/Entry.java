@@ -18,13 +18,15 @@ package com.raygroupintl.m.parsetree;
 
 import com.raygroupintl.m.parsetree.data.EntryId;
 
-public class Entry extends NodeList<Node> {
+public class Entry extends NodeList<Line> {
 	private static final long serialVersionUID = 1L;
 
 	private String name;
 	private String routineName;
 	private int index;
 	private String[] parameters;
+	
+	private int endIndex = -1;
 	
 	public Entry(String name, String routineName, int index, String[] parameters) {
 		this.name = name;
@@ -54,8 +56,26 @@ public class Entry extends NodeList<Node> {
 		
 	}
 	
+	public int getEndIndex() {
+		return this.endIndex;
+	}
+	
+	public boolean isClosed() {
+		return this.endIndex > -1;
+	}
+	
 	@Override
 	public void accept(Visitor visitor) {
 		visitor.visitEntry(this);
+	}
+
+	@Override
+	public void add(Line node) {
+		if (this.endIndex >= 0) {
+			node.tranformToClosed();
+		} else if (node.isClosed()) {
+			this.endIndex = this.size();
+		}
+		super.add(node);
 	}
 }

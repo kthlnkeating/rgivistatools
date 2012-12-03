@@ -19,6 +19,23 @@ package com.raygroupintl.m.parsetree;
 public class Goto extends MultiCommand  {
 	private static final long serialVersionUID = 1L;
 
+	private static class NoPostConditionAtomicGotoFinder extends Visitor {
+		private boolean hasOneWithNoPostCondition;
+		
+		@Override
+		protected void visitAtomicGoto(AtomicGoto atomicGoto) {
+			this.hasOneWithNoPostCondition = this.hasOneWithNoPostCondition || ! atomicGoto.hasPostCondition();
+		}
+		
+		public boolean find(Node node) {
+			this.hasOneWithNoPostCondition = false;
+			node.accept(this);
+			return this.hasOneWithNoPostCondition;
+		}
+		
+		public static NoPostConditionAtomicGotoFinder INSTANCE = new NoPostConditionAtomicGotoFinder();
+	}
+		
 	public Goto(Node postCondition, Node argument) {
 		super(postCondition, argument);
 	}
@@ -26,5 +43,21 @@ public class Goto extends MultiCommand  {
 	@Override
 	public void accept(Visitor visitor) {
 		visitor.visitGoto(this);
+	}
+
+	@Override
+	public ParentNode addSelf(ParentNode current, NodeList<Node> nodes, int level) {
+		nodes.add(this);
+		if (current.isCloseble() && ! this.hasPostCondition()) {
+			Node argument = this.getArgument();
+			if (argument != null) {
+				boolean hasNoPostConditionOne = NoPostConditionAtomicGotoFinder.INSTANCE.find(argument);
+				if (hasNoPostConditionOne) {
+					DeadCmds deadCmds = new DeadCmds(level);
+					return deadCmds.addSelf(current, nodes, level);
+				}
+			}
+		}		
+		return current;
 	}
 }

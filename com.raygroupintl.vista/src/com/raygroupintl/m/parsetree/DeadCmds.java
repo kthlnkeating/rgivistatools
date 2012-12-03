@@ -16,28 +16,21 @@
 
 package com.raygroupintl.m.parsetree;
 
-import java.io.Serializable;
+public class DeadCmds extends ParentNode {
+	private static final long serialVersionUID = 1L;
 
-public interface Node extends Serializable {
-	void accept(Visitor visitor);
+	private int level;
 	
-	void acceptPreAssignment(Visitor visitor);
-	void acceptPostAssignment(Visitor visitor, Node rhs);
+	public DeadCmds(int level) {
+		this.level = level;
+	}
 	
-	void acceptExclusiveNew(Visitor visitor);
-	void acceptNew(Visitor visitor);
-	
-	void acceptExclusiveKill(Visitor visitor);
-	void acceptKill(Visitor visitor);
-
-	void acceptPreMerge(Visitor visitor);
-	void acceptPostMerge(Visitor visitor, Node rhs);
-	
-	void acceptCallArgument(Visitor visitor, int order);
-	
-	ParentNode addSelf(ParentNode current, NodeList<Node> nodes, int level);
-	
-	String getAsConstExpr();
-	
-	boolean setEntryList(EntryList entryList);
+	public int getLevel() {
+		return this.level;
+	}
+		
+	@Override
+	public void accept(Visitor visitor) {
+		visitor.visitDeadCmds(this);
+	}
 }

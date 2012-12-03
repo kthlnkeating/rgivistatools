@@ -27,4 +27,14 @@ public class QuitCmd extends MultiCommand  {
 	public void accept(Visitor visitor) {
 		visitor.visitQuit(this);
 	}
+
+	@Override
+	public ParentNode addSelf(ParentNode current, NodeList<Node> nodes, int level) {
+		nodes.add(this);
+		if (current.isCloseble() && ! this.hasPostCondition()) {
+			DeadCmds deadCmds = new DeadCmds(level);
+			return deadCmds.addSelf(current, nodes, level);
+		}		
+		return current;
+	}
 }

@@ -73,7 +73,7 @@ public abstract class BasicNode implements Node {
 	}
 
 	@Override
-	public ParentNode addSelf(ParentNode current, NodeList<Node> nodes) {
+	public ParentNode addSelf(ParentNode current, NodeList<Node> nodes, int level) {
 		nodes.add(this);
 		return current;
 	}

@@ -43,6 +43,7 @@ public class NodeList<T extends Node> extends Nodes<T> {
 		this.nodes.add(node);
 	}
 	
+	@Override
 	public T getLastNode() {
 		if (this.nodes != null) {
 			int lastIndex = this.nodes.size() - 1;

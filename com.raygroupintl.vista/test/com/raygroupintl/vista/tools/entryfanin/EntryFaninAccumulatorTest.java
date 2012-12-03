@@ -32,7 +32,9 @@ public class EntryFaninAccumulatorTest {
 	public void test() {
 		String[] resourceNames = {"resource/FINROU00.m", 
 				                  "resource/FINROU01.m", 
-				                  "resource/FINROU02.m"};
+				                  "resource/FINROU02.m", 
+				                  "resource/FINROU03.m", 
+				                  "resource/FINROU04.m"};
 		Routine[] routines = new Routine[resourceNames.length];
 		MRARoutineFactory rf = MRARoutineFactory.getInstance(MVersion.CACHE);
 		for (int i=0; i<resourceNames.length; ++i) {
@@ -52,7 +54,9 @@ public class EntryFaninAccumulatorTest {
 		}
 		EntryFanins fanins = accumulator.getResult();
 		Set<EntryId> s = fanins.getFaninEntries();
-		Assert.assertEquals(7, s.size());
+		Assert.assertEquals(15, s.size());
+		this.checkResult(fanins, "FINROU01^FINROU01", new String[]{":4^FINROU01"});
+		this.checkResult(fanins, ":4^FINROU01", new String[]{"ADD^FINROU00"});
 		this.checkResult(fanins, "ADDALL^FINROU01", new String[]{"ADD^FINROU00"});
 		this.checkResult(fanins, "CONDADD^FINROU01", new String[]{"CONDADD2^FINROU01"});
 		this.checkResult(fanins, "CONDADD2^FINROU01", new String[]{"ADD^FINROU00"});
@@ -60,5 +64,11 @@ public class EntryFaninAccumulatorTest {
 		this.checkResult(fanins, "ADD^FINROU02", new String[]{"ADDALL^FINROU01"});
 		this.checkResult(fanins, "ADD2^FINROU02", new String[]{"ADD^FINROU02"});
 		this.checkResult(fanins, "MULTADD^FINROU00", new String[]{"ADD^FINROU00"});
+		this.checkResult(fanins, "FINROU03^FINROU03", new String[]{"TESTINDO^FINROU03"});
+		this.checkResult(fanins, "TESTINDO^FINROU03", new String[]{"ADD^FINROU00"});
+		this.checkResult(fanins, "FINROU04^FINROU04", new String[]{"TESTINDO^FINROU04"});
+		this.checkResult(fanins, "TESTINDO^FINROU04", new String[]{":5^FINROU04"});
+		this.checkResult(fanins, ":5^FINROU04", new String[]{"OTHER^FINROU02"});
+		this.checkResult(fanins, "OTHER^FINROU02", new String[]{"ADD^FINROU00"});
 	}
 }

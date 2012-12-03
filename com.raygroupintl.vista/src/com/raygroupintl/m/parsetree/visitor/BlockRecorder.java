@@ -19,13 +19,10 @@ package com.raygroupintl.m.parsetree.visitor;
 import java.util.HashSet;
 import java.util.Set;
 
+import com.raygroupintl.m.parsetree.DeadCmds;
 import com.raygroupintl.m.parsetree.DoBlock;
-import com.raygroupintl.m.parsetree.ElseCmd;
 import com.raygroupintl.m.parsetree.Entry;
 import com.raygroupintl.m.parsetree.EntryList;
-import com.raygroupintl.m.parsetree.ForLoop;
-import com.raygroupintl.m.parsetree.IfCmd;
-import com.raygroupintl.m.parsetree.QuitCmd;
 import com.raygroupintl.m.parsetree.Routine;
 import com.raygroupintl.m.parsetree.data.Block;
 import com.raygroupintl.m.parsetree.data.Blocks;
@@ -39,9 +36,6 @@ public abstract class BlockRecorder<T> extends FanoutRecorder {
 	private String currentRoutineName;
 	
 	private int index;
-	
-	private int underCondition;
-	private int underFor;
 	
 	private Set<Integer> doBlockHash = new HashSet<Integer>();
 
@@ -63,8 +57,6 @@ public abstract class BlockRecorder<T> extends FanoutRecorder {
 		this.currentBlock = null;
 		this.currentRoutineName = null;
 		this.index = 0;		
-		this.underCondition = 0;
-		this.underFor = 0;
 		this.doBlockHash = new HashSet<Integer>();
 	}
 	
@@ -73,50 +65,23 @@ public abstract class BlockRecorder<T> extends FanoutRecorder {
 	@Override
 	protected void updateFanout(boolean isGoto, boolean conditional) {
 		EntryId fanout = this.getLastFanout();
-		boolean shouldClose = isGoto && (! conditional) && (this.underCondition < 1);
 		if (fanout != null) {
 			int i = this.incrementIndex();
 			CallArgument[] callArguments = this.getLastArguments();
 			this.currentBlock.addFanout(i, fanout, callArguments);	
 			this.postUpdateFanout(fanout, callArguments);
 		} 
-		if (shouldClose) {
-			this.currentBlock.close();
-		}
-	}
-
-	@Override
-	protected void visitQuit(QuitCmd quitCmd) {
-		quitCmd.acceptSubNodes(this);
-		boolean quitConditional = (quitCmd.getPostCondition() != null);
-		if ((! quitConditional) && (this.underFor < 1) && (this.underCondition < 1)) {
-			this.currentBlock.close();			
-		}
-	}
-
-	@Override
-	protected void visitForLoop(ForLoop forLoop) {
-		++this.underFor;
-		super.visitForLoop(forLoop);
-		--this.underFor;
-	}
-	
-	@Override
-	protected void visitIf(IfCmd ifCmd) {
-		++this.underCondition;
-		super.visitIf(ifCmd);
-		--this.underCondition;
-	}
-	
-	@Override
-	protected void visitElse(ElseCmd elseCmd) {
-		++this.underCondition;
-		super.visitElse(elseCmd);
-		--this.underCondition;
 	}
 
 	protected abstract Block<T> getNewBlock(int index, EntryId entryId, Blocks<T> blocks, String[] params);
  	
+	@Override
+	protected void visitDeadCmds(DeadCmds deadCmds) {
+		if (deadCmds.getLevel() > 0) {
+			super.visitDeadCmds(deadCmds);
+		}
+	}
+	
 	@Override
 	protected void visitEntry(Entry entry) {
 		Block<T> lastBlock = this.currentBlock;
@@ -133,10 +98,12 @@ public abstract class BlockRecorder<T> extends FanoutRecorder {
 			this.currentBlocks.put(tag, this.currentBlock);
 			EntryId defaultGoto = new EntryId(null, tag);
 			lastBlock.addFanout(this.index, defaultGoto, null);
-			lastBlock.close();
 		}
 		++this.index;
-		super.visitEntry(entry);	
+		super.visitEntry(entry);
+		if (entry.isClosed()) {
+			this.currentBlock.close();
+		}
 	}
 			
 	@Override
@@ -165,8 +132,10 @@ public abstract class BlockRecorder<T> extends FanoutRecorder {
 			this.currentBlocks = lastBlocks;
 			this.currentBlock = lastBlock;
 			String tag = entryList.getNodes().get(0).getName();
-			EntryId defaultDo = new EntryId(null, tag);		
-			lastBlock.addFanout(this.index, defaultDo, null);
+			EntryId defaultDo = new EntryId(null, tag);
+			if (! lastBlock.isClosed()) {
+				lastBlock.addFanout(this.index, defaultDo, null);
+			}
 			this.currentBlocks.put(tag, firstBlock);
 		}
 	}
