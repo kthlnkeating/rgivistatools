@@ -23,6 +23,8 @@ public abstract class Nodes<T extends Node> extends BasicNode {
 
 	public abstract T getLastNode();
 	
+	public abstract T getFirstNode();
+	
 	protected void acceptElements(Visitor visitor) {
 		for (Node node : this.getNodes()) {
 			if (node != null) node.accept(visitor);

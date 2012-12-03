@@ -23,4 +23,8 @@ public class EntryList extends NodeList<Entry> {
 	public void accept(Visitor visitor) {
 		visitor.visitEntryList(this);
 	}
+	
+	public String getName() {
+		return this.getFirstNode().getName();
+	}
 }

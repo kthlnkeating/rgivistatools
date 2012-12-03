@@ -21,7 +21,6 @@ import java.util.Map;
 
 public class Blocks<T> {
 	private Map<String, Block<T>> blocks = new HashMap<String, Block<T>>();
-	private Block<T> firstBlock;
 	private Blocks<T> parent;
 	
 	public Blocks() {		
@@ -42,13 +41,5 @@ public class Blocks<T> {
 	
 	public void put(String name, Block<T> block) {
 		this.blocks.put(name, block);
-	}
-	
-	public void setFirst(Block<T> block) {
-		this.firstBlock = block;
-	}
-	
-	public Block<T> getFirstBlock() {
-		return this.firstBlock;
 	}
 }
