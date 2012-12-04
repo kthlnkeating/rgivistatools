@@ -308,6 +308,9 @@ public class RepositoryTools extends Tools {
 				VistaPackages vps = this.getVistaPackages(ri);
 				if (vps != null) {						
 					SerializedRoutineWriter srw = new SerializedRoutineWriter(this.params.parseTreeDirectory);
+					for (String r : this.params.routines) {
+						srw.addRoutineNameFilter(r);
+					}					
 					vps.accept(srw);
 				}
 			}

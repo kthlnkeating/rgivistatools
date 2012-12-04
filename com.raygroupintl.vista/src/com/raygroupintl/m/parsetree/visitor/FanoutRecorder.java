@@ -26,13 +26,11 @@ import java.util.Set;
 import com.raygroupintl.m.parsetree.ActualList;
 import com.raygroupintl.m.parsetree.AtomicDo;
 import com.raygroupintl.m.parsetree.AtomicGoto;
-import com.raygroupintl.m.parsetree.Do;
 import com.raygroupintl.m.parsetree.DoBlock;
 import com.raygroupintl.m.parsetree.EnvironmentFanoutRoutine;
 import com.raygroupintl.m.parsetree.Extrinsic;
 import com.raygroupintl.m.parsetree.FanoutLabel;
 import com.raygroupintl.m.parsetree.FanoutRoutine;
-import com.raygroupintl.m.parsetree.Goto;
 import com.raygroupintl.m.parsetree.IndirectFanoutLabel;
 import com.raygroupintl.m.parsetree.IndirectFanoutRoutine;
 import com.raygroupintl.m.parsetree.Local;
@@ -81,7 +79,6 @@ public class FanoutRecorder extends LocationMarker {
 	private Map<LineLocation, List<EntryId>> fanouts;
 	private LastInfo lastInfo = new LastInfo();
 	private Filter<EntryId> filter;
-	private boolean conditional;
 	private Set<Integer> doBlockHash = new HashSet<Integer>();
 
 	public FanoutRecorder() {
@@ -156,7 +153,7 @@ public class FanoutRecorder extends LocationMarker {
 		return this.lastInfo.callArguments;
 	}
 	
-	protected void updateFanout(boolean isGoto, boolean conditional) {
+	protected void updateFanout() {
 		EntryId fanout = this.lastInfo.getFanout();
 		if (fanout != null) {
 			if (this.filter != null) {
@@ -176,16 +173,14 @@ public class FanoutRecorder extends LocationMarker {
 	protected void visitAtomicDo(AtomicDo atomicDo) {
 		this.lastInfo.reset();
 		super.visitAtomicDo(atomicDo);
-		boolean b = this.conditional || atomicDo.getPostConditional();
-		this.updateFanout(false, b);
+		this.updateFanout();
 	}
 	
 	@Override
 	protected void visitAtomicGoto(AtomicGoto atomicGoto) {
 		this.lastInfo.reset();
 		super.visitAtomicGoto(atomicGoto);
-		boolean b = this.conditional || atomicGoto.hasPostCondition();
-		this.updateFanout(true, b);
+		this.updateFanout();
 	}
 	
 	@Override
@@ -193,7 +188,7 @@ public class FanoutRecorder extends LocationMarker {
 		LastInfo current = this.lastInfo;
 		this.lastInfo = new LastInfo();
 		super.visitExtrinsic(extrinsic);
-		this.updateFanout(false, false);
+		this.updateFanout();
 		this.lastInfo = current;
 	}
 	
@@ -205,20 +200,6 @@ public class FanoutRecorder extends LocationMarker {
 		this.lastInfo = current;
 	}
 	
-	@Override
-	protected void visitDo(Do d) {
-		this.conditional = d.getPostCondition() != null;
-		d.acceptSubNodes(this);
-		this.conditional = false;
-	}
-	
-	@Override
-	protected void visitGoto(Goto g) {
-		this.conditional = g.getPostCondition() != null;
-		g.acceptSubNodes(this);
-		this.conditional = false;		
-	}
-
 	@Override
 	protected void visitDoBlock(DoBlock doBlock) {
 		int id = doBlock.getUniqueId();

@@ -50,11 +50,12 @@ public class NodeList<T extends Node> extends Nodes<T> {
 		}
 		return null;
 	}
+	
 	@Override
 	public T getLastNode() {
 		if (this.nodes != null) {
 			int lastIndex = this.nodes.size() - 1;
-			if (lastIndex > 0) {
+			if (lastIndex >= 0) {
 				return this.nodes.get(lastIndex);
 			}
 		}

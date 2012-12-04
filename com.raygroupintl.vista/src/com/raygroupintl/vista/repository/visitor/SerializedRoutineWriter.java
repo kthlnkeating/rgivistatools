@@ -23,6 +23,7 @@ import java.io.Serializable;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -37,11 +38,19 @@ public class SerializedRoutineWriter extends RepositoryVisitor {
 
 	private String outputDirectory;
 	private int packageCount;
+	private List<String> nameRegexs;
 	
 	public SerializedRoutineWriter(String outputDirectory) {
 		this.outputDirectory = outputDirectory;
 	}
 
+	public void addRoutineNameFilter(String regex) {
+		if (this.nameRegexs == null) {
+			this.nameRegexs = new ArrayList<String>();
+		}
+		this.nameRegexs.add(regex);
+	}
+	
 	private void writeObject(String fileName, Serializable object) throws IOException {
 		FileOutputStream fos = new FileOutputStream(fileName);
 		ObjectOutputStream oos = new ObjectOutputStream(fos);
@@ -49,16 +58,25 @@ public class SerializedRoutineWriter extends RepositoryVisitor {
 		oos.close();
 	}
 	
+	private boolean matches(String name) {
+		for (String nameRegex : this.nameRegexs) {
+			if (name.matches(nameRegex)) return true;
+		}
+		return false;
+	}
+	
 	@Override
 	public void visitRoutine(Routine routine) {
-		Path path = Paths.get(this.outputDirectory, routine.getName() + ".ser");
-		String fileName = path.toString();
-		try {
-			this.writeObject(fileName, routine);
-		} catch (IOException ioException) {
-			String msg = "Unable to write object to file " + fileName;
-			LOGGER.log(Level.SEVERE, msg, ioException);
-		}		
+		if ((this.nameRegexs == null) || (this.matches(routine.getName()))) {
+			Path path = Paths.get(this.outputDirectory, routine.getName() + ".ser");
+			String fileName = path.toString();
+			try {
+				this.writeObject(fileName, routine);
+			} catch (IOException ioException) {
+				String msg = "Unable to write object to file " + fileName;
+				LOGGER.log(Level.SEVERE, msg, ioException);
+			}
+		}
 	}
 	
 	@Override

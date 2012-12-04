@@ -110,7 +110,7 @@ public class FilemanCallRecorder extends FanoutRecorder {
 	}
 	
 	@Override
-	protected void updateFanout(boolean isGoto, boolean conditional) {
+	protected void updateFanout() {
 		EntryId fanout = this.getLastFanout();
 		if (fanout != null) {
 			CallArgument[] callArguments = this.getLastArguments();

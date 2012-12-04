@@ -27,6 +27,7 @@ public class Entry extends NodeList<Line> {
 	private String[] parameters;
 	
 	private int endIndex = -1;
+	private Entry continuationEntry;
 	
 	public Entry(String name, String routineName, int index, String[] parameters) {
 		this.name = name;
@@ -77,5 +78,13 @@ public class Entry extends NodeList<Line> {
 			this.endIndex = this.size();
 		}
 		super.add(node);
+	}
+	
+	public void setContinuationEntry(Entry entry) {
+		this.continuationEntry = entry;
+	}
+
+	public Entry getContinuationEntry() {
+		return this.continuationEntry;
 	}
 }

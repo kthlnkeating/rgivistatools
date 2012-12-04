@@ -63,7 +63,7 @@ public abstract class BlockRecorder<T> extends FanoutRecorder {
 	protected abstract void postUpdateFanout(EntryId fanout, CallArgument[] callArguments);
 	
 	@Override
-	protected void updateFanout(boolean isGoto, boolean conditional) {
+	protected void updateFanout() {
 		EntryId fanout = this.getLastFanout();
 		if (fanout != null) {
 			int i = this.incrementIndex();
@@ -94,15 +94,24 @@ public abstract class BlockRecorder<T> extends FanoutRecorder {
 				this.currentBlocks.put(tag, this.currentBlock);
 			}
 		} else {
-			this.currentBlocks.put(tag, this.currentBlock);
+			this.currentBlocks.put(tag, this.currentBlock);			
 			EntryId defaultGoto = new EntryId(null, tag);
-			lastBlock.addFanout(this.index, defaultGoto, null);
+			if (! lastBlock.isClosed()) {
+				lastBlock.addFanout(this.index, defaultGoto, null);
+			}
 		}
 		++this.index;
 		super.visitEntry(entry);
 		if (entry.isClosed()) {
 			this.currentBlock.close();
 		} 
+		//if (entry.getContinuationEntry() != null) {
+		//	Entry ce = entry.getContinuationEntry();
+		//	String ceTag = ce.getName();
+		//	EntryId defaultGoto = new EntryId(null, ceTag);
+		//	++this.index;
+		//	this.currentBlock.addFanout(this.index, defaultGoto, null);
+		//}
 	}
 			
 	@Override
