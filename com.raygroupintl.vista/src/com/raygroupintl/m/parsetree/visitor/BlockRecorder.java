@@ -84,34 +84,26 @@ public abstract class BlockRecorder<T> extends FanoutRecorder {
 	
 	@Override
 	protected void visitEntry(Entry entry) {
-		Block<T> lastBlock = this.currentBlock;
 		++this.index;
 		String tag = entry.getName();
 		EntryId entryId = entry.getFullEntryId();		
 		this.currentBlock = this.getNewBlock(this.index, entryId, this.currentBlocks, entry.getParameters());
-		if (lastBlock == null) {
-			if ((tag != null) && (! tag.isEmpty())) {
-				this.currentBlocks.put(tag, this.currentBlock);
-			}
-		} else {
-			this.currentBlocks.put(tag, this.currentBlock);			
-			EntryId defaultGoto = new EntryId(null, tag);
-			if (! lastBlock.isClosed()) {
-				lastBlock.addFanout(this.index, defaultGoto, null);
-			}
+		if ((tag != null) && (! tag.isEmpty())) {
+			this.currentBlocks.put(tag, this.currentBlock);
 		}
 		++this.index;
 		super.visitEntry(entry);
 		if (entry.isClosed()) {
 			this.currentBlock.close();
 		} 
-		//if (entry.getContinuationEntry() != null) {
-		//	Entry ce = entry.getContinuationEntry();
-		//	String ceTag = ce.getName();
-		//	EntryId defaultGoto = new EntryId(null, ceTag);
-		//	++this.index;
-		//	this.currentBlock.addFanout(this.index, defaultGoto, null);
-		//}
+		if (entry.getContinuationEntry() != null) {
+			Entry ce = entry.getContinuationEntry();
+			String ceTag = ce.getName();
+			EntryId defaultGoto = new EntryId(null, ceTag);
+			++this.index;
+			this.currentBlock.addFanout(this.index, defaultGoto, null);
+			++this.index;
+		}
 	}
 			
 	@Override
