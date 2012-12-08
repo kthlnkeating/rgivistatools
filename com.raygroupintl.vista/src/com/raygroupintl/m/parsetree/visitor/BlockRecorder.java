@@ -126,7 +126,7 @@ public abstract class BlockRecorder<T> extends FanoutRecorder {
 			Blocks<T> lastBlocks = this.currentBlocks;
 			Block<T> lastBlock = this.currentBlock;
 			this.currentBlock = null;
-			this.currentBlocks = new Blocks<T>(lastBlocks);
+			this.currentBlocks = new Blocks<T>(lastBlock);
 			doBlock.acceptEntryList(this);
 			String tag = entryList.getName();
 			Block<T> firstBlock = this.currentBlocks.get(tag);

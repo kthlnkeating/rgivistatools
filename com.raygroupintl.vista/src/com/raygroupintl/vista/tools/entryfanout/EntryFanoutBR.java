@@ -44,8 +44,8 @@ public class EntryFanoutBR extends BlockRecorder<Void> {
 		List<EntryId> fs = b.getFanouts();
 		for (EntryId f : fs) {
 			String label = f.getLabelOrDefault();
-			if (label.charAt(0) == ':') {
-				Block<Void> cb = b.getChildBlock(label);
+			Block<Void> cb = b.getChildBlock(label);
+			if (cb != null) {
 				Set<EntryId> cr = this.getBlockFanouts(cb); 
 				r.addAll(cr);
 			} else {

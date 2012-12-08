@@ -14,37 +14,21 @@
 // limitations under the License.
 //---------------------------------------------------------------------------
 
-package com.raygroupintl.m.parsetree.data;
+package com.raygroupintl.vista.tools.entrycodeinfo;
 
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Set;
+import com.raygroupintl.m.parsetree.visitor.BlockRecorder;
+import com.raygroupintl.m.parsetree.visitor.BlockRecorderFactory;
+import com.raygroupintl.vista.repository.RepositoryInfo;
 
-public class Blocks<T> {
-	private Map<String, Block<T>> blocks = new HashMap<String, Block<T>>();
-	private Block<T> parent;
+public class EntryCodeInfoRecorderFactory implements BlockRecorderFactory<CodeInfo> {
+	private RepositoryInfo repositoryInfo;
 	
-	public Blocks() {		
+	public EntryCodeInfoRecorderFactory(RepositoryInfo repositoryInfo) {
+		this.repositoryInfo = repositoryInfo;
 	}
 	
-	public Blocks(Block<T> parent) {
-		this.parent = parent;
-	}
-	
-	public Set<String> getTags() {
-		return this.blocks.keySet();
-	}
-	
-	public Block<T> get(String name) {
-		Block<T> result = this.blocks.get(name);
-		if ((result == null) && (this.parent != null)) {
-			return this.parent.getSiblingBlock(name);
-		} else {
-			return result;
-		}
-	}
-	
-	public void put(String name, Block<T> block) {
-		this.blocks.put(name, block);
+	@Override
+	public BlockRecorder<CodeInfo> getRecorder() {
+		return new EntryCodeInfoRecorder(this.repositoryInfo);
 	}
 }

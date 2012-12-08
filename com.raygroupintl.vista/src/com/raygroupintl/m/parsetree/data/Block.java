@@ -120,6 +120,10 @@ public class Block<T> {
 		return null;
 	}
 	
+	public Block<T> getSiblingBlock(String tag) {
+		return this.siblings.get(tag);
+	}
+	
 	private void update(FanoutBlocks<T> fanoutBlocks, BlocksSupply<T> blocksSupply, Filter<EntryId> filter) {
 		for (IndexedFanout ifout : this.fanouts) {
 			EntryId fout = ifout.getFanout();
