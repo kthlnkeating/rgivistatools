@@ -136,7 +136,7 @@ public abstract class BlockRecorder<T> extends FanoutRecorder {
 			if (! lastBlock.isClosed()) {
 				lastBlock.addFanout(this.index, defaultDo, null);
 			}
-			this.currentBlocks.put(tag, firstBlock);
+			lastBlock.addChild(firstBlock);
 		}
 	}
 	

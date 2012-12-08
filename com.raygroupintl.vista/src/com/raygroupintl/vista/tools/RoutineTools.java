@@ -26,8 +26,10 @@ import java.util.Map;
 import com.raygroupintl.m.parsetree.Routine;
 import com.raygroupintl.m.token.MVersion;
 import com.raygroupintl.output.FileWrapper;
+import com.raygroupintl.output.TerminalFormatter;
 import com.raygroupintl.vista.repository.visitor.EntryWriter;
 import com.raygroupintl.vista.repository.visitor.SerializedRoutineWriter;
+import com.raygroupintl.vista.tools.entryfanout.EntryFanoutAccumulator;
 
 public class RoutineTools extends Tools {
 	protected static abstract class RoutineRunType extends Tool {
@@ -104,6 +106,30 @@ public class RoutineTools extends Tools {
 		}
 	}
 	
+	private static class EntryFanout extends RoutineRunType {		
+		public EntryFanout(CLIParams params) {
+			super(params);
+		}
+		
+		@Override
+		public void run() {
+			List<Routine> routines = this.getRoutines();
+			if (routines != null) {
+				FileWrapper fr = this.getOutputFile();
+				if (fr != null) {
+					EntryFanoutAccumulator efa = new EntryFanoutAccumulator();
+					efa.addRoutines(routines);
+					if (fr.start()) {
+						TerminalFormatter tf = new TerminalFormatter();
+						tf.setTab(12);
+						efa.write(fr, tf);
+						fr.stop();
+					}
+				}						
+			}
+		}
+	}
+	
 	private static class ParseTreeSave extends RoutineRunType {		
 		public ParseTreeSave(CLIParams params) {
 			super(params);
@@ -125,6 +151,12 @@ public class RoutineTools extends Tools {
 			@Override
 			public Tool getInstance(CLIParams params) {
 				return new Entry(params);
+			}
+		});
+		tools.put("entryfanout", new MemberFactory() {				
+			@Override
+			public Tool getInstance(CLIParams params) {
+				return new EntryFanout(params);
 			}
 		});
 		tools.put("parsetreesave", new MemberFactory() {				

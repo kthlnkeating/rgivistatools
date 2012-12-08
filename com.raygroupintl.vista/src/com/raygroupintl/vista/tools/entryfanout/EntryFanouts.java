@@ -14,54 +14,54 @@
 // limitations under the License.
 //---------------------------------------------------------------------------
 
-package com.raygroupintl.vista.tools.entryfanin;
+package com.raygroupintl.vista.tools.entryfanout;
 
-import java.util.Map;
+import java.util.Collections;
 import java.util.Set;
 import java.util.SortedSet;
-import java.util.TreeMap;
+import java.util.TreeSet;
 
 import com.raygroupintl.m.parsetree.data.EntryId;
 import com.raygroupintl.output.Terminal;
 import com.raygroupintl.output.TerminalFormatter;
 import com.raygroupintl.vista.tools.fnds.ToolResult;
 
-public class EntryFanins implements ToolResult {
+public class EntryFanouts implements ToolResult {
 	private EntryId entryUnderTest;
-	Map<EntryId, SortedSet<EntryId>> pathPieces = new TreeMap<EntryId, SortedSet<EntryId>>();
+	private SortedSet<EntryId> fanoutEntries;
 
-	public EntryFanins(EntryId entryUnderTest) {
+	public EntryFanouts(EntryId entryUnderTest) {
 		this.entryUnderTest = entryUnderTest;
 	}
-
-	public void add(PathPieceToEntry ppte) {
-		if (ppte.exist()) {
-			this.pathPieces.put(ppte.getStartEntry(), ppte.getNextEntries());
+	
+	public void add(EntryId fanout) {
+		if (this.fanoutEntries == null) {
+			this.fanoutEntries = new TreeSet<EntryId>();
+		} 
+		this.fanoutEntries.add(fanout);
+	}
+	
+	public EntryId getEntry() {
+		return this.entryUnderTest;
+	}
+	
+	public Set<EntryId> getFanouts() {
+		if (this.fanoutEntries == null) {
+			return Collections.emptySet();
+		} else {
+			return Collections.unmodifiableSortedSet(this.fanoutEntries);
 		}
-	}
-	
-	public boolean hasFaninEntry(EntryId entryId) {
-		return this.pathPieces.containsKey(entryId);
-	}
-	
-	public Set<EntryId> getFaninEntries() {
-		return this.pathPieces.keySet();
-	}
-	
-	public Set<EntryId> getFaninNextEntries(EntryId entry) {
-		return this.pathPieces.get(entry);
 	}
 	
 	@Override
 	public void write(Terminal t, TerminalFormatter tf) {
-		t.writeEOL(" " + this.entryUnderTest.toString2());				
-		Set<EntryId> starts = this.pathPieces.keySet();
-		for (EntryId start : starts) {
-			Set<EntryId> nextUps = this.pathPieces.get(start);
-			for (EntryId nextUp : nextUps) {
-				t.write("   " + start.toString2() + " thru ");
-				t.writeEOL(nextUp.toString2());
+		t.writeEOL(" " + this.entryUnderTest.toString2());	
+		if (fanoutEntries == null) {
+			t.writeEOL("  --");				
+		} else {
+			for (EntryId f : this.fanoutEntries) {
+				t.writeEOL("  " + f.toString2());
 			}
-		}	
-	}
+		}
+	}	
 }

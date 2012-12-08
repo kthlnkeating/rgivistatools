@@ -16,6 +16,7 @@
 
 package com.raygroupintl.vista.tools.entryfanin;
 
+import java.util.Collection;
 import java.util.List;
 
 import com.raygroupintl.m.parsetree.Routine;
@@ -55,6 +56,12 @@ public class EntryFaninAccumulator  {
 		}		
 	}
 	
+	public void addRoutines(Collection<Routine> routines) {
+		for (Routine routine : routines) {
+			this.addRoutine(routine);
+		}
+	}
+		
 	public EntryFanins getResult() {
 		EntryFanins result = new EntryFanins(this.entryUnderTest);
 		for (PathPieceToEntry p : this.store.values()) {

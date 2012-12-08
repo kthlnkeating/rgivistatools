@@ -56,6 +56,7 @@ public class Block<T> {
 	private int index;
 	private EntryId entryId;
 	private Blocks<T> siblings;
+	private List<Block<T>> children;
 	private T attachedObject;
 	
 	private List<IndexedFanout> fanouts = new ArrayList<IndexedFanout>();
@@ -87,10 +88,37 @@ public class Block<T> {
 	public void addFanout(int index, EntryId fanout, CallArgument[] arguments) {
 		if (! this.closed) {
 			IndexedFanout ifo = new IndexedFanout(index, fanout);			
-			ifo.setByRefs(arguments);
 			this.fanouts.add(ifo);
 		}
 	}	
+	
+	public void addChild(Block<T> child) {
+		if (this.children == null) {
+			this.children = new ArrayList<Block<T>>(2);
+		}
+		this.children.add(child);
+	}
+	
+	public List<EntryId> getFanouts() {
+		List<EntryId> result = new ArrayList<EntryId>();
+		for (IndexedFanout ifo : this.fanouts) {
+			EntryId fo = ifo.getFanout();
+			result.add(fo);
+		}
+		return result;
+	}
+	
+	public Block<T> getChildBlock(String tag) {
+		if (this.children != null) {	
+			for (Block<T> child : this.children) {
+				String childTag = child.getEntryId().getLabelOrDefault();
+				if (tag.equals(childTag)) {				
+					return child;
+				}
+			}
+		}
+		return null;
+	}
 	
 	private void update(FanoutBlocks<T> fanoutBlocks, BlocksSupply<T> blocksSupply, Filter<EntryId> filter) {
 		for (IndexedFanout ifout : this.fanouts) {
@@ -102,23 +130,26 @@ public class Block<T> {
 				tagName = routineName;
 			}			
 			if (routineName == null) {
-				Block<T> tagBlock = this.siblings.get(tagName);
+				Block<T> tagBlock = this.getChildBlock(tagName);
 				if (tagBlock == null) {
-					String inRoutineName = this.entryId.getRoutineName();
-					if (inRoutineName != null) {
-						Map<String, String> replacedRoutines = blocksSupply.getReplacementRoutines();
-						String replacement = replacedRoutines.get(tagName);
-						if ((replacement != null) && (replacement.equals(inRoutineName))) {
-							tagBlock = this.siblings.get(replacement);
-						}
-					}
+					tagBlock = this.siblings.get(tagName);
 					if (tagBlock == null) {
-						if (! reported.contains(fout)) {						
-							LOGGER.log(Level.WARNING, "Unable to find information about tag " + tagName + " in " + this.entryId.getRoutineName());
-							reported.add(fout);
+						String inRoutineName = this.entryId.getRoutineName();
+						if (inRoutineName != null) {
+							Map<String, String> replacedRoutines = blocksSupply.getReplacementRoutines();
+							String replacement = replacedRoutines.get(tagName);
+							if ((replacement != null) && (replacement.equals(inRoutineName))) {
+								tagBlock = this.siblings.get(replacement);
+							}
 						}
-						continue;
 					}
+				}
+				if (tagBlock == null) {
+					if (! reported.contains(fout)) {						
+						LOGGER.log(Level.WARNING, "Unable to find information about tag " + tagName + " in " + this.entryId.getRoutineName());
+						reported.add(fout);
+					}
+					continue;
 				}
 				fanoutBlocks.add(this, tagBlock, ifout.getIndex());
 			} else {

@@ -16,41 +16,13 @@
 
 package com.raygroupintl.m.parsetree.data;
 
-import java.util.ArrayList;
-import java.util.List;
-
-import com.raygroupintl.struct.Indexed;
-
-
 public class IndexedFanout {
 	private int index;
 	private EntryId fanout;
-	private List<Indexed<String>> byRefs;
 		
 	public IndexedFanout(int index, EntryId fanout) {
 		this.index = index;
 		this.fanout = fanout;
-	}
-
-	public void setByRefs(CallArgument[] callArguments) {
-		this.byRefs = null;
-		if (callArguments != null) {
-			int count = 0;
-			for (int i=0; i<callArguments.length; ++i) {
-				CallArgument ca = callArguments[i];
-				if ((ca != null) && (ca.getType() == CallArgumentType.LOCAL_BY_REF)) ++count;
-			}
-			if (count > 0) {
-				this.byRefs = new ArrayList<Indexed<String>>(count);
-				for (int i=0; i<callArguments.length; ++i) {
-					CallArgument ca = callArguments[i];
-					if ((ca != null) && (ca.getType() == CallArgumentType.LOCAL_BY_REF)) {
-						Indexed<String> is = new Indexed<String>(ca.getValue(), i);
-						this.byRefs.add(is);
-					}
-				}
-			}
-		}
 	}
 	
 	public int getIndex() {
@@ -59,10 +31,6 @@ public class IndexedFanout {
 		
 	public EntryId getFanout() {
 		return this.fanout;
-	}
-	
-	public List<Indexed<String>> getByRefs() {
-		return this.byRefs;
 	}
 }
 	

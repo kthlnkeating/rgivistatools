@@ -18,6 +18,7 @@ package com.raygroupintl.m.parsetree.data;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Set;
 
 public class Blocks<T> {
 	private Map<String, Block<T>> blocks = new HashMap<String, Block<T>>();
@@ -28,6 +29,10 @@ public class Blocks<T> {
 	
 	public Blocks(Blocks<T> parent) {
 		this.parent = parent;
+	}
+	
+	public Set<String> getTags() {
+		return this.blocks.keySet();
 	}
 	
 	public Block<T> get(String name) {
