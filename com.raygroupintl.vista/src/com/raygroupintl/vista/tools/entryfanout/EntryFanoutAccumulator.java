@@ -31,13 +31,13 @@ public class EntryFanoutAccumulator {
 	
 	public void addRoutine(Routine routine) {
 		EntryFanoutBR recorder = new EntryFanoutBR();
-		Map<String, Set<EntryId>> rawFanouts = recorder.getResults(routine);
+		RoutineFanouts rawFanouts = recorder.getResults(routine);
 		String routineName = routine.getName();
-		Set<String> tags = rawFanouts.keySet();
+		Set<String> tags = rawFanouts.getRoutineEntryTags();
 		for (String tag : tags) {
 			EntryId eid = new EntryId(routineName, tag);
 			EntryFanouts efouts = new EntryFanouts(eid); 
-			Set<EntryId> values = rawFanouts.get(tag);
+			Set<EntryId> values = rawFanouts.getFanouts(tag);
 			for (EntryId v : values) {
 				efouts.add(v);
 			}

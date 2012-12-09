@@ -16,7 +16,11 @@
 
 package com.raygroupintl.m.parsetree.data;
 
-public class EntryId implements Comparable<EntryId> {
+import java.io.Serializable;
+
+public class EntryId implements Comparable<EntryId>, Serializable {
+	private static final long serialVersionUID = 1L;
+
 	public enum StringFormat {
 		SF_SINGLE_LABEL,
 		SF_SINGLE_ROUTINE;

@@ -16,6 +16,7 @@
 
 package com.raygroupintl.vista.tools.entryfanout;
 
+import java.io.Serializable;
 import java.util.Collections;
 import java.util.Set;
 import java.util.SortedSet;
@@ -26,7 +27,9 @@ import com.raygroupintl.output.Terminal;
 import com.raygroupintl.output.TerminalFormatter;
 import com.raygroupintl.vista.tools.fnds.ToolResult;
 
-public class EntryFanouts implements ToolResult {
+public class EntryFanouts implements ToolResult, Serializable {
+	private static final long serialVersionUID = 1L;
+
 	private EntryId entryUnderTest;
 	private SortedSet<EntryId> fanoutEntries;
 

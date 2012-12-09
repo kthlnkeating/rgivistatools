@@ -16,10 +16,8 @@
 
 package com.raygroupintl.vista.tools.entryfanout;
 
-import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
-import java.util.Map;
 import java.util.Set;
 
 import com.raygroupintl.m.parsetree.Routine;
@@ -55,10 +53,10 @@ public class EntryFanoutBR extends BlockRecorder<Void> {
 		return r;
 	}
  	
-	public Map<String, Set<EntryId>> getResults(Routine routine) {
+	public RoutineFanouts getResults(Routine routine) {
 		routine.accept(this);
 		Blocks<Void> bs = super.getBlocks();
-		Map<String, Set<EntryId>> result = new HashMap<String, Set<EntryId>>();		
+		RoutineFanouts result = new RoutineFanouts();
 		Set<String> tags = bs.getTags();
 		for (String tag : tags) {
 			Block<Void> b = bs.get(tag);

@@ -32,6 +32,8 @@ import com.raygroupintl.m.parsetree.Routine;
 import com.raygroupintl.vista.repository.RepositoryVisitor;
 import com.raygroupintl.vista.repository.VistaPackage;
 import com.raygroupintl.vista.repository.VistaPackages;
+import com.raygroupintl.vista.tools.entryfanout.EntryFanoutBR;
+import com.raygroupintl.vista.tools.entryfanout.RoutineFanouts;
 
 public class SerializedRoutineWriter extends RepositoryVisitor {
 	private final static Logger LOGGER = Logger.getLogger(SerializedRoutineWriter.class.getName());
@@ -58,6 +60,18 @@ public class SerializedRoutineWriter extends RepositoryVisitor {
 		oos.close();
 	}
 	
+	private void writeObject(Routine routine, Serializable object, String extension) {
+		String routineName = routine.getName();
+		Path path = Paths.get(this.outputDirectory, routineName + extension);
+		String fileName = path.toString();
+		try {
+			this.writeObject(fileName, object);
+		} catch (IOException ioException) {
+			String msg = "Unable to write object to file " + fileName;
+			LOGGER.log(Level.SEVERE, msg, ioException);
+		}
+	}
+	
 	private boolean matches(String name) {
 		for (String nameRegex : this.nameRegexs) {
 			if (name.matches(nameRegex)) return true;
@@ -65,17 +79,17 @@ public class SerializedRoutineWriter extends RepositoryVisitor {
 		return false;
 	}
 	
+	private void writeFanout(Routine routine) {
+		EntryFanoutBR recorder = new EntryFanoutBR();
+		RoutineFanouts result = recorder.getResults(routine);
+		this.writeObject(routine, result, ".fo");
+	}
+	
 	@Override
 	public void visitRoutine(Routine routine) {
 		if ((this.nameRegexs == null) || (this.matches(routine.getName()))) {
-			Path path = Paths.get(this.outputDirectory, routine.getName() + ".ser");
-			String fileName = path.toString();
-			try {
-				this.writeObject(fileName, routine);
-			} catch (IOException ioException) {
-				String msg = "Unable to write object to file " + fileName;
-				LOGGER.log(Level.SEVERE, msg, ioException);
-			}
+			this.writeObject(routine, routine, ".ser");
+			this.writeFanout(routine);
 		}
 	}
 	
