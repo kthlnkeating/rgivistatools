@@ -124,7 +124,7 @@ public class Block<T> {
 		return this.siblings.get(tag);
 	}
 	
-	private void update(FanoutBlocks<T> fanoutBlocks, BlocksSupply<T> blocksSupply, Filter<EntryId> filter) {
+	private void update(FanoutBlocks<Block<T>> fanoutBlocks, BlocksSupply<T> blocksSupply, Filter<EntryId> filter) {
 		for (IndexedFanout ifout : this.fanouts) {
 			EntryId fout = ifout.getFanout();
 			if ((filter != null) && (! filter.isValid(fout))) continue;
@@ -196,7 +196,7 @@ public class Block<T> {
 		}
 	}
 	
-	private void updateFanoutBlocks(FanoutBlocks<T> fanoutBlocks, BlocksSupply<T> blocksSupply, Filter<EntryId> filter) {
+	private void updateFanoutBlocks(FanoutBlocks<Block<T>> fanoutBlocks, BlocksSupply<T> blocksSupply, Filter<EntryId> filter) {
 		int index = 0;	
 		while (index < fanoutBlocks.getSize()) {
 			Block<T> b = fanoutBlocks.getBlock(index);
@@ -205,14 +205,14 @@ public class Block<T> {
 		}		
 	}
 	
-	public FanoutBlocks<T> getFanoutBlocks(BlocksSupply<T> blocksSupply, ObjectIdContainer blockIdContainer, Filter<EntryId> filter) {
-		FanoutBlocks<T> fanoutBlocks = new FanoutBlocks<T>(this, blockIdContainer);
+	public FanoutBlocks<Block<T>> getFanoutBlocks(BlocksSupply<T> blocksSupply, ObjectIdContainer blockIdContainer, Filter<EntryId> filter) {
+		FanoutBlocks<Block<T>> fanoutBlocks = new FanoutBlocks<Block<T>>(this, blockIdContainer);
 		this.updateFanoutBlocks(fanoutBlocks, blocksSupply, filter);
 		return fanoutBlocks;
 	}
 	
-	public FanoutBlocks<T> getFanoutBlocks(BlocksSupply<T> blocksSupply, Filter<EntryId> filter) {
-		FanoutBlocks<T> fanoutBlocks = new FanoutBlocks<T>(this, null);
+	public FanoutBlocks<Block<T>> getFanoutBlocks(BlocksSupply<T> blocksSupply, Filter<EntryId> filter) {
+		FanoutBlocks<Block<T>> fanoutBlocks = new FanoutBlocks<Block<T>>(this, null);
 		this.updateFanoutBlocks(fanoutBlocks, blocksSupply, filter);
 		return fanoutBlocks;
 	}

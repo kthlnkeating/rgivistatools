@@ -22,10 +22,10 @@ public class EntryFaninsAggregator {
 		this.supply = supply;
 	}
 	
-	private int updateFaninData(PathPieceToEntry data, Block<FaninMark> b, FanoutBlocks<FaninMark> fanoutBlocks, Map<Integer, PathPieceToEntry> datas) {
+	private int updateFaninData(PathPieceToEntry data, Block<FaninMark> b, FanoutBlocks<Block<FaninMark>> fanoutBlocks, Map<Integer, PathPieceToEntry> datas) {
 		int numChange = 0;
-		FaninList<FaninMark> faninList = fanoutBlocks.getFaninList(b);
-		List<Indexed<Block<FaninMark>>> faninBlocks = faninList.getFaninBlocks();
+		FaninList<Block<FaninMark>> faninList = fanoutBlocks.getFaninList(b);
+		List<Indexed<Block<FaninMark>>> faninBlocks = faninList.getFanins();
 		for (Indexed<Block<FaninMark>> ib : faninBlocks) {
 			Block<FaninMark> faninBlock = ib.getObject();
 			int faninId = System.identityHashCode(faninBlock);
@@ -39,7 +39,7 @@ public class EntryFaninsAggregator {
 		return numChange;
 	}
 	
-	private PathPieceToEntry get(FanoutBlocks<FaninMark> fanoutBlocks, DataStore<PathPieceToEntry> store) {			
+	private PathPieceToEntry get(FanoutBlocks<Block<FaninMark>> fanoutBlocks, DataStore<PathPieceToEntry> store) {			
 		Map<Integer, PathPieceToEntry> datas = new HashMap<Integer, PathPieceToEntry>();
 
 		List<Block<FaninMark>> blocks = fanoutBlocks.getBlocks();
@@ -80,7 +80,7 @@ public class EntryFaninsAggregator {
 		if (result != null) {
 			return result;
 		}
-		FanoutBlocks<FaninMark> fanoutBlocks = this.block.getFanoutBlocks(this.supply, store, filter);
+		FanoutBlocks<Block<FaninMark>> fanoutBlocks = this.block.getFanoutBlocks(this.supply, store, filter);
 		return this.get(fanoutBlocks, store);
 	}
 }

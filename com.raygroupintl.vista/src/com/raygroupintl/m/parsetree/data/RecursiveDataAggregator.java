@@ -32,10 +32,10 @@ public class RecursiveDataAggregator<T, U extends RecursiveDataHandler<T>> {
 		this.supply = supply;
 	}
 	
-	private int updateFaninData(T data, Block<U> b, FanoutBlocks<U> fanoutBlocks, Map<Integer, T> datas) {
+	private int updateFaninData(T data, Block<U> b, FanoutBlocks<Block<U>> fanoutBlocks, Map<Integer, T> datas) {
 		int numChange = 0;
-		FaninList<U> faninList = fanoutBlocks.getFaninList(b);
-		List<Indexed<Block<U>>> faninBlocks = faninList.getFaninBlocks();
+		FaninList<Block<U>> faninList = fanoutBlocks.getFaninList(b);
+		List<Indexed<Block<U>>> faninBlocks = faninList.getFanins();
 		for (Indexed<Block<U>> ib : faninBlocks) {
 			Block<U> faninBlock = ib.getObject();
 			int faninId = System.identityHashCode(faninBlock);
@@ -45,7 +45,7 @@ public class RecursiveDataAggregator<T, U extends RecursiveDataHandler<T>> {
 		return numChange;
 	}
 	
-	private T get(FanoutBlocks<U> fanoutBlocks, DataStore<T> store) {			
+	private T get(FanoutBlocks<Block<U>> fanoutBlocks, DataStore<T> store) {			
 		Map<Integer, T> datas = new HashMap<Integer, T>();
 
 		List<Block<U>> blocks = fanoutBlocks.getBlocks();
@@ -86,7 +86,7 @@ public class RecursiveDataAggregator<T, U extends RecursiveDataHandler<T>> {
 		if (result != null) {
 			return result;
 		}
-		FanoutBlocks<U> fanoutBlocks = this.block.getFanoutBlocks(this.supply, store, filter);
+		FanoutBlocks<Block<U>> fanoutBlocks = this.block.getFanoutBlocks(this.supply, store, filter);
 		return this.get(fanoutBlocks, store);
 	}
 }

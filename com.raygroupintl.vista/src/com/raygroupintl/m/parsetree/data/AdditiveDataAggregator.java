@@ -30,7 +30,7 @@ public class AdditiveDataAggregator<T, U extends AdditiveDataHandler<T>> {
 	}
 	
 	public T get(Filter<EntryId> filter) {
-		FanoutBlocks<U> fanoutBlocks = this.block.getFanoutBlocks(this.supply, filter);
+		FanoutBlocks<Block<U>> fanoutBlocks = this.block.getFanoutBlocks(this.supply, filter);
 		List<Block<U>> blocks = fanoutBlocks.getBlocks();
 		T result = this.block.getAttachedObject().getNewInstance();
 		for (Block<U> b : blocks) {

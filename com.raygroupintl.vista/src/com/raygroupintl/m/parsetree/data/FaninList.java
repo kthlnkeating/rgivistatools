@@ -24,26 +24,26 @@ import java.util.Set;
 import com.raygroupintl.struct.Indexed;
 
 public class FaninList<T> {
-	private Block<T> block;
-	private List<Indexed<Block<T>>> faninBlocks = new ArrayList<Indexed<Block<T>>>();
+	private T node;
+	private List<Indexed<T>> faninNodes = new ArrayList<Indexed<T>>();
 	private Set<Integer> existing = new HashSet<Integer>();
 	
-	public FaninList(Block<T> block) {
-		this.block = block;
+	public FaninList(T node) {
+		this.node = node;
 	}
 			
-	public void addFanin(Block<T> faninBlock, int index) {
-		int faninId = System.identityHashCode(faninBlock);
-		if (faninId != System.identityHashCode(this.block)) {
+	public void addFanin(T faninNode, int index) {
+		int faninId = System.identityHashCode(faninNode);
+		if (faninId != System.identityHashCode(this.node)) {
 			if (! this.existing.contains(faninId)) {
-				Indexed<Block<T>> e = new Indexed<Block<T>>(faninBlock, index);
-				this.faninBlocks.add(e);
+				Indexed<T> e = new Indexed<T>(faninNode, index);
+				this.faninNodes.add(e);
 				this.existing.add(faninId);
 			}
 		}
 	}
 	
-	public List<Indexed<Block<T>>> getFaninBlocks() {
-		return this.faninBlocks;
+	public List<Indexed<T>> getFanins() {
+		return this.faninNodes;
 	}
 }
