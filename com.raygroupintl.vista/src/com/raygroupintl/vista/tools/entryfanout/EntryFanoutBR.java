@@ -33,7 +33,7 @@ public class EntryFanoutBR extends BlockRecorder<Void> {
 	}
 	
 	@Override
-	protected Block<Void> getNewBlock(int index, EntryId entryId, Blocks<Void> blocks, String[] params) {
+	protected Block<Void> getNewBlock(int index, EntryId entryId, Blocks<Block<Void>> blocks, String[] params) {
 		return new Block<Void>(index, entryId, blocks, null);
 	}
 	
@@ -55,7 +55,7 @@ public class EntryFanoutBR extends BlockRecorder<Void> {
  	
 	public RoutineFanouts getResults(Routine routine) {
 		routine.accept(this);
-		Blocks<Void> bs = super.getBlocks();
+		Blocks<Block<Void>> bs = super.getBlocks();
 		RoutineFanouts result = new RoutineFanouts();
 		Set<String> tags = bs.getTags();
 		for (String tag : tags) {

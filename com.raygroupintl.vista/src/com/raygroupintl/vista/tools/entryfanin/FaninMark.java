@@ -17,9 +17,8 @@
 package com.raygroupintl.vista.tools.entryfanin;
 
 import com.raygroupintl.m.parsetree.data.EntryId;
-import com.raygroupintl.m.parsetree.data.RecursiveDataHandler;
 
-public class FaninMark implements RecursiveDataHandler<PathPieceToEntry> {
+public class FaninMark {
 	private EntryId startNode;
 	private EntryId endNode;
 	
@@ -35,13 +34,11 @@ public class FaninMark implements RecursiveDataHandler<PathPieceToEntry> {
 		return this.endNode != null;
 	}
 
-	@Override
 	public PathPieceToEntry getLocalCopy()  {
 		return new PathPieceToEntry(this.startNode);
 	}
 	
-	@Override
-	public int update(PathPieceToEntry target, PathPieceToEntry source, int sourceIndex) {
+	public int update(PathPieceToEntry target, PathPieceToEntry source) {
 		int changeCount = 0;
 		if (source.exist()) {
 			EntryId sourceStart = source.getStartEntry();

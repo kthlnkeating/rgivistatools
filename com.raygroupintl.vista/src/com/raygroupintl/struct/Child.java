@@ -14,29 +14,8 @@
 // limitations under the License.
 //---------------------------------------------------------------------------
 
-package com.raygroupintl.m.parsetree.data;
+package com.raygroupintl.struct;
 
-import java.util.List;
-
-import com.raygroupintl.struct.Filter;
-
-public class AdditiveDataAggregator<T, U extends AdditiveDataHandler<T>> {
-	Block<U> block;
-	BlocksSupply<Block<U>> supply;
-	
-	public AdditiveDataAggregator(Block<U> block, BlocksSupply<Block<U>> supply) {
-		this.block = block;
-		this.supply = supply;
-	}
-	
-	public T get(Filter<EntryId> filter) {
-		FanoutBlocks<Block<U>> fanoutBlocks = this.block.getFanoutBlocks(this.supply, filter);
-		List<Block<U>> blocks = fanoutBlocks.getBlocks();
-		T result = this.block.getAttachedObject().getNewInstance();
-		for (Block<U> b : blocks) {
-			U dataHandler = b.getAttachedObject();
-			dataHandler.update(result);
-		}
-		return result;		
-	}
+public interface Child<T> {
+	T getParent();
 }

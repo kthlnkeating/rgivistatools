@@ -24,6 +24,7 @@ import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import com.raygroupintl.struct.Child;
 import com.raygroupintl.struct.Filter;
 import com.raygroupintl.struct.ObjectIdContainer;
 
@@ -49,20 +50,20 @@ import com.raygroupintl.struct.ObjectIdContainer;
  * @see com.raygroupintl.m.parsetree.visitor.BlockRecorder
  *           
  */
-public class Block<T> {
+public class Block<T> implements Child<Blocks<Block<T>>> {
 	private final static Logger LOGGER = Logger.getLogger(Block.class.getName());
 	private static Set<EntryId> reported = new HashSet<EntryId>();
 
 	private int index;
 	private EntryId entryId;
-	private Blocks<T> siblings;
+	private Blocks<Block<T>> siblings;
 	private List<Block<T>> children;
 	private T attachedObject;
 	
 	private List<IndexedFanout> fanouts = new ArrayList<IndexedFanout>();
 	private boolean closed;
 	
-	public Block(int index, EntryId entryId, Blocks<T> siblings, T attachedObject) {
+	public Block(int index, EntryId entryId, Blocks<Block<T>> siblings, T attachedObject) {
 		this.index = index;
 		this.entryId = entryId;
 		this.siblings = siblings;
@@ -120,11 +121,11 @@ public class Block<T> {
 		return null;
 	}
 	
-	public Block<T> getSiblingBlock(String tag) {
-		return this.siblings.get(tag);
+	public Blocks<Block<T>> getParent() {
+		return this.siblings;
 	}
 	
-	private void update(FanoutBlocks<Block<T>> fanoutBlocks, BlocksSupply<T> blocksSupply, Filter<EntryId> filter) {
+	private void update(FanoutBlocks<Block<T>> fanoutBlocks, BlocksSupply<Block<T>> blocksSupply, Filter<EntryId> filter) {
 		for (IndexedFanout ifout : this.fanouts) {
 			EntryId fout = ifout.getFanout();
 			if ((filter != null) && (! filter.isValid(fout))) continue;
@@ -157,7 +158,7 @@ public class Block<T> {
 				}
 				fanoutBlocks.add(this, tagBlock, ifout.getIndex());
 			} else {
-				Blocks<T> routineBlocks = blocksSupply.getBlocks(routineName);
+				Blocks<Block<T>> routineBlocks = blocksSupply.getBlocks(routineName);
 				String originalTagName = tagName;
 				if (routineBlocks == null) {
 					Map<String, String> replacedRoutines = blocksSupply.getReplacementRoutines();
@@ -196,7 +197,7 @@ public class Block<T> {
 		}
 	}
 	
-	private void updateFanoutBlocks(FanoutBlocks<Block<T>> fanoutBlocks, BlocksSupply<T> blocksSupply, Filter<EntryId> filter) {
+	private void updateFanoutBlocks(FanoutBlocks<Block<T>> fanoutBlocks, BlocksSupply<Block<T>> blocksSupply, Filter<EntryId> filter) {
 		int index = 0;	
 		while (index < fanoutBlocks.getSize()) {
 			Block<T> b = fanoutBlocks.getBlock(index);
@@ -205,13 +206,13 @@ public class Block<T> {
 		}		
 	}
 	
-	public FanoutBlocks<Block<T>> getFanoutBlocks(BlocksSupply<T> blocksSupply, ObjectIdContainer blockIdContainer, Filter<EntryId> filter) {
+	public FanoutBlocks<Block<T>> getFanoutBlocks(BlocksSupply<Block<T>> blocksSupply, ObjectIdContainer blockIdContainer, Filter<EntryId> filter) {
 		FanoutBlocks<Block<T>> fanoutBlocks = new FanoutBlocks<Block<T>>(this, blockIdContainer);
 		this.updateFanoutBlocks(fanoutBlocks, blocksSupply, filter);
 		return fanoutBlocks;
 	}
 	
-	public FanoutBlocks<Block<T>> getFanoutBlocks(BlocksSupply<T> blocksSupply, Filter<EntryId> filter) {
+	public FanoutBlocks<Block<T>> getFanoutBlocks(BlocksSupply<Block<T>> blocksSupply, Filter<EntryId> filter) {
 		FanoutBlocks<Block<T>> fanoutBlocks = new FanoutBlocks<Block<T>>(this, null);
 		this.updateFanoutBlocks(fanoutBlocks, blocksSupply, filter);
 		return fanoutBlocks;

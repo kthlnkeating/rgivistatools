@@ -27,7 +27,7 @@ import com.raygroupintl.vista.repository.RepositoryVisitor;
 import com.raygroupintl.vista.repository.VistaPackage;
 import com.raygroupintl.vista.repository.VistaPackages;
 
-public class BlocksInMap<T> extends BlocksSupply<T> {
+public class BlocksInMap<T> extends BlocksSupply<Block<T>> {
 	private final static Logger LOGGER = Logger.getLogger(BlocksInMap.class.getName());
 
 	private static class Factory<T> extends RepositoryVisitor {
@@ -50,7 +50,7 @@ public class BlocksInMap<T> extends BlocksSupply<T> {
 		@Override
 		public void visitRoutine(Routine routine) {
 			routine.accept(this.recorder);
-			Blocks<T> blocks = this.recorder.getBlocks();
+			Blocks<Block<T>> blocks = this.recorder.getBlocks();
 			this.blocksMap.put(routine.getName(), blocks);
 		}
 		
@@ -65,7 +65,7 @@ public class BlocksInMap<T> extends BlocksSupply<T> {
 		}
 	}
 
-	private Map<String, Blocks<T>> map = new HashMap<String, Blocks<T>>();
+	private Map<String, Blocks<Block<T>>> map = new HashMap<String, Blocks<Block<T>>>();
 	
 	public BlocksInMap() {
 		super();
@@ -75,12 +75,12 @@ public class BlocksInMap<T> extends BlocksSupply<T> {
 		super(replacementRoutines);
 	}
 	
-	public Blocks<T> put(String routineName,  Blocks<T> blocks) {
+	public Blocks<Block<T>> put(String routineName,  Blocks<Block<T>> blocks) {
 		return this.map.put(routineName, blocks);
 	}
 	
 	@Override
-	public Blocks<T> getBlocks(String routineName) {
+	public Blocks<Block<T>> getBlocks(String routineName) {
 		return this.map.get(routineName);
 	}
 		
@@ -96,7 +96,7 @@ public class BlocksInMap<T> extends BlocksSupply<T> {
 		for (Routine r : routines) {
 			br.reset();
 			r.accept(br);
-			Blocks<T> blocks = br.getBlocks();
+			Blocks<Block<T>> blocks = br.getBlocks();
 			result.put(r.getName(), blocks);
 		}
 		return result;

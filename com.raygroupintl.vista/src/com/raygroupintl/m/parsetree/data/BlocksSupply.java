@@ -19,7 +19,9 @@ package com.raygroupintl.m.parsetree.data;
 import java.util.Collections;
 import java.util.Map;
 
-public abstract class BlocksSupply<T> {
+import com.raygroupintl.struct.Child;
+
+public abstract class BlocksSupply<T extends Child<Blocks<T>>> {
 	Map<String, String> replacementRoutines = Collections.emptyMap();
 	
 	public BlocksSupply() {
@@ -31,7 +33,7 @@ public abstract class BlocksSupply<T> {
 	
 	public abstract Blocks<T> getBlocks(String routineName);
 	
-	public Block<T> getBlock(EntryId entryId) {
+	public T getBlock(EntryId entryId) {
 		String routineName = entryId.getRoutineName();
 		Blocks<T> rbs = this.getBlocks(routineName);
 		if (rbs != null) {

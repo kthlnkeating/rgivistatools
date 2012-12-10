@@ -20,6 +20,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import com.raygroupintl.m.parsetree.data.Block;
 import com.raygroupintl.m.parsetree.data.BlocksInMap;
 import com.raygroupintl.m.parsetree.data.BlocksInSerialRoutine;
 import com.raygroupintl.m.parsetree.data.BlocksSupply;
@@ -107,7 +108,7 @@ public abstract class EntryInfoTool extends Tool {
 		super(params);
 	}
 	
-	protected <T> BlocksSupply<T> getBlocksSupply(RepositoryInfo ri, BlockRecorderFactory<T> f) {
+	protected <T> BlocksSupply<Block<T>> getBlocksSupply(RepositoryInfo ri, BlockRecorderFactory<T> f) {
 		if ((this.params.parseTreeDirectory == null) || this.params.parseTreeDirectory.isEmpty()) {
 			return BlocksInMap.getInstance(f.getRecorder(), ri, REPLACEMENT_ROUTINES);
 		} else {

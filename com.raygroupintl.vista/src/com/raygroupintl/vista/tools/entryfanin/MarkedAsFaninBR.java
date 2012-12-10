@@ -38,7 +38,7 @@ public class MarkedAsFaninBR extends BlockRecorder<FaninMark> {
 	}
 	
 	@Override
-	protected Block<FaninMark> getNewBlock(int index, EntryId entryId, Blocks<FaninMark> blocks, String[] params) {
+	protected Block<FaninMark> getNewBlock(int index, EntryId entryId, Blocks<Block<FaninMark>> blocks, String[] params) {
 		return new Block<FaninMark>(index, entryId, blocks, new FaninMark(entryId));
 	}
 }

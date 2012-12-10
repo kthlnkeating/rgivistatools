@@ -15,9 +15,9 @@ import com.raygroupintl.struct.Indexed;
 
 public class EntryFaninsAggregator {
 	Block<FaninMark> block;
-	BlocksSupply<FaninMark> supply;
+	BlocksSupply<Block<FaninMark>> supply;
 	
-	public EntryFaninsAggregator(Block<FaninMark> block, BlocksSupply<FaninMark> supply) {
+	public EntryFaninsAggregator(Block<FaninMark> block, BlocksSupply<Block<FaninMark>> supply) {
 		this.block = block;
 		this.supply = supply;
 	}
@@ -31,7 +31,7 @@ public class EntryFaninsAggregator {
 			int faninId = System.identityHashCode(faninBlock);
 			PathPieceToEntry faninData = datas.get(faninId);
 			boolean alreadyVisited = faninData.exist();
-			int localChange = faninBlock.getAttachedObject().update(faninData, data, ib.getIndex());
+			int localChange = faninBlock.getAttachedObject().update(faninData, data);
 			if ((localChange > 0) && ! alreadyVisited) {
 				this.updateFaninData(faninData, faninBlock, fanoutBlocks, datas);
 			}
@@ -63,7 +63,7 @@ public class EntryFaninsAggregator {
 			int id = System.identityHashCode(b);
 			PathPieceToEntry data = datas.get(id);
 			if ((! data.exist()) && b.getAttachedObject().isFanin()) {
-				b.getAttachedObject().update(data, data, b.getIndex());
+				b.getAttachedObject().update(data, data);
 				this.updateFaninData(data, b, fanoutBlocks, datas);
 			}
 		}

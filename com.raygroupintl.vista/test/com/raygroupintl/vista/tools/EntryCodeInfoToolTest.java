@@ -58,7 +58,7 @@ public class EntryCodeInfoToolTest {
 	}
 		
 	private void testAssumedLocal(BlocksInMap<CodeInfo> blocksMap, String routineName, String tag, String[] expectedAssumeds, String[] expectedGlobals) {
-		Blocks<CodeInfo> rbs = blocksMap.getBlocks(routineName);
+		Blocks<Block<CodeInfo>> rbs = blocksMap.getBlocks(routineName);
 		Block<CodeInfo> lb = rbs.get(tag);
 		RecursiveDataAggregator<Set<String>, CodeInfo> ala = new RecursiveDataAggregator<Set<String>, CodeInfo>(lb, blocksMap);
 		Set<String> assumeds = ala.get(new DataStore<Set<String>>(), new PassFilter<EntryId>());
@@ -77,7 +77,7 @@ public class EntryCodeInfoToolTest {
 	}
 	
 	private void filemanTest(BlocksInMap<CodeInfo> blocksMap, String routineName, String tag, String[] expectedGlobals, String[] expectedCalls) {
-		Blocks<CodeInfo> rbs = blocksMap.getBlocks(routineName);
+		Blocks<Block<CodeInfo>> rbs = blocksMap.getBlocks(routineName);
 		Block<CodeInfo> lb = rbs.get(tag);
 		AdditiveDataAggregator<BasicCodeInfo, CodeInfo> bcia = new AdditiveDataAggregator<BasicCodeInfo, CodeInfo>(lb, blocksMap);
 		BasicCodeInfo apiData = bcia.get(new PassFilter<EntryId>());

@@ -25,9 +25,9 @@ import com.raygroupintl.struct.Indexed;
 
 public class RecursiveDataAggregator<T, U extends RecursiveDataHandler<T>> {
 	Block<U> block;
-	BlocksSupply<U> supply;
+	BlocksSupply<Block<U>> supply;
 	
-	public RecursiveDataAggregator(Block<U> block, BlocksSupply<U> supply) {
+	public RecursiveDataAggregator(Block<U> block, BlocksSupply<Block<U>> supply) {
 		this.block = block;
 		this.supply = supply;
 	}

@@ -23,6 +23,7 @@ import java.util.List;
 import java.util.Map;
 
 import com.raygroupintl.m.parsetree.Routine;
+import com.raygroupintl.m.parsetree.data.Block;
 import com.raygroupintl.m.parsetree.data.BlocksSupply;
 import com.raygroupintl.m.parsetree.data.EntryId;
 import com.raygroupintl.output.FileWrapper;
@@ -141,7 +142,7 @@ public class RepositoryTools extends Tools {
 		public List<ToolResult> getResult(final RepositoryInfo ri, List<EntryId> entries) {
 			List<ToolResult> resultList = new ArrayList<ToolResult>();
 			for (EntryId entryId : entries) {
-				BlocksSupply<FaninMark> blocksSupply = this.getBlocksSupply(ri, new MarkedAsFaninBRF(entryId));		
+				BlocksSupply<Block<FaninMark>> blocksSupply = this.getBlocksSupply(ri, new MarkedAsFaninBRF(entryId));		
 				final EntryFaninAccumulator efit = new EntryFaninAccumulator(entryId, blocksSupply);
 				FilterFactory<EntryId, EntryId> filterFactory = new FilterFactory<EntryId, EntryId>() {
 					@Override

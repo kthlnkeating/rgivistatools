@@ -23,9 +23,9 @@ import com.raygroupintl.m.parsetree.Routine;
 import com.raygroupintl.m.parsetree.visitor.BlockRecorder;
 import com.raygroupintl.m.parsetree.visitor.BlockRecorderFactory;
 
-public class BlocksInSerialRoutine<T> extends BlocksSupply<T> {
+public class BlocksInSerialRoutine<T> extends BlocksSupply<Block<T>> {
 	private String inputPath;
-	private HashMap<String, Blocks<T>> blocks = new HashMap<String, Blocks<T>>();
+	private HashMap<String, Blocks<Block<T>>> blocks = new HashMap<String, Blocks<Block<T>>>();
 	private BlockRecorderFactory<T> blockRecorder;
 	
 	public BlocksInSerialRoutine(String inputPath, BlockRecorderFactory<T> brf, Map<String, String> replacementRoutines) {
@@ -35,9 +35,9 @@ public class BlocksInSerialRoutine<T> extends BlocksSupply<T> {
 	}
 	
 	@Override
-	public Blocks<T> getBlocks(String routineName) {
+	public Blocks<Block<T>> getBlocks(String routineName) {
 		if (! this.blocks.containsKey(routineName)) {			
-			Blocks<T> result = null;
+			Blocks<Block<T>> result = null;
 			Routine routine = Routine.readSerialized(this.inputPath, routineName);
 			if (routine != null) {
 				BlockRecorder<T> recorder = this.blockRecorder.getRecorder();

@@ -39,7 +39,7 @@ public class EntryCodeInfoTool extends EntryInfoTool {
 		super(params);
 	}
 	
-	public ToolResult getResult(DataStore<Set<String>> store, BlocksSupply<CodeInfo> blocksSupply, EntryId entryId, Filter<EntryId> filter) {
+	public ToolResult getResult(DataStore<Set<String>> store, BlocksSupply<Block<CodeInfo>> blocksSupply, EntryId entryId, Filter<EntryId> filter) {
 		Block<CodeInfo> b = blocksSupply.getBlock(entryId);
 		if (b != null) {
 			RecursiveDataAggregator<Set<String>, CodeInfo> ala = new RecursiveDataAggregator<Set<String>, CodeInfo>(b, blocksSupply);
@@ -54,7 +54,7 @@ public class EntryCodeInfoTool extends EntryInfoTool {
 	
 	public List<ToolResult> getResult(RepositoryInfo ri, List<EntryId> entries) {
 		DataStore<Set<String>> store = new DataStore<Set<String>>();					
-		BlocksSupply<CodeInfo> blocksSupply = this.getBlocksSupply(ri, new EntryCodeInfoRecorderFactory(ri));
+		BlocksSupply<Block<CodeInfo>> blocksSupply = this.getBlocksSupply(ri, new EntryCodeInfoRecorderFactory(ri));
 		List<ToolResult> resultList = new ArrayList<ToolResult>();
 		for (EntryId entryId : entries) {
 			Filter<EntryId> filter = this.getFilter(ri, entryId);

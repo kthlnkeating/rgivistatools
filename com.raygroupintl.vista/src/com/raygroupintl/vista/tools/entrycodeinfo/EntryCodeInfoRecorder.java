@@ -267,7 +267,7 @@ public class EntryCodeInfoRecorder extends BlockRecorder<CodeInfo> {
 	}
 
 	@Override
-	protected Block<CodeInfo> getNewBlock(int index, EntryId entryId, Blocks<CodeInfo> blocks, String[] params) {
+	protected Block<CodeInfo> getNewBlock(int index, EntryId entryId, Blocks<Block<CodeInfo>> blocks, String[] params) {
 		Block<CodeInfo> result = new Block<CodeInfo>(index, entryId, blocks, new CodeInfo());
 		result.getAttachedObject().setFormals(params);
 		return result;

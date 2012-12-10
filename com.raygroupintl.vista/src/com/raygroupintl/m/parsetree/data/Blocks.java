@@ -20,14 +20,16 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
 
-public class Blocks<T> {
-	private Map<String, Block<T>> blocks = new HashMap<String, Block<T>>();
-	private Block<T> parent;
+import com.raygroupintl.struct.Child;
+
+public class Blocks<T extends Child<Blocks<T>>> {
+	private Map<String, T> blocks = new HashMap<String, T>();
+	private T parent;
 	
 	public Blocks() {		
 	}
 	
-	public Blocks(Block<T> parent) {
+	public Blocks(T parent) {
 		this.parent = parent;
 	}
 	
@@ -35,16 +37,21 @@ public class Blocks<T> {
 		return this.blocks.keySet();
 	}
 	
-	public Block<T> get(String name) {
-		Block<T> result = this.blocks.get(name);
+	public T get(String name) {
+		T result = this.blocks.get(name);
 		if ((result == null) && (this.parent != null)) {
-			return this.parent.getSiblingBlock(name);
+			Blocks<T> grandParent = this.parent.getParent();
+			if (grandParent != null) {
+				return grandParent.get(name);
+			} else {
+				return null;
+			}
 		} else {
 			return result;
 		}
 	}
 	
-	public void put(String name, Block<T> block) {
+	public void put(String name, T block) {
 		this.blocks.put(name, block);
 	}
 }

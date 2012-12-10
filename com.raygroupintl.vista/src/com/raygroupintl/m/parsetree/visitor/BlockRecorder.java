@@ -30,7 +30,7 @@ import com.raygroupintl.m.parsetree.data.CallArgument;
 import com.raygroupintl.m.parsetree.data.EntryId;
 
 public abstract class BlockRecorder<T> extends FanoutRecorder {
-	private Blocks<T> currentBlocks;
+	private Blocks<Block<T>> currentBlocks;
 	
 	private Block<T> currentBlock;
 	private String currentRoutineName;
@@ -73,7 +73,7 @@ public abstract class BlockRecorder<T> extends FanoutRecorder {
 		} 
 	}
 
-	protected abstract Block<T> getNewBlock(int index, EntryId entryId, Blocks<T> blocks, String[] params);
+	protected abstract Block<T> getNewBlock(int index, EntryId entryId, Blocks<Block<T>> blocks, String[] params);
  	
 	@Override
 	protected void visitDeadCmds(DeadCmds deadCmds) {
@@ -123,10 +123,10 @@ public abstract class BlockRecorder<T> extends FanoutRecorder {
 		if (! this.doBlockHash.contains(id)) {
 			doBlockHash.add(id);
 			doBlock.acceptPostCondition(this);
-			Blocks<T> lastBlocks = this.currentBlocks;
+			Blocks<Block<T>> lastBlocks = this.currentBlocks;
 			Block<T> lastBlock = this.currentBlock;
 			this.currentBlock = null;
-			this.currentBlocks = new Blocks<T>(lastBlock);
+			this.currentBlocks = new Blocks<Block<T>>(lastBlock);
 			doBlock.acceptEntryList(this);
 			String tag = entryList.getName();
 			Block<T> firstBlock = this.currentBlocks.get(tag);
@@ -140,7 +140,7 @@ public abstract class BlockRecorder<T> extends FanoutRecorder {
 		}
 	}
 	
-	public Blocks<T> getBlocks() {
+	public Blocks<Block<T>> getBlocks() {
 		return this.currentBlocks;
 	}
 	
@@ -155,7 +155,7 @@ public abstract class BlockRecorder<T> extends FanoutRecorder {
 	@Override
 	protected void visitRoutine(Routine routine) {
 		this.reset();
-		this.currentBlocks = new Blocks<T>();
+		this.currentBlocks = new Blocks<Block<T>>();
 		this.currentRoutineName = routine.getName();
 		super.visitRoutine(routine);
 	}

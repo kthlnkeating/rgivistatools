@@ -31,11 +31,11 @@ import com.raygroupintl.struct.PassFilter;
 
 public class EntryFaninAccumulator  {
 	private EntryId entryUnderTest;
-	private BlocksSupply<FaninMark> blocksSupply;
+	private BlocksSupply<Block<FaninMark>> blocksSupply;
 	private DataStore<PathPieceToEntry> store = new DataStore<PathPieceToEntry>();					
 	private FilterFactory<EntryId, EntryId> filterFactory = new ConstFilterFactory<EntryId, EntryId>(new PassFilter<EntryId>());
 	
-	public EntryFaninAccumulator(EntryId entryUnderTest, BlocksSupply<FaninMark> blocksSupply) {
+	public EntryFaninAccumulator(EntryId entryUnderTest, BlocksSupply<Block<FaninMark>> blocksSupply) {
 		this.entryUnderTest = entryUnderTest;
 		this.blocksSupply = blocksSupply;
 	}
