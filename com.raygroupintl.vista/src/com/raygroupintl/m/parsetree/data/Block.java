@@ -17,6 +17,7 @@
 package com.raygroupintl.m.parsetree.data;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
@@ -121,6 +122,14 @@ public class Block<T> implements Child<Blocks<Block<T>>> {
 		return null;
 	}
 	
+	public List<Block<T>> getChildren() {
+		if (this.children == null) {
+			return Collections.emptyList();
+		} else {
+			return this.children;
+		}
+	}
+	
 	public Blocks<Block<T>> getParent() {
 		return this.siblings;
 	}
@@ -193,6 +202,33 @@ public class Block<T> implements Child<Blocks<Block<T>>> {
 					}
 				}
 				fanoutBlocks.add(this, tagBlock, ifout.getIndex());
+			}				 
+		}
+	}
+	
+	public void updateLocals(Set<Integer> localEntries, Filter<EntryId> filter) {
+		for (IndexedFanout ifout : this.fanouts) {
+			EntryId fout = ifout.getFanout();
+			if ((filter != null) && (! filter.isValid(fout))) continue;
+			String routineName = fout.getRoutineName();
+			String tagName = fout.getTag();					
+			if (tagName == null) {
+				tagName = routineName;
+			}			
+			if (routineName == null) {				
+				Block<T> tagBlock = this.getChildBlock(tagName);
+				if (tagBlock == null) {
+					tagBlock = this.siblings.get(tagName);
+				}
+				if (tagBlock != null) {
+					if (tagBlock.getParent().getParent() != null) {
+						Integer id = System.identityHashCode(tagBlock);
+						if (! localEntries.contains(id)) {
+							localEntries.add(id);
+							tagBlock.updateLocals(localEntries, filter);
+						}
+					}
+				} 			
 			}				 
 		}
 	}

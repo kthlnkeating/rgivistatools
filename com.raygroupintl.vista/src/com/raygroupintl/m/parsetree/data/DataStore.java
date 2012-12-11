@@ -34,6 +34,14 @@ public class DataStore<T> implements ObjectIdContainer {
 		return this.map.get(id);
 	}
 	
+	public T remove(Integer id) {
+		return this.map.remove(id);
+	}
+	
+	public T get(Integer id) {
+		return this.map.get(id);
+	}
+	
 	public boolean contains(int id) {
 		return this.map.containsKey(id);				
 	}

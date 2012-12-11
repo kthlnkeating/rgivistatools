@@ -31,7 +31,7 @@ import com.raygroupintl.vista.repository.RepositoryInfo;
 import com.raygroupintl.vista.tools.fnds.ToolResult;
 
 public abstract class EntryInfoTool extends Tool {
-	private static Map<String, String> REPLACEMENT_ROUTINES = new HashMap<String, String>();
+	public static Map<String, String> REPLACEMENT_ROUTINES = new HashMap<String, String>();
 	static {
 		REPLACEMENT_ROUTINES.put("%ZOSV", "ZOSVONT");
 		REPLACEMENT_ROUTINES.put("%ZIS4", "ZIS4ONT");

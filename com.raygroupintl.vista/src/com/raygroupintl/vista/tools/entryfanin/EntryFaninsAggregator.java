@@ -77,10 +77,22 @@ public class EntryFaninsAggregator {
 		
 	public PathPieceToEntry get(DataStore<PathPieceToEntry> store, Filter<EntryId> filter) {
 		PathPieceToEntry result = store.get(this.block);
-		if (result != null) {
-			return result;
+		if (result == null) {
+			FanoutBlocks<Block<FaninMark>> fanoutBlocks = this.block.getFanoutBlocks(this.supply, store, filter);
+			result = this.get(fanoutBlocks, store);
 		}
-		FanoutBlocks<Block<FaninMark>> fanoutBlocks = this.block.getFanoutBlocks(this.supply, store, filter);
-		return this.get(fanoutBlocks, store);
+		//Set<Integer> localEntries = new HashSet<Integer>();
+		//this.block.updateLocals(localEntries, filter);
+		//Set<EntryId> tobeRemoved = new HashSet<EntryId>();
+		//for (Integer id : localEntries) {
+		//	PathPieceToEntry lp = store.get(id);
+		//	if (lp != null) {
+		//		result.copy(lp);
+		//		tobeRemoved.add(lp.getStartEntry());
+		//	}
+		//	store.remove(id);
+		//}
+		//result.remove(tobeRemoved);		
+		return result;
 	}
 }

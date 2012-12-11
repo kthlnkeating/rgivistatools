@@ -44,6 +44,7 @@ import com.raygroupintl.vista.repository.visitor.FanoutWriter;
 import com.raygroupintl.vista.repository.visitor.OptionWriter;
 import com.raygroupintl.vista.repository.visitor.RPCWriter;
 import com.raygroupintl.vista.repository.visitor.SerializedRoutineWriter;
+import com.raygroupintl.vista.tools.entryfanin.BlocksInSerialFanouts;
 import com.raygroupintl.vista.tools.entryfanin.EntryFaninAccumulator;
 import com.raygroupintl.vista.tools.entryfanin.MarkedAsFaninBRF;
 import com.raygroupintl.vista.tools.entryfanin.FaninMark;
@@ -139,10 +140,21 @@ public class RepositoryTools extends Tools {
 			super(params);
 		}
 		
+		private BlocksSupply<Block<FaninMark>> getSupply(EntryId entryId, RepositoryInfo ri) {
+			String method = this.params.getMethod("routinefile");
+			if (method.equalsIgnoreCase("fanoutfile")) {
+				BlocksSupply<Block<FaninMark>> blocksSupply = new BlocksInSerialFanouts(entryId, this.params.parseTreeDirectory, EntryInfoTool.REPLACEMENT_ROUTINES);		
+				return blocksSupply;
+			} else {
+				BlocksSupply<Block<FaninMark>> blocksSupply = this.getBlocksSupply(ri, new MarkedAsFaninBRF(entryId));		
+				return blocksSupply;
+			}
+		}
+		
 		public List<ToolResult> getResult(final RepositoryInfo ri, List<EntryId> entries) {
 			List<ToolResult> resultList = new ArrayList<ToolResult>();
 			for (EntryId entryId : entries) {
-				BlocksSupply<Block<FaninMark>> blocksSupply = this.getBlocksSupply(ri, new MarkedAsFaninBRF(entryId));		
+				BlocksSupply<Block<FaninMark>> blocksSupply = this.getSupply(entryId, ri);
 				final EntryFaninAccumulator efit = new EntryFaninAccumulator(entryId, blocksSupply);
 				FilterFactory<EntryId, EntryId> filterFactory = new FilterFactory<EntryId, EntryId>() {
 					@Override

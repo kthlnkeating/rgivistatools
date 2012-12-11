@@ -14,32 +14,14 @@
 // limitations under the License.
 //---------------------------------------------------------------------------
 
-package com.raygroupintl.vista.tools.entryfanout;
+package com.raygroupintl.vista.tools.fnds;
 
-import java.io.Serializable;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Set;
-
+import com.raygroupintl.m.parsetree.Routine;
 import com.raygroupintl.m.parsetree.data.EntryId;
+import com.raygroupintl.struct.FilterFactory;
 
-public class RoutineFanouts implements Serializable {
-	private static final long serialVersionUID = 1L;
-
-	private Map<String, Set<EntryId>> fanouts = new HashMap<String, Set<EntryId>>();
-	
-	public RoutineFanouts() {
-	}
-
-	public Set<EntryId> put(String tag, Set<EntryId> fanouts) {
-		return this.fanouts.put(tag, fanouts);
-	}
-	
-	public Set<String> getRoutineEntryTags() {
-		return this.fanouts.keySet();
-	}
-	
-	public Set<EntryId> getFanouts(String tag) {
-		return this.fanouts.get(tag);
-	}
+public interface AccumulatorOnRoutine {
+	void setFilterFactory(FilterFactory<EntryId, EntryId> filterFactory);
+	void addRoutine(Routine routine);
+	ToolResult getResult();
 }

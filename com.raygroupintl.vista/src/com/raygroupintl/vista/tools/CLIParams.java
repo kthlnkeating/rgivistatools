@@ -66,6 +66,9 @@ public class CLIParams {
 	
 	@CLIParameter(names={"--rawformat"})
 	public boolean rawFormat;
+	
+	@CLIParameter(names={"--method"})
+	public String method;
 			
 	private static void logError(String msg) {
 		Logger logger = Logger.getLogger(MRoutineAnalyzer.class.getName());		
@@ -111,5 +114,13 @@ public class CLIParams {
 			this.positionals.remove(0);
 		}
 	}
+	
+	public String getMethod(String defaultMethod) {
+		if ((this.method == null) || this.method.isEmpty()) {
+			return defaultMethod;
+		} else {
+			return this.method;
+		}
+ 	}
 }
 

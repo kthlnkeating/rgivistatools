@@ -16,6 +16,7 @@
 
 package com.raygroupintl.m.parsetree.data;
 
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
@@ -37,6 +38,14 @@ public class Blocks<T extends Child<Blocks<T>>> {
 		return this.blocks.keySet();
 	}
 	
+	public Collection<T> getBlocks() {
+		return this.blocks.values();
+	}
+	
+	public T get2(String name) {
+		return this.blocks.get(name);
+	}
+	
 	public T get(String name) {
 		T result = this.blocks.get(name);
 		if ((result == null) && (this.parent != null)) {
@@ -53,5 +62,9 @@ public class Blocks<T extends Child<Blocks<T>>> {
 	
 	public void put(String name, T block) {
 		this.blocks.put(name, block);
+	}
+	
+	public T getParent() {
+		return this.parent;
 	}
 }

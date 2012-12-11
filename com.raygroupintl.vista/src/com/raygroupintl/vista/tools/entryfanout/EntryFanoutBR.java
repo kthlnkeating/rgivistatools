@@ -37,18 +37,32 @@ public class EntryFanoutBR extends BlockRecorder<Void> {
 		return new Block<Void>(index, entryId, blocks, null);
 	}
 	
-	private Set<EntryId> getBlockFanouts(Block<Void> b) {
+	private Set<EntryId> getBlockFanouts(Block<Void> b, String routineName, Blocks<Block<Void>> siblings, Set<String> parentAlready) {
 		Set<EntryId> r = new HashSet<EntryId>();
 		List<EntryId> fs = b.getFanouts();
 		for (EntryId f : fs) {
-			String label = f.getLabelOrDefault();
-			Block<Void> cb = b.getChildBlock(label);
-			if (cb != null) {
-				Set<EntryId> cr = this.getBlockFanouts(cb); 
-				r.addAll(cr);
-			} else {
-				r.add(f);
+			String rname = f.getRoutineName();
+			if ((rname == null) || rname.equals(routineName)) {
+				String label = f.getLabelOrDefault();
+				Block<Void> cb = b.getChildBlock(label);
+				if (cb != null) {
+					Set<String> already = new HashSet<String>();
+					already.add(label);
+					Set<EntryId> cr = this.getBlockFanouts(cb, routineName, cb.getParent(), already); 
+					r.addAll(cr);				
+					continue;
+				} 
+				if ((siblings != null)) {
+					Block<Void> sb = siblings.get2(label);
+					if ((sb != null)  && (! parentAlready.contains(label))) {
+						parentAlready.add(label);
+						Set<EntryId> sr = this.getBlockFanouts(sb, routineName, siblings, parentAlready); 
+						r.addAll(sr);				
+						continue;
+					}
+				}
 			}
+			r.add(f);
 		}		
 		return r;
 	}
@@ -58,9 +72,10 @@ public class EntryFanoutBR extends BlockRecorder<Void> {
 		Blocks<Block<Void>> bs = super.getBlocks();
 		RoutineFanouts result = new RoutineFanouts();
 		Set<String> tags = bs.getTags();
+		String routineName = routine.getName();
 		for (String tag : tags) {
 			Block<Void> b = bs.get(tag);
-			Set<EntryId> bfouts = this.getBlockFanouts(b);
+			Set<EntryId> bfouts = this.getBlockFanouts(b, routineName, null, null);
 			result.put(tag, bfouts);
 		}		
 		return result;		

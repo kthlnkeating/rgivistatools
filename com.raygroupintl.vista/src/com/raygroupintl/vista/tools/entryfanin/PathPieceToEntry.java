@@ -16,6 +16,7 @@
 
 package com.raygroupintl.vista.tools.entryfanin;
 
+import java.util.Set;
 import java.util.SortedSet;
 import java.util.TreeSet;
 
@@ -50,5 +51,25 @@ public class PathPieceToEntry {
 			return true;
 		}
 		return false;
+	}
+	
+	public void copy(PathPieceToEntry p) {
+		if (p.nexts != null) {
+			this.nexts.addAll(p.nexts);
+		}
+	}
+	
+	public void remove(Set<EntryId> eids) {
+		if (this.nexts != null) {
+			this.nexts.removeAll(eids);
+		}
+	}	
+	
+	void shortCut(PathPieceToEntry continuationPath) {
+		EntryId continuation = continuationPath.getStartEntry();
+		if ((this.nexts != null) && this.nexts.contains(continuation)) {
+			this.nexts.remove(continuation);
+			this.nexts.addAll(continuationPath.getNextEntries());
+		}
 	}
 }
