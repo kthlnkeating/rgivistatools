@@ -257,4 +257,8 @@ public class Block<T> implements Child<Blocks<Block<T>>> {
 	public T getAttachedObject() {
 		return this.attachedObject;
 	}
+	
+	public boolean isInternal() {
+		return this.getParent().getParent() != null;
+	}
 }

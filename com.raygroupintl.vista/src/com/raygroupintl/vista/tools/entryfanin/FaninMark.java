@@ -16,6 +16,8 @@
 
 package com.raygroupintl.vista.tools.entryfanin;
 
+import java.util.Set;
+
 import com.raygroupintl.m.parsetree.data.EntryId;
 
 public class FaninMark {
@@ -38,19 +40,30 @@ public class FaninMark {
 		return new PathPieceToEntry(this.startNode);
 	}
 	
-	public int update(PathPieceToEntry target, PathPieceToEntry source) {
-		int changeCount = 0;
-		if (source.exist()) {
-			EntryId sourceStart = source.getStartEntry();
-			if (target.add(sourceStart)) {
-				++changeCount;
-			}
-		} 
+	public void initialize(PathPieceToEntry target) {
 		if (this.endNode != null) {
 			if (target.add(this.endNode)) {
-				++changeCount;
 			}
 		}
+	}
+	
+	public int update(PathPieceToEntry target, PathPieceToEntry source, boolean fromLocalBlock) {
+		int changeCount = 0;
+		if (source.exist()) {
+			if (fromLocalBlock) {
+				Set<EntryId> ids = source.getNextEntries();
+				for (EntryId id : ids) {
+					if (target.add(id)) {
+						++changeCount;
+					}					
+				}
+			} else {
+				EntryId sourceStart = source.getStartEntry();
+				if (target.add(sourceStart)) {
+					++changeCount;
+				}
+			}
+		} 
 		return changeCount;
 	}
 }

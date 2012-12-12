@@ -35,10 +35,12 @@ public class EntryFaninAccumulator implements AccumulatorOnRoutine  {
 	private BlocksSupply<Block<FaninMark>> blocksSupply;
 	private DataStore<PathPieceToEntry> store = new DataStore<PathPieceToEntry>();					
 	private FilterFactory<EntryId, EntryId> filterFactory = new ConstFilterFactory<EntryId, EntryId>(new PassFilter<EntryId>());
+	private boolean filterInternalBlocks;
 	
-	public EntryFaninAccumulator(EntryId entryUnderTest, BlocksSupply<Block<FaninMark>> blocksSupply) {
+	public EntryFaninAccumulator(EntryId entryUnderTest, BlocksSupply<Block<FaninMark>> blocksSupply, boolean filterInternalBlocks) {
 		this.entryUnderTest = entryUnderTest;
 		this.blocksSupply = blocksSupply;
+		this.filterInternalBlocks = filterInternalBlocks;
 	}
 	
 	@Override
@@ -53,7 +55,7 @@ public class EntryFaninAccumulator implements AccumulatorOnRoutine  {
 			Filter<EntryId> filter = this.filterFactory.getFilter(routineEntryTag);
 			Block<FaninMark> b = this.blocksSupply.getBlock(routineEntryTag);
 			if (b != null) {
-				EntryFaninsAggregator ag = new EntryFaninsAggregator(b, this.blocksSupply);
+				EntryFaninsAggregator ag = new EntryFaninsAggregator(b, this.blocksSupply, this.filterInternalBlocks);
 				ag.get(store, filter);
 			}
 		}		

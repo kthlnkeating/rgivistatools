@@ -14,12 +14,14 @@ import com.raygroupintl.struct.Filter;
 import com.raygroupintl.struct.Indexed;
 
 public class EntryFaninsAggregator {
-	Block<FaninMark> block;
-	BlocksSupply<Block<FaninMark>> supply;
+	private Block<FaninMark> block;
+	private BlocksSupply<Block<FaninMark>> supply;
+	private boolean filterInternalBlocks;
 	
-	public EntryFaninsAggregator(Block<FaninMark> block, BlocksSupply<Block<FaninMark>> supply) {
+	public EntryFaninsAggregator(Block<FaninMark> block, BlocksSupply<Block<FaninMark>> supply, boolean filterInternalBlocks) {
 		this.block = block;
 		this.supply = supply;
+		this.filterInternalBlocks = filterInternalBlocks;
 	}
 	
 	private int updateFaninData(PathPieceToEntry data, Block<FaninMark> b, FanoutBlocks<Block<FaninMark>> fanoutBlocks, Map<Integer, PathPieceToEntry> datas) {
@@ -30,9 +32,10 @@ public class EntryFaninsAggregator {
 			Block<FaninMark> faninBlock = ib.getObject();
 			int faninId = System.identityHashCode(faninBlock);
 			PathPieceToEntry faninData = datas.get(faninId);
-			boolean alreadyVisited = faninData.exist();
-			int localChange = faninBlock.getAttachedObject().update(faninData, data);
-			if ((localChange > 0) && ! alreadyVisited) {
+			boolean alreadyVisited = false; //faninData.exist();
+			boolean useInternal = this.filterInternalBlocks && b.isInternal();
+			int localChange = faninBlock.getAttachedObject().update(faninData, data, useInternal);
+			if ((localChange > 0) && (useInternal || ! alreadyVisited)) {
 				this.updateFaninData(faninData, faninBlock, fanoutBlocks, datas);
 			}
 		}		
@@ -63,13 +66,15 @@ public class EntryFaninsAggregator {
 			int id = System.identityHashCode(b);
 			PathPieceToEntry data = datas.get(id);
 			if ((! data.exist()) && b.getAttachedObject().isFanin()) {
-				b.getAttachedObject().update(data, data);
+				b.getAttachedObject().initialize(data);
 				this.updateFaninData(data, b, fanoutBlocks, datas);
 			}
 		}
 					
 		for (Block<FaninMark> bi : blocks) {
-			store.put(bi, datas);
+			if (! (bi.isInternal() && this.filterInternalBlocks)) {
+				store.put(bi, datas);
+			}
 		}
 		Block<FaninMark> b = blocks.get(0);
 		return store.put(b, datas);
@@ -81,18 +86,6 @@ public class EntryFaninsAggregator {
 			FanoutBlocks<Block<FaninMark>> fanoutBlocks = this.block.getFanoutBlocks(this.supply, store, filter);
 			result = this.get(fanoutBlocks, store);
 		}
-		//Set<Integer> localEntries = new HashSet<Integer>();
-		//this.block.updateLocals(localEntries, filter);
-		//Set<EntryId> tobeRemoved = new HashSet<EntryId>();
-		//for (Integer id : localEntries) {
-		//	PathPieceToEntry lp = store.get(id);
-		//	if (lp != null) {
-		//		result.copy(lp);
-		//		tobeRemoved.add(lp.getStartEntry());
-		//	}
-		//	store.remove(id);
-		//}
-		//result.remove(tobeRemoved);		
 		return result;
 	}
 }

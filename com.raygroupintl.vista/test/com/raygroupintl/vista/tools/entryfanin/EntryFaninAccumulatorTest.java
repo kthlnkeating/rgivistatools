@@ -48,7 +48,8 @@ public class EntryFaninAccumulatorTest {
 		MarkedAsFaninBR recorder = new MarkedAsFaninBR(entryId);
 		Map<String, String> emptyMap = Collections.emptyMap();
 		BlocksInMap<FaninMark> blocksMap = BlocksInMap.getInstance(recorder, routines, emptyMap);
-		EntryFaninAccumulator accumulator = new EntryFaninAccumulator(entryId, blocksMap);
+		
+		EntryFaninAccumulator accumulator = new EntryFaninAccumulator(entryId, blocksMap, false);
 		for (Routine r : routines) {
 			accumulator.addRoutine(r);
 		}
@@ -70,5 +71,26 @@ public class EntryFaninAccumulatorTest {
 		this.checkResult(fanins, "TESTINDO^FINROU04", new String[]{":5^FINROU04"});
 		this.checkResult(fanins, ":5^FINROU04", new String[]{"OTHER^FINROU02"});
 		this.checkResult(fanins, "OTHER^FINROU02", new String[]{"ADD^FINROU00"});
+		
+		EntryFaninAccumulator accumulator2 = new EntryFaninAccumulator(entryId, blocksMap, true);
+		for (Routine r : routines) {
+			accumulator2.addRoutine(r);
+		}
+		EntryFanins fanins2 = accumulator2.getResult();
+		Set<EntryId> s2 = fanins2.getFaninEntries();
+		Assert.assertEquals(13, s2.size());
+		this.checkResult(fanins2, "FINROU01^FINROU01", new String[]{"ADD^FINROU00"});
+		this.checkResult(fanins2, "ADDALL^FINROU01", new String[]{"ADD^FINROU00"});
+		this.checkResult(fanins2, "CONDADD^FINROU01", new String[]{"CONDADD2^FINROU01"});
+		this.checkResult(fanins2, "CONDADD2^FINROU01", new String[]{"ADD^FINROU00"});
+		this.checkResult(fanins2, "MULTAALL^FINROU01", new String[]{"MULTADD^FINROU00"});
+		this.checkResult(fanins2, "ADD^FINROU02", new String[]{"ADDALL^FINROU01"});
+		this.checkResult(fanins2, "ADD2^FINROU02", new String[]{"ADD^FINROU02"});
+		this.checkResult(fanins2, "MULTADD^FINROU00", new String[]{"ADD^FINROU00"});
+		this.checkResult(fanins2, "FINROU03^FINROU03", new String[]{"TESTINDO^FINROU03"});
+		this.checkResult(fanins2, "TESTINDO^FINROU03", new String[]{"ADD^FINROU00"});
+		this.checkResult(fanins2, "FINROU04^FINROU04", new String[]{"TESTINDO^FINROU04"});
+		this.checkResult(fanins2, "TESTINDO^FINROU04", new String[]{"OTHER^FINROU02"});
+		this.checkResult(fanins2, "OTHER^FINROU02", new String[]{"ADD^FINROU00"});
 	}
 }
