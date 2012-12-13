@@ -29,6 +29,15 @@ public class ToolResultCollection<T extends ToolResult> implements ToolResult {
 		this.content.add(toolResult);
 	}
 	
+	public T getLast() {
+		int size = this.content.size();
+		if(size > 0) {
+			return this.content.get(size-1);
+		} else {
+			return null;
+		}
+	}
+	
 	@Override
 	public void write(Terminal t, TerminalFormatter tf) {
 		for (T eci : this.content) {

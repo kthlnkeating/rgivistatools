@@ -31,7 +31,7 @@ public class EntryCodeInfoAccumulator {
 		this.filterFactory = filterFactory;
 	}
 	
-	public void addEntry(EntryId entryId) {
+	public EntryCodeInfo findForEntry(EntryId entryId) {
 		Block<CodeInfo> b = blocksSupply.getBlock(entryId);
 		if (b != null) {
 			Filter<EntryId> filter = this.filterFactory.getFilter(entryId);
@@ -39,10 +39,15 @@ public class EntryCodeInfoAccumulator {
 			Set<String> assumedLocals = ala.get(store, filter);
 			AdditiveDataAggregator<BasicCodeInfo, CodeInfo> bcia = new AdditiveDataAggregator<BasicCodeInfo, CodeInfo>(b, blocksSupply);
 			BasicCodeInfo apiData = bcia.get(filter);
-			this.results.add(new EntryCodeInfo(entryId, b.getAttachedObject().getFormals(), assumedLocals, apiData));
+			return new EntryCodeInfo(entryId, b.getAttachedObject().getFormals(), assumedLocals, apiData);
 		} else {
-			this.results.add(new EntryCodeInfo(entryId, null, null, null));
+			return new EntryCodeInfo(entryId, null, null, null);
 		}		
+	}
+	
+	public void addEntry(EntryId entryId) {
+		EntryCodeInfo e = this.findForEntry(entryId);
+		this.results.add(e);
 	}
 	
 	public void addRoutine(Routine routine) {
@@ -60,5 +65,9 @@ public class EntryCodeInfoAccumulator {
 		
 	public ToolResultCollection<EntryCodeInfo> getResult() {
 		return this.results;
+	}
+	
+	public EntryCodeInfo getLastResult() {
+		return this.results.getLast();
 	}
 }
