@@ -68,7 +68,7 @@ public abstract class BlockRecorder<T> extends FanoutRecorder {
 		if (fanout != null) {
 			int i = this.incrementIndex();
 			CallArgument[] callArguments = this.getLastArguments();
-			this.currentBlock.addFanout(i, fanout, callArguments);	
+			this.currentBlock.addFanout(i, fanout);	
 			this.postUpdateFanout(fanout, callArguments);
 		} 
 	}
@@ -101,7 +101,7 @@ public abstract class BlockRecorder<T> extends FanoutRecorder {
 			String ceTag = ce.getName();
 			EntryId defaultGoto = new EntryId(null, ceTag);
 			++this.index;
-			this.currentBlock.addFanout(this.index, defaultGoto, null);
+			this.currentBlock.addFanout(this.index, defaultGoto);
 			++this.index;
 		}
 	}
@@ -134,7 +134,7 @@ public abstract class BlockRecorder<T> extends FanoutRecorder {
 			this.currentBlock = lastBlock;
 			if ((lastBlock != null) && (! lastBlock.isClosed())) {
 				EntryId defaultDo = new EntryId(null, tag);
-				lastBlock.addFanout(this.index, defaultDo, null);
+				lastBlock.addFanout(this.index, defaultDo);
 				lastBlock.addChild(firstBlock);
 			}
 		}

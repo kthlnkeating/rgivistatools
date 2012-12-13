@@ -46,9 +46,10 @@ import com.raygroupintl.vista.repository.visitor.RPCWriter;
 import com.raygroupintl.vista.repository.visitor.SerializedRoutineWriter;
 import com.raygroupintl.vista.tools.entryfanin.BlocksInSerialFanouts;
 import com.raygroupintl.vista.tools.entryfanin.EntryFaninAccumulator;
+import com.raygroupintl.vista.tools.entryfanin.EntryFanins;
 import com.raygroupintl.vista.tools.entryfanin.MarkedAsFaninBRF;
 import com.raygroupintl.vista.tools.entryfanin.FaninMark;
-import com.raygroupintl.vista.tools.fnds.ToolResult;
+import com.raygroupintl.vista.tools.fnds.ToolResultCollection;
 
 public class RepositoryTools extends Tools {
 	private static class Fanout extends Tool {		
@@ -151,8 +152,8 @@ public class RepositoryTools extends Tools {
 			}
 		}
 		
-		public List<ToolResult> getResult(final RepositoryInfo ri, List<EntryId> entries) {
-			List<ToolResult> resultList = new ArrayList<ToolResult>();
+		public ToolResultCollection<EntryFanins> getResult(final RepositoryInfo ri, List<EntryId> entries) {
+			ToolResultCollection<EntryFanins> resultList = new ToolResultCollection<EntryFanins>();
 			for (EntryId entryId : entries) {
 				final EntryFaninAccumulator efit = this.getSupply(entryId, ri);
 				FilterFactory<EntryId, EntryId> filterFactory = new FilterFactory<EntryId, EntryId>() {
@@ -178,7 +179,7 @@ public class RepositoryTools extends Tools {
 				};
 				VistaPackages vps = this.getVistaPackages(ri);
 				vps.accept(rv);
-				ToolResult result = efit.getResult();
+				EntryFanins result = efit.getResult();
 				resultList.add(result);
 			}
 			return resultList;

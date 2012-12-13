@@ -27,6 +27,7 @@ import com.raygroupintl.m.parsetree.data.BlocksSupply;
 import com.raygroupintl.m.parsetree.data.EntryId;
 import com.raygroupintl.m.parsetree.visitor.BlockRecorderFactory;
 import com.raygroupintl.output.FileWrapper;
+import com.raygroupintl.output.TerminalFormatter;
 import com.raygroupintl.vista.repository.RepositoryInfo;
 import com.raygroupintl.vista.tools.fnds.ToolResult;
 
@@ -116,7 +117,7 @@ public abstract class EntryInfoTool extends Tool {
 		}		
 	}
 
-	protected abstract List<ToolResult> getResult(RepositoryInfo ri, List<EntryId> entries);
+	protected abstract ToolResult getResult(RepositoryInfo ri, List<EntryId> entries);
 	
 	@Override
 	public void run() {
@@ -126,8 +127,13 @@ public abstract class EntryInfoTool extends Tool {
 			if (ri != null) {			
 				List<EntryId> entries = this.getEntries();
 				if (entries != null) {
-					List<ToolResult> resultList = this.getResult(ri, entries);		
-					this.writeEntries(fr, resultList);
+					ToolResult resultList = this.getResult(ri, entries);		
+					if (fr.start()) {
+						TerminalFormatter tf = new TerminalFormatter();
+						tf.setTab(12);
+						resultList.write(fr, tf);
+						fr.stop();
+					}
 				}
 			}
 		}

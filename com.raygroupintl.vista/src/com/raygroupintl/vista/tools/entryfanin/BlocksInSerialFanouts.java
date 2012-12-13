@@ -57,7 +57,7 @@ public class BlocksInSerialFanouts extends BlocksSupply<Block<FaninMark>> {
 				Block<FaninMark> b = new Block<FaninMark>(index, beid, result, fim);
 				int foindex = 0;
 				for (EntryId eid : entryFanouts) {
-					b.addFanout(foindex, eid, null);
+					b.addFanout(foindex, eid);
 					++foindex;
 				}
 				result.put(entryTag, b);

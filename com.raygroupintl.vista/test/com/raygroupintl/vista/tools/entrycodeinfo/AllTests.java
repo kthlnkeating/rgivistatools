@@ -1,11 +1,11 @@
-package com.raygroupintl.vista.tools;
+package com.raygroupintl.vista.tools.entrycodeinfo;
 
 import org.junit.runner.RunWith;
 import org.junit.runners.Suite;
 import org.junit.runners.Suite.SuiteClasses;
 
 @RunWith(Suite.class)
-@SuiteClasses({ ErrorExemptionsTest.class })
+@SuiteClasses({ EntryCodeInfoToolTest.class })
 public class AllTests {
 
 }

@@ -87,7 +87,7 @@ public class Block<T> implements Child<Blocks<Block<T>>> {
 		return this.entryId;
 	}
 		
-	public void addFanout(int index, EntryId fanout, CallArgument[] arguments) {
+	public void addFanout(int index, EntryId fanout) {
 		if (! this.closed) {
 			IndexedFanout ifo = new IndexedFanout(index, fanout);			
 			this.fanouts.add(ifo);
