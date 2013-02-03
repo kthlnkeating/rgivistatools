@@ -40,6 +40,7 @@ import com.raygroupintl.vista.tools.entryfanin.EntryFaninAccumulator;
 import com.raygroupintl.vista.tools.entryfanin.EntryFanins;
 import com.raygroupintl.vista.tools.entryfanin.FaninMark;
 import com.raygroupintl.vista.tools.entryfanin.MarkedAsFaninBRF;
+import com.raygroupintl.vista.tools.entryinfo.Accumulator;
 import com.raygroupintl.vista.tools.entryinfo.CodeInfo;
 import com.raygroupintl.vista.tools.entryinfo.EntryCodeInfoAccumulator;
 import com.raygroupintl.vista.tools.entryinfo.EntryCodeInfoRecorderFactory;
@@ -120,8 +121,8 @@ public class RepoEntryTools extends Tools {
 		REPLACEMENT_ROUTINES.put("%ZISUTL", "ZISUTL");
 	}
 
-	private static abstract class EntryInfoTool extends Tool {		
-		public EntryInfoTool(CLIParams params) {
+	private static abstract class EntryInfoToolBase extends Tool {		
+		public EntryInfoToolBase(CLIParams params) {
 			super(params);
 		}
 		
@@ -156,22 +157,26 @@ public class RepoEntryTools extends Tools {
 		}
 	}
 
-	private static class EntryCodeInfoTool extends EntryInfoTool {	
-		public EntryCodeInfoTool(CLIParams params) {
+	private static abstract class EntryInfoTool<T> extends EntryInfoToolBase {	
+		public EntryInfoTool(CLIParams params) {
 			super(params);
 		}
 		
+		protected abstract Accumulator getAccumulator(BlocksSupply<Block<T>> blocksSupply, FilterFactory<EntryId, EntryId> filterFactory);
+		
+		protected abstract BlockRecorderFactory<T> getBlockRecorderFactory(final RepositoryInfo ri);
+		
 		@Override
 		public ToolResult getResult(final RepositoryInfo ri, List<EntryId> entries) {
-			BlocksSupply<Block<CodeInfo>> blocksSupply = this.getBlocksSupply(ri, new EntryCodeInfoRecorderFactory(ri));
+			BlockRecorderFactory<T> rf = this.getBlockRecorderFactory(ri);
+			BlocksSupply<Block<T>> blocksSupply = this.getBlocksSupply(ri, rf);
 			FilterFactory<EntryId, EntryId> filterFactory = new FilterFactory<EntryId, EntryId>() {
 				@Override
 				public Filter<EntryId> getFilter(EntryId parameter) {
-					return EntryCodeInfoTool.this.getFilter(ri, parameter);
+					return EntryInfoTool.this.getFilter(ri, parameter);
 				}
 			}; 
-			EntryCodeInfoAccumulator a = new EntryCodeInfoAccumulator(blocksSupply);
-			a.setFilterFactory(filterFactory);
+			Accumulator a = this.getAccumulator(blocksSupply, filterFactory);
 			for (EntryId entryId : entries) {
 				a.addEntry(entryId);
 			}
@@ -179,7 +184,23 @@ public class RepoEntryTools extends Tools {
 		}
 	}
 
-	private static class EntryFanin extends EntryInfoTool {		
+	private static class EntryCodeInfoTool extends EntryInfoTool<CodeInfo> {	
+		public EntryCodeInfoTool(CLIParams params) {
+			super(params);
+		}
+		
+		@Override
+		protected Accumulator getAccumulator(BlocksSupply<Block<CodeInfo>> blocksSupply, FilterFactory<EntryId, EntryId> filterFactory) {
+			return new EntryCodeInfoAccumulator(blocksSupply, filterFactory);			
+		}
+
+		@Override
+		protected BlockRecorderFactory<CodeInfo> getBlockRecorderFactory(final RepositoryInfo ri) {
+			return new EntryCodeInfoRecorderFactory(ri);	
+		}
+	}
+
+	private static class EntryFanin extends EntryInfoToolBase {		
 		public EntryFanin(CLIParams params) {
 			super(params);
 		}

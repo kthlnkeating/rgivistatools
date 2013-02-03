@@ -17,14 +17,19 @@ import com.raygroupintl.struct.FilterFactory;
 import com.raygroupintl.struct.PassFilter;
 import com.raygroupintl.vista.tools.fnds.ToolResultCollection;
 
-public class EntryCodeInfoAccumulator {
+public class EntryCodeInfoAccumulator extends Accumulator {
 	private BlocksSupply<Block<CodeInfo>> blocksSupply;
+	private FilterFactory<EntryId, EntryId> filterFactory;
 	private DataStore<Set<String>> store = new DataStore<Set<String>>();					
-	private FilterFactory<EntryId, EntryId> filterFactory = new ConstFilterFactory<EntryId, EntryId>(new PassFilter<EntryId>());
 	private ToolResultCollection<EntryCodeInfo> results = new ToolResultCollection<EntryCodeInfo>();
 	
 	public EntryCodeInfoAccumulator(BlocksSupply<Block<CodeInfo>> blocksSupply) {
+		this(blocksSupply, new ConstFilterFactory<EntryId, EntryId>(new PassFilter<EntryId>()));
+	}
+
+	public EntryCodeInfoAccumulator(BlocksSupply<Block<CodeInfo>> blocksSupply, FilterFactory<EntryId, EntryId> filterFactory) {
 		this.blocksSupply = blocksSupply;
+		this.filterFactory = filterFactory;
 	}
 	
 	public void setFilterFactory(FilterFactory<EntryId, EntryId> filterFactory) {
@@ -45,6 +50,7 @@ public class EntryCodeInfoAccumulator {
 		}		
 	}
 	
+	@Override
 	public void addEntry(EntryId entryId) {
 		EntryCodeInfo e = this.findForEntry(entryId);
 		this.results.add(e);
@@ -62,7 +68,8 @@ public class EntryCodeInfoAccumulator {
 			this.addRoutine(routine);
 		}
 	}
-		
+	
+	@Override
 	public ToolResultCollection<EntryCodeInfo> getResult() {
 		return this.results;
 	}
