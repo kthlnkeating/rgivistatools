@@ -14,7 +14,7 @@
 // limitations under the License.
 //---------------------------------------------------------------------------
 
-package com.raygroupintl.vista.tools.entrycodeinfo;
+package com.raygroupintl.vista.tools.entryinfo;
 
 import java.util.HashMap;
 import java.util.HashSet;

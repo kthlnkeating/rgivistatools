@@ -1,4 +1,4 @@
-package com.raygroupintl.vista.tools.entrycodeinfo;
+package com.raygroupintl.vista.tools.entryinfo;
 
 import java.util.Collection;
 import java.util.List;
@@ -31,7 +31,7 @@ public class EntryCodeInfoAccumulator {
 		this.filterFactory = filterFactory;
 	}
 	
-	public EntryCodeInfo findForEntry(EntryId entryId) {
+	EntryCodeInfo findForEntry(EntryId entryId) {
 		Block<CodeInfo> b = blocksSupply.getBlock(entryId);
 		if (b != null) {
 			Filter<EntryId> filter = this.filterFactory.getFilter(entryId);

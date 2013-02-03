@@ -1,4 +1,4 @@
-package com.raygroupintl.vista.tools.entrycodeinfo;
+package com.raygroupintl.vista.tools.entryinfo;
 
 import java.util.HashMap;
 import java.util.HashSet;
@@ -13,8 +13,10 @@ import com.raygroupintl.m.parsetree.Routine;
 import com.raygroupintl.m.parsetree.data.EntryId;
 import com.raygroupintl.m.parsetree.data.BlocksInMap;
 import com.raygroupintl.vista.tools.AccumulatorTestCommon;
-import com.raygroupintl.vista.tools.entrycodeinfo.CodeInfo;
-import com.raygroupintl.vista.tools.entrycodeinfo.EntryCodeInfoRecorder;
+import com.raygroupintl.vista.tools.entryinfo.CodeInfo;
+import com.raygroupintl.vista.tools.entryinfo.EntryCodeInfo;
+import com.raygroupintl.vista.tools.entryinfo.EntryCodeInfoAccumulator;
+import com.raygroupintl.vista.tools.entryinfo.EntryCodeInfoRecorder;
 
 public class EntryCodeInfoToolTest {
 	private void testAssumedLocal(EntryCodeInfo r, String[] expectedAssumeds, String[] expectedGlobals) {

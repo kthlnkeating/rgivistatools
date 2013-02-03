@@ -77,7 +77,7 @@ public class MRoutineAnalyzer {
 	
 	public static void main(String[] args) {
 		try {
-			Tools[] rtss = new Tools[]{new RepositoryTools(), new MacroTools(), new RoutineTools()};
+			Tools[] rtss = new Tools[]{new RepositoryTools(), new RepoEntryTools(), new MacroTools(), new MFileTools()};
 		
 			CLIParams params = getCommandLineParamaters(args);	
 			if (params == null) return;

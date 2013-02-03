@@ -16,12 +16,17 @@
 
 package com.raygroupintl.vista.tools.fnds;
 
-import com.raygroupintl.m.parsetree.Routine;
-import com.raygroupintl.m.parsetree.data.EntryId;
-import com.raygroupintl.struct.FilterFactory;
-
-public interface AccumulatorOnRoutine {
-	void setFilterFactory(FilterFactory<EntryId, EntryId> filterFactory);
-	void addRoutine(Routine routine);
-	ToolResult getResult();
+@SuppressWarnings("serial")
+public class ToolErrorException extends RuntimeException {
+	public ToolErrorException(String message) {
+		super(message);
+	}
+	
+	public ToolErrorException(String message, Throwable cause) {
+		super(message, cause);
+	}
+	
+	public ToolErrorException(Throwable cause) {
+		super(cause);
+	}
 }

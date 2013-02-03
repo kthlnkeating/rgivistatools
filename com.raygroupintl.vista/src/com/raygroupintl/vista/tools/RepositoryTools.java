@@ -22,15 +22,8 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 
-import com.raygroupintl.m.parsetree.Routine;
-import com.raygroupintl.m.parsetree.data.Block;
-import com.raygroupintl.m.parsetree.data.BlocksSupply;
-import com.raygroupintl.m.parsetree.data.EntryId;
 import com.raygroupintl.output.FileWrapper;
-import com.raygroupintl.struct.Filter;
-import com.raygroupintl.struct.FilterFactory;
 import com.raygroupintl.vista.repository.RepositoryInfo;
-import com.raygroupintl.vista.repository.RepositoryVisitor;
 import com.raygroupintl.vista.repository.VistaPackage;
 import com.raygroupintl.vista.repository.VistaPackages;
 import com.raygroupintl.vista.repository.visitor.CacheOccuranceWriter;
@@ -44,12 +37,6 @@ import com.raygroupintl.vista.repository.visitor.FanoutWriter;
 import com.raygroupintl.vista.repository.visitor.OptionWriter;
 import com.raygroupintl.vista.repository.visitor.RPCWriter;
 import com.raygroupintl.vista.repository.visitor.SerializedRoutineWriter;
-import com.raygroupintl.vista.tools.entryfanin.BlocksInSerialFanouts;
-import com.raygroupintl.vista.tools.entryfanin.EntryFaninAccumulator;
-import com.raygroupintl.vista.tools.entryfanin.EntryFanins;
-import com.raygroupintl.vista.tools.entryfanin.MarkedAsFaninBRF;
-import com.raygroupintl.vista.tools.entryfanin.FaninMark;
-import com.raygroupintl.vista.tools.fnds.ToolResultCollection;
 
 public class RepositoryTools extends Tools {
 	private static class Fanout extends Tool {		
@@ -133,56 +120,6 @@ public class RepositoryTools extends Tools {
 					}
 				}
 			}
-		}
-	}
-	
-	private static class EntryFanin extends EntryInfoTool {		
-		public EntryFanin(CLIParams params) {
-			super(params);
-		}
-		
-		private EntryFaninAccumulator getSupply(EntryId entryId, RepositoryInfo ri) {
-			String method = this.params.getMethod("routinefile");
-			if (method.equalsIgnoreCase("fanoutfile")) {
-				BlocksSupply<Block<FaninMark>> blocksSupply = new BlocksInSerialFanouts(entryId, this.params.parseTreeDirectory, EntryInfoTool.REPLACEMENT_ROUTINES);		
-				return new EntryFaninAccumulator(entryId, blocksSupply, false);
-			} else {
-				BlocksSupply<Block<FaninMark>> blocksSupply = this.getBlocksSupply(ri, new MarkedAsFaninBRF(entryId));		
-				return new EntryFaninAccumulator(entryId, blocksSupply, true);
-			}
-		}
-		
-		public ToolResultCollection<EntryFanins> getResult(final RepositoryInfo ri, List<EntryId> entries) {
-			ToolResultCollection<EntryFanins> resultList = new ToolResultCollection<EntryFanins>();
-			for (EntryId entryId : entries) {
-				final EntryFaninAccumulator efit = this.getSupply(entryId, ri);
-				FilterFactory<EntryId, EntryId> filterFactory = new FilterFactory<EntryId, EntryId>() {
-					@Override
-					public Filter<EntryId> getFilter(EntryId parameter) {
-						return EntryFanin.this.getFilter(ri, parameter);
-					}
-				}; 
-				efit.setFilterFactory(filterFactory);
-				RepositoryVisitor rv = new RepositoryVisitor() {
-					int packageCount;
-					@Override
-					protected void visitRoutine(Routine routine) {
-						efit.addRoutine(routine);
-					}
-					@Override
-					protected void visitVistaPackage(VistaPackage routinePackage) {
-						++this.packageCount;
-						MRALogger.logInfo(RepositoryTools.class, String.valueOf(this.packageCount) + ". " + routinePackage.getPackageName() + "...writing");
-						super.visitVistaPackage(routinePackage);
-						MRALogger.logInfo(RepositoryTools.class, "..done.\n");
-					}
-				};
-				VistaPackages vps = this.getVistaPackages(ri);
-				vps.accept(rv);
-				EntryFanins result = efit.getResult();
-				resultList.add(result);
-			}
-			return resultList;
 		}
 	}
 	
@@ -423,18 +360,6 @@ public class RepositoryTools extends Tools {
 			@Override
 			public Tool getInstance(CLIParams params) {
 				return new Entry(params);
-			}
-		});
-		tools.put("entryinfo", new MemberFactory() {				
-			@Override
-			public Tool getInstance(CLIParams params) {
-				return new EntryCodeInfoTool(params);
-			}
-		});
-		tools.put("entryfanin", new MemberFactory() {				
-			@Override
-			public Tool getInstance(CLIParams params) {
-				return new EntryFanin(params);
 			}
 		});
 		tools.put("error", new MemberFactory() {				

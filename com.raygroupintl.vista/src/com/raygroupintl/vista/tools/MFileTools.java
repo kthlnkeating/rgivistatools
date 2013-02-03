@@ -31,7 +31,7 @@ import com.raygroupintl.vista.repository.visitor.EntryWriter;
 import com.raygroupintl.vista.repository.visitor.SerializedRoutineWriter;
 import com.raygroupintl.vista.tools.entryfanout.EntryFanoutAccumulator;
 
-public class RoutineTools extends Tools {
+public class MFileTools extends Tools {
 	protected static abstract class RoutineRunType extends Tool {
 		public RoutineRunType(CLIParams params) {
 			super(params);

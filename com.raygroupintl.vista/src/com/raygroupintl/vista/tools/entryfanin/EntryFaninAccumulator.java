@@ -28,9 +28,8 @@ import com.raygroupintl.struct.ConstFilterFactory;
 import com.raygroupintl.struct.Filter;
 import com.raygroupintl.struct.FilterFactory;
 import com.raygroupintl.struct.PassFilter;
-import com.raygroupintl.vista.tools.fnds.AccumulatorOnRoutine;
 
-public class EntryFaninAccumulator implements AccumulatorOnRoutine  {
+public class EntryFaninAccumulator  {
 	private EntryId entryUnderTest;
 	private BlocksSupply<Block<FaninMark>> blocksSupply;
 	private DataStore<PathPieceToEntry> store = new DataStore<PathPieceToEntry>();					
@@ -43,12 +42,10 @@ public class EntryFaninAccumulator implements AccumulatorOnRoutine  {
 		this.filterInternalBlocks = filterInternalBlocks;
 	}
 	
-	@Override
 	public void setFilterFactory(FilterFactory<EntryId, EntryId> filterFactory) {
 		this.filterFactory = filterFactory;
 	}
 	
-	@Override
 	public void addRoutine(Routine routine) {
 		List<EntryId> routineEntryTags = routine.getEntryIdList();
 		for (EntryId routineEntryTag : routineEntryTags) {
@@ -67,7 +64,6 @@ public class EntryFaninAccumulator implements AccumulatorOnRoutine  {
 		}
 	}
 		
-	@Override
 	public EntryFanins getResult() {
 		EntryFanins result = new EntryFanins(this.entryUnderTest);
 		for (PathPieceToEntry p : this.store.values()) {
