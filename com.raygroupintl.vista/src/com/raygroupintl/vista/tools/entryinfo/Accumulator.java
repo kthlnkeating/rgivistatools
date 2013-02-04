@@ -16,10 +16,59 @@
 
 package com.raygroupintl.vista.tools.entryinfo;
 
-import com.raygroupintl.m.parsetree.data.EntryId;
-import com.raygroupintl.vista.tools.fnds.ToolResult;
+import java.util.Collection;
+import java.util.List;
 
-public abstract class Accumulator {
-	public abstract void addEntry(EntryId entryId);
-	public abstract ToolResult getResult();
+import com.raygroupintl.m.parsetree.Routine;
+import com.raygroupintl.m.parsetree.data.EntryId;
+import com.raygroupintl.struct.ConstFilterFactory;
+import com.raygroupintl.struct.FilterFactory;
+import com.raygroupintl.struct.PassFilter;
+import com.raygroupintl.vista.tools.fnds.ToolResult;
+import com.raygroupintl.vista.tools.fnds.ToolResultCollection;
+
+public abstract class Accumulator<T extends ToolResult> {
+	protected FilterFactory<EntryId, EntryId> filterFactory;
+	protected ToolResultCollection<T> results;
+	
+	protected Accumulator(ToolResultCollection<T> results) {
+		this(new ConstFilterFactory<EntryId, EntryId>(new PassFilter<EntryId>()), results);
+	}
+
+	protected Accumulator(FilterFactory<EntryId, EntryId> filterFactory, ToolResultCollection<T> results) {
+		this.filterFactory = filterFactory;
+		this.results = results;
+	}
+
+	public void setFilterFactory(FilterFactory<EntryId, EntryId> filterFactory) {
+		this.filterFactory = filterFactory;
+	}
+	
+	public abstract T getResult(EntryId entryId);
+
+	public void addEntry(EntryId entryId) {
+		T e = this.getResult(entryId);
+		this.results.add(e);
+	}
+	
+	public void addRoutine(Routine routine) {
+		List<EntryId> routineEntryTags = routine.getEntryIdList();
+		for (EntryId routineEntryTag : routineEntryTags) {
+			this.addEntry(routineEntryTag);
+		}		
+	}
+	
+	public void addRoutines(Collection<Routine> routines) {
+		for (Routine routine : routines) {
+			this.addRoutine(routine);
+		}
+	}
+	
+	public ToolResultCollection<T> getResult() {
+		return this.results;
+	}
+	
+	public T getLastResult() {
+		return this.results.getLast();
+	}
 }

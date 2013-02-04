@@ -16,19 +16,19 @@
 
 package com.raygroupintl.vista.tools.entryinfo;
 
+import com.raygroupintl.m.parsetree.data.Block;
+import com.raygroupintl.m.parsetree.data.Blocks;
+import com.raygroupintl.m.parsetree.data.CallArgument;
+import com.raygroupintl.m.parsetree.data.EntryId;
 import com.raygroupintl.m.parsetree.visitor.BlockRecorder;
-import com.raygroupintl.m.parsetree.visitor.BlockRecorderFactory;
-import com.raygroupintl.vista.repository.RepositoryInfo;
 
-public class EntryCodeInfoRecorderFactory implements BlockRecorderFactory<CodeInfo> {
-	private RepositoryInfo repositoryInfo;
-	
-	public EntryCodeInfoRecorderFactory(RepositoryInfo repositoryInfo) {
-		this.repositoryInfo = repositoryInfo;
+public class VoidBlockRecorder extends BlockRecorder<Void> {
+	@Override
+	protected void postUpdateFanout(EntryId fanout, CallArgument[] callArguments) {		
 	}
 	
 	@Override
-	public BlockRecorder<CodeInfo> getRecorder() {
-		return new EntryCodeInfoRecorder(this.repositoryInfo);
+	protected Block<Void> getNewBlock(int index, EntryId entryId, Blocks<Block<Void>> blocks, String[] params) {
+		return new Block<Void>(index, entryId, blocks, null);
 	}
 }

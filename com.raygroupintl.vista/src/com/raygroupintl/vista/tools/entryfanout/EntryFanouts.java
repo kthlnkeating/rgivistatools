@@ -32,6 +32,7 @@ public class EntryFanouts implements ToolResult, Serializable {
 
 	private EntryId entryUnderTest;
 	private SortedSet<EntryId> fanoutEntries;
+	private String errorMsg;
 
 	public EntryFanouts(EntryId entryUnderTest) {
 		this.entryUnderTest = entryUnderTest;
@@ -42,6 +43,10 @@ public class EntryFanouts implements ToolResult, Serializable {
 			this.fanoutEntries = new TreeSet<EntryId>();
 		} 
 		this.fanoutEntries.add(fanout);
+	}
+	
+	public void setErrorMsg(String errorMsg) {
+		this.errorMsg = errorMsg;
 	}
 	
 	public EntryId getEntry() {
@@ -60,7 +65,12 @@ public class EntryFanouts implements ToolResult, Serializable {
 	public void write(Terminal t, TerminalFormatter tf) {
 		t.writeEOL(" " + this.entryUnderTest.toString2());	
 		if (fanoutEntries == null) {
-			t.writeEOL("  --");				
+			if (this.errorMsg == null) {
+				t.writeEOL("  --");				
+			} else {
+				t.write("  ");
+				t.writeEOL(this.errorMsg);
+			}
 		} else {
 			for (EntryId f : this.fanoutEntries) {
 				t.writeEOL("  " + f.toString2());

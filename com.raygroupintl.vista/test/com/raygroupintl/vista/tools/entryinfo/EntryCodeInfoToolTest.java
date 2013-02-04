@@ -61,19 +61,19 @@ public class EntryCodeInfoToolTest {
 		
 		EntryCodeInfoAccumulator a = new EntryCodeInfoAccumulator(blocksMap);
 				
-		this.testAssumedLocal(a.findForEntry(new EntryId("APIROU00", "FACT")), new String[]{"I"}, new String[0]);
-		this.testAssumedLocal(a.findForEntry(new EntryId("APIROU00", "SUM")), new String[]{"M", "R", "I"}, new String[]{"^RGI0(\"EF\""});
-		this.testAssumedLocal(a.findForEntry(new EntryId("APIROU00", "SUMFACT")), new String[]{"S", "P"}, new String[]{"^RGI0(\"EF\""});
-		this.testAssumedLocal(a.findForEntry(new EntryId("APIROU00", "STORE")), new String[]{"K", "D", "R"}, new String[0]);
-		this.testAssumedLocal(a.findForEntry(new EntryId("APIROU00", "STOREG")), new String[]{"K", "A", "D", "R"}, new String[0]);
-		this.testAssumedLocal(a.findForEntry(new EntryId("APIROU00", "TOOTHER")), new String[]{"I", "M"}, new String[0]);
-		this.testAssumedLocal(a.findForEntry(new EntryId("APIROU00", "TONONE")), new String[]{"A", "D", "ME", "NE", "HR"}, new String[0]);
-		this.testAssumedLocal(a.findForEntry(new EntryId("APIROU00", "ZZ")), new String[]{"A", "D"}, new String[0]);
-		this.testAssumedLocal(a.findForEntry(new EntryId("APIROU01", "SUMFACT")), new String[]{"S", "P"}, new String[]{"^RGI0(\"EF\"", "^UD(", "^UD(5", "^UM"});
-		this.testAssumedLocal(a.findForEntry(new EntryId("APIROU01", "STORE")), new String[]{"K", "D", "R"}, new String[0]);
-		this.testAssumedLocal(a.findForEntry(new EntryId("APIROU01", "LOOP")), new String[]{"S", "A", "C", "I", "J", "B", "D", "P"}, new String[]{"^RGI0(\"EF\"", "^UD(", "^UD(5", "^UM"});
-		this.testAssumedLocal(a.findForEntry(new EntryId("APIROU03", "GPIND")), new String[]{"B", "A"}, new String[0]);
-		this.testAssumedLocal(a.findForEntry(new EntryId("APIROU03", "CALL1")), new String[]{"A", "B"}, new String[0]);
-		this.filemanTest(a.findForEntry(new EntryId("APIROU03", "FILEMAN")), new String[]{"^DIC(9.4","^DIE(9.5", "^DIK(9.6"}, new String[]{"CHK^DIE(10.1", "CHK^DMI(10.2", "CHK^DDI(10.3"});				
+		this.testAssumedLocal(a.getResult(new EntryId("APIROU00", "FACT")), new String[]{"I"}, new String[0]);
+		this.testAssumedLocal(a.getResult(new EntryId("APIROU00", "SUM")), new String[]{"M", "R", "I"}, new String[]{"^RGI0(\"EF\""});
+		this.testAssumedLocal(a.getResult(new EntryId("APIROU00", "SUMFACT")), new String[]{"S", "P"}, new String[]{"^RGI0(\"EF\""});
+		this.testAssumedLocal(a.getResult(new EntryId("APIROU00", "STORE")), new String[]{"K", "D", "R"}, new String[0]);
+		this.testAssumedLocal(a.getResult(new EntryId("APIROU00", "STOREG")), new String[]{"K", "A", "D", "R"}, new String[0]);
+		this.testAssumedLocal(a.getResult(new EntryId("APIROU00", "TOOTHER")), new String[]{"I", "M"}, new String[0]);
+		this.testAssumedLocal(a.getResult(new EntryId("APIROU00", "TONONE")), new String[]{"A", "D", "ME", "NE", "HR"}, new String[0]);
+		this.testAssumedLocal(a.getResult(new EntryId("APIROU00", "ZZ")), new String[]{"A", "D"}, new String[0]);
+		this.testAssumedLocal(a.getResult(new EntryId("APIROU01", "SUMFACT")), new String[]{"S", "P"}, new String[]{"^RGI0(\"EF\"", "^UD(", "^UD(5", "^UM"});
+		this.testAssumedLocal(a.getResult(new EntryId("APIROU01", "STORE")), new String[]{"K", "D", "R"}, new String[0]);
+		this.testAssumedLocal(a.getResult(new EntryId("APIROU01", "LOOP")), new String[]{"S", "A", "C", "I", "J", "B", "D", "P"}, new String[]{"^RGI0(\"EF\"", "^UD(", "^UD(5", "^UM"});
+		this.testAssumedLocal(a.getResult(new EntryId("APIROU03", "GPIND")), new String[]{"B", "A"}, new String[0]);
+		this.testAssumedLocal(a.getResult(new EntryId("APIROU03", "CALL1")), new String[]{"A", "B"}, new String[0]);
+		this.filemanTest(a.getResult(new EntryId("APIROU03", "FILEMAN")), new String[]{"^DIC(9.4","^DIE(9.5", "^DIK(9.6"}, new String[]{"CHK^DIE(10.1", "CHK^DMI(10.2", "CHK^DDI(10.3"});				
 	}
 }
