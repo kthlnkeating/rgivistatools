@@ -58,7 +58,7 @@ public class RepositoryInfo {
 				MGlobalNode node0 = input.getNode("0");
 				if (node0 != null) {
 					String type = node0.getValuePiece(3);
-					if ((type != null) && (type.equals("R"))) { //TODO: create an enum for "R"
+					if ((type != null) && (type.equals("R"))) {
 						MGlobalNode node25 = input.getNode("25");
 						return node25 != null;
 					}				
@@ -85,6 +85,11 @@ public class RepositoryInfo {
 	
 	private static class ProtocolFilter implements Filter<MGlobalNode> {
 		private DigitFilter digitFilter = new DigitFilter();
+		private String protocolType;
+		
+		public ProtocolFilter(String protocolType) {
+			this.protocolType = protocolType;
+		}
 		
 		@Override
 		public boolean isValid(MGlobalNode input) {
@@ -93,7 +98,7 @@ public class RepositoryInfo {
 				MGlobalNode node0 = input.getNode("0");
 				if (node0 != null) {
 					String type = node0.getValuePiece(3);
-					if ((type != null) && (type.equals("A"))) { //TODO: create an enum for "A"
+					if ((type != null) && (protocolType == null || type.equals(protocolType))) {
 						return input.getNode("20") != null || input.getNode("26") != null;
 					}
 				}
@@ -323,13 +328,13 @@ public class RepositoryInfo {
 		return result;
 	}
 	
-	public List<List<EntryIdWithSource>> getProtocolEntryPoints() {
+	public List<List<EntryIdWithSource>> getProtocolEntryPoints(String protocolType) {
 		String root = RepositoryInfo.getLocation();
 		Path path = Paths.get(root, "Packages", "Kernel", "Globals", "101+PROTOCOL.zwr");
 		MGlobalNode rootNode = new MGlobalNode();
 		rootNode.read(path);
 		MGlobalNode node = rootNode.getNode("ORD","101");
-		List<List<EntryIdWithSource>> result = node.getValues(new ProtocolFilter(), new ProtocolTransformer());
+		List<List<EntryIdWithSource>> result = node.getValues(new ProtocolFilter(protocolType), new ProtocolTransformer());
 		return result;
 	}
 	

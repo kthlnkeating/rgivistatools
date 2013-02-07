@@ -117,8 +117,11 @@ public class RepositoryTools extends Tools {
 	}
 	
 	private static class Protocol extends Tool {
+		private CLIParams params;
+		
 		public Protocol(CLIParams params) {
 			super(params);
+			this.params = params;
 		}
 		
 		@Override
@@ -129,7 +132,7 @@ public class RepositoryTools extends Tools {
 				if (ri != null) {
 					VistaPackages vps = this.getVistaPackages(ri);
 					if (vps != null) {
-						ProtocolWriter ow = new ProtocolWriter(ri, fr);
+						ProtocolWriter ow = new ProtocolWriter(ri, fr, params.protocolType);
 						ow.write(vps);
 					}
 				}

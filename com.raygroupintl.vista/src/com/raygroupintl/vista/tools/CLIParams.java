@@ -69,6 +69,9 @@ public class CLIParams {
 	
 	@CLIParameter(names={"--method"})
 	public String method;
+	
+	@CLIParameter(names={"-ptype", "--protocoltype"})
+	public String protocolType;
 			
 	private static void logError(String msg) {
 		Logger logger = Logger.getLogger(MRoutineAnalyzer.class.getName());		

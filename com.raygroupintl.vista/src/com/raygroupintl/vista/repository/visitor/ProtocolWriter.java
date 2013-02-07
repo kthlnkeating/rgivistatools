@@ -32,15 +32,17 @@ import com.raygroupintl.vista.repository.VistaPackages;
 public class ProtocolWriter {
 	private RepositoryInfo repositoryInfo;
 	private FileWrapper fileWrapper;
+	private String protocolType;
 	
-	public ProtocolWriter(RepositoryInfo repositoryInfo, FileWrapper fileWrapper) {
+	public ProtocolWriter(RepositoryInfo repositoryInfo, FileWrapper fileWrapper, String protocolType) {
 		this.repositoryInfo = repositoryInfo;
 		this.fileWrapper = fileWrapper;
+		this.protocolType = protocolType;
 	}
 		
 	public void write(VistaPackages vps) {
 		List<VistaPackage> packages = this.repositoryInfo.getAllPackages(); 
-		List<List<EntryIdWithSource>> protocolsMVL = this.repositoryInfo.getProtocolEntryPoints(); //multi value list
+		List<List<EntryIdWithSource>> protocolsMVL = this.repositoryInfo.getProtocolEntryPoints(protocolType); //multi value list
 		Map<String, List<EntryIdWithSource>> protocolsByPackage = new HashMap<String, List<EntryIdWithSource>>();
 		for (VistaPackage p : packages) {
 			String name = p.getPackageName();
@@ -75,7 +77,6 @@ public class ProtocolWriter {
 					Collections.sort(reportProtocols);
 					for (EntryIdWithSource reportProtocol : reportProtocols) {
 						this.fileWrapper.writeEOL(" NAME: " + reportProtocol.getSource());
-						//this.fileWrapper.writeEOL(" TYPE:" + reportProtocol) could report type here.
 						this.fileWrapper.writeEOL("  TAG: " + reportProtocol.getEntryId().toString());
 						this.fileWrapper.writeEOL();
 					}

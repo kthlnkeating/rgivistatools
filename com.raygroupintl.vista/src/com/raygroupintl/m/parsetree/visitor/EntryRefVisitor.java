@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.raygroupintl.m.parsetree.AtomicDo;
+import com.raygroupintl.m.parsetree.ErrorNode;
 import com.raygroupintl.m.parsetree.FanoutLabel;
 import com.raygroupintl.m.parsetree.FanoutRoutine;
 import com.raygroupintl.m.parsetree.Visitor;
@@ -21,6 +22,13 @@ import com.raygroupintl.parsergen.ParseException;
 
 public class EntryRefVisitor extends Visitor {
 	
+	@Override
+	protected void visitErrorNode(ErrorNode error) {
+		super.visitErrorNode(error);
+	}
+
+
+
 	private List<EntryId> entryTags = new ArrayList<EntryId>();
 	private String label;
 	private String routine;
@@ -29,14 +37,14 @@ public class EntryRefVisitor extends Visitor {
 	protected void visitFanoutLabel(FanoutLabel label) {
 		super.visitFanoutLabel(label);
 		this.label = label.getValue();
-		System.out.println(": " + label.getValue());
+		//System.out.println("LBL: " + label.getValue());
 	}
 
 	@Override
 	protected void visitFanoutRoutine(FanoutRoutine routine) { //this is not visited if the call is to a local tag (ie: D TAG)
 		super.visitFanoutRoutine(routine);
 		this.routine = routine.getName();
-		System.out.println(": " + routine.getName());
+		//System.out.println("RTN: " + routine.getName());
 	}
 	
 	@Override
@@ -58,6 +66,8 @@ public class EntryRefVisitor extends Visitor {
 	public List<EntryId> getEntryTags() {
 		return entryTags;
 	}
+	
+	
 	
 //	@Override
 //	protected void visitAtomicGoto(AtomicGoto atomicGoto) {
