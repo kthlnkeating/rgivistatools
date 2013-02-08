@@ -20,6 +20,7 @@ import java.util.Set;
 import java.util.TreeSet;
 
 import com.raygroupintl.util.CLIParamMgr;
+import com.raygroupintl.vista.tools.fnds.ToolErrorException;
 
 public class MRoutineAnalyzer {
 	private static CLIParams getCommandLineParamaters(String[] args) {
@@ -77,7 +78,7 @@ public class MRoutineAnalyzer {
 	
 	public static void main(String[] args) {
 		try {
-			Tools[] rtss = new Tools[]{new RepositoryTools(), new RepoEntryTools(), new MacroTools(), new MFileTools()};
+			Tools[] rtss = new Tools[]{new RepositoryTools(), new RepoEntryTools(), new MacroTools(), new MFileTools(), new UtilityTools()};
 		
 			CLIParams params = getCommandLineParamaters(args);	
 			if (params == null) return;
@@ -106,6 +107,8 @@ public class MRoutineAnalyzer {
 				logErrorWithOptions("Specified run type option " + runTypeOption + " is not know.", rtss);					
 			}
 			
+		} catch (ToolErrorException e) {
+			MRALogger.logError("Error running tool", e);
 		} catch (Throwable t) {
 			MRALogger.logError("Unexpected error.", t);
 		}
