@@ -26,10 +26,10 @@ public class RoutineBeautifyTest {
 		supplyCache = null;
 	}
 
-	public void testrefactor(MTFSupply m) {
-		MRoutine original = TFCommonTest.getRoutineToken(this.getClass(), "resource/BEAT0SRC.m", m);
-		MRoutine source = TFCommonTest.getRoutineToken(this.getClass(), "resource/BEAT0SRC.m", m);
-		MRoutine result = TFCommonTest.getRoutineToken(this.getClass(), "resource/BEAT0RST.m", m);
+	private void testrefactor(MTFSupply m, String src, String target) {
+		MRoutine original = TFCommonTest.getRoutineToken(this.getClass(), src, m);
+		MRoutine source = TFCommonTest.getRoutineToken(this.getClass(), src, m);
+		MRoutine result = TFCommonTest.getRoutineToken(this.getClass(), target, m);
 		
 		source.refactor(new MRefactorSettings());
 		List<MLine> originalLines = original.asList();
@@ -46,6 +46,15 @@ public class RoutineBeautifyTest {
 				Assert.assertFalse(sourceLineValue.equals(originalLines.get(i).toValue().toString()));				
 			}
 		}
+		
+		String a = source.toValue().toString();
+		String b = result.toValue().toString();
+		Assert.assertEquals(a, b);
+	}
+	
+	public void testrefactor(MTFSupply m) {
+		testrefactor(m, "resource/BEAT0SRC.m", "resource/BEAT0RST.m");
+		testrefactor(m, "resource/BEAT1SRC.m", "resource/BEAT1RST.m");
 	}
 	
 	@Test

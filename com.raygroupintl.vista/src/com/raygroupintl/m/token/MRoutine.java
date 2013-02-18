@@ -42,8 +42,10 @@ public class MRoutine implements MToken {
 	@Override
 	public TextPiece toValue() {
 		TextPiece result = new TextPiece();
+		TextPiece eol = new TextPiece(getEOL());
 		for (MLine line : this.lines) {
 			result.add(line.toValue());
+			result.add(eol);
 		}
 		return result;
 	}
