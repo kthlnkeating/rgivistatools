@@ -17,8 +17,10 @@
 package com.raygroupintl.vista.tools;
 
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import com.raygroupintl.m.parsetree.Routine;
 import com.raygroupintl.m.parsetree.data.Block;
@@ -36,6 +38,10 @@ import com.raygroupintl.vista.repository.RepositoryInfo;
 import com.raygroupintl.vista.repository.RepositoryVisitor;
 import com.raygroupintl.vista.repository.VistaPackage;
 import com.raygroupintl.vista.repository.VistaPackages;
+import com.raygroupintl.vista.tools.entry.CodeLocations;
+import com.raygroupintl.vista.tools.entry.EntryCodeLocations;
+import com.raygroupintl.vista.tools.entry.LocalAssignmentAccumulator;
+import com.raygroupintl.vista.tools.entry.LocalAssignmentRecorder;
 import com.raygroupintl.vista.tools.entryfanin.BlocksInSerialFanouts;
 import com.raygroupintl.vista.tools.entryfanin.EntryFaninAccumulator;
 import com.raygroupintl.vista.tools.entryfanin.EntryFanins;
@@ -218,6 +224,37 @@ public class RepoEntryTools extends Tools {
 		}
 	}
 
+	private static class EntryLocalAssignmentRecorderFactory implements BlockRecorderFactory<CodeLocations> {
+		private Set<String> localsUnderTest;
+		
+		public EntryLocalAssignmentRecorderFactory(Set<String> localsUnderTest) {
+			this.localsUnderTest = localsUnderTest;
+		}
+		
+		@Override
+		public BlockRecorder<CodeLocations> getRecorder() {
+			return new LocalAssignmentRecorder(this.localsUnderTest);
+		}
+	}
+
+	private static class EntryLocalAssignmentTool extends EntryInfoTool<CodeLocations, EntryCodeLocations> {	
+		public EntryLocalAssignmentTool(CLIParams params) {
+			super(params);
+		}
+		
+		@Override
+		protected Accumulator<EntryCodeLocations> getAccumulator(BlocksSupply<Block<CodeLocations>> blocksSupply, FilterFactory<EntryId, EntryId> filterFactory) {
+			return new LocalAssignmentAccumulator(blocksSupply, filterFactory);			
+		}
+
+		@Override
+		protected BlockRecorderFactory<CodeLocations> getBlockRecorderFactory(final RepositoryInfo ri) {
+			Set<String> locals = new HashSet<String>();
+			locals.add("SDCLN");
+			return new EntryLocalAssignmentRecorderFactory(locals);	
+		}
+	}
+
 	private static class EntryFanoutRecorderFactory implements BlockRecorderFactory<Void> {
 		@Override
 		public BlockRecorder<Void> getRecorder() {
@@ -298,6 +335,12 @@ public class RepoEntryTools extends Tools {
 			@Override
 			public Tool getInstance(CLIParams params) {
 				return new EntryCodeInfoTool(params);
+			}
+		});
+		tools.put("entrylocalassignment", new MemberFactory() {				
+			@Override
+			public Tool getInstance(CLIParams params) {
+				return new EntryLocalAssignmentTool(params);
 			}
 		});
 		tools.put("entryfanout", new MemberFactory() {				
