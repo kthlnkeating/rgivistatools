@@ -17,10 +17,10 @@
 package com.raygroupintl.vista.tools.entryinfo;
 
 import com.raygroupintl.m.parsetree.data.Block;
-import com.raygroupintl.m.parsetree.data.Blocks;
 import com.raygroupintl.m.parsetree.data.CallArgument;
 import com.raygroupintl.m.parsetree.data.EntryId;
 import com.raygroupintl.m.parsetree.visitor.BlockRecorder;
+import com.raygroupintl.struct.HierarchicalMap;
 
 public class VoidBlockRecorder extends BlockRecorder<Void> {
 	@Override
@@ -28,7 +28,7 @@ public class VoidBlockRecorder extends BlockRecorder<Void> {
 	}
 	
 	@Override
-	protected Block<Void> getNewBlock(int index, EntryId entryId, Blocks<Block<Void>> blocks, String[] params) {
+	protected Block<Void> getNewBlock(int index, EntryId entryId, HierarchicalMap<String, Block<Void>> blocks, String[] params) {
 		return new Block<Void>(index, entryId, blocks, null);
 	}
 }

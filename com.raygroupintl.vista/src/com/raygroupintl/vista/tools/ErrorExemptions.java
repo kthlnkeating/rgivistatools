@@ -107,6 +107,7 @@ public class ErrorExemptions {
 		r.addLine("PSSHTTP", "PEPSPOST", 34);
 		r.addLine("GMTSDGCH", "MAIN", 6);
 		r.addLine("GMTSDGCH", "MAIN", 7);
+		r.addLine("LR138PO", "LOC", 4);
 		r.addRoutine("PSORELD1");
 		r.addRoutine("HLUCM001");// Do block
 		r.addRoutine("ZISG3");

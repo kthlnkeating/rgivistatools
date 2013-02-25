@@ -22,6 +22,7 @@ import java.util.logging.Logger;
 
 import com.raygroupintl.m.parsetree.Routine;
 import com.raygroupintl.m.parsetree.visitor.BlockRecorder;
+import com.raygroupintl.struct.HierarchicalMap;
 import com.raygroupintl.vista.repository.RepositoryInfo;
 import com.raygroupintl.vista.repository.RepositoryVisitor;
 import com.raygroupintl.vista.repository.VistaPackage;
@@ -50,7 +51,7 @@ public class BlocksInMap<T> extends BlocksSupply<Block<T>> {
 		@Override
 		public void visitRoutine(Routine routine) {
 			routine.accept(this.recorder);
-			Blocks<Block<T>> blocks = this.recorder.getBlocks();
+			HierarchicalMap<String, Block<T>> blocks = this.recorder.getBlocks();
 			this.blocksMap.put(routine.getName(), blocks);
 		}
 		
@@ -65,7 +66,7 @@ public class BlocksInMap<T> extends BlocksSupply<Block<T>> {
 		}
 	}
 
-	private Map<String, Blocks<Block<T>>> map = new HashMap<String, Blocks<Block<T>>>();
+	private Map<String, HierarchicalMap<String, Block<T>>> map = new HashMap<String, HierarchicalMap<String, Block<T>>>();
 	
 	public BlocksInMap() {
 		super();
@@ -75,12 +76,12 @@ public class BlocksInMap<T> extends BlocksSupply<Block<T>> {
 		super(replacementRoutines);
 	}
 	
-	public Blocks<Block<T>> put(String routineName,  Blocks<Block<T>> blocks) {
+	public HierarchicalMap<String, Block<T>> put(String routineName,  HierarchicalMap<String, Block<T>> blocks) {
 		return this.map.put(routineName, blocks);
 	}
 	
 	@Override
-	public Blocks<Block<T>> getBlocks(String routineName) {
+	public HierarchicalMap<String, Block<T>> getBlocks(String routineName) {
 		return this.map.get(routineName);
 	}
 		
@@ -96,7 +97,7 @@ public class BlocksInMap<T> extends BlocksSupply<Block<T>> {
 		for (Routine r : routines) {
 			br.reset();
 			r.accept(br);
-			Blocks<Block<T>> blocks = br.getBlocks();
+			HierarchicalMap<String, Block<T>> blocks = br.getBlocks();
 			result.put(r.getName(), blocks);
 		}
 		return result;

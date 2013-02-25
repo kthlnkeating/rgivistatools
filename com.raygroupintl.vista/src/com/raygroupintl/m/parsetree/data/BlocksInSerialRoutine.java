@@ -22,10 +22,11 @@ import java.util.Map;
 import com.raygroupintl.m.parsetree.Routine;
 import com.raygroupintl.m.parsetree.visitor.BlockRecorder;
 import com.raygroupintl.m.parsetree.visitor.BlockRecorderFactory;
+import com.raygroupintl.struct.HierarchicalMap;
 
 public class BlocksInSerialRoutine<T> extends BlocksSupply<Block<T>> {
 	private String inputPath;
-	private HashMap<String, Blocks<Block<T>>> blocks = new HashMap<String, Blocks<Block<T>>>();
+	private HashMap<String, HierarchicalMap<String, Block<T>>> blocks = new HashMap<String, HierarchicalMap<String, Block<T>>>();
 	private BlockRecorderFactory<T> blockRecorder;
 	
 	public BlocksInSerialRoutine(String inputPath, BlockRecorderFactory<T> brf, Map<String, String> replacementRoutines) {
@@ -35,9 +36,9 @@ public class BlocksInSerialRoutine<T> extends BlocksSupply<Block<T>> {
 	}
 	
 	@Override
-	public Blocks<Block<T>> getBlocks(String routineName) {
+	public HierarchicalMap<String, Block<T>> getBlocks(String routineName) {
 		if (! this.blocks.containsKey(routineName)) {			
-			Blocks<Block<T>> result = null;
+			HierarchicalMap<String, Block<T>> result = null;
 			Routine routine = Routine.readSerialized(this.inputPath, routineName);
 			if (routine != null) {
 				BlockRecorder<T> recorder = this.blockRecorder.getRecorder();

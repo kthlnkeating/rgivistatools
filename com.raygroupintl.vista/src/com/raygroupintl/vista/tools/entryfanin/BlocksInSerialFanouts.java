@@ -21,16 +21,16 @@ import java.util.Map;
 import java.util.Set;
 
 import com.raygroupintl.m.parsetree.data.Block;
-import com.raygroupintl.m.parsetree.data.Blocks;
 import com.raygroupintl.m.parsetree.data.BlocksSupply;
 import com.raygroupintl.m.parsetree.data.EntryId;
+import com.raygroupintl.struct.HierarchicalMap;
 import com.raygroupintl.vista.tools.entryfanout.RoutineFanouts;
 import com.raygroupintl.vista.tools.fnds.ToolUtilities;
 
 public class BlocksInSerialFanouts extends BlocksSupply<Block<FaninMark>> {
 	private EntryId entryUnderTest;
 	private String inputPath;
-	private HashMap<String, Blocks<Block<FaninMark>>> blocks = new HashMap<String, Blocks<Block<FaninMark>>>();
+	private HashMap<String, HierarchicalMap<String, Block<FaninMark>>> blocks = new HashMap<String, HierarchicalMap<String, Block<FaninMark>>>();
 	
 	public BlocksInSerialFanouts(EntryId entryUnderTest, String inputPath, Map<String, String> replacementRoutines) {
 		super(replacementRoutines);
@@ -38,9 +38,9 @@ public class BlocksInSerialFanouts extends BlocksSupply<Block<FaninMark>> {
 		this.inputPath = inputPath;
 	}
 	
-	private Blocks<Block<FaninMark>> getBlocks(String routineName, RoutineFanouts fanouts) {
+	private HierarchicalMap<String, Block<FaninMark>> getBlocks(String routineName, RoutineFanouts fanouts) {
 		if (fanouts != null) {
-			Blocks<Block<FaninMark>> result = new Blocks<Block<FaninMark>>();
+			HierarchicalMap<String, Block<FaninMark>> result = new HierarchicalMap<String, Block<FaninMark>>();
 			Set<String> entryTags = fanouts.getRoutineEntryTags();
 			int index = 0;
 			EntryId eidUnderTest = this.entryUnderTest;
@@ -69,10 +69,10 @@ public class BlocksInSerialFanouts extends BlocksSupply<Block<FaninMark>> {
 	}
 	
 	@Override
-	public Blocks<Block<FaninMark>> getBlocks(String routineName) {
+	public HierarchicalMap<String, Block<FaninMark>> getBlocks(String routineName) {
 		if (! this.blocks.containsKey(routineName)) {			
 			RoutineFanouts fanouts = (RoutineFanouts) ToolUtilities.readSerializedRoutineObject(this.inputPath, routineName, ".fo");
-			Blocks<Block<FaninMark>> result = this.getBlocks(routineName, fanouts);
+			HierarchicalMap<String, Block<FaninMark>> result = this.getBlocks(routineName, fanouts);
 			this.blocks.put(routineName, result);
 			return result;
 		}

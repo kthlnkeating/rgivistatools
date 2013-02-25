@@ -17,10 +17,10 @@
 package com.raygroupintl.vista.tools.entryfanin;
 
 import com.raygroupintl.m.parsetree.data.Block;
-import com.raygroupintl.m.parsetree.data.Blocks;
 import com.raygroupintl.m.parsetree.data.CallArgument;
 import com.raygroupintl.m.parsetree.data.EntryId;
 import com.raygroupintl.m.parsetree.visitor.BlockRecorder;
+import com.raygroupintl.struct.HierarchicalMap;
 
 public class MarkedAsFaninBR extends BlockRecorder<FaninMark> {
 	private EntryId entryId;
@@ -38,7 +38,7 @@ public class MarkedAsFaninBR extends BlockRecorder<FaninMark> {
 	}
 	
 	@Override
-	protected Block<FaninMark> getNewBlock(int index, EntryId entryId, Blocks<Block<FaninMark>> blocks, String[] params) {
+	protected Block<FaninMark> getNewBlock(int index, EntryId entryId, HierarchicalMap<String, Block<FaninMark>> blocks, String[] params) {
 		return new Block<FaninMark>(index, entryId, blocks, new FaninMark(entryId));
 	}
 }

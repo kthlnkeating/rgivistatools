@@ -14,57 +14,32 @@
 // limitations under the License.
 //---------------------------------------------------------------------------
 
-package com.raygroupintl.m.parsetree.data;
+package com.raygroupintl.struct;
 
-import java.util.Collection;
 import java.util.HashMap;
-import java.util.Map;
-import java.util.Set;
 
-import com.raygroupintl.struct.Child;
-
-public class Blocks<T extends Child<Blocks<T>>> {
-	private Map<String, T> blocks = new HashMap<String, T>();
-	private T parent;
+public class HierarchicalMap<K, V> extends HashMap<K, V> {
+	private static final long serialVersionUID = 1L;
 	
-	public Blocks() {		
+	private HierarchicalMap<K, V> parent;
+	
+	public HierarchicalMap() {		
 	}
 	
-	public Blocks(T parent) {
+	public HierarchicalMap(HierarchicalMap<K, V> parent) {
 		this.parent = parent;
 	}
 	
-	public Set<String> getTags() {
-		return this.blocks.keySet();
-	}
-	
-	public Collection<T> getBlocks() {
-		return this.blocks.values();
-	}
-	
-	public T get2(String name) {
-		return this.blocks.get(name);
-	}
-	
-	public T get(String name) {
-		T result = this.blocks.get(name);
+	public V getThruHierarchy(K key) {
+		V result = super.get(key);
 		if ((result == null) && (this.parent != null)) {
-			Blocks<T> grandParent = this.parent.getParent();
-			if (grandParent != null) {
-				return grandParent.get(name);
-			} else {
-				return null;
-			}
+			return this.parent.getThruHierarchy(key);
 		} else {
 			return result;
 		}
 	}
 	
-	public void put(String name, T block) {
-		this.blocks.put(name, block);
-	}
-	
-	public T getParent() {
+	public HierarchicalMap<K, V> getParent() {
 		return this.parent;
 	}
 }

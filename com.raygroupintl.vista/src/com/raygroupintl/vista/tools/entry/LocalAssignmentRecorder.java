@@ -21,12 +21,12 @@ import java.util.Set;
 import com.raygroupintl.m.parsetree.Local;
 import com.raygroupintl.m.parsetree.Node;
 import com.raygroupintl.m.parsetree.data.Block;
-import com.raygroupintl.m.parsetree.data.Blocks;
 import com.raygroupintl.m.parsetree.data.CallArgument;
 import com.raygroupintl.m.parsetree.data.EntryId;
 import com.raygroupintl.m.parsetree.visitor.BlockRecorder;
 import com.raygroupintl.m.struct.CodeLocation;
 import com.raygroupintl.m.struct.LineLocation;
+import com.raygroupintl.struct.HierarchicalMap;
 
 public class LocalAssignmentRecorder extends BlockRecorder<CodeLocations> {
 	private Set<String> localNames;
@@ -40,7 +40,7 @@ public class LocalAssignmentRecorder extends BlockRecorder<CodeLocations> {
 	}
 	
 	@Override
-	protected Block<CodeLocations> getNewBlock(int index, EntryId entryId, Blocks<Block<CodeLocations>> blocks, String[] params) {
+	protected Block<CodeLocations> getNewBlock(int index, EntryId entryId, HierarchicalMap<String, Block<CodeLocations>> blocks, String[] params) {
 		CodeLocations ecls = new CodeLocations();
 		return new Block<CodeLocations>(index, entryId, blocks, ecls);
 	}

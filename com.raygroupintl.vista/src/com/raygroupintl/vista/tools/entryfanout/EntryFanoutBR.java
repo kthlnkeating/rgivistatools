@@ -22,10 +22,10 @@ import java.util.Set;
 
 import com.raygroupintl.m.parsetree.Routine;
 import com.raygroupintl.m.parsetree.data.Block;
-import com.raygroupintl.m.parsetree.data.Blocks;
 import com.raygroupintl.m.parsetree.data.CallArgument;
 import com.raygroupintl.m.parsetree.data.EntryId;
 import com.raygroupintl.m.parsetree.visitor.BlockRecorder;
+import com.raygroupintl.struct.HierarchicalMap;
 
 public class EntryFanoutBR extends BlockRecorder<Void> {
 	@Override
@@ -33,11 +33,11 @@ public class EntryFanoutBR extends BlockRecorder<Void> {
 	}
 	
 	@Override
-	protected Block<Void> getNewBlock(int index, EntryId entryId, Blocks<Block<Void>> blocks, String[] params) {
+	protected Block<Void> getNewBlock(int index, EntryId entryId, HierarchicalMap<String, Block<Void>> blocks, String[] params) {
 		return new Block<Void>(index, entryId, blocks, null);
 	}
 	
-	private Set<EntryId> getBlockFanouts(Block<Void> b, String routineName, Blocks<Block<Void>> siblings, Set<String> parentAlready) {
+	private Set<EntryId> getBlockFanouts(Block<Void> b, String routineName, HierarchicalMap<String, Block<Void>> siblings, Set<String> parentAlready) {
 		Set<EntryId> r = new HashSet<EntryId>();
 		List<EntryId> fs = b.getFanouts();
 		for (EntryId f : fs) {
@@ -48,12 +48,12 @@ public class EntryFanoutBR extends BlockRecorder<Void> {
 				if (cb != null) {
 					Set<String> already = new HashSet<String>();
 					already.add(label);
-					Set<EntryId> cr = this.getBlockFanouts(cb, routineName, cb.getParent(), already); 
+					Set<EntryId> cr = this.getBlockFanouts(cb, routineName, cb.getCallableBlocks(), already); 
 					r.addAll(cr);				
 					continue;
 				} 
 				if ((siblings != null)) {
-					Block<Void> sb = siblings.get2(label);
+					Block<Void> sb = siblings.get(label);
 					if ((sb != null)  && (! parentAlready.contains(label))) {
 						parentAlready.add(label);
 						Set<EntryId> sr = this.getBlockFanouts(sb, routineName, siblings, parentAlready); 
@@ -69,12 +69,12 @@ public class EntryFanoutBR extends BlockRecorder<Void> {
  	
 	public RoutineFanouts getResults(Routine routine) {
 		routine.accept(this);
-		Blocks<Block<Void>> bs = super.getBlocks();
+		HierarchicalMap<String, Block<Void>> bs = super.getBlocks();
 		RoutineFanouts result = new RoutineFanouts();
-		Set<String> tags = bs.getTags();
+		Set<String> tags = bs.keySet();
 		String routineName = routine.getName();
 		for (String tag : tags) {
-			Block<Void> b = bs.get(tag);
+			Block<Void> b = bs.getThruHierarchy(tag);
 			Set<EntryId> bfouts = this.getBlockFanouts(b, routineName, null, null);
 			result.put(tag, bfouts);
 		}		

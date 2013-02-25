@@ -25,12 +25,12 @@ import com.raygroupintl.m.parsetree.Entry;
 import com.raygroupintl.m.parsetree.EntryList;
 import com.raygroupintl.m.parsetree.Routine;
 import com.raygroupintl.m.parsetree.data.Block;
-import com.raygroupintl.m.parsetree.data.Blocks;
 import com.raygroupintl.m.parsetree.data.CallArgument;
 import com.raygroupintl.m.parsetree.data.EntryId;
+import com.raygroupintl.struct.HierarchicalMap;
 
 public abstract class BlockRecorder<T> extends FanoutRecorder {
-	private Blocks<Block<T>> currentBlocks;
+	private HierarchicalMap<String, Block<T>> currentBlocks;
 	
 	private Block<T> currentBlock;
 	private String currentRoutineName;
@@ -73,7 +73,7 @@ public abstract class BlockRecorder<T> extends FanoutRecorder {
 		} 
 	}
 
-	protected abstract Block<T> getNewBlock(int index, EntryId entryId, Blocks<Block<T>> blocks, String[] params);
+	protected abstract Block<T> getNewBlock(int index, EntryId entryId, HierarchicalMap<String, Block<T>> blocks, String[] params);
  	
 	@Override
 	protected void visitDeadCmds(DeadCmds deadCmds) {
@@ -123,13 +123,13 @@ public abstract class BlockRecorder<T> extends FanoutRecorder {
 		if (! this.doBlockHash.contains(id)) {
 			doBlockHash.add(id);
 			doBlock.acceptPostCondition(this);
-			Blocks<Block<T>> lastBlocks = this.currentBlocks;
+			HierarchicalMap<String, Block<T>> lastBlocks = this.currentBlocks;
 			Block<T> lastBlock = this.currentBlock;
 			this.currentBlock = null;
-			this.currentBlocks = new Blocks<Block<T>>(lastBlock);
+			this.currentBlocks = new HierarchicalMap<String, Block<T>>(lastBlocks);
 			doBlock.acceptEntryList(this);
 			String tag = entryList.getName();
-			Block<T> firstBlock = this.currentBlocks.get(tag);
+			Block<T> firstBlock = this.currentBlocks.getThruHierarchy(tag);
 			this.currentBlocks = lastBlocks;
 			this.currentBlock = lastBlock;
 			if ((lastBlock != null) && (! lastBlock.isClosed())) {
@@ -140,7 +140,7 @@ public abstract class BlockRecorder<T> extends FanoutRecorder {
 		}
 	}
 	
-	public Blocks<Block<T>> getBlocks() {
+	public HierarchicalMap<String, Block<T>> getBlocks() {
 		return this.currentBlocks;
 	}
 	
@@ -155,7 +155,7 @@ public abstract class BlockRecorder<T> extends FanoutRecorder {
 	@Override
 	protected void visitRoutine(Routine routine) {
 		this.reset();
-		this.currentBlocks = new Blocks<Block<T>>();
+		this.currentBlocks = new HierarchicalMap<String, Block<T>>();
 		this.currentRoutineName = routine.getName();
 		super.visitRoutine(routine);
 	}
