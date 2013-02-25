@@ -16,7 +16,6 @@
 
 package com.raygroupintl.vista.tools;
 
-import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
@@ -59,79 +58,6 @@ import com.raygroupintl.vista.tools.fnds.ToolResult;
 import com.raygroupintl.vista.tools.fnds.ToolResultCollection;
 
 public class RepoEntryTools extends Tools {
-	public static Map<String, String> REPLACEMENT_ROUTINES = new HashMap<String, String>();
-	static {
-		REPLACEMENT_ROUTINES.put("%ZOSV", "ZOSVONT");
-		REPLACEMENT_ROUTINES.put("%ZIS4", "ZIS4ONT");
-		REPLACEMENT_ROUTINES.put("%ZISF", "ZISFONT");
-		REPLACEMENT_ROUTINES.put("%ZISH", "ZISHONT");
-		REPLACEMENT_ROUTINES.put("%XUCI", "ZISHONT");
-
-		REPLACEMENT_ROUTINES.put("%ZISTCPS", "ZISTCPS");
-		REPLACEMENT_ROUTINES.put("%ZTMDCL", "ZTMDCL");
-		
-		REPLACEMENT_ROUTINES.put("%ZOSVKR", "ZOSVKRO");
-		REPLACEMENT_ROUTINES.put("%ZOSVKSE", "ZOSVKSOE");
-		REPLACEMENT_ROUTINES.put("%ZOSVKSS", "ZOSVKSOS");
-		REPLACEMENT_ROUTINES.put("%ZOSVKSD", "ZOSVKSD");
-
-		REPLACEMENT_ROUTINES.put("%ZTLOAD", "ZTLOAD");
-		REPLACEMENT_ROUTINES.put("%ZTLOAD1", "ZTLOAD1");
-		REPLACEMENT_ROUTINES.put("%ZTLOAD2", "ZTLOAD2");
-		REPLACEMENT_ROUTINES.put("%ZTLOAD3", "ZTLOAD3");
-		REPLACEMENT_ROUTINES.put("%ZTLOAD4", "ZTLOAD4");
-		REPLACEMENT_ROUTINES.put("%ZTLOAD5", "ZTLOAD5");
-		REPLACEMENT_ROUTINES.put("%ZTLOAD6", "ZTLOAD6");
-		REPLACEMENT_ROUTINES.put("%ZTLOAD7", "ZTLOAD7");
-		
-		REPLACEMENT_ROUTINES.put("%ZTM", "ZTM");
-		REPLACEMENT_ROUTINES.put("%ZTM0", "ZTM0");
-		REPLACEMENT_ROUTINES.put("%ZTM1", "ZTM1");
-		REPLACEMENT_ROUTINES.put("%ZTM2", "ZTM2");
-		REPLACEMENT_ROUTINES.put("%ZTM3", "ZTM3");
-		REPLACEMENT_ROUTINES.put("%ZTM4", "ZTM4");
-		REPLACEMENT_ROUTINES.put("%ZTM5", "ZTM5");
-		REPLACEMENT_ROUTINES.put("%ZTM6", "ZTM6");
-		
-		REPLACEMENT_ROUTINES.put("%ZTMS", "ZTMS");
-		REPLACEMENT_ROUTINES.put("%ZTMS0", "ZTMS0");
-		REPLACEMENT_ROUTINES.put("%ZTMS1", "ZTMS1");
-		REPLACEMENT_ROUTINES.put("%ZTMS2", "ZTMS2");
-		REPLACEMENT_ROUTINES.put("%ZTMS3", "ZTMS3");
-		REPLACEMENT_ROUTINES.put("%ZTMS4", "ZTMS4");
-		REPLACEMENT_ROUTINES.put("%ZTMS5", "ZTMS5");
-		REPLACEMENT_ROUTINES.put("%ZTMS7", "ZTMS7");
-		REPLACEMENT_ROUTINES.put("%ZTMSH", "ZTMSH");
-
-		REPLACEMENT_ROUTINES.put("%DT", "DIDT");
-		REPLACEMENT_ROUTINES.put("%DTC", "DIDTC");
-		REPLACEMENT_ROUTINES.put("%RCR", "DIRCR");
-
-		REPLACEMENT_ROUTINES.put("%ZTER", "ZTER");
-		REPLACEMENT_ROUTINES.put("%ZTER1", "ZTER1");
-
-		REPLACEMENT_ROUTINES.put("%ZTPP", "ZTPP");
-		REPLACEMENT_ROUTINES.put("%ZTP1", "ZTP1");
-		REPLACEMENT_ROUTINES.put("%ZTPTCH", "ZTPTCH");
-		REPLACEMENT_ROUTINES.put("%ZTRDE", "ZTRDE");
-		REPLACEMENT_ROUTINES.put("%ZTMOVE", "ZTMOVE");
-		
-		REPLACEMENT_ROUTINES.put("%ZIS", "ZIS");
-		REPLACEMENT_ROUTINES.put("%ZIS1", "ZIS1");
-		REPLACEMENT_ROUTINES.put("%ZIS2", "ZIS2");
-		REPLACEMENT_ROUTINES.put("%ZIS3", "ZIS3");
-		REPLACEMENT_ROUTINES.put("%ZIS5", "ZIS5");
-		REPLACEMENT_ROUTINES.put("%ZIS6", "ZIS6");
-		REPLACEMENT_ROUTINES.put("%ZIS7", "ZIS7");
-		REPLACEMENT_ROUTINES.put("%ZISC", "ZISC");
-		REPLACEMENT_ROUTINES.put("%ZISP", "ZISP");
-		REPLACEMENT_ROUTINES.put("%ZISS", "ZISS");
-		REPLACEMENT_ROUTINES.put("%ZISS1", "ZISS1");
-		REPLACEMENT_ROUTINES.put("%ZISS2", "ZISS2");
-		REPLACEMENT_ROUTINES.put("%ZISTCP", "ZISTCP");
-		REPLACEMENT_ROUTINES.put("%ZISUTL", "ZISUTL");
-	}
-
 	private static abstract class EntryInfoToolBase extends Tool {		
 		public EntryInfoToolBase(CLIParams params) {
 			super(params);
@@ -139,9 +65,9 @@ public class RepoEntryTools extends Tools {
 		
 		protected <T> BlocksSupply<Block<T>> getBlocksSupply(RepositoryInfo ri, BlockRecorderFactory<T> f) {
 			if ((this.params.parseTreeDirectory == null) || this.params.parseTreeDirectory.isEmpty()) {
-				return BlocksInMap.getInstance(f.getRecorder(), ri, REPLACEMENT_ROUTINES);
+				return BlocksInMap.getInstance(f.getRecorder(), ri);
 			} else {
-				return new BlocksInSerialRoutine<T>(this.params.parseTreeDirectory, f, REPLACEMENT_ROUTINES);
+				return new BlocksInSerialRoutine<T>(this.params.parseTreeDirectory, f);
 			}		
 		}
 
@@ -286,7 +212,7 @@ public class RepoEntryTools extends Tools {
 		private EntryFaninAccumulator getSupply(EntryId entryId, RepositoryInfo ri) {
 			String method = this.params.getMethod("routinefile");
 			if (method.equalsIgnoreCase("fanoutfile")) {
-				BlocksSupply<Block<FaninMark>> blocksSupply = new BlocksInSerialFanouts(entryId, this.params.parseTreeDirectory, REPLACEMENT_ROUTINES);		
+				BlocksSupply<Block<FaninMark>> blocksSupply = new BlocksInSerialFanouts(entryId, this.params.parseTreeDirectory);		
 				return new EntryFaninAccumulator(entryId, blocksSupply, false);
 			} else {
 				BlocksSupply<Block<FaninMark>> blocksSupply = this.getBlocksSupply(ri, new MarkedAsFaninBRF(entryId));		

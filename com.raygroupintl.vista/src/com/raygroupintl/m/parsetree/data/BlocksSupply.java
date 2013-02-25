@@ -16,21 +16,9 @@
 
 package com.raygroupintl.m.parsetree.data;
 
-import java.util.Collections;
-import java.util.Map;
-
 import com.raygroupintl.struct.HierarchicalMap;
 
 public abstract class BlocksSupply<T> {
-	Map<String, String> replacementRoutines = Collections.emptyMap();
-	
-	public BlocksSupply() {
-	}
-	
-	public BlocksSupply(Map<String, String> replacementRoutines) {
-		this.replacementRoutines = replacementRoutines;
-	}
-	
 	public abstract HierarchicalMap<String, T> getBlocks(String routineName);
 	
 	public T getBlock(EntryId entryId) {
@@ -41,13 +29,5 @@ public abstract class BlocksSupply<T> {
 			return rbs.getThruHierarchy(label);
 		} 
 		return null;		
-	}
-	
-	public Map<String, String> getReplacementRoutines() {
-		if (this.replacementRoutines == null) {
-			return Collections.emptyMap();
-		} else {
-			return this.replacementRoutines;
-		}
 	}
 }

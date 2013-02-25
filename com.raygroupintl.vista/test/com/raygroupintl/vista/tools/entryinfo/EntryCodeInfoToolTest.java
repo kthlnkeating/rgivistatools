@@ -1,8 +1,6 @@
 package com.raygroupintl.vista.tools.entryinfo;
 
-import java.util.HashMap;
 import java.util.HashSet;
-import java.util.Map;
 import java.util.Set;
 
 import junit.framework.Assert;
@@ -55,9 +53,7 @@ public class EntryCodeInfoToolTest {
 		Routine[] routines = AccumulatorTestCommon.getRoutines(EntryCodeInfoToolTest.class, resourceNames);
 		
 		EntryCodeInfoRecorder recorder = new EntryCodeInfoRecorder(null);
-		Map<String, String> replacement = new HashMap<String, String>();
-		replacement.put("%DTC", "APIROU02");
-		BlocksInMap<CodeInfo> blocksMap = BlocksInMap.getInstance(recorder, routines, replacement);
+		BlocksInMap<CodeInfo> blocksMap = BlocksInMap.getInstance(recorder, routines);
 		
 		EntryCodeInfoAccumulator a = new EntryCodeInfoAccumulator(blocksMap);
 				

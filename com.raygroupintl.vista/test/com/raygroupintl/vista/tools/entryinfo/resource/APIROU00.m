@@ -45,9 +45,9 @@ STOREG ;
  Q
  ;
 TOOTHER
- D FACT^%DTC(5) Q 
+ D FACT^APIROU02(5) Q 
 TONONE
- D ^%DTC 
+ D ^APIROU02 
  ;
 ZZ S A=A+1
  S D=D+1

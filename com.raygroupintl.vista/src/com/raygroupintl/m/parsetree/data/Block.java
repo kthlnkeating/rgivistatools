@@ -19,7 +19,6 @@ package com.raygroupintl.m.parsetree.data;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
-import java.util.Map;
 import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -138,16 +137,6 @@ public class Block<T> {
 				Block<T> tagBlock = this.getChildBlock(tagName);
 				if (tagBlock == null) {
 					tagBlock = this.callables.getThruHierarchy(tagName);
-					if (tagBlock == null) {
-						String inRoutineName = this.entryId.getRoutineName();
-						if (inRoutineName != null) {
-							Map<String, String> replacedRoutines = blocksSupply.getReplacementRoutines();
-							String replacement = replacedRoutines.get(tagName);
-							if ((replacement != null) && (replacement.equals(inRoutineName))) {
-								tagBlock = this.callables.getThruHierarchy(replacement);
-							}
-						}
-					}
 				}
 				if (tagBlock == null) {
 					if (! reported.contains(fout)) {						
@@ -160,24 +149,12 @@ public class Block<T> {
 			} else {
 				HierarchicalMap<String, Block<T>> routineBlocks = blocksSupply.getBlocks(routineName);
 				String originalTagName = tagName;
-				if (routineBlocks == null) {
-					Map<String, String> replacedRoutines = blocksSupply.getReplacementRoutines();
-					if (replacedRoutines != null) {
-						String replacement = replacedRoutines.get(routineName);
-						if (replacement != null) {
-							routineBlocks = blocksSupply.getBlocks(replacement);
-							if (tagName.equals(routineName)) {
-								tagName = replacement;
-							}
-						}
+				if (routineBlocks == null) {					
+					if (! reported.contains(fout)) {
+						LOGGER.log(Level.WARNING, "Unable to find information about routine " + routineName + ".");
+						reported.add(fout);
 					}
-					if (routineBlocks == null) {					
-						if (! reported.contains(fout)) {
-							LOGGER.log(Level.WARNING, "Unable to find information about routine " + routineName + ".");
-							reported.add(fout);
-						}
-						continue;
-					}
+					continue;
 				}
 				Block<T> tagBlock = routineBlocks.getThruHierarchy(tagName);
 				if (tagBlock == null) {
@@ -193,33 +170,6 @@ public class Block<T> {
 					}
 				}
 				fanoutBlocks.add(this, tagBlock, ifout.getIndex());
-			}				 
-		}
-	}
-	
-	public void updateLocals(Set<Integer> localEntries, Filter<EntryId> filter) {
-		for (IndexedFanout ifout : this.fanouts) {
-			EntryId fout = ifout.getFanout();
-			if ((filter != null) && (! filter.isValid(fout))) continue;
-			String routineName = fout.getRoutineName();
-			String tagName = fout.getTag();					
-			if (tagName == null) {
-				tagName = routineName;
-			}			
-			if (routineName == null) {				
-				Block<T> tagBlock = this.getChildBlock(tagName);
-				if (tagBlock == null) {
-					tagBlock = this.callables.getThruHierarchy(tagName);
-				}
-				if (tagBlock != null) {
-					if (tagBlock.getCallableBlocks().getParent() != null) {
-						Integer id = System.identityHashCode(tagBlock);
-						if (! localEntries.contains(id)) {
-							localEntries.add(id);
-							tagBlock.updateLocals(localEntries, filter);
-						}
-					}
-				} 			
 			}				 
 		}
 	}

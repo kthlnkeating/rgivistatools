@@ -17,7 +17,6 @@
 package com.raygroupintl.vista.tools.entryfanin;
 
 import java.util.HashMap;
-import java.util.Map;
 import java.util.Set;
 
 import com.raygroupintl.m.parsetree.data.Block;
@@ -32,8 +31,7 @@ public class BlocksInSerialFanouts extends BlocksSupply<Block<FaninMark>> {
 	private String inputPath;
 	private HashMap<String, HierarchicalMap<String, Block<FaninMark>>> blocks = new HashMap<String, HierarchicalMap<String, Block<FaninMark>>>();
 	
-	public BlocksInSerialFanouts(EntryId entryUnderTest, String inputPath, Map<String, String> replacementRoutines) {
-		super(replacementRoutines);
+	public BlocksInSerialFanouts(EntryId entryUnderTest, String inputPath) {
 		this.entryUnderTest = entryUnderTest;
 		this.inputPath = inputPath;
 	}

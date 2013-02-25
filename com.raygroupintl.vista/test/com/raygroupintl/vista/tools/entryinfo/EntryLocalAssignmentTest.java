@@ -1,8 +1,6 @@
 package com.raygroupintl.vista.tools.entryinfo;
 
-import java.util.HashMap;
 import java.util.HashSet;
-import java.util.Map;
 import java.util.Set;
 
 import junit.framework.Assert;
@@ -35,9 +33,7 @@ public class EntryLocalAssignmentTest {
 		Set<String> locals = new HashSet<String>();
 		locals.add("R");
 		LocalAssignmentRecorder recorder = new LocalAssignmentRecorder(locals);
-		Map<String, String> replacement = new HashMap<String, String>();
-		replacement.put("%DTC", "APIROU02");
-		BlocksInMap<CodeLocations> blocksMap = BlocksInMap.getInstance(recorder, routines, replacement);
+		BlocksInMap<CodeLocations> blocksMap = BlocksInMap.getInstance(recorder, routines);
 		
 		LocalAssignmentAccumulator a = new LocalAssignmentAccumulator(blocksMap);
 				

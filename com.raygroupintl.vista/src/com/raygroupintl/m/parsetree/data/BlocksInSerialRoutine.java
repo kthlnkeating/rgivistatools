@@ -17,7 +17,6 @@
 package com.raygroupintl.m.parsetree.data;
 
 import java.util.HashMap;
-import java.util.Map;
 
 import com.raygroupintl.m.parsetree.Routine;
 import com.raygroupintl.m.parsetree.visitor.BlockRecorder;
@@ -29,8 +28,7 @@ public class BlocksInSerialRoutine<T> extends BlocksSupply<Block<T>> {
 	private HashMap<String, HierarchicalMap<String, Block<T>>> blocks = new HashMap<String, HierarchicalMap<String, Block<T>>>();
 	private BlockRecorderFactory<T> blockRecorder;
 	
-	public BlocksInSerialRoutine(String inputPath, BlockRecorderFactory<T> brf, Map<String, String> replacementRoutines) {
-		super(replacementRoutines);
+	public BlocksInSerialRoutine(String inputPath, BlockRecorderFactory<T> brf) {
 		this.inputPath = inputPath;
 		this.blockRecorder = brf;
 	}

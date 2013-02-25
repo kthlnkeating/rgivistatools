@@ -36,9 +36,9 @@ public class BlocksInMap<T> extends BlocksSupply<Block<T>> {
 		private BlockRecorder<T> recorder;
 		private BlocksInMap<T> blocksMap;
 		
-		public Factory(BlockRecorder<T> br, Map<String, String> replacementRoutines) {
+		public Factory(BlockRecorder<T> br) {
 			this.recorder= br;
-			this.blocksMap = new BlocksInMap<T>(replacementRoutines);
+			this.blocksMap = new BlocksInMap<T>();
 		}
 		
 		@Override
@@ -68,14 +68,6 @@ public class BlocksInMap<T> extends BlocksSupply<Block<T>> {
 
 	private Map<String, HierarchicalMap<String, Block<T>>> map = new HashMap<String, HierarchicalMap<String, Block<T>>>();
 	
-	public BlocksInMap() {
-		super();
-	}
-	
-	public BlocksInMap(Map<String, String> replacementRoutines) {
-		super(replacementRoutines);
-	}
-	
 	public HierarchicalMap<String, Block<T>> put(String routineName,  HierarchicalMap<String, Block<T>> blocks) {
 		return this.map.put(routineName, blocks);
 	}
@@ -85,15 +77,15 @@ public class BlocksInMap<T> extends BlocksSupply<Block<T>> {
 		return this.map.get(routineName);
 	}
 		
-	public static <T> BlocksInMap<T> getInstance(BlockRecorder<T> br, RepositoryInfo ri, Map<String, String> replacementRoutines) {
-		Factory<T> f = new Factory<T>(br, replacementRoutines);
+	public static <T> BlocksInMap<T> getInstance(BlockRecorder<T> br, RepositoryInfo ri) {
+		Factory<T> f = new Factory<T>(br);
 		VistaPackages vps = new VistaPackages(ri.getAllPackages());
 		vps.accept(f);
 		return f.getBlocks();		
 	}
 	
-	public static <T> BlocksInMap<T> getInstance(BlockRecorder<T> br, Routine[] routines, Map<String, String> replacementRoutines) {
-		BlocksInMap<T> result = new BlocksInMap<T>(replacementRoutines);
+	public static <T> BlocksInMap<T> getInstance(BlockRecorder<T> br, Routine[] routines) {
+		BlocksInMap<T> result = new BlocksInMap<T>();
 		for (Routine r : routines) {
 			br.reset();
 			r.accept(br);

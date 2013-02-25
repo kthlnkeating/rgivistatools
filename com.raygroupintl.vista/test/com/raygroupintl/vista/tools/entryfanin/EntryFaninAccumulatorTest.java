@@ -1,7 +1,5 @@
 package com.raygroupintl.vista.tools.entryfanin;
 
-import java.util.Collections;
-import java.util.Map;
 import java.util.Set;
 
 import junit.framework.Assert;
@@ -46,8 +44,7 @@ public class EntryFaninAccumulatorTest {
 		}
 		EntryId entryId = new EntryId("FINROU00", "ADD");
 		MarkedAsFaninBR recorder = new MarkedAsFaninBR(entryId);
-		Map<String, String> emptyMap = Collections.emptyMap();
-		BlocksInMap<FaninMark> blocksMap = BlocksInMap.getInstance(recorder, routines, emptyMap);
+		BlocksInMap<FaninMark> blocksMap = BlocksInMap.getInstance(recorder, routines);
 		
 		EntryFaninAccumulator accumulator = new EntryFaninAccumulator(entryId, blocksMap, false);
 		for (Routine r : routines) {

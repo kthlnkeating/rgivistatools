@@ -1,7 +1,5 @@
 package com.raygroupintl.vista.tools.entryinfo;
 
-import java.util.HashMap;
-import java.util.Map;
 import java.util.Set;
 
 import junit.framework.Assert;
@@ -31,9 +29,7 @@ public class EntryFanoutToolTest {
 		Routine[] routines = AccumulatorTestCommon.getRoutines(EntryCodeInfoToolTest.class, resourceNames);
 		
 		VoidBlockRecorder recorder = new VoidBlockRecorder();
-		Map<String, String> replacement = new HashMap<String, String>();
-		replacement.put("%DTC", "APIROU02");
-		BlocksInMap<Void> blocksMap = BlocksInMap.getInstance(recorder, routines, replacement);
+		BlocksInMap<Void> blocksMap = BlocksInMap.getInstance(recorder, routines);
 		
 		FanoutAccumulator a = new FanoutAccumulator(blocksMap);
 				
