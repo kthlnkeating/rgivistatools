@@ -164,6 +164,16 @@ public class VistaPackage  implements RepositoryNode {
 		return path;			
 	}
 	
+	public Path getPathForRoutine(String routine) {
+		String vistaFOIARoot = RepositoryInfo.getLocation();
+		if (vistaFOIARoot == null) {
+			vistaFOIARoot = "";
+		}
+		String dir = this.getDirectoryName();
+		Path path = Paths.get(vistaFOIARoot, "Packages", dir, "Routines", routine+".m");
+		return path;			
+	}
+	
 	public boolean contains(String routineName) {
 		List<String> prefixes = this.getPrefixes();
 		for (String prefix : prefixes) {

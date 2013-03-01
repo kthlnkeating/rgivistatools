@@ -492,5 +492,11 @@ public class RepositoryTools extends Tools {
 				return new CacheUsage(params);
 			}
 		});
+		tools.put("returntype", new MemberFactory() {				
+			@Override
+			public Tool getInstance(CLIParams params) {
+				return new ReturnTypeTool(params);
+			}
+		});
 	}
 }
