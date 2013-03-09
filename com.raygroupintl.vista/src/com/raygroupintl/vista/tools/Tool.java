@@ -106,7 +106,7 @@ public abstract class Tool {
 		}
 	}
 	
-	private List<String> getEntriesInString() {
+	protected List<String> getEntriesInString() {
 		if (this.params.inputFile != null) {
 			try {
 				Path path = Paths.get(this.params.inputFile);

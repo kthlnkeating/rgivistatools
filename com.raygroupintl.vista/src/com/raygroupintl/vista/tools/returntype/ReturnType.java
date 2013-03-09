@@ -2,9 +2,9 @@ package com.raygroupintl.vista.tools.returntype;
 
 public class ReturnType {
 	
+	//basically just a prototype wrapper since ENUM's are singleton.
 	private ReturnTypeENUM returnType;
-	//TODO: either put more values in here for tracking line locations and everything or create a new visitor for tracking line locations.
-
+	
 	public ReturnType(ReturnTypeENUM returnType) {
 		super();
 		this.returnType = returnType;
