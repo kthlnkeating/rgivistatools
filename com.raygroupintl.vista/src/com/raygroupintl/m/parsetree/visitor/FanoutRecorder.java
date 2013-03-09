@@ -19,6 +19,7 @@ package com.raygroupintl.m.parsetree.visitor;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -41,17 +42,21 @@ import com.raygroupintl.m.parsetree.StringLiteral;
 import com.raygroupintl.m.parsetree.data.CallArgument;
 import com.raygroupintl.m.parsetree.data.CallArgumentType;
 import com.raygroupintl.m.parsetree.data.EntryId;
+import com.raygroupintl.m.struct.EntryFanoutInfo;
+import com.raygroupintl.m.struct.FanoutTypeENUM;
 import com.raygroupintl.m.struct.LineLocation;
 import com.raygroupintl.struct.Filter;
 
 public class FanoutRecorder extends LocationMarker {
-	private static class LastInfo {
+	
+	private class LastInfo {
 		public IndirectFanoutLabel lastIndirectFanoutLabel;
 		public FanoutLabel lastFanoutLabel;
 		public IndirectFanoutRoutine lastIndirectFanoutRoutine;
 		public FanoutRoutine lastFanoutRoutine;
 		public EnvironmentFanoutRoutine lastEnvironmentFanoutRoutine;
 		public CallArgument[] callArguments;
+		public FanoutTypeENUM fanoutType;
 		
 		private void reset() {
 			this.lastIndirectFanoutLabel = null;
@@ -60,6 +65,7 @@ public class FanoutRecorder extends LocationMarker {
 			this.lastEnvironmentFanoutRoutine = null;
 			this.lastFanoutRoutine = null;
 			this.callArguments = null;
+			this.fanoutType = null;
 		}
 		
 		private EntryId getFanout() {
@@ -74,9 +80,14 @@ public class FanoutRecorder extends LocationMarker {
 		
 			return new EntryId(routine, label);
 		}
+		
+		private EntryFanoutInfo getFanout2() {
+			return new EntryFanoutInfo(getLastLocation(), fanoutType, getFanout());
+		}
 	}
 		
 	private Map<LineLocation, List<EntryId>> fanouts;
+	private LinkedList<EntryFanoutInfo> fanouts2;
 	private LastInfo lastInfo = new LastInfo();
 	private Filter<EntryId> filter;
 	private Set<Integer> doBlockHash = new HashSet<Integer>();
@@ -166,13 +177,16 @@ public class FanoutRecorder extends LocationMarker {
 				this.fanouts.put(location, fanoutsOnLocation);
 			}
 			fanoutsOnLocation.add(fanout);
-		}		
+		}
+		
+		fanouts2.add(this.lastInfo.getFanout2());
 	}
 		
 	@Override
 	protected void visitAtomicDo(AtomicDo atomicDo) {
 		this.lastInfo.reset();
 		super.visitAtomicDo(atomicDo);
+		this.lastInfo.fanoutType = FanoutTypeENUM.DO;
 		this.updateFanout();
 	}
 	
@@ -180,6 +194,7 @@ public class FanoutRecorder extends LocationMarker {
 	protected void visitAtomicGoto(AtomicGoto atomicGoto) {
 		this.lastInfo.reset();
 		super.visitAtomicGoto(atomicGoto);
+		this.lastInfo.fanoutType = FanoutTypeENUM.GOTO;
 		this.updateFanout();
 	}
 	
@@ -188,6 +203,7 @@ public class FanoutRecorder extends LocationMarker {
 		LastInfo current = this.lastInfo;
 		this.lastInfo = new LastInfo();
 		super.visitExtrinsic(extrinsic);
+		this.lastInfo.fanoutType = FanoutTypeENUM.EXTRINSIC;
 		this.updateFanout();
 		this.lastInfo = current;
 	}
@@ -197,6 +213,7 @@ public class FanoutRecorder extends LocationMarker {
 		LastInfo current = this.lastInfo;
 		this.lastInfo = new LastInfo();
 		super.visitObjectMethodCall(omc);
+		//TODO: regist this as a fanout type?
 		this.lastInfo = current;
 	}
 	
@@ -212,6 +229,7 @@ public class FanoutRecorder extends LocationMarker {
 	@Override
 	protected void visitRoutine(Routine routine) {
 		this.fanouts = new HashMap<LineLocation, List<EntryId>>();
+		this.fanouts2 = new LinkedList<EntryFanoutInfo>();
 		super.visitRoutine(routine);
 	}
 
@@ -226,5 +244,10 @@ public class FanoutRecorder extends LocationMarker {
 	public Map<LineLocation, List<EntryId>> getFanouts(Routine routine) {
 		routine.accept(this);
 		return this.fanouts;
-	}		
+	}
+	
+	public LinkedList<EntryFanoutInfo> getFanouts2(Routine routine) {
+		routine.accept(this);
+		return this.fanouts2;
+	}
 }

@@ -30,8 +30,19 @@ import java.util.Scanner;
 import java.util.TreeMap;
 
 import com.raygroupintl.m.parsetree.data.EntryId;
-import com.raygroupintl.m.parsetree.data.EntryIdWithSource;
 import com.raygroupintl.m.parsetree.data.EntryId.StringFormat;
+import com.raygroupintl.m.parsetree.data.EntryIdWithSource;
+import com.raygroupintl.m.parsetree.visitor.EntryRefVisitor;
+import com.raygroupintl.m.token.MLine;
+import com.raygroupintl.m.token.MObjectSupply;
+import com.raygroupintl.m.token.MTFSupply;
+import com.raygroupintl.m.token.MToken;
+import com.raygroupintl.m.token.MVersion;
+import com.raygroupintl.parser.SyntaxErrorException;
+import com.raygroupintl.parser.Text;
+import com.raygroupintl.parser.TokenFactory;
+import com.raygroupintl.parsergen.ObjectSupply;
+import com.raygroupintl.parsergen.ParseException;
 import com.raygroupintl.stringlib.DigitFilter;
 import com.raygroupintl.struct.Filter;
 import com.raygroupintl.struct.Transformer;
@@ -69,6 +80,83 @@ public class RepositoryInfo {
 				return new EntryIdWithSource(entryId, source);
 			}
 			return null;
+		}			
+	}
+	
+	private static class ProtocolFilter implements Filter<MGlobalNode> {
+		private DigitFilter digitFilter = new DigitFilter();
+		private String protocolType;
+		
+		public ProtocolFilter(String protocolType) {
+			this.protocolType = protocolType;
+		}
+		
+		@Override
+		public boolean isValid(MGlobalNode input) {
+			
+			if (this.digitFilter.isValid(input.getName())) {
+				MGlobalNode node0 = input.getNode("0");
+				if (node0 != null) {
+					String type = node0.getValuePiece(3);
+					if ((type != null) && (protocolType == null || type.equals(protocolType))) {
+						return input.getNode("20") != null || input.getNode("26") != null;
+					}
+				}
+			}
+			return false;
+		}
+		
+	}
+	
+
+	private static class ProtocolTransformer implements Transformer<MGlobalNode, List<EntryIdWithSource>> {
+		
+		private ObjectSupply<MToken> mAdapterSupply = new MObjectSupply();
+		private TokenFactory<MToken> tfLine;
+		
+		public ProtocolTransformer() {
+			super();
+			
+			try {
+				tfLine = MTFSupply.getInstance(MVersion.CACHE).line; //TODO: should be set from cli args
+			} catch (ParseException e) {
+				e.printStackTrace();
+			} 
+		}
+		
+		@Override 
+		public List<EntryIdWithSource> transform(MGlobalNode inputNode) {
+			List<EntryIdWithSource> results = new ArrayList<EntryIdWithSource>();
+			
+			MGlobalNode node = inputNode.getNode("20") != null
+					&& !inputNode.getNode("20").getValue().isEmpty() ? inputNode
+					.getNode("20") : inputNode.getNode("26");
+
+			if (node == null || node.getValue().isEmpty())
+				return results;
+					
+					
+			//parse out D subroutine calls
+			String line = node.getValue();
+			if (line.charAt(0) != ' ')
+				line = " " +line; //parser is expecting a complete, valid M line
+			Text text = new Text(line);
+			MLine mline = null;
+			try {
+				mline = (MLine) tfLine.tokenize(text, this.mAdapterSupply);
+			} catch (SyntaxErrorException e) {
+				e.printStackTrace();
+			}
+			
+			EntryRefVisitor erv = new EntryRefVisitor();
+			mline.getNode().accept(erv);
+			
+			String source = inputNode.getNode("0").getValuePiece(0);
+			for (EntryId entryId : erv.getEntryTags()) {
+				results.add(new EntryIdWithSource(entryId, source));
+			}
+			
+			return results;
 		}			
 	}
 	
@@ -240,6 +328,16 @@ public class RepositoryInfo {
 		return result;
 	}
 	
+	public List<List<EntryIdWithSource>> getProtocolEntryPoints(String protocolType) {
+		String root = RepositoryInfo.getLocation();
+		Path path = Paths.get(root, "Packages", "Kernel", "Globals", "101+PROTOCOL.zwr");
+		MGlobalNode rootNode = new MGlobalNode();
+		rootNode.read(path);
+		MGlobalNode node = rootNode.getNode("ORD","101");
+		List<List<EntryIdWithSource>> result = node.getValues(new ProtocolFilter(protocolType), new ProtocolTransformer());
+		return result;
+	}
+	
 	public List<EntryIdWithSource> getRPCs() {
 		String root = RepositoryInfo.getLocation();
 		Path path = Paths.get(root, "Packages", "RPC Broker", "Globals", "8994+REMOTE PROCEDURE.zwr");
@@ -369,4 +467,6 @@ public class RepositoryInfo {
 			return null;
 		}
 	}
+
+
 }

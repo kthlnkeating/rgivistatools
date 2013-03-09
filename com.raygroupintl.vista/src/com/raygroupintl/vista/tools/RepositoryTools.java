@@ -35,6 +35,7 @@ import com.raygroupintl.vista.repository.visitor.ErrorWriter;
 import com.raygroupintl.vista.repository.visitor.FaninWriter;
 import com.raygroupintl.vista.repository.visitor.FanoutWriter;
 import com.raygroupintl.vista.repository.visitor.OptionWriter;
+import com.raygroupintl.vista.repository.visitor.ProtocolWriter;
 import com.raygroupintl.vista.repository.visitor.RPCWriter;
 import com.raygroupintl.vista.repository.visitor.SerializedRoutineWriter;
 
@@ -95,6 +96,30 @@ public class RepositoryTools extends Tools {
 					VistaPackages vps = this.getVistaPackages(ri);
 					if (vps != null) {						
 						OptionWriter ow = new OptionWriter(ri, fr);
+						ow.write(vps);
+					}
+				}
+			}
+		}
+	}
+	
+	private static class Protocol extends Tool {
+		private CLIParams params;
+		
+		public Protocol(CLIParams params) {
+			super(params);
+			this.params = params;
+		}
+		
+		@Override
+		public void run() {
+			FileWrapper fr = this.getOutputFile();
+			if (fr != null) {
+				RepositoryInfo ri = this.getRepositoryInfo();
+				if (ri != null) {
+					VistaPackages vps = this.getVistaPackages(ri);
+					if (vps != null) {
+						ProtocolWriter ow = new ProtocolWriter(ri, fr, params.protocolType);
 						ow.write(vps);
 					}
 				}
@@ -332,6 +357,12 @@ public class RepositoryTools extends Tools {
 				return new Option(params);
 			}
 		});
+		tools.put("protocol", new MemberFactory() {
+			@Override
+			public Tool getInstance(CLIParams params) {
+				return new Protocol(params);
+			}
+		});
 		tools.put("rpc", new MemberFactory() {				
 			@Override
 			public Tool getInstance(CLIParams params) {
@@ -384,6 +415,12 @@ public class RepositoryTools extends Tools {
 			@Override
 			public Tool getInstance(CLIParams params) {
 				return new CacheUsage(params);
+			}
+		});
+		tools.put("returntype", new MemberFactory() {				
+			@Override
+			public Tool getInstance(CLIParams params) {
+				return new ReturnTypeTool(params);
 			}
 		});
 	}
