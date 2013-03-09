@@ -77,7 +77,7 @@ public class ReturnTypeTool extends Tool {
 		
 		//gather only the return types
 		//parse as indicated in (2)
-		BlocksInMap<ReturnType> blocksMap = BlocksInMap.getInstance(rtBR, fanoutRoutines, null); //for every routine that is a fanout, return all the block types
+		BlocksInMap<ReturnType> blocksMap = BlocksInMap.getInstance(rtBR, fanoutRoutines); //for every routine that is a fanout, return all the block types
 		////blocksMap.map <String,Blocks> key: Routinename, the routine being a fanout. value: blocks of the routine key
 		//--Blocks is a hashmap wrapper of <String,Block<T>> and links to 1 parent Blocks.. the get can query the parent if not found in the present. key: tag, in the routine, Block, of the tag
 		//----Block contains an attached object, children - ArrayList<Block> (do blocks), siblings - Blocks<T> (siblings in the routine?), fanouts - ArrayList of IndexedFanout (int routineindex, EntryId)		

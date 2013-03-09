@@ -4,10 +4,10 @@ import com.raygroupintl.m.parsetree.Entry;
 import com.raygroupintl.m.parsetree.Line;
 import com.raygroupintl.m.parsetree.QuitCmd;
 import com.raygroupintl.m.parsetree.data.Block;
-import com.raygroupintl.m.parsetree.data.Blocks;
 import com.raygroupintl.m.parsetree.data.CallArgument;
 import com.raygroupintl.m.parsetree.data.EntryId;
 import com.raygroupintl.m.parsetree.visitor.BlockRecorder;
+import com.raygroupintl.struct.HierarchicalMap;
 
 public class ReturnTypeBR extends BlockRecorder<ReturnType> {
 
@@ -53,18 +53,7 @@ public class ReturnTypeBR extends BlockRecorder<ReturnType> {
 	@Override
 	protected void postUpdateFanout(EntryId fanout, CallArgument[] callArguments) {
 	}
-	
-	//TODO: how to report each fanout (same one more than once) at each line location? Maybe need to create a new custom visitor that is more verbose.
-
-	@Override
-	protected Block<ReturnType> getNewBlock(int index, EntryId entryId, Blocks<Block<ReturnType>> blocks, String[] params) {
-		//getNewBlock is called BEFORE the nodes in the block are visited. so create ReturnStaus, but refer to it and update it afterwards
-		//System.out.println("found new block");
-//		attachedObject = new ReturnStatus();
-//		returnTypeENUM = null;
-		return new Block<ReturnType>(index, entryId, blocks, attachedObject); //this gets called when a new entry is visited. get it again later via getCurrentBlock()
-	}
-	
+		
 	@Override
 	protected void visitEntry(Entry entry) {
 //		if (!entry.getKey().contains(":"))
@@ -76,6 +65,12 @@ public class ReturnTypeBR extends BlockRecorder<ReturnType> {
 		}
 //		if (!entry.getKey().contains(":"))
 //			System.out.println("stop entry: " +entry.getKey());
+	}
+
+	@Override
+	protected Block<ReturnType> getNewBlock(int index, EntryId entryId,
+			HierarchicalMap<String, Block<ReturnType>> blocks, String[] params) {
+		return new Block<ReturnType>(index, entryId, blocks, attachedObject); //this gets called when a new entry is visited. get it again later via getCurrentBlock()
 	}
 
 }
