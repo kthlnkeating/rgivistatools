@@ -17,6 +17,7 @@
 package com.raygroupintl.vista.tools;
 
 import java.io.IOException;
+import java.io.Writer;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
@@ -39,6 +40,7 @@ import com.raygroupintl.vista.tools.fnds.ToolResult;
 
 public abstract class Tool {
 	protected CLIParams params;
+	protected Writer toolOutput; //can be set programatically (ie: eclipse)
 	
 	protected Tool(CLIParams params) {
 		this.params = params;

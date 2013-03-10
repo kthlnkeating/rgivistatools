@@ -7,7 +7,6 @@ import java.util.Map;
 import java.util.Set;
 
 import com.raygroupintl.m.parsetree.Routine;
-import com.raygroupintl.m.parsetree.data.EntryId;
 import com.raygroupintl.m.token.MVersion;
 import com.raygroupintl.vista.repository.RepositoryInfo;
 import com.raygroupintl.vista.repository.VistaPackage;
@@ -23,7 +22,7 @@ public class RoutineLoader {
 		repositoryInfo = RepositoryInfo.getInstance(MRARoutineFactory.getInstance(version));
 	}
 	
-	public void loadRoutines(Set<String> routineNames) {
+	public void loadRoutines(Collection<String> routineNames) {
 		for (String routineName: routineNames) {
 			loadRoutine(routineName);
 		}
