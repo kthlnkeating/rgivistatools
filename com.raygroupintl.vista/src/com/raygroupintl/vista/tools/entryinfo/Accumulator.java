@@ -53,7 +53,7 @@ public abstract class Accumulator<T extends ToolResult, B> {
 	
 	protected abstract T getEmptyBlockResult(EntryId entryId);
 	
-	public T getResult(EntryId entryId) {
+	protected T getResult(EntryId entryId) {
 		Block<B> b = this.blocksSupply.getBlock(entryId);
 		if (b != null) {
 			Filter<EntryId> filter = this.filterFactory.getFilter(entryId);
@@ -83,9 +83,5 @@ public abstract class Accumulator<T extends ToolResult, B> {
 	
 	public ToolResultCollection<T> getResult() {
 		return this.results;
-	}
-	
-	public T getLastResult() {
-		return this.results.getLast();
 	}
 }

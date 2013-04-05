@@ -16,45 +16,45 @@
 
 package com.raygroupintl.vista.tools.entryinfo;
 
-import java.util.Set;
-
 import com.raygroupintl.m.parsetree.data.EntryId;
 import com.raygroupintl.output.Terminal;
 import com.raygroupintl.output.TerminalFormatter;
 import com.raygroupintl.vista.tools.fnds.ToolResult;
 
-public class EntryCodeInfo implements ToolResult {
-	public EntryId entryId;
-	public String[] formals;
-	public AssumedVariablesTR assumedVariables;
-	public BasicCodeInfoTR basicCodeInfo;
+public class BasicCodeInfoTR implements ToolResult {
+	private EntryId entryId;
+	private BasicCodeInfo info;
 
-	public EntryCodeInfo(EntryId entryId, String[] formals, AssumedVariablesTR assumedVariables, BasicCodeInfoTR basicCodeInfo) {
+	public BasicCodeInfoTR(EntryId entryId, BasicCodeInfo info) {
 		this.entryId = entryId;
-		this.formals = formals;
-		this.assumedVariables = assumedVariables;
-		this.basicCodeInfo = basicCodeInfo;
+		this.info = info;
 	}
 	
-	public Set<String> getAssumedVariables() {
-		return this.assumedVariables.getData();
+	public BasicCodeInfo getData() {
+		return this.info;
 	}
 	
-	public BasicCodeInfo getBasicCodeInfo() {
-		return this.basicCodeInfo.getData();
+	public boolean isValid() {
+		return this.info != null;
+	}
+	
+	public void writeInfo(Terminal t, TerminalFormatter tf) {
+		t.writeFormatted("GLBS", this.info.getGlobals(), tf);
+		t.writeFormatted("READ" , this.info.getReadCount(), tf);
+		t.writeFormatted("WRITE", this.info.getWriteCount(), tf);
+		t.writeFormatted("EXEC", this.info.getExecuteCount(), tf);
+		t.writeFormatted("IND", this.info.getIndirectionCount(), tf);
+		t.writeFormatted("FMGLBS", this.info.getFilemanGlobals(), tf);
+		t.writeFormatted("FMCALLS", this.info.getFilemanCalls(), tf);		
 	}
 	
 	@Override
 	public void write(Terminal t, TerminalFormatter tf) {
 		t.writeEOL(" " + this.entryId.toString2());		
-		if ((this.formals == null) && (! this.assumedVariables.isValid()) && (! this.basicCodeInfo.isValid())) {
+		if (this.info == null) {
 			t.writeEOL("  ERROR: Invalid entry point");
-			return;
 		} else {
-			t.writeFormatted("FORMAL", this.formals, tf);
-			this.assumedVariables.writeVariables(t, tf);
-			this.basicCodeInfo.writeInfo(t, tf);
-			t.writeEOL();
+			this.writeInfo(t, tf);
 		}
-	}
+	}	
 }

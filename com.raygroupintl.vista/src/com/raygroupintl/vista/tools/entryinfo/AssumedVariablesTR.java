@@ -16,6 +16,9 @@
 
 package com.raygroupintl.vista.tools.entryinfo;
 
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 import java.util.Set;
 
 import com.raygroupintl.m.parsetree.data.EntryId;
@@ -23,38 +26,37 @@ import com.raygroupintl.output.Terminal;
 import com.raygroupintl.output.TerminalFormatter;
 import com.raygroupintl.vista.tools.fnds.ToolResult;
 
-public class EntryCodeInfo implements ToolResult {
-	public EntryId entryId;
-	public String[] formals;
-	public AssumedVariablesTR assumedVariables;
-	public BasicCodeInfoTR basicCodeInfo;
+public class AssumedVariablesTR implements ToolResult  {
+	private EntryId entryId;
+	private Set<String> assumedVariables;
 
-	public EntryCodeInfo(EntryId entryId, String[] formals, AssumedVariablesTR assumedVariables, BasicCodeInfoTR basicCodeInfo) {
+	public AssumedVariablesTR(EntryId entryId, Set<String> assumedVariables) {
 		this.entryId = entryId;
-		this.formals = formals;
 		this.assumedVariables = assumedVariables;
-		this.basicCodeInfo = basicCodeInfo;
 	}
 	
-	public Set<String> getAssumedVariables() {
-		return this.assumedVariables.getData();
+	public Set<String> getData() {
+		return this.assumedVariables;
 	}
 	
-	public BasicCodeInfo getBasicCodeInfo() {
-		return this.basicCodeInfo.getData();
+	public boolean isValid() {
+		return this.assumedVariables != null;
+	}
+	
+	public void writeVariables(Terminal t, TerminalFormatter tf) {
+		List<String> assumedLocalsSorted = new ArrayList<String>(this.assumedVariables);
+		Collections.sort(assumedLocalsSorted);			
+		t.writeFormatted("ASSUMED", assumedLocalsSorted, tf);		
 	}
 	
 	@Override
 	public void write(Terminal t, TerminalFormatter tf) {
 		t.writeEOL(" " + this.entryId.toString2());		
-		if ((this.formals == null) && (! this.assumedVariables.isValid()) && (! this.basicCodeInfo.isValid())) {
+		if (this.assumedVariables == null) {
 			t.writeEOL("  ERROR: Invalid entry point");
 			return;
 		} else {
-			t.writeFormatted("FORMAL", this.formals, tf);
-			this.assumedVariables.writeVariables(t, tf);
-			this.basicCodeInfo.writeInfo(t, tf);
-			t.writeEOL();
+			this.writeVariables(t, tf);
 		}
-	}
+	}	
 }

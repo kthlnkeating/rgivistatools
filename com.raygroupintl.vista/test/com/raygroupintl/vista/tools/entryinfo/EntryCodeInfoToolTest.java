@@ -18,13 +18,13 @@ import com.raygroupintl.vista.tools.entryinfo.EntryCodeInfoRecorder;
 
 public class EntryCodeInfoToolTest {
 	private void testAssumedLocal(EntryCodeInfo r, String[] expectedAssumeds, String[] expectedGlobals) {
-		Set<String> assumeds = r.assumedLocals;
+		Set<String> assumeds = r.getAssumedVariables();
 		Assert.assertEquals(expectedAssumeds.length, assumeds.size());
 		for (String expectedOutput : expectedAssumeds) {
 			Assert.assertTrue(assumeds.contains(expectedOutput));			
 		}				
 
-		Set<String> globals = new HashSet<String>(r.otherCodeInfo.getGlobals());
+		Set<String> globals = new HashSet<String>(r.getBasicCodeInfo().getGlobals());
 		Assert.assertEquals(expectedGlobals.length, globals.size());
 		for (String expectedGlobal : expectedGlobals) {
 			Assert.assertTrue(globals.contains(expectedGlobal));			
@@ -32,13 +32,13 @@ public class EntryCodeInfoToolTest {
 	}
 	
 	private void filemanTest(EntryCodeInfo r, String[] expectedGlobals, String[] expectedCalls) {
-		Set<String> globals = new HashSet<String>(r.otherCodeInfo.getFilemanGlobals());
+		Set<String> globals = new HashSet<String>(r.getBasicCodeInfo().getFilemanGlobals());
 		Assert.assertEquals(expectedGlobals.length, globals.size());
 		for (String expectedGlobal : expectedGlobals) {
 			Assert.assertTrue(globals.contains(expectedGlobal));			
 		}				
 
-		Set<String> calls = new HashSet<String>(r.otherCodeInfo.getFilemanCalls());
+		Set<String> calls = new HashSet<String>(r.getBasicCodeInfo().getFilemanCalls());
 		Assert.assertEquals(expectedCalls.length, calls.size());
 		for (String expectedCall : expectedCalls) {
 			Assert.assertTrue(calls.contains(expectedCall));			
