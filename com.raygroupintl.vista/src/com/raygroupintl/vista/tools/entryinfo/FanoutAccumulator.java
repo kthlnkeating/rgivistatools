@@ -11,38 +11,35 @@ import com.raygroupintl.struct.FilterFactory;
 import com.raygroupintl.vista.tools.entryfanout.EntryFanouts;
 import com.raygroupintl.vista.tools.fnds.ToolResultCollection;
 
-public class FanoutAccumulator extends Accumulator<EntryFanouts>{
-	private BlocksSupply<Block<Void>> blocksSupply;
-	
+public class FanoutAccumulator extends Accumulator<EntryFanouts, Void>{
 	public FanoutAccumulator(BlocksSupply<Block<Void>> blocksSupply) {
-		super(new ToolResultCollection<EntryFanouts>());
-		this.blocksSupply = blocksSupply;
+		super(blocksSupply, new ToolResultCollection<EntryFanouts>());
 	}
 
 	public FanoutAccumulator(BlocksSupply<Block<Void>> blocksSupply, FilterFactory<EntryId, EntryId> filterFactory) {
-		super(filterFactory, new ToolResultCollection<EntryFanouts>());
-		this.blocksSupply = blocksSupply;
+		super(blocksSupply, filterFactory, new ToolResultCollection<EntryFanouts>());
 	}
 	
 	@Override
-	public EntryFanouts getResult(EntryId entryId) {
-		Block<Void> topBlock = this.blocksSupply.getBlock(entryId);
-		EntryFanouts result = new EntryFanouts(entryId);
-		if (topBlock != null) {
-			Filter<EntryId> filter = this.filterFactory.getFilter(entryId);
-			FanoutBlocks<Block<Void>> fanoutBlocks = topBlock.getFanoutBlocks(this.blocksSupply, filter);
-			List<Block<Void>> blocks = fanoutBlocks.getBlocks();
-			boolean first = true;
-			for (Block<Void> b : blocks) {
-				if (first) {
-					first = false;
-				} else if (! b.isInternal()) {					
-					result.add(b.getEntryId());
-				}
+	protected EntryFanouts getResult(Block<Void> block, Filter<EntryId> filter) {
+		FanoutBlocks<Block<Void>> fanoutBlocks = block.getFanoutBlocks(this.blocksSupply, filter);
+		List<Block<Void>> blocks = fanoutBlocks.getBlocks();
+		boolean first = true;
+		EntryFanouts result = new EntryFanouts(block.getEntryId());
+		for (Block<Void> b : blocks) {
+			if (first) {
+				first = false;
+			} else if (! b.isInternal()) {					
+				result.add(b.getEntryId());
 			}
-		} else {
-			result.setErrorMsg("Not Found");
-		}		
+		}
+		return result;
+	}
+	
+	@Override
+	protected EntryFanouts getEmptyBlockResult(EntryId entryId) {
+		EntryFanouts result = new EntryFanouts(entryId);
+		result.setErrorMsg("Not Found");
 		return result;
 	}
 }

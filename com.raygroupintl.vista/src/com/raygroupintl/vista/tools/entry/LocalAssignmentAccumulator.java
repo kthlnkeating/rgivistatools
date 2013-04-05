@@ -9,29 +9,25 @@ import com.raygroupintl.struct.FilterFactory;
 import com.raygroupintl.vista.tools.entryinfo.Accumulator;
 import com.raygroupintl.vista.tools.fnds.ToolResultCollection;
 
-public class LocalAssignmentAccumulator extends Accumulator<EntryCodeLocations> {
-	private BlocksSupply<Block<CodeLocations>> blocksSupply;
-	
+public class LocalAssignmentAccumulator extends Accumulator<EntryCodeLocations, CodeLocations> {
 	public LocalAssignmentAccumulator(BlocksSupply<Block<CodeLocations>> blocksSupply) {
-		super(new ToolResultCollection<EntryCodeLocations>());
-		this.blocksSupply = blocksSupply;
+		super(blocksSupply, new ToolResultCollection<EntryCodeLocations>());
 	}
 
 	public LocalAssignmentAccumulator(BlocksSupply<Block<CodeLocations>> blocksSupply, FilterFactory<EntryId, EntryId> filterFactory) {
-		super(filterFactory, new ToolResultCollection<EntryCodeLocations>());
-		this.blocksSupply = blocksSupply;
+		super(blocksSupply, filterFactory, new ToolResultCollection<EntryCodeLocations>());
 	}
 	
 	@Override
-	public EntryCodeLocations getResult(EntryId entryId) {
-		Block<CodeLocations> b = blocksSupply.getBlock(entryId);
-		if (b != null) {
-			Filter<EntryId> filter = this.filterFactory.getFilter(entryId);
-			AdditiveDataAggregator<CodeLocations, CodeLocations> bcia = new AdditiveDataAggregator<CodeLocations, CodeLocations>(b, blocksSupply);
-			CodeLocations codeLocations = bcia.get(filter);
-			return new EntryCodeLocations(entryId, codeLocations);
-		} else {
-			return new EntryCodeLocations(entryId);
-		}		
+	protected EntryCodeLocations getResult(Block<CodeLocations> block, Filter<EntryId> filter) {
+		EntryId entryId = block.getEntryId();
+		AdditiveDataAggregator<CodeLocations, CodeLocations> bcia = new AdditiveDataAggregator<CodeLocations, CodeLocations>(block, blocksSupply);
+		CodeLocations codeLocations = bcia.get(filter);
+		return new EntryCodeLocations(entryId, codeLocations);
+	}
+	
+	@Override
+	protected EntryCodeLocations getEmptyBlockResult(EntryId entryId) {
+		return new EntryCodeLocations(entryId);
 	}
 }

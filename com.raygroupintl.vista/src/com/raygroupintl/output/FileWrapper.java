@@ -22,8 +22,6 @@ import java.io.IOException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import com.raygroupintl.vista.repository.visitor.FanoutWriter;
-
 public class FileWrapper extends Terminal {
 	private final static Logger LOGGER = Logger.getLogger(FileWrapper.class.getName());
 

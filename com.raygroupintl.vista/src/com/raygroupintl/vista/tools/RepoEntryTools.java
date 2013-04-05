@@ -99,7 +99,7 @@ public class RepoEntryTools extends Tools {
 			super(params);
 		}
 		
-		protected abstract Accumulator<U> getAccumulator(BlocksSupply<Block<T>> blocksSupply, FilterFactory<EntryId, EntryId> filterFactory);
+		protected abstract Accumulator<U, T> getAccumulator(BlocksSupply<Block<T>> blocksSupply, FilterFactory<EntryId, EntryId> filterFactory);
 		
 		protected abstract BlockRecorderFactory<T> getBlockRecorderFactory(final RepositoryInfo ri);
 		
@@ -113,7 +113,7 @@ public class RepoEntryTools extends Tools {
 					return EntryInfoTool.this.getFilter(ri, parameter);
 				}
 			}; 
-			Accumulator<U> a = this.getAccumulator(blocksSupply, filterFactory);
+			Accumulator<U, T> a = this.getAccumulator(blocksSupply, filterFactory);
 			for (EntryId entryId : entries) {
 				a.addEntry(entryId);
 			}
@@ -140,7 +140,7 @@ public class RepoEntryTools extends Tools {
 		}
 		
 		@Override
-		protected Accumulator<EntryCodeInfo> getAccumulator(BlocksSupply<Block<CodeInfo>> blocksSupply, FilterFactory<EntryId, EntryId> filterFactory) {
+		protected Accumulator<EntryCodeInfo, CodeInfo> getAccumulator(BlocksSupply<Block<CodeInfo>> blocksSupply, FilterFactory<EntryId, EntryId> filterFactory) {
 			return new EntryCodeInfoAccumulator(blocksSupply, filterFactory);			
 		}
 
@@ -169,7 +169,7 @@ public class RepoEntryTools extends Tools {
 		}
 		
 		@Override
-		protected Accumulator<EntryCodeLocations> getAccumulator(BlocksSupply<Block<CodeLocations>> blocksSupply, FilterFactory<EntryId, EntryId> filterFactory) {
+		protected Accumulator<EntryCodeLocations, CodeLocations> getAccumulator(BlocksSupply<Block<CodeLocations>> blocksSupply, FilterFactory<EntryId, EntryId> filterFactory) {
 			return new LocalAssignmentAccumulator(blocksSupply, filterFactory);			
 		}
 
@@ -194,7 +194,7 @@ public class RepoEntryTools extends Tools {
 		}
 		
 		@Override
-		protected Accumulator<EntryFanouts> getAccumulator(BlocksSupply<Block<Void>> blocksSupply, FilterFactory<EntryId, EntryId> filterFactory) {
+		protected Accumulator<EntryFanouts, Void> getAccumulator(BlocksSupply<Block<Void>> blocksSupply, FilterFactory<EntryId, EntryId> filterFactory) {
 			return new FanoutAccumulator(blocksSupply, filterFactory);			
 		}
 
