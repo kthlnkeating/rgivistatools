@@ -48,6 +48,8 @@ import com.raygroupintl.vista.tools.entryfanin.FaninMark;
 import com.raygroupintl.vista.tools.entryfanin.MarkedAsFaninBRF;
 import com.raygroupintl.vista.tools.entryfanout.EntryFanouts;
 import com.raygroupintl.vista.tools.entryinfo.Accumulator;
+import com.raygroupintl.vista.tools.entryinfo.AssumedVariableAccumulator;
+import com.raygroupintl.vista.tools.entryinfo.AssumedVariablesTR;
 import com.raygroupintl.vista.tools.entryinfo.CodeInfo;
 import com.raygroupintl.vista.tools.entryinfo.EntryCodeInfo;
 import com.raygroupintl.vista.tools.entryinfo.EntryCodeInfoAccumulator;
@@ -142,6 +144,22 @@ public class RepoEntryTools extends Tools {
 		@Override
 		protected Accumulator<EntryCodeInfo, CodeInfo> getAccumulator(BlocksSupply<Block<CodeInfo>> blocksSupply, FilterFactory<EntryId, EntryId> filterFactory) {
 			return new EntryCodeInfoAccumulator(blocksSupply, filterFactory);			
+		}
+
+		@Override
+		protected BlockRecorderFactory<CodeInfo> getBlockRecorderFactory(final RepositoryInfo ri) {
+			return new EntryCodeInfoRecorderFactory(ri);	
+		}
+	}
+
+	private static class EntryAssumedVarTool extends EntryInfoTool<CodeInfo, AssumedVariablesTR> {	
+		public EntryAssumedVarTool(CLIParams params) {
+			super(params);
+		}
+		
+		@Override
+		protected Accumulator<AssumedVariablesTR, CodeInfo> getAccumulator(BlocksSupply<Block<CodeInfo>> blocksSupply, FilterFactory<EntryId, EntryId> filterFactory) {
+			return new AssumedVariableAccumulator(blocksSupply, filterFactory);			
 		}
 
 		@Override
@@ -261,6 +279,12 @@ public class RepoEntryTools extends Tools {
 			@Override
 			public Tool getInstance(CLIParams params) {
 				return new EntryCodeInfoTool(params);
+			}
+		});
+		tools.put("entryassumedvar", new MemberFactory() {				
+			@Override
+			public Tool getInstance(CLIParams params) {
+				return new EntryAssumedVarTool(params);
 			}
 		});
 		tools.put("entrylocalassignment", new MemberFactory() {				
