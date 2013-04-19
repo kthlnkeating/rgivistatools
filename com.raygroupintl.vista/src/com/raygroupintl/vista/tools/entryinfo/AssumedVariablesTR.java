@@ -29,10 +29,12 @@ import com.raygroupintl.vista.tools.fnds.ToolResult;
 public class AssumedVariablesTR implements ToolResult  {
 	private EntryId entryId;
 	private Set<String> assumedVariables;
+	private AssumedVarsToolFlag flags;
 
-	public AssumedVariablesTR(EntryId entryId, Set<String> assumedVariables) {
+	public AssumedVariablesTR(EntryId entryId, Set<String> assumedVariables, AssumedVarsToolFlag flags) {
 		this.entryId = entryId;
 		this.assumedVariables = assumedVariables;
+		this.flags = flags;
 	}
 	
 	public Set<String> getData() {
@@ -43,6 +45,10 @@ public class AssumedVariablesTR implements ToolResult  {
 		return this.assumedVariables != null;
 	}
 	
+	private boolean hasAssumedVariables() {
+		return (this.assumedVariables != null) && (this.assumedVariables.size() > 0);
+	}
+	
 	public void writeVariables(Terminal t, TerminalFormatter tf) {
 		List<String> assumedLocalsSorted = new ArrayList<String>(this.assumedVariables);
 		Collections.sort(assumedLocalsSorted);			
@@ -51,11 +57,15 @@ public class AssumedVariablesTR implements ToolResult  {
 	
 	@Override
 	public void write(Terminal t, TerminalFormatter tf) {
-		t.writeEOL(" " + this.entryId.toString2());		
 		if (this.assumedVariables == null) {
+			t.writeEOL(" " + this.entryId.toString2());		
 			t.writeEOL("  ERROR: Invalid entry point");
 			return;
 		} else {
+			if (this.flags.getIgnoreEntryWithNoAssumedVariables() && ! this.hasAssumedVariables()) {
+				return;
+			}
+			t.writeEOL(" " + this.entryId.toString2());		
 			this.writeVariables(t, tf);
 		}
 	}	

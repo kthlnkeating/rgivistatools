@@ -9,6 +9,9 @@ import org.junit.Test;
 import com.raygroupintl.m.parsetree.Routine;
 import com.raygroupintl.m.parsetree.data.EntryId;
 import com.raygroupintl.m.parsetree.data.BlocksInMap;
+import com.raygroupintl.m.parsetree.filter.ExcludeAllFanoutFilter;
+import com.raygroupintl.struct.Filter;
+import com.raygroupintl.struct.FilterFactory;
 import com.raygroupintl.vista.tools.AccumulatorTestCommon;
 import com.raygroupintl.vista.tools.entryinfo.CodeInfo;
 import com.raygroupintl.vista.tools.entryinfo.EntryCodeInfoRecorder;
@@ -26,7 +29,7 @@ public class EntryAssumedVarTest {
 	public void testAssumedLocals() {
 		String[] resourceNames = {
 				"resource/APIROU00.m", "resource/APIROU01.m", "resource/APIROU02.m", "resource/APIROU03.m", 
-				"resource/DMI.m", "resource/DDI.m", "resource/DIE.m", "resource/FIE.m"};
+				"resource/APIROU04.m", "resource/DMI.m", "resource/DDI.m", "resource/DIE.m", "resource/FIE.m"};
 		Routine[] routines = AccumulatorTestCommon.getRoutines(EntryCodeInfoToolTest.class, resourceNames);
 		
 		EntryCodeInfoRecorder recorder = new EntryCodeInfoRecorder(null);
@@ -47,5 +50,19 @@ public class EntryAssumedVarTest {
 		this.testAssumedLocal(a.getResult(new EntryId("APIROU01", "LOOP")), new String[]{"S", "A", "C", "I", "J", "B", "D", "P"});
 		this.testAssumedLocal(a.getResult(new EntryId("APIROU03", "GPIND")), new String[]{"B", "A"});
 		this.testAssumedLocal(a.getResult(new EntryId("APIROU03", "CALL1")), new String[]{"A", "B"});
+		
+		FilterFactory<EntryId, EntryId> filterFactory = new FilterFactory<EntryId, EntryId>() {
+			@Override
+			public Filter<EntryId> getFilter(EntryId parameter) {
+				return new ExcludeAllFanoutFilter();
+			}
+		};
+		AssumedVariableAccumulator a2 = new AssumedVariableAccumulator(blocksMap, filterFactory);
+		this.testAssumedLocal(a2.getResult(new EntryId("APIROU04", "INDOBLK")), new String[]{"I", "Y"});		
+		
+		AssumedVarsToolFlag flags = new AssumedVarsToolFlag();
+		flags.addExpectedAssumeVariable("I");
+		AssumedVariableAccumulator a3 = new AssumedVariableAccumulator(blocksMap, filterFactory, flags);		
+		this.testAssumedLocal(a3.getResult(new EntryId("APIROU04", "INDOBLK")), new String[]{"Y"});		
 	}
 }

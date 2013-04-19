@@ -29,24 +29,38 @@ import com.raygroupintl.vista.tools.fnds.ToolResultCollection;
 
 public class AssumedVariableAccumulator extends Accumulator<AssumedVariablesTR, CodeInfo> {
 	private DataStore<Set<String>> store = new DataStore<Set<String>>();					
+	private AssumedVarsToolFlag flags;
 	
-	public AssumedVariableAccumulator(BlocksSupply<Block<CodeInfo>> blocksSupply) {
+	public AssumedVariableAccumulator(BlocksSupply<Block<CodeInfo>> blocksSupply, AssumedVarsToolFlag flags) {
 		super(blocksSupply, new ToolResultCollection<AssumedVariablesTR>());
+		this.flags = flags;
 	}
 
-	public AssumedVariableAccumulator(BlocksSupply<Block<CodeInfo>> blocksSupply, FilterFactory<EntryId, EntryId> filterFactory) {
+	public AssumedVariableAccumulator(BlocksSupply<Block<CodeInfo>> blocksSupply) {
+		this(blocksSupply, new AssumedVarsToolFlag());
+	}
+
+	public AssumedVariableAccumulator(BlocksSupply<Block<CodeInfo>> blocksSupply, FilterFactory<EntryId, EntryId> filterFactory, AssumedVarsToolFlag flags) {
 		super(blocksSupply, filterFactory, new ToolResultCollection<AssumedVariablesTR>());
+		this.flags = flags;
+	}
+	
+	public AssumedVariableAccumulator(BlocksSupply<Block<CodeInfo>> blocksSupply, FilterFactory<EntryId, EntryId> filterFactory) {
+		this(blocksSupply, filterFactory, new AssumedVarsToolFlag());
 	}
 	
 	@Override
 	protected AssumedVariablesTR getResult(Block<CodeInfo> block, Filter<EntryId> filter) {
 		RecursiveDataAggregator<Set<String>, CodeInfo> ala = new RecursiveDataAggregator<Set<String>, CodeInfo>(block, blocksSupply);
 		Set<String> assumedVariables = ala.get(this.store, filter);
-		return new AssumedVariablesTR(block.getEntryId(), assumedVariables);	
+		if (assumedVariables != null) {
+			assumedVariables.removeAll(this.flags.getExpectedAssumedVariables());
+		}
+		return new AssumedVariablesTR(block.getEntryId(), assumedVariables, this.flags);	
 	}
 	
 	@Override
 	protected AssumedVariablesTR getEmptyBlockResult(EntryId entryId) {
-		return new AssumedVariablesTR(entryId, null);		
+		return new AssumedVariablesTR(entryId, null, this.flags);		
 	}
 }

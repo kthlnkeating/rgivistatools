@@ -25,6 +25,7 @@ import java.util.List;
 import java.util.Scanner;
 
 import com.raygroupintl.m.parsetree.data.EntryId;
+import com.raygroupintl.m.parsetree.filter.ExcludeAllFanoutFilter;
 import com.raygroupintl.m.parsetree.filter.ExcludeFilemanCallFanoutFilter;
 import com.raygroupintl.m.parsetree.filter.ExcludeNonPkgCallFanoutFilter;
 import com.raygroupintl.m.parsetree.filter.ExcludeNonRtnFanoutFilter;
@@ -146,7 +147,7 @@ public abstract class Tool {
 		try {
 			int result = Integer.parseInt(this.params.flag);
 			if (result < 0) return 0;
-			if (result > 3) return 3;
+			if (result > 4) return 4;
 			return result;
 		} catch(Throwable t) {
 		}
@@ -172,6 +173,8 @@ public abstract class Tool {
 			}
 			case 3:
 				return new ExcludeNonRtnFanoutFilter(entryId);
+			case 4:
+				return new ExcludeAllFanoutFilter();
 			default:
 				return new PercentRoutineFanoutFilter();
 		}

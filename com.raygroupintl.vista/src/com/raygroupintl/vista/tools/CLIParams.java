@@ -23,6 +23,7 @@ import java.util.logging.Logger;
 
 import com.raygroupintl.util.CLIParamMgr;
 import com.raygroupintl.util.CLIParameter;
+import com.raygroupintl.vista.tools.entryinfo.AssumedVarsToolFlag;
 
 public class CLIParams {
 	@CLIParameter
@@ -58,8 +59,11 @@ public class CLIParams {
 	@CLIParameter(names={"-md", "--mdirectory"})
 	public List<String> additionalMDirectories = new ArrayList<String>();
 	
-	@CLIParameter(names={"-mf", "--mfile"})
-	public List<String> additionalMFiles = new ArrayList<String>();
+	@CLIParameter(names={"-x", "--exclude"})
+	public List<String> excludes = new ArrayList<String>();
+	
+	@CLIParameter(names={"-of", "--outflag"})
+	public List<String> outputFlags = new ArrayList<String>();
 	
 	@CLIParameter(names={"-ownf", "--ownershipfile"})
 	public String ownershipFilePath;
@@ -73,6 +77,9 @@ public class CLIParams {
 	@CLIParameter(names={"-ptype", "--protocoltype"})
 	public String protocolType;
 			
+	@CLIParameter(names={"--"})
+	public List<String> additionalMFiles = new ArrayList<String>();
+
 	private static void logError(String msg) {
 		Logger logger = Logger.getLogger(MRoutineAnalyzer.class.getName());		
 		logger.log(Level.SEVERE, msg);
@@ -125,5 +132,18 @@ public class CLIParams {
 			return this.method;
 		}
  	}
+	
+	public AssumedVarsToolFlag getAssumedVariablesFlags() {
+		AssumedVarsToolFlag result = new AssumedVarsToolFlag();
+		for (String outputFlag : this.outputFlags) {
+			if (outputFlag.equals("ignorenodata")) {
+				result.setIgnoreEntryWithNoAssumedVariables(true);
+			}
+		}
+		if (this.excludes.size() > 0) {
+			result.addAllExpectedAssumeVariables(this.excludes);
+		}
+		return result;		
+	}
 }
 

@@ -158,8 +158,8 @@ public class RepoEntryTools extends Tools {
 		}
 		
 		@Override
-		protected Accumulator<AssumedVariablesTR, CodeInfo> getAccumulator(BlocksSupply<Block<CodeInfo>> blocksSupply, FilterFactory<EntryId, EntryId> filterFactory) {
-			return new AssumedVariableAccumulator(blocksSupply, filterFactory);			
+		protected Accumulator<AssumedVariablesTR, CodeInfo> getAccumulator(BlocksSupply<Block<CodeInfo>> blocksSupply, FilterFactory<EntryId, EntryId> filterFactory) {			
+			return new AssumedVariableAccumulator(blocksSupply, filterFactory, this.params.getAssumedVariablesFlags());			
 		}
 
 		@Override
