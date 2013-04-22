@@ -25,15 +25,9 @@ import java.util.List;
 import java.util.Scanner;
 
 import com.raygroupintl.m.parsetree.data.EntryId;
-import com.raygroupintl.m.parsetree.filter.ExcludeAllFanoutFilter;
-import com.raygroupintl.m.parsetree.filter.ExcludeFilemanCallFanoutFilter;
-import com.raygroupintl.m.parsetree.filter.ExcludeNonPkgCallFanoutFilter;
-import com.raygroupintl.m.parsetree.filter.ExcludeNonRtnFanoutFilter;
-import com.raygroupintl.m.parsetree.filter.PercentRoutineFanoutFilter;
 import com.raygroupintl.m.token.MVersion;
 import com.raygroupintl.output.FileWrapper;
 import com.raygroupintl.output.TerminalFormatter;
-import com.raygroupintl.struct.Filter;
 import com.raygroupintl.vista.repository.RepositoryInfo;
 import com.raygroupintl.vista.repository.VistaPackage;
 import com.raygroupintl.vista.repository.VistaPackages;
@@ -141,42 +135,5 @@ public abstract class Tool {
 			return result;
 		}
 		return null;
-	}
-
-	private int getFanoutFlag() {
-		try {
-			int result = Integer.parseInt(this.params.flag);
-			if (result < 0) return 0;
-			if (result > 4) return 4;
-			return result;
-		} catch(Throwable t) {
-		}
-		return 0;
-	}
-	
-	protected Filter<EntryId> getFilter(RepositoryInfo ri, EntryId entryId) {
-		int flag = this.getFanoutFlag();
-		switch (flag) {
-			case 1: {
-				String routineName = entryId.getRoutineName();
-				VistaPackage vp = ri.getPackageFromRoutineName(routineName);
-				return new ExcludeFilemanCallFanoutFilter(ri, vp.getDefaultPrefix());
-			}
-			case 2: {
-				String routineName = entryId.getRoutineName();
-				if (routineName == null) {
-					return new ExcludeNonPkgCallFanoutFilter(ri, null);
-				} else {
-					VistaPackage vp = ri.getPackageFromRoutineName(routineName);
-					return new ExcludeNonPkgCallFanoutFilter(ri, vp.getDefaultPrefix());
-				}
-			}
-			case 3:
-				return new ExcludeNonRtnFanoutFilter(entryId);
-			case 4:
-				return new ExcludeAllFanoutFilter();
-			default:
-				return new PercentRoutineFanoutFilter();
-		}
 	}
 }

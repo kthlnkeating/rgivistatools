@@ -68,37 +68,37 @@ public class MacroTools extends Tools {
 			MRoutineAnalyzer.main(new String[]{"entry", "-p", "OR", "-r", "ORQQPL.*", "-o", pathPrefix + "einfo_cprspl_tags.txt"});
 			
 			MRoutineAnalyzer.main(new String[]{"entryinfo", "-i", pathPrefix + "einfo_cprspl_tags.txt", "-o", pathPrefix + "einfo_cprspl_0.txt",
-						"-ptd", outputPath + "\\serial", "-f", "0"});
+						"-ptd", outputPath + "\\serial", "-rd", "all", "-xns", "%"});
 			MRoutineAnalyzer.main(new String[]{"entryinfo", "-i", pathPrefix + "einfo_cprspl_tags.txt", "-o", pathPrefix + "einfo_cprspl_1.txt",
-						"-ptd", outputPath + "\\serial", "-f", "1"});
+						"-ptd", outputPath + "\\serial", "-rd", "all", "-xns", "DI", "-xns", "DD", "-xns", "DM", "-xns", "%", "-xns", "Z", "-xns", "X", "-xxns", "XPAR"});
 			MRoutineAnalyzer.main(new String[]{"entryinfo", "-i", pathPrefix + "einfo_cprspl_tags.txt", "-o", pathPrefix + "einfo_cprspl_2.txt",
-						"-ptd", outputPath + "\\serial", "-f", "2"});
+						"-ptd", outputPath + "\\serial", "-rd", "all", "-ns", "OR", "-ns", "OCX", "-xns", "ORRC", "-xns", "ORRJ"});
 			MRoutineAnalyzer.main(new String[]{"entryinfo", "-i", pathPrefix + "einfo_cprspl_tags.txt", "-o", pathPrefix + "einfo_cprspl_3.txt",
-						"-ptd", outputPath + "\\serial", "-f", "3"});
+						"-ptd", outputPath + "\\serial", "-rd", "routine"});
 
 
 			MRoutineAnalyzer.main(new String[]{"fanin", "-o", pathPrefix + "einfo_gmplfi_tags.txt", "--rawformat", "-p", "GMPL"});
 
 			MRoutineAnalyzer.main(new String[]{"entryinfo", "-i", pathPrefix + "einfo_gmplfi_tags.txt", "-o", pathPrefix + "einfo_gmplfi_0.txt",
-						"-ptd", outputPath + "\\serial", "-f", "0"});
+						"-ptd", outputPath + "\\serial", "-rd", "all", "-xns", "%"});
 			MRoutineAnalyzer.main(new String[]{"entryinfo", "-i", pathPrefix + "einfo_gmplfi_tags.txt", "-o", pathPrefix + "einfo_gmplfi_1.txt",
-						"-ptd", outputPath + "\\serial", "-f", "1"});
+						"-ptd", outputPath + "\\serial", "-rd", "all", "-xns", "DI", "-xns", "DD", "-xns", "DM", "-xns", "%", "-xns", "Z", "-xns", "X", "-xxns", "XPAR"});
 			MRoutineAnalyzer.main(new String[]{"entryinfo", "-i", pathPrefix + "einfo_gmplfi_tags.txt", "-o", pathPrefix + "einfo_gmplfi_2.txt",
-						"-ptd", outputPath + "\\serial", "-f", "2"});
+						"-ptd", outputPath + "\\serial", "-ns", "GMPL"});
 			MRoutineAnalyzer.main(new String[]{"entryinfo", "-i", pathPrefix + "einfo_gmplfi_tags.txt", "-o", pathPrefix + "einfo_gmplfi_3.txt",
-					"-ptd", outputPath + "\\serial", "-f", "3"});
+					"-ptd", outputPath + "\\serial", "-rd", "routine"});
 			
 			
 			MRoutineAnalyzer.main(new String[]{"fanin", "-o", pathPrefix + "einfo_sdfi_tags.txt", "--rawformat", "-p", "SD"});
 
 			MRoutineAnalyzer.main(new String[]{"entryinfo", "-i", pathPrefix + "einfo_sdfi_tags.txt", "-o", pathPrefix + "einfo_sdfi_0.txt",
-						"-ptd", outputPath + "\\serial", "-f", "0"});
+						"-ptd", outputPath + "\\serial", "-rd", "all", "-xns", "%"});
 			MRoutineAnalyzer.main(new String[]{"entryinfo", "-i", pathPrefix + "einfo_sdfi_tags.txt", "-o", pathPrefix + "einfo_sdfi_1.txt",
-						"-ptd", outputPath + "\\serial", "-f", "1"});
+						"-ptd", outputPath + "\\serial", "-rd", "all", "-xns", "DI", "-xns", "DD", "-xns", "DM", "-xns", "%", "-xns", "Z", "-xns", "X", "-xxns", "XPAR"});
 			MRoutineAnalyzer.main(new String[]{"entryinfo", "-i", pathPrefix + "einfo_sdfi_tags.txt", "-o", pathPrefix + "einfo_sdfi_2.txt",
-						"-ptd", outputPath + "\\serial", "-f", "2"});		
+						"-ptd", outputPath + "\\serial", "\\serial", "-ns", "SD", "-ns", "SC"});		
 			MRoutineAnalyzer.main(new String[]{"entryinfo", "-i", pathPrefix + "einfo_sdfi_tags.txt", "-o", pathPrefix + "einfo_sdfi_3.txt",
-					"-ptd", outputPath + "\\serial", "-f", "3"});		
+					"-ptd", outputPath + "\\serial", "-rd", "routine"});		
 		}
 	}
 

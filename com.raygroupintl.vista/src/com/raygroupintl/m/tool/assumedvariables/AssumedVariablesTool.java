@@ -14,7 +14,7 @@
 // limitations under the License.
 //---------------------------------------------------------------------------
 
-package com.raygroupintl.vista.tools.entryinfo;
+package com.raygroupintl.m.tool.assumedvariables;
 
 import java.util.Set;
 
@@ -25,36 +25,39 @@ import com.raygroupintl.m.parsetree.data.EntryId;
 import com.raygroupintl.m.parsetree.data.RecursiveDataAggregator;
 import com.raygroupintl.struct.Filter;
 import com.raygroupintl.struct.FilterFactory;
+import com.raygroupintl.vista.tools.entryinfo.Accumulator;
+import com.raygroupintl.vista.tools.entryinfo.AssumedVariablesTR;
+import com.raygroupintl.vista.tools.entryinfo.CodeInfo;
 import com.raygroupintl.vista.tools.fnds.ToolResultCollection;
 
-public class AssumedVariableAccumulator extends Accumulator<AssumedVariablesTR, CodeInfo> {
+public class AssumedVariablesTool extends Accumulator<AssumedVariablesTR, CodeInfo> {
 	private DataStore<Set<String>> store = new DataStore<Set<String>>();					
-	private AssumedVarsToolFlag flags;
+	private AVSTResultPresentation flags;
 	
-	public AssumedVariableAccumulator(BlocksSupply<Block<CodeInfo>> blocksSupply, AssumedVarsToolFlag flags) {
+	public AssumedVariablesTool(BlocksSupply<Block<CodeInfo>> blocksSupply, AVSTResultPresentation flags) {
 		super(blocksSupply, new ToolResultCollection<AssumedVariablesTR>());
 		this.flags = flags;
 	}
 
-	public AssumedVariableAccumulator(BlocksSupply<Block<CodeInfo>> blocksSupply) {
-		this(blocksSupply, new AssumedVarsToolFlag());
+	public AssumedVariablesTool(BlocksSupply<Block<CodeInfo>> blocksSupply) {
+		this(blocksSupply, new AVSTResultPresentation());
 	}
 
-	public AssumedVariableAccumulator(BlocksSupply<Block<CodeInfo>> blocksSupply, FilterFactory<EntryId, EntryId> filterFactory, AssumedVarsToolFlag flags) {
+	public AssumedVariablesTool(BlocksSupply<Block<CodeInfo>> blocksSupply, FilterFactory<EntryId, EntryId> filterFactory, AVSTResultPresentation flags) {
 		super(blocksSupply, filterFactory, new ToolResultCollection<AssumedVariablesTR>());
 		this.flags = flags;
 	}
 	
-	public AssumedVariableAccumulator(BlocksSupply<Block<CodeInfo>> blocksSupply, FilterFactory<EntryId, EntryId> filterFactory) {
-		this(blocksSupply, filterFactory, new AssumedVarsToolFlag());
+	public AssumedVariablesTool(BlocksSupply<Block<CodeInfo>> blocksSupply, FilterFactory<EntryId, EntryId> filterFactory) {
+		this(blocksSupply, filterFactory, new AVSTResultPresentation());
 	}
 	
 	@Override
-	protected AssumedVariablesTR getResult(Block<CodeInfo> block, Filter<EntryId> filter) {
+	public AssumedVariablesTR getResult(Block<CodeInfo> block, Filter<EntryId> filter) {
 		RecursiveDataAggregator<Set<String>, CodeInfo> ala = new RecursiveDataAggregator<Set<String>, CodeInfo>(block, blocksSupply);
 		Set<String> assumedVariables = ala.get(this.store, filter);
 		if (assumedVariables != null) {
-			assumedVariables.removeAll(this.flags.getExpectedAssumedVariables());
+			assumedVariables.removeAll(this.flags.getExpected());
 		}
 		return new AssumedVariablesTR(block.getEntryId(), assumedVariables, this.flags);	
 	}

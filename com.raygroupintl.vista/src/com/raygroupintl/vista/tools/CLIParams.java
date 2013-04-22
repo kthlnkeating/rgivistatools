@@ -21,9 +21,9 @@ import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import com.raygroupintl.m.tool.assumedvariables.AVSTResultPresentation;
 import com.raygroupintl.util.CLIParamMgr;
 import com.raygroupintl.util.CLIParameter;
-import com.raygroupintl.vista.tools.entryinfo.AssumedVarsToolFlag;
 
 public class CLIParams {
 	@CLIParameter
@@ -43,9 +43,6 @@ public class CLIParams {
 	 
 	@CLIParameter(names={"-i", "--input"})
 	public String inputFile;
-	
-	@CLIParameter(names={"-f", "--flag"})
-	public String flag;
 	
 	@CLIParameter(names={"-ptd", "--parsetreedir"})
 	public String parseTreeDirectory;
@@ -79,7 +76,21 @@ public class CLIParams {
 			
 	@CLIParameter(names={"--"})
 	public List<String> additionalMFiles = new ArrayList<String>();
+	
+	
+	@CLIParameter(names={"-ns", "--namespace"})
+	public List<String> includeNamespaces = new ArrayList<String>();
+	
+	@CLIParameter(names={"-xns", "--excludenamespace"})
+	public List<String> excludeNamespaces = new ArrayList<String>();
+	
+	@CLIParameter(names={"-xxns", "--excludenamespaceexception"})
+	public List<String> excludeExceptionNamespaces = new ArrayList<String>();
 
+	@CLIParameter(names={"-rd", "--recursiondepth"})
+	public String recursionDepth;
+
+	
 	private static void logError(String msg) {
 		Logger logger = Logger.getLogger(MRoutineAnalyzer.class.getName());		
 		logger.log(Level.SEVERE, msg);
@@ -133,15 +144,15 @@ public class CLIParams {
 		}
  	}
 	
-	public AssumedVarsToolFlag getAssumedVariablesFlags() {
-		AssumedVarsToolFlag result = new AssumedVarsToolFlag();
+	public AVSTResultPresentation getAssumedVariablesFlags() {
+		AVSTResultPresentation result = new AVSTResultPresentation();
 		for (String outputFlag : this.outputFlags) {
 			if (outputFlag.equals("ignorenodata")) {
-				result.setIgnoreEntryWithNoAssumedVariables(true);
+				result.setSkipEmpty(true);
 			}
 		}
 		if (this.excludes.size() > 0) {
-			result.addAllExpectedAssumeVariables(this.excludes);
+			result.addExpected(this.excludes);
 		}
 		return result;		
 	}

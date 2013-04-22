@@ -22,6 +22,7 @@ import java.util.List;
 import java.util.Set;
 
 import com.raygroupintl.m.parsetree.data.EntryId;
+import com.raygroupintl.m.tool.assumedvariables.AVSTResultPresentation;
 import com.raygroupintl.output.Terminal;
 import com.raygroupintl.output.TerminalFormatter;
 import com.raygroupintl.vista.tools.fnds.ToolResult;
@@ -29,9 +30,9 @@ import com.raygroupintl.vista.tools.fnds.ToolResult;
 public class AssumedVariablesTR implements ToolResult  {
 	private EntryId entryId;
 	private Set<String> assumedVariables;
-	private AssumedVarsToolFlag flags;
+	private AVSTResultPresentation flags;
 
-	public AssumedVariablesTR(EntryId entryId, Set<String> assumedVariables, AssumedVarsToolFlag flags) {
+	public AssumedVariablesTR(EntryId entryId, Set<String> assumedVariables, AVSTResultPresentation flags) {
 		this.entryId = entryId;
 		this.assumedVariables = assumedVariables;
 		this.flags = flags;
@@ -62,7 +63,7 @@ public class AssumedVariablesTR implements ToolResult  {
 			t.writeEOL("  ERROR: Invalid entry point");
 			return;
 		} else {
-			if (this.flags.getIgnoreEntryWithNoAssumedVariables() && ! this.hasAssumedVariables()) {
+			if (this.flags.getSkipEmpty() && ! this.hasAssumedVariables()) {
 				return;
 			}
 			t.writeEOL(" " + this.entryId.toString2());		

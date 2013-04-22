@@ -10,6 +10,8 @@ import com.raygroupintl.m.parsetree.Routine;
 import com.raygroupintl.m.parsetree.data.EntryId;
 import com.raygroupintl.m.parsetree.data.BlocksInMap;
 import com.raygroupintl.m.parsetree.filter.ExcludeAllFanoutFilter;
+import com.raygroupintl.m.tool.assumedvariables.AVSTResultPresentation;
+import com.raygroupintl.m.tool.assumedvariables.AssumedVariablesTool;
 import com.raygroupintl.struct.Filter;
 import com.raygroupintl.struct.FilterFactory;
 import com.raygroupintl.vista.tools.AccumulatorTestCommon;
@@ -35,7 +37,7 @@ public class EntryAssumedVarTest {
 		EntryCodeInfoRecorder recorder = new EntryCodeInfoRecorder(null);
 		BlocksInMap<CodeInfo> blocksMap = BlocksInMap.getInstance(recorder, routines);
 		
-		AssumedVariableAccumulator a = new AssumedVariableAccumulator(blocksMap);
+		AssumedVariablesTool a = new AssumedVariablesTool(blocksMap);
 				
 		this.testAssumedLocal(a.getResult(new EntryId("APIROU00", "FACT")), new String[]{"I"});
 		this.testAssumedLocal(a.getResult(new EntryId("APIROU00", "SUM")), new String[]{"M", "R", "I"});
@@ -57,12 +59,12 @@ public class EntryAssumedVarTest {
 				return new ExcludeAllFanoutFilter();
 			}
 		};
-		AssumedVariableAccumulator a2 = new AssumedVariableAccumulator(blocksMap, filterFactory);
+		AssumedVariablesTool a2 = new AssumedVariablesTool(blocksMap, filterFactory);
 		this.testAssumedLocal(a2.getResult(new EntryId("APIROU04", "INDOBLK")), new String[]{"I", "Y"});		
 		
-		AssumedVarsToolFlag flags = new AssumedVarsToolFlag();
-		flags.addExpectedAssumeVariable("I");
-		AssumedVariableAccumulator a3 = new AssumedVariableAccumulator(blocksMap, filterFactory, flags);		
+		AVSTResultPresentation flags = new AVSTResultPresentation();
+		flags.addExpected("I");
+		AssumedVariablesTool a3 = new AssumedVariablesTool(blocksMap, filterFactory, flags);		
 		this.testAssumedLocal(a3.getResult(new EntryId("APIROU04", "INDOBLK")), new String[]{"Y"});		
 	}
 }

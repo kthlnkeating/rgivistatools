@@ -29,9 +29,10 @@ import com.raygroupintl.m.parsetree.data.BlocksSupply;
 import com.raygroupintl.m.parsetree.data.EntryId;
 import com.raygroupintl.m.parsetree.visitor.BlockRecorder;
 import com.raygroupintl.m.parsetree.visitor.BlockRecorderFactory;
+import com.raygroupintl.m.tool.RecursionSpecification;
+import com.raygroupintl.m.tool.assumedvariables.AssumedVariablesTool;
 import com.raygroupintl.output.FileWrapper;
 import com.raygroupintl.output.TerminalFormatter;
-import com.raygroupintl.struct.Filter;
 import com.raygroupintl.struct.FilterFactory;
 import com.raygroupintl.vista.repository.RepositoryInfo;
 import com.raygroupintl.vista.repository.RepositoryVisitor;
@@ -48,7 +49,6 @@ import com.raygroupintl.vista.tools.entryfanin.FaninMark;
 import com.raygroupintl.vista.tools.entryfanin.MarkedAsFaninBRF;
 import com.raygroupintl.vista.tools.entryfanout.EntryFanouts;
 import com.raygroupintl.vista.tools.entryinfo.Accumulator;
-import com.raygroupintl.vista.tools.entryinfo.AssumedVariableAccumulator;
 import com.raygroupintl.vista.tools.entryinfo.AssumedVariablesTR;
 import com.raygroupintl.vista.tools.entryinfo.CodeInfo;
 import com.raygroupintl.vista.tools.entryinfo.EntryCodeInfo;
@@ -109,12 +109,8 @@ public class RepoEntryTools extends Tools {
 		public ToolResult getResult(final RepositoryInfo ri, List<EntryId> entries) {
 			BlockRecorderFactory<T> rf = this.getBlockRecorderFactory(ri);
 			BlocksSupply<Block<T>> blocksSupply = this.getBlocksSupply(ri, rf);
-			FilterFactory<EntryId, EntryId> filterFactory = new FilterFactory<EntryId, EntryId>() {
-				@Override
-				public Filter<EntryId> getFilter(EntryId parameter) {
-					return EntryInfoTool.this.getFilter(ri, parameter);
-				}
-			}; 
+			RecursionSpecification rs = CLIParamsAdapter.toRecursionSpecification(this.params);
+			FilterFactory<EntryId, EntryId> filterFactory = rs.getFanoutFilterFactory();
 			Accumulator<U, T> a = this.getAccumulator(blocksSupply, filterFactory);
 			for (EntryId entryId : entries) {
 				a.addEntry(entryId);
@@ -159,7 +155,7 @@ public class RepoEntryTools extends Tools {
 		
 		@Override
 		protected Accumulator<AssumedVariablesTR, CodeInfo> getAccumulator(BlocksSupply<Block<CodeInfo>> blocksSupply, FilterFactory<EntryId, EntryId> filterFactory) {			
-			return new AssumedVariableAccumulator(blocksSupply, filterFactory, this.params.getAssumedVariablesFlags());			
+			return new AssumedVariablesTool(blocksSupply, filterFactory, this.params.getAssumedVariablesFlags());			
 		}
 
 		@Override
@@ -243,12 +239,8 @@ public class RepoEntryTools extends Tools {
 			ToolResultCollection<EntryFanins> resultList = new ToolResultCollection<EntryFanins>();
 			for (EntryId entryId : entries) {
 				final EntryFaninAccumulator efit = this.getSupply(entryId, ri);
-				FilterFactory<EntryId, EntryId> filterFactory = new FilterFactory<EntryId, EntryId>() {
-					@Override
-					public Filter<EntryId> getFilter(EntryId parameter) {
-						return EntryFanin.this.getFilter(ri, parameter);
-					}
-				}; 
+				RecursionSpecification rs = CLIParamsAdapter.toRecursionSpecification(this.params);
+				FilterFactory<EntryId, EntryId> filterFactory = rs.getFanoutFilterFactory();
 				efit.setFilterFactory(filterFactory);
 				RepositoryVisitor rv = new RepositoryVisitor() {
 					int packageCount;
