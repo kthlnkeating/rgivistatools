@@ -16,17 +16,13 @@
 
 package com.raygroupintl.vista.tools.entryinfo;
 
-import com.raygroupintl.m.parsetree.data.EntryId;
 import com.raygroupintl.output.Terminal;
 import com.raygroupintl.output.TerminalFormatter;
-import com.raygroupintl.vista.tools.fnds.ToolResult;
 
-public class BasicCodeInfoTR implements ToolResult {
-	private EntryId entryId;
+public class BasicCodeInfoTR {
 	private BasicCodeInfo info;
 
-	public BasicCodeInfoTR(EntryId entryId, BasicCodeInfo info) {
-		this.entryId = entryId;
+	public BasicCodeInfoTR(BasicCodeInfo info) {
 		this.info = info;
 	}
 	
@@ -47,14 +43,4 @@ public class BasicCodeInfoTR implements ToolResult {
 		t.writeFormatted("FMGLBS", this.info.getFilemanGlobals(), tf);
 		t.writeFormatted("FMCALLS", this.info.getFilemanCalls(), tf);		
 	}
-	
-	@Override
-	public void write(Terminal t, TerminalFormatter tf) {
-		t.writeEOL(" " + this.entryId.toString2());		
-		if (this.info == null) {
-			t.writeEOL("  ERROR: Invalid entry point");
-		} else {
-			this.writeInfo(t, tf);
-		}
-	}	
 }

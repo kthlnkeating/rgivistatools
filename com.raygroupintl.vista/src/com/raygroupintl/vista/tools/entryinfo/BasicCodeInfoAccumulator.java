@@ -22,26 +22,25 @@ import com.raygroupintl.m.parsetree.data.BlocksSupply;
 import com.raygroupintl.m.parsetree.data.EntryId;
 import com.raygroupintl.struct.Filter;
 import com.raygroupintl.struct.FilterFactory;
-import com.raygroupintl.vista.tools.fnds.ToolResultCollection;
 
 public class BasicCodeInfoAccumulator extends Accumulator<BasicCodeInfoTR, CodeInfo> {
 	public BasicCodeInfoAccumulator(BlocksSupply<Block<CodeInfo>> blocksSupply) {
-		super(blocksSupply, new ToolResultCollection<BasicCodeInfoTR>());
+		super(blocksSupply);
 	}
 
 	public BasicCodeInfoAccumulator(BlocksSupply<Block<CodeInfo>> blocksSupply, FilterFactory<EntryId, EntryId> filterFactory) {
-		super(blocksSupply, filterFactory, new ToolResultCollection<BasicCodeInfoTR>());
+		super(blocksSupply, filterFactory);
 	}
 	
 	@Override
 	protected BasicCodeInfoTR getResult(Block<CodeInfo> block, Filter<EntryId> filter) {
 		AdditiveDataAggregator<BasicCodeInfo, CodeInfo> bcia = new AdditiveDataAggregator<BasicCodeInfo, CodeInfo>(block, blocksSupply);
 		BasicCodeInfo apiData = bcia.get(filter);
-		return new BasicCodeInfoTR(block.getEntryId(), apiData);
+		return new BasicCodeInfoTR(apiData);
 	}
 	
 	@Override
 	protected BasicCodeInfoTR getEmptyBlockResult(EntryId entryId) {
-		return new BasicCodeInfoTR(entryId, null);		
+		return new BasicCodeInfoTR(null);		
 	}
 }

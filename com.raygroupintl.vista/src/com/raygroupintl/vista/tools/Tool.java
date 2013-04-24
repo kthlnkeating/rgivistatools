@@ -27,11 +27,9 @@ import java.util.Scanner;
 import com.raygroupintl.m.parsetree.data.EntryId;
 import com.raygroupintl.m.token.MVersion;
 import com.raygroupintl.output.FileWrapper;
-import com.raygroupintl.output.TerminalFormatter;
 import com.raygroupintl.vista.repository.RepositoryInfo;
 import com.raygroupintl.vista.repository.VistaPackage;
 import com.raygroupintl.vista.repository.VistaPackages;
-import com.raygroupintl.vista.tools.fnds.ToolResult;
 
 public abstract class Tool {
 	protected CLIParams params;
@@ -91,18 +89,7 @@ public abstract class Tool {
 		}
 		return new FileWrapper(this.params.outputFile);
 	}
-	
-	protected void writeEntries(FileWrapper fr, List<ToolResult> resultList) {
-		if (fr.start()) {
-			TerminalFormatter tf = new TerminalFormatter();
-			tf.setTab(12);
-			for (ToolResult result : resultList) {
-				result.write(fr, tf);
-			}
-			fr.stop();
-		}
-	}
-	
+		
 	protected List<String> getEntriesInString() {
 		if (this.params.inputFile != null) {
 			try {

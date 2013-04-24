@@ -22,20 +22,19 @@ import com.raygroupintl.m.parsetree.data.EntryId;
 import com.raygroupintl.m.tool.assumedvariables.AssumedVariablesTool;
 import com.raygroupintl.struct.Filter;
 import com.raygroupintl.struct.FilterFactory;
-import com.raygroupintl.vista.tools.fnds.ToolResultCollection;
 
 public class EntryCodeInfoAccumulator extends Accumulator<EntryCodeInfo, CodeInfo> {
 	private AssumedVariablesTool assumedVariableAccumulator;
 	private BasicCodeInfoAccumulator basicCodeInfoAccumulator;
 	
 	public EntryCodeInfoAccumulator(BlocksSupply<Block<CodeInfo>> blocksSupply) {
-		super(blocksSupply, new ToolResultCollection<EntryCodeInfo>());
+		super(blocksSupply);
 		this.assumedVariableAccumulator = new AssumedVariablesTool(blocksSupply);
 		this.basicCodeInfoAccumulator = new BasicCodeInfoAccumulator(blocksSupply);
 	}
 
 	public EntryCodeInfoAccumulator(BlocksSupply<Block<CodeInfo>> blocksSupply, FilterFactory<EntryId, EntryId> filterFactory) {
-		super(blocksSupply, filterFactory, new ToolResultCollection<EntryCodeInfo>());
+		super(blocksSupply, filterFactory);
 		this.assumedVariableAccumulator = new AssumedVariablesTool(blocksSupply, filterFactory);
 		this.basicCodeInfoAccumulator = new BasicCodeInfoAccumulator(blocksSupply, filterFactory);
 	}

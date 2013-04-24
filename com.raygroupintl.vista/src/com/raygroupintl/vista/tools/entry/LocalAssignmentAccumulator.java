@@ -23,15 +23,14 @@ import com.raygroupintl.m.parsetree.data.EntryId;
 import com.raygroupintl.struct.Filter;
 import com.raygroupintl.struct.FilterFactory;
 import com.raygroupintl.vista.tools.entryinfo.Accumulator;
-import com.raygroupintl.vista.tools.fnds.ToolResultCollection;
 
 public class LocalAssignmentAccumulator extends Accumulator<EntryCodeLocations, CodeLocations> {
 	public LocalAssignmentAccumulator(BlocksSupply<Block<CodeLocations>> blocksSupply) {
-		super(blocksSupply, new ToolResultCollection<EntryCodeLocations>());
+		super(blocksSupply);
 	}
 
 	public LocalAssignmentAccumulator(BlocksSupply<Block<CodeLocations>> blocksSupply, FilterFactory<EntryId, EntryId> filterFactory) {
-		super(blocksSupply, filterFactory, new ToolResultCollection<EntryCodeLocations>());
+		super(blocksSupply, filterFactory);
 	}
 	
 	@Override

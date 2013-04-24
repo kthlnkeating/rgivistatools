@@ -19,11 +19,8 @@ package com.raygroupintl.vista.tools.entry;
 import java.io.Serializable;
 
 import com.raygroupintl.m.parsetree.data.EntryId;
-import com.raygroupintl.output.Terminal;
-import com.raygroupintl.output.TerminalFormatter;
-import com.raygroupintl.vista.tools.fnds.ToolResult;
 
-public class EntryCodeLocations implements ToolResult, Serializable {
+public class EntryCodeLocations implements Serializable {
 	private static final long serialVersionUID = 1L;
 
 	private EntryId entryUnderTest;
@@ -33,6 +30,10 @@ public class EntryCodeLocations implements ToolResult, Serializable {
 		this(entryUnderTest, new CodeLocations());
 	}
 	
+	public EntryId getEntryUnderTest() {
+		return this.entryUnderTest;
+	}
+
 	public EntryCodeLocations(EntryId entryUnderTest, CodeLocations codeLocations) {
 		this.entryUnderTest = entryUnderTest;
 		this.codeLocations = codeLocations;
@@ -45,10 +46,4 @@ public class EntryCodeLocations implements ToolResult, Serializable {
 	public CodeLocations getCodeLocations() {
 		return this.codeLocations;
 	}
-	
-	@Override
-	public void write(Terminal t, TerminalFormatter tf) {
-		t.writeEOL(" " + this.entryUnderTest.toString2());
-		this.codeLocations.write(t, tf);
-	}	
 }

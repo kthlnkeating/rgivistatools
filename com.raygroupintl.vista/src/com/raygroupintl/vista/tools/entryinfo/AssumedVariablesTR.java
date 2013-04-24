@@ -25,9 +25,8 @@ import com.raygroupintl.m.parsetree.data.EntryId;
 import com.raygroupintl.m.tool.assumedvariables.AVSTResultPresentation;
 import com.raygroupintl.output.Terminal;
 import com.raygroupintl.output.TerminalFormatter;
-import com.raygroupintl.vista.tools.fnds.ToolResult;
 
-public class AssumedVariablesTR implements ToolResult  {
+public class AssumedVariablesTR  {
 	private EntryId entryId;
 	private Set<String> assumedVariables;
 	private AVSTResultPresentation flags;
@@ -38,6 +37,14 @@ public class AssumedVariablesTR implements ToolResult  {
 		this.flags = flags;
 	}
 	
+	public EntryId getEntryUnderTest() {
+		return this.entryId;
+	}
+
+	public AVSTResultPresentation getFlags() {
+		return this.flags;
+	}
+			
 	public Set<String> getData() {
 		return this.assumedVariables;
 	}
@@ -46,7 +53,7 @@ public class AssumedVariablesTR implements ToolResult  {
 		return this.assumedVariables != null;
 	}
 	
-	private boolean hasAssumedVariables() {
+	public boolean hasAssumedVariables() {
 		return (this.assumedVariables != null) && (this.assumedVariables.size() > 0);
 	}
 	
@@ -55,19 +62,4 @@ public class AssumedVariablesTR implements ToolResult  {
 		Collections.sort(assumedLocalsSorted);			
 		t.writeFormatted("ASSUMED", assumedLocalsSorted, tf);		
 	}
-	
-	@Override
-	public void write(Terminal t, TerminalFormatter tf) {
-		if (this.assumedVariables == null) {
-			t.writeEOL(" " + this.entryId.toString2());		
-			t.writeEOL("  ERROR: Invalid entry point");
-			return;
-		} else {
-			if (this.flags.getSkipEmpty() && ! this.hasAssumedVariables()) {
-				return;
-			}
-			t.writeEOL(" " + this.entryId.toString2());		
-			this.writeVariables(t, tf);
-		}
-	}	
 }

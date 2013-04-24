@@ -19,11 +19,8 @@ package com.raygroupintl.vista.tools.entryinfo;
 import java.util.Set;
 
 import com.raygroupintl.m.parsetree.data.EntryId;
-import com.raygroupintl.output.Terminal;
-import com.raygroupintl.output.TerminalFormatter;
-import com.raygroupintl.vista.tools.fnds.ToolResult;
 
-public class EntryCodeInfo implements ToolResult {
+public class EntryCodeInfo {
 	public EntryId entryId;
 	public String[] formals;
 	public AssumedVariablesTR assumedVariables;
@@ -36,6 +33,14 @@ public class EntryCodeInfo implements ToolResult {
 		this.basicCodeInfo = basicCodeInfo;
 	}
 	
+	public EntryId getEntryUnderTest() {
+		return this.entryId;
+	}
+
+	public String[] getFormals() {
+		return this.formals;
+	}
+	
 	public Set<String> getAssumedVariables() {
 		return this.assumedVariables.getData();
 	}
@@ -44,17 +49,11 @@ public class EntryCodeInfo implements ToolResult {
 		return this.basicCodeInfo.getData();
 	}
 	
-	@Override
-	public void write(Terminal t, TerminalFormatter tf) {
-		t.writeEOL(" " + this.entryId.toString2());		
-		if ((this.formals == null) && (! this.assumedVariables.isValid()) && (! this.basicCodeInfo.isValid())) {
-			t.writeEOL("  ERROR: Invalid entry point");
-			return;
-		} else {
-			t.writeFormatted("FORMAL", this.formals, tf);
-			this.assumedVariables.writeVariables(t, tf);
-			this.basicCodeInfo.writeInfo(t, tf);
-			t.writeEOL();
-		}
+	public AssumedVariablesTR getAssumedVariablesTR() {
+		return this.assumedVariables;
+	}
+	
+	public BasicCodeInfoTR getBasicCodeInfoTR() {
+		return this.basicCodeInfo;
 	}
 }

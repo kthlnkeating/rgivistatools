@@ -22,16 +22,17 @@ import java.util.SortedSet;
 import java.util.TreeMap;
 
 import com.raygroupintl.m.parsetree.data.EntryId;
-import com.raygroupintl.output.Terminal;
-import com.raygroupintl.output.TerminalFormatter;
-import com.raygroupintl.vista.tools.fnds.ToolResult;
 
-public class EntryFanins implements ToolResult {
+public class EntryFanins {
 	private EntryId entryUnderTest;
 	Map<EntryId, SortedSet<EntryId>> pathPieces = new TreeMap<EntryId, SortedSet<EntryId>>();
 
 	public EntryFanins(EntryId entryUnderTest) {
 		this.entryUnderTest = entryUnderTest;
+	}
+	
+	public EntryId getEntryUnderTest() {
+		return this.entryUnderTest;
 	}
 
 	public void add(PathPieceToEntry ppte) {
@@ -50,18 +51,5 @@ public class EntryFanins implements ToolResult {
 	
 	public Set<EntryId> getFaninNextEntries(EntryId entry) {
 		return this.pathPieces.get(entry);
-	}
-	
-	@Override
-	public void write(Terminal t, TerminalFormatter tf) {
-		t.writeEOL(" " + this.entryUnderTest.toString2());				
-		Set<EntryId> starts = this.pathPieces.keySet();
-		for (EntryId start : starts) {
-			Set<EntryId> nextUps = this.pathPieces.get(start);
-			for (EntryId nextUp : nextUps) {
-				t.write("   " + start.toString2() + " thru ");
-				t.writeEOL(nextUp.toString2());
-			}
-		}	
 	}
 }

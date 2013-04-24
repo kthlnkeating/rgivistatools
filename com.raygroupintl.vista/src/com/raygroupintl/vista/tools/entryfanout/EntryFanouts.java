@@ -17,17 +17,13 @@
 package com.raygroupintl.vista.tools.entryfanout;
 
 import java.io.Serializable;
-import java.util.Collections;
 import java.util.Set;
 import java.util.SortedSet;
 import java.util.TreeSet;
 
 import com.raygroupintl.m.parsetree.data.EntryId;
-import com.raygroupintl.output.Terminal;
-import com.raygroupintl.output.TerminalFormatter;
-import com.raygroupintl.vista.tools.fnds.ToolResult;
 
-public class EntryFanouts implements ToolResult, Serializable {
+public class EntryFanouts implements Serializable {
 	private static final long serialVersionUID = 1L;
 
 	private EntryId entryUnderTest;
@@ -38,6 +34,10 @@ public class EntryFanouts implements ToolResult, Serializable {
 		this.entryUnderTest = entryUnderTest;
 	}
 	
+	public EntryId getEntryUnderTest() {
+		return this.entryUnderTest;
+	}
+
 	public void add(EntryId fanout) {
 		if (this.fanoutEntries == null) {
 			this.fanoutEntries = new TreeSet<EntryId>();
@@ -49,32 +49,15 @@ public class EntryFanouts implements ToolResult, Serializable {
 		this.errorMsg = errorMsg;
 	}
 	
+	public String getErrorMsg() {
+		return this.errorMsg;
+	}
+	
 	public EntryId getEntry() {
 		return this.entryUnderTest;
 	}
 	
 	public Set<EntryId> getFanouts() {
-		if (this.fanoutEntries == null) {
-			return Collections.emptySet();
-		} else {
-			return Collections.unmodifiableSortedSet(this.fanoutEntries);
-		}
+		return this.fanoutEntries;
 	}
-	
-	@Override
-	public void write(Terminal t, TerminalFormatter tf) {
-		t.writeEOL(" " + this.entryUnderTest.toString2());	
-		if (fanoutEntries == null) {
-			if (this.errorMsg == null) {
-				t.writeEOL("  --");				
-			} else {
-				t.write("  ");
-				t.writeEOL(this.errorMsg);
-			}
-		} else {
-			for (EntryId f : this.fanoutEntries) {
-				t.writeEOL("  " + f.toString2());
-			}
-		}
-	}	
 }

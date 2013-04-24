@@ -28,14 +28,13 @@ import com.raygroupintl.struct.FilterFactory;
 import com.raygroupintl.vista.tools.entryinfo.Accumulator;
 import com.raygroupintl.vista.tools.entryinfo.AssumedVariablesTR;
 import com.raygroupintl.vista.tools.entryinfo.CodeInfo;
-import com.raygroupintl.vista.tools.fnds.ToolResultCollection;
 
 public class AssumedVariablesTool extends Accumulator<AssumedVariablesTR, CodeInfo> {
 	private DataStore<Set<String>> store = new DataStore<Set<String>>();					
 	private AVSTResultPresentation flags;
 	
 	public AssumedVariablesTool(BlocksSupply<Block<CodeInfo>> blocksSupply, AVSTResultPresentation flags) {
-		super(blocksSupply, new ToolResultCollection<AssumedVariablesTR>());
+		super(blocksSupply);
 		this.flags = flags;
 	}
 
@@ -44,7 +43,7 @@ public class AssumedVariablesTool extends Accumulator<AssumedVariablesTR, CodeIn
 	}
 
 	public AssumedVariablesTool(BlocksSupply<Block<CodeInfo>> blocksSupply, FilterFactory<EntryId, EntryId> filterFactory, AVSTResultPresentation flags) {
-		super(blocksSupply, filterFactory, new ToolResultCollection<AssumedVariablesTR>());
+		super(blocksSupply, filterFactory);
 		this.flags = flags;
 	}
 	

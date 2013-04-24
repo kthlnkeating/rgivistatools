@@ -55,11 +55,29 @@ public class EntryFanoutAccumulator {
 		return this.fanouts;
 	}
 
+	private void write(EntryFanouts result, Terminal t, TerminalFormatter tf) {
+		t.writeEOL(" " + result.getEntryUnderTest().toString2());	
+		Set<EntryId> r = result.getFanouts();
+		if (r == null) {
+			String em = result.getErrorMsg();
+			if (em == null) {
+				t.writeEOL("  --");				
+			} else {
+				t.write("  ");
+				t.writeEOL(em);
+			}
+		} else {
+			for (EntryId f : r) {
+				t.writeEOL("  " + f.toString2());
+			}
+		}
+	}
+
 	public void write(Terminal t, TerminalFormatter tf) {
 		Set<EntryId> eids = this.fanouts.keySet();
 		for (EntryId eid : eids) {
 			EntryFanouts rfos = this.fanouts.get(eid);
-			rfos.write(t, tf);			
+			this.write(rfos, t, tf);			
 			t.writeEOL();
 		}		
 	}	

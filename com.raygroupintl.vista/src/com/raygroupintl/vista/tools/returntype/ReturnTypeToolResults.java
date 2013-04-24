@@ -5,9 +5,8 @@ import java.util.LinkedList;
 import com.raygroupintl.m.struct.EntryFanoutInfo;
 import com.raygroupintl.output.Terminal;
 import com.raygroupintl.output.TerminalFormatter;
-import com.raygroupintl.vista.tools.fnds.ToolResult;
 
-public class ReturnTypeToolResults implements ToolResult {
+public class ReturnTypeToolResults {
 	
 	private String resultName;
 	private LinkedList<EntryFanoutInfo> inResults;
@@ -26,7 +25,6 @@ public class ReturnTypeToolResults implements ToolResult {
 	     return String.format("%1$-" + n + "s", s);  
 	}
 
-	@Override
 	public void write(Terminal t, TerminalFormatter tf) {
 		t.writeEOL(" " + resultName);
 		

@@ -18,7 +18,6 @@ import com.raygroupintl.output.FileWrapper;
 import com.raygroupintl.output.OutputTerm;
 import com.raygroupintl.output.Terminal;
 import com.raygroupintl.output.TerminalFormatter;
-import com.raygroupintl.vista.tools.fnds.ToolResult;
 import com.raygroupintl.vista.tools.returntype.ReturnType;
 import com.raygroupintl.vista.tools.returntype.ReturnTypeBR;
 import com.raygroupintl.vista.tools.returntype.ReturnTypeENUM;
@@ -117,7 +116,7 @@ public class ReturnTypeTool extends Tool {
 			//System.out.println(fanout.getLineLocation()+ " : " +fanout.getFanoutTo() + " : " +fanout.getFanoutType() + " : " + fanout.getReturnType() + " : " +fanout.isValid());
 		}
 		
-		ToolResult resultList = new ReturnTypeToolResults(routineName, entryFanoutsList);
+		ReturnTypeToolResults resultList = new ReturnTypeToolResults(routineName, entryFanoutsList);
 		
 		if (fileWrapper != null) {
 			if (fileWrapper.start()) {
@@ -132,7 +131,7 @@ public class ReturnTypeTool extends Tool {
 
 	}
 
-	private void sendToOut(ToolResult resultList, Terminal term) {
+	private void sendToOut(ReturnTypeToolResults resultList, Terminal term) {
 		TerminalFormatter tf = new TerminalFormatter();
 		tf.setTab(12);
 		resultList.write(term, tf);

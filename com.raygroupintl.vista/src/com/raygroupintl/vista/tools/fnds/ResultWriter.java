@@ -16,32 +16,9 @@
 
 package com.raygroupintl.vista.tools.fnds;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import com.raygroupintl.output.Terminal;
 import com.raygroupintl.output.TerminalFormatter;
 
-public class ToolResultCollection<T extends ToolResult> implements ToolResult {
-	private List<T> content = new ArrayList<T>(); 
-	
-	public void add(T toolResult) {
-		this.content.add(toolResult);
-	}
-	
-	public T getLast() {
-		int size = this.content.size();
-		if(size > 0) {
-			return this.content.get(size-1);
-		} else {
-			return null;
-		}
-	}
-	
-	@Override
-	public void write(Terminal t, TerminalFormatter tf) {
-		for (T eci : this.content) {
-			eci.write(t, tf);
-		}
-	}
+public interface ResultWriter<T> {
+	void write(T result, Terminal t, TerminalFormatter tf);
 }

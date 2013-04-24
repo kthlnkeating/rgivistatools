@@ -23,11 +23,8 @@ import java.util.List;
 
 import com.raygroupintl.m.parsetree.data.AdditiveDataHandler;
 import com.raygroupintl.m.struct.CodeLocation;
-import com.raygroupintl.output.Terminal;
-import com.raygroupintl.output.TerminalFormatter;
-import com.raygroupintl.vista.tools.fnds.ToolResult;
 
-public class CodeLocations implements ToolResult, Serializable, AdditiveDataHandler<CodeLocations> {
+public class CodeLocations implements Serializable, AdditiveDataHandler<CodeLocations> {
 	private static final long serialVersionUID = 1L;
 
 	private List<CodeLocation> codeLocations;
@@ -44,17 +41,6 @@ public class CodeLocations implements ToolResult, Serializable, AdditiveDataHand
 			return Collections.emptyList();
 		} else {
 			return Collections.unmodifiableList(this.codeLocations);
-		}
-	}
-	
-	@Override
-	public void write(Terminal t, TerminalFormatter tf) {
-		if (this.codeLocations == null) {
-			t.writeEOL("  --");				
-		} else {
-			for (CodeLocation c : this.codeLocations) {
-				t.writeEOL("  " + c.toString());
-			}
 		}
 	}
 	
