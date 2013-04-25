@@ -16,39 +16,46 @@
 
 package com.raygroupintl.vista.tools.entryinfo;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import com.raygroupintl.m.parsetree.data.Block;
 import com.raygroupintl.m.parsetree.data.BlocksSupply;
 import com.raygroupintl.m.parsetree.data.EntryId;
 import com.raygroupintl.m.tool.assumedvariables.AssumedVariables;
 import com.raygroupintl.m.tool.assumedvariables.AssumedVariablesTool;
 import com.raygroupintl.m.tool.assumedvariables.AssumedVariablesToolParams;
-import com.raygroupintl.struct.Filter;
 
-public class EntryCodeInfoAccumulator extends Accumulator<EntryCodeInfo, CodeInfo> {
+public class EntryCodeInfoAccumulator {
 	private AssumedVariablesTool assumedVariableAccumulator;
 	private BasicCodeInfoAccumulator basicCodeInfoAccumulator;
 	
 	public EntryCodeInfoAccumulator(BlocksSupply<Block<CodeInfo>> blocksSupply) {
-		super(blocksSupply);
 		this.assumedVariableAccumulator = new AssumedVariablesTool(blocksSupply);
 		this.basicCodeInfoAccumulator = new BasicCodeInfoAccumulator(blocksSupply);
 	}
 
 	public EntryCodeInfoAccumulator(BlocksSupply<Block<CodeInfo>> blocksSupply, AssumedVariablesToolParams params) {
-		super(blocksSupply, params.getRecursionSpecification().getFanoutFilterFactory());
 		this.assumedVariableAccumulator = new AssumedVariablesTool(blocksSupply, params);
 		this.basicCodeInfoAccumulator = new BasicCodeInfoAccumulator(blocksSupply, params.getRecursionSpecification().getFanoutFilterFactory());
 	}
 	
-	@Override
-	protected EntryCodeInfo getResult(Block<CodeInfo> block, Filter<EntryId> filter) {
-		AssumedVariables assumedVariables = this.assumedVariableAccumulator.getResult(block, filter);
-		BasicCodeInfoTR basicCodeInfo = this.basicCodeInfoAccumulator.getResult(block, filter);
-		return new EntryCodeInfo(block.getAttachedObject().getFormals(), assumedVariables, basicCodeInfo);		
+	protected EntryCodeInfo getResult(EntryId entryId) {
+		AssumedVariables assumedVariables = this.assumedVariableAccumulator.getResult(entryId);		
+		BasicCodeInfoTR basicCodeInfo = this.basicCodeInfoAccumulator.getResult(entryId);
+		if (assumedVariables.isValid() && basicCodeInfo.isValid()) {
+			return new EntryCodeInfo(assumedVariables, basicCodeInfo);					
+		} else {
+			return new EntryCodeInfo(null, null);		
+		}		
 	}
-	
-	@Override
-	protected EntryCodeInfo getEmptyBlockResult(EntryId entryId) {
-		return new EntryCodeInfo(null, null, null);		
+
+	public List<EntryCodeInfo> getResult(List<EntryId> entries) {
+		List<EntryCodeInfo> result = new ArrayList<EntryCodeInfo>();
+		for (EntryId entryId : entries) {
+			EntryCodeInfo e = this.getResult(entryId);
+			result.add(e);
+		}		
+		return result;
 	}
 }

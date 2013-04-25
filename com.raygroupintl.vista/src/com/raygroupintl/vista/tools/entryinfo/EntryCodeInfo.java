@@ -22,18 +22,16 @@ import com.raygroupintl.m.tool.MEntryToolResult;
 import com.raygroupintl.m.tool.assumedvariables.AssumedVariables;
 
 public class EntryCodeInfo implements MEntryToolResult {
-	public String[] formals;
 	public AssumedVariables assumedVariables;
 	public BasicCodeInfoTR basicCodeInfo;
 
-	public EntryCodeInfo(String[] formals, AssumedVariables assumedVariables, BasicCodeInfoTR basicCodeInfo) {
-		this.formals = formals;
+	public EntryCodeInfo(AssumedVariables assumedVariables, BasicCodeInfoTR basicCodeInfo) {
 		this.assumedVariables = assumedVariables;
 		this.basicCodeInfo = basicCodeInfo;
 	}
 	
 	public String[] getFormals() {
-		return this.formals;
+		return this.basicCodeInfo.getFormals();
 	}
 	
 	public Set<String> getAssumedVariables() {

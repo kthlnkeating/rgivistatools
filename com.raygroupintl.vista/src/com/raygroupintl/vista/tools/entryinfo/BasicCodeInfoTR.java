@@ -21,10 +21,16 @@ import com.raygroupintl.output.Terminal;
 import com.raygroupintl.output.TerminalFormatter;
 
 public class BasicCodeInfoTR implements MEntryToolResult {
+	public String[] formals;	
 	private BasicCodeInfo info;
 
-	public BasicCodeInfoTR(BasicCodeInfo info) {
+	public BasicCodeInfoTR(String[] formals, BasicCodeInfo info) {
+		this.formals = formals;
 		this.info = info;
+	}
+	
+	public String[] getFormals() {
+		return this.formals;
 	}
 	
 	public BasicCodeInfo getData() {

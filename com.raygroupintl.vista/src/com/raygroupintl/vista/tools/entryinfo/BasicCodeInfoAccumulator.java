@@ -36,11 +36,11 @@ public class BasicCodeInfoAccumulator extends Accumulator<BasicCodeInfoTR, CodeI
 	protected BasicCodeInfoTR getResult(Block<CodeInfo> block, Filter<EntryId> filter) {
 		AdditiveDataAggregator<BasicCodeInfo, CodeInfo> bcia = new AdditiveDataAggregator<BasicCodeInfo, CodeInfo>(block, blocksSupply);
 		BasicCodeInfo apiData = bcia.get(filter);
-		return new BasicCodeInfoTR(apiData);
+		return new BasicCodeInfoTR(block.getAttachedObject().getFormals(), apiData);
 	}
 	
 	@Override
 	protected BasicCodeInfoTR getEmptyBlockResult(EntryId entryId) {
-		return new BasicCodeInfoTR(null);		
+		return new BasicCodeInfoTR(null, null);		
 	}
 }

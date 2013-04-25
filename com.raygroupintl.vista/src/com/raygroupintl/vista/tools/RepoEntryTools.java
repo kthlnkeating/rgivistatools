@@ -157,21 +157,26 @@ public class RepoEntryTools extends Tools {
 		}
 	}
 
-	private static class EntryCodeInfoTool extends EntryInfoTool<CodeInfo, EntryCodeInfo> {	
+	private static class EntryCodeInfoTool extends EntryInfoToolBase<EntryCodeInfo> {	
 		public EntryCodeInfoTool(CLIParams params) {
 			super(params);
 		}
 		
-		@Override
 		protected BlockRecorderFactory<CodeInfo> getBlockRecorderFactory(final RepositoryInfo ri) {
 			return new EntryCodeInfoRecorderFactory(ri);	
 		}
 
-		@Override
 		protected List<EntryCodeInfo> getResult(BlocksSupply<Block<CodeInfo>> blocksSupply, List<EntryId> entries) {
 			AssumedVariablesToolParams p = CLIParamsAdapter.toAssumedVariablesToolParams(this.params);
 			EntryCodeInfoAccumulator a = new EntryCodeInfoAccumulator(blocksSupply, p);
 			return a.getResult(entries);			
+		}
+
+		@Override
+		public List<EntryCodeInfo> getResult(final RepositoryInfo ri, List<EntryId> entries) {
+			BlockRecorderFactory<CodeInfo> rf = this.getBlockRecorderFactory(ri);
+			BlocksSupply<Block<CodeInfo>> blocksSupply = this.getBlocksSupply(ri, rf);
+			return this.getResult(blocksSupply, entries);
 		}
 
 		@Override
