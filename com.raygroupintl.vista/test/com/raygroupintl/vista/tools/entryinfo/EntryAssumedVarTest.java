@@ -9,18 +9,18 @@ import org.junit.Test;
 import com.raygroupintl.m.parsetree.Routine;
 import com.raygroupintl.m.parsetree.data.EntryId;
 import com.raygroupintl.m.parsetree.data.BlocksInMap;
-import com.raygroupintl.m.parsetree.filter.ExcludeAllFanoutFilter;
-import com.raygroupintl.m.tool.assumedvariables.AVSTResultPresentation;
+import com.raygroupintl.m.tool.RecursionDepth;
+import com.raygroupintl.m.tool.RecursionSpecification;
+import com.raygroupintl.m.tool.assumedvariables.AssumedVariablesToolParams;
+import com.raygroupintl.m.tool.assumedvariables.AssumedVariables;
 import com.raygroupintl.m.tool.assumedvariables.AssumedVariablesTool;
-import com.raygroupintl.struct.Filter;
-import com.raygroupintl.struct.FilterFactory;
 import com.raygroupintl.vista.tools.AccumulatorTestCommon;
 import com.raygroupintl.vista.tools.entryinfo.CodeInfo;
 import com.raygroupintl.vista.tools.entryinfo.EntryCodeInfoRecorder;
 
 public class EntryAssumedVarTest {
-	private void testAssumedLocal(AssumedVariablesTR r, String[] expectedAssumeds) {
-		Set<String> assumeds = r.getData();
+	private void testAssumedLocal(AssumedVariables r, String[] expectedAssumeds) {
+		Set<String> assumeds = r.toSet();
 		Assert.assertEquals(expectedAssumeds.length, assumeds.size());
 		for (String expectedOutput : expectedAssumeds) {
 			Assert.assertTrue(assumeds.contains(expectedOutput));			
@@ -37,8 +37,13 @@ public class EntryAssumedVarTest {
 		EntryCodeInfoRecorder recorder = new EntryCodeInfoRecorder(null);
 		BlocksInMap<CodeInfo> blocksMap = BlocksInMap.getInstance(recorder, routines);
 		
-		AssumedVariablesTool a = new AssumedVariablesTool(blocksMap);
-				
+		AssumedVariablesToolParams p = new AssumedVariablesToolParams();		
+		RecursionSpecification rs = new RecursionSpecification();
+		rs.setDepth(RecursionDepth.ALL);
+		p.setRecursionSpecification(rs);
+		AssumedVariablesTool a = new AssumedVariablesTool(blocksMap, p);
+		
+		
 		this.testAssumedLocal(a.getResult(new EntryId("APIROU00", "FACT")), new String[]{"I"});
 		this.testAssumedLocal(a.getResult(new EntryId("APIROU00", "SUM")), new String[]{"M", "R", "I"});
 		this.testAssumedLocal(a.getResult(new EntryId("APIROU00", "SUMFACT")), new String[]{"S", "P"});
@@ -53,18 +58,13 @@ public class EntryAssumedVarTest {
 		this.testAssumedLocal(a.getResult(new EntryId("APIROU03", "GPIND")), new String[]{"B", "A"});
 		this.testAssumedLocal(a.getResult(new EntryId("APIROU03", "CALL1")), new String[]{"A", "B"});
 		
-		FilterFactory<EntryId, EntryId> filterFactory = new FilterFactory<EntryId, EntryId>() {
-			@Override
-			public Filter<EntryId> getFilter(EntryId parameter) {
-				return new ExcludeAllFanoutFilter();
-			}
-		};
-		AssumedVariablesTool a2 = new AssumedVariablesTool(blocksMap, filterFactory);
+		AssumedVariablesToolParams p2 = new AssumedVariablesToolParams();		
+		AssumedVariablesTool a2 = new AssumedVariablesTool(blocksMap, p2);
 		this.testAssumedLocal(a2.getResult(new EntryId("APIROU04", "INDOBLK")), new String[]{"I", "Y"});		
 		
-		AVSTResultPresentation flags = new AVSTResultPresentation();
-		flags.addExpected("I");
-		AssumedVariablesTool a3 = new AssumedVariablesTool(blocksMap, filterFactory, flags);		
+		AssumedVariablesToolParams p3 = new AssumedVariablesToolParams();
+		p3.addExpected("I");
+		AssumedVariablesTool a3 = new AssumedVariablesTool(blocksMap, p3);		
 		this.testAssumedLocal(a3.getResult(new EntryId("APIROU04", "INDOBLK")), new String[]{"Y"});		
 	}
 }

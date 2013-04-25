@@ -13,14 +13,12 @@ import com.raygroupintl.m.parsetree.data.EntryId;
 import com.raygroupintl.m.struct.CodeLocation;
 import com.raygroupintl.vista.tools.AccumulatorTestCommon;
 import com.raygroupintl.vista.tools.entry.CodeLocations;
-import com.raygroupintl.vista.tools.entry.EntryCodeLocations;
 import com.raygroupintl.vista.tools.entry.LocalAssignmentAccumulator;
 import com.raygroupintl.vista.tools.entry.LocalAssignmentRecorder;
 
 public class EntryLocalAssignmentTest {
-	private void testLocations(EntryCodeLocations r, CodeLocation[] expectedCodeLocations) {
-		CodeLocations cls = r.getCodeLocations();
-		Assert.assertTrue(cls.isIdenticalTo(expectedCodeLocations));
+	private void testLocations(CodeLocations r, CodeLocation[] expectedCodeLocations) {
+		Assert.assertTrue(r.isIdenticalTo(expectedCodeLocations));
 	}
 	
 	@Test

@@ -19,9 +19,10 @@ package com.raygroupintl.vista.tools.entryinfo;
 import com.raygroupintl.m.parsetree.data.Block;
 import com.raygroupintl.m.parsetree.data.BlocksSupply;
 import com.raygroupintl.m.parsetree.data.EntryId;
+import com.raygroupintl.m.tool.assumedvariables.AssumedVariables;
 import com.raygroupintl.m.tool.assumedvariables.AssumedVariablesTool;
+import com.raygroupintl.m.tool.assumedvariables.AssumedVariablesToolParams;
 import com.raygroupintl.struct.Filter;
-import com.raygroupintl.struct.FilterFactory;
 
 public class EntryCodeInfoAccumulator extends Accumulator<EntryCodeInfo, CodeInfo> {
 	private AssumedVariablesTool assumedVariableAccumulator;
@@ -33,21 +34,21 @@ public class EntryCodeInfoAccumulator extends Accumulator<EntryCodeInfo, CodeInf
 		this.basicCodeInfoAccumulator = new BasicCodeInfoAccumulator(blocksSupply);
 	}
 
-	public EntryCodeInfoAccumulator(BlocksSupply<Block<CodeInfo>> blocksSupply, FilterFactory<EntryId, EntryId> filterFactory) {
-		super(blocksSupply, filterFactory);
-		this.assumedVariableAccumulator = new AssumedVariablesTool(blocksSupply, filterFactory);
-		this.basicCodeInfoAccumulator = new BasicCodeInfoAccumulator(blocksSupply, filterFactory);
+	public EntryCodeInfoAccumulator(BlocksSupply<Block<CodeInfo>> blocksSupply, AssumedVariablesToolParams params) {
+		super(blocksSupply, params.getRecursionSpecification().getFanoutFilterFactory());
+		this.assumedVariableAccumulator = new AssumedVariablesTool(blocksSupply, params);
+		this.basicCodeInfoAccumulator = new BasicCodeInfoAccumulator(blocksSupply, params.getRecursionSpecification().getFanoutFilterFactory());
 	}
 	
 	@Override
 	protected EntryCodeInfo getResult(Block<CodeInfo> block, Filter<EntryId> filter) {
-		AssumedVariablesTR assumedVariables = this.assumedVariableAccumulator.getResult(block, filter);
+		AssumedVariables assumedVariables = this.assumedVariableAccumulator.getResult(block, filter);
 		BasicCodeInfoTR basicCodeInfo = this.basicCodeInfoAccumulator.getResult(block, filter);
-		return new EntryCodeInfo(block.getEntryId(), block.getAttachedObject().getFormals(), assumedVariables, basicCodeInfo);		
+		return new EntryCodeInfo(block.getAttachedObject().getFormals(), assumedVariables, basicCodeInfo);		
 	}
 	
 	@Override
 	protected EntryCodeInfo getEmptyBlockResult(EntryId entryId) {
-		return new EntryCodeInfo(entryId, null, null, null);		
+		return new EntryCodeInfo(null, null, null);		
 	}
 }

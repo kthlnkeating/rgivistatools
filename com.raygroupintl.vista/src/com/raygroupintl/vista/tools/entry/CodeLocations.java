@@ -23,8 +23,9 @@ import java.util.List;
 
 import com.raygroupintl.m.parsetree.data.AdditiveDataHandler;
 import com.raygroupintl.m.struct.CodeLocation;
+import com.raygroupintl.m.tool.MEntryToolResult;
 
-public class CodeLocations implements Serializable, AdditiveDataHandler<CodeLocations> {
+public class CodeLocations implements MEntryToolResult, Serializable, AdditiveDataHandler<CodeLocations> {
 	private static final long serialVersionUID = 1L;
 
 	private List<CodeLocation> codeLocations;
@@ -70,4 +71,15 @@ public class CodeLocations implements Serializable, AdditiveDataHandler<CodeLoca
 		}		
 		return false;
 	}
+
+	@Override
+	public boolean isValid() {
+		return this.codeLocations != null;
+	}
+	
+	@Override
+	public boolean isEmpty() {
+		return (this.codeLocations == null) || (this.codeLocations.size() ==0);
+	}
+	
 }

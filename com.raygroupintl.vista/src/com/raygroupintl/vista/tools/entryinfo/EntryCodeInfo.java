@@ -18,42 +18,49 @@ package com.raygroupintl.vista.tools.entryinfo;
 
 import java.util.Set;
 
-import com.raygroupintl.m.parsetree.data.EntryId;
+import com.raygroupintl.m.tool.MEntryToolResult;
+import com.raygroupintl.m.tool.assumedvariables.AssumedVariables;
 
-public class EntryCodeInfo {
-	public EntryId entryId;
+public class EntryCodeInfo implements MEntryToolResult {
 	public String[] formals;
-	public AssumedVariablesTR assumedVariables;
+	public AssumedVariables assumedVariables;
 	public BasicCodeInfoTR basicCodeInfo;
 
-	public EntryCodeInfo(EntryId entryId, String[] formals, AssumedVariablesTR assumedVariables, BasicCodeInfoTR basicCodeInfo) {
-		this.entryId = entryId;
+	public EntryCodeInfo(String[] formals, AssumedVariables assumedVariables, BasicCodeInfoTR basicCodeInfo) {
 		this.formals = formals;
 		this.assumedVariables = assumedVariables;
 		this.basicCodeInfo = basicCodeInfo;
 	}
 	
-	public EntryId getEntryUnderTest() {
-		return this.entryId;
-	}
-
 	public String[] getFormals() {
 		return this.formals;
 	}
 	
 	public Set<String> getAssumedVariables() {
-		return this.assumedVariables.getData();
+		return this.assumedVariables.toSet();
 	}
 	
 	public BasicCodeInfo getBasicCodeInfo() {
 		return this.basicCodeInfo.getData();
 	}
 	
-	public AssumedVariablesTR getAssumedVariablesTR() {
+	public AssumedVariables getAssumedVariablesTR() {
 		return this.assumedVariables;
 	}
 	
 	public BasicCodeInfoTR getBasicCodeInfoTR() {
 		return this.basicCodeInfo;
 	}
+	
+	@Override
+	public boolean isValid() {
+		return this.assumedVariables.isValid() && this.basicCodeInfo.isValid();
+	}
+	
+	@Override
+	public boolean isEmpty() {
+		return this.assumedVariables.isEmpty() && this.basicCodeInfo.isEmpty();
+	}
+	
+	
 }

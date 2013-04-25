@@ -46,7 +46,7 @@ public class EntryFaninAccumulatorTest {
 		MarkedAsFaninBR recorder = new MarkedAsFaninBR(entryId);
 		BlocksInMap<FaninMark> blocksMap = BlocksInMap.getInstance(recorder, routines);
 		
-		EntryFaninAccumulator accumulator = new EntryFaninAccumulator(entryId, blocksMap, false);
+		EntryFaninAccumulator accumulator = new EntryFaninAccumulator(blocksMap, false);
 		for (Routine r : routines) {
 			accumulator.addRoutine(r);
 		}
@@ -69,7 +69,7 @@ public class EntryFaninAccumulatorTest {
 		this.checkResult(fanins, ":5^FINROU04", new String[]{"OTHER^FINROU02"});
 		this.checkResult(fanins, "OTHER^FINROU02", new String[]{"ADD^FINROU00"});
 		
-		EntryFaninAccumulator accumulator2 = new EntryFaninAccumulator(entryId, blocksMap, true);
+		EntryFaninAccumulator accumulator2 = new EntryFaninAccumulator(blocksMap, true);
 		for (Routine r : routines) {
 			accumulator2.addRoutine(r);
 		}

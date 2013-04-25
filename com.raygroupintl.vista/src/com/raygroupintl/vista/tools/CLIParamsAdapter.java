@@ -18,6 +18,7 @@ package com.raygroupintl.vista.tools;
 
 import com.raygroupintl.m.tool.RecursionDepth;
 import com.raygroupintl.m.tool.RecursionSpecification;
+import com.raygroupintl.m.tool.assumedvariables.AssumedVariablesToolParams;
 
 public class CLIParamsAdapter {
 	public static RecursionSpecification toRecursionSpecification(CLIParams params) {
@@ -36,5 +37,15 @@ public class CLIParamsAdapter {
 		} catch (Exception ex) {
 			return null;
 		}			
+	}
+	
+	public static AssumedVariablesToolParams toAssumedVariablesToolParams(CLIParams params) {
+		AssumedVariablesToolParams result = new AssumedVariablesToolParams();
+		if (params.excludes.size() > 0) {
+			result.addExpected(params.excludes);
+		}
+		RecursionSpecification rs = toRecursionSpecification(params);
+		result.setRecursionSpecification(rs);	
+		return result;		
 	}
 }

@@ -14,7 +14,10 @@
 // limitations under the License.
 //---------------------------------------------------------------------------
 
-package com.raygroupintl.m.tool.assumedvariables;
+package com.raygroupintl.m.tool;
 
-public class AVSTInput {
+public interface MEntryToolResult {
+	boolean isValid();
+	
+	boolean isEmpty();
 }

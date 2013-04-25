@@ -16,7 +16,10 @@
 
 package com.raygroupintl.output;
 
+import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Collections;
+import java.util.List;
 
 public abstract class Terminal {
 	public abstract boolean write(String data);
@@ -58,5 +61,11 @@ public abstract class Terminal {
 			this.write("--");
 		}
 		this.writeEOL();		
+	}
+
+	public void writeSortedFormatted(String title, Collection<String> dataList, TerminalFormatter tf) {
+		List<String> sorted = new ArrayList<String>(dataList);
+		Collections.sort(sorted);		
+		this.writeFormatted(title, sorted, tf);
 	}
 }

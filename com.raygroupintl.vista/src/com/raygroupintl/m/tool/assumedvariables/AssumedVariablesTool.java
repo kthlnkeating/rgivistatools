@@ -24,45 +24,34 @@ import com.raygroupintl.m.parsetree.data.DataStore;
 import com.raygroupintl.m.parsetree.data.EntryId;
 import com.raygroupintl.m.parsetree.data.RecursiveDataAggregator;
 import com.raygroupintl.struct.Filter;
-import com.raygroupintl.struct.FilterFactory;
 import com.raygroupintl.vista.tools.entryinfo.Accumulator;
-import com.raygroupintl.vista.tools.entryinfo.AssumedVariablesTR;
 import com.raygroupintl.vista.tools.entryinfo.CodeInfo;
 
-public class AssumedVariablesTool extends Accumulator<AssumedVariablesTR, CodeInfo> {
+public class AssumedVariablesTool extends Accumulator<AssumedVariables, CodeInfo> {
 	private DataStore<Set<String>> store = new DataStore<Set<String>>();					
-	private AVSTResultPresentation flags;
+	private AssumedVariablesToolParams params;
 	
-	public AssumedVariablesTool(BlocksSupply<Block<CodeInfo>> blocksSupply, AVSTResultPresentation flags) {
-		super(blocksSupply);
-		this.flags = flags;
-	}
-
 	public AssumedVariablesTool(BlocksSupply<Block<CodeInfo>> blocksSupply) {
-		this(blocksSupply, new AVSTResultPresentation());
+		this(blocksSupply, new AssumedVariablesToolParams());
 	}
 
-	public AssumedVariablesTool(BlocksSupply<Block<CodeInfo>> blocksSupply, FilterFactory<EntryId, EntryId> filterFactory, AVSTResultPresentation flags) {
-		super(blocksSupply, filterFactory);
-		this.flags = flags;
-	}
-	
-	public AssumedVariablesTool(BlocksSupply<Block<CodeInfo>> blocksSupply, FilterFactory<EntryId, EntryId> filterFactory) {
-		this(blocksSupply, filterFactory, new AVSTResultPresentation());
+	public AssumedVariablesTool(BlocksSupply<Block<CodeInfo>> blocksSupply, AssumedVariablesToolParams params) {
+		super(blocksSupply, params.getRecursionSpecification().getFanoutFilterFactory());
+		this.params = params;
 	}
 	
 	@Override
-	public AssumedVariablesTR getResult(Block<CodeInfo> block, Filter<EntryId> filter) {
+	public AssumedVariables getResult(Block<CodeInfo> block, Filter<EntryId> filter) {
 		RecursiveDataAggregator<Set<String>, CodeInfo> ala = new RecursiveDataAggregator<Set<String>, CodeInfo>(block, blocksSupply);
 		Set<String> assumedVariables = ala.get(this.store, filter);
 		if (assumedVariables != null) {
-			assumedVariables.removeAll(this.flags.getExpected());
+			assumedVariables.removeAll(this.params.getExpected());
 		}
-		return new AssumedVariablesTR(block.getEntryId(), assumedVariables, this.flags);	
+		return new AssumedVariables(assumedVariables);	
 	}
 	
 	@Override
-	protected AssumedVariablesTR getEmptyBlockResult(EntryId entryId) {
-		return new AssumedVariablesTR(entryId, null, this.flags);		
+	protected AssumedVariables getEmptyBlockResult(EntryId entryId) {
+		return new AssumedVariables(null);		
 	}
 }

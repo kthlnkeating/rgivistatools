@@ -24,7 +24,7 @@ import com.raygroupintl.struct.Filter;
 import com.raygroupintl.struct.FilterFactory;
 import com.raygroupintl.vista.tools.entryinfo.Accumulator;
 
-public class LocalAssignmentAccumulator extends Accumulator<EntryCodeLocations, CodeLocations> {
+public class LocalAssignmentAccumulator extends Accumulator<CodeLocations, CodeLocations> {
 	public LocalAssignmentAccumulator(BlocksSupply<Block<CodeLocations>> blocksSupply) {
 		super(blocksSupply);
 	}
@@ -34,15 +34,13 @@ public class LocalAssignmentAccumulator extends Accumulator<EntryCodeLocations, 
 	}
 	
 	@Override
-	protected EntryCodeLocations getResult(Block<CodeLocations> block, Filter<EntryId> filter) {
-		EntryId entryId = block.getEntryId();
+	protected CodeLocations getResult(Block<CodeLocations> block, Filter<EntryId> filter) {
 		AdditiveDataAggregator<CodeLocations, CodeLocations> bcia = new AdditiveDataAggregator<CodeLocations, CodeLocations>(block, blocksSupply);
-		CodeLocations codeLocations = bcia.get(filter);
-		return new EntryCodeLocations(entryId, codeLocations);
+		return bcia.get(filter);
 	}
 	
 	@Override
-	protected EntryCodeLocations getEmptyBlockResult(EntryId entryId) {
-		return new EntryCodeLocations(entryId);
+	protected CodeLocations getEmptyBlockResult(EntryId entryId) {
+		return new CodeLocations();
 	}
 }

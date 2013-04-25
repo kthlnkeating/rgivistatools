@@ -36,7 +36,7 @@ public class EntryFanoutAccumulator {
 		Set<String> tags = rawFanouts.getRoutineEntryTags();
 		for (String tag : tags) {
 			EntryId eid = new EntryId(routineName, tag);
-			EntryFanouts efouts = new EntryFanouts(eid); 
+			EntryFanouts efouts = new EntryFanouts(); 
 			Set<EntryId> values = rawFanouts.getFanouts(tag);
 			for (EntryId v : values) {
 				efouts.add(v);
@@ -55,8 +55,8 @@ public class EntryFanoutAccumulator {
 		return this.fanouts;
 	}
 
-	private void write(EntryFanouts result, Terminal t, TerminalFormatter tf) {
-		t.writeEOL(" " + result.getEntryUnderTest().toString2());	
+	private void write(EntryId entryId, EntryFanouts result, Terminal t, TerminalFormatter tf) {
+		t.writeEOL(" " + entryId.toString2());	
 		Set<EntryId> r = result.getFanouts();
 		if (r == null) {
 			String em = result.getErrorMsg();
@@ -77,7 +77,7 @@ public class EntryFanoutAccumulator {
 		Set<EntryId> eids = this.fanouts.keySet();
 		for (EntryId eid : eids) {
 			EntryFanouts rfos = this.fanouts.get(eid);
-			this.write(rfos, t, tf);			
+			this.write(eid, rfos, t, tf);			
 			t.writeEOL();
 		}		
 	}	

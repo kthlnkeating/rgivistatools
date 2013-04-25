@@ -40,7 +40,7 @@ public class FanoutAccumulator extends Accumulator<EntryFanouts, Void>{
 		FanoutBlocks<Block<Void>> fanoutBlocks = block.getFanoutBlocks(this.blocksSupply, filter);
 		List<Block<Void>> blocks = fanoutBlocks.getBlocks();
 		boolean first = true;
-		EntryFanouts result = new EntryFanouts(block.getEntryId());
+		EntryFanouts result = new EntryFanouts();
 		for (Block<Void> b : blocks) {
 			if (first) {
 				first = false;
@@ -53,7 +53,7 @@ public class FanoutAccumulator extends Accumulator<EntryFanouts, Void>{
 	
 	@Override
 	protected EntryFanouts getEmptyBlockResult(EntryId entryId) {
-		EntryFanouts result = new EntryFanouts(entryId);
+		EntryFanouts result = new EntryFanouts();
 		result.setErrorMsg("Not Found");
 		return result;
 	}

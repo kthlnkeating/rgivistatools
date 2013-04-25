@@ -20,10 +20,20 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-public class AVSTResultPresentation {
-	private List<String> expected;
-	private boolean skipEmpty;
+import com.raygroupintl.m.tool.RecursionSpecification;
 
+public class AssumedVariablesToolParams {
+	private RecursionSpecification recursionSpec = new RecursionSpecification();
+	private List<String> expected;
+
+	public void setRecursionSpecification(RecursionSpecification recursionSpec) {
+		this.recursionSpec = recursionSpec;
+	}
+	
+	public RecursionSpecification getRecursionSpecification() {
+		return this.recursionSpec;
+	}
+		
 	public void addExpected(String variable) {
 		if (this.expected == null) {
 			this.expected = new ArrayList<String>();
@@ -45,13 +55,4 @@ public class AVSTResultPresentation {
 			return Collections.unmodifiableList(this.expected);
 		}
 	}
-
-	public void setSkipEmpty(boolean b) {
-		this.skipEmpty = b;
-	}
-
-	public boolean getSkipEmpty() {
-		return this.skipEmpty;		
-	}
-
 }

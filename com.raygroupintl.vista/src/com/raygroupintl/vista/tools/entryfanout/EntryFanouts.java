@@ -22,21 +22,13 @@ import java.util.SortedSet;
 import java.util.TreeSet;
 
 import com.raygroupintl.m.parsetree.data.EntryId;
+import com.raygroupintl.m.tool.MEntryToolResult;
 
-public class EntryFanouts implements Serializable {
+public class EntryFanouts implements MEntryToolResult, Serializable {
 	private static final long serialVersionUID = 1L;
 
-	private EntryId entryUnderTest;
 	private SortedSet<EntryId> fanoutEntries;
 	private String errorMsg;
-
-	public EntryFanouts(EntryId entryUnderTest) {
-		this.entryUnderTest = entryUnderTest;
-	}
-	
-	public EntryId getEntryUnderTest() {
-		return this.entryUnderTest;
-	}
 
 	public void add(EntryId fanout) {
 		if (this.fanoutEntries == null) {
@@ -53,8 +45,14 @@ public class EntryFanouts implements Serializable {
 		return this.errorMsg;
 	}
 	
-	public EntryId getEntry() {
-		return this.entryUnderTest;
+	@Override
+	public boolean isValid() {
+		return this.fanoutEntries != null;
+	}
+	
+	@Override
+	public boolean isEmpty() {
+		return (this.fanoutEntries == null) || (this.fanoutEntries.size() == 0);
 	}
 	
 	public Set<EntryId> getFanouts() {

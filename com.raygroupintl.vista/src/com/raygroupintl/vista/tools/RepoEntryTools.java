@@ -31,9 +31,11 @@ import com.raygroupintl.m.parsetree.data.EntryId;
 import com.raygroupintl.m.parsetree.visitor.BlockRecorder;
 import com.raygroupintl.m.parsetree.visitor.BlockRecorderFactory;
 import com.raygroupintl.m.struct.CodeLocation;
+import com.raygroupintl.m.tool.MEntryToolResult;
 import com.raygroupintl.m.tool.RecursionSpecification;
-import com.raygroupintl.m.tool.assumedvariables.AVSTResultPresentation;
+import com.raygroupintl.m.tool.assumedvariables.AssumedVariables;
 import com.raygroupintl.m.tool.assumedvariables.AssumedVariablesTool;
+import com.raygroupintl.m.tool.assumedvariables.AssumedVariablesToolParams;
 import com.raygroupintl.output.FileWrapper;
 import com.raygroupintl.output.Terminal;
 import com.raygroupintl.output.TerminalFormatter;
@@ -43,7 +45,6 @@ import com.raygroupintl.vista.repository.RepositoryVisitor;
 import com.raygroupintl.vista.repository.VistaPackage;
 import com.raygroupintl.vista.repository.VistaPackages;
 import com.raygroupintl.vista.tools.entry.CodeLocations;
-import com.raygroupintl.vista.tools.entry.EntryCodeLocations;
 import com.raygroupintl.vista.tools.entry.LocalAssignmentAccumulator;
 import com.raygroupintl.vista.tools.entry.LocalAssignmentRecorder;
 import com.raygroupintl.vista.tools.entryfanin.BlocksInSerialFanouts;
@@ -52,7 +53,6 @@ import com.raygroupintl.vista.tools.entryfanin.EntryFanins;
 import com.raygroupintl.vista.tools.entryfanin.FaninMark;
 import com.raygroupintl.vista.tools.entryfanin.MarkedAsFaninBRF;
 import com.raygroupintl.vista.tools.entryfanout.EntryFanouts;
-import com.raygroupintl.vista.tools.entryinfo.AssumedVariablesTR;
 import com.raygroupintl.vista.tools.entryinfo.BasicCodeInfoTR;
 import com.raygroupintl.vista.tools.entryinfo.CodeInfo;
 import com.raygroupintl.vista.tools.entryinfo.EntryCodeInfo;
@@ -60,10 +60,9 @@ import com.raygroupintl.vista.tools.entryinfo.EntryCodeInfoAccumulator;
 import com.raygroupintl.vista.tools.entryinfo.EntryCodeInfoRecorder;
 import com.raygroupintl.vista.tools.entryinfo.FanoutAccumulator;
 import com.raygroupintl.vista.tools.entryinfo.VoidBlockRecorder;
-import com.raygroupintl.vista.tools.fnds.ResultWriter;
 
 public class RepoEntryTools extends Tools {
-	private static abstract class EntryInfoToolBase<U> extends Tool {		
+	private static abstract class EntryInfoToolBase<U extends MEntryToolResult> extends Tool {		
 		public EntryInfoToolBase(CLIParams params) {
 			super(params);
 		}
@@ -78,7 +77,31 @@ public class RepoEntryTools extends Tools {
 
 		protected abstract List<U> getResult(RepositoryInfo ri, List<EntryId> entries);
 		
-		protected abstract ResultWriter<U> getResultWriter(); 
+		protected void write(EntryId entryId, U result, Terminal t, TerminalFormatter tf, boolean skipEmpty) {			
+			if (result.isValid()) {
+				if ((! skipEmpty) || (! result.isEmpty())) {
+					t.writeEOL(" " + entryId.toString2());		
+					this.write(result, t, tf);
+				}
+			} else {
+				t.writeEOL(" " + entryId.toString2());		
+				t.writeEOL("  ERROR: Invalid entry point");
+				return;
+			}
+			
+		}
+				
+		protected abstract void write(U result, Terminal t, TerminalFormatter tf);
+
+		private boolean skipEmpty() {
+			List<String> outputFlags = this.params.outputFlags;
+			for (String outputFlag : outputFlags) {
+				if (outputFlag.equals("ignorenodata")) {
+					return true;
+				}
+			}
+			return false;			
+		}
 		
 		@Override
 		public void run() {
@@ -92,9 +115,9 @@ public class RepoEntryTools extends Tools {
 						if (fr.start()) {
 							TerminalFormatter tf = new TerminalFormatter();
 							tf.setTab(12);
-							ResultWriter<U> rw = this.getResultWriter();
-							for (U tr : resultList) {
-								rw.write(tr, fr, tf);
+							int n = entries.size();
+							for (int i=0; i<n; ++i) {
+								this.write(entries.get(i), resultList.get(i), fr, tf, this.skipEmpty());
 							}
 							fr.stop();
 						}
@@ -104,22 +127,20 @@ public class RepoEntryTools extends Tools {
 		}
 	}
 
-	private static abstract class EntryInfoTool<T, U> extends EntryInfoToolBase<U> {	
+	private static abstract class EntryInfoTool<T, U extends MEntryToolResult> extends EntryInfoToolBase<U> {	
 		public EntryInfoTool(CLIParams params) {
 			super(params);
 		}
 		
 		protected abstract BlockRecorderFactory<T> getBlockRecorderFactory(final RepositoryInfo ri);
 		
-		protected abstract List<U> getResult(BlocksSupply<Block<T>> blocksSupply, FilterFactory<EntryId, EntryId> filterFactory, List<EntryId> entries);
+		protected abstract List<U> getResult(BlocksSupply<Block<T>> blocksSupply, List<EntryId> entries);
 		
 		@Override
 		public List<U> getResult(final RepositoryInfo ri, List<EntryId> entries) {
 			BlockRecorderFactory<T> rf = this.getBlockRecorderFactory(ri);
 			BlocksSupply<Block<T>> blocksSupply = this.getBlocksSupply(ri, rf);
-			RecursionSpecification rs = CLIParamsAdapter.toRecursionSpecification(this.params);
-			FilterFactory<EntryId, EntryId> filterFactory = rs.getFanoutFilterFactory();
-			return this.getResult(blocksSupply, filterFactory, entries);
+			return this.getResult(blocksSupply, entries);
 		}
 	}
 
@@ -147,35 +168,25 @@ public class RepoEntryTools extends Tools {
 		}
 
 		@Override
-		protected List<EntryCodeInfo> getResult(BlocksSupply<Block<CodeInfo>> blocksSupply, FilterFactory<EntryId, EntryId> filterFactory, List<EntryId> entries) {
-			EntryCodeInfoAccumulator a = new EntryCodeInfoAccumulator(blocksSupply, filterFactory);
+		protected List<EntryCodeInfo> getResult(BlocksSupply<Block<CodeInfo>> blocksSupply, List<EntryId> entries) {
+			AssumedVariablesToolParams p = CLIParamsAdapter.toAssumedVariablesToolParams(this.params);
+			EntryCodeInfoAccumulator a = new EntryCodeInfoAccumulator(blocksSupply, p);
 			return a.getResult(entries);			
 		}
 
 		@Override
-		protected ResultWriter<EntryCodeInfo> getResultWriter() {
-			return new ResultWriter<EntryCodeInfo>() {
-				@Override
-				public void write(EntryCodeInfo result, Terminal t, TerminalFormatter tf) {
-					t.writeEOL(" " + result.getEntryUnderTest().toString2());
-					String[] f = result.getFormals();
-					AssumedVariablesTR av = result.getAssumedVariablesTR();
-					BasicCodeInfoTR ci = result.getBasicCodeInfoTR();
-					if ((f == null) && (! av.isValid()) && (! ci.isValid())) {
-						t.writeEOL("  ERROR: Invalid entry point");
-						return;
-					} else {
-						t.writeFormatted("FORMAL", f, tf);
-						av.writeVariables(t, tf);
-						ci.writeInfo(t, tf);
-						t.writeEOL();
-					}
-				}
-			};
+		protected void write(EntryCodeInfo result, Terminal t, TerminalFormatter tf) {
+			String[] f = result.getFormals();
+			AssumedVariables av = result.getAssumedVariablesTR();
+			BasicCodeInfoTR ci = result.getBasicCodeInfoTR();
+			t.writeFormatted("FORMAL", f, tf);
+			t.writeSortedFormatted("ASSUMED", av.toSet(), tf);
+			ci.writeInfo(t, tf);
+			t.writeEOL();
 		}	
 	}
 
-	private static class EntryAssumedVarTool extends EntryInfoTool<CodeInfo, AssumedVariablesTR> {	
+	private static class EntryAssumedVarTool extends EntryInfoTool<CodeInfo, AssumedVariables> {	
 		public EntryAssumedVarTool(CLIParams params) {
 			super(params);
 		}
@@ -186,32 +197,16 @@ public class RepoEntryTools extends Tools {
 		}
 		
 		@Override
-		protected List<AssumedVariablesTR> getResult(BlocksSupply<Block<CodeInfo>> blocksSupply, FilterFactory<EntryId, EntryId> filterFactory, List<EntryId> entries) {
-			AssumedVariablesTool a = new AssumedVariablesTool(blocksSupply, filterFactory, this.params.getAssumedVariablesFlags());
+		protected List<AssumedVariables> getResult(BlocksSupply<Block<CodeInfo>> blocksSupply, List<EntryId> entries) {
+			AssumedVariablesToolParams params = CLIParamsAdapter.toAssumedVariablesToolParams(this.params);
+			AssumedVariablesTool a = new AssumedVariablesTool(blocksSupply, params);
 			return a.getResult(entries);			
 		}
 		
 		@Override
-		protected ResultWriter<AssumedVariablesTR> getResultWriter() {
-			return new ResultWriter<AssumedVariablesTR>() {
-				@Override
-				public void write(AssumedVariablesTR result, Terminal t, TerminalFormatter tf) {
-					Set<String> data = result.getData();
-					if (data == null) {
-						t.writeEOL(" " + result.getEntryUnderTest().toString2());		
-						t.writeEOL("  ERROR: Invalid entry point");
-						return;
-					} else {
-						AVSTResultPresentation fl = result.getFlags();
-						if (fl.getSkipEmpty() && ! result.hasAssumedVariables()) {
-							return;
-						}
-						t.writeEOL(" " + result.getEntryUnderTest().toString2());		
-						result.writeVariables(t, tf);
-					}
-				}
-			};
-		}	
+		protected void write(AssumedVariables result, Terminal t, TerminalFormatter tf) {
+			t.writeSortedFormatted("ASSUMED", result.toSet(), tf);
+		}
 	}
 
 	private static class EntryLocalAssignmentRecorderFactory implements BlockRecorderFactory<CodeLocations> {
@@ -227,7 +222,7 @@ public class RepoEntryTools extends Tools {
 		}
 	}
 
-	private static class EntryLocalAssignmentTool extends EntryInfoTool<CodeLocations, EntryCodeLocations> {	
+	private static class EntryLocalAssignmentTool extends EntryInfoTool<CodeLocations, CodeLocations> {	
 		public EntryLocalAssignmentTool(CLIParams params) {
 			super(params);
 		}
@@ -240,27 +235,23 @@ public class RepoEntryTools extends Tools {
 		}
 		
 		@Override
-		protected List<EntryCodeLocations> getResult(BlocksSupply<Block<CodeLocations>> blocksSupply, FilterFactory<EntryId, EntryId> filterFactory, List<EntryId> entries) {
+		protected List<CodeLocations> getResult(BlocksSupply<Block<CodeLocations>> blocksSupply, List<EntryId> entries) {
+			RecursionSpecification rs = CLIParamsAdapter.toRecursionSpecification(this.params);
+			FilterFactory<EntryId, EntryId> filterFactory = rs.getFanoutFilterFactory();
 			LocalAssignmentAccumulator a = new LocalAssignmentAccumulator(blocksSupply, filterFactory);
 			return a.getResult(entries);			
 		}
 
 		@Override
-		protected ResultWriter<EntryCodeLocations> getResultWriter() {
-			return new ResultWriter<EntryCodeLocations>() {
-				@Override
-				public void write(EntryCodeLocations result, Terminal t, TerminalFormatter tf) {
-					t.writeEOL(" " + result.getEntryUnderTest().toString2());
-					List<CodeLocation> cl = result.getCodeLocations().getCodeLocations();
-					if (cl == null) {
-						t.writeEOL("  --");				
-					} else {
-						for (CodeLocation c : cl) {
-							t.writeEOL("  " + c.toString());
-						}
-					}
+		protected void write(CodeLocations result, Terminal t, TerminalFormatter tf) {
+			List<CodeLocation> cl = result.getCodeLocations();
+			if (cl == null) {
+				t.writeEOL("  --");				
+			} else {
+				for (CodeLocation c : cl) {
+					t.writeEOL("  " + c.toString());
 				}
-			};
+			}
 		}	
 	}
 
@@ -282,33 +273,29 @@ public class RepoEntryTools extends Tools {
 		}
 
 		@Override
-		protected List<EntryFanouts> getResult(BlocksSupply<Block<Void>> blocksSupply, FilterFactory<EntryId, EntryId> filterFactory, List<EntryId> entries) {
+		protected List<EntryFanouts> getResult(BlocksSupply<Block<Void>> blocksSupply, List<EntryId> entries) {
+			RecursionSpecification rs = CLIParamsAdapter.toRecursionSpecification(this.params);
+			FilterFactory<EntryId, EntryId> filterFactory = rs.getFanoutFilterFactory();
 			FanoutAccumulator a = new FanoutAccumulator(blocksSupply, filterFactory);
 			return a.getResult(entries);			
 		}
 		
 		@Override
-		protected ResultWriter<EntryFanouts> getResultWriter() {
-			return new ResultWriter<EntryFanouts>() {
-				@Override
-				public void write(EntryFanouts result, Terminal t, TerminalFormatter tf) {
-					t.writeEOL(" " + result.getEntryUnderTest().toString2());	
-					Set<EntryId> r = result.getFanouts();
-					if (r == null) {
-						String em = result.getErrorMsg();
-						if (em == null) {
-							t.writeEOL("  --");				
-						} else {
-							t.write("  ");
-							t.writeEOL(em);
-						}
-					} else {
-						for (EntryId f : r) {
-							t.writeEOL("  " + f.toString2());
-						}
-					}
+		protected void write(EntryFanouts result, Terminal t, TerminalFormatter tf) {
+			Set<EntryId> r = result.getFanouts();
+			if (r == null) {
+				String em = result.getErrorMsg();
+				if (em == null) {
+					t.writeEOL("  --");				
+				} else {
+					t.write("  ");
+					t.writeEOL(em);
 				}
-			};
+			} else {
+				for (EntryId f : r) {
+					t.writeEOL("  " + f.toString2());
+				}
+			}
 		}	
 	}
 
@@ -321,10 +308,10 @@ public class RepoEntryTools extends Tools {
 			String method = this.params.getMethod("routinefile");
 			if (method.equalsIgnoreCase("fanoutfile")) {
 				BlocksSupply<Block<FaninMark>> blocksSupply = new BlocksInSerialFanouts(entryId, this.params.parseTreeDirectory);		
-				return new EntryFaninAccumulator(entryId, blocksSupply, false);
+				return new EntryFaninAccumulator(blocksSupply, false);
 			} else {
 				BlocksSupply<Block<FaninMark>> blocksSupply = this.getBlocksSupply(ri, new MarkedAsFaninBRF(entryId));		
-				return new EntryFaninAccumulator(entryId, blocksSupply, true);
+				return new EntryFaninAccumulator(blocksSupply, true);
 			}
 		}
 		
@@ -359,22 +346,16 @@ public class RepoEntryTools extends Tools {
 		}
 		
 		@Override
-		protected ResultWriter<EntryFanins> getResultWriter() {
-			return new ResultWriter<EntryFanins>() {
-				@Override
-				public void write(EntryFanins result, Terminal t, TerminalFormatter tf) {
-					t.writeEOL(" " + result.getEntryUnderTest().toString2());				
-					Set<EntryId> starts = result.getFaninEntries();
-					for (EntryId start : starts) {
-						Set<EntryId> nextUps = result.getFaninNextEntries(start);
-						for (EntryId nextUp : nextUps) {
-							t.write("   " + start.toString2() + " thru ");
-							t.writeEOL(nextUp.toString2());
-						}
-					}	
+		protected void write(EntryFanins result, Terminal t, TerminalFormatter tf) {
+			Set<EntryId> starts = result.getFaninEntries();
+			for (EntryId start : starts) {
+				Set<EntryId> nextUps = result.getFaninNextEntries(start);
+				for (EntryId nextUp : nextUps) {
+					t.write("   " + start.toString2() + " thru ");
+					t.writeEOL(nextUp.toString2());
 				}
-			};
-		}	
+			}	
+		}
 	}
 	
 	@Override

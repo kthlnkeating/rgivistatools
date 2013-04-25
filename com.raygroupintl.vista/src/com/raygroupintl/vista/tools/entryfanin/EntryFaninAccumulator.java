@@ -30,14 +30,12 @@ import com.raygroupintl.struct.FilterFactory;
 import com.raygroupintl.struct.PassFilter;
 
 public class EntryFaninAccumulator  {
-	private EntryId entryUnderTest;
 	private BlocksSupply<Block<FaninMark>> blocksSupply;
 	private DataStore<PathPieceToEntry> store = new DataStore<PathPieceToEntry>();					
 	private FilterFactory<EntryId, EntryId> filterFactory = new ConstFilterFactory<EntryId, EntryId>(new PassFilter<EntryId>());
 	private boolean filterInternalBlocks;
 	
-	public EntryFaninAccumulator(EntryId entryUnderTest, BlocksSupply<Block<FaninMark>> blocksSupply, boolean filterInternalBlocks) {
-		this.entryUnderTest = entryUnderTest;
+	public EntryFaninAccumulator(BlocksSupply<Block<FaninMark>> blocksSupply, boolean filterInternalBlocks) {
 		this.blocksSupply = blocksSupply;
 		this.filterInternalBlocks = filterInternalBlocks;
 	}
@@ -65,7 +63,7 @@ public class EntryFaninAccumulator  {
 	}
 		
 	public EntryFanins getResult() {
-		EntryFanins result = new EntryFanins(this.entryUnderTest);
+		EntryFanins result = new EntryFanins();
 		for (PathPieceToEntry p : this.store.values()) {
 			if (p != null) {
 				result.add(p);

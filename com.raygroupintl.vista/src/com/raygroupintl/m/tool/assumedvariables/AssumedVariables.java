@@ -14,36 +14,28 @@
 // limitations under the License.
 //---------------------------------------------------------------------------
 
-package com.raygroupintl.vista.tools.entry;
+package com.raygroupintl.m.tool.assumedvariables;
 
-import java.io.Serializable;
+import java.util.Set;
 
-import com.raygroupintl.m.parsetree.data.EntryId;
+import com.raygroupintl.m.tool.MEntryToolResult;
 
-public class EntryCodeLocations implements Serializable {
-	private static final long serialVersionUID = 1L;
+public class AssumedVariables implements MEntryToolResult  {
+	private Set<String> assumedVariables;
 
-	private EntryId entryUnderTest;
-	private CodeLocations codeLocations;
-
-	public EntryCodeLocations(EntryId entryUnderTest) {
-		this(entryUnderTest, new CodeLocations());
+	public AssumedVariables(Set<String> assumedVariables) {
+		this.assumedVariables = assumedVariables;
 	}
 	
-	public EntryId getEntryUnderTest() {
-		return this.entryUnderTest;
-	}
-
-	public EntryCodeLocations(EntryId entryUnderTest, CodeLocations codeLocations) {
-		this.entryUnderTest = entryUnderTest;
-		this.codeLocations = codeLocations;
+	public Set<String> toSet() {
+		return this.assumedVariables;
 	}
 	
-	public EntryId getEntry() {
-		return this.entryUnderTest;
+	public boolean isValid() {
+		return this.assumedVariables != null;
 	}
 	
-	public CodeLocations getCodeLocations() {
-		return this.codeLocations;
+	public boolean isEmpty() {
+		return (this.assumedVariables == null) || (this.assumedVariables.size() ==0);
 	}
 }

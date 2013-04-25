@@ -16,10 +16,11 @@
 
 package com.raygroupintl.vista.tools.entryinfo;
 
+import com.raygroupintl.m.tool.MEntryToolResult;
 import com.raygroupintl.output.Terminal;
 import com.raygroupintl.output.TerminalFormatter;
 
-public class BasicCodeInfoTR {
+public class BasicCodeInfoTR implements MEntryToolResult {
 	private BasicCodeInfo info;
 
 	public BasicCodeInfoTR(BasicCodeInfo info) {
@@ -30,8 +31,14 @@ public class BasicCodeInfoTR {
 		return this.info;
 	}
 	
+	@Override
 	public boolean isValid() {
 		return this.info != null;
+	}
+	
+	@Override
+	public boolean isEmpty() {
+		return this.info == null;
 	}
 	
 	public void writeInfo(Terminal t, TerminalFormatter tf) {

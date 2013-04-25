@@ -21,7 +21,6 @@ import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import com.raygroupintl.m.tool.assumedvariables.AVSTResultPresentation;
 import com.raygroupintl.util.CLIParamMgr;
 import com.raygroupintl.util.CLIParameter;
 
@@ -142,19 +141,6 @@ public class CLIParams {
 		} else {
 			return this.method;
 		}
- 	}
-	
-	public AVSTResultPresentation getAssumedVariablesFlags() {
-		AVSTResultPresentation result = new AVSTResultPresentation();
-		for (String outputFlag : this.outputFlags) {
-			if (outputFlag.equals("ignorenodata")) {
-				result.setSkipEmpty(true);
-			}
-		}
-		if (this.excludes.size() > 0) {
-			result.addExpected(this.excludes);
-		}
-		return result;		
-	}
+ 	}	
 }
 

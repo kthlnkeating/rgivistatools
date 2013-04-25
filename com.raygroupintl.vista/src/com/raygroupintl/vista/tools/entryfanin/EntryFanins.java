@@ -22,18 +22,10 @@ import java.util.SortedSet;
 import java.util.TreeMap;
 
 import com.raygroupintl.m.parsetree.data.EntryId;
+import com.raygroupintl.m.tool.MEntryToolResult;
 
-public class EntryFanins {
-	private EntryId entryUnderTest;
+public class EntryFanins implements MEntryToolResult {
 	Map<EntryId, SortedSet<EntryId>> pathPieces = new TreeMap<EntryId, SortedSet<EntryId>>();
-
-	public EntryFanins(EntryId entryUnderTest) {
-		this.entryUnderTest = entryUnderTest;
-	}
-	
-	public EntryId getEntryUnderTest() {
-		return this.entryUnderTest;
-	}
 
 	public void add(PathPieceToEntry ppte) {
 		if (ppte.exist()) {
@@ -52,4 +44,15 @@ public class EntryFanins {
 	public Set<EntryId> getFaninNextEntries(EntryId entry) {
 		return this.pathPieces.get(entry);
 	}
+	
+	@Override
+	public boolean isValid() {
+		return this.pathPieces != null;
+	}
+	
+	@Override
+	public boolean isEmpty() {
+		return (this.pathPieces == null) || (this.pathPieces.size() == 0);
+	}
+	
 }

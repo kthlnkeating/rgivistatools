@@ -15,7 +15,7 @@ import com.raygroupintl.vista.tools.entryfanout.EntryFanouts;
 public class EntryFanoutToolTest {
 	private void testFanouts(EntryFanouts r, EntryId[] expectedFanouts) {
 		Set<EntryId> fanouts = r.getFanouts();
-		Assert.assertEquals(expectedFanouts.length, fanouts.size());
+		Assert.assertEquals(expectedFanouts.length, fanouts == null ? 0 : fanouts.size());
 		for (EntryId expectedFanout : expectedFanouts) {
 			Assert.assertTrue(fanouts.contains(expectedFanout));			
 		}				
