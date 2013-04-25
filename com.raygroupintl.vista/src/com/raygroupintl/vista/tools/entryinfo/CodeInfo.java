@@ -64,7 +64,7 @@ public class CodeInfo implements RecursiveDataHandler<Set<String>>, AdditiveData
 		}
 	}		
 	
-	public void addLocal(int index, Local local) {
+	public void addLocal(Local local) {
 		String label = local.getName().toString();
 		if ((this.formalsMap == null) || (! this.formalsMap.containsKey(label))) {
 			if (! this.newedLocals.containsKey(label)) {
@@ -105,7 +105,7 @@ public class CodeInfo implements RecursiveDataHandler<Set<String>>, AdditiveData
 		}
 	}
 	
-	public boolean isNewed(String name, int sourceIndex) {
+	private boolean isNewed(String name, int sourceIndex) {
 		Integer index = this.newedLocals.get(name);
 		if (index == null) {
 			return false;
@@ -115,7 +115,7 @@ public class CodeInfo implements RecursiveDataHandler<Set<String>>, AdditiveData
 		return true;
 	}
 	
-	public boolean isDefined(String name, int sourceIndex) {
+	private boolean isDefined(String name, int sourceIndex) {
 		if ((this.formalsMap != null) && (this.formalsMap.containsKey(name))) {
 			return true;
 		}

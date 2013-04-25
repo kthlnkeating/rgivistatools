@@ -33,8 +33,8 @@ public class EntryFanoutBR extends BlockRecorder<Void> {
 	}
 	
 	@Override
-	protected Block<Void> getNewBlock(int index, EntryId entryId, HierarchicalMap<String, Block<Void>> blocks, String[] params) {
-		return new Block<Void>(index, entryId, blocks, null);
+	protected Block<Void> getNewBlock(EntryId entryId, HierarchicalMap<String, Block<Void>> blocks, String[] params) {
+		return new Block<Void>(entryId, blocks, null);
 	}
 	
 	private Set<EntryId> getBlockFanouts(Block<Void> b, String routineName, HierarchicalMap<String, Block<Void>> siblings, Set<String> parentAlready) {

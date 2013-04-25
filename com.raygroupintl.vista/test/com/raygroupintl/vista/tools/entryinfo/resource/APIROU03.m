@@ -28,3 +28,21 @@ FILEMAN
  D CHK^DMI(10.2,4)
  D CHK^DDI(10.3,4)
  Q
+ ;
+NEWFOLVL ;
+ D ASSUMEV1^APIROU04
+ N V1
+ S V1=V1+1
+ Q
+ ;
+NEWDOLVL
+ N A
+ S A=0
+ F  D  S A=A+1 Q:A=3
+ . S B=$G(B)+1
+ . W B    
+ N B
+ S B=$G(B)+1
+ Q B
+ ;
+ 

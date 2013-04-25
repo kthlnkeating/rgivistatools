@@ -40,9 +40,9 @@ public class LocalAssignmentRecorder extends BlockRecorder<CodeLocations> {
 	}
 	
 	@Override
-	protected Block<CodeLocations> getNewBlock(int index, EntryId entryId, HierarchicalMap<String, Block<CodeLocations>> blocks, String[] params) {
+	protected Block<CodeLocations> getNewBlock(EntryId entryId, HierarchicalMap<String, Block<CodeLocations>> blocks, String[] params) {
 		CodeLocations ecls = new CodeLocations();
-		return new Block<CodeLocations>(index, entryId, blocks, ecls);
+		return new Block<CodeLocations>(entryId, blocks, ecls);
 	}
 
 	protected void setLocal(Local local, Node rhs) {

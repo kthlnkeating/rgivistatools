@@ -47,8 +47,7 @@ public abstract class BlockRecorder<T> extends FanoutRecorder {
 		return this.currentRoutineName;
 	}
 	
-	protected int incrementIndex() {
-		++this.index;
+	protected int getIndex() {
 		return this.index;
 	}
 	
@@ -66,14 +65,14 @@ public abstract class BlockRecorder<T> extends FanoutRecorder {
 	protected void updateFanout() {
 		EntryId fanout = this.getLastFanout();
 		if (fanout != null) {
-			int i = this.incrementIndex();
 			CallArgument[] callArguments = this.getLastArguments();
-			this.currentBlock.addFanout(i, fanout);	
+			this.currentBlock.addFanout(this.index, fanout);	
 			this.postUpdateFanout(fanout, callArguments);
+			++this.index;
 		} 
 	}
 
-	protected abstract Block<T> getNewBlock(int index, EntryId entryId, HierarchicalMap<String, Block<T>> blocks, String[] params);
+	protected abstract Block<T> getNewBlock(EntryId entryId, HierarchicalMap<String, Block<T>> blocks, String[] params);
  	
 	@Override
 	protected void visitDeadCmds(DeadCmds deadCmds) {
@@ -84,14 +83,12 @@ public abstract class BlockRecorder<T> extends FanoutRecorder {
 	
 	@Override
 	protected void visitEntry(Entry entry) {
-		++this.index;
 		String tag = entry.getName();
 		EntryId entryId = entry.getFullEntryId();		
-		this.currentBlock = this.getNewBlock(this.index, entryId, this.currentBlocks, entry.getParameters());
+		this.currentBlock = this.getNewBlock(entryId, this.currentBlocks, entry.getParameters());
 		if ((tag != null) && (! tag.isEmpty())) {
 			this.currentBlocks.put(tag, this.currentBlock);
 		}
-		++this.index;
 		super.visitEntry(entry);
 		if (entry.isClosed()) {
 			this.currentBlock.close();
@@ -100,7 +97,6 @@ public abstract class BlockRecorder<T> extends FanoutRecorder {
 			Entry ce = entry.getContinuationEntry();
 			String ceTag = ce.getName();
 			EntryId defaultGoto = new EntryId(null, ceTag);
-			++this.index;
 			this.currentBlock.addFanout(this.index, defaultGoto);
 			++this.index;
 		}
@@ -136,6 +132,7 @@ public abstract class BlockRecorder<T> extends FanoutRecorder {
 				EntryId defaultDo = new EntryId(null, tag);
 				lastBlock.addFanout(this.index, defaultDo);
 				lastBlock.addChild(firstBlock);
+				++this.index;
 			}
 		}
 	}

@@ -9,3 +9,7 @@ INDOBLK ;
  . S Y=$GET(Y)+1
  Q
  ;
+ASSUMEV1 ;
+ S V1=V1+1
+ Q
+ ;

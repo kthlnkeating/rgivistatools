@@ -38,8 +38,8 @@ public class MarkedAsFaninBR extends BlockRecorder<FaninMark> {
 	}
 	
 	@Override
-	protected Block<FaninMark> getNewBlock(int index, EntryId entryId, HierarchicalMap<String, Block<FaninMark>> blocks, String[] params) {
-		return new Block<FaninMark>(index, entryId, blocks, new FaninMark(entryId));
+	protected Block<FaninMark> getNewBlock(EntryId entryId, HierarchicalMap<String, Block<FaninMark>> blocks, String[] params) {
+		return new Block<FaninMark>(entryId, blocks, new FaninMark(entryId));
 	}
 }
 	

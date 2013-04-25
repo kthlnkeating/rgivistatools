@@ -50,10 +50,9 @@ public class EntryCodeInfoRecorder extends BlockRecorder<CodeInfo> {
 	}
 	
 	private void addOutput(Local local) {
-		int i = this.incrementIndex();
 		CodeInfo d = this.getCurrentBlockAttachedObject();
 		if (d != null) {
-			d.addLocal(i, local);	
+			d.addLocal(local);	
 		}
 	}
 	
@@ -194,7 +193,7 @@ public class EntryCodeInfoRecorder extends BlockRecorder<CodeInfo> {
 	
 	@Override
 	protected void newLocal(Local local) {
-		int i = this.incrementIndex();
+		int i = this.getIndex();
 		CodeInfo d = this.getCurrentBlockAttachedObject();
 		if (d != null) d.addNewed(i, local);
 	}
@@ -222,24 +221,21 @@ public class EntryCodeInfoRecorder extends BlockRecorder<CodeInfo> {
 	protected void visitLocal(Local local) {
 		if ((! this.underDeviceParameter) || (! isDeviceParameter(local))) { 
 			super.visitLocal(local);
-			int i = this.incrementIndex();
 			CodeInfo d = this.getCurrentBlockAttachedObject();
-			if (d != null) d.addLocal(i, local);
+			if (d != null) d.addLocal(local);
 		}
 	}
 
 	@Override
 	protected void passLocalByVal(Local local, int index) {		
-		int i = this.incrementIndex();
 		CodeInfo d = this.getCurrentBlockAttachedObject();
-		if (d != null) d.addLocal(i, local);
+		if (d != null) d.addLocal(local);
 	}
 	
 	@Override
 	protected void passLocalByRef(Local local, int index) {
-		int i = this.incrementIndex();
 		CodeInfo d = this.getCurrentBlockAttachedObject();
-		if (d != null) d.addLocal(i, local);
+		if (d != null) d.addLocal(local);
 		super.passLocalByRef(local, index);
 	}
 
@@ -267,8 +263,8 @@ public class EntryCodeInfoRecorder extends BlockRecorder<CodeInfo> {
 	}
 
 	@Override
-	protected Block<CodeInfo> getNewBlock(int index, EntryId entryId, HierarchicalMap<String, Block<CodeInfo>> blocks, String[] params) {
-		Block<CodeInfo> result = new Block<CodeInfo>(index, entryId, blocks, new CodeInfo());
+	protected Block<CodeInfo> getNewBlock(EntryId entryId, HierarchicalMap<String, Block<CodeInfo>> blocks, String[] params) {
+		Block<CodeInfo> result = new Block<CodeInfo>(entryId, blocks, new CodeInfo());
 		result.getAttachedObject().setFormals(params);
 		return result;
 	}

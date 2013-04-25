@@ -28,7 +28,7 @@ public class VoidBlockRecorder extends BlockRecorder<Void> {
 	}
 	
 	@Override
-	protected Block<Void> getNewBlock(int index, EntryId entryId, HierarchicalMap<String, Block<Void>> blocks, String[] params) {
-		return new Block<Void>(index, entryId, blocks, null);
+	protected Block<Void> getNewBlock(EntryId entryId, HierarchicalMap<String, Block<Void>> blocks, String[] params) {
+		return new Block<Void>(entryId, blocks, null);
 	}
 }

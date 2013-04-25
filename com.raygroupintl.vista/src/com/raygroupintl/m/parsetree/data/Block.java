@@ -53,7 +53,6 @@ public class Block<T> {
 	private final static Logger LOGGER = Logger.getLogger(Block.class.getName());
 	private static Set<EntryId> reported = new HashSet<EntryId>();
 
-	private int index;
 	private EntryId entryId;
 	private HierarchicalMap<String, Block<T>> callables;
 	private List<Block<T>> children;
@@ -62,8 +61,7 @@ public class Block<T> {
 	private List<IndexedFanout> fanouts = new ArrayList<IndexedFanout>();
 	private boolean closed;
 	
-	public Block(int index, EntryId entryId, HierarchicalMap<String, Block<T>> callables, T attachedObject) {
-		this.index = index;
+	public Block(EntryId entryId, HierarchicalMap<String, Block<T>> callables, T attachedObject) {
 		this.entryId = entryId;
 		this.callables = callables;
 		this.attachedObject = attachedObject;
@@ -75,10 +73,6 @@ public class Block<T> {
 	
 	public boolean isClosed() {
 		return this.closed;
-	}
-	
-	public int getIndex() {
-		return this.index;
 	}
 	
 	public EntryId getEntryId() {

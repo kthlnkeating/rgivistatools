@@ -40,7 +40,6 @@ public class BlocksInSerialFanouts extends BlocksSupply<Block<FaninMark>> {
 		if (fanouts != null) {
 			HierarchicalMap<String, Block<FaninMark>> result = new HierarchicalMap<String, Block<FaninMark>>();
 			Set<String> entryTags = fanouts.getRoutineEntryTags();
-			int index = 0;
 			EntryId eidUnderTest = this.entryUnderTest;
 			if (routineName.equals(this.entryUnderTest.getRoutineName())) {
 				eidUnderTest = new EntryId(null, this.entryUnderTest.getLabelOrDefault());
@@ -52,14 +51,13 @@ public class BlocksInSerialFanouts extends BlocksSupply<Block<FaninMark>> {
 				if (entryFanouts.contains(eidUnderTest)) {
 					fim.set(this.entryUnderTest);
 				}
-				Block<FaninMark> b = new Block<FaninMark>(index, beid, result, fim);
+				Block<FaninMark> b = new Block<FaninMark>(beid, result, fim);
 				int foindex = 0;
 				for (EntryId eid : entryFanouts) {
 					b.addFanout(foindex, eid);
 					++foindex;
 				}
 				result.put(entryTag, b);
-				++index;
 			}
 			return result;
 		}

@@ -68,9 +68,9 @@ public class ReturnTypeBR extends BlockRecorder<ReturnType> {
 	}
 
 	@Override
-	protected Block<ReturnType> getNewBlock(int index, EntryId entryId,
+	protected Block<ReturnType> getNewBlock(EntryId entryId,
 			HierarchicalMap<String, Block<ReturnType>> blocks, String[] params) {
-		return new Block<ReturnType>(index, entryId, blocks, attachedObject); //this gets called when a new entry is visited. get it again later via getCurrentBlock()
+		return new Block<ReturnType>(entryId, blocks, attachedObject); //this gets called when a new entry is visited. get it again later via getCurrentBlock()
 	}
 
 }
