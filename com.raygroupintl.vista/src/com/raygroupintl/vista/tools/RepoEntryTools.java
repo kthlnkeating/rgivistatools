@@ -25,14 +25,16 @@ import java.util.Set;
 import com.raygroupintl.m.parsetree.Routine;
 import com.raygroupintl.m.parsetree.data.Block;
 import com.raygroupintl.m.parsetree.data.BlocksInMap;
-import com.raygroupintl.m.parsetree.data.BlocksInSerialRoutine;
 import com.raygroupintl.m.parsetree.data.BlocksSupply;
 import com.raygroupintl.m.parsetree.data.EntryId;
 import com.raygroupintl.m.parsetree.visitor.BlockRecorder;
 import com.raygroupintl.m.parsetree.visitor.BlockRecorderFactory;
 import com.raygroupintl.m.struct.CodeLocation;
+import com.raygroupintl.m.tool.AccumulatingBlocksSupply;
 import com.raygroupintl.m.tool.MEntryToolResult;
+import com.raygroupintl.m.tool.ParseTreeSupply;
 import com.raygroupintl.m.tool.RecursionSpecification;
+import com.raygroupintl.m.tool.SavedParsedTrees;
 import com.raygroupintl.m.tool.assumedvariables.AssumedVariables;
 import com.raygroupintl.m.tool.assumedvariables.AssumedVariablesTool;
 import com.raygroupintl.m.tool.assumedvariables.AssumedVariablesToolParams;
@@ -71,7 +73,8 @@ public class RepoEntryTools extends Tools {
 			if ((this.params.parseTreeDirectory == null) || this.params.parseTreeDirectory.isEmpty()) {
 				return BlocksInMap.getInstance(f.getRecorder(), ri);
 			} else {
-				return new BlocksInSerialRoutine<T>(this.params.parseTreeDirectory, f);
+				ParseTreeSupply pts = new SavedParsedTrees(this.params.parseTreeDirectory);
+				return new AccumulatingBlocksSupply<T>(pts, f);
 			}		
 		}
 

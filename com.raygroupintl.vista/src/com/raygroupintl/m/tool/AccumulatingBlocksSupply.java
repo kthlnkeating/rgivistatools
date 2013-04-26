@@ -14,22 +14,24 @@
 // limitations under the License.
 //---------------------------------------------------------------------------
 
-package com.raygroupintl.m.parsetree.data;
+package com.raygroupintl.m.tool;
 
 import java.util.HashMap;
 
 import com.raygroupintl.m.parsetree.Routine;
+import com.raygroupintl.m.parsetree.data.Block;
+import com.raygroupintl.m.parsetree.data.BlocksSupply;
 import com.raygroupintl.m.parsetree.visitor.BlockRecorder;
 import com.raygroupintl.m.parsetree.visitor.BlockRecorderFactory;
 import com.raygroupintl.struct.HierarchicalMap;
 
-public class BlocksInSerialRoutine<T> extends BlocksSupply<Block<T>> {
-	private String inputPath;
+public class AccumulatingBlocksSupply<T> extends BlocksSupply<Block<T>> {
+	private ParseTreeSupply parseTreeSupply;
 	private HashMap<String, HierarchicalMap<String, Block<T>>> blocks = new HashMap<String, HierarchicalMap<String, Block<T>>>();
 	private BlockRecorderFactory<T> blockRecorder;
 	
-	public BlocksInSerialRoutine(String inputPath, BlockRecorderFactory<T> brf) {
-		this.inputPath = inputPath;
+	public AccumulatingBlocksSupply(ParseTreeSupply parseTreeSupply, BlockRecorderFactory<T> brf) {
+		this.parseTreeSupply = parseTreeSupply;
 		this.blockRecorder = brf;
 	}
 	
@@ -37,7 +39,7 @@ public class BlocksInSerialRoutine<T> extends BlocksSupply<Block<T>> {
 	public HierarchicalMap<String, Block<T>> getBlocks(String routineName) {
 		if (! this.blocks.containsKey(routineName)) {			
 			HierarchicalMap<String, Block<T>> result = null;
-			Routine routine = Routine.readSerialized(this.inputPath, routineName);
+			Routine routine = this.parseTreeSupply.getParseTree(routineName);
 			if (routine != null) {
 				BlockRecorder<T> recorder = this.blockRecorder.getRecorder();
 				routine.accept(recorder);
