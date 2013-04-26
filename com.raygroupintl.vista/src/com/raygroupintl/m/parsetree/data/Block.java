@@ -142,7 +142,6 @@ public class Block<T> {
 				fanoutBlocks.add(this, tagBlock, ifout.getIndex());
 			} else {
 				HierarchicalMap<String, Block<T>> routineBlocks = blocksSupply.getBlocks(routineName);
-				String originalTagName = tagName;
 				if (routineBlocks == null) {					
 					if (! reported.contains(fout)) {
 						LOGGER.log(Level.WARNING, "Unable to find information about routine " + routineName + ".");
@@ -152,16 +151,11 @@ public class Block<T> {
 				}
 				Block<T> tagBlock = routineBlocks.getThruHierarchy(tagName);
 				if (tagBlock == null) {
-					if (! originalTagName.equals(tagName)) {
-						tagBlock = routineBlocks.getThruHierarchy(originalTagName);
+					if (! reported.contains(fout)) {
+						LOGGER.log(Level.WARNING, "Unable to find information about tag " + fout.toString() + " in " + routineName);
+						reported.add(fout);
 					}
-					if (tagBlock == null) {
-						if (! reported.contains(fout)) {
-							LOGGER.log(Level.WARNING, "Unable to find information about tag " + fout.toString() + " in " + routineName);
-							reported.add(fout);
-						}
-						continue;
-					}
+					continue;
 				}
 				fanoutBlocks.add(this, tagBlock, ifout.getIndex());
 			}				 
