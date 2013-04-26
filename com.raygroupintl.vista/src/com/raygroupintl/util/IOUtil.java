@@ -17,41 +17,17 @@
 package com.raygroupintl.util;
 
 import java.io.IOException;
-import java.nio.file.FileVisitResult;
 import java.nio.file.Files;
 import java.nio.file.InvalidPathException;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.nio.file.SimpleFileVisitor;
-import java.nio.file.attribute.BasicFileAttributes;
+import java.util.List;
 
 import com.raygroupintl.struct.Filter;
+import com.raygroupintl.util.filevisitor.DirectoryFlattener;
+import com.raygroupintl.util.filevisitor.NameFilteredFileVisitor;
 
 public class IOUtil {
-	private static class DirectoryFlattener extends SimpleFileVisitor<Path> {
-		private Path destDirPath;
-		private Filter<Path> filter;
-		
-		public DirectoryFlattener(Path destDirPath, Filter<Path> filter) {
-			this.destDirPath = destDirPath;
-			this.filter = filter;
-		}
-		
-		@Override
-		public FileVisitResult visitFile(Path path, BasicFileAttributes attr) throws IOException {
-			boolean valid = this.filter.isValid(path);
-			if (attr.isDirectory()) {
-				return valid ? FileVisitResult.CONTINUE : FileVisitResult.SKIP_SUBTREE;
-			}
-			if (valid && attr.isRegularFile()) {
-				Path leaf = path.getFileName();
-				Path destinationPath = Paths.get(this.destDirPath.toString(), leaf.toString());
-				Files.copy(path, destinationPath);
-			}	
-			return FileVisitResult.CONTINUE;
-		}
-	}
-	
 	private static Path getDirectoryPath(String directory) throws IOException {
 		try {
 			Path path = Paths.get(directory);
@@ -71,5 +47,20 @@ public class IOUtil {
 		} catch (InvalidPathException e) {
 			throw new IOException(e);
 		}
+	}
+	
+	public static List<Path> getFiles(String rootDirectory, Filter<String> nameFilter) throws IOException {
+		NameFilteredFileVisitor visitor = new NameFilteredFileVisitor(nameFilter);
+		Path path = Paths.get(rootDirectory);
+		Files.walkFileTree(path, visitor);
+		return visitor.getFiles();
+	}
+	
+	public static List<Path> getFiles(List<Path> paths, Filter<String> nameFilter) throws IOException {
+		NameFilteredFileVisitor visitor = new NameFilteredFileVisitor(nameFilter);
+		for (Path path : paths) {
+			Files.walkFileTree(path, visitor);
+		}
+		return visitor.getFiles();
 	}
 }

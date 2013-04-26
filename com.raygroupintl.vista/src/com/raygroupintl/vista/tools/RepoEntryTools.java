@@ -16,6 +16,7 @@
 
 package com.raygroupintl.vista.tools;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
@@ -24,7 +25,6 @@ import java.util.Set;
 
 import com.raygroupintl.m.parsetree.Routine;
 import com.raygroupintl.m.parsetree.data.Block;
-import com.raygroupintl.m.parsetree.data.BlocksInMap;
 import com.raygroupintl.m.parsetree.data.BlocksSupply;
 import com.raygroupintl.m.parsetree.data.EntryId;
 import com.raygroupintl.m.parsetree.visitor.BlockRecorder;
@@ -35,6 +35,8 @@ import com.raygroupintl.m.tool.MEntryToolResult;
 import com.raygroupintl.m.tool.ParseTreeSupply;
 import com.raygroupintl.m.tool.RecursionSpecification;
 import com.raygroupintl.m.tool.SavedParsedTrees;
+import com.raygroupintl.m.tool.SourceCodeFiles;
+import com.raygroupintl.m.tool.SourceCodeToParseTreeAdapter;
 import com.raygroupintl.m.tool.assumedvariables.AssumedVariables;
 import com.raygroupintl.m.tool.assumedvariables.AssumedVariablesTool;
 import com.raygroupintl.m.tool.assumedvariables.AssumedVariablesToolParams;
@@ -71,7 +73,15 @@ public class RepoEntryTools extends Tools {
 		
 		protected <T> BlocksSupply<Block<T>> getBlocksSupply(RepositoryInfo ri, BlockRecorderFactory<T> f) {
 			if ((this.params.parseTreeDirectory == null) || this.params.parseTreeDirectory.isEmpty()) {
-				return BlocksInMap.getInstance(f.getRecorder(), ri);
+				String vistaFOIA = RepositoryInfo.getLocation();
+				try {
+					SourceCodeFiles files = SourceCodeFiles.getInstance(vistaFOIA);
+					ParseTreeSupply pts = new SourceCodeToParseTreeAdapter(files);
+					return new AccumulatingBlocksSupply<T>(pts, f);
+				}
+				catch (IOException e) {
+					return null;
+				}				
 			} else {
 				ParseTreeSupply pts = new SavedParsedTrees(this.params.parseTreeDirectory);
 				return new AccumulatingBlocksSupply<T>(pts, f);

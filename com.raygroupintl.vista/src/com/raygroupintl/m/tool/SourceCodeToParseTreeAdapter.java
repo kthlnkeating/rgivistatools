@@ -41,9 +41,9 @@ public class SourceCodeToParseTreeAdapter implements ParseTreeSupply {
 		try {
 			MTFSupply mtf = MTFSupply.getInstance(MVersion.CACHE);
 			TFRoutine tf = new TFRoutine(mtf);
-			this.inError = true;
 			return tf;
 		} catch (ParseException e) {
+			this.inError = true;
 			MRALogger.logError("Unable to load M parser definitions.");
 			return null;
 		}

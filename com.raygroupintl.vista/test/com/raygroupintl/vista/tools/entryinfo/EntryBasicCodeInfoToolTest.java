@@ -7,9 +7,12 @@ import java.util.Set;
 
 import junit.framework.Assert;
 
-import com.raygroupintl.m.parsetree.Routine;
+import com.raygroupintl.m.parsetree.data.Block;
+import com.raygroupintl.m.parsetree.data.BlocksSupply;
 import com.raygroupintl.m.parsetree.data.EntryId;
-import com.raygroupintl.m.parsetree.data.BlocksInMap;
+import com.raygroupintl.m.parsetree.visitor.BlockRecorderFactory;
+import com.raygroupintl.m.tool.AccumulatingBlocksSupply;
+import com.raygroupintl.m.tool.ParseTreeSupply;
 import com.raygroupintl.vista.tools.AccumulatorTestCommon;
 import com.raygroupintl.vista.tools.entryinfo.CodeInfo;
 import com.raygroupintl.vista.tools.entryinfo.EntryCodeInfoRecorder;
@@ -42,12 +45,16 @@ public class EntryBasicCodeInfoToolTest {
 		String[] resourceNames = {
 				"resource/APIROU00.m", "resource/APIROU01.m", "resource/APIROU02.m", "resource/APIROU03.m", 
 				"resource/DMI.m", "resource/DDI.m", "resource/DIE.m", "resource/FIE.m"};
-		Routine[] routines = AccumulatorTestCommon.getRoutines(EntryCodeInfoToolTest.class, resourceNames);
+		ParseTreeSupply pts = AccumulatorTestCommon.getParseTreeSupply(EntryCodeInfoToolTest.class, resourceNames);
+		BlockRecorderFactory<CodeInfo> brf = new BlockRecorderFactory<CodeInfo>() {
+			@Override
+			public EntryCodeInfoRecorder getRecorder() {
+				return new EntryCodeInfoRecorder(null);	
+			}
+		};  
+		BlocksSupply<Block<CodeInfo>> blocksSupply = new AccumulatingBlocksSupply<CodeInfo>(pts, brf);
 		
-		EntryCodeInfoRecorder recorder = new EntryCodeInfoRecorder(null);
-		BlocksInMap<CodeInfo> blocksMap = BlocksInMap.getInstance(recorder, routines);
-		
-		BasicCodeInfoAccumulator a = new BasicCodeInfoAccumulator(blocksMap);
+		BasicCodeInfoAccumulator a = new BasicCodeInfoAccumulator(blocksSupply);
 				
 		this.testExpectedGlobal(a.getResult(new EntryId("APIROU00", "FACT")), new String[0]);
 		this.testExpectedGlobal(a.getResult(new EntryId("APIROU00", "SUM")), new String[]{"^RGI0(\"EF\""});

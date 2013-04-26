@@ -52,7 +52,11 @@ public class EntryCodeInfo implements MEntryToolResult {
 	
 	@Override
 	public boolean isValid() {
-		return this.assumedVariables.isValid() && this.basicCodeInfo.isValid();
+		if ((this.assumedVariables == null) || (this.basicCodeInfo == null)) {
+			return false;
+		} else {
+			return this.assumedVariables.isValid() && this.basicCodeInfo.isValid();
+		} 
 	}
 	
 	@Override

@@ -19,8 +19,14 @@ package com.raygroupintl.m.tool;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.nio.file.Path;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
+
+import com.raygroupintl.stringlib.EndsWithFilter;
+import com.raygroupintl.struct.Filter;
+import com.raygroupintl.util.IOUtil;
 
 public class SourceCodeFiles implements SourceCodeSupply {
 	private Map<String, String> filesByRoutineName = new HashMap<String, String>();
@@ -41,5 +47,17 @@ public class SourceCodeFiles implements SourceCodeSupply {
 			}
 		}
 		return null;
+	}
+	
+	public static SourceCodeFiles getInstance(String rootDirectory) throws IOException {
+		Filter<String> nameFilter = new EndsWithFilter(".m");
+		List<Path> paths = IOUtil.getFiles(rootDirectory, nameFilter);
+		SourceCodeFiles result = new SourceCodeFiles();
+		for (Path path : paths) {
+			String fileName = path.getFileName().toString();
+			String routineName = fileName.substring(0, fileName.length()-2);
+			result.put(routineName, path.toString());			
+		}		
+		return result;
 	}
 }

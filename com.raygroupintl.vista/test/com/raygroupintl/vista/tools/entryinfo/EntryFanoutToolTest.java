@@ -6,9 +6,12 @@ import junit.framework.Assert;
 
 import org.junit.Test;
 
-import com.raygroupintl.m.parsetree.Routine;
-import com.raygroupintl.m.parsetree.data.BlocksInMap;
+import com.raygroupintl.m.parsetree.data.Block;
+import com.raygroupintl.m.parsetree.data.BlocksSupply;
 import com.raygroupintl.m.parsetree.data.EntryId;
+import com.raygroupintl.m.parsetree.visitor.BlockRecorderFactory;
+import com.raygroupintl.m.tool.AccumulatingBlocksSupply;
+import com.raygroupintl.m.tool.ParseTreeSupply;
 import com.raygroupintl.vista.tools.AccumulatorTestCommon;
 import com.raygroupintl.vista.tools.entryfanout.EntryFanouts;
 
@@ -26,12 +29,16 @@ public class EntryFanoutToolTest {
 		String[] resourceNames = {
 				"resource/APIROU00.m", "resource/APIROU01.m", "resource/APIROU02.m", "resource/APIROU03.m", 
 				"resource/DMI.m", "resource/DDI.m", "resource/DIE.m", "resource/FIE.m"};
-		Routine[] routines = AccumulatorTestCommon.getRoutines(EntryCodeInfoToolTest.class, resourceNames);
+		ParseTreeSupply pts = AccumulatorTestCommon.getParseTreeSupply(EntryCodeInfoToolTest.class, resourceNames);
+		BlockRecorderFactory<Void> brf = new BlockRecorderFactory<Void>() {
+			@Override
+			public VoidBlockRecorder getRecorder() {
+				return new VoidBlockRecorder();	
+			}
+		};  
+		BlocksSupply<Block<Void>> blocksSupply = new AccumulatingBlocksSupply<Void>(pts, brf);
 		
-		VoidBlockRecorder recorder = new VoidBlockRecorder();
-		BlocksInMap<Void> blocksMap = BlocksInMap.getInstance(recorder, routines);
-		
-		FanoutAccumulator a = new FanoutAccumulator(blocksMap);
+		FanoutAccumulator a = new FanoutAccumulator(blocksSupply);
 				
 		this.testFanouts(a.getResult(new EntryId("APIROU00", "FACT")), new EntryId[0]);
 		this.testFanouts(a.getResult(new EntryId("APIROU00", "SUM")), new EntryId[0]);
