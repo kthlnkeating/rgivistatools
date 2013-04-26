@@ -55,6 +55,9 @@ public class CLIParams {
 	@CLIParameter(names={"-md", "--mdirectory"})
 	public List<String> additionalMDirectories = new ArrayList<String>();
 	
+	@CLIParameter(names={"-mf", "--mfile"})
+	public List<String> additionalMFiles = new ArrayList<String>();
+
 	@CLIParameter(names={"-x", "--exclude"})
 	public List<String> excludes = new ArrayList<String>();
 	
@@ -72,10 +75,7 @@ public class CLIParams {
 	
 	@CLIParameter(names={"-ptype", "--protocoltype"})
 	public String protocolType;
-			
-	@CLIParameter(names={"--"})
-	public List<String> additionalMFiles = new ArrayList<String>();
-	
+				
 	
 	@CLIParameter(names={"-ns", "--namespace"})
 	public List<String> includeNamespaces = new ArrayList<String>();

@@ -84,7 +84,7 @@ public class MacroTools extends Tools {
 			MRoutineAnalyzer.main(new String[]{"entryinfo", "-i", pathPrefix + "einfo_gmplfi_tags.txt", "-o", pathPrefix + "einfo_gmplfi_1.txt",
 						"-ptd", outputPath + "\\serial", "-rd", "all", "-xns", "DI", "-xns", "DD", "-xns", "DM", "-xns", "%", "-xns", "Z", "-xns", "X", "-xxns", "XPAR"});
 			MRoutineAnalyzer.main(new String[]{"entryinfo", "-i", pathPrefix + "einfo_gmplfi_tags.txt", "-o", pathPrefix + "einfo_gmplfi_2.txt",
-						"-ptd", outputPath + "\\serial", "-ns", "GMPL"});
+						"-ptd", outputPath + "\\serial", "-rd", "all", "-ns", "GMPL"});
 			MRoutineAnalyzer.main(new String[]{"entryinfo", "-i", pathPrefix + "einfo_gmplfi_tags.txt", "-o", pathPrefix + "einfo_gmplfi_3.txt",
 					"-ptd", outputPath + "\\serial", "-rd", "routine"});
 			
@@ -94,9 +94,9 @@ public class MacroTools extends Tools {
 			MRoutineAnalyzer.main(new String[]{"entryinfo", "-i", pathPrefix + "einfo_sdfi_tags.txt", "-o", pathPrefix + "einfo_sdfi_0.txt",
 						"-ptd", outputPath + "\\serial", "-rd", "all", "-xns", "%"});
 			MRoutineAnalyzer.main(new String[]{"entryinfo", "-i", pathPrefix + "einfo_sdfi_tags.txt", "-o", pathPrefix + "einfo_sdfi_1.txt",
-						"-ptd", outputPath + "\\serial", "-rd", "all", "-xns", "DI", "-xns", "DD", "-xns", "DM", "-xns", "%", "-xns", "Z", "-xns", "X", "-xxns", "XPAR"});
+						"-ptd", outputPath + "\\serial", "-rd", "all", "-xns", "DI", "-xns", "DD", "-xns", "DM", "-xns", "%", "-xns", "Z", "-xns", "X", "-xxns", "XPAR", "-xxns", "XT", "-xxns", "XMX", "-xxns", "XM"});
 			MRoutineAnalyzer.main(new String[]{"entryinfo", "-i", pathPrefix + "einfo_sdfi_tags.txt", "-o", pathPrefix + "einfo_sdfi_2.txt",
-						"-ptd", outputPath + "\\serial", "\\serial", "-ns", "SD", "-ns", "SC"});		
+						"-ptd", outputPath + "\\serial", "\\serial", "-rd", "all", "-ns", "SD", "-ns", "SC"});		
 			MRoutineAnalyzer.main(new String[]{"entryinfo", "-i", pathPrefix + "einfo_sdfi_tags.txt", "-o", pathPrefix + "einfo_sdfi_3.txt",
 					"-ptd", outputPath + "\\serial", "-rd", "routine"});		
 		}
