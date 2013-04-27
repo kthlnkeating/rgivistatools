@@ -53,7 +53,7 @@ public class EntryCodeInfoToolTest {
 				"resource/DMI.m", "resource/DDI.m", "resource/DIE.m", "resource/FIE.m"};
 		ParseTreeSupply pts = AccumulatorTestCommon.getParseTreeSupply(EntryCodeInfoToolTest.class, resourceNames);
 				
-		AssumedVariablesToolParams params = new AssumedVariablesToolParams(pts, null);
+		AssumedVariablesToolParams params = new AssumedVariablesToolParams(pts);
 		RecursionSpecification rs = new RecursionSpecification();
 		rs.setDepth(RecursionDepth.ALL);
 		params.setRecursionSpecification(rs);

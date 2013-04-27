@@ -26,42 +26,31 @@ import com.raygroupintl.m.parsetree.visitor.BlockRecorder;
 import com.raygroupintl.m.parsetree.visitor.BlockRecorderFactory;
 import com.raygroupintl.m.tool.MEntryTool;
 import com.raygroupintl.struct.Filter;
-import com.raygroupintl.vista.repository.RepositoryInfo;
-import com.raygroupintl.vista.tools.entryinfo.CodeInfo;
-import com.raygroupintl.vista.tools.entryinfo.EntryCodeInfoRecorder;
 
-public class AssumedVariablesTool extends MEntryTool<AssumedVariables, CodeInfo> {
-	private static class EntryCodeInfoRecorderFactory implements BlockRecorderFactory<CodeInfo> {
-		private RepositoryInfo repositoryInfo;
-		
-		public EntryCodeInfoRecorderFactory(RepositoryInfo repositoryInfo) {
-			this.repositoryInfo = repositoryInfo;
-		}
-		
+public class AssumedVariablesTool extends MEntryTool<AssumedVariables, AssumedVariablesBlockData> {
+	private static class EntryCodeInfoRecorderFactory implements BlockRecorderFactory<AssumedVariablesBlockData> {
 		@Override
-		public BlockRecorder<CodeInfo> getRecorder() {
-			return new EntryCodeInfoRecorder(this.repositoryInfo);
+		public BlockRecorder<AssumedVariablesBlockData> getRecorder() {
+			return new AssumedVariablesRecorder();
 		}
 	}
 
 	private DataStore<Set<String>> store = new DataStore<Set<String>>();					
 	private AssumedVariablesToolParams params;
-	private RepositoryInfo repositoryInfo;
 	
 	public AssumedVariablesTool(AssumedVariablesToolParams params) {
 		super(params);
 		this.params = params;
-		this.repositoryInfo = params.getRepositoryInfo();
 	}
 	
 	@Override
-	protected BlockRecorderFactory<CodeInfo> getBlockRecorderFactory() {
-		return new EntryCodeInfoRecorderFactory(this.repositoryInfo);
+	protected BlockRecorderFactory<AssumedVariablesBlockData> getBlockRecorderFactory() {
+		return new EntryCodeInfoRecorderFactory();
 	}
 
 	@Override
-	public AssumedVariables getResult(Block<CodeInfo> block, Filter<EntryId> filter) {
-		RecursiveDataAggregator<Set<String>, CodeInfo> ala = new RecursiveDataAggregator<Set<String>, CodeInfo>(block, blocksSupply);
+	public AssumedVariables getResult(Block<AssumedVariablesBlockData> block, Filter<EntryId> filter) {
+		RecursiveDataAggregator<Set<String>, AssumedVariablesBlockData> ala = new RecursiveDataAggregator<Set<String>, AssumedVariablesBlockData>(block, blocksSupply);
 		Set<String> assumedVariables = ala.get(this.store, filter);
 		if (assumedVariables != null) {
 			assumedVariables.removeAll(this.params.getExpected());

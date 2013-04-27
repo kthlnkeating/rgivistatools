@@ -39,6 +39,7 @@ import com.raygroupintl.m.tool.basiccodeinfo.BasicCodeInfoTR;
 import com.raygroupintl.m.tool.basiccodeinfo.BasicCodeInfoToolParams;
 import com.raygroupintl.m.tool.basiccodeinfo.CodeLocations;
 import com.raygroupintl.m.tool.fanout.EntryFanouts;
+import com.raygroupintl.m.tool.fanout.FanoutTool;
 import com.raygroupintl.m.tool.localassignment.LocalAssignmentTool;
 import com.raygroupintl.m.tool.localassignment.LocalAssignmentToolParams;
 import com.raygroupintl.output.FileWrapper;
@@ -57,7 +58,6 @@ import com.raygroupintl.vista.tools.entryfanin.MarkedAsFaninBRF;
 import com.raygroupintl.vista.tools.entryinfo.CodeInfo;
 import com.raygroupintl.vista.tools.entryinfo.EntryCodeInfo;
 import com.raygroupintl.vista.tools.entryinfo.EntryCodeInfoAccumulator;
-import com.raygroupintl.vista.tools.entryinfo.FanoutAccumulator;
 
 public class RepoEntryTools extends Tools {
 	private static abstract class EntryInfoToolBase<U extends MEntryToolResult> extends Tool {		
@@ -137,7 +137,7 @@ public class RepoEntryTools extends Tools {
 		
 		@Override
 		public List<EntryCodeInfo> getResult(RepositoryInfo ri, List<EntryId> entries) {
-			AssumedVariablesToolParams p = CLIParamsAdapter.toAssumedVariablesToolParams(this.params, ri);
+			AssumedVariablesToolParams p = CLIParamsAdapter.toAssumedVariablesToolParams(this.params);
 			BasicCodeInfoToolParams p2 = CLIParamsAdapter.toBasicCodeInfoToolParams(this.params, ri);
 			EntryCodeInfoAccumulator a = new EntryCodeInfoAccumulator(p, p2);
 			return a.getResult(entries);			
@@ -162,7 +162,7 @@ public class RepoEntryTools extends Tools {
 		
 		@Override
 		protected List<AssumedVariables> getResult(List<EntryId> entries) {
-			AssumedVariablesToolParams params = CLIParamsAdapter.toAssumedVariablesToolParams(this.params, null);
+			AssumedVariablesToolParams params = CLIParamsAdapter.toAssumedVariablesToolParams(this.params);
 			AssumedVariablesTool a = new AssumedVariablesTool(params);
 			return a.getResult(entries);			
 		}
@@ -206,7 +206,7 @@ public class RepoEntryTools extends Tools {
 		@Override
 		protected List<EntryFanouts> getResult(List<EntryId> entries) {
 			CommonToolParams params = CLIParamsAdapter.toCommonToolParams(this.params);
-			FanoutAccumulator a = new FanoutAccumulator(params);
+			FanoutTool a = new FanoutTool(params);
 			return a.getResult(entries);			
 		}
 		

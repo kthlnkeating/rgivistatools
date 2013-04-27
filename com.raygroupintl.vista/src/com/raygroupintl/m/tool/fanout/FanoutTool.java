@@ -14,7 +14,7 @@
 // limitations under the License.
 //---------------------------------------------------------------------------
 
-package com.raygroupintl.vista.tools.entryinfo;
+package com.raygroupintl.m.tool.fanout;
 
 import java.util.List;
 
@@ -25,10 +25,9 @@ import com.raygroupintl.m.parsetree.visitor.BlockRecorder;
 import com.raygroupintl.m.parsetree.visitor.BlockRecorderFactory;
 import com.raygroupintl.m.tool.CommonToolParams;
 import com.raygroupintl.m.tool.MEntryTool;
-import com.raygroupintl.m.tool.fanout.EntryFanouts;
 import com.raygroupintl.struct.Filter;
 
-public class FanoutAccumulator extends MEntryTool<EntryFanouts, Void>{
+public class FanoutTool extends MEntryTool<EntryFanouts, Void>{
 	private static class EntryFanoutRecorderFactory implements BlockRecorderFactory<Void> {
 		@Override
 		public BlockRecorder<Void> getRecorder() {
@@ -36,7 +35,7 @@ public class FanoutAccumulator extends MEntryTool<EntryFanouts, Void>{
 		}
 	}
 
-	public FanoutAccumulator(CommonToolParams params) {
+	public FanoutTool(CommonToolParams params) {
 		super(params);
 	}
 	

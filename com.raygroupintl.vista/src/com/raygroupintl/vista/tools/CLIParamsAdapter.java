@@ -83,9 +83,9 @@ public class CLIParamsAdapter {
 		return result;		
 	}
 
-	public static AssumedVariablesToolParams toAssumedVariablesToolParams(CLIParams params, RepositoryInfo repositoryInfo) {
+	public static AssumedVariablesToolParams toAssumedVariablesToolParams(CLIParams params) {
 		ParseTreeSupply pts = getParseTreeSupply(params);
-		AssumedVariablesToolParams result = new AssumedVariablesToolParams(pts, repositoryInfo);
+		AssumedVariablesToolParams result = new AssumedVariablesToolParams(pts);
 		if (params.excludes.size() > 0) {
 			result.addExpected(params.excludes);
 		}

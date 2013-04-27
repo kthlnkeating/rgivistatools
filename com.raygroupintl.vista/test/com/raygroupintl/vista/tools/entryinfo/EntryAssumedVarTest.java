@@ -30,7 +30,7 @@ public class EntryAssumedVarTest {
 				"resource/APIROU00.m", "resource/APIROU01.m", "resource/APIROU02.m", "resource/APIROU03.m", 
 				"resource/APIROU04.m", "resource/DMI.m", "resource/DDI.m", "resource/DIE.m", "resource/FIE.m"};
 		ParseTreeSupply pts = AccumulatorTestCommon.getParseTreeSupply(EntryCodeInfoToolTest.class, resourceNames);		
-		AssumedVariablesToolParams p = new AssumedVariablesToolParams(pts, null);		
+		AssumedVariablesToolParams p = new AssumedVariablesToolParams(pts);		
 		RecursionSpecification rs = new RecursionSpecification();
 		rs.setDepth(RecursionDepth.ALL);
 		p.setRecursionSpecification(rs);
@@ -53,11 +53,11 @@ public class EntryAssumedVarTest {
 		this.testAssumedLocal(a.getResult(new EntryId("APIROU03", "NEWFOLVL")), new String[]{"V1"});
 		this.testAssumedLocal(a.getResult(new EntryId("APIROU03", "NEWDOLVL")), new String[]{"B"});
 		
-		AssumedVariablesToolParams p2 = new AssumedVariablesToolParams(pts, null);		
+		AssumedVariablesToolParams p2 = new AssumedVariablesToolParams(pts);		
 		AssumedVariablesTool a2 = new AssumedVariablesTool(p2);
 		this.testAssumedLocal(a2.getResult(new EntryId("APIROU04", "INDOBLK")), new String[]{"I", "Y"});		
 		
-		AssumedVariablesToolParams p3 = new AssumedVariablesToolParams(pts, null);
+		AssumedVariablesToolParams p3 = new AssumedVariablesToolParams(pts);
 		p3.addExpected("I");
 		AssumedVariablesTool a3 = new AssumedVariablesTool(p3);		
 		this.testAssumedLocal(a3.getResult(new EntryId("APIROU04", "INDOBLK")), new String[]{"Y"});		

@@ -12,6 +12,7 @@ import com.raygroupintl.m.tool.ParseTreeSupply;
 import com.raygroupintl.m.tool.RecursionDepth;
 import com.raygroupintl.m.tool.RecursionSpecification;
 import com.raygroupintl.m.tool.fanout.EntryFanouts;
+import com.raygroupintl.m.tool.fanout.FanoutTool;
 import com.raygroupintl.vista.tools.AccumulatorTestCommon;
 
 public class EntryFanoutToolTest {
@@ -35,7 +36,7 @@ public class EntryFanoutToolTest {
 		rs.setDepth(RecursionDepth.ALL);
 		p.setRecursionSpecification(rs);
 
-		FanoutAccumulator a = new FanoutAccumulator(p);
+		FanoutTool a = new FanoutTool(p);
 				
 		this.testFanouts(a.getResult(new EntryId("APIROU00", "FACT")), new EntryId[0]);
 		this.testFanouts(a.getResult(new EntryId("APIROU00", "SUM")), new EntryId[0]);

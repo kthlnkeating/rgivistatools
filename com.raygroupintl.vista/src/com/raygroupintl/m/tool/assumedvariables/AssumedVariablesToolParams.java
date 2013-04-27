@@ -28,13 +28,8 @@ public class AssumedVariablesToolParams extends CommonToolParams {
 	public RepositoryInfo repositoryInfo;
 	private List<String> expected;
 
-	public AssumedVariablesToolParams(ParseTreeSupply pts, RepositoryInfo repositoryInfo) {
+	public AssumedVariablesToolParams(ParseTreeSupply pts) {
 		super(pts);
-		this.repositoryInfo = repositoryInfo;
-	}
-
-	public RepositoryInfo getRepositoryInfo() {
-		return this.repositoryInfo;
 	}
 
 	public void addExpected(String variable) {
