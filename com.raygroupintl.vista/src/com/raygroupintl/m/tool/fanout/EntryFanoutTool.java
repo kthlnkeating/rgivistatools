@@ -14,7 +14,7 @@
 // limitations under the License.
 //---------------------------------------------------------------------------
 
-package com.raygroupintl.vista.tools.entryfanout;
+package com.raygroupintl.m.tool.fanout;
 
 import java.util.Collection;
 import java.util.Map;
@@ -26,7 +26,7 @@ import com.raygroupintl.m.parsetree.data.EntryId;
 import com.raygroupintl.output.Terminal;
 import com.raygroupintl.output.TerminalFormatter;
 
-public class EntryFanoutAccumulator {
+public class EntryFanoutTool {
 	private Map<EntryId, EntryFanouts> fanouts = new TreeMap<EntryId, EntryFanouts>();
 	
 	public void addRoutine(Routine routine) {

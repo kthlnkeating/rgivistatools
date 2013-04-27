@@ -16,12 +16,20 @@
 
 package com.raygroupintl.m.tool;
 
-public class CommonToolParams {
-/*	private RecursionSpecification recursionSpec = new RecursionSpecification();
+import com.raygroupintl.m.parsetree.data.Block;
+import com.raygroupintl.m.parsetree.data.BlocksSupply;
+import com.raygroupintl.m.parsetree.data.EntryId;
+import com.raygroupintl.m.parsetree.visitor.BlockRecorderFactory;
+import com.raygroupintl.struct.FilterFactory;
 
-	public CommonToolParams() {
+public class CommonToolParams {
+	private ParseTreeSupply parseTreeSupply;
+	private RecursionSpecification recursionSpec = new RecursionSpecification();
+
+	public CommonToolParams(ParseTreeSupply parseTreeSupply) {
+		this.parseTreeSupply = parseTreeSupply;		
 	}
-		
+	
 	public void setRecursionSpecification(RecursionSpecification recursionSpec) {
 		this.recursionSpec = recursionSpec;
 	}
@@ -29,4 +37,12 @@ public class CommonToolParams {
 	public RecursionSpecification getRecursionSpecification() {
 		return this.recursionSpec;
 	}
-*/}
+
+	public FilterFactory<EntryId, EntryId> getFanoutFilterFactory() {
+		return this.recursionSpec.getFanoutFilterFactory();
+	}
+	
+	public <T> BlocksSupply<Block<T>> getBlocksSupply(BlockRecorderFactory<T> f) {
+		return new AccumulatingBlocksSupply<T>(this.parseTreeSupply, f);
+	}
+}

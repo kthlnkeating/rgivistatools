@@ -20,20 +20,23 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-import com.raygroupintl.m.tool.RecursionSpecification;
+import com.raygroupintl.m.tool.CommonToolParams;
+import com.raygroupintl.m.tool.ParseTreeSupply;
+import com.raygroupintl.vista.repository.RepositoryInfo;
 
-public class AssumedVariablesToolParams {
-	private RecursionSpecification recursionSpec = new RecursionSpecification();
+public class AssumedVariablesToolParams extends CommonToolParams {
+	public RepositoryInfo repositoryInfo;
 	private List<String> expected;
 
-	public void setRecursionSpecification(RecursionSpecification recursionSpec) {
-		this.recursionSpec = recursionSpec;
+	public AssumedVariablesToolParams(ParseTreeSupply pts, RepositoryInfo repositoryInfo) {
+		super(pts);
+		this.repositoryInfo = repositoryInfo;
 	}
-	
-	public RecursionSpecification getRecursionSpecification() {
-		return this.recursionSpec;
+
+	public RepositoryInfo getRepositoryInfo() {
+		return this.repositoryInfo;
 	}
-		
+
 	public void addExpected(String variable) {
 		if (this.expected == null) {
 			this.expected = new ArrayList<String>();

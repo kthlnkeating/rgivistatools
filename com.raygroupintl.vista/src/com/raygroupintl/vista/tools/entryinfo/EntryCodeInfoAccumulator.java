@@ -19,25 +19,21 @@ package com.raygroupintl.vista.tools.entryinfo;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.raygroupintl.m.parsetree.data.Block;
-import com.raygroupintl.m.parsetree.data.BlocksSupply;
 import com.raygroupintl.m.parsetree.data.EntryId;
 import com.raygroupintl.m.tool.assumedvariables.AssumedVariables;
 import com.raygroupintl.m.tool.assumedvariables.AssumedVariablesTool;
 import com.raygroupintl.m.tool.assumedvariables.AssumedVariablesToolParams;
+import com.raygroupintl.m.tool.basiccodeinfo.BasicCodeInfoTR;
+import com.raygroupintl.m.tool.basiccodeinfo.BasicCodeInfoTool;
+import com.raygroupintl.m.tool.basiccodeinfo.BasicCodeInfoToolParams;
 
 public class EntryCodeInfoAccumulator {
 	private AssumedVariablesTool assumedVariableAccumulator;
-	private BasicCodeInfoAccumulator basicCodeInfoAccumulator;
+	private BasicCodeInfoTool basicCodeInfoAccumulator;
 	
-	public EntryCodeInfoAccumulator(BlocksSupply<Block<CodeInfo>> blocksSupply) {
-		this.assumedVariableAccumulator = new AssumedVariablesTool(blocksSupply);
-		this.basicCodeInfoAccumulator = new BasicCodeInfoAccumulator(blocksSupply);
-	}
-
-	public EntryCodeInfoAccumulator(BlocksSupply<Block<CodeInfo>> blocksSupply, AssumedVariablesToolParams params) {
-		this.assumedVariableAccumulator = new AssumedVariablesTool(blocksSupply, params);
-		this.basicCodeInfoAccumulator = new BasicCodeInfoAccumulator(blocksSupply, params.getRecursionSpecification().getFanoutFilterFactory());
+	public EntryCodeInfoAccumulator(AssumedVariablesToolParams params, BasicCodeInfoToolParams params2) {
+		this.assumedVariableAccumulator = new AssumedVariablesTool(params);
+		this.basicCodeInfoAccumulator = new BasicCodeInfoTool(params2);
 	}
 	
 	protected EntryCodeInfo getResult(EntryId entryId) {

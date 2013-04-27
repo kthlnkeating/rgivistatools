@@ -14,32 +14,21 @@
 // limitations under the License.
 //---------------------------------------------------------------------------
 
-package com.raygroupintl.vista.tools.entryfanout;
+package com.raygroupintl.m.tool.basiccodeinfo;
 
-import java.io.Serializable;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Set;
+import com.raygroupintl.m.tool.CommonToolParams;
+import com.raygroupintl.m.tool.ParseTreeSupply;
+import com.raygroupintl.vista.repository.RepositoryInfo;
 
-import com.raygroupintl.m.parsetree.data.EntryId;
-
-public class RoutineFanouts implements Serializable {
-	private static final long serialVersionUID = 1L;
-
-	private Map<String, Set<EntryId>> fanouts = new HashMap<String, Set<EntryId>>();
+public class BasicCodeInfoToolParams extends CommonToolParams {
+	public RepositoryInfo repositoryInfo;
 	
-	public RoutineFanouts() {
-	}
-
-	public Set<EntryId> put(String tag, Set<EntryId> fanouts) {
-		return this.fanouts.put(tag, fanouts);
+	public BasicCodeInfoToolParams(ParseTreeSupply pts, RepositoryInfo repositoryInfo) {
+		super(pts);
+		this.repositoryInfo = repositoryInfo;
 	}
 	
-	public Set<String> getRoutineEntryTags() {
-		return this.fanouts.keySet();
-	}
-	
-	public Set<EntryId> getFanouts(String tag) {
-		return this.fanouts.get(tag);
+	public RepositoryInfo getRepositoryInfo() {
+		return this.repositoryInfo;
 	}
 }

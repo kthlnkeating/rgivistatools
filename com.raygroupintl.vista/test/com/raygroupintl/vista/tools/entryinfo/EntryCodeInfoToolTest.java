@@ -7,20 +7,15 @@ import junit.framework.Assert;
 
 import org.junit.Test;
 
-import com.raygroupintl.m.parsetree.data.Block;
-import com.raygroupintl.m.parsetree.data.BlocksSupply;
 import com.raygroupintl.m.parsetree.data.EntryId;
-import com.raygroupintl.m.parsetree.visitor.BlockRecorderFactory;
-import com.raygroupintl.m.tool.AccumulatingBlocksSupply;
 import com.raygroupintl.m.tool.ParseTreeSupply;
 import com.raygroupintl.m.tool.RecursionDepth;
 import com.raygroupintl.m.tool.RecursionSpecification;
 import com.raygroupintl.m.tool.assumedvariables.AssumedVariablesToolParams;
+import com.raygroupintl.m.tool.basiccodeinfo.BasicCodeInfoToolParams;
 import com.raygroupintl.vista.tools.AccumulatorTestCommon;
-import com.raygroupintl.vista.tools.entryinfo.CodeInfo;
 import com.raygroupintl.vista.tools.entryinfo.EntryCodeInfo;
 import com.raygroupintl.vista.tools.entryinfo.EntryCodeInfoAccumulator;
-import com.raygroupintl.vista.tools.entryinfo.EntryCodeInfoRecorder;
 
 public class EntryCodeInfoToolTest {
 	private void testAssumedLocal(EntryCodeInfo r, String[] expectedAssumeds, String[] expectedGlobals) {
@@ -57,21 +52,16 @@ public class EntryCodeInfoToolTest {
 				"resource/APIROU00.m", "resource/APIROU01.m", "resource/APIROU02.m", "resource/APIROU03.m", 
 				"resource/DMI.m", "resource/DDI.m", "resource/DIE.m", "resource/FIE.m"};
 		ParseTreeSupply pts = AccumulatorTestCommon.getParseTreeSupply(EntryCodeInfoToolTest.class, resourceNames);
-		BlockRecorderFactory<CodeInfo> brf = new BlockRecorderFactory<CodeInfo>() {
-			@Override
-			public EntryCodeInfoRecorder getRecorder() {
-				return new EntryCodeInfoRecorder(null);	
-			}
-		};  
-		BlocksSupply<Block<CodeInfo>> blocksSupply = new AccumulatingBlocksSupply<CodeInfo>(pts, brf);
-		
-		
-		AssumedVariablesToolParams params = new AssumedVariablesToolParams();
+				
+		AssumedVariablesToolParams params = new AssumedVariablesToolParams(pts, null);
 		RecursionSpecification rs = new RecursionSpecification();
 		rs.setDepth(RecursionDepth.ALL);
 		params.setRecursionSpecification(rs);
+
+		BasicCodeInfoToolParams bcip = new BasicCodeInfoToolParams(pts, null);
+		bcip.setRecursionSpecification(rs);
 		
-		EntryCodeInfoAccumulator a = new EntryCodeInfoAccumulator(blocksSupply, params);
+		EntryCodeInfoAccumulator a = new EntryCodeInfoAccumulator(params, bcip);
 				
 		this.testAssumedLocal(a.getResult(new EntryId("APIROU00", "FACT")), new String[]{"I"}, new String[0]);
 		this.testAssumedLocal(a.getResult(new EntryId("APIROU00", "SUM")), new String[]{"M", "R", "I"}, new String[]{"^RGI0(\"EF\""});

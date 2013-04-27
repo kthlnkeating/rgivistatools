@@ -20,6 +20,8 @@ import java.util.Set;
 
 import com.raygroupintl.m.tool.MEntryToolResult;
 import com.raygroupintl.m.tool.assumedvariables.AssumedVariables;
+import com.raygroupintl.m.tool.basiccodeinfo.BasicCodeInfo;
+import com.raygroupintl.m.tool.basiccodeinfo.BasicCodeInfoTR;
 
 public class EntryCodeInfo implements MEntryToolResult {
 	public AssumedVariables assumedVariables;

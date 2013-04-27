@@ -29,11 +29,11 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import com.raygroupintl.m.parsetree.Routine;
+import com.raygroupintl.m.tool.fanout.EntryFanoutBR;
+import com.raygroupintl.m.tool.fanout.RoutineFanouts;
 import com.raygroupintl.vista.repository.RepositoryVisitor;
 import com.raygroupintl.vista.repository.VistaPackage;
 import com.raygroupintl.vista.repository.VistaPackages;
-import com.raygroupintl.vista.tools.entryfanout.EntryFanoutBR;
-import com.raygroupintl.vista.tools.entryfanout.RoutineFanouts;
 
 public class SerializedRoutineWriter extends RepositoryVisitor {
 	private final static Logger LOGGER = Logger.getLogger(SerializedRoutineWriter.class.getName());

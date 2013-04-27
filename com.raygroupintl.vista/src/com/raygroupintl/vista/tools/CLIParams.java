@@ -61,6 +61,9 @@ public class CLIParams {
 	@CLIParameter(names={"-x", "--exclude"})
 	public List<String> excludes = new ArrayList<String>();
 	
+	@CLIParameter(names={"-w", "--with"})
+	public List<String> includes = new ArrayList<String>();
+	
 	@CLIParameter(names={"-of", "--outflag"})
 	public List<String> outputFlags = new ArrayList<String>();
 	

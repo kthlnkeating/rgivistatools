@@ -14,7 +14,7 @@
 // limitations under the License.
 //---------------------------------------------------------------------------
 
-package com.raygroupintl.vista.tools.entryfanout;
+package com.raygroupintl.m.tool.fanout;
 
 import java.util.HashSet;
 import java.util.List;

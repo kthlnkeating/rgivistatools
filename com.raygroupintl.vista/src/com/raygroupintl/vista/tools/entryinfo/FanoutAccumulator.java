@@ -19,22 +19,32 @@ package com.raygroupintl.vista.tools.entryinfo;
 import java.util.List;
 
 import com.raygroupintl.m.parsetree.data.Block;
-import com.raygroupintl.m.parsetree.data.BlocksSupply;
 import com.raygroupintl.m.parsetree.data.EntryId;
 import com.raygroupintl.m.parsetree.data.FanoutBlocks;
+import com.raygroupintl.m.parsetree.visitor.BlockRecorder;
+import com.raygroupintl.m.parsetree.visitor.BlockRecorderFactory;
+import com.raygroupintl.m.tool.CommonToolParams;
+import com.raygroupintl.m.tool.MEntryTool;
+import com.raygroupintl.m.tool.fanout.EntryFanouts;
 import com.raygroupintl.struct.Filter;
-import com.raygroupintl.struct.FilterFactory;
-import com.raygroupintl.vista.tools.entryfanout.EntryFanouts;
 
-public class FanoutAccumulator extends Accumulator<EntryFanouts, Void>{
-	public FanoutAccumulator(BlocksSupply<Block<Void>> blocksSupply) {
-		super(blocksSupply);
+public class FanoutAccumulator extends MEntryTool<EntryFanouts, Void>{
+	private static class EntryFanoutRecorderFactory implements BlockRecorderFactory<Void> {
+		@Override
+		public BlockRecorder<Void> getRecorder() {
+			return new VoidBlockRecorder();
+		}
 	}
 
-	public FanoutAccumulator(BlocksSupply<Block<Void>> blocksSupply, FilterFactory<EntryId, EntryId> filterFactory) {
-		super(blocksSupply, filterFactory);
+	public FanoutAccumulator(CommonToolParams params) {
+		super(params);
 	}
 	
+	@Override
+	protected BlockRecorderFactory<Void> getBlockRecorderFactory() {
+		return new EntryFanoutRecorderFactory();
+	}
+
 	@Override
 	protected EntryFanouts getResult(Block<Void> block, Filter<EntryId> filter) {
 		FanoutBlocks<Block<Void>> fanoutBlocks = block.getFanoutBlocks(this.blocksSupply, filter);

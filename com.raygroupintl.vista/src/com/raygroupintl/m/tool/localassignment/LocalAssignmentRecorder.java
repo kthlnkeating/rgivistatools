@@ -14,7 +14,7 @@
 // limitations under the License.
 //---------------------------------------------------------------------------
 
-package com.raygroupintl.vista.tools.entry;
+package com.raygroupintl.m.tool.localassignment;
 
 import java.util.Set;
 
@@ -26,6 +26,7 @@ import com.raygroupintl.m.parsetree.data.EntryId;
 import com.raygroupintl.m.parsetree.visitor.BlockRecorder;
 import com.raygroupintl.m.struct.CodeLocation;
 import com.raygroupintl.m.struct.LineLocation;
+import com.raygroupintl.m.tool.basiccodeinfo.CodeLocations;
 import com.raygroupintl.struct.HierarchicalMap;
 
 public class LocalAssignmentRecorder extends BlockRecorder<CodeLocations> {

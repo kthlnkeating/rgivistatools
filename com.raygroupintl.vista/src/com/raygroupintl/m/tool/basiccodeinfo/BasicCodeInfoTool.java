@@ -14,24 +14,39 @@
 // limitations under the License.
 //---------------------------------------------------------------------------
 
-package com.raygroupintl.vista.tools.entryinfo;
+package com.raygroupintl.m.tool.basiccodeinfo;
 
 import com.raygroupintl.m.parsetree.data.AdditiveDataAggregator;
 import com.raygroupintl.m.parsetree.data.Block;
-import com.raygroupintl.m.parsetree.data.BlocksSupply;
 import com.raygroupintl.m.parsetree.data.EntryId;
+import com.raygroupintl.m.parsetree.visitor.BlockRecorder;
+import com.raygroupintl.m.parsetree.visitor.BlockRecorderFactory;
+import com.raygroupintl.m.tool.MEntryTool;
 import com.raygroupintl.struct.Filter;
-import com.raygroupintl.struct.FilterFactory;
+import com.raygroupintl.vista.repository.RepositoryInfo;
+import com.raygroupintl.vista.tools.entryinfo.CodeInfo;
+import com.raygroupintl.vista.tools.entryinfo.EntryCodeInfoRecorder;
 
-public class BasicCodeInfoAccumulator extends Accumulator<BasicCodeInfoTR, CodeInfo> {
-	public BasicCodeInfoAccumulator(BlocksSupply<Block<CodeInfo>> blocksSupply) {
-		super(blocksSupply);
+public class BasicCodeInfoTool extends MEntryTool<BasicCodeInfoTR, CodeInfo> {
+	private class EntryCodeInfoRecorderFactory implements BlockRecorderFactory<CodeInfo> {
+		@Override
+		public BlockRecorder<CodeInfo> getRecorder() {
+			return new EntryCodeInfoRecorder(BasicCodeInfoTool.this.repositoryInfo);
+		}
 	}
 
-	public BasicCodeInfoAccumulator(BlocksSupply<Block<CodeInfo>> blocksSupply, FilterFactory<EntryId, EntryId> filterFactory) {
-		super(blocksSupply, filterFactory);
+	private RepositoryInfo repositoryInfo;
+	
+	public BasicCodeInfoTool(BasicCodeInfoToolParams params) {
+		super(params);
+		this.repositoryInfo = params.getRepositoryInfo();
 	}
 	
+	@Override
+	protected BlockRecorderFactory<CodeInfo> getBlockRecorderFactory() {
+		return new EntryCodeInfoRecorderFactory();
+	}
+
 	@Override
 	protected BasicCodeInfoTR getResult(Block<CodeInfo> block, Filter<EntryId> filter) {
 		AdditiveDataAggregator<BasicCodeInfo, CodeInfo> bcia = new AdditiveDataAggregator<BasicCodeInfo, CodeInfo>(block, blocksSupply);

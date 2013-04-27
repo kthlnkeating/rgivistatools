@@ -24,6 +24,7 @@ import java.util.Set;
 import com.raygroupintl.m.parsetree.Local;
 import com.raygroupintl.m.parsetree.data.AdditiveDataHandler;
 import com.raygroupintl.m.parsetree.data.RecursiveDataHandler;
+import com.raygroupintl.m.tool.basiccodeinfo.BasicCodeInfo;
 
 public class CodeInfo implements RecursiveDataHandler<Set<String>>, AdditiveDataHandler<BasicCodeInfo> {
 	private String[] formals;

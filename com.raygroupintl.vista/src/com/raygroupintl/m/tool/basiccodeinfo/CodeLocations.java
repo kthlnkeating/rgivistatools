@@ -14,7 +14,7 @@
 // limitations under the License.
 //---------------------------------------------------------------------------
 
-package com.raygroupintl.vista.tools.entry;
+package com.raygroupintl.m.tool.basiccodeinfo;
 
 import java.io.Serializable;
 import java.util.ArrayList;

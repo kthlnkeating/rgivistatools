@@ -25,11 +25,11 @@ import java.util.Map;
 
 import com.raygroupintl.m.parsetree.Routine;
 import com.raygroupintl.m.token.MVersion;
+import com.raygroupintl.m.tool.fanout.EntryFanoutTool;
 import com.raygroupintl.output.FileWrapper;
 import com.raygroupintl.output.TerminalFormatter;
 import com.raygroupintl.vista.repository.visitor.EntryWriter;
 import com.raygroupintl.vista.repository.visitor.SerializedRoutineWriter;
-import com.raygroupintl.vista.tools.entryfanout.EntryFanoutAccumulator;
 
 public class MFileTools extends Tools {
 	protected static abstract class RoutineRunType extends Tool {
@@ -117,7 +117,7 @@ public class MFileTools extends Tools {
 			if (routines != null) {
 				FileWrapper fr = this.getOutputFile();
 				if (fr != null) {
-					EntryFanoutAccumulator efa = new EntryFanoutAccumulator();
+					EntryFanoutTool efa = new EntryFanoutTool();
 					efa.addRoutines(routines);
 					if (fr.start()) {
 						TerminalFormatter tf = new TerminalFormatter();

@@ -14,25 +14,39 @@
 // limitations under the License.
 //---------------------------------------------------------------------------
 
-package com.raygroupintl.vista.tools.entry;
+package com.raygroupintl.m.tool.localassignment;
+
+import java.util.Set;
 
 import com.raygroupintl.m.parsetree.data.AdditiveDataAggregator;
 import com.raygroupintl.m.parsetree.data.Block;
-import com.raygroupintl.m.parsetree.data.BlocksSupply;
 import com.raygroupintl.m.parsetree.data.EntryId;
+import com.raygroupintl.m.parsetree.visitor.BlockRecorder;
+import com.raygroupintl.m.parsetree.visitor.BlockRecorderFactory;
+import com.raygroupintl.m.tool.MEntryTool;
+import com.raygroupintl.m.tool.basiccodeinfo.CodeLocations;
 import com.raygroupintl.struct.Filter;
-import com.raygroupintl.struct.FilterFactory;
-import com.raygroupintl.vista.tools.entryinfo.Accumulator;
 
-public class LocalAssignmentAccumulator extends Accumulator<CodeLocations, CodeLocations> {
-	public LocalAssignmentAccumulator(BlocksSupply<Block<CodeLocations>> blocksSupply) {
-		super(blocksSupply);
+public class LocalAssignmentTool extends MEntryTool<CodeLocations, CodeLocations> {
+	private class EntryLocalAssignmentRecorderFactory implements BlockRecorderFactory<CodeLocations> {
+		@Override
+		public BlockRecorder<CodeLocations> getRecorder() {
+			return new LocalAssignmentRecorder(LocalAssignmentTool.this.localsUnderTest);
+		}
 	}
 
-	public LocalAssignmentAccumulator(BlocksSupply<Block<CodeLocations>> blocksSupply, FilterFactory<EntryId, EntryId> filterFactory) {
-		super(blocksSupply, filterFactory);
+	private Set<String> localsUnderTest;
+	
+	public LocalAssignmentTool(LocalAssignmentToolParams params) {
+		super(params);
+		this.localsUnderTest = params.getLocals();
 	}
 	
+	@Override
+	protected BlockRecorderFactory<CodeLocations> getBlockRecorderFactory() {
+		return this.new EntryLocalAssignmentRecorderFactory();
+	}
+
 	@Override
 	protected CodeLocations getResult(Block<CodeLocations> block, Filter<EntryId> filter) {
 		AdditiveDataAggregator<CodeLocations, CodeLocations> bcia = new AdditiveDataAggregator<CodeLocations, CodeLocations>(block, blocksSupply);

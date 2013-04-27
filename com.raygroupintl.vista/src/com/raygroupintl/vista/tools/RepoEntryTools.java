@@ -16,9 +16,7 @@
 
 package com.raygroupintl.vista.tools;
 
-import java.io.IOException;
 import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -27,19 +25,22 @@ import com.raygroupintl.m.parsetree.Routine;
 import com.raygroupintl.m.parsetree.data.Block;
 import com.raygroupintl.m.parsetree.data.BlocksSupply;
 import com.raygroupintl.m.parsetree.data.EntryId;
-import com.raygroupintl.m.parsetree.visitor.BlockRecorder;
-import com.raygroupintl.m.parsetree.visitor.BlockRecorderFactory;
 import com.raygroupintl.m.struct.CodeLocation;
 import com.raygroupintl.m.tool.AccumulatingBlocksSupply;
+import com.raygroupintl.m.tool.CommonToolParams;
 import com.raygroupintl.m.tool.MEntryToolResult;
 import com.raygroupintl.m.tool.ParseTreeSupply;
 import com.raygroupintl.m.tool.RecursionSpecification;
 import com.raygroupintl.m.tool.SavedParsedTrees;
-import com.raygroupintl.m.tool.SourceCodeFiles;
-import com.raygroupintl.m.tool.SourceCodeToParseTreeAdapter;
 import com.raygroupintl.m.tool.assumedvariables.AssumedVariables;
 import com.raygroupintl.m.tool.assumedvariables.AssumedVariablesTool;
 import com.raygroupintl.m.tool.assumedvariables.AssumedVariablesToolParams;
+import com.raygroupintl.m.tool.basiccodeinfo.BasicCodeInfoTR;
+import com.raygroupintl.m.tool.basiccodeinfo.BasicCodeInfoToolParams;
+import com.raygroupintl.m.tool.basiccodeinfo.CodeLocations;
+import com.raygroupintl.m.tool.fanout.EntryFanouts;
+import com.raygroupintl.m.tool.localassignment.LocalAssignmentTool;
+import com.raygroupintl.m.tool.localassignment.LocalAssignmentToolParams;
 import com.raygroupintl.output.FileWrapper;
 import com.raygroupintl.output.Terminal;
 import com.raygroupintl.output.TerminalFormatter;
@@ -48,22 +49,15 @@ import com.raygroupintl.vista.repository.RepositoryInfo;
 import com.raygroupintl.vista.repository.RepositoryVisitor;
 import com.raygroupintl.vista.repository.VistaPackage;
 import com.raygroupintl.vista.repository.VistaPackages;
-import com.raygroupintl.vista.tools.entry.CodeLocations;
-import com.raygroupintl.vista.tools.entry.LocalAssignmentAccumulator;
-import com.raygroupintl.vista.tools.entry.LocalAssignmentRecorder;
 import com.raygroupintl.vista.tools.entryfanin.BlocksInSerialFanouts;
 import com.raygroupintl.vista.tools.entryfanin.EntryFaninAccumulator;
 import com.raygroupintl.vista.tools.entryfanin.EntryFanins;
 import com.raygroupintl.vista.tools.entryfanin.FaninMark;
 import com.raygroupintl.vista.tools.entryfanin.MarkedAsFaninBRF;
-import com.raygroupintl.vista.tools.entryfanout.EntryFanouts;
-import com.raygroupintl.vista.tools.entryinfo.BasicCodeInfoTR;
 import com.raygroupintl.vista.tools.entryinfo.CodeInfo;
 import com.raygroupintl.vista.tools.entryinfo.EntryCodeInfo;
 import com.raygroupintl.vista.tools.entryinfo.EntryCodeInfoAccumulator;
-import com.raygroupintl.vista.tools.entryinfo.EntryCodeInfoRecorder;
 import com.raygroupintl.vista.tools.entryinfo.FanoutAccumulator;
-import com.raygroupintl.vista.tools.entryinfo.VoidBlockRecorder;
 
 public class RepoEntryTools extends Tools {
 	private static abstract class EntryInfoToolBase<U extends MEntryToolResult> extends Tool {		
@@ -71,23 +65,6 @@ public class RepoEntryTools extends Tools {
 			super(params);
 		}
 		
-		protected <T> BlocksSupply<Block<T>> getBlocksSupply(RepositoryInfo ri, BlockRecorderFactory<T> f) {
-			if ((this.params.parseTreeDirectory == null) || this.params.parseTreeDirectory.isEmpty()) {
-				String vistaFOIA = RepositoryInfo.getLocation();
-				try {
-					SourceCodeFiles files = SourceCodeFiles.getInstance(vistaFOIA);
-					ParseTreeSupply pts = new SourceCodeToParseTreeAdapter(files);
-					return new AccumulatingBlocksSupply<T>(pts, f);
-				}
-				catch (IOException e) {
-					return null;
-				}				
-			} else {
-				ParseTreeSupply pts = new SavedParsedTrees(this.params.parseTreeDirectory);
-				return new AccumulatingBlocksSupply<T>(pts, f);
-			}		
-		}
-
 		protected abstract List<U> getResult(RepositoryInfo ri, List<EntryId> entries);
 		
 		protected void write(EntryId entryId, U result, Terminal t, TerminalFormatter tf, boolean skipEmpty) {			
@@ -145,28 +122,11 @@ public class RepoEntryTools extends Tools {
 			super(params);
 		}
 		
-		protected abstract BlockRecorderFactory<T> getBlockRecorderFactory(final RepositoryInfo ri);
-		
-		protected abstract List<U> getResult(BlocksSupply<Block<T>> blocksSupply, List<EntryId> entries);
+		protected abstract List<U> getResult(List<EntryId> entries);
 		
 		@Override
-		public List<U> getResult(final RepositoryInfo ri, List<EntryId> entries) {
-			BlockRecorderFactory<T> rf = this.getBlockRecorderFactory(ri);
-			BlocksSupply<Block<T>> blocksSupply = this.getBlocksSupply(ri, rf);
-			return this.getResult(blocksSupply, entries);
-		}
-	}
-
-	private static class EntryCodeInfoRecorderFactory implements BlockRecorderFactory<CodeInfo> {
-		private RepositoryInfo repositoryInfo;
-		
-		public EntryCodeInfoRecorderFactory(RepositoryInfo repositoryInfo) {
-			this.repositoryInfo = repositoryInfo;
-		}
-		
-		@Override
-		public BlockRecorder<CodeInfo> getRecorder() {
-			return new EntryCodeInfoRecorder(this.repositoryInfo);
+		public List<U> getResult(RepositoryInfo ri, List<EntryId> entries) {
+			return this.getResult(entries);
 		}
 	}
 
@@ -175,21 +135,12 @@ public class RepoEntryTools extends Tools {
 			super(params);
 		}
 		
-		protected BlockRecorderFactory<CodeInfo> getBlockRecorderFactory(final RepositoryInfo ri) {
-			return new EntryCodeInfoRecorderFactory(ri);	
-		}
-
-		protected List<EntryCodeInfo> getResult(BlocksSupply<Block<CodeInfo>> blocksSupply, List<EntryId> entries) {
-			AssumedVariablesToolParams p = CLIParamsAdapter.toAssumedVariablesToolParams(this.params);
-			EntryCodeInfoAccumulator a = new EntryCodeInfoAccumulator(blocksSupply, p);
-			return a.getResult(entries);			
-		}
-
 		@Override
-		public List<EntryCodeInfo> getResult(final RepositoryInfo ri, List<EntryId> entries) {
-			BlockRecorderFactory<CodeInfo> rf = this.getBlockRecorderFactory(ri);
-			BlocksSupply<Block<CodeInfo>> blocksSupply = this.getBlocksSupply(ri, rf);
-			return this.getResult(blocksSupply, entries);
+		public List<EntryCodeInfo> getResult(RepositoryInfo ri, List<EntryId> entries) {
+			AssumedVariablesToolParams p = CLIParamsAdapter.toAssumedVariablesToolParams(this.params, ri);
+			BasicCodeInfoToolParams p2 = CLIParamsAdapter.toBasicCodeInfoToolParams(this.params, ri);
+			EntryCodeInfoAccumulator a = new EntryCodeInfoAccumulator(p, p2);
+			return a.getResult(entries);			
 		}
 
 		@Override
@@ -210,14 +161,9 @@ public class RepoEntryTools extends Tools {
 		}
 		
 		@Override
-		protected BlockRecorderFactory<CodeInfo> getBlockRecorderFactory(final RepositoryInfo ri) {
-			return new EntryCodeInfoRecorderFactory(ri);	
-		}
-		
-		@Override
-		protected List<AssumedVariables> getResult(BlocksSupply<Block<CodeInfo>> blocksSupply, List<EntryId> entries) {
-			AssumedVariablesToolParams params = CLIParamsAdapter.toAssumedVariablesToolParams(this.params);
-			AssumedVariablesTool a = new AssumedVariablesTool(blocksSupply, params);
+		protected List<AssumedVariables> getResult(List<EntryId> entries) {
+			AssumedVariablesToolParams params = CLIParamsAdapter.toAssumedVariablesToolParams(this.params, null);
+			AssumedVariablesTool a = new AssumedVariablesTool(params);
 			return a.getResult(entries);			
 		}
 		
@@ -227,36 +173,15 @@ public class RepoEntryTools extends Tools {
 		}
 	}
 
-	private static class EntryLocalAssignmentRecorderFactory implements BlockRecorderFactory<CodeLocations> {
-		private Set<String> localsUnderTest;
-		
-		public EntryLocalAssignmentRecorderFactory(Set<String> localsUnderTest) {
-			this.localsUnderTest = localsUnderTest;
-		}
-		
-		@Override
-		public BlockRecorder<CodeLocations> getRecorder() {
-			return new LocalAssignmentRecorder(this.localsUnderTest);
-		}
-	}
-
 	private static class EntryLocalAssignmentTool extends EntryInfoTool<CodeLocations, CodeLocations> {	
 		public EntryLocalAssignmentTool(CLIParams params) {
 			super(params);
 		}
 		
 		@Override
-		protected BlockRecorderFactory<CodeLocations> getBlockRecorderFactory(final RepositoryInfo ri) {
-			Set<String> locals = new HashSet<String>();
-			locals.add("SDCLN");
-			return new EntryLocalAssignmentRecorderFactory(locals);	
-		}
-		
-		@Override
-		protected List<CodeLocations> getResult(BlocksSupply<Block<CodeLocations>> blocksSupply, List<EntryId> entries) {
-			RecursionSpecification rs = CLIParamsAdapter.toRecursionSpecification(this.params);
-			FilterFactory<EntryId, EntryId> filterFactory = rs.getFanoutFilterFactory();
-			LocalAssignmentAccumulator a = new LocalAssignmentAccumulator(blocksSupply, filterFactory);
+		protected List<CodeLocations> getResult(List<EntryId> entries) {
+			LocalAssignmentToolParams params = CLIParamsAdapter.toLocalAssignmentToolParams(this.params);
+			LocalAssignmentTool a = new LocalAssignmentTool(params);
 			return a.getResult(entries);			
 		}
 
@@ -273,28 +198,15 @@ public class RepoEntryTools extends Tools {
 		}	
 	}
 
-	private static class EntryFanoutRecorderFactory implements BlockRecorderFactory<Void> {
-		@Override
-		public BlockRecorder<Void> getRecorder() {
-			return new VoidBlockRecorder();
-		}
-	}
-
 	private static class EntryFanoutTool extends EntryInfoTool<Void, EntryFanouts> {	
 		public EntryFanoutTool(CLIParams params) {
 			super(params);
 		}
 		
 		@Override
-		protected BlockRecorderFactory<Void> getBlockRecorderFactory(final RepositoryInfo ri) {
-			return new EntryFanoutRecorderFactory();	
-		}
-
-		@Override
-		protected List<EntryFanouts> getResult(BlocksSupply<Block<Void>> blocksSupply, List<EntryId> entries) {
-			RecursionSpecification rs = CLIParamsAdapter.toRecursionSpecification(this.params);
-			FilterFactory<EntryId, EntryId> filterFactory = rs.getFanoutFilterFactory();
-			FanoutAccumulator a = new FanoutAccumulator(blocksSupply, filterFactory);
+		protected List<EntryFanouts> getResult(List<EntryId> entries) {
+			CommonToolParams params = CLIParamsAdapter.toCommonToolParams(this.params);
+			FanoutAccumulator a = new FanoutAccumulator(params);
 			return a.getResult(entries);			
 		}
 		
@@ -328,8 +240,9 @@ public class RepoEntryTools extends Tools {
 				BlocksSupply<Block<FaninMark>> blocksSupply = new BlocksInSerialFanouts(entryId, this.params.parseTreeDirectory);		
 				return new EntryFaninAccumulator(blocksSupply, false);
 			} else {
-				BlocksSupply<Block<FaninMark>> blocksSupply = this.getBlocksSupply(ri, new MarkedAsFaninBRF(entryId));		
-				return new EntryFaninAccumulator(blocksSupply, true);
+				ParseTreeSupply pts = new SavedParsedTrees(params.parseTreeDirectory);
+				AccumulatingBlocksSupply<FaninMark> bs = new AccumulatingBlocksSupply<FaninMark>(pts, new MarkedAsFaninBRF(entryId));
+				return new EntryFaninAccumulator(bs, true);
 			}
 		}
 		

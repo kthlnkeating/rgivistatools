@@ -14,7 +14,7 @@
 // limitations under the License.
 //---------------------------------------------------------------------------
 
-package com.raygroupintl.vista.tools.entryinfo;
+package com.raygroupintl.m.tool.basiccodeinfo;
 
 import com.raygroupintl.m.tool.MEntryToolResult;
 import com.raygroupintl.output.Terminal;

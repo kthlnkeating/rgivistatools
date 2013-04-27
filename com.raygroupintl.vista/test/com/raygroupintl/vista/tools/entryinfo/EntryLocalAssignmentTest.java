@@ -1,23 +1,18 @@
 package com.raygroupintl.vista.tools.entryinfo;
 
-import java.util.HashSet;
-import java.util.Set;
-
 import junit.framework.Assert;
 
 import org.junit.Test;
 
-import com.raygroupintl.m.parsetree.data.Block;
-import com.raygroupintl.m.parsetree.data.BlocksSupply;
 import com.raygroupintl.m.parsetree.data.EntryId;
-import com.raygroupintl.m.parsetree.visitor.BlockRecorderFactory;
 import com.raygroupintl.m.struct.CodeLocation;
-import com.raygroupintl.m.tool.AccumulatingBlocksSupply;
 import com.raygroupintl.m.tool.ParseTreeSupply;
+import com.raygroupintl.m.tool.RecursionDepth;
+import com.raygroupintl.m.tool.RecursionSpecification;
+import com.raygroupintl.m.tool.basiccodeinfo.CodeLocations;
+import com.raygroupintl.m.tool.localassignment.LocalAssignmentTool;
+import com.raygroupintl.m.tool.localassignment.LocalAssignmentToolParams;
 import com.raygroupintl.vista.tools.AccumulatorTestCommon;
-import com.raygroupintl.vista.tools.entry.CodeLocations;
-import com.raygroupintl.vista.tools.entry.LocalAssignmentAccumulator;
-import com.raygroupintl.vista.tools.entry.LocalAssignmentRecorder;
 
 public class EntryLocalAssignmentTest {
 	private void testLocations(CodeLocations r, CodeLocation[] expectedCodeLocations) {
@@ -29,18 +24,14 @@ public class EntryLocalAssignmentTest {
 		String[] resourceNames = {
 				"resource/APIROU00.m", "resource/APIROU01.m", "resource/APIROU02.m", "resource/APIROU03.m", 
 				"resource/DMI.m", "resource/DDI.m", "resource/DIE.m", "resource/FIE.m"};
-		ParseTreeSupply pts = AccumulatorTestCommon.getParseTreeSupply(EntryCodeInfoToolTest.class, resourceNames);
-		final Set<String> locals = new HashSet<String>();
-		locals.add("R");
-		BlockRecorderFactory<CodeLocations> brf = new BlockRecorderFactory<CodeLocations>() {
-			@Override
-			public LocalAssignmentRecorder getRecorder() {
-				return new LocalAssignmentRecorder(locals);	
-			}
-		};  
-		BlocksSupply<Block<CodeLocations>> blocksSupply = new AccumulatingBlocksSupply<CodeLocations>(pts, brf);
-				
-		LocalAssignmentAccumulator a = new LocalAssignmentAccumulator(blocksSupply);
+		ParseTreeSupply pts = AccumulatorTestCommon.getParseTreeSupply(EntryLocalAssignmentTest.class, resourceNames);
+		LocalAssignmentToolParams p = new LocalAssignmentToolParams(pts);		
+		RecursionSpecification rs = new RecursionSpecification();
+		rs.setDepth(RecursionDepth.ALL);
+		p.setRecursionSpecification(rs);
+		p.addLocal("R");
+
+		LocalAssignmentTool a = new LocalAssignmentTool(p);
 				
 		CodeLocation[] expectedCodeLocations = new CodeLocation[]{
 				new CodeLocation("APIROU01", "SUMFACT", 4),

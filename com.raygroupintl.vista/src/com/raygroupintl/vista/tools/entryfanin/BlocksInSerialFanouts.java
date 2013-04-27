@@ -22,8 +22,8 @@ import java.util.Set;
 import com.raygroupintl.m.parsetree.data.Block;
 import com.raygroupintl.m.parsetree.data.BlocksSupply;
 import com.raygroupintl.m.parsetree.data.EntryId;
+import com.raygroupintl.m.tool.fanout.RoutineFanouts;
 import com.raygroupintl.struct.HierarchicalMap;
-import com.raygroupintl.vista.tools.entryfanout.RoutineFanouts;
 import com.raygroupintl.vista.tools.fnds.ToolUtilities;
 
 public class BlocksInSerialFanouts extends BlocksSupply<Block<FaninMark>> {

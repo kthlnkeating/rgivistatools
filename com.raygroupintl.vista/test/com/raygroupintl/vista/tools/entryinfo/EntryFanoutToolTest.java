@@ -6,14 +6,13 @@ import junit.framework.Assert;
 
 import org.junit.Test;
 
-import com.raygroupintl.m.parsetree.data.Block;
-import com.raygroupintl.m.parsetree.data.BlocksSupply;
 import com.raygroupintl.m.parsetree.data.EntryId;
-import com.raygroupintl.m.parsetree.visitor.BlockRecorderFactory;
-import com.raygroupintl.m.tool.AccumulatingBlocksSupply;
+import com.raygroupintl.m.tool.CommonToolParams;
 import com.raygroupintl.m.tool.ParseTreeSupply;
+import com.raygroupintl.m.tool.RecursionDepth;
+import com.raygroupintl.m.tool.RecursionSpecification;
+import com.raygroupintl.m.tool.fanout.EntryFanouts;
 import com.raygroupintl.vista.tools.AccumulatorTestCommon;
-import com.raygroupintl.vista.tools.entryfanout.EntryFanouts;
 
 public class EntryFanoutToolTest {
 	private void testFanouts(EntryFanouts r, EntryId[] expectedFanouts) {
@@ -30,15 +29,13 @@ public class EntryFanoutToolTest {
 				"resource/APIROU00.m", "resource/APIROU01.m", "resource/APIROU02.m", "resource/APIROU03.m", 
 				"resource/DMI.m", "resource/DDI.m", "resource/DIE.m", "resource/FIE.m"};
 		ParseTreeSupply pts = AccumulatorTestCommon.getParseTreeSupply(EntryCodeInfoToolTest.class, resourceNames);
-		BlockRecorderFactory<Void> brf = new BlockRecorderFactory<Void>() {
-			@Override
-			public VoidBlockRecorder getRecorder() {
-				return new VoidBlockRecorder();	
-			}
-		};  
-		BlocksSupply<Block<Void>> blocksSupply = new AccumulatingBlocksSupply<Void>(pts, brf);
 		
-		FanoutAccumulator a = new FanoutAccumulator(blocksSupply);
+		CommonToolParams p = new CommonToolParams(pts);		
+		RecursionSpecification rs = new RecursionSpecification();
+		rs.setDepth(RecursionDepth.ALL);
+		p.setRecursionSpecification(rs);
+
+		FanoutAccumulator a = new FanoutAccumulator(p);
 				
 		this.testFanouts(a.getResult(new EntryId("APIROU00", "FACT")), new EntryId[0]);
 		this.testFanouts(a.getResult(new EntryId("APIROU00", "SUM")), new EntryId[0]);

@@ -14,7 +14,7 @@
 // limitations under the License.
 //---------------------------------------------------------------------------
 
-package com.raygroupintl.vista.tools.entryinfo;
+package com.raygroupintl.m.tool;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -22,33 +22,27 @@ import java.util.List;
 import com.raygroupintl.m.parsetree.data.Block;
 import com.raygroupintl.m.parsetree.data.BlocksSupply;
 import com.raygroupintl.m.parsetree.data.EntryId;
-import com.raygroupintl.struct.ConstFilterFactory;
+import com.raygroupintl.m.parsetree.visitor.BlockRecorderFactory;
 import com.raygroupintl.struct.Filter;
 import com.raygroupintl.struct.FilterFactory;
-import com.raygroupintl.struct.PassFilter;
 
-public abstract class Accumulator<T, B> {
+public abstract class MEntryTool<T, B> {
 	protected BlocksSupply<Block<B>> blocksSupply;
 	private FilterFactory<EntryId, EntryId> filterFactory;
 	
-	protected Accumulator(BlocksSupply<Block<B>> blocksSupply) {
-		this(blocksSupply, new ConstFilterFactory<EntryId, EntryId>(new PassFilter<EntryId>()));
+	protected MEntryTool(CommonToolParams params) {
+		BlockRecorderFactory<B> f = this.getBlockRecorderFactory();
+		this.blocksSupply = params.getBlocksSupply(f);
+		this.filterFactory = params.getFanoutFilterFactory();
 	}
 
-	protected Accumulator(BlocksSupply<Block<B>> blocksSupply, FilterFactory<EntryId, EntryId> filterFactory) {
-		this.blocksSupply = blocksSupply;
-		this.filterFactory = filterFactory;
-	}
-
-	public void setFilterFactory(FilterFactory<EntryId, EntryId> filterFactory) {
-		this.filterFactory = filterFactory;
-	}
+	protected abstract BlockRecorderFactory<B> getBlockRecorderFactory();
 	
 	protected abstract T getResult(Block<B> block, Filter<EntryId> filter);
 	
 	protected abstract T getEmptyBlockResult(EntryId entryId);
 	
-	protected T getResult(EntryId entryId) {
+	public T getResult(EntryId entryId) {
 		Block<B> b = this.blocksSupply.getBlock(entryId);
 		if (b != null) {
 			Filter<EntryId> filter = this.filterFactory.getFilter(entryId);
