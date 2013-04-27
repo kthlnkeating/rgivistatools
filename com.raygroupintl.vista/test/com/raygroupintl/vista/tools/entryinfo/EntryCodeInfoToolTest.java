@@ -14,8 +14,8 @@ import com.raygroupintl.m.tool.RecursionSpecification;
 import com.raygroupintl.m.tool.assumedvariables.AssumedVariablesToolParams;
 import com.raygroupintl.m.tool.basiccodeinfo.BasicCodeInfoToolParams;
 import com.raygroupintl.vista.tools.AccumulatorTestCommon;
-import com.raygroupintl.vista.tools.entryinfo.EntryCodeInfo;
-import com.raygroupintl.vista.tools.entryinfo.EntryCodeInfoAccumulator;
+import com.raygroupintl.vista.tools.entry.EntryCodeInfo;
+import com.raygroupintl.vista.tools.entry.EntryCodeInfoAccumulator;
 
 public class EntryCodeInfoToolTest {
 	private void testAssumedLocal(EntryCodeInfo r, String[] expectedAssumeds, String[] expectedGlobals) {

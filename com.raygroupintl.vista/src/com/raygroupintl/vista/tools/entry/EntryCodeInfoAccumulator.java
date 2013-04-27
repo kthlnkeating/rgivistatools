@@ -14,7 +14,7 @@
 // limitations under the License.
 //---------------------------------------------------------------------------
 
-package com.raygroupintl.vista.tools.entryinfo;
+package com.raygroupintl.vista.tools.entry;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -36,7 +36,7 @@ public class EntryCodeInfoAccumulator {
 		this.basicCodeInfoAccumulator = new BasicCodeInfoTool(params2);
 	}
 	
-	protected EntryCodeInfo getResult(EntryId entryId) {
+	public EntryCodeInfo getResult(EntryId entryId) {
 		AssumedVariables assumedVariables = this.assumedVariableAccumulator.getResult(entryId);		
 		BasicCodeInfoTR basicCodeInfo = this.basicCodeInfoAccumulator.getResult(entryId);
 		if (assumedVariables.isValid() && basicCodeInfo.isValid()) {

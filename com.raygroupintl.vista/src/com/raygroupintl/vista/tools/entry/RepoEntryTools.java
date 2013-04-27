@@ -14,7 +14,7 @@
 // limitations under the License.
 //---------------------------------------------------------------------------
 
-package com.raygroupintl.vista.tools;
+package com.raygroupintl.vista.tools.entry;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -37,6 +37,7 @@ import com.raygroupintl.m.tool.assumedvariables.AssumedVariablesTool;
 import com.raygroupintl.m.tool.assumedvariables.AssumedVariablesToolParams;
 import com.raygroupintl.m.tool.basiccodeinfo.BasicCodeInfoTR;
 import com.raygroupintl.m.tool.basiccodeinfo.BasicCodeInfoToolParams;
+import com.raygroupintl.m.tool.basiccodeinfo.CodeInfo;
 import com.raygroupintl.m.tool.basiccodeinfo.CodeLocations;
 import com.raygroupintl.m.tool.fanout.EntryFanouts;
 import com.raygroupintl.m.tool.fanout.FanoutTool;
@@ -50,14 +51,17 @@ import com.raygroupintl.vista.repository.RepositoryInfo;
 import com.raygroupintl.vista.repository.RepositoryVisitor;
 import com.raygroupintl.vista.repository.VistaPackage;
 import com.raygroupintl.vista.repository.VistaPackages;
+import com.raygroupintl.vista.tools.CLIParams;
+import com.raygroupintl.vista.tools.CLIParamsAdapter;
+import com.raygroupintl.vista.tools.MRALogger;
+import com.raygroupintl.vista.tools.RepositoryTools;
+import com.raygroupintl.vista.tools.Tool;
+import com.raygroupintl.vista.tools.Tools;
 import com.raygroupintl.vista.tools.entryfanin.BlocksInSerialFanouts;
 import com.raygroupintl.vista.tools.entryfanin.EntryFaninAccumulator;
 import com.raygroupintl.vista.tools.entryfanin.EntryFanins;
 import com.raygroupintl.vista.tools.entryfanin.FaninMark;
 import com.raygroupintl.vista.tools.entryfanin.MarkedAsFaninBRF;
-import com.raygroupintl.vista.tools.entryinfo.CodeInfo;
-import com.raygroupintl.vista.tools.entryinfo.EntryCodeInfo;
-import com.raygroupintl.vista.tools.entryinfo.EntryCodeInfoAccumulator;
 
 public class RepoEntryTools extends Tools {
 	private static abstract class EntryInfoToolBase<U extends MEntryToolResult> extends Tool {		

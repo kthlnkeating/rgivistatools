@@ -24,8 +24,6 @@ import com.raygroupintl.m.parsetree.visitor.BlockRecorderFactory;
 import com.raygroupintl.m.tool.MEntryTool;
 import com.raygroupintl.struct.Filter;
 import com.raygroupintl.vista.repository.RepositoryInfo;
-import com.raygroupintl.vista.tools.entryinfo.CodeInfo;
-import com.raygroupintl.vista.tools.entryinfo.EntryCodeInfoRecorder;
 
 public class BasicCodeInfoTool extends MEntryTool<BasicCodeInfoTR, CodeInfo> {
 	private class EntryCodeInfoRecorderFactory implements BlockRecorderFactory<CodeInfo> {

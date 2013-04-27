@@ -14,16 +14,12 @@
 // limitations under the License.
 //---------------------------------------------------------------------------
 
-package com.raygroupintl.vista.tools.entryinfo;
-
-import java.util.HashSet;
-import java.util.Set;
+package com.raygroupintl.m.tool.basiccodeinfo;
 
 import com.raygroupintl.m.parsetree.Global;
 import com.raygroupintl.m.parsetree.Indirection;
 import com.raygroupintl.m.parsetree.Local;
 import com.raygroupintl.m.parsetree.Node;
-import com.raygroupintl.m.parsetree.OpenCloseUseCmdNodes;
 import com.raygroupintl.m.parsetree.ReadCmd;
 import com.raygroupintl.m.parsetree.WriteCmd;
 import com.raygroupintl.m.parsetree.XecuteCmd;
@@ -38,22 +34,13 @@ import com.raygroupintl.vista.repository.VistaPackage;
 
 public class EntryCodeInfoRecorder extends BlockRecorder<CodeInfo> {
 	private RepositoryInfo repositoryInfo;
-	private boolean underDeviceParameter;
 	
 	public EntryCodeInfoRecorder(RepositoryInfo ri) {
 		this.repositoryInfo = ri;
 	}
 
 	public void reset() {
-		this.underDeviceParameter = false;
 		super.reset();
-	}
-	
-	private void addOutput(Local local) {
-		CodeInfo d = this.getCurrentBlockAttachedObject();
-		if (d != null) {
-			d.addLocal(local);	
-		}
 	}
 	
 	private static String removeDoubleQuote(String input) {
@@ -140,19 +127,10 @@ public class EntryCodeInfoRecorder extends BlockRecorder<CodeInfo> {
 	}
 
 	@Override
-	protected void visitDeviceParameters(OpenCloseUseCmdNodes.DeviceParameters deviceParameters) {
-		boolean current = this.underDeviceParameter;
-		this.underDeviceParameter = true;
-		super.visitDeviceParameters(deviceParameters);
-		this.underDeviceParameter = current;
-	}
-		
-	@Override
 	protected void setLocal(Local local, Node rhs) {
 		CodeInfo d = this.getCurrentBlockAttachedObject();
 		if (d != null) {
 			String rn = this.getCurrentRoutineName();
-			this.addOutput(local);
 			if ((rhs != null) && ! inFilemanRoutine(rn, true)) {
 				String rhsAsConst = rhs.getAsConstExpr();
 				if (rhsAsConst != null) {
@@ -181,64 +159,6 @@ public class EntryCodeInfoRecorder extends BlockRecorder<CodeInfo> {
 		}
 	}
 	
-	@Override
-	protected void mergeLocal(Local local, Node rhs) {
-		this.addOutput(local);
-	}
-	
-	@Override
-	protected void killLocal(Local local) {		
-		this.addOutput(local);
-	}
-	
-	@Override
-	protected void newLocal(Local local) {
-		int i = this.getIndex();
-		CodeInfo d = this.getCurrentBlockAttachedObject();
-		if (d != null) d.addNewed(i, local);
-	}
-	
-	private static Set<String> DEVICE_PARAMS = new HashSet<String>();
-	static {
-		DEVICE_PARAMS.add("LINE");
-		DEVICE_PARAMS.add("NOLINE");
-		DEVICE_PARAMS.add("VT");
-		DEVICE_PARAMS.add("NOESCAPE");
-		DEVICE_PARAMS.add("ESCAPE");
-	}
-	
-	
-	private boolean isDeviceParameter(Local local) {
-		String name = local.getName().toString();
-		if (DEVICE_PARAMS.contains(name)) {
-			return true;
-		} else {
-			return false;
-		}
-	}
-	
-	@Override
-	protected void visitLocal(Local local) {
-		if ((! this.underDeviceParameter) || (! isDeviceParameter(local))) { 
-			super.visitLocal(local);
-			CodeInfo d = this.getCurrentBlockAttachedObject();
-			if (d != null) d.addLocal(local);
-		}
-	}
-
-	@Override
-	protected void passLocalByVal(Local local, int index) {		
-		CodeInfo d = this.getCurrentBlockAttachedObject();
-		if (d != null) d.addLocal(local);
-	}
-	
-	@Override
-	protected void passLocalByRef(Local local, int index) {
-		CodeInfo d = this.getCurrentBlockAttachedObject();
-		if (d != null) d.addLocal(local);
-		super.passLocalByRef(local, index);
-	}
-
 	@Override
 	protected void visitGlobal(Global global) {
 		super.visitGlobal(global);
