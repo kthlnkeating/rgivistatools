@@ -96,9 +96,6 @@ public abstract class BlockRecorder<T> extends FanoutRecorder {
 			this.currentBlock.addFanout(this.index, defaultGoto);
 			++this.index;
 		}
-		if (entry.isClosed()) {
-			this.currentBlock.close();
-		} 
 	}
 			
 	@Override
@@ -115,7 +112,7 @@ public abstract class BlockRecorder<T> extends FanoutRecorder {
 			Block<T> firstBlock = this.currentBlocks.getThruHierarchy(tag);
 			this.currentBlocks = lastBlocks;
 			this.currentBlock = lastBlock;
-			if ((lastBlock != null) && (! lastBlock.isClosed())) {
+			if ((lastBlock != null)) { //&& (! lastBlock.isClosed())) {
 				EntryId defaultDo = new EntryId(null, tag);
 				lastBlock.addFanout(this.index, defaultDo);
 				lastBlock.addChild(firstBlock);
@@ -129,7 +126,7 @@ public abstract class BlockRecorder<T> extends FanoutRecorder {
 	}
 	
 	public T getCurrentBlockAttachedObject() {
-		if ((this.currentBlock != null) && (! this.currentBlock.isClosed())) {			
+		if ((this.currentBlock != null)) {
 			return this.currentBlock.getAttachedObject();
 		} else {
 			return null;

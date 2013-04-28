@@ -59,7 +59,6 @@ public class Block<T> {
 	private T attachedObject;
 	
 	private List<IndexedFanout> fanouts = new ArrayList<IndexedFanout>();
-	private boolean closed;
 	
 	public Block(EntryId entryId, HierarchicalMap<String, Block<T>> callables, T attachedObject) {
 		this.entryId = entryId;
@@ -67,23 +66,13 @@ public class Block<T> {
 		this.attachedObject = attachedObject;
 	}
 	
-	public void close() {
-		this.closed = true;
-	}
-	
-	public boolean isClosed() {
-		return this.closed;
-	}
-	
 	public EntryId getEntryId() {
 		return this.entryId;
 	}
 		
 	public void addFanout(int index, EntryId fanout) {
-		if (! this.closed) {
-			IndexedFanout ifo = new IndexedFanout(index, fanout);			
-			this.fanouts.add(ifo);
-		}
+		IndexedFanout ifo = new IndexedFanout(index, fanout);			
+		this.fanouts.add(ifo);
 	}	
 	
 	public void addChild(Block<T> child) {
