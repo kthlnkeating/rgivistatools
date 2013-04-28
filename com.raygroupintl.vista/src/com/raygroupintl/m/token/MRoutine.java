@@ -144,7 +144,7 @@ public class MRoutine implements MToken {
 			}
 			
 			if ((tag != null) || (entry == null)) {
-				if (tag == null) tag = "";
+				if (tag == null) tag = "~";
 				Entry newEntry = new Entry(tag, this.name, line.getParameters());				
 				if ((entry != null) && !(entry.isClosed())) {
 					entry.setContinuationEntry(newEntry);
