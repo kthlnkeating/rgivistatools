@@ -23,21 +23,15 @@ public class Entry extends NodeList<Line> {
 
 	private String name;
 	private String routineName;
-	private int index;
 	private String[] parameters;
 	
 	private int endIndex = -1;
 	private Entry continuationEntry;
 	
-	public Entry(String name, String routineName, int index, String[] parameters) {
+	public Entry(String name, String routineName, String[] parameters) {
 		this.name = name;
 		this.routineName = routineName;
-		this.index = index;
 		this.parameters = parameters;
-	}
-	
-	public String getKey() {
-		return this.name + '^' + this.routineName + ',' + String.valueOf(this.index);
 	}
 	
 	public String getName() {

@@ -98,7 +98,6 @@ public class MRoutine implements MToken {
 		EntryList entryList = new EntryList();
 		routine.setEntryList(entryList);
 				
-		int index = 0;
 		int level = 0;
 		Line lineNode = null;
 		Entry entry = null;
@@ -142,7 +141,7 @@ public class MRoutine implements MToken {
 			
 			if ((tag != null) || (entry == null)) {
 				if (tag == null) tag = "";
-				Entry newEntry = new Entry(tag, this.name, index, line.getParameters());				
+				Entry newEntry = new Entry(tag, this.name, line.getParameters());				
 				if ((entry != null) && !(entry.isClosed())) {
 					entry.setContinuationEntry(newEntry);
 				}
@@ -152,7 +151,6 @@ public class MRoutine implements MToken {
 
 			lineNode = (errorNode == null) ? line.getNode() : line.getAsErrorNode(errorNode);
 			entry.add(lineNode);
-			++index;
 		}
 		
 		return routine;

@@ -86,13 +86,10 @@ public abstract class BlockRecorder<T> extends FanoutRecorder {
 		String tag = entry.getName();
 		EntryId entryId = entry.getFullEntryId();		
 		this.currentBlock = this.getNewBlock(entryId, this.currentBlocks, entry.getParameters());
-		if ((tag != null) && (! tag.isEmpty())) {
+		if (! tag.isEmpty()) {
 			this.currentBlocks.put(tag, this.currentBlock);
 		}
 		super.visitEntry(entry);
-		if (entry.isClosed()) {
-			this.currentBlock.close();
-		} 
 		if (entry.getContinuationEntry() != null) {
 			Entry ce = entry.getContinuationEntry();
 			String ceTag = ce.getName();
@@ -100,13 +97,11 @@ public abstract class BlockRecorder<T> extends FanoutRecorder {
 			this.currentBlock.addFanout(this.index, defaultGoto);
 			++this.index;
 		}
+		if (entry.isClosed()) {
+			this.currentBlock.close();
+		} 
 	}
 			
-	@Override
-	protected void visitEntryList(EntryList entryList) {
-		super.visitEntryList(entryList);
-	}
-
 	@Override
 	protected void visitDoBlock(DoBlock doBlock) {
 		EntryList entryList = doBlock.getEntryList();
