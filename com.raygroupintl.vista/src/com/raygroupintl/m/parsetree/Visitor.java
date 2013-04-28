@@ -305,7 +305,11 @@ public class Visitor {
 		entry.acceptSubNodes(this);
 	}
 		
-	protected void visitEntryList(EntryList entryList) {
+	protected void visitInnerEntryList(InnerEntryList entryList) {
+		entryList.acceptSubNodes(this);
+	}
+		
+	protected void visitOuterEntryList(OuterEntryList entryList) {
 		entryList.acceptSubNodes(this);
 	}
 		

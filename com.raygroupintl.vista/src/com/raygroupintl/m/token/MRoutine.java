@@ -9,10 +9,12 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Stack;
 
-import com.raygroupintl.m.parsetree.EntryList;
 import com.raygroupintl.m.parsetree.Entry;
 import com.raygroupintl.m.parsetree.ErrorNode;
+import com.raygroupintl.m.parsetree.InnerEntryList;
 import com.raygroupintl.m.parsetree.Line;
+import com.raygroupintl.m.parsetree.NodeList;
+import com.raygroupintl.m.parsetree.OuterEntryList;
 import com.raygroupintl.m.parsetree.Routine;
 import com.raygroupintl.m.struct.MError;
 import com.raygroupintl.m.struct.MRefactorSettings;
@@ -95,13 +97,15 @@ public class MRoutine implements MToken {
 		}
 
 		Routine routine = new Routine(this.name);
-		EntryList entryList = new EntryList();
-		routine.setEntryList(entryList);
-				
+		OuterEntryList routineEntryList = new OuterEntryList();
+		routine.setEntryList(routineEntryList);
+		
+		NodeList<Entry> entryList = routineEntryList;
+		
 		int level = 0;
 		Line lineNode = null;
 		Entry entry = null;
-		Stack<EntryList> entryLists = null;
+		Stack<NodeList<Entry>> entryLists = null;
 		
 		for (int i=0; i<this.lines.size(); ++i) {
 			MLine line = this.lines.get(i);
@@ -125,7 +129,7 @@ public class MRoutine implements MToken {
 						errorNode = new ErrorNode(MError.ERR_BLOCK_STRUCTURE);
 						return new Routine(this.name, errorNode);					
 					}
-					EntryList newEntryList = new EntryList();
+					InnerEntryList newEntryList = new InnerEntryList();
 					if (lineNode.setEntryList(newEntryList)) {
 						if (entryLists == null) entryLists = new Stack<>();
 						entryLists.push(entryList);

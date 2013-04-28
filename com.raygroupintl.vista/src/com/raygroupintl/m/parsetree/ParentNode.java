@@ -42,7 +42,7 @@ public abstract class ParentNode extends BasicNode {
 	}
 		
 	@Override
-	public boolean setEntryList(EntryList entryList) {
+	public boolean setEntryList(InnerEntryList entryList) {
 		boolean result = false;
 		if (this.nodes != null) for (Node node : this.nodes.getNodes()) {
 			boolean nodeResult = node.setEntryList(entryList);

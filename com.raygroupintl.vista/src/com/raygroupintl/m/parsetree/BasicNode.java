@@ -29,7 +29,7 @@ public abstract class BasicNode implements Node {
 	}
 
 	@Override
-	public boolean setEntryList(EntryList entryList) {
+	public boolean setEntryList(InnerEntryList entryList) {
 		return false;
 	}
 

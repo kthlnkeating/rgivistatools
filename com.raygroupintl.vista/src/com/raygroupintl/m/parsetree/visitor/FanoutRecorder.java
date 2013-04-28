@@ -27,13 +27,13 @@ import java.util.Set;
 import com.raygroupintl.m.parsetree.ActualList;
 import com.raygroupintl.m.parsetree.AtomicDo;
 import com.raygroupintl.m.parsetree.AtomicGoto;
-import com.raygroupintl.m.parsetree.DoBlock;
 import com.raygroupintl.m.parsetree.EnvironmentFanoutRoutine;
 import com.raygroupintl.m.parsetree.Extrinsic;
 import com.raygroupintl.m.parsetree.FanoutLabel;
 import com.raygroupintl.m.parsetree.FanoutRoutine;
 import com.raygroupintl.m.parsetree.IndirectFanoutLabel;
 import com.raygroupintl.m.parsetree.IndirectFanoutRoutine;
+import com.raygroupintl.m.parsetree.InnerEntryList;
 import com.raygroupintl.m.parsetree.Local;
 import com.raygroupintl.m.parsetree.NumberLiteral;
 import com.raygroupintl.m.parsetree.ObjectMethodCall;
@@ -90,7 +90,7 @@ public class FanoutRecorder extends LocationMarker {
 	private LinkedList<EntryFanoutInfo> fanouts2;
 	private LastInfo lastInfo = new LastInfo();
 	private Filter<EntryId> filter;
-	private Set<Integer> doBlockHash = new HashSet<Integer>();
+	private Set<Integer> innerEntryListHash = new HashSet<Integer>();
 
 	public FanoutRecorder() {
 	}
@@ -218,14 +218,14 @@ public class FanoutRecorder extends LocationMarker {
 	}
 	
 	@Override
-	protected void visitDoBlock(DoBlock doBlock) {
-		int id = doBlock.getUniqueId();
-		if (! this.doBlockHash.contains(id)) {
-			doBlockHash.add(id);
-			super.visitDoBlock(doBlock);
+	protected void visitInnerEntryList(InnerEntryList entryList) {
+		int id = System.identityHashCode(entryList);
+		if (! this.innerEntryListHash.contains(id)) {
+			this.innerEntryListHash.add(id);
+			super.visitInnerEntryList(entryList);
 		}
 	}
-
+		
 	@Override
 	protected void visitRoutine(Routine routine) {
 		this.fanouts = new HashMap<LineLocation, List<EntryId>>();

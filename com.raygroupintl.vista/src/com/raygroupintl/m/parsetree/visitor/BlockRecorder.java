@@ -20,9 +20,8 @@ import java.util.HashSet;
 import java.util.Set;
 
 import com.raygroupintl.m.parsetree.DeadCmds;
-import com.raygroupintl.m.parsetree.DoBlock;
 import com.raygroupintl.m.parsetree.Entry;
-import com.raygroupintl.m.parsetree.EntryList;
+import com.raygroupintl.m.parsetree.InnerEntryList;
 import com.raygroupintl.m.parsetree.Routine;
 import com.raygroupintl.m.parsetree.data.Block;
 import com.raygroupintl.m.parsetree.data.CallArgument;
@@ -37,7 +36,7 @@ public abstract class BlockRecorder<T> extends FanoutRecorder {
 	
 	private int index;
 	
-	private Set<Integer> doBlockHash = new HashSet<Integer>();
+	private Set<Integer> innerEntryListHash = new HashSet<Integer>();
 
 	protected Block<T> getCurrentBlock() {
 		return this.currentBlock;
@@ -56,7 +55,7 @@ public abstract class BlockRecorder<T> extends FanoutRecorder {
 		this.currentBlock = null;
 		this.currentRoutineName = null;
 		this.index = 0;		
-		this.doBlockHash = new HashSet<Integer>();
+		this.innerEntryListHash = new HashSet<Integer>();
 	}
 	
 	protected abstract void postUpdateFanout(EntryId fanout, CallArgument[] callArguments);
@@ -103,22 +102,15 @@ public abstract class BlockRecorder<T> extends FanoutRecorder {
 	}
 			
 	@Override
-	protected void visitDoBlock(DoBlock doBlock) {
-		EntryList entryList = doBlock.getEntryList();
-		if (entryList == null) {
-			doBlock.acceptPostCondition(this);			
-			return;
-		}
-		
-		int id = doBlock.getUniqueId();
-		if (! this.doBlockHash.contains(id)) {
-			doBlockHash.add(id);
-			doBlock.acceptPostCondition(this);
+	protected void visitInnerEntryList(InnerEntryList entryList) {
+		int id = System.identityHashCode(entryList);
+		if (! this.innerEntryListHash.contains(id)) {
+			this.innerEntryListHash.add(id);
 			HierarchicalMap<String, Block<T>> lastBlocks = this.currentBlocks;
 			Block<T> lastBlock = this.currentBlock;
 			this.currentBlock = null;
 			this.currentBlocks = new HierarchicalMap<String, Block<T>>(lastBlocks);
-			doBlock.acceptEntryList(this);
+			super.visitInnerEntryList(entryList);
 			String tag = entryList.getName();
 			Block<T> firstBlock = this.currentBlocks.getThruHierarchy(tag);
 			this.currentBlocks = lastBlocks;
@@ -131,7 +123,7 @@ public abstract class BlockRecorder<T> extends FanoutRecorder {
 			}
 		}
 	}
-	
+		
 	public HierarchicalMap<String, Block<T>> getBlocks() {
 		return this.currentBlocks;
 	}

@@ -20,7 +20,7 @@ public class DoBlock extends BasicNode {
 	private static final long serialVersionUID = 1L;
 
 	private Node postCondition;
-	private EntryList entryList;
+	private InnerEntryList entryList;
 	
 	public DoBlock(Node postCondition) {
 		this.postCondition = postCondition;
@@ -30,7 +30,7 @@ public class DoBlock extends BasicNode {
 		return this.postCondition;
 	}
 	
-	public EntryList getEntryList() {
+	public InnerEntryList getEntryList() {
 		return this.entryList;
 	}
 	
@@ -57,7 +57,7 @@ public class DoBlock extends BasicNode {
 	}
 	
 	@Override
-	public boolean setEntryList(EntryList entryList) {
+	public boolean setEntryList(InnerEntryList entryList) {
 		this.entryList = entryList;
 		return true;
 	}

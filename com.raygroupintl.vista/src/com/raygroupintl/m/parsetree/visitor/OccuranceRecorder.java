@@ -24,12 +24,12 @@ import java.util.Set;
 import com.raygroupintl.m.parsetree.AtomicDo;
 import com.raygroupintl.m.parsetree.AtomicGoto;
 import com.raygroupintl.m.parsetree.Do;
-import com.raygroupintl.m.parsetree.DoBlock;
 import com.raygroupintl.m.parsetree.ErrorNode;
 import com.raygroupintl.m.parsetree.ExternalDo;
 import com.raygroupintl.m.parsetree.Extrinsic;
 import com.raygroupintl.m.parsetree.Goto;
 import com.raygroupintl.m.parsetree.Indirection;
+import com.raygroupintl.m.parsetree.InnerEntryList;
 import com.raygroupintl.m.parsetree.Routine;
 import com.raygroupintl.m.struct.LineLocation;
 
@@ -44,7 +44,7 @@ public class OccuranceRecorder extends LocationMarker {
 	private Map<LineLocation, Integer> gotoCalls = new HashMap<LineLocation, Integer>();
 	private Map<LineLocation, Integer> extrinsics = new HashMap<LineLocation, Integer>();
 	
-	private Set<Integer> doBlockHash = new HashSet<Integer>();
+	private Set<Integer> innerEntryListHash = new HashSet<Integer>();
 
 	private static void increment(Map<LineLocation, Integer> map, LineLocation location) {
 		Integer count = map.get(location);
@@ -69,16 +69,17 @@ public class OccuranceRecorder extends LocationMarker {
 		super.visitIndirection(indirection);
 	}
 
-	protected void visitDoBlock(DoBlock doBlock) {
-		int id = doBlock.getUniqueId();
-		if (! this.doBlockHash.contains(id)) {
-			doBlockHash.add(id);
+	@Override
+	protected void visitInnerEntryList(InnerEntryList entryList) {
+		int id = System.identityHashCode(entryList);
+		if (! this.innerEntryListHash.contains(id)) {
+			this.innerEntryListHash.add(id);
 			LineLocation location = this.getLastLocation();
 			increment(this.doBlocks, location);
-			super.visitDoBlock(doBlock);
+			super.visitInnerEntryList(entryList);
 		}
 	}
-	
+		
 	protected void visitExternalDo(ExternalDo externalDo) {
 		LineLocation location = this.getLastLocation();
 		increment(this.externalDoCalls, location);

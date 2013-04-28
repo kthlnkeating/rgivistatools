@@ -33,7 +33,7 @@ public class Routine extends BasicNode {
 	private final static Logger LOGGER = Logger.getLogger(Routine.class.getName());
 
 	private String name;
-	private EntryList entryList;
+	private OuterEntryList entryList;
 	private ErrorNode errorNode;
 	
 	public Routine(String name) {
@@ -81,11 +81,14 @@ public class Routine extends BasicNode {
 	}
 	
 	@Override
-	public boolean setEntryList(EntryList entryList) {
-		this.entryList = entryList;
-		return true;
+	public boolean setEntryList(InnerEntryList entryList) {
+		return false;
 	}
 	
+	public void setEntryList(OuterEntryList entryList) {
+		this.entryList = entryList;
+	}
+
 	public void setErrorNode(ErrorNode errorNode) {
 		this.errorNode = errorNode;
 	}

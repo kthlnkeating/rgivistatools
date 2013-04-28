@@ -20,9 +20,9 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 
-import com.raygroupintl.m.parsetree.EntryList;
 import com.raygroupintl.m.parsetree.DoBlock;
 import com.raygroupintl.m.parsetree.ErrorNode;
+import com.raygroupintl.m.parsetree.InnerEntryList;
 import com.raygroupintl.m.parsetree.Routine;
 import com.raygroupintl.m.struct.LineLocation;
 import com.raygroupintl.m.struct.MError;
@@ -61,9 +61,10 @@ public class ErrorRecorder extends LocationMarker {
 		MError error = errorNode.getError();
 		this.addError(error);
 	}
-		
+	
+	@Override
 	protected void visitDoBlock(DoBlock doBlock) {
-		EntryList block = doBlock.getEntryList();
+		InnerEntryList block = doBlock.getEntryList();
 		if (block == null) {
 			MError error = new MError(MError.ERR_NO_DO_BLOCK);
 			this.addError(error);
