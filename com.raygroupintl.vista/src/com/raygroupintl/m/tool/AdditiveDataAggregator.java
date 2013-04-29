@@ -20,12 +20,13 @@ import java.util.List;
 import java.util.Set;
 
 import com.raygroupintl.m.parsetree.data.Block;
+import com.raygroupintl.m.parsetree.data.BlockData;
 import com.raygroupintl.m.parsetree.data.BlocksSupply;
 import com.raygroupintl.m.parsetree.data.EntryId;
 import com.raygroupintl.m.parsetree.data.FanoutBlocks;
 import com.raygroupintl.struct.Filter;
 
-public abstract class AdditiveDataAggregator<T, U> {
+public abstract class AdditiveDataAggregator<T, U extends BlockData> {
 	Block<U> block;
 	BlocksSupply<Block<U>> supply;
 	

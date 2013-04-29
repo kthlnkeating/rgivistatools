@@ -57,5 +57,4 @@ public class CodeLocation {
 		int result = hashString.hashCode(); 
 		return result;
 	}
-	
 }

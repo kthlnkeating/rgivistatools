@@ -21,14 +21,20 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
+import com.raygroupintl.m.parsetree.data.BlockData;
+import com.raygroupintl.m.parsetree.data.EntryId;
 import com.raygroupintl.m.struct.CodeLocation;
 import com.raygroupintl.m.tool.MEntryToolResult;
 
-public class CodeLocations implements MEntryToolResult, Serializable {
+public class CodeLocations extends BlockData implements MEntryToolResult, Serializable {
 	private static final long serialVersionUID = 1L;
 
 	private List<CodeLocation> codeLocations;
 
+	public CodeLocations(EntryId entryId) {
+		super(entryId);
+	}
+	
 	public void add(CodeLocation codeLocation) {
 		if (this.codeLocations == null) {
 			this.codeLocations = new ArrayList<CodeLocation>();

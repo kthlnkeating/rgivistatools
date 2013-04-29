@@ -44,11 +44,11 @@ import com.raygroupintl.struct.ObjectIdContainer;
  * @see com.raygroupintl.m.parsetree.visitor.BlockRecorder
  *           
  */
-public class Block<T> implements EntryObject {
+public class Block<T extends BlockData> implements EntryObject {
 	private HierarchicalMap<String, Block<T>> callables;
-	private BlockData<T> blockData;
+	private T blockData;
 	
-	public Block(HierarchicalMap<String, Block<T>> callables, BlockData<T> blockData) {
+	public Block(HierarchicalMap<String, Block<T>> callables, T blockData) {
 		this.callables = callables;
 		this.blockData = blockData;
 	}
@@ -62,7 +62,7 @@ public class Block<T> implements EntryObject {
 		return this.callables;
 	}
 	
-	public BlockData<T> getData() {
+	public T getData() {
 		return this.blockData;
 	}
 	

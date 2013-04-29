@@ -43,12 +43,12 @@ public class AssumedVariablesTool extends MEntryTool<AssumedVariables, AssumedVa
 		}
 		
 		protected Set<String> getNewDataInstance(Block<AssumedVariablesBlockData> block) {
-			AssumedVariablesBlockData bd = block.getData().getAttachedObject();
+			AssumedVariablesBlockData bd = block.getData();
 			return new HashSet<>(bd.getAssumedLocals());		
 		}
 		
 		protected int updateData(Block<AssumedVariablesBlockData> targetBlock, Set<String> targetData, Set<String> sourceData, int index) {
-			AssumedVariablesBlockData bd = targetBlock.getData().getAttachedObject();		
+			AssumedVariablesBlockData bd = targetBlock.getData();		
 			int result = 0;
 			for (String name : sourceData) {
 				if (! bd.isDefined(name, index)) {

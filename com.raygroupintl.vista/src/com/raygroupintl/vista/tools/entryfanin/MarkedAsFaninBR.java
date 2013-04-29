@@ -16,7 +16,6 @@
 
 package com.raygroupintl.vista.tools.entryfanin;
 
-import com.raygroupintl.m.parsetree.data.BlockData;
 import com.raygroupintl.m.parsetree.data.CallArgument;
 import com.raygroupintl.m.parsetree.data.EntryId;
 import com.raygroupintl.m.parsetree.visitor.BlockRecorder;
@@ -31,14 +30,14 @@ public class MarkedAsFaninBR extends BlockRecorder<FaninMark> {
 	@Override
 	protected void postUpdateFanout(EntryId fanout, CallArgument[] callArguments) {
 		if (this.entryId.equals(fanout, this.getCurrentRoutineName())) {
-			FaninMark b = this.getCurrentBlockAttachedObject();
+			FaninMark b = this.getCurrentBlockData();
 			b.set(this.entryId);
 		}
 	}
 	
 	@Override
-	protected BlockData<FaninMark> getNewBlockData(EntryId entryId, String[] params) {
-		return new BlockData<FaninMark>(entryId, new FaninMark(entryId));
+	protected FaninMark getNewBlockData(EntryId entryId, String[] params) {
+		return new FaninMark(entryId);
 	}
 }
 	

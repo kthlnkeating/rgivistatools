@@ -28,10 +28,10 @@ import com.raygroupintl.vista.repository.RepositoryVisitor;
 import com.raygroupintl.vista.repository.VistaPackage;
 import com.raygroupintl.vista.repository.VistaPackages;
 
-public class BlocksInMap<T> extends BlocksSupply<Block<T>> {
+public class BlocksInMap<T extends BlockData> extends BlocksSupply<Block<T>> {
 	private final static Logger LOGGER = Logger.getLogger(BlocksInMap.class.getName());
 
-	private static class Factory<T> extends RepositoryVisitor {
+	private static class Factory<T extends BlockData> extends RepositoryVisitor {
 		private int packageCount;
 		private BlockRecorder<T> recorder;
 		private BlocksInMap<T> blocksMap;
@@ -77,14 +77,14 @@ public class BlocksInMap<T> extends BlocksSupply<Block<T>> {
 		return this.map.get(routineName);
 	}
 		
-	public static <T> BlocksInMap<T> getInstance(BlockRecorder<T> br, RepositoryInfo ri) {
+	public static <T extends BlockData> BlocksInMap<T> getInstance(BlockRecorder<T> br, RepositoryInfo ri) {
 		Factory<T> f = new Factory<T>(br);
 		VistaPackages vps = new VistaPackages(ri.getAllPackages());
 		vps.accept(f);
 		return f.getBlocks();		
 	}
 	
-	public static <T> BlocksInMap<T> getInstance(BlockRecorder<T> br, Routine[] routines) {
+	public static <T extends BlockData> BlocksInMap<T> getInstance(BlockRecorder<T> br, Routine[] routines) {
 		BlocksInMap<T> result = new BlocksInMap<T>();
 		for (Routine r : routines) {
 			br.reset();

@@ -103,13 +103,13 @@ public class ReturnTypeTool extends Tool {
 				fanout.setFanoutExists(false);
 				continue;
 			}
-			fanout.setReturnType(blockOfFanout.getData().getAttachedObject().getReturnType());
+			fanout.setReturnType(blockOfFanout.getData().getReturnType());
 			if (fanout.getFanoutType() == FanoutTypeENUM.DO || fanout.getFanoutType() == FanoutTypeENUM.GOTO) {
-				if (blockOfFanout.getData().getAttachedObject().getReturnType() != ReturnTypeENUM.RETURN_NOTHING) {
+				if (blockOfFanout.getData().getReturnType() != ReturnTypeENUM.RETURN_NOTHING) {
 					fanout.setValid(false);
 				}
 			} else if (fanout.getFanoutType() == FanoutTypeENUM.EXTRINSIC) {
-				if (blockOfFanout.getData().getAttachedObject().getReturnType() != ReturnTypeENUM.RETURN_VALUE) {
+				if (blockOfFanout.getData().getReturnType() != ReturnTypeENUM.RETURN_VALUE) {
 					fanout.setValid(false);
 				}
 			}

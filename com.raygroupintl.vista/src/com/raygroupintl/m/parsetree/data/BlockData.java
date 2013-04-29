@@ -19,14 +19,12 @@ package com.raygroupintl.m.parsetree.data;
 import java.util.ArrayList;
 import java.util.List;
 
-public class BlockData<T> {
+public class BlockData {
 	private EntryId entryId;
 	private List<IndexedFanout> fanouts = new ArrayList<IndexedFanout>();
-	private T attachedObject;
 	
-	public BlockData(EntryId entryId, T attachedObject) {
+	public BlockData(EntryId entryId) {
 		this.entryId = entryId;
-		this.attachedObject = attachedObject;
 	}
 
 	public EntryId getEntryId() {
@@ -49,9 +47,5 @@ public class BlockData<T> {
 			result.add(fo);
 		}
 		return result;
-	}
-	
-	public T getAttachedObject() {
-		return this.attachedObject;
 	}
 }

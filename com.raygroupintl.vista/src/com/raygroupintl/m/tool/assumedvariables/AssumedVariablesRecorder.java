@@ -22,12 +22,11 @@ import java.util.Set;
 import com.raygroupintl.m.parsetree.Local;
 import com.raygroupintl.m.parsetree.Node;
 import com.raygroupintl.m.parsetree.OpenCloseUseCmdNodes;
-import com.raygroupintl.m.parsetree.data.BlockData;
 import com.raygroupintl.m.parsetree.data.CallArgument;
 import com.raygroupintl.m.parsetree.data.EntryId;
 import com.raygroupintl.m.parsetree.visitor.BlockRecorder;
 
-public class AssumedVariablesRecorder extends BlockRecorder<AssumedVariablesBlockData> {
+class AssumedVariablesRecorder extends BlockRecorder<AssumedVariablesBlockData> {
 	private boolean underDeviceParameter;
 	
 	public void reset() {
@@ -36,7 +35,7 @@ public class AssumedVariablesRecorder extends BlockRecorder<AssumedVariablesBloc
 	}
 	
 	private void addOutput(Local local) {
-		AssumedVariablesBlockData d = this.getCurrentBlockAttachedObject();
+		AssumedVariablesBlockData d = this.getCurrentBlockData();
 		if (d != null) {
 			d.addLocal(local);	
 		}
@@ -56,7 +55,7 @@ public class AssumedVariablesRecorder extends BlockRecorder<AssumedVariablesBloc
 		
 	@Override
 	protected void setLocal(Local local, Node rhs) {
-		AssumedVariablesBlockData d = this.getCurrentBlockAttachedObject();
+		AssumedVariablesBlockData d = this.getCurrentBlockData();
 		if (d != null) {
 			this.addOutput(local);
 		}
@@ -75,7 +74,7 @@ public class AssumedVariablesRecorder extends BlockRecorder<AssumedVariablesBloc
 	@Override
 	protected void newLocal(Local local) {
 		int i = this.getIndex();
-		AssumedVariablesBlockData d = this.getCurrentBlockAttachedObject();
+		AssumedVariablesBlockData d = this.getCurrentBlockData();
 		if (d != null) d.addNewed(i, local);
 	}
 	
@@ -102,28 +101,28 @@ public class AssumedVariablesRecorder extends BlockRecorder<AssumedVariablesBloc
 	protected void visitLocal(Local local) {
 		if ((! this.underDeviceParameter) || (! isDeviceParameter(local))) { 
 			super.visitLocal(local);
-			AssumedVariablesBlockData d = this.getCurrentBlockAttachedObject();
+			AssumedVariablesBlockData d = this.getCurrentBlockData();
 			if (d != null) d.addLocal(local);
 		}
 	}
 
 	@Override
 	protected void passLocalByVal(Local local, int index) {		
-		AssumedVariablesBlockData d = this.getCurrentBlockAttachedObject();
+		AssumedVariablesBlockData d = this.getCurrentBlockData();
 		if (d != null) d.addLocal(local);
 	}
 	
 	@Override
 	protected void passLocalByRef(Local local, int index) {
-		AssumedVariablesBlockData d = this.getCurrentBlockAttachedObject();
+		AssumedVariablesBlockData d = this.getCurrentBlockData();
 		if (d != null) d.addLocal(local);
 		super.passLocalByRef(local, index);
 	}
 
 	@Override
-	protected BlockData<AssumedVariablesBlockData> getNewBlockData(EntryId entryId, String[] params) {
-		BlockData<AssumedVariablesBlockData> result = new BlockData<AssumedVariablesBlockData>(entryId, new AssumedVariablesBlockData());
-		result.getAttachedObject().setFormals(params);
+	protected AssumedVariablesBlockData getNewBlockData(EntryId entryId, String[] params) {
+		AssumedVariablesBlockData result = new AssumedVariablesBlockData(entryId);
+		result.setFormals(params);
 		return result;
 	}
 }

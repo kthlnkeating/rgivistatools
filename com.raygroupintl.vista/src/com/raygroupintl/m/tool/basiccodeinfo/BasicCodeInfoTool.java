@@ -47,7 +47,7 @@ public class BasicCodeInfoTool extends MEntryTool<BasicCodeInfoTR, CodeInfo> {
 		}
 		
 		protected void updateData(BasicCodeInfo targetData, Block<CodeInfo> fanoutBlock) {
-			CodeInfo updateSource = fanoutBlock.getData().getAttachedObject();
+			CodeInfo updateSource = fanoutBlock.getData();
 			targetData.mergeGlobals(updateSource.getGlobals());
 			targetData.mergeFilemanGlobals(updateSource.getFilemanGlobals());
 			targetData.mergeFilemanCalls(updateSource.getFilemanCalls());
@@ -76,7 +76,7 @@ public class BasicCodeInfoTool extends MEntryTool<BasicCodeInfoTR, CodeInfo> {
 		BCITDataAggregator bcia = new BCITDataAggregator(block, blocksSupply);
 		Set<EntryId> missing = new HashSet<EntryId>();
 		BasicCodeInfo apiData = bcia.get(filter, missing);
-		return new BasicCodeInfoTR(block.getData().getAttachedObject().getFormals(), apiData);
+		return new BasicCodeInfoTR(block.getData().getFormals(), apiData);
 	}
 	
 	@Override

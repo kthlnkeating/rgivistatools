@@ -22,12 +22,18 @@ import java.util.Map;
 import java.util.Set;
 
 import com.raygroupintl.m.parsetree.Local;
+import com.raygroupintl.m.parsetree.data.BlockData;
+import com.raygroupintl.m.parsetree.data.EntryId;
 
-public class AssumedVariablesBlockData {
+class AssumedVariablesBlockData extends BlockData {
 	private String[] formals;
 	private Map<String, Integer> formalsMap;
 	private Map<String, Integer> newedLocals = new HashMap<String, Integer>();
 	private Set<String> assumedLocals = new HashSet<String>();
+	
+	public AssumedVariablesBlockData(EntryId entryId) {
+		super(entryId);
+	}
 	
 	public void setFormals(String[] formals) {
 		this.formals = formals;

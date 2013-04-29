@@ -1,17 +1,20 @@
 package com.raygroupintl.vista.tools.returntype;
 
-public class ReturnType {
+import com.raygroupintl.m.parsetree.data.BlockData;
+import com.raygroupintl.m.parsetree.data.EntryId;
+
+public class ReturnType extends BlockData {
 	
 	//basically just a prototype wrapper since ENUM's are singleton.
 	private ReturnTypeENUM returnType;
 	
-	public ReturnType(ReturnTypeENUM returnType) {
-		super();
+	public ReturnType(EntryId entryId, ReturnTypeENUM returnType) {
+		super(entryId);
 		this.returnType = returnType;
 	}
 	
-	public ReturnType() {
-		super();
+	public ReturnType(EntryId entryId) {
+		super(entryId);
 	}
 
 	public ReturnTypeENUM getReturnType() {

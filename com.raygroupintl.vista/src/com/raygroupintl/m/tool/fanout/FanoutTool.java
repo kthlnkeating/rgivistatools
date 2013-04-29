@@ -21,6 +21,7 @@ import java.util.List;
 import java.util.Set;
 
 import com.raygroupintl.m.parsetree.data.Block;
+import com.raygroupintl.m.parsetree.data.BlockData;
 import com.raygroupintl.m.parsetree.data.EntryId;
 import com.raygroupintl.m.parsetree.data.FanoutBlocks;
 import com.raygroupintl.m.parsetree.visitor.BlockRecorder;
@@ -29,10 +30,10 @@ import com.raygroupintl.m.tool.CommonToolParams;
 import com.raygroupintl.m.tool.MEntryTool;
 import com.raygroupintl.struct.Filter;
 
-public class FanoutTool extends MEntryTool<EntryFanouts, Void>{
-	private static class EntryFanoutRecorderFactory implements BlockRecorderFactory<Void> {
+public class FanoutTool extends MEntryTool<EntryFanouts, BlockData>{
+	private static class EntryFanoutRecorderFactory implements BlockRecorderFactory<BlockData> {
 		@Override
-		public BlockRecorder<Void> getRecorder() {
+		public BlockRecorder<BlockData> getRecorder() {
 			return new VoidBlockRecorder();
 		}
 	}
@@ -42,18 +43,18 @@ public class FanoutTool extends MEntryTool<EntryFanouts, Void>{
 	}
 	
 	@Override
-	protected BlockRecorderFactory<Void> getBlockRecorderFactory() {
+	protected BlockRecorderFactory<BlockData> getBlockRecorderFactory() {
 		return new EntryFanoutRecorderFactory();
 	}
 
 	@Override
-	protected EntryFanouts getResult(Block<Void> block, Filter<EntryId> filter) {
+	protected EntryFanouts getResult(Block<BlockData> block, Filter<EntryId> filter) {
 		Set<EntryId> missing = new HashSet<EntryId>();
-		FanoutBlocks<Block<Void>> fanoutBlocks = block.getFanoutBlocks(this.blocksSupply, filter, missing);
-		List<Block<Void>> blocks = fanoutBlocks.getBlocks();
+		FanoutBlocks<Block<BlockData>> fanoutBlocks = block.getFanoutBlocks(this.blocksSupply, filter, missing);
+		List<Block<BlockData>> blocks = fanoutBlocks.getBlocks();
 		boolean first = true;
 		EntryFanouts result = new EntryFanouts();
-		for (Block<Void> b : blocks) {
+		for (Block<BlockData> b : blocks) {
 			if (first) {
 				first = false;
 			} else if (! b.isInternal()) {					

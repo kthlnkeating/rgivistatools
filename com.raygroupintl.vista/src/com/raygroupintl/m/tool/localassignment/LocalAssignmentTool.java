@@ -45,11 +45,11 @@ public class LocalAssignmentTool extends MEntryTool<CodeLocations, CodeLocations
 		}
 		
 		protected CodeLocations getNewDataInstance(Block<CodeLocations> block) {
-			return new CodeLocations();
+			return new CodeLocations(block.getEntryId());
 		}
 		
 		protected void updateData(CodeLocations targetData, Block<CodeLocations> fanoutBlock) {
-			CodeLocations source = fanoutBlock.getData().getAttachedObject();
+			CodeLocations source = fanoutBlock.getData();
 			List<CodeLocation> cls = source.getCodeLocations();
 			if (cls != null) {
 				for (CodeLocation c : cls) {
@@ -80,6 +80,6 @@ public class LocalAssignmentTool extends MEntryTool<CodeLocations, CodeLocations
 	
 	@Override
 	protected CodeLocations getEmptyBlockResult(EntryId entryId) {
-		return new CodeLocations();
+		return new CodeLocations(entryId);
 	}
 }

@@ -29,17 +29,17 @@ import com.raygroupintl.m.parsetree.data.CallArgument;
 import com.raygroupintl.m.parsetree.data.EntryId;
 import com.raygroupintl.struct.HierarchicalMap;
 
-public abstract class BlockRecorder<T> extends FanoutRecorder {
+public abstract class BlockRecorder<T extends BlockData> extends FanoutRecorder {
 	private HierarchicalMap<String, Block<T>> currentBlocks;
 	
-	private BlockData<T> currentBlockData;
+	private T currentBlockData;
 	private String currentRoutineName;
 	
 	private int index;
 	
 	private Set<Integer> innerEntryListHash = new HashSet<Integer>();
 
-	protected BlockData<T> getCurrentBlockData() {
+	protected T getCurrentBlockData() {
 		return this.currentBlockData;
 	}
 	
@@ -72,7 +72,7 @@ public abstract class BlockRecorder<T> extends FanoutRecorder {
 		} 
 	}
 
-	protected abstract BlockData<T> getNewBlockData(EntryId entryId, String[] params);
+	protected abstract T getNewBlockData(EntryId entryId, String[] params);
  	
 	@Override
 	protected void visitDeadCmds(DeadCmds deadCmds) {
@@ -104,7 +104,7 @@ public abstract class BlockRecorder<T> extends FanoutRecorder {
 		if (! this.innerEntryListHash.contains(id)) {
 			this.innerEntryListHash.add(id);
 			HierarchicalMap<String, Block<T>> lastBlocks = this.currentBlocks;
-			BlockData<T> lastBlock = this.currentBlockData;
+			T lastBlock = this.currentBlockData;
 			this.currentBlockData = null;
 			this.currentBlocks = new HierarchicalMap<String, Block<T>>(lastBlocks);
 			super.visitInnerEntryList(entryList);
@@ -121,14 +121,6 @@ public abstract class BlockRecorder<T> extends FanoutRecorder {
 		
 	public HierarchicalMap<String, Block<T>> getBlocks() {
 		return this.currentBlocks;
-	}
-	
-	public T getCurrentBlockAttachedObject() {
-		if ((this.currentBlockData != null)) {
-			return this.currentBlockData.getAttachedObject();
-		} else {
-			return null;
-		}
 	}
 	
 	@Override

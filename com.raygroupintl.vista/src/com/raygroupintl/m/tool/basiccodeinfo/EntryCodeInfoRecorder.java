@@ -23,7 +23,6 @@ import com.raygroupintl.m.parsetree.Node;
 import com.raygroupintl.m.parsetree.ReadCmd;
 import com.raygroupintl.m.parsetree.WriteCmd;
 import com.raygroupintl.m.parsetree.XecuteCmd;
-import com.raygroupintl.m.parsetree.data.BlockData;
 import com.raygroupintl.m.parsetree.data.CallArgument;
 import com.raygroupintl.m.parsetree.data.CallArgumentType;
 import com.raygroupintl.m.parsetree.data.EntryId;
@@ -83,7 +82,7 @@ public class EntryCodeInfoRecorder extends BlockRecorder<CodeInfo> {
 	@Override
 	protected void postUpdateFanout(EntryId fanout, CallArgument[] callArguments) {
 		String rn = this.getCurrentRoutineName();
-		CodeInfo d = this.getCurrentBlockAttachedObject();
+		CodeInfo d = this.getCurrentBlockData();
 		if ((d != null) && (callArguments != null) && (callArguments.length > 0) && ! inFilemanRoutine(rn, true)) {
 			CallArgument ca = callArguments[0];
 			if (ca != null) {
@@ -105,7 +104,7 @@ public class EntryCodeInfoRecorder extends BlockRecorder<CodeInfo> {
 	@Override
 	protected void visitReadCmd(ReadCmd readCmd) {
 		super.visitReadCmd(readCmd);
-		CodeInfo d = this.getCurrentBlockAttachedObject();
+		CodeInfo d = this.getCurrentBlockData();
 		if (d != null) d.incrementRead();
 	}
 
@@ -113,7 +112,7 @@ public class EntryCodeInfoRecorder extends BlockRecorder<CodeInfo> {
 	@Override
 	protected void visitWriteCmd(WriteCmd writeCmd) {
 		super.visitWriteCmd(writeCmd);
-		CodeInfo d = this.getCurrentBlockAttachedObject();
+		CodeInfo d = this.getCurrentBlockData();
 		if (d != null) d.incrementWrite();
 	}
 
@@ -121,13 +120,13 @@ public class EntryCodeInfoRecorder extends BlockRecorder<CodeInfo> {
 	@Override
 	protected void visitXecuteCmd(XecuteCmd xecuteCmd) {
 		super.visitXecuteCmd(xecuteCmd);
-		CodeInfo d = this.getCurrentBlockAttachedObject();
+		CodeInfo d = this.getCurrentBlockData();
 		if (d != null) d.incrementExecute();
 	}
 
 	@Override
 	protected void setLocal(Local local, Node rhs) {
-		CodeInfo d = this.getCurrentBlockAttachedObject();
+		CodeInfo d = this.getCurrentBlockData();
 		if (d != null) {
 			String rn = this.getCurrentRoutineName();
 			if ((rhs != null) && ! inFilemanRoutine(rn, true)) {
@@ -170,21 +169,21 @@ public class EntryCodeInfoRecorder extends BlockRecorder<CodeInfo> {
 				name += constValue;
 			}
 		}
-		CodeInfo d = this.getCurrentBlockAttachedObject();
+		CodeInfo d = this.getCurrentBlockData();
 		if (d != null) d.addGlobal(name);		
 	}
 	
 	@Override
 	protected void visitIndirection(Indirection indirection) {
-		CodeInfo d = this.getCurrentBlockAttachedObject();
+		CodeInfo d = this.getCurrentBlockData();
 		if (d != null) d.incrementIndirection();
 		super.visitIndirection(indirection);
 	}
 
 	@Override
-	protected BlockData<CodeInfo> getNewBlockData(EntryId entryId, String[] params) {
-		BlockData<CodeInfo> result = new BlockData<CodeInfo>(entryId, new CodeInfo());
-		result.getAttachedObject().setFormals(params);
+	protected CodeInfo getNewBlockData(EntryId entryId, String[] params) {
+		CodeInfo result = new CodeInfo(entryId);
+		result.setFormals(params);
 		return result;
 	}
 }

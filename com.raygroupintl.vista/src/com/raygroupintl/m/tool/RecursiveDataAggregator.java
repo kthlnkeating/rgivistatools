@@ -22,6 +22,7 @@ import java.util.Map;
 import java.util.Set;
 
 import com.raygroupintl.m.parsetree.data.Block;
+import com.raygroupintl.m.parsetree.data.BlockData;
 import com.raygroupintl.m.parsetree.data.BlocksSupply;
 import com.raygroupintl.m.parsetree.data.DataStore;
 import com.raygroupintl.m.parsetree.data.EntryId;
@@ -30,7 +31,7 @@ import com.raygroupintl.m.parsetree.data.FanoutBlocks;
 import com.raygroupintl.struct.Filter;
 import com.raygroupintl.struct.Indexed;
 
-public abstract class RecursiveDataAggregator<T, U> {
+public abstract class RecursiveDataAggregator<T, U extends BlockData> {
 	Block<U> block;
 	BlocksSupply<Block<U>> supply;
 	

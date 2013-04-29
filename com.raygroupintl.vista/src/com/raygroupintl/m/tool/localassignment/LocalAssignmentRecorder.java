@@ -20,7 +20,6 @@ import java.util.Set;
 
 import com.raygroupintl.m.parsetree.Local;
 import com.raygroupintl.m.parsetree.Node;
-import com.raygroupintl.m.parsetree.data.BlockData;
 import com.raygroupintl.m.parsetree.data.CallArgument;
 import com.raygroupintl.m.parsetree.data.EntryId;
 import com.raygroupintl.m.parsetree.visitor.BlockRecorder;
@@ -40,15 +39,15 @@ public class LocalAssignmentRecorder extends BlockRecorder<CodeLocations> {
 	}
 	
 	@Override
-	protected BlockData<CodeLocations> getNewBlockData(EntryId entryId, String[] params) {
-		CodeLocations ecls = new CodeLocations();
-		return new BlockData<CodeLocations>(entryId, ecls);
+	protected CodeLocations getNewBlockData(EntryId entryId, String[] params) {
+		CodeLocations ecls = new CodeLocations(entryId);
+		return ecls;
 	}
 
 	protected void setLocal(Local local, Node rhs) {
 		String name = local.getName().toString();
 		if (this.localNames.contains(name)) {
-			CodeLocations ecls = this.getCurrentBlockAttachedObject();
+			CodeLocations ecls = this.getCurrentBlockData();
 			LineLocation ll = this.getLastLocation();
 			String rn = this.getCurrentRoutineName();
 			CodeLocation cl = new CodeLocation(rn, ll);

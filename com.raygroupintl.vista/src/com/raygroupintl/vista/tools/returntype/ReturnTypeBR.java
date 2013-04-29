@@ -3,7 +3,6 @@ package com.raygroupintl.vista.tools.returntype;
 import com.raygroupintl.m.parsetree.Entry;
 import com.raygroupintl.m.parsetree.Line;
 import com.raygroupintl.m.parsetree.QuitCmd;
-import com.raygroupintl.m.parsetree.data.BlockData;
 import com.raygroupintl.m.parsetree.data.CallArgument;
 import com.raygroupintl.m.parsetree.data.EntryId;
 import com.raygroupintl.m.parsetree.visitor.BlockRecorder;
@@ -12,7 +11,7 @@ public class ReturnTypeBR extends BlockRecorder<ReturnType> {
 
 	private int lineLevel;
 	private ReturnTypeENUM returnTypeENUM = null;
-	private ReturnType attachedObject = new ReturnType();;
+	private ReturnType attachedObject;
 	
 	@Override
 	protected void visitLine(Line line) {
@@ -59,7 +58,7 @@ public class ReturnTypeBR extends BlockRecorder<ReturnType> {
 //			System.out.println("start entry: " +entry.getKey());
 		super.visitEntry(entry);
 		if (entry.isClosed()) { //reset the return type, since the entry being visited has now completed via an unconditional quit
-			attachedObject = new ReturnType();
+			attachedObject = new ReturnType(entry.getFullEntryId());
 			returnTypeENUM = null;
 		}
 //		if (!entry.getKey().contains(":"))
@@ -67,8 +66,8 @@ public class ReturnTypeBR extends BlockRecorder<ReturnType> {
 	}
 
 	@Override
-	protected BlockData<ReturnType> getNewBlockData(EntryId entryId, String[] params) {
-		return new BlockData<ReturnType>(entryId,attachedObject); //this gets called when a new entry is visited. get it again later via getCurrentBlock()
+	protected ReturnType getNewBlockData(EntryId entryId, String[] params) {
+		return new ReturnType(entryId); //this gets called when a new entry is visited. get it again later via getCurrentBlock()
 	}
 
 }

@@ -17,6 +17,7 @@
 package com.raygroupintl.m.tool;
 
 import com.raygroupintl.m.parsetree.data.Block;
+import com.raygroupintl.m.parsetree.data.BlockData;
 import com.raygroupintl.m.parsetree.data.BlocksSupply;
 import com.raygroupintl.m.parsetree.data.EntryId;
 import com.raygroupintl.m.parsetree.visitor.BlockRecorderFactory;
@@ -42,7 +43,7 @@ public class CommonToolParams {
 		return this.recursionSpec.getFanoutFilterFactory();
 	}
 	
-	public <T> BlocksSupply<Block<T>> getBlocksSupply(BlockRecorderFactory<T> f) {
+	public <T extends BlockData> BlocksSupply<Block<T>> getBlocksSupply(BlockRecorderFactory<T> f) {
 		return new AccumulatingBlocksSupply<T>(this.parseTreeSupply, f);
 	}
 }

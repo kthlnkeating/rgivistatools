@@ -20,13 +20,14 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.raygroupintl.m.parsetree.data.Block;
+import com.raygroupintl.m.parsetree.data.BlockData;
 import com.raygroupintl.m.parsetree.data.BlocksSupply;
 import com.raygroupintl.m.parsetree.data.EntryId;
 import com.raygroupintl.m.parsetree.visitor.BlockRecorderFactory;
 import com.raygroupintl.struct.Filter;
 import com.raygroupintl.struct.FilterFactory;
 
-public abstract class MEntryTool<T, B> {
+public abstract class MEntryTool<T, B extends BlockData> {
 	protected BlocksSupply<Block<B>> blocksSupply;
 	private FilterFactory<EntryId, EntryId> filterFactory;
 	

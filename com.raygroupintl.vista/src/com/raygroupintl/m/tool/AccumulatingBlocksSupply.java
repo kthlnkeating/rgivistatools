@@ -20,12 +20,13 @@ import java.util.HashMap;
 
 import com.raygroupintl.m.parsetree.Routine;
 import com.raygroupintl.m.parsetree.data.Block;
+import com.raygroupintl.m.parsetree.data.BlockData;
 import com.raygroupintl.m.parsetree.data.BlocksSupply;
 import com.raygroupintl.m.parsetree.visitor.BlockRecorder;
 import com.raygroupintl.m.parsetree.visitor.BlockRecorderFactory;
 import com.raygroupintl.struct.HierarchicalMap;
 
-public class AccumulatingBlocksSupply<T> extends BlocksSupply<Block<T>> {
+public class AccumulatingBlocksSupply<T extends BlockData> extends BlocksSupply<Block<T>> {
 	private ParseTreeSupply parseTreeSupply;
 	private HashMap<String, HierarchicalMap<String, Block<T>>> blocks = new HashMap<String, HierarchicalMap<String, Block<T>>>();
 	private BlockRecorderFactory<T> blockRecorder;

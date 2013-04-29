@@ -21,7 +21,10 @@ import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 
-public class CodeInfo  {
+import com.raygroupintl.m.parsetree.data.BlockData;
+import com.raygroupintl.m.parsetree.data.EntryId;
+
+public class CodeInfo extends BlockData {
 	private String[] formals;
 	private Map<String, Integer> formalsMap;
 	private Set<String> globals = new HashSet<String>();
@@ -32,6 +35,10 @@ public class CodeInfo  {
 	private int writeCount;
 	private int readCount;
 	private int executeCount;
+	
+	public CodeInfo(EntryId entryId) {
+		super(entryId);
+	}
 	
 	public void setFormals(String[] formals) {
 		this.formals = formals;
