@@ -21,11 +21,10 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-import com.raygroupintl.m.parsetree.data.AdditiveDataHandler;
 import com.raygroupintl.m.struct.CodeLocation;
 import com.raygroupintl.m.tool.MEntryToolResult;
 
-public class CodeLocations implements MEntryToolResult, Serializable, AdditiveDataHandler<CodeLocations> {
+public class CodeLocations implements MEntryToolResult, Serializable {
 	private static final long serialVersionUID = 1L;
 
 	private List<CodeLocation> codeLocations;
@@ -42,20 +41,6 @@ public class CodeLocations implements MEntryToolResult, Serializable, AdditiveDa
 			return Collections.emptyList();
 		} else {
 			return Collections.unmodifiableList(this.codeLocations);
-		}
-	}
-	
-	@Override
-	public CodeLocations getNewInstance() {
-		return new CodeLocations();
-	}
-	
-	@Override
-	public void update(CodeLocations target) {
-		if (this.codeLocations != null) {
-			for (CodeLocation c : this.codeLocations) {
-				target.add(c);
-			}
 		}
 	}
 	

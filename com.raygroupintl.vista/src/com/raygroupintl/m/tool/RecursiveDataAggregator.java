@@ -14,16 +14,22 @@
 // limitations under the License.
 //---------------------------------------------------------------------------
 
-package com.raygroupintl.m.parsetree.data;
+package com.raygroupintl.m.tool;
 
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import com.raygroupintl.m.parsetree.data.Block;
+import com.raygroupintl.m.parsetree.data.BlocksSupply;
+import com.raygroupintl.m.parsetree.data.DataStore;
+import com.raygroupintl.m.parsetree.data.EntryId;
+import com.raygroupintl.m.parsetree.data.FaninList;
+import com.raygroupintl.m.parsetree.data.FanoutBlocks;
 import com.raygroupintl.struct.Filter;
 import com.raygroupintl.struct.Indexed;
 
-public class RecursiveDataAggregator<T, U extends RecursiveDataHandler<T>> {
+public abstract class RecursiveDataAggregator<T, U> {
 	Block<U> block;
 	BlocksSupply<Block<U>> supply;
 	
@@ -31,6 +37,10 @@ public class RecursiveDataAggregator<T, U extends RecursiveDataHandler<T>> {
 		this.block = block;
 		this.supply = supply;
 	}
+	
+	protected abstract T getNewDataInstance(Block<U> block);
+	
+	protected abstract int updateData(Block<U> targetBlock, T targetData, T sourceData, int index);
 	
 	private int updateFaninData(T data, Block<U> b, FanoutBlocks<Block<U>> fanoutBlocks, Map<Integer, T> datas) {
 		int numChange = 0;
@@ -40,7 +50,7 @@ public class RecursiveDataAggregator<T, U extends RecursiveDataHandler<T>> {
 			Block<U> faninBlock = ib.getObject();
 			int faninId = System.identityHashCode(faninBlock);
 			T faninData = datas.get(faninId);
-			numChange += faninBlock.getAttachedObject().update(faninData, data, ib.getIndex());
+			numChange += this.updateData(faninBlock, faninData, data, ib.getIndex());
 		}		
 		return numChange;
 	}
@@ -51,8 +61,7 @@ public class RecursiveDataAggregator<T, U extends RecursiveDataHandler<T>> {
 		List<Block<U>> blocks = fanoutBlocks.getBlocks();
 		for (Block<U> b : blocks) {
 			int id = System.identityHashCode(b);
-			U bd = b.getAttachedObject();
-			T data = bd.getLocalCopy();
+			T data = this.getNewDataInstance(b);
 			datas.put(id, data);
 		}
 		

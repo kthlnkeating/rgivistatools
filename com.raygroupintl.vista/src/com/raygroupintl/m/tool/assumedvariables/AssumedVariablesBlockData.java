@@ -22,9 +22,8 @@ import java.util.Map;
 import java.util.Set;
 
 import com.raygroupintl.m.parsetree.Local;
-import com.raygroupintl.m.parsetree.data.RecursiveDataHandler;
 
-public class AssumedVariablesBlockData implements RecursiveDataHandler<Set<String>> {
+public class AssumedVariablesBlockData {
 	private String[] formals;
 	private Map<String, Integer> formalsMap;
 	private Map<String, Integer> newedLocals = new HashMap<String, Integer>();
@@ -82,7 +81,7 @@ public class AssumedVariablesBlockData implements RecursiveDataHandler<Set<Strin
 		return true;
 	}
 	
-	private boolean isDefined(String name, int sourceIndex) {
+	public boolean isDefined(String name, int sourceIndex) {
 		if ((this.formalsMap != null) && (this.formalsMap.containsKey(name))) {
 			return true;
 		}
@@ -95,24 +94,5 @@ public class AssumedVariablesBlockData implements RecursiveDataHandler<Set<Strin
 	
 	public Set<String> getAssumedLocals() {
 		return this.assumedLocals;
-	}
-	
-	@Override
-	public Set<String> getLocalCopy()  {
-		return new HashSet<>(this.getAssumedLocals());		
-	}
-	
-	@Override
-	public int update(Set<String> target, Set<String> source, int sourceIndex) {
-		int result = 0;
-		for (String name : source) {
-			if (! this.isDefined(name, sourceIndex)) {
-				if (! target.contains(name)) {
-					target.add(name);
-					++result;
-				}
-			}
-		}
-		return result;
 	}
 }

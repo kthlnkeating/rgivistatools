@@ -16,11 +16,12 @@
 
 package com.raygroupintl.m.tool.basiccodeinfo;
 
-import com.raygroupintl.m.parsetree.data.AdditiveDataAggregator;
 import com.raygroupintl.m.parsetree.data.Block;
+import com.raygroupintl.m.parsetree.data.BlocksSupply;
 import com.raygroupintl.m.parsetree.data.EntryId;
 import com.raygroupintl.m.parsetree.visitor.BlockRecorder;
 import com.raygroupintl.m.parsetree.visitor.BlockRecorderFactory;
+import com.raygroupintl.m.tool.AdditiveDataAggregator;
 import com.raygroupintl.m.tool.MEntryTool;
 import com.raygroupintl.struct.Filter;
 import com.raygroupintl.vista.repository.RepositoryInfo;
@@ -33,6 +34,28 @@ public class BasicCodeInfoTool extends MEntryTool<BasicCodeInfoTR, CodeInfo> {
 		}
 	}
 
+	private class BCITDataAggregator extends AdditiveDataAggregator<BasicCodeInfo, CodeInfo> {
+		public BCITDataAggregator(Block<CodeInfo> block, BlocksSupply<Block<CodeInfo>> supply) {
+			super(block, supply);
+		}
+
+		protected BasicCodeInfo getNewDataInstance(Block<CodeInfo> block) {
+			return new BasicCodeInfo();
+		}
+		
+		protected void updateData(BasicCodeInfo targetData, Block<CodeInfo> fanoutBlock) {
+			CodeInfo updateSource = fanoutBlock.getAttachedObject();
+			targetData.mergeGlobals(updateSource.getGlobals());
+			targetData.mergeFilemanGlobals(updateSource.getFilemanGlobals());
+			targetData.mergeFilemanCalls(updateSource.getFilemanCalls());
+			
+			targetData.incrementIndirectionCount(updateSource.getIndirectionCount());
+			targetData.incrementReadCount(updateSource.getReadCount());
+			targetData.incrementWriteCount(updateSource.getWriteCount());
+			targetData.incrementExecuteCount(updateSource.getExecuteCount());		
+		}		
+	}
+	
 	private RepositoryInfo repositoryInfo;
 	
 	public BasicCodeInfoTool(BasicCodeInfoToolParams params) {
@@ -47,7 +70,7 @@ public class BasicCodeInfoTool extends MEntryTool<BasicCodeInfoTR, CodeInfo> {
 
 	@Override
 	protected BasicCodeInfoTR getResult(Block<CodeInfo> block, Filter<EntryId> filter) {
-		AdditiveDataAggregator<BasicCodeInfo, CodeInfo> bcia = new AdditiveDataAggregator<BasicCodeInfo, CodeInfo>(block, blocksSupply);
+		BCITDataAggregator bcia = new BCITDataAggregator(block, blocksSupply);
 		BasicCodeInfo apiData = bcia.get(filter);
 		return new BasicCodeInfoTR(block.getAttachedObject().getFormals(), apiData);
 	}

@@ -16,15 +16,17 @@
 
 package com.raygroupintl.m.tool.assumedvariables;
 
+import java.util.HashSet;
 import java.util.Set;
 
 import com.raygroupintl.m.parsetree.data.Block;
+import com.raygroupintl.m.parsetree.data.BlocksSupply;
 import com.raygroupintl.m.parsetree.data.DataStore;
 import com.raygroupintl.m.parsetree.data.EntryId;
-import com.raygroupintl.m.parsetree.data.RecursiveDataAggregator;
 import com.raygroupintl.m.parsetree.visitor.BlockRecorder;
 import com.raygroupintl.m.parsetree.visitor.BlockRecorderFactory;
 import com.raygroupintl.m.tool.MEntryTool;
+import com.raygroupintl.m.tool.RecursiveDataAggregator;
 import com.raygroupintl.struct.Filter;
 
 public class AssumedVariablesTool extends MEntryTool<AssumedVariables, AssumedVariablesBlockData> {
@@ -35,6 +37,31 @@ public class AssumedVariablesTool extends MEntryTool<AssumedVariables, AssumedVa
 		}
 	}
 
+	private static class AVTDataAggregator extends RecursiveDataAggregator<Set<String>, AssumedVariablesBlockData> {
+		public AVTDataAggregator(Block<AssumedVariablesBlockData> block, BlocksSupply<Block<AssumedVariablesBlockData>> supply) {
+			super(block, supply);
+		}
+		
+		protected Set<String> getNewDataInstance(Block<AssumedVariablesBlockData> block) {
+			AssumedVariablesBlockData bd = block.getAttachedObject();
+			return new HashSet<>(bd.getAssumedLocals());		
+		}
+		
+		protected int updateData(Block<AssumedVariablesBlockData> targetBlock, Set<String> targetData, Set<String> sourceData, int index) {
+			AssumedVariablesBlockData bd = targetBlock.getAttachedObject();		
+			int result = 0;
+			for (String name : sourceData) {
+				if (! bd.isDefined(name, index)) {
+					if (! targetData.contains(name)) {
+						targetData.add(name);
+						++result;
+					}
+				}
+			}
+			return result;
+		}		
+	}
+	
 	private DataStore<Set<String>> store = new DataStore<Set<String>>();					
 	private AssumedVariablesToolParams params;
 	
@@ -50,7 +77,7 @@ public class AssumedVariablesTool extends MEntryTool<AssumedVariables, AssumedVa
 
 	@Override
 	public AssumedVariables getResult(Block<AssumedVariablesBlockData> block, Filter<EntryId> filter) {
-		RecursiveDataAggregator<Set<String>, AssumedVariablesBlockData> ala = new RecursiveDataAggregator<Set<String>, AssumedVariablesBlockData>(block, blocksSupply);
+		AVTDataAggregator ala = new AVTDataAggregator(block, blocksSupply);
 		Set<String> assumedVariables = ala.get(this.store, filter);
 		if (assumedVariables != null) {
 			assumedVariables.removeAll(this.params.getExpected());

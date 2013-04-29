@@ -21,9 +21,7 @@ import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 
-import com.raygroupintl.m.parsetree.data.AdditiveDataHandler;
-
-public class CodeInfo implements AdditiveDataHandler<BasicCodeInfo> {
+public class CodeInfo  {
 	private String[] formals;
 	private Map<String, Integer> formalsMap;
 	private Set<String> globals = new HashSet<String>();
@@ -115,22 +113,5 @@ public class CodeInfo implements AdditiveDataHandler<BasicCodeInfo> {
 	
 	public int getExecuteCount() {
 		return this.executeCount;
-	}
-
-	@Override
-	public BasicCodeInfo getNewInstance() {
-		return new BasicCodeInfo();
-	}
-
-	@Override
-	public void update(BasicCodeInfo target) {
-		target.mergeGlobals(this.getGlobals());
-		target.mergeFilemanGlobals(this.getFilemanGlobals());
-		target.mergeFilemanCalls(this.getFilemanCalls());
-		
-		target.incrementIndirectionCount(this.getIndirectionCount());
-		target.incrementReadCount(this.getReadCount());
-		target.incrementWriteCount(this.getWriteCount());
-		target.incrementExecuteCount(this.getExecuteCount());		
 	}
 }

@@ -16,13 +16,16 @@
 
 package com.raygroupintl.m.tool.localassignment;
 
+import java.util.List;
 import java.util.Set;
 
-import com.raygroupintl.m.parsetree.data.AdditiveDataAggregator;
 import com.raygroupintl.m.parsetree.data.Block;
+import com.raygroupintl.m.parsetree.data.BlocksSupply;
 import com.raygroupintl.m.parsetree.data.EntryId;
 import com.raygroupintl.m.parsetree.visitor.BlockRecorder;
 import com.raygroupintl.m.parsetree.visitor.BlockRecorderFactory;
+import com.raygroupintl.m.struct.CodeLocation;
+import com.raygroupintl.m.tool.AdditiveDataAggregator;
 import com.raygroupintl.m.tool.MEntryTool;
 import com.raygroupintl.m.tool.basiccodeinfo.CodeLocations;
 import com.raygroupintl.struct.Filter;
@@ -33,6 +36,26 @@ public class LocalAssignmentTool extends MEntryTool<CodeLocations, CodeLocations
 		public BlockRecorder<CodeLocations> getRecorder() {
 			return new LocalAssignmentRecorder(LocalAssignmentTool.this.localsUnderTest);
 		}
+	}
+	
+	private class LATDataAggregator extends AdditiveDataAggregator<CodeLocations, CodeLocations> {
+		public LATDataAggregator(Block<CodeLocations> block, BlocksSupply<Block<CodeLocations>> supply) {
+			super(block, supply);
+		}
+		
+		protected CodeLocations getNewDataInstance(Block<CodeLocations> block) {
+			return new CodeLocations();
+		}
+		
+		protected void updateData(CodeLocations targetData, Block<CodeLocations> fanoutBlock) {
+			CodeLocations source = fanoutBlock.getAttachedObject();
+			List<CodeLocation> cls = source.getCodeLocations();
+			if (cls != null) {
+				for (CodeLocation c : cls) {
+					targetData.add(c);
+				}
+			}
+		}		
 	}
 
 	private Set<String> localsUnderTest;
@@ -49,7 +72,7 @@ public class LocalAssignmentTool extends MEntryTool<CodeLocations, CodeLocations
 
 	@Override
 	protected CodeLocations getResult(Block<CodeLocations> block, Filter<EntryId> filter) {
-		AdditiveDataAggregator<CodeLocations, CodeLocations> bcia = new AdditiveDataAggregator<CodeLocations, CodeLocations>(block, blocksSupply);
+		LATDataAggregator bcia = new LATDataAggregator(block, blocksSupply);
 		return bcia.get(filter);
 	}
 	
