@@ -1,9 +1,10 @@
-package com.raygroupintl.vista.tools.entryinfo;
+package com.raygroupintl.m.tool.localassignment;
 
 import junit.framework.Assert;
 
 import org.junit.Test;
 
+import com.raygroupintl.m.MTestCommon;
 import com.raygroupintl.m.parsetree.data.EntryId;
 import com.raygroupintl.m.struct.CodeLocation;
 import com.raygroupintl.m.tool.ParseTreeSupply;
@@ -12,19 +13,18 @@ import com.raygroupintl.m.tool.RecursionSpecification;
 import com.raygroupintl.m.tool.basiccodeinfo.CodeLocations;
 import com.raygroupintl.m.tool.localassignment.LocalAssignmentTool;
 import com.raygroupintl.m.tool.localassignment.LocalAssignmentToolParams;
-import com.raygroupintl.vista.tools.AccumulatorTestCommon;
 
-public class EntryLocalAssignmentTest {
+public class LATTest {
 	private void testLocations(CodeLocations r, CodeLocation[] expectedCodeLocations) {
 		Assert.assertTrue(r.isIdenticalTo(expectedCodeLocations));
 	}
 	
 	@Test
 	public void test() {
-		String[] resourceNames = {
-				"resource/APIROU00.m", "resource/APIROU01.m", "resource/APIROU02.m", "resource/APIROU03.m", 
-				"resource/DMI.m", "resource/DDI.m", "resource/DIE.m", "resource/FIE.m"};
-		ParseTreeSupply pts = AccumulatorTestCommon.getParseTreeSupply(EntryLocalAssignmentTest.class, resourceNames);
+		String[] routineNames = {
+				"APIROU00", "APIROU01", "APIROU02", "APIROU03", 
+				"DMI", "DDI", "DIE", "FIE"};
+		ParseTreeSupply pts = MTestCommon.getParseTreeSupply(routineNames);
 		LocalAssignmentToolParams p = new LocalAssignmentToolParams(pts);		
 		RecursionSpecification rs = new RecursionSpecification();
 		rs.setDepth(RecursionDepth.ALL);

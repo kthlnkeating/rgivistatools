@@ -6,16 +6,14 @@ import junit.framework.Assert;
 
 import org.junit.Test;
 
+import com.raygroupintl.m.MTestCommon;
 import com.raygroupintl.m.parsetree.Routine;
 import com.raygroupintl.m.parsetree.data.Block;
 import com.raygroupintl.m.parsetree.data.BlocksSupply;
 import com.raygroupintl.m.parsetree.data.EntryId;
 import com.raygroupintl.m.parsetree.visitor.BlockRecorderFactory;
-import com.raygroupintl.m.parsetree.visitor.ErrorRecorder;
 import com.raygroupintl.m.tool.AccumulatingBlocksSupply;
 import com.raygroupintl.m.tool.ParseTreeSupply;
-import com.raygroupintl.m.tool.SourceCodeResources;
-import com.raygroupintl.m.tool.SourceCodeToParseTreeAdapter;
 
 public class EntryFaninAccumulatorTest { 
 	private void checkResult(EntryFanins fanins, String faninEntry, String[] faninNextEntries) {
@@ -32,22 +30,12 @@ public class EntryFaninAccumulatorTest {
 		
 	@Test
 	public void test() {
-		String[] resourceNames = {"resource/FINROU00.m", 
-				                  "resource/FINROU01.m", 
-				                  "resource/FINROU02.m", 
-				                  "resource/FINROU03.m", 
-				                  "resource/FINROU04.m"};
-		Routine[] routines = new Routine[resourceNames.length];
-		SourceCodeResources<EntryFaninAccumulatorTest> scr = SourceCodeResources.getInstance(EntryFaninAccumulatorTest.class, resourceNames);
-		ParseTreeSupply pts = new SourceCodeToParseTreeAdapter(scr);
-		for (int i=0; i<resourceNames.length; ++i) {
-			String resourceName = resourceNames[i];
-			String routineName = resourceName.split("/")[1].split(".m")[0];
-			routines[i] = pts.getParseTree(routineName);
-			ErrorRecorder er = new ErrorRecorder();
-			routines[i].accept(er);
-			Assert.assertEquals(0, er.getLastErrors().size());
-		}
+		String[] routineNames = {"FINROU00", 
+				                 "FINROU01", 
+				                 "FINROU02", 
+				                 "FINROU03", 
+				                 "FINROU04"};
+		ParseTreeSupply pts = MTestCommon.getParseTreeSupply(routineNames);
 		final EntryId entryId = new EntryId("FINROU00", "ADD");
 		BlockRecorderFactory<FaninMark> brf = new BlockRecorderFactory<FaninMark>() {
 			@Override
@@ -58,7 +46,8 @@ public class EntryFaninAccumulatorTest {
 		BlocksSupply<Block<FaninMark>> blocksSupply = new AccumulatingBlocksSupply<FaninMark>(pts, brf);
 		
 		EntryFaninAccumulator accumulator = new EntryFaninAccumulator(blocksSupply, false);
-		for (Routine r : routines) {
+		for (String routineName : routineNames) {
+			Routine r = pts.getParseTree(routineName);
 			accumulator.addRoutine(r);
 		}
 		EntryFanins fanins = accumulator.getResult();
@@ -81,7 +70,8 @@ public class EntryFaninAccumulatorTest {
 		this.checkResult(fanins, "OTHER^FINROU02", new String[]{"ADD^FINROU00"});
 		
 		EntryFaninAccumulator accumulator2 = new EntryFaninAccumulator(blocksSupply, true);
-		for (Routine r : routines) {
+		for (String routineName : routineNames) {
+			Routine r = pts.getParseTree(routineName);
 			accumulator2.addRoutine(r);
 		}
 		EntryFanins fanins2 = accumulator2.getResult();

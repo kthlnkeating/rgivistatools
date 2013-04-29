@@ -9,6 +9,7 @@ import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
+import com.raygroupintl.m.MTestCommon;
 import com.raygroupintl.m.parsetree.Routine;
 import com.raygroupintl.m.parsetree.data.EntryId;
 import com.raygroupintl.m.parsetree.visitor.ErrorRecorder;
@@ -36,8 +37,8 @@ public class TRoutineTest {
 		supplyCache = null;
 	}
 	
-	private List<ObjectInRoutine<MError>> getErrors(String fileName, MTFSupply m) {
-		MRoutine token = TFCommonTest.getRoutineToken(this.getClass(), fileName, m);
+	private List<ObjectInRoutine<MError>> getErrors(String routineName, MTFSupply m) {
+		MRoutine token = MTestCommon.getRoutineToken(routineName, m);
 		Routine r = token.getNode();
 		ErrorRecorder v = new ErrorRecorder();
 		List<ObjectInRoutine<MError>> result = v.visitErrors(r);
@@ -45,9 +46,9 @@ public class TRoutineTest {
 	}
 	
 	public void testNonErrorFiles(MTFSupply m) {
-		String[] fileNames = {"resource/XRGITST0.m", "resource/CMDTEST0.m"};
-		for (String fileName : fileNames) {
-			List<ObjectInRoutine<MError>> result = this.getErrors(fileName, m);
+		String[] routineNames = {"XRGITST0", "CMDTEST0"};
+		for (String routineName : routineNames) {
+			List<ObjectInRoutine<MError>> result = this.getErrors(routineName, m);
 			Assert.assertEquals(0, result.size());
 		}
 	}
@@ -65,8 +66,8 @@ public class TRoutineTest {
 	}
 	
 	private void testErrTest0(MTFSupply m) {
-		String fileName = "resource/ERRTEST0.m";
-		List<ObjectInRoutine<MError>> result = this.getErrors(fileName, m);
+		String routineName = "ERRTEST0";
+		List<ObjectInRoutine<MError>> result = this.getErrors(routineName, m);
 		Assert.assertEquals(5, result.size());
 		testErrTest0Error(result.get(0), "MULTIPLY", 2);
 		testErrTest0Error(result.get(1), "MAIN", 3);
@@ -101,8 +102,8 @@ public class TRoutineTest {
 	}
 	
 	private void testCmdTest0(MTFSupply m) {
-		String fileName = "resource/CMDTEST0.m";
-		MRoutine token = TFCommonTest.getRoutineToken(this.getClass(), fileName, m);
+		String routineName = "CMDTEST0";
+		MRoutine token = MTestCommon.getRoutineToken(routineName, m);
 		Routine r = token.getNode();
 
 		OccuranceRecorder or = OccuranceRecorder.record(r);		

@@ -7,13 +7,13 @@ import junit.framework.Assert;
 
 import org.junit.Test;
 
+import com.raygroupintl.m.MTestCommon;
 import com.raygroupintl.m.parsetree.data.EntryId;
 import com.raygroupintl.m.tool.ParseTreeSupply;
 import com.raygroupintl.m.tool.RecursionDepth;
 import com.raygroupintl.m.tool.RecursionSpecification;
 import com.raygroupintl.m.tool.assumedvariables.AssumedVariablesToolParams;
 import com.raygroupintl.m.tool.basiccodeinfo.BasicCodeInfoToolParams;
-import com.raygroupintl.vista.tools.AccumulatorTestCommon;
 import com.raygroupintl.vista.tools.entry.EntryCodeInfo;
 import com.raygroupintl.vista.tools.entry.EntryCodeInfoAccumulator;
 
@@ -48,10 +48,10 @@ public class EntryCodeInfoToolTest {
 	
 	@Test
 	public void testAssumedLocals() {
-		String[] resourceNames = {
-				"resource/APIROU00.m", "resource/APIROU01.m", "resource/APIROU02.m", "resource/APIROU03.m", 
-				"resource/DMI.m", "resource/DDI.m", "resource/DIE.m", "resource/FIE.m"};
-		ParseTreeSupply pts = AccumulatorTestCommon.getParseTreeSupply(EntryCodeInfoToolTest.class, resourceNames);
+		String[] routineNames = {
+				"APIROU00", "APIROU01", "APIROU02", "APIROU03", 
+				"DMI", "DDI", "DIE", "FIE"};
+		ParseTreeSupply pts = MTestCommon.getParseTreeSupply(routineNames);
 				
 		AssumedVariablesToolParams params = new AssumedVariablesToolParams(pts);
 		RecursionSpecification rs = new RecursionSpecification();

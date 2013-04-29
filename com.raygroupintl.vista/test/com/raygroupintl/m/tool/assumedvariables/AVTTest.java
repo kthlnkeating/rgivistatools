@@ -1,4 +1,4 @@
-package com.raygroupintl.vista.tools.entryinfo;
+package com.raygroupintl.m.tool.assumedvariables;
 
 import java.util.Set;
 
@@ -6,6 +6,7 @@ import junit.framework.Assert;
 
 import org.junit.Test;
 
+import com.raygroupintl.m.MTestCommon;
 import com.raygroupintl.m.parsetree.data.EntryId;
 import com.raygroupintl.m.tool.ParseTreeSupply;
 import com.raygroupintl.m.tool.RecursionDepth;
@@ -13,9 +14,8 @@ import com.raygroupintl.m.tool.RecursionSpecification;
 import com.raygroupintl.m.tool.assumedvariables.AssumedVariablesToolParams;
 import com.raygroupintl.m.tool.assumedvariables.AssumedVariables;
 import com.raygroupintl.m.tool.assumedvariables.AssumedVariablesTool;
-import com.raygroupintl.vista.tools.AccumulatorTestCommon;
 
-public class EntryAssumedVarTest {
+public class AVTTest {
 	private void testAssumedLocal(AssumedVariables r, String[] expectedAssumeds) {
 		Set<String> assumeds = r.toSet();
 		Assert.assertEquals(expectedAssumeds.length, assumeds.size());
@@ -26,10 +26,9 @@ public class EntryAssumedVarTest {
 	
 	@Test
 	public void testAssumedLocals() {
-		String[] resourceNames = {
-				"resource/APIROU00.m", "resource/APIROU01.m", "resource/APIROU02.m", "resource/APIROU03.m", 
-				"resource/APIROU04.m", "resource/DMI.m", "resource/DDI.m", "resource/DIE.m", "resource/FIE.m"};
-		ParseTreeSupply pts = AccumulatorTestCommon.getParseTreeSupply(EntryCodeInfoToolTest.class, resourceNames);		
+		String[] routineNames = {"APIROU00", "APIROU01", "APIROU02", "APIROU03", 
+								 "APIROU04", "DMI", "DDI", "DIE", "FIE"};
+		ParseTreeSupply pts = MTestCommon.getParseTreeSupply(routineNames);		
 		AssumedVariablesToolParams p = new AssumedVariablesToolParams(pts);		
 		RecursionSpecification rs = new RecursionSpecification();
 		rs.setDepth(RecursionDepth.ALL);

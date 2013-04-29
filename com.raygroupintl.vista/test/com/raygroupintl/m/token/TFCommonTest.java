@@ -2,12 +2,9 @@ package com.raygroupintl.m.token;
 
 import static org.junit.Assert.fail;
 
-import java.io.InputStream;
-
 import junit.framework.Assert;
 
 import com.raygroupintl.m.struct.MError;
-import com.raygroupintl.m.struct.MRoutineContent;
 import com.raygroupintl.parser.SyntaxErrorException;
 import com.raygroupintl.parser.Text;
 import com.raygroupintl.parser.Token;
@@ -104,13 +101,5 @@ public class TFCommonTest {
 		} catch(SyntaxErrorException e) {
 			fail("Exception: " + e.getMessage());			
 		}
-	}
-	
-	static <T> MRoutine getRoutineToken(Class<T> cls, String fileName, MTFSupply m) {
-		TFRoutine tf = new TFRoutine(m);
-		InputStream is = cls.getResourceAsStream(fileName);
-		MRoutineContent content = MRoutineContent.getInstance(fileName.split(".m")[0], is);
-		MRoutine r = tf.tokenize(content);
-		return r;
 	}
 }

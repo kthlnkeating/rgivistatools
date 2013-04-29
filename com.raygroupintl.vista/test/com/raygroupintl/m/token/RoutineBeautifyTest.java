@@ -8,6 +8,7 @@ import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
+import com.raygroupintl.m.MTestCommon;
 import com.raygroupintl.m.struct.MRefactorSettings;
 
 public class RoutineBeautifyTest {
@@ -26,10 +27,10 @@ public class RoutineBeautifyTest {
 		supplyCache = null;
 	}
 
-	private void testrefactor(MTFSupply m, String src, String target) {
-		MRoutine original = TFCommonTest.getRoutineToken(this.getClass(), src, m);
-		MRoutine source = TFCommonTest.getRoutineToken(this.getClass(), src, m);
-		MRoutine result = TFCommonTest.getRoutineToken(this.getClass(), target, m);
+	private void testrefactor(MTFSupply m, String routineName, String targetRoutineName) {
+		MRoutine original = MTestCommon.getRoutineToken(routineName, m);
+		MRoutine source = MTestCommon.getRoutineToken(routineName, m);
+		MRoutine result = MTestCommon.getRoutineToken(targetRoutineName, m);
 		
 		source.refactor(new MRefactorSettings());
 		List<MLine> originalLines = original.asList();
@@ -53,8 +54,8 @@ public class RoutineBeautifyTest {
 	}
 	
 	public void testrefactor(MTFSupply m) {
-		testrefactor(m, "resource/BEAT0SRC.m", "resource/BEAT0RST.m");
-		testrefactor(m, "resource/BEAT1SRC.m", "resource/BEAT1RST.m");
+		testrefactor(m, "BEAT0SRC", "BEAT0RST");
+		testrefactor(m, "BEAT1SRC", "BEAT1RST");
 	}
 	
 	@Test

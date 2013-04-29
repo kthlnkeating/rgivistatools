@@ -1,4 +1,4 @@
-package com.raygroupintl.vista.tools.entryinfo;
+package com.raygroupintl.m.tool.basiccodeinfo;
 
 import org.junit.Test;
 
@@ -7,6 +7,7 @@ import java.util.Set;
 
 import junit.framework.Assert;
 
+import com.raygroupintl.m.MTestCommon;
 import com.raygroupintl.m.parsetree.data.EntryId;
 import com.raygroupintl.m.tool.ParseTreeSupply;
 import com.raygroupintl.m.tool.RecursionDepth;
@@ -14,9 +15,8 @@ import com.raygroupintl.m.tool.RecursionSpecification;
 import com.raygroupintl.m.tool.basiccodeinfo.BasicCodeInfoTR;
 import com.raygroupintl.m.tool.basiccodeinfo.BasicCodeInfoTool;
 import com.raygroupintl.m.tool.basiccodeinfo.BasicCodeInfoToolParams;
-import com.raygroupintl.vista.tools.AccumulatorTestCommon;
 
-public class EntryBasicCodeInfoToolTest {
+public class BCITTest {
 	private void testExpectedGlobal(BasicCodeInfoTR r, String[] expectedGlobals) {
 		Set<String> globals = new HashSet<String>(r.getData().getGlobals());
 		Assert.assertEquals(expectedGlobals.length, globals.size());
@@ -41,10 +41,10 @@ public class EntryBasicCodeInfoToolTest {
 	
 	@Test
 	public void testExpectedGlobals() {
-		String[] resourceNames = {
-				"resource/APIROU00.m", "resource/APIROU01.m", "resource/APIROU02.m", "resource/APIROU03.m", 
-				"resource/DMI.m", "resource/DDI.m", "resource/DIE.m", "resource/FIE.m"};
-		ParseTreeSupply pts = AccumulatorTestCommon.getParseTreeSupply(EntryCodeInfoToolTest.class, resourceNames);
+		String[] routineNames = {
+				"APIROU00", "APIROU01", "APIROU02", "APIROU03", 
+				"DMI", "DDI", "DIE", "FIE"};
+		ParseTreeSupply pts = MTestCommon.getParseTreeSupply(routineNames);
 
 		BasicCodeInfoToolParams p = new BasicCodeInfoToolParams(pts, null);		
 		RecursionSpecification rs = new RecursionSpecification();

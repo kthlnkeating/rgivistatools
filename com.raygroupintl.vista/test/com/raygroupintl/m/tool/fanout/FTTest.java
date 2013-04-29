@@ -1,4 +1,4 @@
-package com.raygroupintl.vista.tools.entryinfo;
+package com.raygroupintl.m.tool.fanout;
 
 import java.util.Set;
 
@@ -6,6 +6,7 @@ import junit.framework.Assert;
 
 import org.junit.Test;
 
+import com.raygroupintl.m.MTestCommon;
 import com.raygroupintl.m.parsetree.data.EntryId;
 import com.raygroupintl.m.tool.CommonToolParams;
 import com.raygroupintl.m.tool.ParseTreeSupply;
@@ -13,9 +14,8 @@ import com.raygroupintl.m.tool.RecursionDepth;
 import com.raygroupintl.m.tool.RecursionSpecification;
 import com.raygroupintl.m.tool.fanout.EntryFanouts;
 import com.raygroupintl.m.tool.fanout.FanoutTool;
-import com.raygroupintl.vista.tools.AccumulatorTestCommon;
 
-public class EntryFanoutToolTest {
+public class FTTest {
 	private void testFanouts(EntryFanouts r, EntryId[] expectedFanouts) {
 		Set<EntryId> fanouts = r.getFanouts();
 		Assert.assertEquals(expectedFanouts.length, fanouts == null ? 0 : fanouts.size());
@@ -26,10 +26,10 @@ public class EntryFanoutToolTest {
 	
 	@Test
 	public void test() {
-		String[] resourceNames = {
-				"resource/APIROU00.m", "resource/APIROU01.m", "resource/APIROU02.m", "resource/APIROU03.m", 
-				"resource/DMI.m", "resource/DDI.m", "resource/DIE.m", "resource/FIE.m"};
-		ParseTreeSupply pts = AccumulatorTestCommon.getParseTreeSupply(EntryCodeInfoToolTest.class, resourceNames);
+		String[] routineNames = {
+				"APIROU00", "APIROU01", "APIROU02", "APIROU03", 
+				"DMI", "DDI", "DIE", "FIE"};
+		ParseTreeSupply pts = MTestCommon.getParseTreeSupply(routineNames);
 		
 		CommonToolParams p = new CommonToolParams(pts);		
 		RecursionSpecification rs = new RecursionSpecification();
