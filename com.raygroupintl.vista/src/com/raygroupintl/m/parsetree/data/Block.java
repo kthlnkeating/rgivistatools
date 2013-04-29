@@ -16,8 +16,6 @@
 
 package com.raygroupintl.m.parsetree.data;
 
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Set;
 
 import com.raygroupintl.struct.Filter;
@@ -47,43 +45,29 @@ import com.raygroupintl.struct.ObjectIdContainer;
  *           
  */
 public class Block<T> implements EntryObject {
-	private EntryId entryId;
 	private HierarchicalMap<String, Block<T>> callables;
-	private T attachedObject;
+	private BlockData<T> blockData;
 	
-	private List<IndexedFanout> fanouts = new ArrayList<IndexedFanout>();
-	
-	public Block(EntryId entryId, HierarchicalMap<String, Block<T>> callables, T attachedObject) {
-		this.entryId = entryId;
+	public Block(HierarchicalMap<String, Block<T>> callables, BlockData<T> blockData) {
 		this.callables = callables;
-		this.attachedObject = attachedObject;
+		this.blockData = blockData;
 	}
 	
 	@Override
 	public EntryId getEntryId() {
-		return this.entryId;
+		return this.blockData.getEntryId();
 	}
 		
-	public void addFanout(int index, EntryId fanout) {
-		IndexedFanout ifo = new IndexedFanout(index, fanout);			
-		this.fanouts.add(ifo);
-	}	
-	
-	public List<EntryId> getFanouts() {
-		List<EntryId> result = new ArrayList<EntryId>();
-		for (IndexedFanout ifo : this.fanouts) {
-			EntryId fo = ifo.getFanout();
-			result.add(fo);
-		}
-		return result;
-	}
-	
 	public HierarchicalMap<String, Block<T>> getCallableBlocks() {
 		return this.callables;
 	}
 	
+	public BlockData<T> getData() {
+		return this.blockData;
+	}
+	
 	private void update(FanoutBlocks<Block<T>> fanoutBlocks, BlocksSupply<Block<T>> blocksSupply, Filter<EntryId> filter, Set<EntryId> missing) {
-		for (IndexedFanout ifout : this.fanouts) {
+		for (IndexedFanout ifout : this.blockData.getIndexedFanouts()) {
 			EntryId fout = ifout.getFanout();
 			if ((filter != null) && (! filter.isValid(fout))) continue;
 			String routineName = fout.getRoutineName();
@@ -97,7 +81,7 @@ public class Block<T> implements EntryObject {
 					tagBlock = this.callables.getThruHierarchy(tagName);
 				}
 				if (tagBlock == null) {
-					EntryId missingId = new EntryId( this.entryId.getRoutineName(), tagName);
+					EntryId missingId = new EntryId( this.getEntryId().getRoutineName(), tagName);
 					missing.add(missingId);
 					continue;
 				}
@@ -137,10 +121,6 @@ public class Block<T> implements EntryObject {
 		FanoutBlocks<Block<T>> fanoutBlocks = new FanoutBlocks<Block<T>>(this, null);
 		this.updateFanoutBlocks(fanoutBlocks, blocksSupply, filter, missing);
 		return fanoutBlocks;
-	}
-	
-	public T getAttachedObject() {
-		return this.attachedObject;
 	}
 	
 	public boolean isInternal() {

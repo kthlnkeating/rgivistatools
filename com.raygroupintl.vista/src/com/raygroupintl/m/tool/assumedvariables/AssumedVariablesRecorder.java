@@ -22,11 +22,10 @@ import java.util.Set;
 import com.raygroupintl.m.parsetree.Local;
 import com.raygroupintl.m.parsetree.Node;
 import com.raygroupintl.m.parsetree.OpenCloseUseCmdNodes;
-import com.raygroupintl.m.parsetree.data.Block;
+import com.raygroupintl.m.parsetree.data.BlockData;
 import com.raygroupintl.m.parsetree.data.CallArgument;
 import com.raygroupintl.m.parsetree.data.EntryId;
 import com.raygroupintl.m.parsetree.visitor.BlockRecorder;
-import com.raygroupintl.struct.HierarchicalMap;
 
 public class AssumedVariablesRecorder extends BlockRecorder<AssumedVariablesBlockData> {
 	private boolean underDeviceParameter;
@@ -122,8 +121,8 @@ public class AssumedVariablesRecorder extends BlockRecorder<AssumedVariablesBloc
 	}
 
 	@Override
-	protected Block<AssumedVariablesBlockData> getNewBlock(EntryId entryId, HierarchicalMap<String, Block<AssumedVariablesBlockData>> blocks, String[] params) {
-		Block<AssumedVariablesBlockData> result = new Block<AssumedVariablesBlockData>(entryId, blocks, new AssumedVariablesBlockData());
+	protected BlockData<AssumedVariablesBlockData> getNewBlockData(EntryId entryId, String[] params) {
+		BlockData<AssumedVariablesBlockData> result = new BlockData<AssumedVariablesBlockData>(entryId, new AssumedVariablesBlockData());
 		result.getAttachedObject().setFormals(params);
 		return result;
 	}

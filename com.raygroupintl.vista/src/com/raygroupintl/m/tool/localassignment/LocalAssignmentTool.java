@@ -49,7 +49,7 @@ public class LocalAssignmentTool extends MEntryTool<CodeLocations, CodeLocations
 		}
 		
 		protected void updateData(CodeLocations targetData, Block<CodeLocations> fanoutBlock) {
-			CodeLocations source = fanoutBlock.getAttachedObject();
+			CodeLocations source = fanoutBlock.getData().getAttachedObject();
 			List<CodeLocation> cls = source.getCodeLocations();
 			if (cls != null) {
 				for (CodeLocation c : cls) {

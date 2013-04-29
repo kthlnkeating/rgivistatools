@@ -42,7 +42,7 @@ public class HierarchicalMap<K, V extends EntryObject> extends HashMap<K, V> {
 		}
 		return super.put(key, value);
 	}
-		
+	
 	public void addChild(V child) {
 		if (this.children == null) {
 			this.children = new ArrayList<V>(2);

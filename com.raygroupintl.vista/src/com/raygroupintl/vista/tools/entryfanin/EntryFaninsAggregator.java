@@ -36,7 +36,7 @@ public class EntryFaninsAggregator {
 			PathPieceToEntry faninData = datas.get(faninId);
 			boolean alreadyVisited = false; //faninData.exist();
 			boolean useInternal = this.filterInternalBlocks && b.isInternal();
-			int localChange = faninBlock.getAttachedObject().update(faninData, data, useInternal);
+			int localChange = faninBlock.getData().getAttachedObject().update(faninData, data, useInternal);
 			if ((localChange > 0) && (useInternal || ! alreadyVisited)) {
 				this.updateFaninData(faninData, faninBlock, fanoutBlocks, datas);
 			}
@@ -50,7 +50,7 @@ public class EntryFaninsAggregator {
 		List<Block<FaninMark>> blocks = fanoutBlocks.getBlocks();
 		for (Block<FaninMark> b : blocks) {
 			int id = System.identityHashCode(b);
-			FaninMark bd = b.getAttachedObject();
+			FaninMark bd = b.getData().getAttachedObject();
 			PathPieceToEntry data = bd.getLocalCopy();
 			datas.put(id, data);
 		}
@@ -58,7 +58,7 @@ public class EntryFaninsAggregator {
 		List<Block<FaninMark>> evaluatedBlocks = fanoutBlocks.getEvaludatedBlocks();
 		for (Block<FaninMark> b : evaluatedBlocks) {
 			PathPieceToEntry data = store.get(b);
-			if (data.exist() || b.getAttachedObject().isFanin()) {
+			if (data.exist() || b.getData().getAttachedObject().isFanin()) {
 				this.updateFaninData(data, b, fanoutBlocks, datas);
 			}
 		}
@@ -67,8 +67,8 @@ public class EntryFaninsAggregator {
 			Block<FaninMark> b = blocks.get(i);
 			int id = System.identityHashCode(b);
 			PathPieceToEntry data = datas.get(id);
-			if ((! data.exist()) && b.getAttachedObject().isFanin()) {
-				b.getAttachedObject().initialize(data);
+			if ((! data.exist()) && b.getData().getAttachedObject().isFanin()) {
+				b.getData().getAttachedObject().initialize(data);
 				this.updateFaninData(data, b, fanoutBlocks, datas);
 			}
 		}

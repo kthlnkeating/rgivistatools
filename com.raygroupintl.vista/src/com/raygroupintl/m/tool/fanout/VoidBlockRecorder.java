@@ -16,11 +16,10 @@
 
 package com.raygroupintl.m.tool.fanout;
 
-import com.raygroupintl.m.parsetree.data.Block;
+import com.raygroupintl.m.parsetree.data.BlockData;
 import com.raygroupintl.m.parsetree.data.CallArgument;
 import com.raygroupintl.m.parsetree.data.EntryId;
 import com.raygroupintl.m.parsetree.visitor.BlockRecorder;
-import com.raygroupintl.struct.HierarchicalMap;
 
 public class VoidBlockRecorder extends BlockRecorder<Void> {
 	@Override
@@ -28,7 +27,7 @@ public class VoidBlockRecorder extends BlockRecorder<Void> {
 	}
 	
 	@Override
-	protected Block<Void> getNewBlock(EntryId entryId, HierarchicalMap<String, Block<Void>> blocks, String[] params) {
-		return new Block<Void>(entryId, blocks, null);
+	protected BlockData<Void> getNewBlockData(EntryId entryId, String[] params) {
+		return new BlockData<Void>(entryId, null);
 	}
 }

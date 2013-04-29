@@ -23,12 +23,11 @@ import com.raygroupintl.m.parsetree.Node;
 import com.raygroupintl.m.parsetree.ReadCmd;
 import com.raygroupintl.m.parsetree.WriteCmd;
 import com.raygroupintl.m.parsetree.XecuteCmd;
-import com.raygroupintl.m.parsetree.data.Block;
+import com.raygroupintl.m.parsetree.data.BlockData;
 import com.raygroupintl.m.parsetree.data.CallArgument;
 import com.raygroupintl.m.parsetree.data.CallArgumentType;
 import com.raygroupintl.m.parsetree.data.EntryId;
 import com.raygroupintl.m.parsetree.visitor.BlockRecorder;
-import com.raygroupintl.struct.HierarchicalMap;
 import com.raygroupintl.vista.repository.RepositoryInfo;
 import com.raygroupintl.vista.repository.VistaPackage;
 
@@ -183,8 +182,8 @@ public class EntryCodeInfoRecorder extends BlockRecorder<CodeInfo> {
 	}
 
 	@Override
-	protected Block<CodeInfo> getNewBlock(EntryId entryId, HierarchicalMap<String, Block<CodeInfo>> blocks, String[] params) {
-		Block<CodeInfo> result = new Block<CodeInfo>(entryId, blocks, new CodeInfo());
+	protected BlockData<CodeInfo> getNewBlockData(EntryId entryId, String[] params) {
+		BlockData<CodeInfo> result = new BlockData<CodeInfo>(entryId, new CodeInfo());
 		result.getAttachedObject().setFormals(params);
 		return result;
 	}

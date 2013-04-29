@@ -22,6 +22,7 @@ import java.util.Set;
 
 import com.raygroupintl.m.parsetree.Routine;
 import com.raygroupintl.m.parsetree.data.Block;
+import com.raygroupintl.m.parsetree.data.BlockData;
 import com.raygroupintl.m.parsetree.data.CallArgument;
 import com.raygroupintl.m.parsetree.data.EntryId;
 import com.raygroupintl.m.parsetree.visitor.BlockRecorder;
@@ -33,13 +34,13 @@ public class EntryFanoutBR extends BlockRecorder<Void> {
 	}
 	
 	@Override
-	protected Block<Void> getNewBlock(EntryId entryId, HierarchicalMap<String, Block<Void>> blocks, String[] params) {
-		return new Block<Void>(entryId, blocks, null);
+	protected BlockData<Void> getNewBlockData(EntryId entryId, String[] params) {
+		return new BlockData<Void>(entryId, null);
 	}
 	
 	private Set<EntryId> getBlockFanouts(Block<Void> b, String routineName, HierarchicalMap<String, Block<Void>> siblings, Set<String> parentAlready) {
 		Set<EntryId> r = new HashSet<EntryId>();
-		List<EntryId> fs = b.getFanouts();
+		List<EntryId> fs = b.getData().getFanouts();
 		for (EntryId f : fs) {
 			String rname = f.getRoutineName();
 			if ((rname == null) || rname.equals(routineName)) {

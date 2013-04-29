@@ -20,6 +20,7 @@ import java.util.HashMap;
 import java.util.Set;
 
 import com.raygroupintl.m.parsetree.data.Block;
+import com.raygroupintl.m.parsetree.data.BlockData;
 import com.raygroupintl.m.parsetree.data.BlocksSupply;
 import com.raygroupintl.m.parsetree.data.EntryId;
 import com.raygroupintl.m.tool.fanout.RoutineFanouts;
@@ -51,13 +52,14 @@ public class BlocksInSerialFanouts extends BlocksSupply<Block<FaninMark>> {
 				if (entryFanouts.contains(eidUnderTest)) {
 					fim.set(this.entryUnderTest);
 				}
-				Block<FaninMark> b = new Block<FaninMark>(beid, result, fim);
+				BlockData<FaninMark> b = new BlockData<FaninMark>(beid, fim);
 				int foindex = 0;
 				for (EntryId eid : entryFanouts) {
 					b.addFanout(foindex, eid);
 					++foindex;
 				}
-				result.put(entryTag, b);
+				Block<FaninMark> blx = new Block<FaninMark>(result, b);
+				result.put(entryTag, blx);
 			}
 			return result;
 		}
