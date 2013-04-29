@@ -15,7 +15,7 @@ import org.junit.runners.Suite.SuiteClasses;
 	com.raygroupintl.m.tool.fanout.AllTests.class,	
 	com.raygroupintl.m.tool.basiccodeinfo.AllTests.class,	
 	com.raygroupintl.vista.tools.AllTests.class, 
-	com.raygroupintl.vista.tools.entryinfo.AllTests.class, 
+	com.raygroupintl.vista.tools.entry.AllTests.class, 
 	com.raygroupintl.vista.tools.entryfanin.AllTests.class 
 	})
 public class AllTests {

@@ -1,8 +1,9 @@
-package com.raygroupintl.vista.tools.entryinfo;
+package com.raygroupintl.vista.tools.entry;
 
 import org.junit.runner.RunWith;
 import org.junit.runners.Suite;
 import org.junit.runners.Suite.SuiteClasses;
+
 
 @RunWith(Suite.class)
 @SuiteClasses({ EntryCodeInfoToolTest.class })

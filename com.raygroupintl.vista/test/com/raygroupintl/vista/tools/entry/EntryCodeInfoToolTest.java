@@ -1,4 +1,4 @@
-package com.raygroupintl.vista.tools.entryinfo;
+package com.raygroupintl.vista.tools.entry;
 
 import java.util.HashSet;
 import java.util.Set;
