@@ -78,7 +78,8 @@ public class AssumedVariablesTool extends MEntryTool<AssumedVariables, AssumedVa
 	@Override
 	public AssumedVariables getResult(Block<AssumedVariablesBlockData> block, Filter<EntryId> filter) {
 		AVTDataAggregator ala = new AVTDataAggregator(block, blocksSupply);
-		Set<String> assumedVariables = ala.get(this.store, filter);
+		Set<EntryId> missing = new HashSet<EntryId>();
+		Set<String> assumedVariables = ala.get(this.store, filter, missing);
 		if (assumedVariables != null) {
 			assumedVariables.removeAll(this.params.getExpected());
 		}

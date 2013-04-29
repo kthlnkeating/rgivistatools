@@ -1,8 +1,10 @@
 package com.raygroupintl.vista.tools.entryfanin;
 
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import com.raygroupintl.m.parsetree.data.Block;
 import com.raygroupintl.m.parsetree.data.BlocksSupply;
@@ -83,7 +85,8 @@ public class EntryFaninsAggregator {
 	public PathPieceToEntry get(DataStore<PathPieceToEntry> store, Filter<EntryId> filter) {
 		PathPieceToEntry result = store.get(this.block);
 		if (result == null) {
-			FanoutBlocks<Block<FaninMark>> fanoutBlocks = this.block.getFanoutBlocks(this.supply, store, filter);
+			Set<EntryId> missing = new HashSet<EntryId>();
+			FanoutBlocks<Block<FaninMark>> fanoutBlocks = this.block.getFanoutBlocks(this.supply, store, filter, missing);
 			result = this.get(fanoutBlocks, store);
 		}
 		return result;

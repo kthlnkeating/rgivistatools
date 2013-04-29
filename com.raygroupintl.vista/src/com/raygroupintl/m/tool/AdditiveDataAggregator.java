@@ -17,6 +17,7 @@
 package com.raygroupintl.m.tool;
 
 import java.util.List;
+import java.util.Set;
 
 import com.raygroupintl.m.parsetree.data.Block;
 import com.raygroupintl.m.parsetree.data.BlocksSupply;
@@ -37,8 +38,8 @@ public abstract class AdditiveDataAggregator<T, U> {
 	
 	protected abstract void updateData(T targetData, Block<U> fanoutBlock);
 	
-	public T get(Filter<EntryId> filter) {
-		FanoutBlocks<Block<U>> fanoutBlocks = this.block.getFanoutBlocks(this.supply, filter);
+	public T get(Filter<EntryId> filter, Set<EntryId> missing) {
+		FanoutBlocks<Block<U>> fanoutBlocks = this.block.getFanoutBlocks(this.supply, filter, missing);
 		List<Block<U>> blocks = fanoutBlocks.getBlocks();
 		T result = this.getNewDataInstance(this.block);
 		for (Block<U> b : blocks) {

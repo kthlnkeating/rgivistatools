@@ -17,11 +17,8 @@
 package com.raygroupintl.m.parsetree.data;
 
 import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 import com.raygroupintl.struct.Filter;
 import com.raygroupintl.struct.HierarchicalMap;
@@ -50,9 +47,6 @@ import com.raygroupintl.struct.ObjectIdContainer;
  *           
  */
 public class Block<T> {
-	private final static Logger LOGGER = Logger.getLogger(Block.class.getName());
-	private static Set<EntryId> reported = new HashSet<EntryId>();
-
 	private EntryId entryId;
 	private HierarchicalMap<String, Block<T>> callables;
 	private List<Block<T>> children;
@@ -107,7 +101,7 @@ public class Block<T> {
 		return this.callables;
 	}
 	
-	private void update(FanoutBlocks<Block<T>> fanoutBlocks, BlocksSupply<Block<T>> blocksSupply, Filter<EntryId> filter) {
+	private void update(FanoutBlocks<Block<T>> fanoutBlocks, BlocksSupply<Block<T>> blocksSupply, Filter<EntryId> filter, Set<EntryId> missing) {
 		for (IndexedFanout ifout : this.fanouts) {
 			EntryId fout = ifout.getFanout();
 			if ((filter != null) && (! filter.isValid(fout))) continue;
@@ -122,28 +116,20 @@ public class Block<T> {
 					tagBlock = this.callables.getThruHierarchy(tagName);
 				}
 				if (tagBlock == null) {
-					if (! reported.contains(fout)) {						
-						LOGGER.log(Level.WARNING, "Unable to find information about tag " + tagName + " in " + this.entryId.getRoutineName());
-						reported.add(fout);
-					}
+					EntryId missingId = new EntryId( this.entryId.getRoutineName(), tagName);
+					missing.add(missingId);
 					continue;
 				}
 				fanoutBlocks.add(this, tagBlock, ifout.getIndex());
 			} else {
 				HierarchicalMap<String, Block<T>> routineBlocks = blocksSupply.getBlocks(routineName);
-				if (routineBlocks == null) {					
-					if (! reported.contains(fout)) {
-						LOGGER.log(Level.WARNING, "Unable to find information about routine " + routineName + ".");
-						reported.add(fout);
-					}
+				if (routineBlocks == null) {
+					missing.add(fout);
 					continue;
 				}
 				Block<T> tagBlock = routineBlocks.getThruHierarchy(tagName);
 				if (tagBlock == null) {
-					if (! reported.contains(fout)) {
-						LOGGER.log(Level.WARNING, "Unable to find information about tag " + fout.toString() + " in " + routineName);
-						reported.add(fout);
-					}
+					missing.add(fout);
 					continue;
 				}
 				fanoutBlocks.add(this, tagBlock, ifout.getIndex());
@@ -151,24 +137,24 @@ public class Block<T> {
 		}
 	}
 	
-	private void updateFanoutBlocks(FanoutBlocks<Block<T>> fanoutBlocks, BlocksSupply<Block<T>> blocksSupply, Filter<EntryId> filter) {
+	private void updateFanoutBlocks(FanoutBlocks<Block<T>> fanoutBlocks, BlocksSupply<Block<T>> blocksSupply, Filter<EntryId> filter, Set<EntryId> missing) {
 		int index = 0;	
 		while (index < fanoutBlocks.getSize()) {
 			Block<T> b = fanoutBlocks.getBlock(index);
-			b.update(fanoutBlocks, blocksSupply, filter);
+			b.update(fanoutBlocks, blocksSupply, filter, missing);
 			++index;
 		}		
 	}
 	
-	public FanoutBlocks<Block<T>> getFanoutBlocks(BlocksSupply<Block<T>> blocksSupply, ObjectIdContainer blockIdContainer, Filter<EntryId> filter) {
+	public FanoutBlocks<Block<T>> getFanoutBlocks(BlocksSupply<Block<T>> blocksSupply, ObjectIdContainer blockIdContainer, Filter<EntryId> filter, Set<EntryId> missing) {
 		FanoutBlocks<Block<T>> fanoutBlocks = new FanoutBlocks<Block<T>>(this, blockIdContainer);
-		this.updateFanoutBlocks(fanoutBlocks, blocksSupply, filter);
+		this.updateFanoutBlocks(fanoutBlocks, blocksSupply, filter, missing);
 		return fanoutBlocks;
 	}
 	
-	public FanoutBlocks<Block<T>> getFanoutBlocks(BlocksSupply<Block<T>> blocksSupply, Filter<EntryId> filter) {
+	public FanoutBlocks<Block<T>> getFanoutBlocks(BlocksSupply<Block<T>> blocksSupply, Filter<EntryId> filter, Set<EntryId> missing) {
 		FanoutBlocks<Block<T>> fanoutBlocks = new FanoutBlocks<Block<T>>(this, null);
-		this.updateFanoutBlocks(fanoutBlocks, blocksSupply, filter);
+		this.updateFanoutBlocks(fanoutBlocks, blocksSupply, filter, missing);
 		return fanoutBlocks;
 	}
 	

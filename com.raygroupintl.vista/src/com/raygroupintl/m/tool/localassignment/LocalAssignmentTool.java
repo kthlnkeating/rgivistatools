@@ -16,6 +16,7 @@
 
 package com.raygroupintl.m.tool.localassignment;
 
+import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
@@ -73,7 +74,8 @@ public class LocalAssignmentTool extends MEntryTool<CodeLocations, CodeLocations
 	@Override
 	protected CodeLocations getResult(Block<CodeLocations> block, Filter<EntryId> filter) {
 		LATDataAggregator bcia = new LATDataAggregator(block, blocksSupply);
-		return bcia.get(filter);
+		Set<EntryId> missing = new HashSet<EntryId>();
+		return bcia.get(filter, missing);
 	}
 	
 	@Override

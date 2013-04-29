@@ -16,7 +16,9 @@
 
 package com.raygroupintl.m.tool.fanout;
 
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import com.raygroupintl.m.parsetree.data.Block;
 import com.raygroupintl.m.parsetree.data.EntryId;
@@ -46,7 +48,8 @@ public class FanoutTool extends MEntryTool<EntryFanouts, Void>{
 
 	@Override
 	protected EntryFanouts getResult(Block<Void> block, Filter<EntryId> filter) {
-		FanoutBlocks<Block<Void>> fanoutBlocks = block.getFanoutBlocks(this.blocksSupply, filter);
+		Set<EntryId> missing = new HashSet<EntryId>();
+		FanoutBlocks<Block<Void>> fanoutBlocks = block.getFanoutBlocks(this.blocksSupply, filter, missing);
 		List<Block<Void>> blocks = fanoutBlocks.getBlocks();
 		boolean first = true;
 		EntryFanouts result = new EntryFanouts();

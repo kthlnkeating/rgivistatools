@@ -19,6 +19,7 @@ package com.raygroupintl.m.tool;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import com.raygroupintl.m.parsetree.data.Block;
 import com.raygroupintl.m.parsetree.data.BlocksSupply;
@@ -90,12 +91,12 @@ public abstract class RecursiveDataAggregator<T, U> {
 		return store.put(b, datas);
 	}
 		
-	public T get(DataStore<T> store, Filter<EntryId> filter) {
+	public T get(DataStore<T> store, Filter<EntryId> filter, Set<EntryId> missing) {
 		T result = store.get(this.block);
 		if (result != null) {
 			return result;
 		}
-		FanoutBlocks<Block<U>> fanoutBlocks = this.block.getFanoutBlocks(this.supply, store, filter);
+		FanoutBlocks<Block<U>> fanoutBlocks = this.block.getFanoutBlocks(this.supply, store, filter, missing);
 		return this.get(fanoutBlocks, store);
 	}
 }
