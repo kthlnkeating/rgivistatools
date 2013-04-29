@@ -16,18 +16,38 @@
 
 package com.raygroupintl.struct;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 
-public class HierarchicalMap<K, V> extends HashMap<K, V> {
+import com.raygroupintl.m.parsetree.data.EntryObject;
+
+public class HierarchicalMap<K, V extends EntryObject> extends HashMap<K, V> {
 	private static final long serialVersionUID = 1L;
 	
 	private HierarchicalMap<K, V> parent;
+	private List<V> children;
 	
 	public HierarchicalMap() {		
 	}
 	
 	public HierarchicalMap(HierarchicalMap<K, V> parent) {
 		this.parent = parent;
+	}
+	
+	@Override
+	public V put(K key, V value) {
+		if ((this.parent != null) && (this.size() == 0)) {
+			this.parent.addChild(value);
+		}
+		return super.put(key, value);
+	}
+		
+	public void addChild(V child) {
+		if (this.children == null) {
+			this.children = new ArrayList<V>(2);
+		}
+		this.children.add(child);
 	}
 	
 	public V getThruHierarchy(K key) {
@@ -41,5 +61,17 @@ public class HierarchicalMap<K, V> extends HashMap<K, V> {
 	
 	public HierarchicalMap<K, V> getParent() {
 		return this.parent;
+	}
+
+	public V getChildBlock(String tag) {
+		if (this.children != null) {	
+			for (V child : this.children) {
+				String childTag = child.getEntryId().getLabelOrDefault();
+				if (tag.equals(childTag)) {				
+					return child;
+				}
+			}
+		}
+		return null;
 	}
 }

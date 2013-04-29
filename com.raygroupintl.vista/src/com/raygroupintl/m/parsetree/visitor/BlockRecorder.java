@@ -107,13 +107,11 @@ public abstract class BlockRecorder<T> extends FanoutRecorder {
 			this.currentBlocks = new HierarchicalMap<String, Block<T>>(lastBlocks);
 			super.visitInnerEntryList(entryList);
 			String tag = entryList.getName();
-			Block<T> firstBlock = this.currentBlocks.getThruHierarchy(tag);
 			this.currentBlocks = lastBlocks;
 			this.currentBlock = lastBlock;
 			if ((lastBlock != null)) {
 				EntryId defaultDo = new EntryId(null, tag);
 				lastBlock.addFanout(this.index, defaultDo);
-				lastBlock.addChild(firstBlock);
 				++this.index;
 			}
 		}

@@ -46,10 +46,9 @@ import com.raygroupintl.struct.ObjectIdContainer;
  * @see com.raygroupintl.m.parsetree.visitor.BlockRecorder
  *           
  */
-public class Block<T> {
+public class Block<T> implements EntryObject {
 	private EntryId entryId;
 	private HierarchicalMap<String, Block<T>> callables;
-	private List<Block<T>> children;
 	private T attachedObject;
 	
 	private List<IndexedFanout> fanouts = new ArrayList<IndexedFanout>();
@@ -60,6 +59,7 @@ public class Block<T> {
 		this.attachedObject = attachedObject;
 	}
 	
+	@Override
 	public EntryId getEntryId() {
 		return this.entryId;
 	}
@@ -69,13 +69,6 @@ public class Block<T> {
 		this.fanouts.add(ifo);
 	}	
 	
-	public void addChild(Block<T> child) {
-		if (this.children == null) {
-			this.children = new ArrayList<Block<T>>(2);
-		}
-		this.children.add(child);
-	}
-	
 	public List<EntryId> getFanouts() {
 		List<EntryId> result = new ArrayList<EntryId>();
 		for (IndexedFanout ifo : this.fanouts) {
@@ -83,18 +76,6 @@ public class Block<T> {
 			result.add(fo);
 		}
 		return result;
-	}
-	
-	public Block<T> getChildBlock(String tag) {
-		if (this.children != null) {	
-			for (Block<T> child : this.children) {
-				String childTag = child.getEntryId().getLabelOrDefault();
-				if (tag.equals(childTag)) {				
-					return child;
-				}
-			}
-		}
-		return null;
 	}
 	
 	public HierarchicalMap<String, Block<T>> getCallableBlocks() {
@@ -111,7 +92,7 @@ public class Block<T> {
 				tagName = routineName;
 			}			
 			if (routineName == null) {
-				Block<T> tagBlock = this.getChildBlock(tagName);
+				Block<T> tagBlock = this.callables.getChildBlock(tagName);
 				if (tagBlock == null) {
 					tagBlock = this.callables.getThruHierarchy(tagName);
 				}

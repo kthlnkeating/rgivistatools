@@ -44,7 +44,7 @@ public class EntryFanoutBR extends BlockRecorder<Void> {
 			String rname = f.getRoutineName();
 			if ((rname == null) || rname.equals(routineName)) {
 				String label = f.getLabelOrDefault();
-				Block<Void> cb = b.getChildBlock(label);
+				Block<Void> cb = b.getCallableBlocks().getChildBlock(label);
 				if (cb != null) {
 					Set<String> already = new HashSet<String>();
 					already.add(label);

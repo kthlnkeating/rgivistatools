@@ -16,18 +16,6 @@
 
 package com.raygroupintl.m.parsetree.data;
 
-import com.raygroupintl.struct.HierarchicalMap;
-
-public abstract class BlocksSupply<T extends EntryObject> {
-	public abstract HierarchicalMap<String, T> getBlocks(String routineName);
-	
-	public T getBlock(EntryId entryId) {
-		String routineName = entryId.getRoutineName();
-		HierarchicalMap<String, T> rbs = this.getBlocks(routineName);
-		if (rbs != null) {
-			String label = entryId.getLabelOrDefault();
-			return rbs.getThruHierarchy(label);
-		} 
-		return null;		
-	}
+public interface EntryObject {
+	EntryId getEntryId();
 }
