@@ -35,6 +35,10 @@ public abstract class MultiCommand extends BasicNode {
 		return this.argument;
 	}
 	
+	public boolean hasArgument() {
+		return this.argument != null;
+	}
+	
 	public void acceptSubNodes(Visitor visitor) {
 		if (this.postCondition != null) {
 			this.postCondition.accept(visitor);

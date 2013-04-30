@@ -1,7 +1,7 @@
 package com.raygroupintl.m.struct;
 
 import com.raygroupintl.m.parsetree.data.EntryId;
-import com.raygroupintl.vista.tools.returntype.ReturnTypeENUM;
+import com.raygroupintl.m.tool.quitype.QuitTypeState;
 
 public class EntryFanoutInfo {
 	
@@ -13,7 +13,7 @@ public class EntryFanoutInfo {
 	private LineLocation lineLocation;
 	private FanoutTypeENUM fanoutType;
 	private EntryId fanoutTo;
-	private ReturnTypeENUM returnType;
+	private QuitTypeState returnType;
 	private boolean fanoutExists;
 	
 	public EntryFanoutInfo(LineLocation lineLocation,
@@ -56,11 +56,11 @@ public class EntryFanoutInfo {
 		this.valid = valid;
 	}
 
-	public ReturnTypeENUM getReturnType() {
+	public QuitTypeState getReturnType() {
 		return returnType;
 	}
 
-	public void setReturnType(ReturnTypeENUM returnType) {
+	public void setReturnType(QuitTypeState returnType) {
 		this.returnType = returnType;
 	}
 

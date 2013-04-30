@@ -325,5 +325,11 @@ public class RepoEntryTools extends Tools {
 				return new EntryFanin(params);
 			}
 		});
+		tools.put("quittype", new MemberFactory() {				
+			@Override
+			public Tool getInstance(CLIParams params) {
+				return null;  //new ReturnTypeTool(params);
+			}
+		});		
 	}
 }
