@@ -14,27 +14,21 @@
 // limitations under the License.
 //---------------------------------------------------------------------------
 
-package com.raygroupintl.m.tool.entry.fanout;
+package com.raygroupintl.m.tool.entry.quitype;
 
-import com.raygroupintl.m.parsetree.data.CallArgument;
 import com.raygroupintl.m.parsetree.data.EntryId;
 import com.raygroupintl.m.parsetree.data.IndexedFanout;
-import com.raygroupintl.m.parsetree.visitor.BlockRecorder;
 import com.raygroupintl.m.tool.entry.BlockData;
 
-public class VoidBlockRecorder extends BlockRecorder<IndexedFanout, BlockData<IndexedFanout>> {
-	@Override
-	protected void postUpdateFanout(EntryId fanout, CallArgument[] callArguments) {		
-	}
+class QTBlockData extends BlockData<IndexedFanout> {
+	private QuitType quitType = new QuitType();
 	
-	@Override
-	protected BlockData<IndexedFanout> getNewBlockData(EntryId entryId, String[] params) {
-		return new BlockData<IndexedFanout>(entryId);
+	public QTBlockData(EntryId entryId) {
+		super(entryId);
 	}
-	
-	@Override
-	protected IndexedFanout getFanout(EntryId id) {
-		int index = this.getIndex();
-		return new IndexedFanout(index, id);
+
+	public QuitType getQuitType() {
+		return this.quitType;
 	}
 }
+

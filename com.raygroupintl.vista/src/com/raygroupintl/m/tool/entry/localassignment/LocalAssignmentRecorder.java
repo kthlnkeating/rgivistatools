@@ -22,12 +22,13 @@ import com.raygroupintl.m.parsetree.Local;
 import com.raygroupintl.m.parsetree.Node;
 import com.raygroupintl.m.parsetree.data.CallArgument;
 import com.raygroupintl.m.parsetree.data.EntryId;
+import com.raygroupintl.m.parsetree.data.IndexedFanout;
 import com.raygroupintl.m.parsetree.visitor.BlockRecorder;
 import com.raygroupintl.m.struct.CodeLocation;
 import com.raygroupintl.m.struct.LineLocation;
 import com.raygroupintl.m.tool.entry.basiccodeinfo.CodeLocations;
 
-public class LocalAssignmentRecorder extends BlockRecorder<CodeLocations> {
+public class LocalAssignmentRecorder extends BlockRecorder<IndexedFanout, CodeLocations> {
 	private Set<String> localNames;
 	
 	public LocalAssignmentRecorder(Set<String> localNames)  {
@@ -53,5 +54,11 @@ public class LocalAssignmentRecorder extends BlockRecorder<CodeLocations> {
 			CodeLocation cl = new CodeLocation(rn, ll);
 			ecls.add(cl);
 		}
+	}
+	
+	@Override
+	protected IndexedFanout getFanout(EntryId id) {
+		int index = this.getIndex();
+		return new IndexedFanout(index, id);
 	}
 }

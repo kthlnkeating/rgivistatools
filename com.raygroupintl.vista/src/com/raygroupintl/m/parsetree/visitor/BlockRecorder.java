@@ -25,12 +25,13 @@ import com.raygroupintl.m.parsetree.InnerEntryList;
 import com.raygroupintl.m.parsetree.Routine;
 import com.raygroupintl.m.parsetree.data.CallArgument;
 import com.raygroupintl.m.parsetree.data.EntryId;
+import com.raygroupintl.m.parsetree.data.EntryObject;
 import com.raygroupintl.m.tool.entry.Block;
 import com.raygroupintl.m.tool.entry.BlockData;
 import com.raygroupintl.struct.HierarchicalMap;
 
-public abstract class BlockRecorder<T extends BlockData> extends FanoutRecorder {
-	private HierarchicalMap<String, Block<T>> currentBlocks;
+public abstract class BlockRecorder<F extends EntryObject, T extends BlockData<F>> extends FanoutRecorder {
+	private HierarchicalMap<String, Block<F, T>> currentBlocks;
 	
 	private T currentBlockData;
 	private String currentRoutineName;
@@ -66,13 +67,16 @@ public abstract class BlockRecorder<T extends BlockData> extends FanoutRecorder 
 		EntryId fanout = this.getLastFanout();
 		if (fanout != null) {
 			CallArgument[] callArguments = this.getLastArguments();
-			this.currentBlockData.addFanout(this.index, fanout);	
+			F fo = this.getFanout(fanout);
+			this.currentBlockData.addFanout(fo);	
 			this.postUpdateFanout(fanout, callArguments);
 			++this.index;
 		} 
 	}
 
 	protected abstract T getNewBlockData(EntryId entryId, String[] params);
+	
+	protected abstract F getFanout(EntryId id); 
  	
 	@Override
 	protected void visitDeadCmds(DeadCmds deadCmds) {
@@ -86,14 +90,15 @@ public abstract class BlockRecorder<T extends BlockData> extends FanoutRecorder 
 		String tag = entry.getName();
 		EntryId entryId = entry.getFullEntryId();		
 		this.currentBlockData = this.getNewBlockData(entryId, entry.getParameters());
-		Block<T> b = new Block<T>(this.currentBlocks, this.currentBlockData);
+		Block<F, T> b = new Block<F, T>(this.currentBlocks, this.currentBlockData);
 		this.currentBlocks.put(tag, b);
 		super.visitEntry(entry);
 		if (entry.getContinuationEntry() != null) {
 			Entry ce = entry.getContinuationEntry();
 			String ceTag = ce.getName();
 			EntryId defaultGoto = new EntryId(null, ceTag);
-			this.currentBlockData.addFanout(this.index, defaultGoto);
+			F fo = this.getFanout(defaultGoto);
+			this.currentBlockData.addFanout(fo);
 			++this.index;
 		}
 	}
@@ -103,30 +108,31 @@ public abstract class BlockRecorder<T extends BlockData> extends FanoutRecorder 
 		int id = System.identityHashCode(entryList);
 		if (! this.innerEntryListHash.contains(id)) {
 			this.innerEntryListHash.add(id);
-			HierarchicalMap<String, Block<T>> lastBlocks = this.currentBlocks;
+			HierarchicalMap<String, Block<F, T>> lastBlocks = this.currentBlocks;
 			T lastBlock = this.currentBlockData;
 			this.currentBlockData = null;
-			this.currentBlocks = new HierarchicalMap<String, Block<T>>(lastBlocks);
+			this.currentBlocks = new HierarchicalMap<String, Block<F, T>>(lastBlocks);
 			super.visitInnerEntryList(entryList);
 			String tag = entryList.getName();
 			this.currentBlocks = lastBlocks;
 			this.currentBlockData = lastBlock;
 			if ((lastBlock != null)) {
 				EntryId defaultDo = new EntryId(null, tag);
-				lastBlock.addFanout(this.index, defaultDo);
+				F fo = this.getFanout(defaultDo);
+				lastBlock.addFanout(fo);
 				++this.index;
 			}
 		}
 	}
 		
-	public HierarchicalMap<String, Block<T>> getBlocks() {
+	public HierarchicalMap<String, Block<F, T>> getBlocks() {
 		return this.currentBlocks;
 	}
 	
 	@Override
 	protected void visitRoutine(Routine routine) {
 		this.reset();
-		this.currentBlocks = new HierarchicalMap<String, Block<T>>();
+		this.currentBlocks = new HierarchicalMap<String, Block<F, T>>();
 		this.currentRoutineName = routine.getName();
 		super.visitRoutine(routine);
 	}

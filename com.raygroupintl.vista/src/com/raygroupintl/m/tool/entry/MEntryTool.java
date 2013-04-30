@@ -20,29 +20,30 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.raygroupintl.m.parsetree.data.EntryId;
+import com.raygroupintl.m.parsetree.data.EntryObject;
 import com.raygroupintl.m.parsetree.visitor.BlockRecorderFactory;
 import com.raygroupintl.m.tool.CommonToolParams;
 import com.raygroupintl.struct.Filter;
 import com.raygroupintl.struct.FilterFactory;
 
-public abstract class MEntryTool<T, B extends BlockData> {
-	protected BlocksSupply<Block<B>> blocksSupply;
+public abstract class MEntryTool<T, F extends EntryObject, B extends BlockData<F>> {
+	protected BlocksSupply<Block<F, B>> blocksSupply;
 	private FilterFactory<EntryId, EntryId> filterFactory;
 	
 	protected MEntryTool(CommonToolParams params) {
-		BlockRecorderFactory<B> f = this.getBlockRecorderFactory();
+		BlockRecorderFactory<F, B> f = this.getBlockRecorderFactory();
 		this.blocksSupply = params.getBlocksSupply(f);
 		this.filterFactory = params.getFanoutFilterFactory();
 	}
 
-	protected abstract BlockRecorderFactory<B> getBlockRecorderFactory();
+	protected abstract BlockRecorderFactory<F, B> getBlockRecorderFactory();
 	
-	protected abstract T getResult(Block<B> block, Filter<EntryId> filter);
+	protected abstract T getResult(Block<F, B> block, Filter<EntryId> filter);
 	
 	protected abstract T getEmptyBlockResult(EntryId entryId);
 	
 	public T getResult(EntryId entryId) {
-		Block<B> b = this.blocksSupply.getBlock(entryId);
+		Block<F, B> b = this.blocksSupply.getBlock(entryId);
 		if (b != null) {
 			Filter<EntryId> filter = this.filterFactory.getFilter(entryId);
 			return this.getResult(b, filter);

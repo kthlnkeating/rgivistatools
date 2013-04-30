@@ -22,9 +22,10 @@ import java.util.Map;
 import java.util.Set;
 
 import com.raygroupintl.m.parsetree.data.EntryId;
+import com.raygroupintl.m.parsetree.data.IndexedFanout;
 import com.raygroupintl.m.tool.entry.BlockData;
 
-public class CodeInfo extends BlockData {
+public class CodeInfo extends BlockData<IndexedFanout> {
 	private String[] formals;
 	private Map<String, Integer> formalsMap;
 	private Set<String> globals = new HashSet<String>();

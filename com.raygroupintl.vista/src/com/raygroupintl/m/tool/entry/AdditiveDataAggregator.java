@@ -20,27 +20,28 @@ import java.util.List;
 import java.util.Set;
 
 import com.raygroupintl.m.parsetree.data.EntryId;
+import com.raygroupintl.m.parsetree.data.EntryObject;
 import com.raygroupintl.m.parsetree.data.FanoutBlocks;
 import com.raygroupintl.struct.Filter;
 
-public abstract class AdditiveDataAggregator<T, U extends BlockData> {
-	Block<U> block;
-	BlocksSupply<Block<U>> supply;
+public abstract class AdditiveDataAggregator<T, F extends EntryObject, U extends BlockData<F>> {
+	Block<F, U> block;
+	BlocksSupply<Block<F, U>> supply;
 	
-	public AdditiveDataAggregator(Block<U> block, BlocksSupply<Block<U>> supply) {
+	public AdditiveDataAggregator(Block<F, U> block, BlocksSupply<Block<F, U>> supply) {
 		this.block = block;
 		this.supply = supply;
 	}
 	
-	protected abstract T getNewDataInstance(Block<U> block);
+	protected abstract T getNewDataInstance(Block<F, U> block);
 	
-	protected abstract void updateData(T targetData, Block<U> fanoutBlock);
+	protected abstract void updateData(T targetData, Block<F, U> fanoutBlock);
 	
 	public T get(Filter<EntryId> filter, Set<EntryId> missing) {
-		FanoutBlocks<Block<U>> fanoutBlocks = this.block.getFanoutBlocks(this.supply, filter, missing);
-		List<Block<U>> blocks = fanoutBlocks.getBlocks();
+		FanoutBlocks<Block<F, U>, F> fanoutBlocks = this.block.getFanoutBlocks(this.supply, filter, missing);
+		List<Block<F, U>> blocks = fanoutBlocks.getBlocks();
 		T result = this.getNewDataInstance(this.block);
-		for (Block<U> b : blocks) {
+		for (Block<F, U> b : blocks) {
 			this.updateData(result, b);
 		}
 		return result;		

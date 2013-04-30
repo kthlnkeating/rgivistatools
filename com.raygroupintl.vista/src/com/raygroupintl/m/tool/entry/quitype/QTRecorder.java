@@ -21,11 +21,12 @@ import com.raygroupintl.m.parsetree.ForLoop;
 import com.raygroupintl.m.parsetree.QuitCmd;
 import com.raygroupintl.m.parsetree.data.CallArgument;
 import com.raygroupintl.m.parsetree.data.EntryId;
+import com.raygroupintl.m.parsetree.data.IndexedFanout;
 import com.raygroupintl.m.parsetree.visitor.BlockRecorder;
 import com.raygroupintl.m.struct.CodeLocation;
 import com.raygroupintl.m.struct.LineLocation;
 
-public class QTRecorder extends BlockRecorder<QTBlockData> {
+public class QTRecorder extends BlockRecorder<IndexedFanout, QTBlockData> {
 	@Override
 	protected void visitQuit(QuitCmd quitCmd) {
 		super.visitQuit(quitCmd);
@@ -56,5 +57,11 @@ public class QTRecorder extends BlockRecorder<QTBlockData> {
 	@Override
 	protected QTBlockData getNewBlockData(EntryId entryId, String[] params) {
 		return new QTBlockData(entryId);
+	}
+	
+	@Override
+	protected IndexedFanout getFanout(EntryId id) {
+		int index = this.getIndex();
+		return new IndexedFanout(index, id);
 	}
 }

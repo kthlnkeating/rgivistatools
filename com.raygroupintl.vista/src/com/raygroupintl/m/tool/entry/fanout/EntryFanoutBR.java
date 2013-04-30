@@ -23,29 +23,30 @@ import java.util.Set;
 import com.raygroupintl.m.parsetree.Routine;
 import com.raygroupintl.m.parsetree.data.CallArgument;
 import com.raygroupintl.m.parsetree.data.EntryId;
+import com.raygroupintl.m.parsetree.data.IndexedFanout;
 import com.raygroupintl.m.parsetree.visitor.BlockRecorder;
 import com.raygroupintl.m.tool.entry.Block;
 import com.raygroupintl.m.tool.entry.BlockData;
 import com.raygroupintl.struct.HierarchicalMap;
 
-public class EntryFanoutBR extends BlockRecorder<BlockData> {
+public class EntryFanoutBR extends BlockRecorder<IndexedFanout, BlockData<IndexedFanout>> {
 	@Override
 	protected void postUpdateFanout(EntryId fanout, CallArgument[] callArguments) {		
 	}
 	
 	@Override
-	protected BlockData getNewBlockData(EntryId entryId, String[] params) {
-		return new BlockData(entryId);
+	protected BlockData<IndexedFanout> getNewBlockData(EntryId entryId, String[] params) {
+		return new BlockData<IndexedFanout>(entryId);
 	}
 	
-	private Set<EntryId> getBlockFanouts(Block<BlockData> b, String routineName, HierarchicalMap<String, Block<BlockData>> siblings, Set<String> parentAlready) {
+	private Set<EntryId> getBlockFanouts(Block<IndexedFanout, BlockData<IndexedFanout>> b, String routineName, HierarchicalMap<String, Block<IndexedFanout, BlockData<IndexedFanout>>> siblings, Set<String> parentAlready) {
 		Set<EntryId> r = new HashSet<EntryId>();
 		List<EntryId> fs = b.getData().getFanoutIds();
 		for (EntryId f : fs) {
 			String rname = f.getRoutineName();
 			if ((rname == null) || rname.equals(routineName)) {
 				String label = f.getLabelOrDefault();
-				Block<BlockData> cb = b.getCallableBlocks().getChildBlock(label);
+				Block<IndexedFanout, BlockData<IndexedFanout>> cb = b.getCallableBlocks().getChildBlock(label);
 				if (cb != null) {
 					Set<String> already = new HashSet<String>();
 					already.add(label);
@@ -54,7 +55,7 @@ public class EntryFanoutBR extends BlockRecorder<BlockData> {
 					continue;
 				} 
 				if ((siblings != null)) {
-					Block<BlockData> sb = siblings.get(label);
+					Block<IndexedFanout, BlockData<IndexedFanout>> sb = siblings.get(label);
 					if ((sb != null)  && (! parentAlready.contains(label))) {
 						parentAlready.add(label);
 						Set<EntryId> sr = this.getBlockFanouts(sb, routineName, siblings, parentAlready); 
@@ -70,15 +71,21 @@ public class EntryFanoutBR extends BlockRecorder<BlockData> {
  	
 	public RoutineFanouts getResults(Routine routine) {
 		routine.accept(this);
-		HierarchicalMap<String, Block<BlockData>> bs = super.getBlocks();
+		HierarchicalMap<String, Block<IndexedFanout, BlockData<IndexedFanout>>> bs = super.getBlocks();
 		RoutineFanouts result = new RoutineFanouts();
 		Set<String> tags = bs.keySet();
 		String routineName = routine.getName();
 		for (String tag : tags) {
-			Block<BlockData> b = bs.getThruHierarchy(tag);
+			Block<IndexedFanout, BlockData<IndexedFanout>> b = bs.getThruHierarchy(tag);
 			Set<EntryId> bfouts = this.getBlockFanouts(b, routineName, null, null);
 			result.put(tag, bfouts);
 		}		
 		return result;		
+	}
+	
+	@Override
+	protected IndexedFanout getFanout(EntryId id) {
+		int index = this.getIndex();
+		return new IndexedFanout(index, id);
 	}
 }

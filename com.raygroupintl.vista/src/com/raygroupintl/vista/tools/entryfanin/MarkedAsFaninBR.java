@@ -18,9 +18,10 @@ package com.raygroupintl.vista.tools.entryfanin;
 
 import com.raygroupintl.m.parsetree.data.CallArgument;
 import com.raygroupintl.m.parsetree.data.EntryId;
+import com.raygroupintl.m.parsetree.data.IndexedFanout;
 import com.raygroupintl.m.parsetree.visitor.BlockRecorder;
 
-public class MarkedAsFaninBR extends BlockRecorder<FaninMark> {
+public class MarkedAsFaninBR extends BlockRecorder<IndexedFanout, FaninMark> {
 	private EntryId entryId;
 	
 	public MarkedAsFaninBR(EntryId entryId) {
@@ -38,6 +39,12 @@ public class MarkedAsFaninBR extends BlockRecorder<FaninMark> {
 	@Override
 	protected FaninMark getNewBlockData(EntryId entryId, String[] params) {
 		return new FaninMark(entryId);
+	}
+
+	@Override
+	protected IndexedFanout getFanout(EntryId id) {
+		int index = this.getIndex();
+		return new IndexedFanout(index, id);
 	}
 }
 	

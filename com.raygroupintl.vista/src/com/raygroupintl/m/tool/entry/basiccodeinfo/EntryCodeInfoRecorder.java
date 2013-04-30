@@ -26,11 +26,12 @@ import com.raygroupintl.m.parsetree.XecuteCmd;
 import com.raygroupintl.m.parsetree.data.CallArgument;
 import com.raygroupintl.m.parsetree.data.CallArgumentType;
 import com.raygroupintl.m.parsetree.data.EntryId;
+import com.raygroupintl.m.parsetree.data.IndexedFanout;
 import com.raygroupintl.m.parsetree.visitor.BlockRecorder;
 import com.raygroupintl.vista.repository.RepositoryInfo;
 import com.raygroupintl.vista.repository.VistaPackage;
 
-public class EntryCodeInfoRecorder extends BlockRecorder<CodeInfo> {
+public class EntryCodeInfoRecorder extends BlockRecorder<IndexedFanout, CodeInfo> {
 	private RepositoryInfo repositoryInfo;
 	
 	public EntryCodeInfoRecorder(RepositoryInfo ri) {
@@ -186,4 +187,10 @@ public class EntryCodeInfoRecorder extends BlockRecorder<CodeInfo> {
 		result.setFormals(params);
 		return result;
 	}
-}
+	
+	@Override
+	protected IndexedFanout getFanout(EntryId id) {
+		int index = this.getIndex();
+		return new IndexedFanout(index, id);
+	}
+	}

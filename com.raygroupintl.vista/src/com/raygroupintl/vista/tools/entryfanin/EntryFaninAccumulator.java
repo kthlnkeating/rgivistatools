@@ -22,6 +22,7 @@ import java.util.List;
 import com.raygroupintl.m.parsetree.Routine;
 import com.raygroupintl.m.parsetree.data.DataStore;
 import com.raygroupintl.m.parsetree.data.EntryId;
+import com.raygroupintl.m.parsetree.data.IndexedFanout;
 import com.raygroupintl.m.tool.entry.Block;
 import com.raygroupintl.m.tool.entry.BlocksSupply;
 import com.raygroupintl.struct.ConstFilterFactory;
@@ -30,12 +31,12 @@ import com.raygroupintl.struct.FilterFactory;
 import com.raygroupintl.struct.PassFilter;
 
 public class EntryFaninAccumulator  {
-	private BlocksSupply<Block<FaninMark>> blocksSupply;
+	private BlocksSupply<Block<IndexedFanout, FaninMark>> blocksSupply;
 	private DataStore<PathPieceToEntry> store = new DataStore<PathPieceToEntry>();					
 	private FilterFactory<EntryId, EntryId> filterFactory = new ConstFilterFactory<EntryId, EntryId>(new PassFilter<EntryId>());
 	private boolean filterInternalBlocks;
 	
-	public EntryFaninAccumulator(BlocksSupply<Block<FaninMark>> blocksSupply, boolean filterInternalBlocks) {
+	public EntryFaninAccumulator(BlocksSupply<Block<IndexedFanout, FaninMark>> blocksSupply, boolean filterInternalBlocks) {
 		this.blocksSupply = blocksSupply;
 		this.filterInternalBlocks = filterInternalBlocks;
 	}
@@ -48,7 +49,7 @@ public class EntryFaninAccumulator  {
 		List<EntryId> routineEntryTags = routine.getEntryIdList();
 		for (EntryId routineEntryTag : routineEntryTags) {
 			Filter<EntryId> filter = this.filterFactory.getFilter(routineEntryTag);
-			Block<FaninMark> b = this.blocksSupply.getBlock(routineEntryTag);
+			Block<IndexedFanout, FaninMark> b = this.blocksSupply.getBlock(routineEntryTag);
 			if (b != null) {
 				EntryFaninsAggregator ag = new EntryFaninsAggregator(b, this.blocksSupply, this.filterInternalBlocks);
 				ag.get(store, filter);

@@ -9,7 +9,7 @@ import org.junit.Test;
 import com.raygroupintl.m.MTestCommon;
 import com.raygroupintl.m.parsetree.Routine;
 import com.raygroupintl.m.parsetree.data.EntryId;
-import com.raygroupintl.m.parsetree.visitor.BlockRecorderFactory;
+import com.raygroupintl.m.parsetree.data.IndexedFanout;
 import com.raygroupintl.m.tool.ParseTreeSupply;
 import com.raygroupintl.m.tool.entry.AccumulatingBlocksSupply;
 import com.raygroupintl.m.tool.entry.Block;
@@ -37,13 +37,9 @@ public class EntryFaninAccumulatorTest {
 				                 "FINROU04"};
 		ParseTreeSupply pts = MTestCommon.getParseTreeSupply(routineNames);
 		final EntryId entryId = new EntryId("FINROU00", "ADD");
-		BlockRecorderFactory<FaninMark> brf = new BlockRecorderFactory<FaninMark>() {
-			@Override
-			public MarkedAsFaninBR getRecorder() {
-				return new MarkedAsFaninBR(entryId);	
-			}
-		};  
-		BlocksSupply<Block<FaninMark>> blocksSupply = new AccumulatingBlocksSupply<FaninMark>(pts, brf);
+		MarkedAsFaninBRF brf = new MarkedAsFaninBRF(entryId); 
+
+		BlocksSupply<Block<IndexedFanout, FaninMark>> blocksSupply = new AccumulatingBlocksSupply<IndexedFanout, FaninMark>(pts, brf);
 		
 		EntryFaninAccumulator accumulator = new EntryFaninAccumulator(blocksSupply, false);
 		for (String routineName : routineNames) {

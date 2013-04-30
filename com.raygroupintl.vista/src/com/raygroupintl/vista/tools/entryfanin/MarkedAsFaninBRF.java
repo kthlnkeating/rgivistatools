@@ -17,10 +17,10 @@
 package com.raygroupintl.vista.tools.entryfanin;
 
 import com.raygroupintl.m.parsetree.data.EntryId;
-import com.raygroupintl.m.parsetree.visitor.BlockRecorder;
+import com.raygroupintl.m.parsetree.data.IndexedFanout;
 import com.raygroupintl.m.parsetree.visitor.BlockRecorderFactory;
 
-public class MarkedAsFaninBRF implements BlockRecorderFactory<FaninMark> {
+public class MarkedAsFaninBRF implements BlockRecorderFactory<IndexedFanout, FaninMark> {
 	private EntryId entryId;
 	
 	public MarkedAsFaninBRF(EntryId entryId) {
@@ -28,7 +28,7 @@ public class MarkedAsFaninBRF implements BlockRecorderFactory<FaninMark> {
 	}
 	
 	@Override
-	public BlockRecorder<FaninMark> getRecorder() {
+	public MarkedAsFaninBR getRecorder() {
 		return new MarkedAsFaninBR(this.entryId);
 	}
 }

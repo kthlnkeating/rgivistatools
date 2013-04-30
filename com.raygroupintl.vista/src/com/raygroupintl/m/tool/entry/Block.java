@@ -21,7 +21,6 @@ import java.util.Set;
 import com.raygroupintl.m.parsetree.data.EntryId;
 import com.raygroupintl.m.parsetree.data.EntryObject;
 import com.raygroupintl.m.parsetree.data.FanoutBlocks;
-import com.raygroupintl.m.parsetree.data.IndexedFanout;
 import com.raygroupintl.struct.Filter;
 import com.raygroupintl.struct.HierarchicalMap;
 import com.raygroupintl.struct.ObjectIdContainer;
@@ -48,11 +47,11 @@ import com.raygroupintl.struct.ObjectIdContainer;
  * @see com.raygroupintl.m.parsetree.visitor.BlockRecorder
  *           
  */
-public class Block<T extends BlockData> implements EntryObject {
-	private HierarchicalMap<String, Block<T>> callables;
+public class Block<F extends EntryObject, T extends BlockData<F>> implements EntryObject {
+	private HierarchicalMap<String, Block<F, T>> callables;
 	private T blockData;
 	
-	public Block(HierarchicalMap<String, Block<T>> callables, T blockData) {
+	public Block(HierarchicalMap<String, Block<F, T>> callables, T blockData) {
 		this.callables = callables;
 		this.blockData = blockData;
 	}
@@ -62,7 +61,7 @@ public class Block<T extends BlockData> implements EntryObject {
 		return this.blockData.getEntryId();
 	}
 		
-	public HierarchicalMap<String, Block<T>> getCallableBlocks() {
+	public HierarchicalMap<String, Block<F, T>> getCallableBlocks() {
 		return this.callables;
 	}
 	
@@ -70,8 +69,8 @@ public class Block<T extends BlockData> implements EntryObject {
 		return this.blockData;
 	}
 	
-	private void update(FanoutBlocks<Block<T>> fanoutBlocks, BlocksSupply<Block<T>> blocksSupply, Filter<EntryId> filter, Set<EntryId> missing) {
-		for (IndexedFanout ifout : this.blockData.getFanouts()) {
+	private void update(FanoutBlocks<Block<F, T>, F> fanoutBlocks, BlocksSupply<Block<F, T>> blocksSupply, Filter<EntryId> filter, Set<EntryId> missing) {
+		for (F ifout : this.blockData.getFanouts()) {
 			EntryId fout = ifout.getEntryId();
 			if ((filter != null) && (! filter.isValid(fout))) continue;
 			String routineName = fout.getRoutineName();
@@ -80,7 +79,7 @@ public class Block<T extends BlockData> implements EntryObject {
 				tagName = routineName;
 			}			
 			if (routineName == null) {
-				Block<T> tagBlock = this.callables.getChildBlock(tagName);
+				Block<F, T> tagBlock = this.callables.getChildBlock(tagName);
 				if (tagBlock == null) {
 					tagBlock = this.callables.getThruHierarchy(tagName);
 				}
@@ -89,40 +88,40 @@ public class Block<T extends BlockData> implements EntryObject {
 					missing.add(missingId);
 					continue;
 				}
-				fanoutBlocks.add(this, tagBlock, ifout.getIndex());
+				fanoutBlocks.add(this, tagBlock, ifout);
 			} else {
-				HierarchicalMap<String, Block<T>> routineBlocks = blocksSupply.getBlocks(routineName);
+				HierarchicalMap<String, Block<F, T>> routineBlocks = blocksSupply.getBlocks(routineName);
 				if (routineBlocks == null) {
 					missing.add(fout);
 					continue;
 				}
-				Block<T> tagBlock = routineBlocks.getThruHierarchy(tagName);
+				Block<F, T> tagBlock = routineBlocks.getThruHierarchy(tagName);
 				if (tagBlock == null) {
 					missing.add(fout);
 					continue;
 				}
-				fanoutBlocks.add(this, tagBlock, ifout.getIndex());
+				fanoutBlocks.add(this, tagBlock, ifout);
 			}				 
 		}
 	}
 	
-	private void updateFanoutBlocks(FanoutBlocks<Block<T>> fanoutBlocks, BlocksSupply<Block<T>> blocksSupply, Filter<EntryId> filter, Set<EntryId> missing) {
+	private void updateFanoutBlocks(FanoutBlocks<Block<F, T>, F> fanoutBlocks, BlocksSupply<Block<F, T>> blocksSupply, Filter<EntryId> filter, Set<EntryId> missing) {
 		int index = 0;	
 		while (index < fanoutBlocks.getSize()) {
-			Block<T> b = fanoutBlocks.getBlock(index);
+			Block<F, T> b = fanoutBlocks.getBlock(index);
 			b.update(fanoutBlocks, blocksSupply, filter, missing);
 			++index;
 		}		
 	}
 	
-	public FanoutBlocks<Block<T>> getFanoutBlocks(BlocksSupply<Block<T>> blocksSupply, ObjectIdContainer blockIdContainer, Filter<EntryId> filter, Set<EntryId> missing) {
-		FanoutBlocks<Block<T>> fanoutBlocks = new FanoutBlocks<Block<T>>(this, blockIdContainer);
+	public FanoutBlocks<Block<F, T>, F> getFanoutBlocks(BlocksSupply<Block<F, T>> blocksSupply, ObjectIdContainer blockIdContainer, Filter<EntryId> filter, Set<EntryId> missing) {
+		FanoutBlocks<Block<F, T>, F> fanoutBlocks = new FanoutBlocks<Block<F, T>, F>(this, blockIdContainer);
 		this.updateFanoutBlocks(fanoutBlocks, blocksSupply, filter, missing);
 		return fanoutBlocks;
 	}
 	
-	public FanoutBlocks<Block<T>> getFanoutBlocks(BlocksSupply<Block<T>> blocksSupply, Filter<EntryId> filter, Set<EntryId> missing) {
-		FanoutBlocks<Block<T>> fanoutBlocks = new FanoutBlocks<Block<T>>(this, null);
+	public FanoutBlocks<Block<F, T>, F> getFanoutBlocks(BlocksSupply<Block<F, T>> blocksSupply, Filter<EntryId> filter, Set<EntryId> missing) {
+		FanoutBlocks<Block<F, T>, F> fanoutBlocks = new FanoutBlocks<Block<F, T>, F>(this, null);
 		this.updateFanoutBlocks(fanoutBlocks, blocksSupply, filter, missing);
 		return fanoutBlocks;
 	}

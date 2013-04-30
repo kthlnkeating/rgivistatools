@@ -23,9 +23,10 @@ import java.util.Set;
 
 import com.raygroupintl.m.parsetree.Local;
 import com.raygroupintl.m.parsetree.data.EntryId;
+import com.raygroupintl.m.parsetree.data.IndexedFanout;
 import com.raygroupintl.m.tool.entry.BlockData;
 
-class AssumedVariablesBlockData extends BlockData {
+class AssumedVariablesBlockData extends BlockData<IndexedFanout> {
 	private String[] formals;
 	private Map<String, Integer> formalsMap;
 	private Map<String, Integer> newedLocals = new HashMap<String, Integer>();

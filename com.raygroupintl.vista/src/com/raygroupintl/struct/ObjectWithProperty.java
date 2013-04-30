@@ -14,40 +14,22 @@
 // limitations under the License.
 //---------------------------------------------------------------------------
 
-package com.raygroupintl.m.tool.entry;
+package com.raygroupintl.struct;
 
-import java.util.ArrayList;
-import java.util.List;
-
-import com.raygroupintl.m.parsetree.data.EntryId;
-import com.raygroupintl.m.parsetree.data.EntryObject;
-
-public class BlockData<F extends EntryObject> {
-	private EntryId entryId;
-	private List<F> fanouts = new ArrayList<F>();
+public class ObjectWithProperty<T, U> {
+	private T object;
+	private U property;
 	
-	public BlockData(EntryId entryId) {
-		this.entryId = entryId;
-	}
-
-	public EntryId getEntryId() {
-		return this.entryId;
-	}
-
-	public void addFanout(F fanout) {
-		this.fanouts.add(fanout);
-	}	
-	
-	public List<F> getFanouts() {
-		return this.fanouts;
+	public ObjectWithProperty(T object, U property) {
+		this.object = object;
+		this.property = property;
 	}
 	
-	public List<EntryId> getFanoutIds() {
-		List<EntryId> result = new ArrayList<EntryId>();
-		for (F fo : this.fanouts) {
-			EntryId id = fo.getEntryId();
-			result.add(id);
-		}
-		return result;
+	public U getProperty() {
+		return this.property;
+	}
+	
+	public T getObject() {
+		return this.object;
 	}
 }

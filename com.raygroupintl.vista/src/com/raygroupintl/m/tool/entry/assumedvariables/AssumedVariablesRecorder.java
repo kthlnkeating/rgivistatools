@@ -24,9 +24,10 @@ import com.raygroupintl.m.parsetree.Node;
 import com.raygroupintl.m.parsetree.OpenCloseUseCmdNodes;
 import com.raygroupintl.m.parsetree.data.CallArgument;
 import com.raygroupintl.m.parsetree.data.EntryId;
+import com.raygroupintl.m.parsetree.data.IndexedFanout;
 import com.raygroupintl.m.parsetree.visitor.BlockRecorder;
 
-class AssumedVariablesRecorder extends BlockRecorder<AssumedVariablesBlockData> {
+class AssumedVariablesRecorder extends BlockRecorder<IndexedFanout, AssumedVariablesBlockData> {
 	private boolean underDeviceParameter;
 	
 	public void reset() {
@@ -124,5 +125,11 @@ class AssumedVariablesRecorder extends BlockRecorder<AssumedVariablesBlockData> 
 		AssumedVariablesBlockData result = new AssumedVariablesBlockData(entryId);
 		result.setFormals(params);
 		return result;
+	}
+	
+	@Override
+	protected IndexedFanout getFanout(EntryId id) {
+		int index = this.getIndex();
+		return new IndexedFanout(index, id);
 	}
 }

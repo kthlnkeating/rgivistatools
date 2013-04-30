@@ -20,7 +20,7 @@ import java.util.HashSet;
 import java.util.Set;
 
 import com.raygroupintl.m.parsetree.data.EntryId;
-import com.raygroupintl.m.parsetree.visitor.BlockRecorder;
+import com.raygroupintl.m.parsetree.data.IndexedFanout;
 import com.raygroupintl.m.parsetree.visitor.BlockRecorderFactory;
 import com.raygroupintl.m.tool.entry.AdditiveDataAggregator;
 import com.raygroupintl.m.tool.entry.Block;
@@ -29,24 +29,24 @@ import com.raygroupintl.m.tool.entry.MEntryTool;
 import com.raygroupintl.struct.Filter;
 import com.raygroupintl.vista.repository.RepositoryInfo;
 
-public class BasicCodeInfoTool extends MEntryTool<BasicCodeInfoTR, CodeInfo> {
-	private class EntryCodeInfoRecorderFactory implements BlockRecorderFactory<CodeInfo> {
+public class BasicCodeInfoTool extends MEntryTool<BasicCodeInfoTR, IndexedFanout, CodeInfo> {
+	private class EntryCodeInfoRecorderFactory implements BlockRecorderFactory<IndexedFanout, CodeInfo> {
 		@Override
-		public BlockRecorder<CodeInfo> getRecorder() {
+		public EntryCodeInfoRecorder getRecorder() {
 			return new EntryCodeInfoRecorder(BasicCodeInfoTool.this.repositoryInfo);
 		}
 	}
 
-	private class BCITDataAggregator extends AdditiveDataAggregator<BasicCodeInfo, CodeInfo> {
-		public BCITDataAggregator(Block<CodeInfo> block, BlocksSupply<Block<CodeInfo>> supply) {
+	private class BCITDataAggregator extends AdditiveDataAggregator<BasicCodeInfo, IndexedFanout, CodeInfo> {
+		public BCITDataAggregator(Block<IndexedFanout, CodeInfo> block, BlocksSupply<Block<IndexedFanout, CodeInfo>> supply) {
 			super(block, supply);
 		}
 
-		protected BasicCodeInfo getNewDataInstance(Block<CodeInfo> block) {
+		protected BasicCodeInfo getNewDataInstance(Block<IndexedFanout, CodeInfo> block) {
 			return new BasicCodeInfo();
 		}
 		
-		protected void updateData(BasicCodeInfo targetData, Block<CodeInfo> fanoutBlock) {
+		protected void updateData(BasicCodeInfo targetData, Block<IndexedFanout, CodeInfo> fanoutBlock) {
 			CodeInfo updateSource = fanoutBlock.getData();
 			targetData.mergeGlobals(updateSource.getGlobals());
 			targetData.mergeFilemanGlobals(updateSource.getFilemanGlobals());
@@ -67,12 +67,12 @@ public class BasicCodeInfoTool extends MEntryTool<BasicCodeInfoTR, CodeInfo> {
 	}
 	
 	@Override
-	protected BlockRecorderFactory<CodeInfo> getBlockRecorderFactory() {
+	protected BlockRecorderFactory<IndexedFanout, CodeInfo> getBlockRecorderFactory() {
 		return new EntryCodeInfoRecorderFactory();
 	}
 
 	@Override
-	protected BasicCodeInfoTR getResult(Block<CodeInfo> block, Filter<EntryId> filter) {
+	protected BasicCodeInfoTR getResult(Block<IndexedFanout, CodeInfo> block, Filter<EntryId> filter) {
 		BCITDataAggregator bcia = new BCITDataAggregator(block, blocksSupply);
 		Set<EntryId> missing = new HashSet<EntryId>();
 		BasicCodeInfo apiData = bcia.get(filter, missing);

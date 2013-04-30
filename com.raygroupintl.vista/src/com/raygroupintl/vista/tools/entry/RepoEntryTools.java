@@ -23,6 +23,7 @@ import java.util.Set;
 
 import com.raygroupintl.m.parsetree.Routine;
 import com.raygroupintl.m.parsetree.data.EntryId;
+import com.raygroupintl.m.parsetree.data.IndexedFanout;
 import com.raygroupintl.m.struct.CodeLocation;
 import com.raygroupintl.m.tool.CommonToolParams;
 import com.raygroupintl.m.tool.ParseTreeSupply;
@@ -241,11 +242,11 @@ public class RepoEntryTools extends Tools {
 		private EntryFaninAccumulator getSupply(EntryId entryId, RepositoryInfo ri) {
 			String method = this.params.getMethod("routinefile");
 			if (method.equalsIgnoreCase("fanoutfile")) {
-				BlocksSupply<Block<FaninMark>> blocksSupply = new BlocksInSerialFanouts(entryId, this.params.parseTreeDirectory);		
+				BlocksSupply<Block<IndexedFanout, FaninMark>> blocksSupply = new BlocksInSerialFanouts(entryId, this.params.parseTreeDirectory);		
 				return new EntryFaninAccumulator(blocksSupply, false);
 			} else {
 				ParseTreeSupply pts = new SavedParsedTrees(params.parseTreeDirectory);
-				AccumulatingBlocksSupply<FaninMark> bs = new AccumulatingBlocksSupply<FaninMark>(pts, new MarkedAsFaninBRF(entryId));
+				AccumulatingBlocksSupply<IndexedFanout, FaninMark> bs = new AccumulatingBlocksSupply<IndexedFanout, FaninMark>(pts, new MarkedAsFaninBRF(entryId));
 				return new EntryFaninAccumulator(bs, true);
 			}
 		}
