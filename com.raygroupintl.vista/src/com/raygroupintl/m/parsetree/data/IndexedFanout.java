@@ -16,7 +16,7 @@
 
 package com.raygroupintl.m.parsetree.data;
 
-public class IndexedFanout {
+public class IndexedFanout implements EntryObject {
 	private int index;
 	private EntryId fanout;
 		
@@ -28,8 +28,9 @@ public class IndexedFanout {
 	public int getIndex() {
 		return this.index;
 	}
-		
-	public EntryId getFanout() {
+	
+	@Override
+	public EntryId getEntryId() {
 		return this.fanout;
 	}
 }

@@ -14,10 +14,31 @@
 // limitations under the License.
 //---------------------------------------------------------------------------
 
-package com.raygroupintl.m.parsetree.visitor;
+package com.raygroupintl.m.tool.entry.localassignment;
 
-import com.raygroupintl.m.tool.entry.BlockData;
+import java.util.Collection;
+import java.util.HashSet;
+import java.util.Set;
 
-public interface BlockRecorderFactory<T extends BlockData> {
-	BlockRecorder<T> getRecorder();
+import com.raygroupintl.m.tool.CommonToolParams;
+import com.raygroupintl.m.tool.ParseTreeSupply;
+
+public class LocalAssignmentToolParams extends CommonToolParams {
+	private Set<String> locals = new HashSet<String>(); 
+	
+	public LocalAssignmentToolParams(ParseTreeSupply pts) {
+		super(pts);
+	}
+	
+	public void addLocal(String local) {
+		this.locals.add(local);
+	}
+	
+	public void addLocals(Collection<String> locals) {
+		this.locals.addAll(locals);
+	}
+	
+	public Set<String> getLocals() {
+		return this.locals;
+	}
 }

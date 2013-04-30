@@ -14,10 +14,28 @@
 // limitations under the License.
 //---------------------------------------------------------------------------
 
-package com.raygroupintl.m.parsetree.visitor;
+package com.raygroupintl.m.tool.entry.assumedvariables;
 
-import com.raygroupintl.m.tool.entry.BlockData;
+import java.util.Set;
 
-public interface BlockRecorderFactory<T extends BlockData> {
-	BlockRecorder<T> getRecorder();
+import com.raygroupintl.m.tool.entry.MEntryToolResult;
+
+public class AssumedVariables implements MEntryToolResult  {
+	private Set<String> assumedVariables;
+
+	public AssumedVariables(Set<String> assumedVariables) {
+		this.assumedVariables = assumedVariables;
+	}
+	
+	public Set<String> toSet() {
+		return this.assumedVariables;
+	}
+	
+	public boolean isValid() {
+		return this.assumedVariables != null;
+	}
+	
+	public boolean isEmpty() {
+		return (this.assumedVariables == null) || (this.assumedVariables.size() ==0);
+	}
 }

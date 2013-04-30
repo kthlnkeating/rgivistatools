@@ -19,10 +19,10 @@ package com.raygroupintl.vista.tools.entryfanin;
 import java.util.HashMap;
 import java.util.Set;
 
-import com.raygroupintl.m.parsetree.data.Block;
-import com.raygroupintl.m.parsetree.data.BlocksSupply;
 import com.raygroupintl.m.parsetree.data.EntryId;
-import com.raygroupintl.m.tool.fanout.RoutineFanouts;
+import com.raygroupintl.m.tool.entry.Block;
+import com.raygroupintl.m.tool.entry.BlocksSupply;
+import com.raygroupintl.m.tool.entry.fanout.RoutineFanouts;
 import com.raygroupintl.struct.HierarchicalMap;
 import com.raygroupintl.vista.tools.fnds.ToolUtilities;
 

@@ -6,12 +6,12 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-import com.raygroupintl.m.parsetree.data.Block;
-import com.raygroupintl.m.parsetree.data.BlocksSupply;
 import com.raygroupintl.m.parsetree.data.DataStore;
 import com.raygroupintl.m.parsetree.data.EntryId;
 import com.raygroupintl.m.parsetree.data.FaninList;
 import com.raygroupintl.m.parsetree.data.FanoutBlocks;
+import com.raygroupintl.m.tool.entry.Block;
+import com.raygroupintl.m.tool.entry.BlocksSupply;
 import com.raygroupintl.struct.Filter;
 import com.raygroupintl.struct.Indexed;
 

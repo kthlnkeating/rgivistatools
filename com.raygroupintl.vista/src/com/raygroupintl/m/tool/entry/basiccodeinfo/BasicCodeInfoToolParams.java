@@ -14,10 +14,21 @@
 // limitations under the License.
 //---------------------------------------------------------------------------
 
-package com.raygroupintl.m.parsetree.visitor;
+package com.raygroupintl.m.tool.entry.basiccodeinfo;
 
-import com.raygroupintl.m.tool.entry.BlockData;
+import com.raygroupintl.m.tool.CommonToolParams;
+import com.raygroupintl.m.tool.ParseTreeSupply;
+import com.raygroupintl.vista.repository.RepositoryInfo;
 
-public interface BlockRecorderFactory<T extends BlockData> {
-	BlockRecorder<T> getRecorder();
+public class BasicCodeInfoToolParams extends CommonToolParams {
+	public RepositoryInfo repositoryInfo;
+	
+	public BasicCodeInfoToolParams(ParseTreeSupply pts, RepositoryInfo repositoryInfo) {
+		super(pts);
+		this.repositoryInfo = repositoryInfo;
+	}
+	
+	public RepositoryInfo getRepositoryInfo() {
+		return this.repositoryInfo;
+	}
 }

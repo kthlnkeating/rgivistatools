@@ -20,10 +20,10 @@ import java.util.Collection;
 import java.util.List;
 
 import com.raygroupintl.m.parsetree.Routine;
-import com.raygroupintl.m.parsetree.data.Block;
-import com.raygroupintl.m.parsetree.data.BlocksSupply;
 import com.raygroupintl.m.parsetree.data.DataStore;
 import com.raygroupintl.m.parsetree.data.EntryId;
+import com.raygroupintl.m.tool.entry.Block;
+import com.raygroupintl.m.tool.entry.BlocksSupply;
 import com.raygroupintl.struct.ConstFilterFactory;
 import com.raygroupintl.struct.Filter;
 import com.raygroupintl.struct.FilterFactory;

@@ -14,10 +14,25 @@
 // limitations under the License.
 //---------------------------------------------------------------------------
 
-package com.raygroupintl.m.parsetree.visitor;
+package com.raygroupintl.m.tool.entry;
 
-import com.raygroupintl.m.tool.entry.BlockData;
+public enum RecursionDepth {
+	LABEL("label"),
+	ROUTINE("routine"),
+	ALL("all");
+	
+	private String name;
 
-public interface BlockRecorderFactory<T extends BlockData> {
-	BlockRecorder<T> getRecorder();
+	private RecursionDepth(String name) {
+		this.name = name;
+	}
+
+	public static RecursionDepth get(String name) throws IllegalArgumentException {
+		for (RecursionDepth rd : RecursionDepth.values()) {
+			if (name.equals(rd.name)) {
+				return rd;
+			}
+		}
+		throw new IllegalArgumentException(name);
+	}
 }

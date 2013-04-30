@@ -14,10 +14,20 @@
 // limitations under the License.
 //---------------------------------------------------------------------------
 
-package com.raygroupintl.m.parsetree.visitor;
+package com.raygroupintl.m.tool.entry.fanout;
 
+import com.raygroupintl.m.parsetree.data.CallArgument;
+import com.raygroupintl.m.parsetree.data.EntryId;
+import com.raygroupintl.m.parsetree.visitor.BlockRecorder;
 import com.raygroupintl.m.tool.entry.BlockData;
 
-public interface BlockRecorderFactory<T extends BlockData> {
-	BlockRecorder<T> getRecorder();
+public class VoidBlockRecorder extends BlockRecorder<BlockData> {
+	@Override
+	protected void postUpdateFanout(EntryId fanout, CallArgument[] callArguments) {		
+	}
+	
+	@Override
+	protected BlockData getNewBlockData(EntryId entryId, String[] params) {
+		return new BlockData(entryId);
+	}
 }

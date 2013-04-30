@@ -14,10 +14,32 @@
 // limitations under the License.
 //---------------------------------------------------------------------------
 
-package com.raygroupintl.m.parsetree.visitor;
+package com.raygroupintl.m.tool.entry.fanout;
 
-import com.raygroupintl.m.tool.entry.BlockData;
+import java.io.Serializable;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Set;
 
-public interface BlockRecorderFactory<T extends BlockData> {
-	BlockRecorder<T> getRecorder();
+import com.raygroupintl.m.parsetree.data.EntryId;
+
+public class RoutineFanouts implements Serializable {
+	private static final long serialVersionUID = 1L;
+
+	private Map<String, Set<EntryId>> fanouts = new HashMap<String, Set<EntryId>>();
+	
+	public RoutineFanouts() {
+	}
+
+	public Set<EntryId> put(String tag, Set<EntryId> fanouts) {
+		return this.fanouts.put(tag, fanouts);
+	}
+	
+	public Set<String> getRoutineEntryTags() {
+		return this.fanouts.keySet();
+	}
+	
+	public Set<EntryId> getFanouts(String tag) {
+		return this.fanouts.get(tag);
+	}
 }

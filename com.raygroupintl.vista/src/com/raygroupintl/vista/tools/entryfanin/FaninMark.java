@@ -18,8 +18,8 @@ package com.raygroupintl.vista.tools.entryfanin;
 
 import java.util.Set;
 
-import com.raygroupintl.m.parsetree.data.BlockData;
 import com.raygroupintl.m.parsetree.data.EntryId;
+import com.raygroupintl.m.tool.entry.BlockData;
 
 public class FaninMark extends BlockData {
 	private EntryId startNode;

@@ -10,10 +10,10 @@ import org.junit.Test;
 import com.raygroupintl.m.MTestCommon;
 import com.raygroupintl.m.parsetree.data.EntryId;
 import com.raygroupintl.m.tool.ParseTreeSupply;
-import com.raygroupintl.m.tool.RecursionDepth;
-import com.raygroupintl.m.tool.RecursionSpecification;
-import com.raygroupintl.m.tool.assumedvariables.AssumedVariablesToolParams;
-import com.raygroupintl.m.tool.basiccodeinfo.BasicCodeInfoToolParams;
+import com.raygroupintl.m.tool.entry.RecursionDepth;
+import com.raygroupintl.m.tool.entry.RecursionSpecification;
+import com.raygroupintl.m.tool.entry.assumedvariables.AssumedVariablesToolParams;
+import com.raygroupintl.m.tool.entry.basiccodeinfo.BasicCodeInfoToolParams;
 import com.raygroupintl.vista.tools.entry.EntryCodeInfo;
 import com.raygroupintl.vista.tools.entry.EntryCodeInfoAccumulator;
 

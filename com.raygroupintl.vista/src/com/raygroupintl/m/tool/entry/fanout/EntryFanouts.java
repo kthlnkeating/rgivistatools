@@ -14,45 +14,48 @@
 // limitations under the License.
 //---------------------------------------------------------------------------
 
-package com.raygroupintl.vista.tools.entryfanin;
+package com.raygroupintl.m.tool.entry.fanout;
 
-import java.util.Map;
+import java.io.Serializable;
 import java.util.Set;
 import java.util.SortedSet;
-import java.util.TreeMap;
+import java.util.TreeSet;
 
 import com.raygroupintl.m.parsetree.data.EntryId;
 import com.raygroupintl.m.tool.entry.MEntryToolResult;
 
-public class EntryFanins implements MEntryToolResult {
-	Map<EntryId, SortedSet<EntryId>> pathPieces = new TreeMap<EntryId, SortedSet<EntryId>>();
+public class EntryFanouts implements MEntryToolResult, Serializable {
+	private static final long serialVersionUID = 1L;
 
-	public void add(PathPieceToEntry ppte) {
-		if (ppte.exist()) {
-			this.pathPieces.put(ppte.getStartEntry(), ppte.getNextEntries());
-		}
+	private SortedSet<EntryId> fanoutEntries;
+	private String errorMsg;
+
+	public void add(EntryId fanout) {
+		if (this.fanoutEntries == null) {
+			this.fanoutEntries = new TreeSet<EntryId>();
+		} 
+		this.fanoutEntries.add(fanout);
 	}
 	
-	public boolean hasFaninEntry(EntryId entryId) {
-		return this.pathPieces.containsKey(entryId);
+	public void setErrorMsg(String errorMsg) {
+		this.errorMsg = errorMsg;
 	}
 	
-	public Set<EntryId> getFaninEntries() {
-		return this.pathPieces.keySet();
-	}
-	
-	public Set<EntryId> getFaninNextEntries(EntryId entry) {
-		return this.pathPieces.get(entry);
+	public String getErrorMsg() {
+		return this.errorMsg;
 	}
 	
 	@Override
 	public boolean isValid() {
-		return this.pathPieces != null;
+		return this.fanoutEntries != null;
 	}
 	
 	@Override
 	public boolean isEmpty() {
-		return (this.pathPieces == null) || (this.pathPieces.size() == 0);
+		return (this.fanoutEntries == null) || (this.fanoutEntries.size() == 0);
 	}
 	
+	public Set<EntryId> getFanouts() {
+		return this.fanoutEntries;
+	}
 }

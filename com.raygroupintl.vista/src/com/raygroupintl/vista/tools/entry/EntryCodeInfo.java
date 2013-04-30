@@ -18,10 +18,10 @@ package com.raygroupintl.vista.tools.entry;
 
 import java.util.Set;
 
-import com.raygroupintl.m.tool.MEntryToolResult;
-import com.raygroupintl.m.tool.assumedvariables.AssumedVariables;
-import com.raygroupintl.m.tool.basiccodeinfo.BasicCodeInfo;
-import com.raygroupintl.m.tool.basiccodeinfo.BasicCodeInfoTR;
+import com.raygroupintl.m.tool.entry.MEntryToolResult;
+import com.raygroupintl.m.tool.entry.assumedvariables.AssumedVariables;
+import com.raygroupintl.m.tool.entry.basiccodeinfo.BasicCodeInfo;
+import com.raygroupintl.m.tool.entry.basiccodeinfo.BasicCodeInfoTR;
 
 public class EntryCodeInfo implements MEntryToolResult {
 	public AssumedVariables assumedVariables;

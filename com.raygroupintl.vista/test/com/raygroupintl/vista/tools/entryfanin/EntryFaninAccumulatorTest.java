@@ -8,12 +8,12 @@ import org.junit.Test;
 
 import com.raygroupintl.m.MTestCommon;
 import com.raygroupintl.m.parsetree.Routine;
-import com.raygroupintl.m.parsetree.data.Block;
-import com.raygroupintl.m.parsetree.data.BlocksSupply;
 import com.raygroupintl.m.parsetree.data.EntryId;
 import com.raygroupintl.m.parsetree.visitor.BlockRecorderFactory;
-import com.raygroupintl.m.tool.AccumulatingBlocksSupply;
 import com.raygroupintl.m.tool.ParseTreeSupply;
+import com.raygroupintl.m.tool.entry.AccumulatingBlocksSupply;
+import com.raygroupintl.m.tool.entry.Block;
+import com.raygroupintl.m.tool.entry.BlocksSupply;
 
 public class EntryFaninAccumulatorTest { 
 	private void checkResult(EntryFanins fanins, String faninEntry, String[] faninNextEntries) {

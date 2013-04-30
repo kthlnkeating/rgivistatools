@@ -14,10 +14,22 @@
 // limitations under the License.
 //---------------------------------------------------------------------------
 
-package com.raygroupintl.m.parsetree.visitor;
+package com.raygroupintl.m.tool.entry;
 
-import com.raygroupintl.m.tool.entry.BlockData;
+import com.raygroupintl.m.parsetree.data.EntryId;
+import com.raygroupintl.m.parsetree.data.EntryObject;
+import com.raygroupintl.struct.HierarchicalMap;
 
-public interface BlockRecorderFactory<T extends BlockData> {
-	BlockRecorder<T> getRecorder();
+public abstract class BlocksSupply<T extends EntryObject> {
+	public abstract HierarchicalMap<String, T> getBlocks(String routineName);
+	
+	public T getBlock(EntryId entryId) {
+		String routineName = entryId.getRoutineName();
+		HierarchicalMap<String, T> rbs = this.getBlocks(routineName);
+		if (rbs != null) {
+			String label = entryId.getLabelOrDefault();
+			return rbs.getThruHierarchy(label);
+		} 
+		return null;		
+	}
 }

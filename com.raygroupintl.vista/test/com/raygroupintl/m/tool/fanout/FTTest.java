@@ -10,10 +10,10 @@ import com.raygroupintl.m.MTestCommon;
 import com.raygroupintl.m.parsetree.data.EntryId;
 import com.raygroupintl.m.tool.CommonToolParams;
 import com.raygroupintl.m.tool.ParseTreeSupply;
-import com.raygroupintl.m.tool.RecursionDepth;
-import com.raygroupintl.m.tool.RecursionSpecification;
-import com.raygroupintl.m.tool.fanout.EntryFanouts;
-import com.raygroupintl.m.tool.fanout.FanoutTool;
+import com.raygroupintl.m.tool.entry.RecursionDepth;
+import com.raygroupintl.m.tool.entry.RecursionSpecification;
+import com.raygroupintl.m.tool.entry.fanout.EntryFanouts;
+import com.raygroupintl.m.tool.entry.fanout.FanoutTool;
 
 public class FTTest {
 	private void testFanouts(EntryFanouts r, EntryId[] expectedFanouts) {

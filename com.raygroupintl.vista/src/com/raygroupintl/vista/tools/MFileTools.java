@@ -25,7 +25,7 @@ import java.util.Map;
 
 import com.raygroupintl.m.parsetree.Routine;
 import com.raygroupintl.m.token.MVersion;
-import com.raygroupintl.m.tool.fanout.EntryFanoutTool;
+import com.raygroupintl.m.tool.entry.fanout.EntryFanoutTool;
 import com.raygroupintl.output.FileWrapper;
 import com.raygroupintl.output.TerminalFormatter;
 import com.raygroupintl.vista.repository.visitor.EntryWriter;

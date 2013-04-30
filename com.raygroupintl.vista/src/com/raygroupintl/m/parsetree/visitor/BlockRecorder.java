@@ -23,10 +23,10 @@ import com.raygroupintl.m.parsetree.DeadCmds;
 import com.raygroupintl.m.parsetree.Entry;
 import com.raygroupintl.m.parsetree.InnerEntryList;
 import com.raygroupintl.m.parsetree.Routine;
-import com.raygroupintl.m.parsetree.data.Block;
-import com.raygroupintl.m.parsetree.data.BlockData;
 import com.raygroupintl.m.parsetree.data.CallArgument;
 import com.raygroupintl.m.parsetree.data.EntryId;
+import com.raygroupintl.m.tool.entry.Block;
+import com.raygroupintl.m.tool.entry.BlockData;
 import com.raygroupintl.struct.HierarchicalMap;
 
 public abstract class BlockRecorder<T extends BlockData> extends FanoutRecorder {

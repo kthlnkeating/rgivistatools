@@ -14,10 +14,10 @@
 // limitations under the License.
 //---------------------------------------------------------------------------
 
-package com.raygroupintl.m.parsetree.visitor;
+package com.raygroupintl.m.tool.entry;
 
-import com.raygroupintl.m.tool.entry.BlockData;
-
-public interface BlockRecorderFactory<T extends BlockData> {
-	BlockRecorder<T> getRecorder();
+public interface MEntryToolResult {
+	boolean isValid();
+	
+	boolean isEmpty();
 }

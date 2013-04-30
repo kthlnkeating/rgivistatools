@@ -63,7 +63,7 @@ public class MacroTools extends Tools {
 			
 			MRoutineAnalyzer.main(new String[]{"filemancall", "-o", pathPrefix + "fmc_all.txt"});	  //SPNRPC4 is due to error			
 
-			MRoutineAnalyzer.main(new String[]{"parsetreesave", "-ptd", outputPath + "\\serial"});		
+			//MRoutineAnalyzer.main(new String[]{"parsetreesave", "-ptd", outputPath + "\\serial"});		
 
 			MRoutineAnalyzer.main(new String[]{"entry", "-p", "OR", "-r", "ORQQPL.*", "-o", pathPrefix + "einfo_cprspl_tags.txt"});
 			

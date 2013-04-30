@@ -8,11 +8,11 @@ import com.raygroupintl.m.MTestCommon;
 import com.raygroupintl.m.parsetree.data.EntryId;
 import com.raygroupintl.m.struct.CodeLocation;
 import com.raygroupintl.m.tool.ParseTreeSupply;
-import com.raygroupintl.m.tool.RecursionDepth;
-import com.raygroupintl.m.tool.RecursionSpecification;
-import com.raygroupintl.m.tool.basiccodeinfo.CodeLocations;
-import com.raygroupintl.m.tool.localassignment.LocalAssignmentTool;
-import com.raygroupintl.m.tool.localassignment.LocalAssignmentToolParams;
+import com.raygroupintl.m.tool.entry.RecursionDepth;
+import com.raygroupintl.m.tool.entry.RecursionSpecification;
+import com.raygroupintl.m.tool.entry.basiccodeinfo.CodeLocations;
+import com.raygroupintl.m.tool.entry.localassignment.LocalAssignmentTool;
+import com.raygroupintl.m.tool.entry.localassignment.LocalAssignmentToolParams;
 
 public class LATTest {
 	private void testLocations(CodeLocations r, CodeLocation[] expectedCodeLocations) {

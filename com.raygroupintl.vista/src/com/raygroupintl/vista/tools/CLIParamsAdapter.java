@@ -20,14 +20,14 @@ import java.io.IOException;
 
 import com.raygroupintl.m.tool.CommonToolParams;
 import com.raygroupintl.m.tool.ParseTreeSupply;
-import com.raygroupintl.m.tool.RecursionDepth;
-import com.raygroupintl.m.tool.RecursionSpecification;
 import com.raygroupintl.m.tool.SavedParsedTrees;
 import com.raygroupintl.m.tool.SourceCodeFiles;
 import com.raygroupintl.m.tool.SourceCodeToParseTreeAdapter;
-import com.raygroupintl.m.tool.assumedvariables.AssumedVariablesToolParams;
-import com.raygroupintl.m.tool.basiccodeinfo.BasicCodeInfoToolParams;
-import com.raygroupintl.m.tool.localassignment.LocalAssignmentToolParams;
+import com.raygroupintl.m.tool.entry.RecursionDepth;
+import com.raygroupintl.m.tool.entry.RecursionSpecification;
+import com.raygroupintl.m.tool.entry.assumedvariables.AssumedVariablesToolParams;
+import com.raygroupintl.m.tool.entry.basiccodeinfo.BasicCodeInfoToolParams;
+import com.raygroupintl.m.tool.entry.localassignment.LocalAssignmentToolParams;
 import com.raygroupintl.vista.repository.RepositoryInfo;
 
 public class CLIParamsAdapter {

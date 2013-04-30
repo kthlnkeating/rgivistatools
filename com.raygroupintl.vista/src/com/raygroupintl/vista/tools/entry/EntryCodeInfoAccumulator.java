@@ -20,12 +20,12 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.raygroupintl.m.parsetree.data.EntryId;
-import com.raygroupintl.m.tool.assumedvariables.AssumedVariables;
-import com.raygroupintl.m.tool.assumedvariables.AssumedVariablesTool;
-import com.raygroupintl.m.tool.assumedvariables.AssumedVariablesToolParams;
-import com.raygroupintl.m.tool.basiccodeinfo.BasicCodeInfoTR;
-import com.raygroupintl.m.tool.basiccodeinfo.BasicCodeInfoTool;
-import com.raygroupintl.m.tool.basiccodeinfo.BasicCodeInfoToolParams;
+import com.raygroupintl.m.tool.entry.assumedvariables.AssumedVariables;
+import com.raygroupintl.m.tool.entry.assumedvariables.AssumedVariablesTool;
+import com.raygroupintl.m.tool.entry.assumedvariables.AssumedVariablesToolParams;
+import com.raygroupintl.m.tool.entry.basiccodeinfo.BasicCodeInfoTR;
+import com.raygroupintl.m.tool.entry.basiccodeinfo.BasicCodeInfoTool;
+import com.raygroupintl.m.tool.entry.basiccodeinfo.BasicCodeInfoToolParams;
 
 public class EntryCodeInfoAccumulator {
 	private AssumedVariablesTool assumedVariableAccumulator;

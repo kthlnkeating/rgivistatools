@@ -29,8 +29,8 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import com.raygroupintl.m.parsetree.Routine;
-import com.raygroupintl.m.tool.fanout.EntryFanoutBR;
-import com.raygroupintl.m.tool.fanout.RoutineFanouts;
+import com.raygroupintl.m.tool.entry.fanout.EntryFanoutBR;
+import com.raygroupintl.m.tool.entry.fanout.RoutineFanouts;
 import com.raygroupintl.vista.repository.RepositoryVisitor;
 import com.raygroupintl.vista.repository.VistaPackage;
 import com.raygroupintl.vista.repository.VistaPackages;
