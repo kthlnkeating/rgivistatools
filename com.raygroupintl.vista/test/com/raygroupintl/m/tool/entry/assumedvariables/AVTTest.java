@@ -1,4 +1,4 @@
-package com.raygroupintl.m.tool.assumedvariables;
+package com.raygroupintl.m.tool.entry.assumedvariables;
 
 import java.util.Set;
 

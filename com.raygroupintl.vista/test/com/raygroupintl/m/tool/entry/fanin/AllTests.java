@@ -1,11 +1,11 @@
-package com.raygroupintl.m.tool.localassignment;
+package com.raygroupintl.m.tool.entry.fanin;
 
 import org.junit.runner.RunWith;
 import org.junit.runners.Suite;
 import org.junit.runners.Suite.SuiteClasses;
 
 @RunWith(Suite.class)
-@SuiteClasses({ LATTest.class })
+@SuiteClasses({ FaninToolTest.class })
 public class AllTests {
 
 }

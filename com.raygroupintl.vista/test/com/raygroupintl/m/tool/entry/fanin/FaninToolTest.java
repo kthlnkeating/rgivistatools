@@ -1,4 +1,4 @@
-package com.raygroupintl.vista.tools.entryfanin;
+package com.raygroupintl.m.tool.entry.fanin;
 
 import java.util.Set;
 
@@ -14,8 +14,12 @@ import com.raygroupintl.m.tool.ParseTreeSupply;
 import com.raygroupintl.m.tool.entry.AccumulatingBlocksSupply;
 import com.raygroupintl.m.tool.entry.Block;
 import com.raygroupintl.m.tool.entry.BlocksSupply;
+import com.raygroupintl.m.tool.entry.fanin.EntryFanins;
+import com.raygroupintl.m.tool.entry.fanin.FaninMark;
+import com.raygroupintl.m.tool.entry.fanin.FaninTool;
+import com.raygroupintl.m.tool.entry.fanin.MarkedAsFaninBRF;
 
-public class EntryFaninAccumulatorTest { 
+public class FaninToolTest { 
 	private void checkResult(EntryFanins fanins, String faninEntry, String[] faninNextEntries) {
 		EntryId faninEntryId = EntryId.getInstance(faninEntry); 
 		Assert.assertTrue(fanins.hasFaninEntry(faninEntryId));
@@ -41,7 +45,7 @@ public class EntryFaninAccumulatorTest {
 
 		BlocksSupply<Block<IndexedFanout, FaninMark>> blocksSupply = new AccumulatingBlocksSupply<IndexedFanout, FaninMark>(pts, brf);
 		
-		EntryFaninAccumulator accumulator = new EntryFaninAccumulator(blocksSupply, false);
+		FaninTool accumulator = new FaninTool(blocksSupply, false);
 		for (String routineName : routineNames) {
 			Routine r = pts.getParseTree(routineName);
 			accumulator.addRoutine(r);
@@ -65,7 +69,7 @@ public class EntryFaninAccumulatorTest {
 		this.checkResult(fanins, ":5^FINROU04", new String[]{"OTHER^FINROU02"});
 		this.checkResult(fanins, "OTHER^FINROU02", new String[]{"ADD^FINROU00"});
 		
-		EntryFaninAccumulator accumulator2 = new EntryFaninAccumulator(blocksSupply, true);
+		FaninTool accumulator2 = new FaninTool(blocksSupply, true);
 		for (String routineName : routineNames) {
 			Routine r = pts.getParseTree(routineName);
 			accumulator2.addRoutine(r);

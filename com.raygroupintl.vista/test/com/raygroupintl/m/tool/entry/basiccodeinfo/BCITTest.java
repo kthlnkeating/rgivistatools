@@ -1,4 +1,4 @@
-package com.raygroupintl.m.tool.basiccodeinfo;
+package com.raygroupintl.m.tool.entry.basiccodeinfo;
 
 import org.junit.Test;
 

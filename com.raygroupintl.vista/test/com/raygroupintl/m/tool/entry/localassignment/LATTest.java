@@ -1,4 +1,4 @@
-package com.raygroupintl.m.tool.localassignment;
+package com.raygroupintl.m.tool.entry.localassignment;
 
 import junit.framework.Assert;
 

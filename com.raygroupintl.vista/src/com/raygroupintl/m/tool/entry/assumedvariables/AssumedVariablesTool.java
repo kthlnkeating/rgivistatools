@@ -30,7 +30,7 @@ import com.raygroupintl.m.tool.entry.RecursiveDataAggregator;
 import com.raygroupintl.struct.Filter;
 
 public class AssumedVariablesTool extends MEntryTool<AssumedVariables, IndexedFanout, AssumedVariablesBlockData> {
-	private static class EntryCodeInfoRecorderFactory implements BlockRecorderFactory<IndexedFanout, AssumedVariablesBlockData> {
+	private static class AVTRecorderFactory implements BlockRecorderFactory<IndexedFanout, AssumedVariablesBlockData> {
 		@Override
 		public AssumedVariablesRecorder getRecorder() {
 			return new AssumedVariablesRecorder();
@@ -42,16 +42,15 @@ public class AssumedVariablesTool extends MEntryTool<AssumedVariables, IndexedFa
 			super(block, supply);
 		}
 		
-		protected Set<String> getNewDataInstance(Block<IndexedFanout, AssumedVariablesBlockData> block) {
-			AssumedVariablesBlockData bd = block.getData();
-			return new HashSet<>(bd.getAssumedLocals());		
+		@Override
+		protected Set<String> getNewDataInstance(AssumedVariablesBlockData blockData) {
+			return new HashSet<>(blockData.getAssumedLocals());		
 		}
 		
-		protected int updateData(Block<IndexedFanout, AssumedVariablesBlockData> targetBlock, Set<String> targetData, Set<String> sourceData, IndexedFanout property) {
-			AssumedVariablesBlockData bd = targetBlock.getData();		
+		protected int updateData(AssumedVariablesBlockData targetBlockData, Set<String> targetData, Set<String> sourceData, IndexedFanout property) {
 			int result = 0;
 			for (String name : sourceData) {
-				if (! bd.isDefined(name, property.getIndex())) {
+				if (! targetBlockData.isDefined(name, property.getIndex())) {
 					if (! targetData.contains(name)) {
 						targetData.add(name);
 						++result;
@@ -72,7 +71,7 @@ public class AssumedVariablesTool extends MEntryTool<AssumedVariables, IndexedFa
 	
 	@Override
 	protected BlockRecorderFactory<IndexedFanout, AssumedVariablesBlockData> getBlockRecorderFactory() {
-		return new EntryCodeInfoRecorderFactory();
+		return new AVTRecorderFactory();
 	}
 
 	@Override

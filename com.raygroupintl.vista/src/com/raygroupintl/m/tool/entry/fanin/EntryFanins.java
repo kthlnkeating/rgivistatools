@@ -14,7 +14,7 @@
 // limitations under the License.
 //---------------------------------------------------------------------------
 
-package com.raygroupintl.vista.tools.entryfanin;
+package com.raygroupintl.m.tool.entry.fanin;
 
 import java.util.Map;
 import java.util.Set;

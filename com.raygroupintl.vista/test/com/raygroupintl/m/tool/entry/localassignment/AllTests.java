@@ -1,11 +1,11 @@
-package com.raygroupintl.vista.tools.entryfanin;
+package com.raygroupintl.m.tool.entry.localassignment;
 
 import org.junit.runner.RunWith;
 import org.junit.runners.Suite;
 import org.junit.runners.Suite.SuiteClasses;
 
 @RunWith(Suite.class)
-@SuiteClasses({ EntryFaninAccumulatorTest.class })
+@SuiteClasses({ LATTest.class })
 public class AllTests {
 
 }

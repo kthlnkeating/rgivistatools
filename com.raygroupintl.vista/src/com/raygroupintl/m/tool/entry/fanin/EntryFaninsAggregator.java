@@ -1,4 +1,4 @@
-package com.raygroupintl.vista.tools.entryfanin;
+package com.raygroupintl.m.tool.entry.fanin;
 
 import java.util.HashMap;
 import java.util.HashSet;

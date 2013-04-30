@@ -14,7 +14,7 @@
 // limitations under the License.
 //---------------------------------------------------------------------------
 
-package com.raygroupintl.vista.tools.entryfanin;
+package com.raygroupintl.m.tool.entry.fanin;
 
 import java.util.HashMap;
 import java.util.Set;
@@ -27,12 +27,12 @@ import com.raygroupintl.m.tool.entry.fanout.RoutineFanouts;
 import com.raygroupintl.struct.HierarchicalMap;
 import com.raygroupintl.vista.tools.fnds.ToolUtilities;
 
-public class BlocksInSerialFanouts extends BlocksSupply<Block<IndexedFanout, FaninMark>> {
+public class FanoutFileBasedBlocksSupply extends BlocksSupply<Block<IndexedFanout, FaninMark>> {
 	private EntryId entryUnderTest;
 	private String inputPath;
 	private HashMap<String, HierarchicalMap<String, Block<IndexedFanout, FaninMark>>> blocks = new HashMap<String, HierarchicalMap<String, Block<IndexedFanout, FaninMark>>>();
 	
-	public BlocksInSerialFanouts(EntryId entryUnderTest, String inputPath) {
+	public FanoutFileBasedBlocksSupply(EntryId entryUnderTest, String inputPath) {
 		this.entryUnderTest = entryUnderTest;
 		this.inputPath = inputPath;
 	}

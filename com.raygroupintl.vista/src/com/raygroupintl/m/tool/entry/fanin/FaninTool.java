@@ -14,7 +14,7 @@
 // limitations under the License.
 //---------------------------------------------------------------------------
 
-package com.raygroupintl.vista.tools.entryfanin;
+package com.raygroupintl.m.tool.entry.fanin;
 
 import java.util.Collection;
 import java.util.List;
@@ -30,13 +30,13 @@ import com.raygroupintl.struct.Filter;
 import com.raygroupintl.struct.FilterFactory;
 import com.raygroupintl.struct.PassFilter;
 
-public class EntryFaninAccumulator  {
+public class FaninTool  {
 	private BlocksSupply<Block<IndexedFanout, FaninMark>> blocksSupply;
 	private DataStore<PathPieceToEntry> store = new DataStore<PathPieceToEntry>();					
 	private FilterFactory<EntryId, EntryId> filterFactory = new ConstFilterFactory<EntryId, EntryId>(new PassFilter<EntryId>());
 	private boolean filterInternalBlocks;
 	
-	public EntryFaninAccumulator(BlocksSupply<Block<IndexedFanout, FaninMark>> blocksSupply, boolean filterInternalBlocks) {
+	public FaninTool(BlocksSupply<Block<IndexedFanout, FaninMark>> blocksSupply, boolean filterInternalBlocks) {
 		this.blocksSupply = blocksSupply;
 		this.filterInternalBlocks = filterInternalBlocks;
 	}

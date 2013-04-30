@@ -10,13 +10,13 @@ import org.junit.runners.Suite.SuiteClasses;
 	com.raygroupintl.m.token.AllTests.class, 
 	com.raygroupintl.vista.repository.AllTests.class, 
 	com.raygroupintl.m.struct.AllTests.class,
-	com.raygroupintl.m.tool.assumedvariables.AllTests.class,
-	com.raygroupintl.m.tool.localassignment.AllTests.class,
-	com.raygroupintl.m.tool.fanout.AllTests.class,	
-	com.raygroupintl.m.tool.basiccodeinfo.AllTests.class,	
+	com.raygroupintl.m.tool.entry.assumedvariables.AllTests.class,
+	com.raygroupintl.m.tool.entry.localassignment.AllTests.class,
+	com.raygroupintl.m.tool.entry.fanout.AllTests.class,	
+	com.raygroupintl.m.tool.entry.basiccodeinfo.AllTests.class,	
 	com.raygroupintl.vista.tools.AllTests.class, 
 	com.raygroupintl.vista.tools.entry.AllTests.class, 
-	com.raygroupintl.vista.tools.entryfanin.AllTests.class 
+	com.raygroupintl.m.tool.entry.fanin.AllTests.class 
 	})
 public class AllTests {
 }

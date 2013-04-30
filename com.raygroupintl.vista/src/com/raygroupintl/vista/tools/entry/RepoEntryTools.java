@@ -40,6 +40,11 @@ import com.raygroupintl.m.tool.entry.basiccodeinfo.BasicCodeInfoTR;
 import com.raygroupintl.m.tool.entry.basiccodeinfo.BasicCodeInfoToolParams;
 import com.raygroupintl.m.tool.entry.basiccodeinfo.CodeInfo;
 import com.raygroupintl.m.tool.entry.basiccodeinfo.CodeLocations;
+import com.raygroupintl.m.tool.entry.fanin.EntryFanins;
+import com.raygroupintl.m.tool.entry.fanin.FaninMark;
+import com.raygroupintl.m.tool.entry.fanin.FanoutFileBasedBlocksSupply;
+import com.raygroupintl.m.tool.entry.fanin.FaninTool;
+import com.raygroupintl.m.tool.entry.fanin.MarkedAsFaninBRF;
 import com.raygroupintl.m.tool.entry.fanout.EntryFanouts;
 import com.raygroupintl.m.tool.entry.fanout.FanoutTool;
 import com.raygroupintl.m.tool.entry.localassignment.LocalAssignmentTool;
@@ -58,11 +63,6 @@ import com.raygroupintl.vista.tools.MRALogger;
 import com.raygroupintl.vista.tools.RepositoryTools;
 import com.raygroupintl.vista.tools.Tool;
 import com.raygroupintl.vista.tools.Tools;
-import com.raygroupintl.vista.tools.entryfanin.BlocksInSerialFanouts;
-import com.raygroupintl.vista.tools.entryfanin.EntryFaninAccumulator;
-import com.raygroupintl.vista.tools.entryfanin.EntryFanins;
-import com.raygroupintl.vista.tools.entryfanin.FaninMark;
-import com.raygroupintl.vista.tools.entryfanin.MarkedAsFaninBRF;
 
 public class RepoEntryTools extends Tools {
 	private static abstract class EntryInfoToolBase<U extends MEntryToolResult> extends Tool {		
@@ -239,15 +239,15 @@ public class RepoEntryTools extends Tools {
 			super(params);
 		}
 		
-		private EntryFaninAccumulator getSupply(EntryId entryId, RepositoryInfo ri) {
+		private FaninTool getSupply(EntryId entryId, RepositoryInfo ri) {
 			String method = this.params.getMethod("routinefile");
 			if (method.equalsIgnoreCase("fanoutfile")) {
-				BlocksSupply<Block<IndexedFanout, FaninMark>> blocksSupply = new BlocksInSerialFanouts(entryId, this.params.parseTreeDirectory);		
-				return new EntryFaninAccumulator(blocksSupply, false);
+				BlocksSupply<Block<IndexedFanout, FaninMark>> blocksSupply = new FanoutFileBasedBlocksSupply(entryId, this.params.parseTreeDirectory);		
+				return new FaninTool(blocksSupply, false);
 			} else {
 				ParseTreeSupply pts = new SavedParsedTrees(params.parseTreeDirectory);
 				AccumulatingBlocksSupply<IndexedFanout, FaninMark> bs = new AccumulatingBlocksSupply<IndexedFanout, FaninMark>(pts, new MarkedAsFaninBRF(entryId));
-				return new EntryFaninAccumulator(bs, true);
+				return new FaninTool(bs, true);
 			}
 		}
 		
@@ -255,7 +255,7 @@ public class RepoEntryTools extends Tools {
 		public List<EntryFanins> getResult(final RepositoryInfo ri, List<EntryId> entries) {
 			List<EntryFanins> resultList = new ArrayList<EntryFanins>();
 			for (EntryId entryId : entries) {
-				final EntryFaninAccumulator efit = this.getSupply(entryId, ri);
+				final FaninTool efit = this.getSupply(entryId, ri);
 				RecursionSpecification rs = CLIParamsAdapter.toRecursionSpecification(this.params);
 				FilterFactory<EntryId, EntryId> filterFactory = rs.getFanoutFilterFactory();
 				efit.setFilterFactory(filterFactory);

@@ -1,4 +1,4 @@
-package com.raygroupintl.m.tool.fanout;
+package com.raygroupintl.m.tool.entry.fanout;
 
 import java.util.Set;
 
