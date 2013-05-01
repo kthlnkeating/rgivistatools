@@ -26,7 +26,6 @@ import com.raygroupintl.m.parsetree.AtomicGoto;
 import com.raygroupintl.m.parsetree.Extrinsic;
 import com.raygroupintl.m.parsetree.InnerEntryList;
 import com.raygroupintl.m.parsetree.Routine;
-import com.raygroupintl.m.parsetree.data.CallArgument;
 import com.raygroupintl.m.parsetree.data.EntryId;
 import com.raygroupintl.m.struct.LineLocation;
 import com.raygroupintl.struct.Filter;
@@ -43,7 +42,7 @@ public class FanoutRecorder extends LocationMarker {
 		this.filter = filter;
 	}
 	
-	protected void updateFanout(EntryId fanoutId, CallArgument[] callArguments) {
+	protected void updateFanout(EntryId fanoutId) {
 		if (fanoutId != null) {
 			if (this.filter != null) {
 				if (! this.filter.isValid(fanoutId)) return;
@@ -61,19 +60,19 @@ public class FanoutRecorder extends LocationMarker {
 	@Override
 	protected void visitAtomicDo(AtomicDo atomicDo) {
 		super.visitAtomicDo(atomicDo);		
-		this.updateFanout(atomicDo.getFanoutId(), atomicDo.getCallArguments());
+		this.updateFanout(atomicDo.getFanoutId());
 	}
 	
 	@Override
 	protected void visitAtomicGoto(AtomicGoto atomicGoto) {
 		super.visitAtomicGoto(atomicGoto);
-		this.updateFanout(atomicGoto.getFanoutId(), null);
+		this.updateFanout(atomicGoto.getFanoutId());
 	}
 	
 	@Override
 	protected void visitExtrinsic(Extrinsic extrinsic) {
 		super.visitExtrinsic(extrinsic);
-		this.updateFanout(extrinsic.getFanoutId(), extrinsic.getCallArguments());
+		this.updateFanout(extrinsic.getFanoutId());
 	}
 	
 	@Override

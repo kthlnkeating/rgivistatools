@@ -22,6 +22,9 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+import com.raygroupintl.m.parsetree.AtomicDo;
+import com.raygroupintl.m.parsetree.Extrinsic;
+import com.raygroupintl.m.parsetree.InnerEntryList;
 import com.raygroupintl.m.parsetree.Local;
 import com.raygroupintl.m.parsetree.Node;
 import com.raygroupintl.m.parsetree.Routine;
@@ -31,11 +34,12 @@ import com.raygroupintl.m.parsetree.data.EntryId;
 import com.raygroupintl.vista.repository.RepositoryInfo;
 import com.raygroupintl.vista.repository.VistaPackage;
 
-public class FilemanCallRecorder extends FanoutRecorder {
+public class FilemanCallRecorder extends LocationMarker {
 	private RepositoryInfo repositoryInfo;
 	private String currentRoutineName;
 	private Set<String> filemanGlobals = new HashSet<String>();
 	private Set<String> filemanCalls = new HashSet<String>();
+	private InnerEntryList lastInnerEntryList;
 	
 	public FilemanCallRecorder(RepositoryInfo ri) {
 		this.repositoryInfo = ri;
@@ -109,7 +113,6 @@ public class FilemanCallRecorder extends FanoutRecorder {
 		}
 	}
 	
-	@Override
 	protected void updateFanout(EntryId fanoutId, CallArgument[] callArguments) {
 		if (fanoutId != null) {
 			if ((callArguments != null) && (callArguments.length > 0) && ! inFilemanRoutine(this.currentRoutineName, true)) {
@@ -132,6 +135,26 @@ public class FilemanCallRecorder extends FanoutRecorder {
 		} 
 	}
 	
+	@Override
+	protected void visitAtomicDo(AtomicDo atomicDo) {
+		super.visitAtomicDo(atomicDo);		
+		this.updateFanout(atomicDo.getFanoutId(), atomicDo.getCallArguments());
+	}
+	
+	@Override
+	protected void visitExtrinsic(Extrinsic extrinsic) {
+		super.visitExtrinsic(extrinsic);
+		this.updateFanout(extrinsic.getFanoutId(), extrinsic.getCallArguments());
+	}
+	
+	@Override
+	protected void visitInnerEntryList(InnerEntryList entryList) {
+		if (entryList != this.lastInnerEntryList) {
+			this.lastInnerEntryList = entryList;
+			super.visitInnerEntryList(entryList);
+		}
+	}
+		
 	public List<String> getFilemanGlobals() {
 		List<String> result = new ArrayList<String>(this.filemanGlobals);
 		Collections.sort(result);

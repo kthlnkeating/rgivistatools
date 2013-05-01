@@ -16,8 +16,11 @@
 
 package com.raygroupintl.m.parsetree.visitor;
 
+import com.raygroupintl.m.parsetree.AtomicDo;
+import com.raygroupintl.m.parsetree.AtomicGoto;
 import com.raygroupintl.m.parsetree.DeadCmds;
 import com.raygroupintl.m.parsetree.Entry;
+import com.raygroupintl.m.parsetree.Extrinsic;
 import com.raygroupintl.m.parsetree.InnerEntryList;
 import com.raygroupintl.m.parsetree.Routine;
 import com.raygroupintl.m.parsetree.data.CallArgument;
@@ -27,7 +30,7 @@ import com.raygroupintl.m.tool.entry.Block;
 import com.raygroupintl.m.tool.entry.BlockData;
 import com.raygroupintl.struct.HierarchicalMap;
 
-public abstract class BlockRecorder<F extends EntryObject, T extends BlockData<F>> extends FanoutRecorder {
+public abstract class BlockRecorder<F extends EntryObject, T extends BlockData<F>> extends LocationMarker {
 	private HierarchicalMap<String, Block<F, T>> currentBlocks;
 	private T currentBlockData;
 	private String currentRoutineName;
@@ -56,7 +59,6 @@ public abstract class BlockRecorder<F extends EntryObject, T extends BlockData<F
 	
 	protected abstract void postUpdateFanout(EntryId fanout, CallArgument[] callArguments);
 	
-	@Override
 	protected void updateFanout(EntryId fanoutId, CallArgument[] callArguments) {
 		if (fanoutId != null) {
 			F fo = this.getFanout(fanoutId);
@@ -66,6 +68,24 @@ public abstract class BlockRecorder<F extends EntryObject, T extends BlockData<F
 		} 
 	}
 
+	@Override
+	protected void visitAtomicDo(AtomicDo atomicDo) {
+		super.visitAtomicDo(atomicDo);		
+		this.updateFanout(atomicDo.getFanoutId(), atomicDo.getCallArguments());
+	}
+	
+	@Override
+	protected void visitAtomicGoto(AtomicGoto atomicGoto) {
+		super.visitAtomicGoto(atomicGoto);
+		this.updateFanout(atomicGoto.getFanoutId(), null);
+	}
+	
+	@Override
+	protected void visitExtrinsic(Extrinsic extrinsic) {
+		super.visitExtrinsic(extrinsic);
+		this.updateFanout(extrinsic.getFanoutId(), extrinsic.getCallArguments());
+	}
+	
 	protected abstract T getNewBlockData(EntryId entryId, String[] params);
 	
 	protected abstract F getFanout(EntryId id); 
