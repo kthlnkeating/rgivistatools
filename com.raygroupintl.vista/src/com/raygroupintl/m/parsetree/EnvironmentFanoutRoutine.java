@@ -27,4 +27,19 @@ public class EnvironmentFanoutRoutine extends AdditionalNodeHolder {
 	public void accept(Visitor visitor) {
 		visitor.visitEnvironmentFanoutRoutine(this);
 	}
+	
+	@Override
+	public void update(AtomicGoto atomicGoto) {
+		atomicGoto.setEnvironmentFanoutRoutine(this);
+	}
+	
+	@Override
+	public void update(AtomicDo atomicDo) {
+		atomicDo.setEnvironmentFanoutRoutine(this);
+	}
+	
+	@Override
+	public void update(Extrinsic extrinsic) {		
+		extrinsic.setEnvironmentFanoutRoutine(this);
+	}
 }

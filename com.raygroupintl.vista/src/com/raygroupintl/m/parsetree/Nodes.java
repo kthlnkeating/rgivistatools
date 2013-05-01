@@ -39,4 +39,25 @@ public abstract class Nodes<T extends Node> extends BasicNode {
 	public void accept(Visitor visitor) {
 		this.acceptElements(visitor);
 	}
+	
+	@Override
+	public void update(AtomicGoto atomicGoto) {
+		for (Node node : this.getNodes()) {
+			if (node != null) node.update(atomicGoto);
+		}		
+	}
+
+	@Override
+	public void update(AtomicDo atomicDo) {
+		for (Node node : this.getNodes()) {
+			if (node != null) node.update(atomicDo);
+		}		
+	}
+	@Override
+	
+	public void update(Extrinsic extrinsic) {
+		for (Node node : this.getNodes()) {
+			if (node != null) node.update(extrinsic);
+		}		
+	}
 }

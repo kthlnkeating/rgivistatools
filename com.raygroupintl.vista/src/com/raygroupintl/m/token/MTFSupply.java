@@ -295,7 +295,7 @@ public class MTFSupply {
 	public TokenFactory<MToken> onlyrsimpleexargument;
 	
 	@SequenceTokenType(MExtrinsic.class)	
-	@Rule("'^', indirection")
+	@Rule("'^', indfanoutroutineb")
 	public TokenFactory<MToken> onlyrexargument;
 	
 	@Rule("indexargument | labelcallexargument | exargument | onlyrsimpleexargument | onlyrexargument")
@@ -326,6 +326,9 @@ public class MTFSupply {
 	@TokenType(BasicTokens.MTIndirectFanoutRoutine.class)
 	@Rule("rindirection")
 	public TokenFactory<MToken> indfanoutroutine;
+	@TokenType(BasicTokens.MTIndirectFanoutRoutine.class)
+	@Rule("indirection")
+	public TokenFactory<MToken> indfanoutroutineb;
 	@Rule("envfanoutroutine | fanoutroutine")
 	public TokenFactory<MToken> noindroutinepostcaret;
 	
@@ -348,7 +351,7 @@ public class MTFSupply {
 	public TokenFactory<MToken> goargument;
 	
 	@SequenceTokenType(MGotoArgument.class)	
-	@Rule("'^', indirection, [postcondition]")
+	@Rule("'^', indfanoutroutineb, [postcondition]")
 	public TokenFactory<MToken> onlyrgoargument;
 	
 	@SequenceTokenType(MGotoArgument.class)	
@@ -382,7 +385,7 @@ public class MTFSupply {
 	public TokenFactory<MToken> onlyrsimpledoargument;
 	
 	@SequenceTokenType(MDoArgument.class)	
-	@Rule("'^', indirection, [postcondition]")
+	@Rule("'^', indfanoutroutineb, [postcondition]")
 	public TokenFactory<MToken> onlyrdoargument;
 	
 	@Rule("extdoargument | inddoargument | offsetdoargument | labelcalldoargument | doargument | onlyrsimpledoargument | onlyrdoargument")
@@ -397,6 +400,7 @@ public class MTFSupply {
 	@Rule("'^', doroutinepostcaret")
 	public TokenFactory<MToken> doroutineref;
 	
+	@SequenceTokenType(MLineOffset.class)
 	@Rule("'+', expr")
 	public TokenFactory<MToken> dolineoffset;
 

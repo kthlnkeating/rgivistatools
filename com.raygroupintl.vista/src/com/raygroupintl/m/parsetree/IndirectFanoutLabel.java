@@ -27,4 +27,19 @@ public class IndirectFanoutLabel extends AdditionalNodeHolder {
 	public void accept(Visitor visitor) {
 		visitor.visitIndirectFanoutLabel(this);
 	}
+
+	@Override
+	public void update(AtomicGoto atomicGoto) {
+		atomicGoto.setIndirectFanoutLabel(this);
+	}
+
+	@Override
+	public void update(AtomicDo atomicDo) {
+		atomicDo.setIndirectFanoutLabel(this);
+	}
+	
+	@Override
+	public void update(Extrinsic extrinsic) {		
+		extrinsic.setIndirectFanoutLabel(this);
+	}
 }

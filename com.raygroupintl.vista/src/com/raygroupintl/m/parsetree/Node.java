@@ -40,4 +40,8 @@ public interface Node extends Serializable {
 	String getAsConstExpr();
 	
 	boolean setEntryList(InnerEntryList entryList);
+	
+	void update(AtomicGoto atomicGoto);
+	void update(AtomicDo atomicDo);
+	void update(Extrinsic extrinsic);
 }

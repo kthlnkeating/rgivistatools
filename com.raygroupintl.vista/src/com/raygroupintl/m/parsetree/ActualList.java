@@ -36,4 +36,14 @@ public class ActualList extends NodeList<Node> {
 	public void accept(Visitor visitor) {
 		visitor.visitActualList(this);
 	}
+	
+	@Override
+	public void update(AtomicDo atomicDo) {		
+		atomicDo.setActualList(this);
+	}
+	
+	@Override
+	public void update(Extrinsic extrinsic) {		
+		extrinsic.setActualList(this);
+	}
 }

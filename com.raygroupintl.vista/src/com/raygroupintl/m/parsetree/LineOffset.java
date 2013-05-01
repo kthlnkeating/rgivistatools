@@ -16,37 +16,20 @@
 
 package com.raygroupintl.m.parsetree;
 
-public class FanoutRoutine extends AdditionalNodeHolder {
+public class LineOffset extends AdditionalNodeHolder {
 	private static final long serialVersionUID = 1L;
 
-	private String name;
-	
-	public FanoutRoutine(String name, Node addlNode) {
-		super(addlNode);
-		this.name = name;
-	}
-	
-	public String getName() {
-		return name;
+	public LineOffset(Node node) {
+		super(node);
 	}
 	
 	@Override
 	public void accept(Visitor visitor) {
-		visitor.visitFanoutRoutine(this);
-	}
-
-	@Override
-	public void update(AtomicGoto atomicGoto) {
-		atomicGoto.setFanoutRoutine(this);
-	}
-
-	@Override
-	public void update(AtomicDo atomicDo) {
-		atomicDo.setFanoutRoutine(this);
+		visitor.visitLineOffset(this);
 	}
 	
 	@Override
-	public void update(Extrinsic extrinsic) {		
-		extrinsic.setFanoutRoutine(this);
+	public void update(AtomicGoto atomicGoto) {
+		atomicGoto.setLineoffset(this);
 	}
 }

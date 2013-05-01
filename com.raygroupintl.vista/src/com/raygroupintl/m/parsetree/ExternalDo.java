@@ -16,7 +16,7 @@
 
 package com.raygroupintl.m.parsetree;
 
-public class ExternalDo extends AtomicCommand {
+public class ExternalDo extends AdditionalNodeHolder {
 	private static final long serialVersionUID = 1L;
 
 	public ExternalDo(Node additionalNodes) {

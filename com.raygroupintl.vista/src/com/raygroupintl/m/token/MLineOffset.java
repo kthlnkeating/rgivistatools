@@ -14,12 +14,25 @@
 // limitations under the License.
 //---------------------------------------------------------------------------
 
-package com.raygroupintl.m.parsetree;
+package com.raygroupintl.m.token;
 
-abstract public class AtomicCommand extends AdditionalNodeHolder {
-	private static final long serialVersionUID = 1L;
+import com.raygroupintl.m.parsetree.Node;
+import com.raygroupintl.m.parsetree.PostConditional;
+import com.raygroupintl.parser.SequenceOfTokens;
 
-	public AtomicCommand(Node additionalNodes) {
-		super(additionalNodes);
+public class MLineOffset extends MSequence {
+	public MLineOffset(int length) {
+		super(length);
 	}
+	
+	public MLineOffset(SequenceOfTokens<MToken> tokens) {
+		super(tokens);
+	}
+	
+	@Override
+	public Node getNode() {
+		Node addlNode = this.getToken(1).getNode();
+		return new PostConditional(addlNode);
+	}		
+
 }

@@ -77,4 +77,16 @@ public abstract class BasicNode implements Node {
 		nodes.add(this);
 		return current;
 	}
+	
+	@Override
+	public void update(AtomicGoto atomicGoto) {		
+	}
+	
+	@Override
+	public void update(AtomicDo atomicDo) {		
+	}
+	
+	@Override
+	public void update(Extrinsic extrinsic) {	
+	}
 }

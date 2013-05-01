@@ -16,22 +16,45 @@
 
 package com.raygroupintl.m.parsetree;
 
-public class AtomicDo extends AtomicCommand {
+public class AtomicDo extends FanoutNode {
 	private static final long serialVersionUID = 1L;
 
-	private boolean postConditional;
-	
-	public AtomicDo(Node additionalNodes, boolean postConditional) {
-		super(additionalNodes);
-		this.postConditional = postConditional;
+	public LineOffset lineoffset;	
+	public ActualList actualList;	
+	public PostConditional postCondition;
+		
+	public void setLineoffset(LineOffset lineoffset) {
+		this.lineoffset = lineoffset;
 	}
-
-	public boolean getPostConditional() {
-		return this.postConditional;
+	
+	public void setActualList(ActualList actualList) {
+		this.actualList = actualList;
+	}
+	
+	public void setPostCondition(PostConditional postCondition) {
+		this.postCondition = postCondition;
+	}
+	
+	public void acceptSubNodes(Visitor visitor) {
+		super.acceptLabelNodes(visitor);
+		if (this.lineoffset != null) {
+			this.lineoffset.accept(visitor);
+		}
+		super.acceptRoutineNodes(visitor);
+		if (this.actualList != null) {
+			this.actualList.accept(visitor);
+		}		
+		if (this.postCondition != null) {
+			this.postCondition.accept(visitor);
+		}
 	}
 	
 	@Override
 	public void accept(Visitor visitor) {
 		visitor.visitAtomicDo(this);
+	}
+
+	public boolean hasPostCondition() {
+		return this.postCondition != null;
 	}
 }

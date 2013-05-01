@@ -27,4 +27,19 @@ public class IndirectFanoutRoutine extends AdditionalNodeHolder {
 	public void accept(Visitor visitor) {
 		visitor.visitIndirectFanoutRoutine(this);
 	}
+
+	@Override
+	public void update(AtomicGoto atomicGoto) {
+		atomicGoto.setIndirectFanoutRoutine(this);
+	}
+
+	@Override
+	public void update(AtomicDo atomicDo) {
+		atomicDo.setIndirectFanoutRoutine(this);
+	}
+	
+	@Override
+	public void update(Extrinsic extrinsic) {		
+		extrinsic.setIndirectFanoutRoutine(this);
+	}
 }

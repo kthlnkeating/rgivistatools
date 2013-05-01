@@ -42,6 +42,10 @@ public class Visitor {
 		}
 	}
 	
+	protected void visitLineOffset(LineOffset lo) {
+		this.visitAdditionalNodeHolder(lo);
+	}
+	
 	protected void visitPostConditional(PostConditional pc) {
 		this.visitAdditionalNodeHolder(pc);
 	}
@@ -116,10 +120,6 @@ public class Visitor {
 		this.visitAdditionalNodeHolder(routine);
 	}
 		
-	protected void visitAtomicCommand(AtomicCommand atomicCommand) {
-		this.visitAdditionalNodeHolder(atomicCommand);
-	}
-	
 	
 	protected void visitForLoop(ForLoop forLoop) {
 		forLoop.acceptSubNodes(this);
@@ -127,15 +127,15 @@ public class Visitor {
 	
 
 	protected void visitExternalDo(ExternalDo externalDo) {
-		this.visitAtomicCommand(externalDo);
+		this.visitAdditionalNodeHolder(externalDo);
 	}
 	
 	protected void visitAtomicDo(AtomicDo atomicDo) {
-		this.visitAtomicCommand(atomicDo);
+		atomicDo.acceptSubNodes(this);
 	}
 	
 	protected void visitAtomicGoto(AtomicGoto atomicGoto) {
-		this.visitAtomicCommand(atomicGoto);
+		atomicGoto.acceptSubNodes(this);
 	}
 	
 	
@@ -157,15 +157,15 @@ public class Visitor {
 	
 	
 	protected void visitAtomicOpenCmd(OpenCloseUseCmdNodes.AtomicOpenCmd atomicOpenCmd) {
-		this.visitAtomicCommand(atomicOpenCmd);
+		this.visitAdditionalNodeHolder(atomicOpenCmd);
 	}
 	
 	protected void visitAtomicCloseCmd(OpenCloseUseCmdNodes.AtomicCloseCmd atomicCloseCmd) {
-		this.visitAtomicCommand(atomicCloseCmd);
+		this.visitAdditionalNodeHolder(atomicCloseCmd);
 	}
 	
 	protected void visitAtomicUseCmd(OpenCloseUseCmdNodes.AtomicUseCmd atomicUseCmd) {
-		this.visitAtomicCommand(atomicUseCmd);
+		this.visitAdditionalNodeHolder(atomicUseCmd);
 	}
 		
 	protected void visitOpenCmd(OpenCloseUseCmdNodes.OpenCmd openCmd) {
@@ -274,7 +274,7 @@ public class Visitor {
 
 	
 	protected void visitExtrinsic(Extrinsic extrinsic) {
-		this.visitAdditionalNodeHolder(extrinsic);
+		extrinsic.acceptSubNodes(this);
 	}
 
 	protected void visitObjectMethodCall(ObjectMethodCall omc) {

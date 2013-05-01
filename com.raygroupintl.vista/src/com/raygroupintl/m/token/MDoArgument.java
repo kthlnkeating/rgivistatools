@@ -19,7 +19,6 @@ package com.raygroupintl.m.token;
 import com.raygroupintl.m.parsetree.AtomicDo;
 import com.raygroupintl.m.parsetree.Node;
 import com.raygroupintl.parser.SequenceOfTokens;
-import com.raygroupintl.parser.Token;
 
 public class MDoArgument extends MSequence {
 	public MDoArgument(int length) {
@@ -32,10 +31,13 @@ public class MDoArgument extends MSequence {
 	
 	@Override
 	public Node getNode() {
-		Token lastToken = this.getToken(this.size()-1);
-		boolean postConditional = (lastToken != null) && (lastToken instanceof BasicTokens.MPostCondition);
-		Node additionalNodes = super.getNode();
-		AtomicDo result = new AtomicDo(additionalNodes, postConditional);
+		AtomicDo result = new AtomicDo();
+		for (MToken t : this.toIterable()) {
+			if (t != null) {
+				Node node = t.getNode();
+				if (node != null) node.update(result);
+			}
+		}
 		return result;
 	}
 }

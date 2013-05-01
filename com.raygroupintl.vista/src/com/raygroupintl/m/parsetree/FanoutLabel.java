@@ -34,4 +34,19 @@ public class FanoutLabel extends AdditionalNodeHolder {
 	public void accept(Visitor visitor) {
 		visitor.visitFanoutLabel(this);
 	}
+
+	@Override
+	public void update(AtomicGoto atomicGoto) {
+		atomicGoto.setFanoutLabel(this);
+	}
+
+	@Override
+	public void update(AtomicDo atomicDo) {
+		atomicDo.setFanoutLabel(this);
+	}
+	
+	@Override
+	public void update(Extrinsic extrinsic) {		
+		extrinsic.setFanoutLabel(this);
+	}
 }

@@ -16,13 +16,23 @@
 
 package com.raygroupintl.m.parsetree;
 
-public class Extrinsic extends AtomicCommand {
+public class Extrinsic extends FanoutNode {
 	private static final long serialVersionUID = 1L;
 
-	public Extrinsic(Node additionalNodes) {
-		super(additionalNodes);
+	public ActualList actualList;
+			
+	public void setActualList(ActualList actualList) {
+		this.actualList = actualList;
 	}
-		
+	
+	public void acceptSubNodes(Visitor visitor) {
+		super.acceptLabelNodes(visitor);
+		super.acceptRoutineNodes(visitor);
+		if (this.actualList != null) {
+			this.actualList.accept(visitor);
+		}		
+	}
+	
 	@Override
 	public void accept(Visitor visitor) {
 		visitor.visitExtrinsic(this);

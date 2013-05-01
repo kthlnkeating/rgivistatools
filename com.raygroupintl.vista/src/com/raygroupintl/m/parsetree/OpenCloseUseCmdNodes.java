@@ -17,7 +17,7 @@
 package com.raygroupintl.m.parsetree;
 
 public class OpenCloseUseCmdNodes {
-	public static class AtomicOpenCmd extends AtomicCommand {
+	public static class AtomicOpenCmd extends AdditionalNodeHolder {
 		private static final long serialVersionUID = 1L;
 
 		public AtomicOpenCmd(Node node) {
@@ -43,7 +43,7 @@ public class OpenCloseUseCmdNodes {
 		}		
 	}
 
-	public static class AtomicCloseCmd extends AtomicCommand {
+	public static class AtomicCloseCmd extends AdditionalNodeHolder {
 		private static final long serialVersionUID = 1L;
 
 		public AtomicCloseCmd(Node node) {
@@ -69,7 +69,7 @@ public class OpenCloseUseCmdNodes {
 		}		
 	}
 
-	public static class AtomicUseCmd extends AtomicCommand {
+	public static class AtomicUseCmd extends AdditionalNodeHolder {
 		private static final long serialVersionUID = 1L;
 
 		public AtomicUseCmd(Node node) {

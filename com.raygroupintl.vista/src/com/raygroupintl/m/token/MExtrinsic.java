@@ -31,8 +31,13 @@ public class MExtrinsic extends MSequence {
 
 	@Override
 	public Node getNode() {
-		Node additionalNodes = super.getNode();
-		Extrinsic result = new Extrinsic(additionalNodes);
+		Extrinsic result = new Extrinsic();
+		for (MToken t : this.toIterable()) {
+			if (t != null) {
+				Node node = t.getNode();
+				if (node != null) node.update(result);
+			}
+		}
 		return result;
 	}
 }

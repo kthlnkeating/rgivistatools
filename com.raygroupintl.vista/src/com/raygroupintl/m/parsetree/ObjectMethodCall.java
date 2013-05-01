@@ -16,7 +16,7 @@
 
 package com.raygroupintl.m.parsetree;
 
-public class ObjectMethodCall extends AtomicCommand {
+public class ObjectMethodCall extends AdditionalNodeHolder {
 	private static final long serialVersionUID = 1L;
 
 	public ObjectMethodCall(Node additionalNodes) {

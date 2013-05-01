@@ -28,4 +28,25 @@ abstract class AdditionalNodeHolder extends BasicNode {
 	public Node getAdditionalNode() {
 		return this.additionalNode;
 	}
+
+	@Override
+	public void update(AtomicGoto atomicGoto) {
+		if (this.additionalNode != null) {
+			this.additionalNode.update(atomicGoto);
+		}
+	}
+	
+	@Override
+	public void update(AtomicDo atomicDo) {		
+		if (this.additionalNode != null) {
+			this.additionalNode.update(atomicDo);
+		}
+	}
+	
+	@Override
+	public void update(Extrinsic extrinsic) {		
+		if (this.additionalNode != null) {
+			this.additionalNode.update(extrinsic);
+		}
+	}
 }

@@ -92,6 +92,7 @@ public class TFCommandTest {
 		testCommand(f, "D &B,&C(P0,.P1)");
 		testCommand(f, "D &A.B^R,&A.C^R(P0,P3)");
 		testCommand(f, "D &B^R,&C^R(,P0)");
+		testCommand(f, "D L4^@RIND4");
 	}
 
 	@Test
