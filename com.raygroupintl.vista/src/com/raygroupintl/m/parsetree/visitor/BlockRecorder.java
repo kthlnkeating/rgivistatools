@@ -63,13 +63,12 @@ public abstract class BlockRecorder<F extends EntryObject, T extends BlockData<F
 	protected abstract void postUpdateFanout(EntryId fanout, CallArgument[] callArguments);
 	
 	@Override
-	protected void updateFanout() {
-		EntryId fanout = this.getLastFanout();
-		if (fanout != null) {
+	protected void updateFanout(EntryId fanoutId) {
+		if (fanoutId != null) {
 			CallArgument[] callArguments = this.getLastArguments();
-			F fo = this.getFanout(fanout);
+			F fo = this.getFanout(fanoutId);
 			this.currentBlockData.addFanout(fo);	
-			this.postUpdateFanout(fanout, callArguments);
+			this.postUpdateFanout(fanoutId, callArguments);
 			++this.index;
 		} 
 	}

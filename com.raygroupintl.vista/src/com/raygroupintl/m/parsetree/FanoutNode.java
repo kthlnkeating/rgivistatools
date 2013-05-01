@@ -16,6 +16,8 @@
 
 package com.raygroupintl.m.parsetree;
 
+import com.raygroupintl.m.parsetree.data.EntryId;
+
 public abstract class FanoutNode extends BasicNode {
 	private static final long serialVersionUID = 1L;
 
@@ -65,4 +67,17 @@ public abstract class FanoutNode extends BasicNode {
 			this.fanoutRoutine.accept(visitor);
 		}
 	}
+	
+	public EntryId getFanoutId() {
+		if ((this.fanoutLabel == null) && (this.fanoutRoutine == null)) {
+			return null;
+		}
+		if ((this.indirectFanoutLabel != null) || (this.indirectFanoutRoutine != null) || this.environmentFanoutRoutine != null) {
+			return null;
+		}
+		String label = (this.fanoutLabel == null) ? null : this.fanoutLabel.getValue();
+		String routine = (this.fanoutRoutine == null) ? null : this.fanoutRoutine.getName();
+	
+		return new EntryId(routine, label);
+	}	
 }

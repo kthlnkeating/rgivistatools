@@ -110,20 +110,19 @@ public class FilemanCallRecorder extends FanoutRecorder {
 	}
 	
 	@Override
-	protected void updateFanout() {
-		EntryId fanout = this.getLastFanout();
-		if (fanout != null) {
+	protected void updateFanout(EntryId fanoutId) {
+		if (fanoutId != null) {
 			CallArgument[] callArguments = this.getLastArguments();
 			if ((callArguments != null) && (callArguments.length > 0) && ! inFilemanRoutine(this.currentRoutineName, true)) {
 				CallArgument ca = callArguments[0];
 				if (ca != null) {
 					CallArgumentType caType = ca.getType();
 					if ((caType == CallArgumentType.STRING_LITERAL) || (caType == CallArgumentType.NUMBER_LITERAL)) {
-						String routineName = fanout.getRoutineName();						
+						String routineName = fanoutId.getRoutineName();						
 						if ((routineName != null) && (routineName.length() > 1) && inFilemanRoutine(routineName, false)) {
 							String cleanValue = removeDoubleQuote(ca.getValue());
 							if (cleanValue.length() > 0 && validate(cleanValue)) {
-								String value = fanout.toString() + "(" + cleanValue;
+								String value = fanoutId.toString() + "(" + cleanValue;
 								this.filemanCalls.add(value);
 							}
 						}
