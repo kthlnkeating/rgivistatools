@@ -21,6 +21,7 @@ import java.util.List;
 import java.util.Set;
 
 import com.raygroupintl.m.parsetree.data.EntryId;
+import com.raygroupintl.m.parsetree.data.Fanout;
 import com.raygroupintl.m.parsetree.data.IndexedFanout;
 import com.raygroupintl.m.parsetree.visitor.BlockRecorderFactory;
 import com.raygroupintl.m.struct.CodeLocation;
@@ -72,7 +73,7 @@ public class LocalAssignmentTool extends MEntryTool<CodeLocations, IndexedFanout
 	}
 
 	@Override
-	protected CodeLocations getResult(Block<IndexedFanout, CodeLocations> block, Filter<EntryId> filter) {
+	protected CodeLocations getResult(Block<IndexedFanout, CodeLocations> block, Filter<Fanout> filter) {
 		LATDataAggregator bcia = new LATDataAggregator(block, blocksSupply);
 		Set<EntryId> missing = new HashSet<EntryId>();
 		return bcia.get(filter, missing);

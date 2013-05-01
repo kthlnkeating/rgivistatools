@@ -19,38 +19,30 @@ package com.raygroupintl.m.tool.entry;
 import java.util.Arrays;
 import java.util.List;
 
-import com.raygroupintl.m.parsetree.data.EntryId;
+import com.raygroupintl.m.parsetree.data.Fanout;
 import com.raygroupintl.struct.Filter;
-import com.raygroupintl.struct.FilterFactory;
 
 public class RecursionSpecification {
-	private static class DoBlockFanoutFilter implements Filter<EntryId> {
+	private static class DoBlockFanoutFilter implements Filter<Fanout> {
 		@Override
-		public boolean isValid(EntryId input) {
-			String label = input.getLabelOrDefault();		
+		public boolean isValid(Fanout input) {
+			String label = input.getEntryId().getLabelOrDefault();		
 			return label.charAt(0) == ':';
 		}		
 	}
 		
-	private static class InRoutineFanoutFilter implements Filter<EntryId> {
-		private String routineUnderTestName;
-		
-		public InRoutineFanoutFilter(EntryId entryUnderTest) {
-			this.routineUnderTestName = entryUnderTest.getRoutineName();		
-		}
-		
+	private static class InRoutineFanoutFilter implements Filter<Fanout> {
 		@Override
-		public boolean isValid(EntryId input) {
+		public boolean isValid(Fanout input) {
 			if (input != null) {
-				String routineName = input.getRoutineName();
+				String routineName = input.getEntryId().getRoutineName();
 				if (routineName == null) return true;
-				return this.routineUnderTestName.equals(routineName);
 			}
 			return false;
 		}
 	}
 	
-	private static class NamespaceBasedFanoutFilter implements Filter<EntryId> {
+	private static class NamespaceBasedFanoutFilter implements Filter<Fanout> {
 		private String[] includeNamespaces;
 		private String[] excludeNamespaces;
 		private String[] excludeExceptionNamespaces;
@@ -82,8 +74,8 @@ public class RecursionSpecification {
 		}
 		
 		@Override
-		public boolean isValid(EntryId input) {
-			String routineName = input.getRoutineName();
+		public boolean isValid(Fanout input) {
+			String routineName = input.getEntryId().getRoutineName();
 			if ((routineName == null) || (routineName.isEmpty())) return true;
 			if (this.includeNamespaces != null) {
 				boolean b = checkNamespace(routineName, this.includeNamespaces);
@@ -152,29 +144,14 @@ public class RecursionSpecification {
 		this.excludedFanoutExceptionNamespaces = addNamespaces(this.excludedFanoutExceptionNamespaces, namespaces);		
 	}
 
-	public FilterFactory<EntryId, EntryId> getFanoutFilterFactory() {
+	public Filter<Fanout> getFanoutFilter() {
 		switch (this.depth) {
 		case ALL:
-			return new FilterFactory<EntryId, EntryId>() {
-				@Override
-				public Filter<EntryId> getFilter(EntryId parameter) {
-					return new NamespaceBasedFanoutFilter(RecursionSpecification.this.includedFanoutNamespaces, RecursionSpecification.this.excludedFanoutNamespaces, RecursionSpecification.this.excludedFanoutExceptionNamespaces);
-				}
-			};
+			return new NamespaceBasedFanoutFilter(RecursionSpecification.this.includedFanoutNamespaces, RecursionSpecification.this.excludedFanoutNamespaces, RecursionSpecification.this.excludedFanoutExceptionNamespaces);
 		case ROUTINE:
-			return new FilterFactory<EntryId, EntryId>() {
-				@Override
-				public Filter<EntryId> getFilter(EntryId entryUnderTest) {
-					return new InRoutineFanoutFilter(entryUnderTest);
-				}
-			};
+			return new InRoutineFanoutFilter();
 		default: // LABEL
-			return new FilterFactory<EntryId, EntryId>() {
-				@Override
-				public Filter<EntryId> getFilter(EntryId entryUnderTest) {
-					return new DoBlockFanoutFilter();
-				}
-			};
+			return new DoBlockFanoutFilter();
 		}
 	}
 }

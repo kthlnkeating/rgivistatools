@@ -42,9 +42,9 @@ public abstract class RecursiveDataAggregator<T, F extends Fanout, U extends Blo
 	
 	protected abstract int updateData(U targetBlockData, T targetData, T sourceData, F sourceProperty);
 	
-	private int updateFaninData(T data, Block<F, U> b, FanoutBlocks<Block<F, U>, F> fanoutBlocks, Map<Integer, T> datas) {
+	private int updateFaninData(T data, Block<F, U> b, FanoutBlocks<F, U> fanoutBlocks, Map<Integer, T> datas) {
 		int numChange = 0;
-		FaninList<Block<F, U>, F> faninList = fanoutBlocks.getFaninList(b);
+		FaninList<F, U> faninList = fanoutBlocks.getFaninList(b);
 		List<ObjectWithProperty<Block<F, U>, F>> faninBlocks = faninList.getFanins();
 		for (ObjectWithProperty<Block<F, U>, F> ib : faninBlocks) {
 			Block<F, U> faninBlock = ib.getObject();
@@ -55,7 +55,7 @@ public abstract class RecursiveDataAggregator<T, F extends Fanout, U extends Blo
 		return numChange;
 	}
 	
-	private T get(FanoutBlocks<Block<F, U>, F> fanoutBlocks, DataStore<T> store) {			
+	private T get(FanoutBlocks<F, U> fanoutBlocks, DataStore<T> store) {			
 		Map<Integer, T> datas = new HashMap<Integer, T>();
 
 		List<Block<F, U>> blocks = fanoutBlocks.getBlocks();
@@ -90,12 +90,12 @@ public abstract class RecursiveDataAggregator<T, F extends Fanout, U extends Blo
 		return store.put(b, datas);
 	}
 		
-	public T get(DataStore<T> store, Filter<EntryId> filter, Set<EntryId> missing) {
+	public T get(DataStore<T> store, Filter<Fanout> filter, Set<EntryId> missing) {
 		T result = store.get(this.block);
 		if (result != null) {
 			return result;
 		}
-		FanoutBlocks<Block<F, U>, F> fanoutBlocks = this.block.getFanoutBlocks(this.supply, store, filter, missing);
+		FanoutBlocks<F, U> fanoutBlocks = this.block.getFanoutBlocks(this.supply, store, filter, missing);
 		return this.get(fanoutBlocks, store);
 	}
 }

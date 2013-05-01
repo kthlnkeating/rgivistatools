@@ -21,29 +21,31 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+import com.raygroupintl.m.tool.entry.Block;
+import com.raygroupintl.m.tool.entry.BlockData;
 import com.raygroupintl.struct.ObjectWithProperty;
 
-public class FaninList<T, U> {
-	private T node;
-	private List<ObjectWithProperty<T, U>> faninNodes = new ArrayList<ObjectWithProperty<T, U>>();
+public class FaninList<U extends Fanout, T extends BlockData<U>> {
+	private Block<U, T> node;
+	private List<ObjectWithProperty<Block<U, T>, U>> faninNodes = new ArrayList<ObjectWithProperty<Block<U, T>, U>>();
 	private Set<Integer> existing = new HashSet<Integer>();
 	
-	public FaninList(T node) {
+	public FaninList(Block<U, T> node) {
 		this.node = node;
 	}
 			
-	public void addFanin(T faninNode, U property) {
+	public void addFanin(Block<U, T> faninNode, U property) {
 		int faninId = System.identityHashCode(faninNode);
 		if (faninId != System.identityHashCode(this.node)) {
 			if (! this.existing.contains(faninId)) {
-				ObjectWithProperty<T, U> e = new ObjectWithProperty<T, U>(faninNode, property);
+				ObjectWithProperty<Block<U, T>, U> e = new ObjectWithProperty<Block<U, T>, U>(faninNode, property);
 				this.faninNodes.add(e);
 				this.existing.add(faninId);
 			}
 		}
 	}
 	
-	public List<ObjectWithProperty<T, U>> getFanins() {
+	public List<ObjectWithProperty<Block<U, T>, U>> getFanins() {
 		return this.faninNodes;
 	}
 }

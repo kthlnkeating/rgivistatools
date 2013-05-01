@@ -21,6 +21,7 @@ import java.util.List;
 import java.util.Set;
 
 import com.raygroupintl.m.parsetree.data.EntryId;
+import com.raygroupintl.m.parsetree.data.Fanout;
 import com.raygroupintl.m.parsetree.data.FanoutBlocks;
 import com.raygroupintl.m.parsetree.data.IndexedFanout;
 import com.raygroupintl.m.parsetree.visitor.BlockRecorderFactory;
@@ -48,9 +49,9 @@ public class FanoutTool extends MEntryTool<EntryFanouts, IndexedFanout, BlockDat
 	}
 
 	@Override
-	protected EntryFanouts getResult(Block<IndexedFanout, BlockData<IndexedFanout>> block, Filter<EntryId> filter) {
+	protected EntryFanouts getResult(Block<IndexedFanout, BlockData<IndexedFanout>> block, Filter<Fanout> filter) {
 		Set<EntryId> missing = new HashSet<EntryId>();
-		FanoutBlocks<Block<IndexedFanout, BlockData<IndexedFanout>>, IndexedFanout> fanoutBlocks = block.getFanoutBlocks(this.blocksSupply, filter, missing);
+		FanoutBlocks<IndexedFanout, BlockData<IndexedFanout>> fanoutBlocks = block.getFanoutBlocks(this.blocksSupply, filter, missing);
 		List<Block<IndexedFanout, BlockData<IndexedFanout>>> blocks = fanoutBlocks.getBlocks();
 		boolean first = true;
 		EntryFanouts result = new EntryFanouts();

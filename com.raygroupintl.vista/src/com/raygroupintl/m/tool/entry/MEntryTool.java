@@ -24,29 +24,27 @@ import com.raygroupintl.m.parsetree.data.Fanout;
 import com.raygroupintl.m.parsetree.visitor.BlockRecorderFactory;
 import com.raygroupintl.m.tool.CommonToolParams;
 import com.raygroupintl.struct.Filter;
-import com.raygroupintl.struct.FilterFactory;
 
 public abstract class MEntryTool<T, F extends Fanout, B extends BlockData<F>> {
 	protected BlocksSupply<Block<F, B>> blocksSupply;
-	private FilterFactory<EntryId, EntryId> filterFactory;
+	private Filter<Fanout> filter;
 	
 	protected MEntryTool(CommonToolParams params) {
 		BlockRecorderFactory<F, B> f = this.getBlockRecorderFactory();
 		this.blocksSupply = params.getBlocksSupply(f);
-		this.filterFactory = params.getFanoutFilterFactory();
+		this.filter = params.getFanoutFilter();
 	}
 
 	protected abstract BlockRecorderFactory<F, B> getBlockRecorderFactory();
 	
-	protected abstract T getResult(Block<F, B> block, Filter<EntryId> filter);
+	protected abstract T getResult(Block<F, B> block, Filter<Fanout> filter);
 	
 	protected abstract T getEmptyBlockResult(EntryId entryId);
 	
 	public T getResult(EntryId entryId) {
 		Block<F, B> b = this.blocksSupply.getBlock(entryId);
 		if (b != null) {
-			Filter<EntryId> filter = this.filterFactory.getFilter(entryId);
-			return this.getResult(b, filter);
+			return this.getResult(b, this.filter);
 		} else {
 			return this.getEmptyBlockResult(entryId);
 		}		

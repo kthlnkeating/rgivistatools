@@ -23,6 +23,7 @@ import java.util.Set;
 
 import com.raygroupintl.m.parsetree.Routine;
 import com.raygroupintl.m.parsetree.data.EntryId;
+import com.raygroupintl.m.parsetree.data.Fanout;
 import com.raygroupintl.m.parsetree.data.IndexedFanout;
 import com.raygroupintl.m.struct.CodeLocation;
 import com.raygroupintl.m.tool.CommonToolParams;
@@ -52,7 +53,7 @@ import com.raygroupintl.m.tool.entry.localassignment.LocalAssignmentToolParams;
 import com.raygroupintl.output.FileWrapper;
 import com.raygroupintl.output.Terminal;
 import com.raygroupintl.output.TerminalFormatter;
-import com.raygroupintl.struct.FilterFactory;
+import com.raygroupintl.struct.Filter;
 import com.raygroupintl.vista.repository.RepositoryInfo;
 import com.raygroupintl.vista.repository.RepositoryVisitor;
 import com.raygroupintl.vista.repository.VistaPackage;
@@ -257,8 +258,8 @@ public class RepoEntryTools extends Tools {
 			for (EntryId entryId : entries) {
 				final FaninTool efit = this.getSupply(entryId, ri);
 				RecursionSpecification rs = CLIParamsAdapter.toRecursionSpecification(this.params);
-				FilterFactory<EntryId, EntryId> filterFactory = rs.getFanoutFilterFactory();
-				efit.setFilterFactory(filterFactory);
+				Filter<Fanout> filter = rs.getFanoutFilter();
+				efit.setFilter(filter);
 				RepositoryVisitor rv = new RepositoryVisitor() {
 					int packageCount;
 					@Override

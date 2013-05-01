@@ -20,6 +20,7 @@ import java.util.HashSet;
 import java.util.Set;
 
 import com.raygroupintl.m.parsetree.data.EntryId;
+import com.raygroupintl.m.parsetree.data.Fanout;
 import com.raygroupintl.m.parsetree.data.IndexedFanout;
 import com.raygroupintl.m.parsetree.visitor.BlockRecorderFactory;
 import com.raygroupintl.m.tool.entry.AdditiveDataAggregator;
@@ -72,7 +73,7 @@ public class BasicCodeInfoTool extends MEntryTool<BasicCodeInfoTR, IndexedFanout
 	}
 
 	@Override
-	protected BasicCodeInfoTR getResult(Block<IndexedFanout, CodeInfo> block, Filter<EntryId> filter) {
+	protected BasicCodeInfoTR getResult(Block<IndexedFanout, CodeInfo> block, Filter<Fanout> filter) {
 		BCITDataAggregator bcia = new BCITDataAggregator(block, blocksSupply);
 		Set<EntryId> missing = new HashSet<EntryId>();
 		BasicCodeInfo apiData = bcia.get(filter, missing);

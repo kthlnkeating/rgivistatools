@@ -9,6 +9,7 @@ import java.util.Set;
 import com.raygroupintl.m.parsetree.data.DataStore;
 import com.raygroupintl.m.parsetree.data.EntryId;
 import com.raygroupintl.m.parsetree.data.FaninList;
+import com.raygroupintl.m.parsetree.data.Fanout;
 import com.raygroupintl.m.parsetree.data.FanoutBlocks;
 import com.raygroupintl.m.parsetree.data.IndexedFanout;
 import com.raygroupintl.m.tool.entry.Block;
@@ -27,9 +28,9 @@ public class EntryFaninsAggregator {
 		this.filterInternalBlocks = filterInternalBlocks;
 	}
 	
-	private int updateFaninData(PathPieceToEntry data, Block<IndexedFanout, FaninMark> b, FanoutBlocks<Block<IndexedFanout, FaninMark>, IndexedFanout> fanoutBlocks, Map<Integer, PathPieceToEntry> datas) {
+	private int updateFaninData(PathPieceToEntry data, Block<IndexedFanout, FaninMark> b, FanoutBlocks<IndexedFanout, FaninMark> fanoutBlocks, Map<Integer, PathPieceToEntry> datas) {
 		int numChange = 0;
-		FaninList<Block<IndexedFanout, FaninMark>, IndexedFanout> faninList = fanoutBlocks.getFaninList(b);
+		FaninList<IndexedFanout, FaninMark> faninList = fanoutBlocks.getFaninList(b);
 		List<ObjectWithProperty<Block<IndexedFanout, FaninMark>, IndexedFanout>> faninBlocks = faninList.getFanins();
 		for (ObjectWithProperty<Block<IndexedFanout, FaninMark>, IndexedFanout> ib : faninBlocks) {
 			Block<IndexedFanout, FaninMark> faninBlock = ib.getObject();
@@ -45,7 +46,7 @@ public class EntryFaninsAggregator {
 		return numChange;
 	}
 	
-	private PathPieceToEntry get(FanoutBlocks<Block<IndexedFanout, FaninMark>, IndexedFanout> fanoutBlocks, DataStore<PathPieceToEntry> store) {			
+	private PathPieceToEntry get(FanoutBlocks<IndexedFanout, FaninMark> fanoutBlocks, DataStore<PathPieceToEntry> store) {			
 		Map<Integer, PathPieceToEntry> datas = new HashMap<Integer, PathPieceToEntry>();
 
 		List<Block<IndexedFanout, FaninMark>> blocks = fanoutBlocks.getBlocks();
@@ -83,11 +84,11 @@ public class EntryFaninsAggregator {
 		return store.put(b, datas);
 	}
 		
-	public PathPieceToEntry get(DataStore<PathPieceToEntry> store, Filter<EntryId> filter) {
+	public PathPieceToEntry get(DataStore<PathPieceToEntry> store, Filter<Fanout> filter) {
 		PathPieceToEntry result = store.get(this.block);
 		if (result == null) {
 			Set<EntryId> missing = new HashSet<EntryId>();
-			FanoutBlocks<Block<IndexedFanout, FaninMark>, IndexedFanout> fanoutBlocks = this.block.getFanoutBlocks(this.supply, store, filter, missing);
+			FanoutBlocks<IndexedFanout, FaninMark> fanoutBlocks = this.block.getFanoutBlocks(this.supply, store, filter, missing);
 			result = this.get(fanoutBlocks, store);
 		}
 		return result;

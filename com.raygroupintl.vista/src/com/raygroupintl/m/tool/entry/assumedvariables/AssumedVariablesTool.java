@@ -21,6 +21,7 @@ import java.util.Set;
 
 import com.raygroupintl.m.parsetree.data.DataStore;
 import com.raygroupintl.m.parsetree.data.EntryId;
+import com.raygroupintl.m.parsetree.data.Fanout;
 import com.raygroupintl.m.parsetree.data.IndexedFanout;
 import com.raygroupintl.m.parsetree.visitor.BlockRecorderFactory;
 import com.raygroupintl.m.tool.entry.Block;
@@ -75,7 +76,7 @@ public class AssumedVariablesTool extends MEntryTool<AssumedVariables, IndexedFa
 	}
 
 	@Override
-	public AssumedVariables getResult(Block<IndexedFanout, AssumedVariablesBlockData> block, Filter<EntryId> filter) {
+	public AssumedVariables getResult(Block<IndexedFanout, AssumedVariablesBlockData> block, Filter<Fanout> filter) {
 		AVTDataAggregator ala = new AVTDataAggregator(block, blocksSupply);
 		Set<EntryId> missing = new HashSet<EntryId>();
 		Set<String> assumedVariables = ala.get(this.store, filter, missing);

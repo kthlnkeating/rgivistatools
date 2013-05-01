@@ -20,6 +20,7 @@ import java.util.HashSet;
 import java.util.Set;
 
 import com.raygroupintl.m.parsetree.data.EntryId;
+import com.raygroupintl.m.parsetree.data.Fanout;
 import com.raygroupintl.m.parsetree.data.IndexedFanout;
 import com.raygroupintl.m.parsetree.visitor.BlockRecorderFactory;
 import com.raygroupintl.m.tool.CommonToolParams;
@@ -60,7 +61,7 @@ public class QuitTypeTool extends MEntryTool<QuitType, IndexedFanout, QTBlockDat
 	}
 
 	@Override
-	protected QuitType getResult(Block<IndexedFanout, QTBlockData> block, Filter<EntryId> filter) {
+	protected QuitType getResult(Block<IndexedFanout, QTBlockData> block, Filter<Fanout> filter) {
 		QTDataAggregator bcia = new QTDataAggregator(block, this.blocksSupply);
 		Set<EntryId> missing = new HashSet<EntryId>();
 		QuitType apiData = bcia.get(filter, missing);

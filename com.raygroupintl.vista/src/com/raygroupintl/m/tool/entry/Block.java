@@ -70,10 +70,10 @@ public class Block<F extends Fanout, T extends BlockData<F>> implements EntryObj
 		return this.blockData;
 	}
 	
-	private void update(FanoutBlocks<Block<F, T>, F> fanoutBlocks, BlocksSupply<Block<F, T>> blocksSupply, Filter<EntryId> filter, Set<EntryId> missing) {
+	private void update(FanoutBlocks<F, T> fanoutBlocks, BlocksSupply<Block<F, T>> blocksSupply, Filter<Fanout> filter, Set<EntryId> missing) {
 		for (F ifout : this.blockData.getFanouts()) {
+			if ((filter != null) && (! filter.isValid(ifout))) continue;
 			EntryId fout = ifout.getEntryId();
-			if ((filter != null) && (! filter.isValid(fout))) continue;
 			String routineName = fout.getRoutineName();
 			String tagName = fout.getTag();					
 			if (tagName == null) {
@@ -106,7 +106,7 @@ public class Block<F extends Fanout, T extends BlockData<F>> implements EntryObj
 		}
 	}
 	
-	private void updateFanoutBlocks(FanoutBlocks<Block<F, T>, F> fanoutBlocks, BlocksSupply<Block<F, T>> blocksSupply, Filter<EntryId> filter, Set<EntryId> missing) {
+	private void updateFanoutBlocks(FanoutBlocks<F, T> fanoutBlocks, BlocksSupply<Block<F, T>> blocksSupply, Filter<Fanout> filter, Set<EntryId> missing) {
 		int index = 0;	
 		while (index < fanoutBlocks.getSize()) {
 			Block<F, T> b = fanoutBlocks.getBlock(index);
@@ -115,14 +115,14 @@ public class Block<F extends Fanout, T extends BlockData<F>> implements EntryObj
 		}		
 	}
 	
-	public FanoutBlocks<Block<F, T>, F> getFanoutBlocks(BlocksSupply<Block<F, T>> blocksSupply, ObjectIdContainer blockIdContainer, Filter<EntryId> filter, Set<EntryId> missing) {
-		FanoutBlocks<Block<F, T>, F> fanoutBlocks = new FanoutBlocks<Block<F, T>, F>(this, blockIdContainer);
+	public FanoutBlocks<F, T> getFanoutBlocks(BlocksSupply<Block<F, T>> blocksSupply, ObjectIdContainer blockIdContainer, Filter<Fanout> filter, Set<EntryId> missing) {
+		FanoutBlocks<F, T> fanoutBlocks = new FanoutBlocks<F, T>(this, blockIdContainer);
 		this.updateFanoutBlocks(fanoutBlocks, blocksSupply, filter, missing);
 		return fanoutBlocks;
 	}
 	
-	public FanoutBlocks<Block<F, T>, F> getFanoutBlocks(BlocksSupply<Block<F, T>> blocksSupply, Filter<EntryId> filter, Set<EntryId> missing) {
-		FanoutBlocks<Block<F, T>, F> fanoutBlocks = new FanoutBlocks<Block<F, T>, F>(this, null);
+	public FanoutBlocks<F, T> getFanoutBlocks(BlocksSupply<Block<F, T>> blocksSupply, Filter<Fanout> filter, Set<EntryId> missing) {
+		FanoutBlocks<F, T> fanoutBlocks = new FanoutBlocks<F, T>(this, null);
 		this.updateFanoutBlocks(fanoutBlocks, blocksSupply, filter, missing);
 		return fanoutBlocks;
 	}
