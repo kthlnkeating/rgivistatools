@@ -20,6 +20,7 @@ import java.util.Set;
 
 import com.raygroupintl.m.parsetree.data.EntryId;
 import com.raygroupintl.m.parsetree.data.EntryObject;
+import com.raygroupintl.m.parsetree.data.Fanout;
 import com.raygroupintl.m.parsetree.data.FanoutBlocks;
 import com.raygroupintl.struct.Filter;
 import com.raygroupintl.struct.HierarchicalMap;
@@ -47,7 +48,7 @@ import com.raygroupintl.struct.ObjectIdContainer;
  * @see com.raygroupintl.m.parsetree.visitor.BlockRecorder
  *           
  */
-public class Block<F extends EntryObject, T extends BlockData<F>> implements EntryObject {
+public class Block<F extends Fanout, T extends BlockData<F>> implements EntryObject {
 	private HierarchicalMap<String, Block<F, T>> callables;
 	private T blockData;
 	

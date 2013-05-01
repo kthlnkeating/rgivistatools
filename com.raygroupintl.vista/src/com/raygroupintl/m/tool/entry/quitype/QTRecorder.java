@@ -19,8 +19,8 @@ package com.raygroupintl.m.tool.entry.quitype;
 import com.raygroupintl.m.parsetree.DoBlock;
 import com.raygroupintl.m.parsetree.ForLoop;
 import com.raygroupintl.m.parsetree.QuitCmd;
-import com.raygroupintl.m.parsetree.data.CallArgument;
 import com.raygroupintl.m.parsetree.data.EntryId;
+import com.raygroupintl.m.parsetree.data.FanoutType;
 import com.raygroupintl.m.parsetree.data.IndexedFanout;
 import com.raygroupintl.m.parsetree.visitor.BlockRecorder;
 import com.raygroupintl.m.struct.CodeLocation;
@@ -56,8 +56,8 @@ public class QTRecorder extends BlockRecorder<IndexedFanout, QTBlockData> {
 	}
 	
 	@Override
-	protected IndexedFanout getFanout(EntryId id) {
+	protected IndexedFanout getFanout(EntryId id, FanoutType type) {
 		int index = this.getIndex();
-		return new IndexedFanout(index, id);
+		return new IndexedFanout(index, id, type);
 	}
 }

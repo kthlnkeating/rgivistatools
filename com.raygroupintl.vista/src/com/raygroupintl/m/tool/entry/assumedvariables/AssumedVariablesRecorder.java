@@ -23,6 +23,7 @@ import com.raygroupintl.m.parsetree.Local;
 import com.raygroupintl.m.parsetree.Node;
 import com.raygroupintl.m.parsetree.OpenCloseUseCmdNodes;
 import com.raygroupintl.m.parsetree.data.EntryId;
+import com.raygroupintl.m.parsetree.data.FanoutType;
 import com.raygroupintl.m.parsetree.data.IndexedFanout;
 import com.raygroupintl.m.parsetree.visitor.BlockRecorder;
 
@@ -123,8 +124,8 @@ class AssumedVariablesRecorder extends BlockRecorder<IndexedFanout, AssumedVaria
 	}
 	
 	@Override
-	protected IndexedFanout getFanout(EntryId id) {
+	protected IndexedFanout getFanout(EntryId id, FanoutType type) {
 		int index = this.getIndex();
-		return new IndexedFanout(index, id);
+		return new IndexedFanout(index, id, type);
 	}
 }

@@ -20,11 +20,11 @@ import java.util.List;
 import java.util.Set;
 
 import com.raygroupintl.m.parsetree.data.EntryId;
-import com.raygroupintl.m.parsetree.data.EntryObject;
+import com.raygroupintl.m.parsetree.data.Fanout;
 import com.raygroupintl.m.parsetree.data.FanoutBlocks;
 import com.raygroupintl.struct.Filter;
 
-public abstract class AdditiveDataAggregator<T, F extends EntryObject, U extends BlockData<F>> {
+public abstract class AdditiveDataAggregator<T, F extends Fanout, U extends BlockData<F>> {
 	Block<F, U> block;
 	BlocksSupply<Block<F, U>> supply;
 	

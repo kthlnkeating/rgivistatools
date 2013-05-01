@@ -14,23 +14,22 @@
 // limitations under the License.
 //---------------------------------------------------------------------------
 
-package com.raygroupintl.m.tool.entry.fanout;
+package com.raygroupintl.m.parsetree.data;
 
-import com.raygroupintl.m.parsetree.data.EntryId;
-import com.raygroupintl.m.parsetree.data.FanoutType;
-import com.raygroupintl.m.parsetree.data.IndexedFanout;
-import com.raygroupintl.m.parsetree.visitor.BlockRecorder;
-import com.raygroupintl.m.tool.entry.BlockData;
-
-public class VoidBlockRecorder extends BlockRecorder<IndexedFanout, BlockData<IndexedFanout>> {
-	@Override
-	protected BlockData<IndexedFanout> getNewBlockData(EntryId entryId, String[] params) {
-		return new BlockData<IndexedFanout>(entryId);
+public class Fanout {
+	private EntryId id;
+	private FanoutType type;
+	
+	public Fanout(EntryId id, FanoutType type) {
+		this.id = id;
+		this.type = type;
 	}
 	
-	@Override
-	protected IndexedFanout getFanout(EntryId id, FanoutType type) {
-		int index = this.getIndex();
-		return new IndexedFanout(index, id, type);
+	public EntryId getEntryId() {
+		return this.id;
+	}
+	
+	public FanoutType getType() {
+		return this.type;
 	}
 }

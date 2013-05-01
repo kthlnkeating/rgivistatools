@@ -24,12 +24,13 @@ import com.raygroupintl.m.parsetree.Extrinsic;
 import com.raygroupintl.m.parsetree.InnerEntryList;
 import com.raygroupintl.m.parsetree.Routine;
 import com.raygroupintl.m.parsetree.data.EntryId;
-import com.raygroupintl.m.parsetree.data.EntryObject;
+import com.raygroupintl.m.parsetree.data.Fanout;
+import com.raygroupintl.m.parsetree.data.FanoutType;
 import com.raygroupintl.m.tool.entry.Block;
 import com.raygroupintl.m.tool.entry.BlockData;
 import com.raygroupintl.struct.HierarchicalMap;
 
-public abstract class BlockRecorder<F extends EntryObject, T extends BlockData<F>> extends LocationMarker {
+public abstract class BlockRecorder<F extends Fanout, T extends BlockData<F>> extends LocationMarker {
 	private HierarchicalMap<String, Block<F, T>> currentBlocks;
 	private T currentBlockData;
 	private String currentRoutineName;
@@ -56,9 +57,10 @@ public abstract class BlockRecorder<F extends EntryObject, T extends BlockData<F
 		this.lastInnerEntryList = null;
 	}
 	
-	protected void updateFanout(EntryId fanoutId) {
+	protected void updateFanout(EntryId fanoutId, FanoutType type) {
 		if (fanoutId != null) {
-			F fo = this.getFanout(fanoutId);
+			fanoutId.localize(this.currentRoutineName);
+			F fo = this.getFanout(fanoutId, type);
 			this.currentBlockData.addFanout(fo);	
 			++this.index;
 		} 
@@ -67,19 +69,19 @@ public abstract class BlockRecorder<F extends EntryObject, T extends BlockData<F
 	@Override
 	protected void visitAtomicDo(AtomicDo atomicDo) {
 		super.visitAtomicDo(atomicDo);		
-		this.updateFanout(atomicDo.getFanoutId());
+		this.updateFanout(atomicDo.getFanoutId(), FanoutType.DO);
 	}
 	
 	@Override
 	protected void visitAtomicGoto(AtomicGoto atomicGoto) {
 		super.visitAtomicGoto(atomicGoto);
-		this.updateFanout(atomicGoto.getFanoutId());
+		this.updateFanout(atomicGoto.getFanoutId(), FanoutType.GOTO);
 	}
 	
 	@Override
 	protected void visitExtrinsic(Extrinsic extrinsic) {
 		super.visitExtrinsic(extrinsic);
-		this.updateFanout(extrinsic.getFanoutId());
+		this.updateFanout(extrinsic.getFanoutId(), FanoutType.EXTRINSIC);
 	}
 	
 	@Override
@@ -87,12 +89,12 @@ public abstract class BlockRecorder<F extends EntryObject, T extends BlockData<F
 		super.visitAssumedGoto(fromEntry, toEntry);
 		String tag = toEntry.getName();
 		EntryId assumedGoto = new EntryId(null, tag);
-		this.updateFanout(assumedGoto);
+		this.updateFanout(assumedGoto, FanoutType.ASSUMED_GOTO);
 	}
 	
 	protected abstract T getNewBlockData(EntryId entryId, String[] params);
 	
-	protected abstract F getFanout(EntryId id); 
+	protected abstract F getFanout(EntryId id, FanoutType type); 
  	
 	@Override
 	protected void visitDeadCmds(DeadCmds deadCmds) {
@@ -116,7 +118,7 @@ public abstract class BlockRecorder<F extends EntryObject, T extends BlockData<F
 		if (entryList != this.lastInnerEntryList) {
 			this.lastInnerEntryList = entryList;
 			EntryId defaultDo = new EntryId(null, entryList.getName());
-			this.updateFanout(defaultDo);
+			this.updateFanout(defaultDo, FanoutType.DO_BLOCK);
 									
 			HierarchicalMap<String, Block<F, T>> lastBlocks = this.currentBlocks;
 			T lastBlock = this.currentBlockData;

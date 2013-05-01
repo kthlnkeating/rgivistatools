@@ -131,6 +131,12 @@ public class EntryId implements Comparable<EntryId>, Serializable {
 		}
 	}
 	
+	public void localize(String routineName) {
+		if (routineName.equals(this.routineName)) {
+			this.routineName = null;
+		}
+	}
+	
 	public static EntryId getInstance(String tag, StringFormat format) {
 		if (tag != null) {
 			String[] pieces = tag.split("\\^");

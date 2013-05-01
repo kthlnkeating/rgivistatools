@@ -20,6 +20,7 @@ import java.util.HashMap;
 import java.util.Set;
 
 import com.raygroupintl.m.parsetree.data.EntryId;
+import com.raygroupintl.m.parsetree.data.FanoutType;
 import com.raygroupintl.m.parsetree.data.IndexedFanout;
 import com.raygroupintl.m.tool.entry.Block;
 import com.raygroupintl.m.tool.entry.BlocksSupply;
@@ -54,7 +55,7 @@ public class FanoutFileBasedBlocksSupply extends BlocksSupply<Block<IndexedFanou
 				}
 				int foindex = 0;
 				for (EntryId eid : entryFanouts) {
-					IndexedFanout ifo = new IndexedFanout(foindex, eid);
+					IndexedFanout ifo = new IndexedFanout(foindex, eid, FanoutType.DO_BLOCK);
 					fim.addFanout(ifo);
 					++foindex;
 				}

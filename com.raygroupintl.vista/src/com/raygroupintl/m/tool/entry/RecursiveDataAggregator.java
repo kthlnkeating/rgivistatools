@@ -23,13 +23,13 @@ import java.util.Set;
 
 import com.raygroupintl.m.parsetree.data.DataStore;
 import com.raygroupintl.m.parsetree.data.EntryId;
-import com.raygroupintl.m.parsetree.data.EntryObject;
 import com.raygroupintl.m.parsetree.data.FaninList;
+import com.raygroupintl.m.parsetree.data.Fanout;
 import com.raygroupintl.m.parsetree.data.FanoutBlocks;
 import com.raygroupintl.struct.Filter;
 import com.raygroupintl.struct.ObjectWithProperty;
 
-public abstract class RecursiveDataAggregator<T, F extends EntryObject, U extends BlockData<F>> {
+public abstract class RecursiveDataAggregator<T, F extends Fanout, U extends BlockData<F>> {
 	Block<F, U> block;
 	BlocksSupply<Block<F, U>> supply;
 	

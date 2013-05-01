@@ -1,6 +1,7 @@
 package com.raygroupintl.m.struct;
 
 import com.raygroupintl.m.parsetree.data.EntryId;
+import com.raygroupintl.m.parsetree.data.FanoutType;
 import com.raygroupintl.m.tool.entry.quitype.QuitTypeState;
 
 public class EntryFanoutInfo {
@@ -11,13 +12,13 @@ public class EntryFanoutInfo {
 	
 	private boolean valid;
 	private LineLocation lineLocation;
-	private FanoutTypeENUM fanoutType;
+	private FanoutType fanoutType;
 	private EntryId fanoutTo;
 	private QuitTypeState returnType;
 	private boolean fanoutExists;
 	
 	public EntryFanoutInfo(LineLocation lineLocation,
-			FanoutTypeENUM fanoutType, EntryId fanoutTo) {
+			FanoutType fanoutType, EntryId fanoutTo) {
 		super();
 		this.lineLocation = lineLocation;
 		this.fanoutType = fanoutType;
@@ -32,11 +33,11 @@ public class EntryFanoutInfo {
 		this.lineLocation = lineLocation;
 	}
 
-	public FanoutTypeENUM getFanoutType() {
+	public FanoutType getFanoutType() {
 		return fanoutType;
 	}
 
-	public void setFanoutType(FanoutTypeENUM fanoutType) {
+	public void setFanoutType(FanoutType fanoutType) {
 		this.fanoutType = fanoutType;
 	}
 

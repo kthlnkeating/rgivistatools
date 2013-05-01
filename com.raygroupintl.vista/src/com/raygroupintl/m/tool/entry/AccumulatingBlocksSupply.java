@@ -19,13 +19,13 @@ package com.raygroupintl.m.tool.entry;
 import java.util.HashMap;
 
 import com.raygroupintl.m.parsetree.Routine;
-import com.raygroupintl.m.parsetree.data.EntryObject;
+import com.raygroupintl.m.parsetree.data.Fanout;
 import com.raygroupintl.m.parsetree.visitor.BlockRecorder;
 import com.raygroupintl.m.parsetree.visitor.BlockRecorderFactory;
 import com.raygroupintl.m.tool.ParseTreeSupply;
 import com.raygroupintl.struct.HierarchicalMap;
 
-public class AccumulatingBlocksSupply<F extends EntryObject, T extends BlockData<F>> extends BlocksSupply<Block<F, T>> {
+public class AccumulatingBlocksSupply<F extends Fanout, T extends BlockData<F>> extends BlocksSupply<Block<F, T>> {
 	private ParseTreeSupply parseTreeSupply;
 	private HashMap<String, HierarchicalMap<String, Block<F, T>>> blocks = new HashMap<String, HierarchicalMap<String, Block<F, T>>>();
 	private BlockRecorderFactory<F, T> blockRecorder;

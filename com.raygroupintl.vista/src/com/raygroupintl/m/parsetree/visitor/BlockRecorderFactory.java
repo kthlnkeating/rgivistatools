@@ -16,9 +16,9 @@
 
 package com.raygroupintl.m.parsetree.visitor;
 
-import com.raygroupintl.m.parsetree.data.EntryObject;
+import com.raygroupintl.m.parsetree.data.Fanout;
 import com.raygroupintl.m.tool.entry.BlockData;
 
-public interface BlockRecorderFactory<F extends EntryObject, T extends BlockData<F>> {
+public interface BlockRecorderFactory<F extends Fanout, T extends BlockData<F>> {
 	BlockRecorder<F, T> getRecorder();
 }

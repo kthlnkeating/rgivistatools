@@ -20,8 +20,8 @@ import java.util.Set;
 
 import com.raygroupintl.m.parsetree.Local;
 import com.raygroupintl.m.parsetree.Node;
-import com.raygroupintl.m.parsetree.data.CallArgument;
 import com.raygroupintl.m.parsetree.data.EntryId;
+import com.raygroupintl.m.parsetree.data.FanoutType;
 import com.raygroupintl.m.parsetree.data.IndexedFanout;
 import com.raygroupintl.m.parsetree.visitor.BlockRecorder;
 import com.raygroupintl.m.struct.CodeLocation;
@@ -53,8 +53,8 @@ public class LocalAssignmentRecorder extends BlockRecorder<IndexedFanout, CodeLo
 	}
 	
 	@Override
-	protected IndexedFanout getFanout(EntryId id) {
+	protected IndexedFanout getFanout(EntryId id, FanoutType type) {
 		int index = this.getIndex();
-		return new IndexedFanout(index, id);
+		return new IndexedFanout(index, id, type);
 	}
 }

@@ -20,9 +20,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.raygroupintl.m.parsetree.data.EntryId;
-import com.raygroupintl.m.parsetree.data.EntryObject;
+import com.raygroupintl.m.parsetree.data.Fanout;
 
-public class BlockData<F extends EntryObject> {
+public class BlockData<F extends Fanout> {
 	private EntryId entryId;
 	private List<F> fanouts = new ArrayList<F>();
 	
