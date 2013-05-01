@@ -18,6 +18,7 @@ package com.raygroupintl.m.tool.entry;
 
 public enum RecursionDepth {
 	LABEL("label"),
+	ENTRY("entry"),
 	ROUTINE("routine"),
 	ALL("all");
 	

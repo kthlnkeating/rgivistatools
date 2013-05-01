@@ -50,6 +50,16 @@ public class HierarchicalMap<K, V extends EntryObject> extends HashMap<K, V> {
 		this.children.add(child);
 	}
 	
+	public Pair<V, Boolean> getThruHierarchyWithLocalFlag(K key) {
+		V result = super.get(key);
+		if ((result == null) && (this.parent != null)) {
+			return this.parent.getThruHierarchyWithLocalFlag(key);
+		} else {
+			boolean isLocal = this.parent != null;
+			return new Pair<V, Boolean>(result, isLocal);
+		}
+	}
+	
 	public V getThruHierarchy(K key) {
 		V result = super.get(key);
 		if ((result == null) && (this.parent != null)) {

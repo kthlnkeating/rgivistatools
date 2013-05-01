@@ -25,6 +25,7 @@ import com.raygroupintl.m.parsetree.data.FanoutBlocks;
 import com.raygroupintl.struct.Filter;
 import com.raygroupintl.struct.HierarchicalMap;
 import com.raygroupintl.struct.ObjectIdContainer;
+import com.raygroupintl.struct.Pair;
 
 /***
  * Block represents a piece of a custom partition of an M Routine. Each block
@@ -72,7 +73,6 @@ public class Block<F extends Fanout, T extends BlockData<F>> implements EntryObj
 	
 	private void update(FanoutBlocks<F, T> fanoutBlocks, BlocksSupply<Block<F, T>> blocksSupply, Filter<Fanout> filter, Set<EntryId> missing) {
 		for (F ifout : this.blockData.getFanouts()) {
-			if ((filter != null) && (! filter.isValid(ifout))) continue;
 			EntryId fout = ifout.getEntryId();
 			String routineName = fout.getRoutineName();
 			String tagName = fout.getTag();					
@@ -81,16 +81,21 @@ public class Block<F extends Fanout, T extends BlockData<F>> implements EntryObj
 			}			
 			if (routineName == null) {
 				Block<F, T> tagBlock = this.callables.getChildBlock(tagName);
+				boolean inner = true;
 				if (tagBlock == null) {
-					tagBlock = this.callables.getThruHierarchy(tagName);
+					Pair<Block<F, T>, Boolean> tagBlockWithInnerFlag = this.callables.getThruHierarchyWithLocalFlag(tagName);					
+					tagBlock = tagBlockWithInnerFlag.first;
+					inner = tagBlockWithInnerFlag.second;
 				}
 				if (tagBlock == null) {
 					EntryId missingId = new EntryId( this.getEntryId().getRoutineName(), tagName);
 					missing.add(missingId);
 					continue;
 				}
+				if ((! inner) && (filter != null) && (! filter.isValid(ifout))) continue;
 				fanoutBlocks.add(this, tagBlock, ifout);
 			} else {
+				if ((filter != null) && (! filter.isValid(ifout))) continue;
 				HierarchicalMap<String, Block<F, T>> routineBlocks = blocksSupply.getBlocks(routineName);
 				if (routineBlocks == null) {
 					missing.add(fout);

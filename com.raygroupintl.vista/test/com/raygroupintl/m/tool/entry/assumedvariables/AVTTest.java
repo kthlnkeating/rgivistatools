@@ -59,6 +59,24 @@ public class AVTTest {
 		AssumedVariablesToolParams p3 = new AssumedVariablesToolParams(pts);
 		p3.addExpected("I");
 		AssumedVariablesTool a3 = new AssumedVariablesTool(p3);		
-		this.testAssumedLocal(a3.getResult(new EntryId("APIROU04", "INDOBLK")), new String[]{"Y"});		
+		this.testAssumedLocal(a3.getResult(new EntryId("APIROU04", "INDOBLK")), new String[]{"Y"});	
+		
+		AssumedVariablesToolParams p4 = new AssumedVariablesToolParams(pts);		
+		AssumedVariablesTool a4 = new AssumedVariablesTool(p4);
+		this.testAssumedLocal(a4.getResult(new EntryId("APIROU04", "ASSUMEV2")), new String[]{"I", "M"});		
+		
+		AssumedVariablesToolParams p5 = new AssumedVariablesToolParams(pts);		
+		RecursionSpecification rs5 = new RecursionSpecification();
+		rs5.setDepth(RecursionDepth.ENTRY);
+		p5.setRecursionSpecification(rs5);
+		AssumedVariablesTool a5 = new AssumedVariablesTool(p5);		
+		this.testAssumedLocal(a5.getResult(new EntryId("APIROU04", "ASSUMEV2")), new String[]{"I", "M", "V3"});		
+		
+		AssumedVariablesToolParams p6 = new AssumedVariablesToolParams(pts);		
+		RecursionSpecification rs6 = new RecursionSpecification();
+		rs6.setDepth(RecursionDepth.ROUTINE);
+		p6.setRecursionSpecification(rs6);
+		AssumedVariablesTool a6 = new AssumedVariablesTool(p6);		
+		this.testAssumedLocal(a6.getResult(new EntryId("APIROU04", "ASSUMEV2")), new String[]{"I", "M", "V1", "V3"});				
 	}
 }

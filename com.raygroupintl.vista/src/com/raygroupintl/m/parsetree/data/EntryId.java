@@ -134,6 +134,9 @@ public class EntryId implements Comparable<EntryId>, Serializable {
 	public void localize(String routineName) {
 		if (routineName.equals(this.routineName)) {
 			this.routineName = null;
+			if (this.label == null) {
+				this.label = routineName;
+			}
 		}
 	}
 	

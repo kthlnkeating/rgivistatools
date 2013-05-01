@@ -20,14 +20,21 @@ import java.util.Arrays;
 import java.util.List;
 
 import com.raygroupintl.m.parsetree.data.Fanout;
+import com.raygroupintl.m.parsetree.data.FanoutType;
 import com.raygroupintl.struct.Filter;
 
 public class RecursionSpecification {
-	private static class DoBlockFanoutFilter implements Filter<Fanout> {
+	private static class InLabelFanoutFilter implements Filter<Fanout> {
 		@Override
 		public boolean isValid(Fanout input) {
-			String label = input.getEntryId().getLabelOrDefault();		
-			return label.charAt(0) == ':';
+			return false;
+		}		
+	}
+		
+	private static class InEntryFanoutFilter implements Filter<Fanout> {
+		@Override
+		public boolean isValid(Fanout input) {			
+			return input.getType() == FanoutType.ASSUMED_GOTO;
 		}		
 	}
 		
@@ -150,8 +157,10 @@ public class RecursionSpecification {
 			return new NamespaceBasedFanoutFilter(RecursionSpecification.this.includedFanoutNamespaces, RecursionSpecification.this.excludedFanoutNamespaces, RecursionSpecification.this.excludedFanoutExceptionNamespaces);
 		case ROUTINE:
 			return new InRoutineFanoutFilter();
+		case ENTRY:
+			return new InEntryFanoutFilter();
 		default: // LABEL
-			return new DoBlockFanoutFilter();
+			return new InLabelFanoutFilter();
 		}
 	}
 }
