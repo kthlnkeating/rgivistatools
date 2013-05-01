@@ -23,7 +23,6 @@ import com.raygroupintl.m.parsetree.Entry;
 import com.raygroupintl.m.parsetree.Extrinsic;
 import com.raygroupintl.m.parsetree.InnerEntryList;
 import com.raygroupintl.m.parsetree.Routine;
-import com.raygroupintl.m.parsetree.data.CallArgument;
 import com.raygroupintl.m.parsetree.data.EntryId;
 import com.raygroupintl.m.parsetree.data.EntryObject;
 import com.raygroupintl.m.tool.entry.Block;
@@ -57,13 +56,10 @@ public abstract class BlockRecorder<F extends EntryObject, T extends BlockData<F
 		this.lastInnerEntryList = null;
 	}
 	
-	protected abstract void postUpdateFanout(EntryId fanout, CallArgument[] callArguments);
-	
-	protected void updateFanout(EntryId fanoutId, CallArgument[] callArguments) {
+	protected void updateFanout(EntryId fanoutId) {
 		if (fanoutId != null) {
 			F fo = this.getFanout(fanoutId);
 			this.currentBlockData.addFanout(fo);	
-			this.postUpdateFanout(fanoutId, callArguments);
 			++this.index;
 		} 
 	}
@@ -71,19 +67,27 @@ public abstract class BlockRecorder<F extends EntryObject, T extends BlockData<F
 	@Override
 	protected void visitAtomicDo(AtomicDo atomicDo) {
 		super.visitAtomicDo(atomicDo);		
-		this.updateFanout(atomicDo.getFanoutId(), atomicDo.getCallArguments());
+		this.updateFanout(atomicDo.getFanoutId());
 	}
 	
 	@Override
 	protected void visitAtomicGoto(AtomicGoto atomicGoto) {
 		super.visitAtomicGoto(atomicGoto);
-		this.updateFanout(atomicGoto.getFanoutId(), null);
+		this.updateFanout(atomicGoto.getFanoutId());
 	}
 	
 	@Override
 	protected void visitExtrinsic(Extrinsic extrinsic) {
 		super.visitExtrinsic(extrinsic);
-		this.updateFanout(extrinsic.getFanoutId(), extrinsic.getCallArguments());
+		this.updateFanout(extrinsic.getFanoutId());
+	}
+	
+	@Override
+	protected void visitAssumedGoto(Entry fromEntry, Entry toEntry) {
+		super.visitAssumedGoto(fromEntry, toEntry);
+		String tag = toEntry.getName();
+		EntryId assumedGoto = new EntryId(null, tag);
+		this.updateFanout(assumedGoto);
 	}
 	
 	protected abstract T getNewBlockData(EntryId entryId, String[] params);
@@ -105,31 +109,17 @@ public abstract class BlockRecorder<F extends EntryObject, T extends BlockData<F
 		Block<F, T> b = new Block<F, T>(this.currentBlocks, this.currentBlockData);
 		this.currentBlocks.put(tag, b);
 		super.visitEntry(entry);
-		if (entry.getContinuationEntry() != null) {
-			Entry ce = entry.getContinuationEntry();
-			String ceTag = ce.getName();
-			EntryId defaultGoto = new EntryId(null, ceTag);
-			F fo = this.getFanout(defaultGoto);
-			this.currentBlockData.addFanout(fo);
-			++this.index;
-		}
 	}
 			
 	@Override
 	protected void visitInnerEntryList(InnerEntryList entryList) {
 		if (entryList != this.lastInnerEntryList) {
 			this.lastInnerEntryList = entryList;
+			EntryId defaultDo = new EntryId(null, entryList.getName());
+			this.updateFanout(defaultDo);
+									
 			HierarchicalMap<String, Block<F, T>> lastBlocks = this.currentBlocks;
-			
 			T lastBlock = this.currentBlockData;
-			if ((lastBlock != null)) {
-				String tag = entryList.getName();
-				EntryId defaultDo = new EntryId(null, tag);
-				F fo = this.getFanout(defaultDo);
-				lastBlock.addFanout(fo);
-				++this.index;
-			}
-						
 			this.currentBlockData = null;
 			this.currentBlocks = new HierarchicalMap<String, Block<F, T>>(lastBlocks);
 			super.visitInnerEntryList(entryList);

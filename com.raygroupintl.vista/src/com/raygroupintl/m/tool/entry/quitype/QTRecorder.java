@@ -43,10 +43,6 @@ public class QTRecorder extends BlockRecorder<IndexedFanout, QTBlockData> {
 	}
 
 	@Override
-	protected void postUpdateFanout(EntryId fanout, CallArgument[] callArguments) {
-	}
-
-	@Override
 	protected void visitForLoop(ForLoop forLoop) {
 	}
 

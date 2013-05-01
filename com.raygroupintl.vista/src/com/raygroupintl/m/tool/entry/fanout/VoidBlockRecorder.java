@@ -16,17 +16,12 @@
 
 package com.raygroupintl.m.tool.entry.fanout;
 
-import com.raygroupintl.m.parsetree.data.CallArgument;
 import com.raygroupintl.m.parsetree.data.EntryId;
 import com.raygroupintl.m.parsetree.data.IndexedFanout;
 import com.raygroupintl.m.parsetree.visitor.BlockRecorder;
 import com.raygroupintl.m.tool.entry.BlockData;
 
 public class VoidBlockRecorder extends BlockRecorder<IndexedFanout, BlockData<IndexedFanout>> {
-	@Override
-	protected void postUpdateFanout(EntryId fanout, CallArgument[] callArguments) {		
-	}
-	
 	@Override
 	protected BlockData<IndexedFanout> getNewBlockData(EntryId entryId, String[] params) {
 		return new BlockData<IndexedFanout>(entryId);

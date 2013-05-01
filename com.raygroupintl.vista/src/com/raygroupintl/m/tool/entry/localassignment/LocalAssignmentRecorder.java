@@ -36,10 +36,6 @@ public class LocalAssignmentRecorder extends BlockRecorder<IndexedFanout, CodeLo
 	}
 	
 	@Override
-	protected void postUpdateFanout(EntryId fanout, CallArgument[] callArguments) {		
-	}
-	
-	@Override
 	protected CodeLocations getNewBlockData(EntryId entryId, String[] params) {
 		CodeLocations ecls = new CodeLocations(entryId);
 		return ecls;

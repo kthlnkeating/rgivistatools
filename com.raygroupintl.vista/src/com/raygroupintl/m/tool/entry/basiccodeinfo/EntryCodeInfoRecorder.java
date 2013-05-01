@@ -16,6 +16,8 @@
 
 package com.raygroupintl.m.tool.entry.basiccodeinfo;
 
+import com.raygroupintl.m.parsetree.AtomicDo;
+import com.raygroupintl.m.parsetree.Extrinsic;
 import com.raygroupintl.m.parsetree.Global;
 import com.raygroupintl.m.parsetree.Indirection;
 import com.raygroupintl.m.parsetree.Local;
@@ -80,8 +82,7 @@ public class EntryCodeInfoRecorder extends BlockRecorder<IndexedFanout, CodeInfo
 		}
 	}
 	
-	@Override
-	protected void postUpdateFanout(EntryId fanout, CallArgument[] callArguments) {
+	private void updateCalls(EntryId fanout, CallArgument[] callArguments) {
 		String rn = this.getCurrentRoutineName();
 		CodeInfo d = this.getCurrentBlockData();
 		if ((d != null) && (callArguments != null) && (callArguments.length > 0) && ! inFilemanRoutine(rn, true)) {
@@ -103,6 +104,18 @@ public class EntryCodeInfoRecorder extends BlockRecorder<IndexedFanout, CodeInfo
 		}		
 	}
 	
+	@Override
+	protected void visitAtomicDo(AtomicDo atomicDo) {
+		super.visitAtomicDo(atomicDo);		
+		this.updateCalls(atomicDo.getFanoutId(), atomicDo.getCallArguments());
+	}
+	
+	@Override
+	protected void visitExtrinsic(Extrinsic extrinsic) {
+		super.visitExtrinsic(extrinsic);
+		this.updateCalls(extrinsic.getFanoutId(), extrinsic.getCallArguments());
+	}
+
 	@Override
 	protected void visitReadCmd(ReadCmd readCmd) {
 		super.visitReadCmd(readCmd);

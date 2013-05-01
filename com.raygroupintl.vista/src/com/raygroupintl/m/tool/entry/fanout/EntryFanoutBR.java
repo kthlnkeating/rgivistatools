@@ -21,7 +21,6 @@ import java.util.List;
 import java.util.Set;
 
 import com.raygroupintl.m.parsetree.Routine;
-import com.raygroupintl.m.parsetree.data.CallArgument;
 import com.raygroupintl.m.parsetree.data.EntryId;
 import com.raygroupintl.m.parsetree.data.IndexedFanout;
 import com.raygroupintl.m.parsetree.visitor.BlockRecorder;
@@ -30,10 +29,6 @@ import com.raygroupintl.m.tool.entry.BlockData;
 import com.raygroupintl.struct.HierarchicalMap;
 
 public class EntryFanoutBR extends BlockRecorder<IndexedFanout, BlockData<IndexedFanout>> {
-	@Override
-	protected void postUpdateFanout(EntryId fanout, CallArgument[] callArguments) {		
-	}
-	
 	@Override
 	protected BlockData<IndexedFanout> getNewBlockData(EntryId entryId, String[] params) {
 		return new BlockData<IndexedFanout>(entryId);

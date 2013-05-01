@@ -301,8 +301,15 @@ public class Visitor {
 		line.acceptSubNodes(this);
 	}
 	
+	protected void visitAssumedGoto(Entry fromEntry, Entry toEntry) {		
+	}
+	
 	protected void visitEntry(Entry entry) {
 		entry.acceptSubNodes(this);
+		Entry nextEntry = entry.getContinuationEntry();
+		if (nextEntry != null) {
+			this.visitAssumedGoto(entry, nextEntry);
+		}
 	}
 		
 	protected void visitInnerEntryList(InnerEntryList entryList) {

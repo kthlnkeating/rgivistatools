@@ -22,7 +22,6 @@ import java.util.Set;
 import com.raygroupintl.m.parsetree.Local;
 import com.raygroupintl.m.parsetree.Node;
 import com.raygroupintl.m.parsetree.OpenCloseUseCmdNodes;
-import com.raygroupintl.m.parsetree.data.CallArgument;
 import com.raygroupintl.m.parsetree.data.EntryId;
 import com.raygroupintl.m.parsetree.data.IndexedFanout;
 import com.raygroupintl.m.parsetree.visitor.BlockRecorder;
@@ -40,10 +39,6 @@ class AssumedVariablesRecorder extends BlockRecorder<IndexedFanout, AssumedVaria
 		if (d != null) {
 			d.addLocal(local);	
 		}
-	}
-	
-	@Override
-	protected void postUpdateFanout(EntryId fanout, CallArgument[] callArguments) {
 	}
 	
 	@Override

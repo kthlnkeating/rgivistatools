@@ -16,7 +16,9 @@
 
 package com.raygroupintl.m.tool.entry.fanin;
 
-import com.raygroupintl.m.parsetree.data.CallArgument;
+import com.raygroupintl.m.parsetree.AtomicDo;
+import com.raygroupintl.m.parsetree.AtomicGoto;
+import com.raygroupintl.m.parsetree.Extrinsic;
 import com.raygroupintl.m.parsetree.data.EntryId;
 import com.raygroupintl.m.parsetree.data.IndexedFanout;
 import com.raygroupintl.m.parsetree.visitor.BlockRecorder;
@@ -28,14 +30,31 @@ public class MarkedAsFaninBR extends BlockRecorder<IndexedFanout, FaninMark> {
 		this.entryId = entryId;
 	}
 
-	@Override
-	protected void postUpdateFanout(EntryId fanout, CallArgument[] callArguments) {
+	protected void updateMark(EntryId fanout) {
 		if (this.entryId.equals(fanout, this.getCurrentRoutineName())) {
 			FaninMark b = this.getCurrentBlockData();
 			b.set(this.entryId);
 		}
 	}
 	
+	@Override
+	protected void visitAtomicDo(AtomicDo atomicDo) {
+		super.visitAtomicDo(atomicDo);		
+		this.updateMark(atomicDo.getFanoutId());
+	}
+	
+	@Override
+	protected void visitAtomicGoto(AtomicGoto atomicGoto) {
+		super.visitAtomicGoto(atomicGoto);
+		this.updateMark(atomicGoto.getFanoutId());
+	}
+	
+	@Override
+	protected void visitExtrinsic(Extrinsic extrinsic) {
+		super.visitExtrinsic(extrinsic);
+		this.updateMark(extrinsic.getFanoutId());
+	}
+
 	@Override
 	protected FaninMark getNewBlockData(EntryId entryId, String[] params) {
 		return new FaninMark(entryId);
