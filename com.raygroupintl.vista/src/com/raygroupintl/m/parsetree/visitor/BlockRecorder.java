@@ -120,19 +120,21 @@ public abstract class BlockRecorder<F extends EntryObject, T extends BlockData<F
 		if (entryList != this.lastInnerEntryList) {
 			this.lastInnerEntryList = entryList;
 			HierarchicalMap<String, Block<F, T>> lastBlocks = this.currentBlocks;
+			
 			T lastBlock = this.currentBlockData;
-			this.currentBlockData = null;
-			this.currentBlocks = new HierarchicalMap<String, Block<F, T>>(lastBlocks);
-			super.visitInnerEntryList(entryList);
-			String tag = entryList.getName();
-			this.currentBlocks = lastBlocks;
-			this.currentBlockData = lastBlock;
 			if ((lastBlock != null)) {
+				String tag = entryList.getName();
 				EntryId defaultDo = new EntryId(null, tag);
 				F fo = this.getFanout(defaultDo);
 				lastBlock.addFanout(fo);
 				++this.index;
 			}
+						
+			this.currentBlockData = null;
+			this.currentBlocks = new HierarchicalMap<String, Block<F, T>>(lastBlocks);
+			super.visitInnerEntryList(entryList);
+			this.currentBlocks = lastBlocks;
+			this.currentBlockData = lastBlock;
 		}
 	}
 		
