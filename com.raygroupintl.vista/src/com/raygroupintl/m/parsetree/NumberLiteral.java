@@ -16,6 +16,9 @@
 
 package com.raygroupintl.m.parsetree;
 
+import com.raygroupintl.m.parsetree.data.CallArgument;
+import com.raygroupintl.m.parsetree.data.CallArgumentType;
+
 public class NumberLiteral extends Literal {
 	private static final long serialVersionUID = 1L;
 
@@ -31,5 +34,10 @@ public class NumberLiteral extends Literal {
 	@Override
 	public void acceptCallArgument(Visitor visitor, int order) {
 		visitor.passNumberLiteral(this, order);
+	}
+
+	@Override
+	public CallArgument toCallArgument() {
+		return new CallArgument(CallArgumentType.NUMBER_LITERAL, this);
 	}
 }

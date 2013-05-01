@@ -18,6 +18,8 @@ package com.raygroupintl.m.parsetree;
 
 import java.io.Serializable;
 
+import com.raygroupintl.m.parsetree.data.CallArgument;
+
 public interface Node extends Serializable {
 	void accept(Visitor visitor);
 	
@@ -34,6 +36,7 @@ public interface Node extends Serializable {
 	void acceptPostMerge(Visitor visitor, Node rhs);
 	
 	void acceptCallArgument(Visitor visitor, int order);
+	CallArgument toCallArgument();
 	
 	ParentNode addSelf(ParentNode current, NodeList<Node> nodes, int level);
 	

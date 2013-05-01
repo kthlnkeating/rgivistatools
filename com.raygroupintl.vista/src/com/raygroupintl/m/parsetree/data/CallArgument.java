@@ -16,20 +16,26 @@
 
 package com.raygroupintl.m.parsetree.data;
 
-public class CallArgument {
+import java.io.Serializable;
+
+import com.raygroupintl.m.parsetree.Node;
+
+public class CallArgument implements Serializable {
+	private static final long serialVersionUID = 1L;
+
 	private CallArgumentType type;
-	private String value;
+	private Node node;
 	
-	public CallArgument(CallArgumentType type, String value) {
+	public CallArgument(CallArgumentType type, Node node) {
 		this.type = type;
-		this.value = value;
+		this.node = node;
 	}
 	
 	public CallArgumentType getType() {
 		return this.type;
 	}
 	
-	public String getValue() {
-		return this.value;
+	public Node getNode() {
+		return this.node;
 	}
 }

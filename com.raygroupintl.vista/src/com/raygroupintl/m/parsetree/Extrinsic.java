@@ -16,21 +16,13 @@
 
 package com.raygroupintl.m.parsetree;
 
-public class Extrinsic extends FanoutNode {
+public class Extrinsic extends FanoutNodeWithArguments {
 	private static final long serialVersionUID = 1L;
 
-	public ActualList actualList;
-			
-	public void setActualList(ActualList actualList) {
-		this.actualList = actualList;
-	}
-	
 	public void acceptSubNodes(Visitor visitor) {
 		super.acceptLabelNodes(visitor);
 		super.acceptRoutineNodes(visitor);
-		if (this.actualList != null) {
-			this.actualList.accept(visitor);
-		}		
+		super.acceptArguments(visitor);
 	}
 	
 	@Override

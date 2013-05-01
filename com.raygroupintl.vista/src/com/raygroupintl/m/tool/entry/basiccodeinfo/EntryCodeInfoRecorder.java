@@ -91,7 +91,8 @@ public class EntryCodeInfoRecorder extends BlockRecorder<IndexedFanout, CodeInfo
 				if ((caType == CallArgumentType.STRING_LITERAL) || (caType == CallArgumentType.NUMBER_LITERAL)) {
 					String routineName = fanout.getRoutineName();						
 					if ((routineName != null) && (routineName.length() > 1) && inFilemanRoutine(routineName, false)) {
-						String cleanValue = removeDoubleQuote(ca.getValue());
+						Node caNode = ca.getNode();
+						String cleanValue = removeDoubleQuote(caNode.getAsConstExpr());
 						if (cleanValue.length() > 0 && validate(cleanValue)) {
 							String value = fanout.toString() + "(" + cleanValue;
 							d.addFilemanCalls(value);

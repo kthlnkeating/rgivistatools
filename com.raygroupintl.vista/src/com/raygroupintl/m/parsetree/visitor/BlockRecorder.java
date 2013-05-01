@@ -16,9 +16,6 @@
 
 package com.raygroupintl.m.parsetree.visitor;
 
-import java.util.HashSet;
-import java.util.Set;
-
 import com.raygroupintl.m.parsetree.DeadCmds;
 import com.raygroupintl.m.parsetree.Entry;
 import com.raygroupintl.m.parsetree.InnerEntryList;
@@ -32,13 +29,10 @@ import com.raygroupintl.struct.HierarchicalMap;
 
 public abstract class BlockRecorder<F extends EntryObject, T extends BlockData<F>> extends FanoutRecorder {
 	private HierarchicalMap<String, Block<F, T>> currentBlocks;
-	
 	private T currentBlockData;
 	private String currentRoutineName;
-	
 	private int index;
-	
-	private Set<Integer> innerEntryListHash = new HashSet<Integer>();
+	private InnerEntryList lastInnerEntryList;
 
 	protected T getCurrentBlockData() {
 		return this.currentBlockData;
@@ -57,15 +51,14 @@ public abstract class BlockRecorder<F extends EntryObject, T extends BlockData<F
 		this.currentBlockData = null;
 		this.currentRoutineName = null;
 		this.index = 0;		
-		this.innerEntryListHash = new HashSet<Integer>();
+		this.lastInnerEntryList = null;
 	}
 	
 	protected abstract void postUpdateFanout(EntryId fanout, CallArgument[] callArguments);
 	
 	@Override
-	protected void updateFanout(EntryId fanoutId) {
+	protected void updateFanout(EntryId fanoutId, CallArgument[] callArguments) {
 		if (fanoutId != null) {
-			CallArgument[] callArguments = this.getLastArguments();
 			F fo = this.getFanout(fanoutId);
 			this.currentBlockData.addFanout(fo);	
 			this.postUpdateFanout(fanoutId, callArguments);
@@ -104,9 +97,8 @@ public abstract class BlockRecorder<F extends EntryObject, T extends BlockData<F
 			
 	@Override
 	protected void visitInnerEntryList(InnerEntryList entryList) {
-		int id = System.identityHashCode(entryList);
-		if (! this.innerEntryListHash.contains(id)) {
-			this.innerEntryListHash.add(id);
+		if (entryList != this.lastInnerEntryList) {
+			this.lastInnerEntryList = entryList;
 			HierarchicalMap<String, Block<F, T>> lastBlocks = this.currentBlocks;
 			T lastBlock = this.currentBlockData;
 			this.currentBlockData = null;

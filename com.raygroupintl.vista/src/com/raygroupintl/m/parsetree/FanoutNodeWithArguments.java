@@ -17,29 +17,30 @@
 package com.raygroupintl.m.parsetree;
 
 import com.raygroupintl.m.parsetree.data.CallArgument;
-import com.raygroupintl.m.parsetree.data.CallArgumentType;
 
-public class LocalReference extends BasicNode {
+public abstract class FanoutNodeWithArguments extends FanoutNode {
 	private static final long serialVersionUID = 1L;
 
-	private Local local;
+	private CallArgument[] callArguments;
 	
-	public LocalReference(Local local) {
-		this.local = local;
+	public void setCallArguments(CallArgument[] callArguments) {
+		this.callArguments = callArguments;
 	}
 	
-	@Override
-	public void accept(Visitor visitor) {
-		this.local.accept(visitor);
+	public CallArgument[] getCallArguments() {
+		return this.callArguments;
 	}
 	
-	@Override
-	public void acceptCallArgument(Visitor visitor, int order) {
-		visitor.passLocalByRef(this.local, order);
-	}
-
-	@Override
-	public CallArgument toCallArgument() {
-		return new CallArgument(CallArgumentType.LOCAL_BY_REF, this);
+	protected void acceptArguments(Visitor visitor) {
+		if (this.callArguments != null) {
+			int index = 0;
+			for (CallArgument callArgument : this.callArguments) {
+				if (callArgument != null) {
+					Node node = callArgument.getNode();
+					node.acceptCallArgument(visitor, index);
+				}
+				++index;
+			}
+		}		
 	}
 }

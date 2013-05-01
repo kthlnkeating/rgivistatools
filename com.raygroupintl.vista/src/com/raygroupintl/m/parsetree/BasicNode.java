@@ -16,6 +16,9 @@
 
 package com.raygroupintl.m.parsetree;
 
+import com.raygroupintl.m.parsetree.data.CallArgument;
+import com.raygroupintl.m.parsetree.data.CallArgumentType;
+
 public abstract class BasicNode implements Node {
 	private static final long serialVersionUID = 1L;
 
@@ -67,6 +70,11 @@ public abstract class BasicNode implements Node {
 		this.accept(visitor);
 	}
 	
+	@Override
+	public CallArgument toCallArgument() {
+		return new CallArgument(CallArgumentType.COMPLEX, this);
+	}
+
 	@Override
 	public String getAsConstExpr() {
 		return null;

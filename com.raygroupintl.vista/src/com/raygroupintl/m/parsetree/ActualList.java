@@ -16,6 +16,8 @@
 
 package com.raygroupintl.m.parsetree;
 
+import com.raygroupintl.m.parsetree.data.CallArgument;
+
 public class ActualList extends NodeList<Node> {
 	private static final long serialVersionUID = 1L;
 
@@ -37,13 +39,27 @@ public class ActualList extends NodeList<Node> {
 		visitor.visitActualList(this);
 	}
 	
+	private void updateFanoutNode(FanoutNodeWithArguments fanoutNode) {
+		CallArgument[] callArguments = new CallArgument[this.size()];
+		int index = 0;
+		for (Node node : this.getNodes()) {
+			if (node != null) {
+				CallArgument ca = node.toCallArgument();
+				callArguments[index] = ca;
+			}
+			++index;
+		}		
+
+		fanoutNode.setCallArguments(callArguments);		
+	}
+	
 	@Override
 	public void update(AtomicDo atomicDo) {		
-		atomicDo.setActualList(this);
+		this.updateFanoutNode(atomicDo);
 	}
 	
 	@Override
 	public void update(Extrinsic extrinsic) {		
-		extrinsic.setActualList(this);
+		this.updateFanoutNode(extrinsic);
 	}
 }

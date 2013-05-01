@@ -25,10 +25,6 @@ public abstract class Literal extends TerminalNode {
 		this.value = value;
 	}
 	
-	public String getValue() {
-		return this.value;
-	}
-	
 	@Override
 	public String getAsConstExpr() {
 		return this.value;

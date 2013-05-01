@@ -16,6 +16,9 @@
 
 package com.raygroupintl.m.parsetree;
 
+import com.raygroupintl.m.parsetree.data.CallArgument;
+import com.raygroupintl.m.parsetree.data.CallArgumentType;
+
 public class StringLiteral extends Literal {
 	private static final long serialVersionUID = 1L;
 
@@ -24,7 +27,7 @@ public class StringLiteral extends Literal {
 	}
 
 	public String getNakedValue() {
-		String value = this.getValue();
+		String value = this.getAsConstExpr();
 		return value.substring(1, value.length()-1);
 	}
 	
@@ -36,5 +39,10 @@ public class StringLiteral extends Literal {
 	@Override
 	public void acceptCallArgument(Visitor visitor, int order) {
 		visitor.passStringLiteral(this, order);
+	}
+
+	@Override
+	public CallArgument toCallArgument() {
+		return new CallArgument(CallArgumentType.STRING_LITERAL, this);
 	}
 }

@@ -18,23 +18,15 @@ package com.raygroupintl.m.parsetree.visitor;
 
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 
-import com.raygroupintl.m.parsetree.ActualList;
 import com.raygroupintl.m.parsetree.AtomicDo;
 import com.raygroupintl.m.parsetree.AtomicGoto;
 import com.raygroupintl.m.parsetree.Extrinsic;
 import com.raygroupintl.m.parsetree.InnerEntryList;
-import com.raygroupintl.m.parsetree.Local;
-import com.raygroupintl.m.parsetree.NumberLiteral;
-import com.raygroupintl.m.parsetree.ObjectMethodCall;
 import com.raygroupintl.m.parsetree.Routine;
-import com.raygroupintl.m.parsetree.StringLiteral;
 import com.raygroupintl.m.parsetree.data.CallArgument;
-import com.raygroupintl.m.parsetree.data.CallArgumentType;
 import com.raygroupintl.m.parsetree.data.EntryId;
 import com.raygroupintl.m.struct.LineLocation;
 import com.raygroupintl.struct.Filter;
@@ -42,8 +34,7 @@ import com.raygroupintl.struct.Filter;
 public class FanoutRecorder extends LocationMarker {
 	private Map<LineLocation, List<EntryId>> fanouts;
 	private Filter<EntryId> filter;
-	private Set<Integer> innerEntryListHash = new HashSet<Integer>();
-	private CallArgument[] lastCallArguments;
+	private InnerEntryList lastInnerEntryList;
 	
 	public FanoutRecorder() {
 	}
@@ -52,38 +43,7 @@ public class FanoutRecorder extends LocationMarker {
 		this.filter = filter;
 	}
 	
-	@Override
-	protected void passStringLiteral(StringLiteral literal, int index) {		
-		String name = literal.getValue();
-		CallArgument ca = new CallArgument(CallArgumentType.STRING_LITERAL, name);
-		this.lastCallArguments[index] = ca;
-	}
-	
-	@Override
-	protected void passNumberLiteral(NumberLiteral literal, int index) {		
-		String name = literal.getValue();
-		CallArgument ca = new CallArgument(CallArgumentType.NUMBER_LITERAL, name);
-		this.lastCallArguments[index] = ca;
-	}
-	
-	@Override
-	protected void passLocalByRef(Local local, int index) {
-		String name = local.getName().toString();
-		CallArgument ca = new CallArgument(CallArgumentType.LOCAL_BY_REF, name);
-		this.lastCallArguments[index] = ca;
-	}
-
-	@Override
-	protected void visitActualList(ActualList actualList) {
-		this.lastCallArguments = new CallArgument[actualList.size()];
-		super.visitActualList(actualList);
-	}
-
-	protected CallArgument[] getLastArguments() {
-		return this.lastCallArguments;
-	}
-	
-	protected void updateFanout(EntryId fanoutId) {
+	protected void updateFanout(EntryId fanoutId, CallArgument[] callArguments) {
 		if (fanoutId != null) {
 			if (this.filter != null) {
 				if (! this.filter.isValid(fanoutId)) return;
@@ -100,38 +60,26 @@ public class FanoutRecorder extends LocationMarker {
 		
 	@Override
 	protected void visitAtomicDo(AtomicDo atomicDo) {
-		this.lastCallArguments = null;
 		super.visitAtomicDo(atomicDo);		
-		this.updateFanout(atomicDo.getFanoutId());
+		this.updateFanout(atomicDo.getFanoutId(), atomicDo.getCallArguments());
 	}
 	
 	@Override
 	protected void visitAtomicGoto(AtomicGoto atomicGoto) {
-		this.lastCallArguments = null;
 		super.visitAtomicGoto(atomicGoto);
-		this.updateFanout(atomicGoto.getFanoutId());
+		this.updateFanout(atomicGoto.getFanoutId(), null);
 	}
 	
 	@Override
 	protected void visitExtrinsic(Extrinsic extrinsic) {
-		CallArgument[] current = this.lastCallArguments;
 		super.visitExtrinsic(extrinsic);
-		this.updateFanout(extrinsic.getFanoutId());
-		this.lastCallArguments = current;
-	}
-	
-	@Override
-	protected void visitObjectMethodCall(ObjectMethodCall omc) {
-		CallArgument[] current = this.lastCallArguments;
-		super.visitObjectMethodCall(omc);
-		this.lastCallArguments = current;
+		this.updateFanout(extrinsic.getFanoutId(), extrinsic.getCallArguments());
 	}
 	
 	@Override
 	protected void visitInnerEntryList(InnerEntryList entryList) {
-		int id = System.identityHashCode(entryList);
-		if (! this.innerEntryListHash.contains(id)) {
-			this.innerEntryListHash.add(id);
+		if (entryList != this.lastInnerEntryList) {
+			this.lastInnerEntryList = entryList;
 			super.visitInnerEntryList(entryList);
 		}
 	}
