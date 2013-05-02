@@ -22,6 +22,10 @@ import java.util.Collections;
 import java.util.List;
 
 public abstract class Terminal {
+	public abstract boolean start();
+	
+	public abstract void stop();
+	
 	public abstract boolean write(String data);
 	
 	public abstract boolean writeEOL();

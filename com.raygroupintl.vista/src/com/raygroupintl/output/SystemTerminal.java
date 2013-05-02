@@ -14,13 +14,27 @@
 // limitations under the License.
 //---------------------------------------------------------------------------
 
-package com.raygroupintl.m.tool;
+package com.raygroupintl.output;
 
-import java.io.InputStream;
-import java.util.Collection;
-
-public interface SourceCodeSupply {
-	InputStream getStream(String routineName);
+public class SystemTerminal extends Terminal {
+	@Override
+	public boolean start() {
+		return true;
+	}
 	
-	Collection<String> getAllRoutineNames();
+	@Override
+	public void stop() {
+	}
+	
+	@Override
+	public boolean write(String data) {
+		System.out.print(data);
+		return true;
+	}
+	
+	@Override
+	public boolean writeEOL() {
+		System.out.println();
+		return true;
+	}
 }

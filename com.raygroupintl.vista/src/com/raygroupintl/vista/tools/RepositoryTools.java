@@ -47,9 +47,9 @@ public class RepositoryTools extends Tools {
 		
 		@Override
 		public void run() {
-			FileWrapper fr = this.getOutputFile();
+			FileWrapper fr = CLIParamsAdapter.getOutputFile(this.params);
 			if (fr != null) {
-				RepositoryInfo ri = this.getRepositoryInfo();
+				RepositoryInfo ri = CLIParamsAdapter.getRepositoryInfo(this.params);
 				if (ri != null) {
 					VistaPackages vps = this.getVistaPackages(ri);
 					if (vps != null) {						
@@ -68,9 +68,9 @@ public class RepositoryTools extends Tools {
 		
 		@Override
 		public void run() {
-			FileWrapper fr = this.getOutputFile();
+			FileWrapper fr = CLIParamsAdapter.getOutputFile(this.params);
 			if (fr != null) {
-				RepositoryInfo ri = this.getRepositoryInfo();
+				RepositoryInfo ri = CLIParamsAdapter.getRepositoryInfo(this.params);
 				if (ri != null) {
 					VistaPackages vps = this.getVistaPackages(ri);
 					if (vps != null) {						
@@ -89,9 +89,9 @@ public class RepositoryTools extends Tools {
 		
 		@Override
 		public void run() {
-			FileWrapper fr = this.getOutputFile();
+			FileWrapper fr = CLIParamsAdapter.getOutputFile(this.params);
 			if (fr != null) {
-				RepositoryInfo ri = this.getRepositoryInfo();
+				RepositoryInfo ri = CLIParamsAdapter.getRepositoryInfo(this.params);
 				if (ri != null) {
 					VistaPackages vps = this.getVistaPackages(ri);
 					if (vps != null) {						
@@ -113,9 +113,9 @@ public class RepositoryTools extends Tools {
 		
 		@Override
 		public void run() {
-			FileWrapper fr = this.getOutputFile();
+			FileWrapper fr = CLIParamsAdapter.getOutputFile(this.params);
 			if (fr != null) {
-				RepositoryInfo ri = this.getRepositoryInfo();
+				RepositoryInfo ri = CLIParamsAdapter.getRepositoryInfo(this.params);
 				if (ri != null) {
 					VistaPackages vps = this.getVistaPackages(ri);
 					if (vps != null) {
@@ -134,9 +134,9 @@ public class RepositoryTools extends Tools {
 		
 		@Override
 		public void run() {
-			FileWrapper fr = this.getOutputFile();
+			FileWrapper fr = CLIParamsAdapter.getOutputFile(this.params);
 			if (fr != null) {
-				RepositoryInfo ri = this.getRepositoryInfo();
+				RepositoryInfo ri = CLIParamsAdapter.getRepositoryInfo(this.params);
 				if (ri != null) {
 					VistaPackages vps = this.getVistaPackages(ri);
 					if (vps != null) {						
@@ -155,9 +155,9 @@ public class RepositoryTools extends Tools {
 		
 		@Override
 		public void run() {
-			FileWrapper fr = this.getOutputFile();
+			FileWrapper fr = CLIParamsAdapter.getOutputFile(this.params);
 			if (fr != null) {
-				RepositoryInfo ri = this.getRepositoryInfo();
+				RepositoryInfo ri = CLIParamsAdapter.getRepositoryInfo(this.params);
 				if (ri != null) {
 					VistaPackages vps = this.getVistaPackages(ri);
 					if (vps != null) {						
@@ -177,9 +177,9 @@ public class RepositoryTools extends Tools {
 		
 		@Override
 		public void run() {
-			FileWrapper fr = this.getOutputFile();
+			FileWrapper fr = CLIParamsAdapter.getOutputFile(this.params);
 			if (fr != null) {
-				RepositoryInfo ri = this.getRepositoryInfo();
+				RepositoryInfo ri = CLIParamsAdapter.getRepositoryInfo(this.params);
 				if (ri != null) {
 					VistaPackages vps = this.getVistaPackages(ri);
 					if (vps != null) {			
@@ -215,9 +215,9 @@ public class RepositoryTools extends Tools {
 		
 		@Override
 		public void run() {
-			FileWrapper fr = this.getOutputFile();
+			FileWrapper fr = CLIParamsAdapter.getOutputFile(this.params);
 			if (fr != null) {
-				RepositoryInfo ri = this.getRepositoryInfo();
+				RepositoryInfo ri = CLIParamsAdapter.getRepositoryInfo(this.params);
 				if (ri != null) {
 					VistaPackages vps = this.getVistaPackages(ri);
 					if (vps != null) {						
@@ -236,9 +236,9 @@ public class RepositoryTools extends Tools {
 		
 		@Override
 		public void run() {
-			FileWrapper fr = this.getOutputFile();
+			FileWrapper fr = CLIParamsAdapter.getOutputFile(this.params);
 			if (fr != null) {
-				RepositoryInfo ri = this.getRepositoryInfo();
+				RepositoryInfo ri = CLIParamsAdapter.getRepositoryInfo(this.params);
 				if (ri != null) {
 					VistaPackages vps = this.getVistaPackages(ri);
 					if (vps != null) {						
@@ -257,9 +257,9 @@ public class RepositoryTools extends Tools {
 		
 		@Override
 		public void run() {
-			FileWrapper fr = this.getOutputFile();
+			FileWrapper fr = CLIParamsAdapter.getOutputFile(this.params);
 			if (fr != null) {
-				RepositoryInfo ri = this.getRepositoryInfo();
+				RepositoryInfo ri = CLIParamsAdapter.getRepositoryInfo(this.params);
 				if (ri != null) {
 					VistaPackages vps = this.getVistaPackages(ri);
 					if (vps != null) {						
@@ -278,7 +278,7 @@ public class RepositoryTools extends Tools {
 		
 		@Override
 		public void run() {
-			RepositoryInfo ri = this.getRepositoryInfo();
+			RepositoryInfo ri = CLIParamsAdapter.getRepositoryInfo(this.params);
 			if (ri != null) {
 				VistaPackages vps = this.getVistaPackages(ri);
 				if (vps != null) {						
@@ -299,9 +299,9 @@ public class RepositoryTools extends Tools {
 		
 		@Override
 		public void run() {
-			FileWrapper fr = this.getOutputFile();
+			FileWrapper fr = CLIParamsAdapter.getOutputFile(this.params);
 			if (fr != null) {
-				RepositoryInfo ri = this.getRepositoryInfo();
+				RepositoryInfo ri = CLIParamsAdapter.getRepositoryInfo(this.params);
 				if (ri != null) {
 					VistaPackages vps = this.getVistaPackages(ri);
 					if (vps != null) {	
@@ -323,9 +323,9 @@ public class RepositoryTools extends Tools {
 		
 		@Override
 		public void run() {
-			FileWrapper fr = this.getOutputFile();
+			FileWrapper fr = CLIParamsAdapter.getOutputFile(this.params);
 			if (fr != null) {
-				RepositoryInfo ri = this.getRepositoryInfo();
+				RepositoryInfo ri = CLIParamsAdapter.getRepositoryInfo(this.params);
 				if (ri != null) {
 					VistaPackages vps = this.getVistaPackages(ri);
 					if (vps != null) {	

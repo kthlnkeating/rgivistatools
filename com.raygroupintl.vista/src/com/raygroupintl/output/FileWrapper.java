@@ -34,6 +34,7 @@ public class FileWrapper extends Terminal {
 		this.outputFileName = outputFileName;
 	}
 	
+	@Override
 	public boolean start() {
 		try {
 			File file = new File(this.outputFileName);
@@ -45,6 +46,7 @@ public class FileWrapper extends Terminal {
 		}
 	}
 	
+	@Override
 	public void stop() {
 		try {
 			if (this.os != null) {
@@ -58,6 +60,7 @@ public class FileWrapper extends Terminal {
 		}
 	}
 
+	@Override
 	public boolean write(String data) {
 		try {
 			if (this.os != null) {
@@ -72,6 +75,7 @@ public class FileWrapper extends Terminal {
 		return false;
 	}
 	
+	@Override
 	public boolean writeEOL() {
 		return this.write(this.eol);
 	}

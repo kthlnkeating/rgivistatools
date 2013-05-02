@@ -16,142 +16,49 @@
 
 package com.raygroupintl.vista.tools;
 
-import java.io.IOException;
-import java.nio.file.Path;
-import java.nio.file.Paths;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Scanner;
-
-import com.raygroupintl.m.parsetree.data.EntryId;
-import com.raygroupintl.m.tool.CommonToolParams;
-import com.raygroupintl.m.tool.ParseTreeSupply;
-import com.raygroupintl.m.tool.SavedParsedTrees;
-import com.raygroupintl.m.tool.SourceCodeFiles;
-import com.raygroupintl.m.tool.SourceCodeToParseTreeAdapter;
-import com.raygroupintl.m.tool.entry.MEntryToolInput;
-import com.raygroupintl.m.tool.entry.RecursionDepth;
-import com.raygroupintl.m.tool.entry.RecursionSpecification;
-import com.raygroupintl.m.tool.entry.assumedvariables.AssumedVariablesToolParams;
-import com.raygroupintl.m.tool.entry.basiccodeinfo.BasicCodeInfoToolParams;
-import com.raygroupintl.m.tool.entry.localassignment.LocalAssignmentToolParams;
+import com.raygroupintl.m.token.MVersion;
+import com.raygroupintl.output.FileWrapper;
+import com.raygroupintl.output.SystemTerminal;
+import com.raygroupintl.output.Terminal;
 import com.raygroupintl.vista.repository.RepositoryInfo;
 
 public class CLIParamsAdapter {
-	public static RecursionSpecification toRecursionSpecification(CLIParams params) {
-		String rdName = params.recursionDepth;
-		if ((rdName == null) || (rdName.isEmpty())) {
-			rdName = "label";
-		}
-		RecursionSpecification rs = new RecursionSpecification();
-		try {
-			RecursionDepth d = RecursionDepth.get(rdName);
-			rs.setDepth(d);
-			rs.addIncludedFanoutNamespaces(params.includeNamespaces);
-			rs.addExcludedFanoutNamespaces(params.excludeNamespaces);
-			rs.addExcludedFanoutExceptionNamespaces(params.excludeExceptionNamespaces);
-			return rs;
-		} catch (Exception ex) {
-			return null;
-		}			
-	}
+	private static RepositoryInfo repositoryInfo;
 	
-	private static ParseTreeSupply getParseTreeSupply(CLIParams params) {
-		if ((params.parseTreeDirectory == null) || params.parseTreeDirectory.isEmpty()) {
-			String rootDirectory = params.rootDirectory;
-			if ((rootDirectory == null) || (rootDirectory.isEmpty())) {
-				rootDirectory = RepositoryInfo.getLocation();
-			}
-			try {
-				SourceCodeFiles files = SourceCodeFiles.getInstance(rootDirectory);
-				return new SourceCodeToParseTreeAdapter(files);
-			}
-			catch (IOException e) {
-				return null;
-			}				
-		} else {
-			return new SavedParsedTrees(params.parseTreeDirectory);
+	public static RepositoryInfo getRepositoryInfo(CLIParams params) {
+		if (CLIParamsAdapter.repositoryInfo != null) {
+			return CLIParamsAdapter.repositoryInfo;
 		}		
-	}
-
-	public static CommonToolParams toCommonToolParams(CLIParams params) {
-		ParseTreeSupply pts = getParseTreeSupply(params);
-		CommonToolParams result = new CommonToolParams(pts);
-		RecursionSpecification rs = toRecursionSpecification(params);
-		result.setRecursionSpecification(rs);	
-		return result;				
-	}
-
-	public static LocalAssignmentToolParams toLocalAssignmentToolParams(CLIParams params) {
-		ParseTreeSupply pts = getParseTreeSupply(params);
-		LocalAssignmentToolParams result = new LocalAssignmentToolParams(pts);
-		if (params.includes.size() > 0) {
-			result.addLocals(params.includes);
-		}
-		RecursionSpecification rs = toRecursionSpecification(params);
-		result.setRecursionSpecification(rs);	
-		return result;		
-	}
-
-	public static AssumedVariablesToolParams toAssumedVariablesToolParams(CLIParams params) {
-		ParseTreeSupply pts = getParseTreeSupply(params);
-		AssumedVariablesToolParams result = new AssumedVariablesToolParams(pts);
-		if (params.excludes.size() > 0) {
-			result.addExpected(params.excludes);
-		}
-		RecursionSpecification rs = toRecursionSpecification(params);
-		result.setRecursionSpecification(rs);	
-		return result;		
-	}
-
-	public static BasicCodeInfoToolParams toBasicCodeInfoToolParams(CLIParams params, RepositoryInfo repositoryInfo) {
-		ParseTreeSupply pts = getParseTreeSupply(params);
-		BasicCodeInfoToolParams result = new BasicCodeInfoToolParams(pts, repositoryInfo);
-
-		RecursionSpecification rs = toRecursionSpecification(params);
-		result.setRecursionSpecification(rs);	
-		return result;		
-	}
-	
-	protected static List<String> getEntriesInString(CLIParams params) {
-		if (params.inputFile != null) {
-			try {
-				Path path = Paths.get(params.inputFile);
-				Scanner scanner = new Scanner(path);
-				List<String> result = new ArrayList<String>();
-				while (scanner.hasNextLine()) {
-					String line = scanner.nextLine();
-					result.add(line);
-				}		
-				scanner.close();
-				return result;
-			} catch (IOException e) {
-				MRALogger.logError("Unable to open file " + params.inputFile);
-				return null;
-			}
-		} else {
-			return params.entries;
-		}			
-	}
-	
-	public static List<EntryId> getEntries(CLIParams params) {
-		List<String> entriesInString = getEntriesInString(params);
-		if (entriesInString != null) {
-			List<EntryId> result = new ArrayList<EntryId>(entriesInString.size());
-			for (String entryInString : entriesInString) {
-				EntryId entryId = EntryId.getInstance(entryInString);
-				result.add(entryId);
-			}
-			return result;
-		}
+		MRARoutineFactory rf = MRARoutineFactory.getInstance(MVersion.CACHE);
+		if (rf != null) {
+			RepositoryInfo ri = RepositoryInfo.getInstance(rf);
+			if (ri != null) {
+				ri.addMDirectories(params.additionalMDirectories);
+				ri.addMFiles(params.additionalMFiles);
+				if ((params.ownershipFilePath != null) && (! params.ownershipFilePath.isEmpty())) {
+					ri.readGlobalOwnership(params.ownershipFilePath);			
+				}
+			}	
+			CLIParamsAdapter.repositoryInfo = ri;
+			return ri;
+		}		
 		return null;
 	}
 	
-	public static MEntryToolInput getMEntryToolInput(CLIParams params) {
-		MEntryToolInput input = new MEntryToolInput();
-		input.addRoutines(params.routines);
-		List<EntryId> entryIds = getEntries(params);
-		input.addEntries(entryIds);
-		return input;
+	public static FileWrapper getOutputFile(CLIParams params) {
+		if ((params.outputFile == null) || params.outputFile.isEmpty()) {
+			MRALogger.logError("File " + params.outputFile + " is not found");
+			return null;
+		} else {
+			return new FileWrapper(params.outputFile);
+		}
+	}
+	
+	public static Terminal getTerminal(CLIParams params) {
+		if ((params.outputFile == null) || params.outputFile.isEmpty()) {
+			return new SystemTerminal();
+		} else {
+			return new FileWrapper(params.outputFile);
+		}
 	}
 }

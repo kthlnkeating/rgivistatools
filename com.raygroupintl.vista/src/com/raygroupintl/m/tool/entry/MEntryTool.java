@@ -77,6 +77,7 @@ public abstract class MEntryTool<T extends MEntryToolIndividualResult, F extends
 			if (hm == null) {
 				MToolError error = new MToolError(MToolErrorType.ROUTINE_NOT_FOUND, new String[]{routineName});
 				result.addError(new EntryId(routineName, null), error);
+				continue;
 			}
 			Set<String> labels = hm.keySet();
 			List<EntryId> entryIds = new ArrayList<EntryId>(labels.size());

@@ -16,8 +16,12 @@
 
 package com.raygroupintl.m.tool;
 
+import java.util.Collection;
+
 import com.raygroupintl.m.parsetree.Routine;
 
 public interface ParseTreeSupply {
 	Routine getParseTree(String routineName);
+	
+	Collection<String> getAllRoutineNames();
 }

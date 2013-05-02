@@ -97,7 +97,7 @@ public class MFileTools extends Tools {
 		public void run() {
 			List<Routine> routines = this.getRoutines();
 			if (routines != null) {
-				FileWrapper fr = this.getOutputFile();
+				FileWrapper fr = CLIParamsAdapter.getOutputFile(this.params);
 				if (fr != null) {
 					EntryWriter ew = new EntryWriter(fr);
 					ew.writeForRoutines(routines);
@@ -115,7 +115,7 @@ public class MFileTools extends Tools {
 		public void run() {
 			List<Routine> routines = this.getRoutines();
 			if (routines != null) {
-				FileWrapper fr = this.getOutputFile();
+				FileWrapper fr = CLIParamsAdapter.getOutputFile(this.params);
 				if (fr != null) {
 					EntryFanoutTool efa = new EntryFanoutTool();
 					efa.addRoutines(routines);

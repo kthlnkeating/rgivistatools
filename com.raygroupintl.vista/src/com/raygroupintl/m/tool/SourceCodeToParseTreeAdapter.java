@@ -17,6 +17,7 @@
 package com.raygroupintl.m.tool;
 
 import java.io.InputStream;
+import java.util.Collection;
 
 import com.raygroupintl.m.parsetree.Node;
 import com.raygroupintl.m.parsetree.Routine;
@@ -69,5 +70,10 @@ public class SourceCodeToParseTreeAdapter implements ParseTreeSupply {
 			}
 		}
 		return null;
+	}
+	
+	@Override
+	public Collection<String> getAllRoutineNames() {
+		return this.sourceCodeSupply.getAllRoutineNames();
 	}
 }

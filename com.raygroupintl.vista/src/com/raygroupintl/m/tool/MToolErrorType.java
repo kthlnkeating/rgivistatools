@@ -17,14 +17,15 @@
 package com.raygroupintl.m.tool;
 
 public enum MToolErrorType {
-	ROUTINE_NOT_FOUND(1),
-	LABEL_NOT_FOUND(2);
+	ROUTINE_NOT_FOUND(1, "Routine {0} is not found."),
+	LABEL_NOT_FOUND(1, "Label {0} is not found.");
 	
 	private int numArguments;
 	private String message;
 	
-	private MToolErrorType(int numArguments) {
+	private MToolErrorType(int numArguments, String message) {
 		this.numArguments = numArguments;
+		this.message = message;
 	}
 	
 	public int getNumArgument() {

@@ -16,10 +16,20 @@
 
 package com.raygroupintl.m.tool;
 
+import java.io.IOException;
+import java.nio.file.Path;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
+
 import com.raygroupintl.m.parsetree.Routine;
+import com.raygroupintl.stringlib.EndsWithFilter;
+import com.raygroupintl.struct.Filter;
+import com.raygroupintl.util.IOUtil;
 
 public class SavedParsedTrees implements ParseTreeSupply {
 	private String inputPath;
+	Collection<String> allRoutineNames;
 
 	public SavedParsedTrees(String inputPath) {
 		this.inputPath = inputPath;
@@ -28,5 +38,26 @@ public class SavedParsedTrees implements ParseTreeSupply {
 	@Override
 	public Routine getParseTree(String routineName) {
 		return Routine.readSerialized(this.inputPath, routineName);		
+	}
+	
+	@Override
+	public Collection<String> getAllRoutineNames() {
+		if (this.allRoutineNames != null) {
+			return this.allRoutineNames;
+		}		
+		try {
+			Filter<String> nameFilter = new EndsWithFilter(".ser");
+			List<Path> paths = IOUtil.getFiles(this.inputPath, nameFilter);
+			List<String> routineNames = new ArrayList<String>();
+			for (Path path : paths) {
+				String fileName = path.getFileName().toString();
+				String routineName = fileName.substring(0, fileName.length()-4);
+				routineNames.add(routineName);
+			}		
+			this.allRoutineNames = routineNames;
+			return routineNames;
+		} catch (IOException e) {
+			return null;
+		}
 	}
 }

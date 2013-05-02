@@ -31,16 +31,13 @@ import com.raygroupintl.m.tool.SavedParsedTrees;
 import com.raygroupintl.m.tool.entry.AccumulatingBlocksSupply;
 import com.raygroupintl.m.tool.entry.Block;
 import com.raygroupintl.m.tool.entry.BlocksSupply;
-import com.raygroupintl.m.tool.entry.MEntryToolIndividualResult;
 import com.raygroupintl.m.tool.entry.MEntryToolInput;
 import com.raygroupintl.m.tool.entry.MEntryToolResult;
 import com.raygroupintl.m.tool.entry.RecursionSpecification;
 import com.raygroupintl.m.tool.entry.assumedvariables.AssumedVariables;
-import com.raygroupintl.m.tool.entry.assumedvariables.AssumedVariablesTool;
 import com.raygroupintl.m.tool.entry.assumedvariables.AssumedVariablesToolParams;
 import com.raygroupintl.m.tool.entry.basiccodeinfo.BasicCodeInfoTR;
 import com.raygroupintl.m.tool.entry.basiccodeinfo.BasicCodeInfoToolParams;
-import com.raygroupintl.m.tool.entry.basiccodeinfo.CodeInfo;
 import com.raygroupintl.m.tool.entry.basiccodeinfo.CodeLocations;
 import com.raygroupintl.m.tool.entry.fanin.EntryFanins;
 import com.raygroupintl.m.tool.entry.fanin.FaninMark;
@@ -53,7 +50,6 @@ import com.raygroupintl.m.tool.entry.legacycodeinfo.LegacyCodeInfo;
 import com.raygroupintl.m.tool.entry.legacycodeinfo.LegacyCodeInfoTool;
 import com.raygroupintl.m.tool.entry.localassignment.LocalAssignmentTool;
 import com.raygroupintl.m.tool.entry.localassignment.LocalAssignmentToolParams;
-import com.raygroupintl.output.FileWrapper;
 import com.raygroupintl.output.Terminal;
 import com.raygroupintl.output.TerminalFormatter;
 import com.raygroupintl.struct.Filter;
@@ -68,110 +64,17 @@ import com.raygroupintl.vista.tools.RepositoryTools;
 import com.raygroupintl.vista.tools.Tool;
 import com.raygroupintl.vista.tools.Tools;
 
-public class RepoEntryTools extends Tools {
-	private static abstract class EntryInfoToolBase<U extends MEntryToolIndividualResult> extends Tool {		
-		public EntryInfoToolBase(CLIParams params) {
-			super(params);
-		}
-		
-		protected abstract MEntryToolResult<U> getResult(RepositoryInfo ri, MEntryToolInput input);
-		
-		protected void write(EntryId entryId, U result, Terminal t, TerminalFormatter tf, boolean skipEmpty) {			
-			if (result.isValid()) {
-				if ((! skipEmpty) || (! result.isEmpty())) {
-					t.writeEOL(" " + entryId.toString2());		
-					this.write(result, t, tf);
-				}
-			} else {
-				t.writeEOL(" " + entryId.toString2());		
-				t.writeEOL("  ERROR: Invalid entry point");
-				return;
-			}
-			
-		}
-				
-		protected abstract void write(U result, Terminal t, TerminalFormatter tf);
-
-		private boolean skipEmpty() {
-			List<String> outputFlags = this.params.outputFlags;
-			for (String outputFlag : outputFlags) {
-				if (outputFlag.equals("ignorenodata")) {
-					return true;
-				}
-			}
-			return false;			
-		}
-		
-		@Override
-		public void run() {
-			FileWrapper fr = this.getOutputFile();
-			if (fr != null) {
-				if ((this.params.rootDirectory != null) && (! this.params.rootDirectory.isEmpty())) {
-					
-				} else {				
-					RepositoryInfo ri = this.getRepositoryInfo();
-					if (ri != null) {			
-						MEntryToolInput input = CLIParamsAdapter.getMEntryToolInput(this.params);
-						if (input != null) {
-							MEntryToolResult<U> result = this.getResult(ri, input);		
-							if (fr.start()) {
-								TerminalFormatter tf = new TerminalFormatter();
-								tf.setTab(12);
-								List<EntryId> entries = result.getEntries();
-								List<U> resultList = result.getResults();
-								int n = entries.size();
-								for (int i=0; i<n; ++i) {
-									this.write(entries.get(i), resultList.get(i), fr, tf, this.skipEmpty());
-								}
-								fr.stop();
-							}
-						}
-					}
-				}
-			}
-		}
-	}
-
-	private static abstract class EntryInfoTool<T, U extends MEntryToolIndividualResult> extends EntryInfoToolBase<U> {	
-		public EntryInfoTool(CLIParams params) {
-			super(params);
-		}
-		
-		protected abstract MEntryToolResult<U> getResult(MEntryToolInput input);
-		
-		@Override
-		public MEntryToolResult<U> getResult(RepositoryInfo ri, MEntryToolInput input) {
-			return this.getResult(input);
-		}
-	}
-
-	private static class EntryAssumedVarTool extends EntryInfoTool<CodeInfo, AssumedVariables> {	
-		public EntryAssumedVarTool(CLIParams params) {
-			super(params);
-		}
-		
-		@Override
-		protected MEntryToolResult<AssumedVariables> getResult(MEntryToolInput input) {
-			AssumedVariablesToolParams params = CLIParamsAdapter.toAssumedVariablesToolParams(this.params);
-			AssumedVariablesTool a = new AssumedVariablesTool(params);
-			return a.getResult(input);			
-		}
-		
-		@Override
-		protected void write(AssumedVariables result, Terminal t, TerminalFormatter tf) {
-			t.writeSortedFormatted("ASSUMED", result.toSet(), tf);
-		}
-	}
-
-	private static class EntryCodeInfoTool extends EntryInfoToolBase<LegacyCodeInfo> {	
+public class CLIEntryTools extends Tools {
+	private static class EntryCodeInfoTool extends CLIEntryTool<LegacyCodeInfo> {	
 		public EntryCodeInfoTool(CLIParams params) {
 			super(params);
 		}
 		
 		@Override
-		public MEntryToolResult<LegacyCodeInfo> getResult(RepositoryInfo ri, MEntryToolInput input) {
-			AssumedVariablesToolParams p = CLIParamsAdapter.toAssumedVariablesToolParams(this.params);
-			BasicCodeInfoToolParams p2 = CLIParamsAdapter.toBasicCodeInfoToolParams(this.params, ri);
+		public MEntryToolResult<LegacyCodeInfo> getResult(MEntryToolInput input) {
+			RepositoryInfo ri = CLIParamsAdapter.getRepositoryInfo(this.params);
+			AssumedVariablesToolParams p = CLIETParamsAdapter.toAssumedVariablesToolParams(this.params);
+			BasicCodeInfoToolParams p2 = CLIETParamsAdapter.toBasicCodeInfoToolParams(this.params, ri);
 			LegacyCodeInfoTool a = new LegacyCodeInfoTool(p, p2);
 			return a.getResult(input);			
 		}
@@ -188,14 +91,14 @@ public class RepoEntryTools extends Tools {
 		}	
 	}
 
-	private static class EntryLocalAssignmentTool extends EntryInfoTool<CodeLocations, CodeLocations> {	
+	private static class EntryLocalAssignmentTool extends CLIEntryTool<CodeLocations> {	
 		public EntryLocalAssignmentTool(CLIParams params) {
 			super(params);
 		}
 		
 		@Override
 		protected MEntryToolResult<CodeLocations> getResult(MEntryToolInput input) {
-			LocalAssignmentToolParams params = CLIParamsAdapter.toLocalAssignmentToolParams(this.params);
+			LocalAssignmentToolParams params = CLIETParamsAdapter.toLocalAssignmentToolParams(this.params);
 			LocalAssignmentTool a = new LocalAssignmentTool(params);
 			return a.getResult(input);			
 		}
@@ -213,14 +116,14 @@ public class RepoEntryTools extends Tools {
 		}	
 	}
 
-	private static class EntryFanoutTool extends EntryInfoTool<Void, EntryFanouts> {	
+	private static class EntryFanoutTool extends CLIEntryTool<EntryFanouts> {	
 		public EntryFanoutTool(CLIParams params) {
 			super(params);
 		}
 		
 		@Override
 		protected MEntryToolResult<EntryFanouts> getResult(MEntryToolInput input) {
-			CommonToolParams params = CLIParamsAdapter.toCommonToolParams(this.params);
+			CommonToolParams params = CLIETParamsAdapter.toCommonToolParams(this.params);
 			FanoutTool a = new FanoutTool(params);
 			return a.getResult(input);			
 		}
@@ -244,7 +147,7 @@ public class RepoEntryTools extends Tools {
 		}	
 	}
 
-	private static class EntryFanin extends EntryInfoToolBase<EntryFanins> {		
+	private static class EntryFanin extends CLIEntryTool<EntryFanins> {		
 		public EntryFanin(CLIParams params) {
 			super(params);
 		}
@@ -262,11 +165,12 @@ public class RepoEntryTools extends Tools {
 		}
 		
 		@Override
-		public MEntryToolResult<EntryFanins> getResult(final RepositoryInfo ri, MEntryToolInput input) {
+		public MEntryToolResult<EntryFanins> getResult(MEntryToolInput input) {
+			RepositoryInfo ri = CLIParamsAdapter.getRepositoryInfo(this.params);
 			MEntryToolResult<EntryFanins> resultList = new MEntryToolResult<EntryFanins>();
 			for (EntryId entryId : input.getEntryIds()) {
 				final FaninTool efit = this.getSupply(entryId, ri);
-				RecursionSpecification rs = CLIParamsAdapter.toRecursionSpecification(this.params);
+				RecursionSpecification rs = CLIETParamsAdapter.toRecursionSpecification(this.params);
 				Filter<Fanout> filter = rs.getFanoutFilter();
 				efit.setFilter(filter);
 				RepositoryVisitor rv = new RepositoryVisitor() {
@@ -315,7 +219,7 @@ public class RepoEntryTools extends Tools {
 		tools.put("entryassumedvar", new MemberFactory() {				
 			@Override
 			public Tool getInstance(CLIParams params) {
-				return new EntryAssumedVarTool(params);
+				return new CLIAssumedVariablesTool(params);
 			}
 		});
 		tools.put("entrylocalassignment", new MemberFactory() {				

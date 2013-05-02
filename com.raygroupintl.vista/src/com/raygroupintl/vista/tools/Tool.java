@@ -19,8 +19,6 @@ package com.raygroupintl.vista.tools;
 import java.io.Writer;
 import java.util.List;
 
-import com.raygroupintl.m.token.MVersion;
-import com.raygroupintl.output.FileWrapper;
 import com.raygroupintl.vista.repository.RepositoryInfo;
 import com.raygroupintl.vista.repository.VistaPackage;
 import com.raygroupintl.vista.repository.VistaPackages;
@@ -35,22 +33,6 @@ public abstract class Tool {
 		
 	public abstract void run();
 
-	protected RepositoryInfo getRepositoryInfo() {
-		MRARoutineFactory rf = MRARoutineFactory.getInstance(MVersion.CACHE);
-		if (rf != null) {
-			RepositoryInfo ri = RepositoryInfo.getInstance(rf);
-			if (ri != null) {
-				ri.addMDirectories(params.additionalMDirectories);
-				ri.addMFiles(params.additionalMFiles);
-				if ((params.ownershipFilePath != null) && (! params.ownershipFilePath.isEmpty())) {
-					ri.readGlobalOwnership(params.ownershipFilePath);			
-				}
-			}			
-			return ri;
-		}		
-		return null;
-	}
-	
 	protected VistaPackages getAllVistaPackages(RepositoryInfo ri) {
 		List<VistaPackage> packages = ri.getAllPackages(this.params.packageExceptions);
 		VistaPackages packageNodes = new VistaPackages(packages);
@@ -74,13 +56,5 @@ public abstract class Tool {
 		}
 		VistaPackages packageNodes = new VistaPackages(packages);
 		return packageNodes;		
-	}
-
-	protected FileWrapper getOutputFile() {
-		if ((this.params.outputFile == null) || this.params.outputFile.isEmpty()) {
-			MRALogger.logError("File " + this.params.outputFile + " is not found");
-			return null;
-		}
-		return new FileWrapper(this.params.outputFile);
 	}
 }

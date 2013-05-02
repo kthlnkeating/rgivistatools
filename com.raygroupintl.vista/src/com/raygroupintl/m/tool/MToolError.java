@@ -30,6 +30,9 @@ public class MToolError {
 		int n = this.params == null ? 0 : this.params.length;
 		for (int i=0; i<type.getNumArgument(); ++i) {
 			String param = (i < n) ? this.params[i] : "XXXXXX";
+			if (param == null) {
+				param = "XXXXXX";
+			}
 			message = message.replaceAll("\\{" + String.valueOf(i) + "\\}", param);
 		}
 		return message;

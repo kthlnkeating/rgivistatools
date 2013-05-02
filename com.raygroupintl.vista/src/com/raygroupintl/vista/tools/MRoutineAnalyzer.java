@@ -20,7 +20,7 @@ import java.util.Set;
 import java.util.TreeSet;
 
 import com.raygroupintl.util.CLIParamMgr;
-import com.raygroupintl.vista.tools.entry.RepoEntryTools;
+import com.raygroupintl.vista.tools.entry.CLIEntryTools;
 import com.raygroupintl.vista.tools.fnds.ToolErrorException;
 
 public class MRoutineAnalyzer {
@@ -79,7 +79,7 @@ public class MRoutineAnalyzer {
 	
 	public static void main(String[] args) {
 		try {
-			Tools[] rtss = new Tools[]{new RepositoryTools(), new RepoEntryTools(), new MacroTools(), new MFileTools(), new UtilityTools()};
+			Tools[] rtss = new Tools[]{new RepositoryTools(), new CLIEntryTools(), new MacroTools(), new MFileTools(), new UtilityTools()};
 		
 			CLIParams params = getCommandLineParamaters(args);	
 			if (params == null) return;

@@ -19,6 +19,7 @@ package com.raygroupintl.m.tool;
 import java.io.InputStream;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -58,4 +59,9 @@ public class SourceCodeResources<T> implements SourceCodeSupply  {
 		}		
 		return result;
 	}
+		
+	@Override
+	public Collection<String> getAllRoutineNames() {
+		return this.resourcesByRoutineName.keySet();
+	}		
 }
