@@ -36,7 +36,7 @@ public class MacroTools extends Tools {
 			String outputPath = this.params.getPositional(0, "C:\\Sandbox");
 			String pathPrefix = this.params.getPositional(1, "C:\\Sandbox\\m_");
 			
-			MRoutineAnalyzer.main(new String[]{"fanout", "-o", pathPrefix + "fo_all.txt"});				
+ 			MRoutineAnalyzer.main(new String[]{"fanout", "-o", pathPrefix + "fo_all.txt"});				
 			MRoutineAnalyzer.main(new String[]{"fanout", "-o", pathPrefix + "fo_gmpl.txt", "-p", "GMPL"});				
 			MRoutineAnalyzer.main(new String[]{"fanout", "-o", pathPrefix + "fo_sd.txt", "-p", "SD"});				
 			

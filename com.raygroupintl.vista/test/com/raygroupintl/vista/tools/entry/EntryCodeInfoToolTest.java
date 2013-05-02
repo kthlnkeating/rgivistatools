@@ -14,11 +14,11 @@ import com.raygroupintl.m.tool.entry.RecursionDepth;
 import com.raygroupintl.m.tool.entry.RecursionSpecification;
 import com.raygroupintl.m.tool.entry.assumedvariables.AssumedVariablesToolParams;
 import com.raygroupintl.m.tool.entry.basiccodeinfo.BasicCodeInfoToolParams;
-import com.raygroupintl.vista.tools.entry.EntryCodeInfo;
-import com.raygroupintl.vista.tools.entry.EntryCodeInfoAccumulator;
+import com.raygroupintl.m.tool.entry.legacycodeinfo.LegacyCodeInfo;
+import com.raygroupintl.m.tool.entry.legacycodeinfo.LegacyCodeInfoTool;
 
 public class EntryCodeInfoToolTest {
-	private void testAssumedLocal(EntryCodeInfo r, String[] expectedAssumeds, String[] expectedGlobals) {
+	private void testAssumedLocal(LegacyCodeInfo r, String[] expectedAssumeds, String[] expectedGlobals) {
 		Set<String> assumeds = r.getAssumedVariables();
 		Assert.assertEquals(expectedAssumeds.length, assumeds.size());
 		for (String expectedOutput : expectedAssumeds) {
@@ -32,7 +32,7 @@ public class EntryCodeInfoToolTest {
 		}				
 	}
 	
-	private void filemanTest(EntryCodeInfo r, String[] expectedGlobals, String[] expectedCalls) {
+	private void filemanTest(LegacyCodeInfo r, String[] expectedGlobals, String[] expectedCalls) {
 		Set<String> globals = new HashSet<String>(r.getBasicCodeInfo().getFilemanGlobals());
 		Assert.assertEquals(expectedGlobals.length, globals.size());
 		for (String expectedGlobal : expectedGlobals) {
@@ -61,7 +61,7 @@ public class EntryCodeInfoToolTest {
 		BasicCodeInfoToolParams bcip = new BasicCodeInfoToolParams(pts, null);
 		bcip.setRecursionSpecification(rs);
 		
-		EntryCodeInfoAccumulator a = new EntryCodeInfoAccumulator(params, bcip);
+		LegacyCodeInfoTool a = new LegacyCodeInfoTool(params, bcip);
 				
 		this.testAssumedLocal(a.getResult(new EntryId("APIROU00", "FACT")), new String[]{"I"}, new String[0]);
 		this.testAssumedLocal(a.getResult(new EntryId("APIROU00", "SUM")), new String[]{"M", "R", "I"}, new String[]{"^RGI0(\"EF\""});

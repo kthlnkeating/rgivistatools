@@ -14,12 +14,11 @@
 // limitations under the License.
 //---------------------------------------------------------------------------
 
-package com.raygroupintl.vista.tools.entry;
-
-import java.util.ArrayList;
-import java.util.List;
+package com.raygroupintl.m.tool.entry.legacycodeinfo;
 
 import com.raygroupintl.m.parsetree.data.EntryId;
+import com.raygroupintl.m.tool.entry.MEntryToolInput;
+import com.raygroupintl.m.tool.entry.MEntryToolResult;
 import com.raygroupintl.m.tool.entry.assumedvariables.AssumedVariables;
 import com.raygroupintl.m.tool.entry.assumedvariables.AssumedVariablesTool;
 import com.raygroupintl.m.tool.entry.assumedvariables.AssumedVariablesToolParams;
@@ -27,31 +26,27 @@ import com.raygroupintl.m.tool.entry.basiccodeinfo.BasicCodeInfoTR;
 import com.raygroupintl.m.tool.entry.basiccodeinfo.BasicCodeInfoTool;
 import com.raygroupintl.m.tool.entry.basiccodeinfo.BasicCodeInfoToolParams;
 
-public class EntryCodeInfoAccumulator {
-	private AssumedVariablesTool assumedVariableAccumulator;
-	private BasicCodeInfoTool basicCodeInfoAccumulator;
+public class LegacyCodeInfoTool {
+	private AssumedVariablesTool avt;
+	private BasicCodeInfoTool bcit;
 	
-	public EntryCodeInfoAccumulator(AssumedVariablesToolParams params, BasicCodeInfoToolParams params2) {
-		this.assumedVariableAccumulator = new AssumedVariablesTool(params);
-		this.basicCodeInfoAccumulator = new BasicCodeInfoTool(params2);
+	public LegacyCodeInfoTool(AssumedVariablesToolParams params, BasicCodeInfoToolParams params2) {
+		this.avt = new AssumedVariablesTool(params);
+		this.bcit = new BasicCodeInfoTool(params2);
 	}
 	
-	public EntryCodeInfo getResult(EntryId entryId) {
-		AssumedVariables assumedVariables = this.assumedVariableAccumulator.getResult(entryId);		
-		BasicCodeInfoTR basicCodeInfo = this.basicCodeInfoAccumulator.getResult(entryId);
-		if (assumedVariables.isValid() && basicCodeInfo.isValid()) {
-			return new EntryCodeInfo(assumedVariables, basicCodeInfo);					
-		} else {
-			return new EntryCodeInfo(null, null);		
-		}		
+	public LegacyCodeInfo getResult(EntryId id) {
+		AssumedVariables avr = this.avt.getResult(id);
+		BasicCodeInfoTR bcir = this.bcit.getResult(id);
+		LCIResultMerger merger = new LCIResultMerger();
+		return merger.merge(avr, bcir);
 	}
 
-	public List<EntryCodeInfo> getResult(List<EntryId> entries) {
-		List<EntryCodeInfo> result = new ArrayList<EntryCodeInfo>();
-		for (EntryId entryId : entries) {
-			EntryCodeInfo e = this.getResult(entryId);
-			result.add(e);
-		}		
+	public MEntryToolResult<LegacyCodeInfo> getResult(MEntryToolInput input) {
+		MEntryToolResult<AssumedVariables> avr = this.avt.getResult(input);
+		MEntryToolResult<BasicCodeInfoTR> bcir = this.bcit.getResult(input);
+		LCIResultMerger merger = new LCIResultMerger();
+		MEntryToolResult<LegacyCodeInfo> result = avr.merge(bcir, merger);
 		return result;
 	}
 }

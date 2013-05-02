@@ -16,8 +16,92 @@
 
 package com.raygroupintl.m.tool.entry;
 
-public interface MEntryToolResult {
-	boolean isValid();
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+
+import com.raygroupintl.m.parsetree.data.EntryId;
+import com.raygroupintl.m.tool.MToolError;
+
+public class MEntryToolResult<T extends MEntryToolIndividualResult> {
+	private List<EntryId> entries = new ArrayList<EntryId>();
+	private List<T> results = new ArrayList<>();
 	
-	boolean isEmpty();
-}
+	private Map<Integer, MToolError> errors;
+	private Set<EntryId> missingEntries;
+	
+	public void add(MEntryToolResult<T> results) {
+		int m = this.entries.size();
+		this.entries.addAll(results.entries);
+		this.results.addAll(results.results);
+		if (results.errors != null) {
+			Set<Integer> errorLines = results.errors.keySet();
+			for (Integer i : errorLines) {
+				int newLocation = i + m;
+				MToolError error = results.errors.get(i);
+				this.errors.put(newLocation, error);
+			}
+		}
+		if (results.missingEntries != null) {
+			if (this.missingEntries == null) {
+				this.missingEntries = results.missingEntries;
+			} else {
+				this.missingEntries.addAll(results.missingEntries);
+			}
+		}
+	}
+		
+	public void add(EntryId id, T result) {
+		this.entries.add(id);
+		this.results.add(result);
+	}
+	
+	public void addError(EntryId id, MToolError error) {
+		int n = this.entries.size();
+		this.entries.add(id);
+		this.results.add(null);
+		if (this.errors == null) {
+			this.errors = new HashMap<Integer, MToolError>();	
+		}
+		this.errors.put(n, error);
+	}
+	
+	public void setMissingEntries(Set<EntryId> missingEntries) {
+		this.missingEntries = missingEntries;
+	}
+	
+	public List<EntryId> getEntries() {
+		return this.entries;
+	}
+	
+	public List<T> getResults() {
+		return this.results;
+	}
+	
+	public MToolError getError(int index) {
+		if (this.errors == null) {
+			return null;
+		} else {
+			return this.errors.get(index);
+		}
+	}
+	
+	public Set<EntryId> getMissingEntries() {
+		return this.missingEntries;
+	}
+	
+	public <U extends MEntryToolIndividualResult, V extends MEntryToolIndividualResult> MEntryToolResult<U> merge(MEntryToolResult<V> addl, SingleResultMerger<U, T, V> singleMerger) {
+		MEntryToolResult<U> result = new MEntryToolResult<U>();	
+		int n = this.entries.size();
+		for (int i=0; i<n; ++i) {
+			EntryId id = this.entries.get(i);
+			T t = this.results.get(i);
+			V v = addl.results.get(i);
+			U u = singleMerger.merge(t, v);
+			result.add(id, u);
+		}
+		return result;	
+	}
+ }

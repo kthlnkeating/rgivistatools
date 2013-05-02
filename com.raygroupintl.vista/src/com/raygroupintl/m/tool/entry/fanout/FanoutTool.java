@@ -16,7 +16,6 @@
 
 package com.raygroupintl.m.tool.entry.fanout;
 
-import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
@@ -49,9 +48,8 @@ public class FanoutTool extends MEntryTool<EntryFanouts, IndexedFanout, BlockDat
 	}
 
 	@Override
-	protected EntryFanouts getResult(Block<IndexedFanout, BlockData<IndexedFanout>> block, Filter<Fanout> filter) {
-		Set<EntryId> missing = new HashSet<EntryId>();
-		FanoutBlocks<IndexedFanout, BlockData<IndexedFanout>> fanoutBlocks = block.getFanoutBlocks(this.blocksSupply, filter, missing);
+	protected EntryFanouts getResult(Block<IndexedFanout, BlockData<IndexedFanout>> block, Filter<Fanout> filter, Set<EntryId> missingEntryIds) {
+		FanoutBlocks<IndexedFanout, BlockData<IndexedFanout>> fanoutBlocks = block.getFanoutBlocks(this.blocksSupply, filter, missingEntryIds);
 		List<Block<IndexedFanout, BlockData<IndexedFanout>>> blocks = fanoutBlocks.getBlocks();
 		boolean first = true;
 		EntryFanouts result = new EntryFanouts();
@@ -62,13 +60,6 @@ public class FanoutTool extends MEntryTool<EntryFanouts, IndexedFanout, BlockDat
 				result.add(b.getEntryId());
 			}
 		}
-		return result;
-	}
-	
-	@Override
-	protected EntryFanouts getEmptyBlockResult(EntryId entryId) {
-		EntryFanouts result = new EntryFanouts();
-		result.setErrorMsg("Not Found");
 		return result;
 	}
 }

@@ -16,11 +16,11 @@
 
 package com.raygroupintl.m.tool.entry.basiccodeinfo;
 
-import com.raygroupintl.m.tool.entry.MEntryToolResult;
+import com.raygroupintl.m.tool.entry.MEntryToolIndividualResult;
 import com.raygroupintl.output.Terminal;
 import com.raygroupintl.output.TerminalFormatter;
 
-public class BasicCodeInfoTR implements MEntryToolResult {
+public class BasicCodeInfoTR implements MEntryToolIndividualResult {
 	public String[] formals;	
 	private BasicCodeInfo info;
 

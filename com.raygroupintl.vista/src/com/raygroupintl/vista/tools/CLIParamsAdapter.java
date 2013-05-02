@@ -17,12 +17,19 @@
 package com.raygroupintl.vista.tools;
 
 import java.io.IOException;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Scanner;
 
+import com.raygroupintl.m.parsetree.data.EntryId;
 import com.raygroupintl.m.tool.CommonToolParams;
 import com.raygroupintl.m.tool.ParseTreeSupply;
 import com.raygroupintl.m.tool.SavedParsedTrees;
 import com.raygroupintl.m.tool.SourceCodeFiles;
 import com.raygroupintl.m.tool.SourceCodeToParseTreeAdapter;
+import com.raygroupintl.m.tool.entry.MEntryToolInput;
 import com.raygroupintl.m.tool.entry.RecursionDepth;
 import com.raygroupintl.m.tool.entry.RecursionSpecification;
 import com.raygroupintl.m.tool.entry.assumedvariables.AssumedVariablesToolParams;
@@ -51,9 +58,12 @@ public class CLIParamsAdapter {
 	
 	private static ParseTreeSupply getParseTreeSupply(CLIParams params) {
 		if ((params.parseTreeDirectory == null) || params.parseTreeDirectory.isEmpty()) {
-			String vistaFOIA = RepositoryInfo.getLocation();
+			String rootDirectory = params.rootDirectory;
+			if ((rootDirectory == null) || (rootDirectory.isEmpty())) {
+				rootDirectory = RepositoryInfo.getLocation();
+			}
 			try {
-				SourceCodeFiles files = SourceCodeFiles.getInstance(vistaFOIA);
+				SourceCodeFiles files = SourceCodeFiles.getInstance(rootDirectory);
 				return new SourceCodeToParseTreeAdapter(files);
 			}
 			catch (IOException e) {
@@ -101,5 +111,47 @@ public class CLIParamsAdapter {
 		RecursionSpecification rs = toRecursionSpecification(params);
 		result.setRecursionSpecification(rs);	
 		return result;		
+	}
+	
+	protected static List<String> getEntriesInString(CLIParams params) {
+		if (params.inputFile != null) {
+			try {
+				Path path = Paths.get(params.inputFile);
+				Scanner scanner = new Scanner(path);
+				List<String> result = new ArrayList<String>();
+				while (scanner.hasNextLine()) {
+					String line = scanner.nextLine();
+					result.add(line);
+				}		
+				scanner.close();
+				return result;
+			} catch (IOException e) {
+				MRALogger.logError("Unable to open file " + params.inputFile);
+				return null;
+			}
+		} else {
+			return params.entries;
+		}			
+	}
+	
+	public static List<EntryId> getEntries(CLIParams params) {
+		List<String> entriesInString = getEntriesInString(params);
+		if (entriesInString != null) {
+			List<EntryId> result = new ArrayList<EntryId>(entriesInString.size());
+			for (String entryInString : entriesInString) {
+				EntryId entryId = EntryId.getInstance(entryInString);
+				result.add(entryId);
+			}
+			return result;
+		}
+		return null;
+	}
+	
+	public static MEntryToolInput getMEntryToolInput(CLIParams params) {
+		MEntryToolInput input = new MEntryToolInput();
+		input.addRoutines(params.routines);
+		List<EntryId> entryIds = getEntries(params);
+		input.addEntries(entryIds);
+		return input;
 	}
 }

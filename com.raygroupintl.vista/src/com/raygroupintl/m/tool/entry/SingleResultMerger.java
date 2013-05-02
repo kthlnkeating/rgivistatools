@@ -14,28 +14,8 @@
 // limitations under the License.
 //---------------------------------------------------------------------------
 
-package com.raygroupintl.m.tool.entry.assumedvariables;
+package com.raygroupintl.m.tool.entry;
 
-import java.util.Set;
-
-import com.raygroupintl.m.tool.entry.MEntryToolIndividualResult;
-
-public class AssumedVariables implements MEntryToolIndividualResult  {
-	private Set<String> assumedVariables;
-
-	public AssumedVariables(Set<String> assumedVariables) {
-		this.assumedVariables = assumedVariables;
-	}
-	
-	public Set<String> toSet() {
-		return this.assumedVariables;
-	}
-	
-	public boolean isValid() {
-		return this.assumedVariables != null;
-	}
-	
-	public boolean isEmpty() {
-		return (this.assumedVariables == null) || (this.assumedVariables.size() ==0);
-	}
+public interface SingleResultMerger<T extends MEntryToolIndividualResult, U extends MEntryToolIndividualResult, V extends MEntryToolIndividualResult> {
+	T merge(U u, V v);
 }

@@ -92,6 +92,8 @@ public class CLIParams {
 	@CLIParameter(names={"-rd", "--recursiondepth"})
 	public String recursionDepth;
 
+	@CLIParameter(names={"-root", "--rootdirectory"})
+	public String rootDirectory;
 	
 	private static void logError(String msg) {
 		Logger logger = Logger.getLogger(MRoutineAnalyzer.class.getName());		

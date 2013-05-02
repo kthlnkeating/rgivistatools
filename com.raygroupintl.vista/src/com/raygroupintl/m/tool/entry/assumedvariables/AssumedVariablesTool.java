@@ -76,18 +76,12 @@ public class AssumedVariablesTool extends MEntryTool<AssumedVariables, IndexedFa
 	}
 
 	@Override
-	public AssumedVariables getResult(Block<IndexedFanout, AssumedVariablesBlockData> block, Filter<Fanout> filter) {
+	public AssumedVariables getResult(Block<IndexedFanout, AssumedVariablesBlockData> block, Filter<Fanout> filter, Set<EntryId> missingEntryIds) {
 		AVTDataAggregator ala = new AVTDataAggregator(block, blocksSupply);
-		Set<EntryId> missing = new HashSet<EntryId>();
-		Set<String> assumedVariables = ala.get(this.store, filter, missing);
+		Set<String> assumedVariables = ala.get(this.store, filter, missingEntryIds);
 		if (assumedVariables != null) {
 			assumedVariables.removeAll(this.params.getExpected());
 		}
 		return new AssumedVariables(assumedVariables);	
-	}
-	
-	@Override
-	protected AssumedVariables getEmptyBlockResult(EntryId entryId) {
-		return new AssumedVariables(null);		
 	}
 }

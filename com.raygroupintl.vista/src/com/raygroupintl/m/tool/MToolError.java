@@ -14,28 +14,24 @@
 // limitations under the License.
 //---------------------------------------------------------------------------
 
-package com.raygroupintl.m.tool.entry.assumedvariables;
+package com.raygroupintl.m.tool;
 
-import java.util.Set;
-
-import com.raygroupintl.m.tool.entry.MEntryToolIndividualResult;
-
-public class AssumedVariables implements MEntryToolIndividualResult  {
-	private Set<String> assumedVariables;
-
-	public AssumedVariables(Set<String> assumedVariables) {
-		this.assumedVariables = assumedVariables;
+public class MToolError {
+	private MToolErrorType type;
+	private String[] params;
+	
+	public MToolError(MToolErrorType type, String[] params) {
+		this.type = type;
+		this.params = params;
 	}
 	
-	public Set<String> toSet() {
-		return this.assumedVariables;
-	}
-	
-	public boolean isValid() {
-		return this.assumedVariables != null;
-	}
-	
-	public boolean isEmpty() {
-		return (this.assumedVariables == null) || (this.assumedVariables.size() ==0);
+	public String getMessage() {
+		String message = type.getMessage();
+		int n = this.params == null ? 0 : this.params.length;
+		for (int i=0; i<type.getNumArgument(); ++i) {
+			String param = (i < n) ? this.params[i] : "XXXXXX";
+			message = message.replaceAll("\\{" + String.valueOf(i) + "\\}", param);
+		}
+		return message;
 	}
 }

@@ -14,28 +14,30 @@
 // limitations under the License.
 //---------------------------------------------------------------------------
 
-package com.raygroupintl.m.tool.entry.assumedvariables;
+package com.raygroupintl.m.tool.entry;
 
-import java.util.Set;
+import java.util.ArrayList;
+import java.util.List;
 
-import com.raygroupintl.m.tool.entry.MEntryToolIndividualResult;
+import com.raygroupintl.m.parsetree.data.EntryId;
 
-public class AssumedVariables implements MEntryToolIndividualResult  {
-	private Set<String> assumedVariables;
+public class MEntryToolInput {
+	private List<String> routineNames = new ArrayList<String>();
+	private List<EntryId> entryIds = new ArrayList<EntryId>();
 
-	public AssumedVariables(Set<String> assumedVariables) {
-		this.assumedVariables = assumedVariables;
+	public void addRoutines(List<String> names) {
+		this.routineNames.addAll(names);
+	}
+
+	public void addEntries(List<EntryId> ids) {
+		this.entryIds.addAll(ids);
 	}
 	
-	public Set<String> toSet() {
-		return this.assumedVariables;
+	public List<String> getRoutineNames() {
+		return this.routineNames;
 	}
 	
-	public boolean isValid() {
-		return this.assumedVariables != null;
-	}
-	
-	public boolean isEmpty() {
-		return (this.assumedVariables == null) || (this.assumedVariables.size() ==0);
+	public List<EntryId> getEntryIds() {
+		return this.entryIds;
 	}
 }

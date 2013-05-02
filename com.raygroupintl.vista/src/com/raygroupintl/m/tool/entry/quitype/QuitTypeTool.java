@@ -16,7 +16,6 @@
 
 package com.raygroupintl.m.tool.entry.quitype;
 
-import java.util.HashSet;
 import java.util.Set;
 
 import com.raygroupintl.m.parsetree.data.EntryId;
@@ -61,15 +60,9 @@ public class QuitTypeTool extends MEntryTool<QuitType, IndexedFanout, QTBlockDat
 	}
 
 	@Override
-	protected QuitType getResult(Block<IndexedFanout, QTBlockData> block, Filter<Fanout> filter) {
+	protected QuitType getResult(Block<IndexedFanout, QTBlockData> block, Filter<Fanout> filter, Set<EntryId> missingEntryIds) {
 		QTDataAggregator bcia = new QTDataAggregator(block, this.blocksSupply);
-		Set<EntryId> missing = new HashSet<EntryId>();
-		QuitType apiData = bcia.get(filter, missing);
+		QuitType apiData = bcia.get(filter, missingEntryIds);
 		return apiData;
-	}
-	
-	@Override
-	protected QuitType getEmptyBlockResult(EntryId entryId) {
-		return null;		
 	}
 }

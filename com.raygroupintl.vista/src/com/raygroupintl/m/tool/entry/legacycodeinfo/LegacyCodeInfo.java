@@ -14,20 +14,20 @@
 // limitations under the License.
 //---------------------------------------------------------------------------
 
-package com.raygroupintl.vista.tools.entry;
+package com.raygroupintl.m.tool.entry.legacycodeinfo;
 
 import java.util.Set;
 
-import com.raygroupintl.m.tool.entry.MEntryToolResult;
+import com.raygroupintl.m.tool.entry.MEntryToolIndividualResult;
 import com.raygroupintl.m.tool.entry.assumedvariables.AssumedVariables;
 import com.raygroupintl.m.tool.entry.basiccodeinfo.BasicCodeInfo;
 import com.raygroupintl.m.tool.entry.basiccodeinfo.BasicCodeInfoTR;
 
-public class EntryCodeInfo implements MEntryToolResult {
+public class LegacyCodeInfo implements MEntryToolIndividualResult {
 	public AssumedVariables assumedVariables;
 	public BasicCodeInfoTR basicCodeInfo;
 
-	public EntryCodeInfo(AssumedVariables assumedVariables, BasicCodeInfoTR basicCodeInfo) {
+	public LegacyCodeInfo(AssumedVariables assumedVariables, BasicCodeInfoTR basicCodeInfo) {
 		this.assumedVariables = assumedVariables;
 		this.basicCodeInfo = basicCodeInfo;
 	}

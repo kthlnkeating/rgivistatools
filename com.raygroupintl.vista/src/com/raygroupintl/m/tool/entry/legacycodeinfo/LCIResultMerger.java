@@ -14,28 +14,14 @@
 // limitations under the License.
 //---------------------------------------------------------------------------
 
-package com.raygroupintl.m.tool.entry.assumedvariables;
+package com.raygroupintl.m.tool.entry.legacycodeinfo;
 
-import java.util.Set;
+import com.raygroupintl.m.tool.entry.SingleResultMerger;
+import com.raygroupintl.m.tool.entry.assumedvariables.AssumedVariables;
+import com.raygroupintl.m.tool.entry.basiccodeinfo.BasicCodeInfoTR;
 
-import com.raygroupintl.m.tool.entry.MEntryToolIndividualResult;
-
-public class AssumedVariables implements MEntryToolIndividualResult  {
-	private Set<String> assumedVariables;
-
-	public AssumedVariables(Set<String> assumedVariables) {
-		this.assumedVariables = assumedVariables;
-	}
-	
-	public Set<String> toSet() {
-		return this.assumedVariables;
-	}
-	
-	public boolean isValid() {
-		return this.assumedVariables != null;
-	}
-	
-	public boolean isEmpty() {
-		return (this.assumedVariables == null) || (this.assumedVariables.size() ==0);
+public class LCIResultMerger implements SingleResultMerger<LegacyCodeInfo, AssumedVariables, BasicCodeInfoTR>{
+	public LegacyCodeInfo merge(AssumedVariables avs, BasicCodeInfoTR bci) {
+		return new LegacyCodeInfo(avs, bci);
 	}
 }

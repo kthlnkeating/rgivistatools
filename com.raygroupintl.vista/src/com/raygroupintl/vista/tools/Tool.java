@@ -16,15 +16,9 @@
 
 package com.raygroupintl.vista.tools;
 
-import java.io.IOException;
 import java.io.Writer;
-import java.nio.file.Path;
-import java.nio.file.Paths;
-import java.util.ArrayList;
 import java.util.List;
-import java.util.Scanner;
 
-import com.raygroupintl.m.parsetree.data.EntryId;
 import com.raygroupintl.m.token.MVersion;
 import com.raygroupintl.output.FileWrapper;
 import com.raygroupintl.vista.repository.RepositoryInfo;
@@ -88,39 +82,5 @@ public abstract class Tool {
 			return null;
 		}
 		return new FileWrapper(this.params.outputFile);
-	}
-		
-	protected List<String> getEntriesInString() {
-		if (this.params.inputFile != null) {
-			try {
-				Path path = Paths.get(this.params.inputFile);
-				Scanner scanner = new Scanner(path);
-				List<String> result = new ArrayList<String>();
-				while (scanner.hasNextLine()) {
-					String line = scanner.nextLine();
-					result.add(line);
-				}		
-				scanner.close();
-				return result;
-			} catch (IOException e) {
-				MRALogger.logError("Unable to open file " + this.params.inputFile);
-				return null;
-			}
-		} else {
-			return this.params.entries;
-		}			
-	}
-	
-	protected List<EntryId> getEntries() {
-		List<String> entriesInString = this.getEntriesInString();
-		if (entriesInString != null) {
-			List<EntryId> result = new ArrayList<EntryId>(entriesInString.size());
-			for (String entryInString : entriesInString) {
-				EntryId entryId = EntryId.getInstance(entryInString);
-				result.add(entryId);
-			}
-			return result;
-		}
-		return null;
 	}
 }

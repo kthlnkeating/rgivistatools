@@ -17,15 +17,20 @@
 package com.raygroupintl.m.tool.entry;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import com.raygroupintl.m.parsetree.data.EntryId;
 import com.raygroupintl.m.parsetree.data.Fanout;
 import com.raygroupintl.m.parsetree.visitor.BlockRecorderFactory;
 import com.raygroupintl.m.tool.CommonToolParams;
+import com.raygroupintl.m.tool.MToolError;
+import com.raygroupintl.m.tool.MToolErrorType;
 import com.raygroupintl.struct.Filter;
+import com.raygroupintl.struct.HierarchicalMap;
 
-public abstract class MEntryTool<T, F extends Fanout, B extends BlockData<F>> {
+public abstract class MEntryTool<T extends MEntryToolIndividualResult, F extends Fanout, B extends BlockData<F>> {
 	protected BlocksSupply<Block<F, B>> blocksSupply;
 	private Filter<Fanout> filter;
 	
@@ -37,25 +42,60 @@ public abstract class MEntryTool<T, F extends Fanout, B extends BlockData<F>> {
 
 	protected abstract BlockRecorderFactory<F, B> getBlockRecorderFactory();
 	
-	protected abstract T getResult(Block<F, B> block, Filter<Fanout> filter);
-	
-	protected abstract T getEmptyBlockResult(EntryId entryId);
+	protected abstract T getResult(Block<F, B> block, Filter<Fanout> filter, Set<EntryId> missing);
 	
 	public T getResult(EntryId entryId) {
 		Block<F, B> b = this.blocksSupply.getBlock(entryId);
-		if (b != null) {
-			return this.getResult(b, this.filter);
-		} else {
-			return this.getEmptyBlockResult(entryId);
-		}		
+		Set<EntryId> missing = new HashSet<EntryId>();
+		T r = this.getResult(b, this.filter, missing);	
+		return r;
+	}
+	
+	public MEntryToolResult<T> getResult(List<EntryId> entryIds) {
+		MEntryToolResult<T> result = new MEntryToolResult<T>();
+		for (EntryId entryId : entryIds) {
+			Block<F, B> b = this.blocksSupply.getBlock(entryId);
+			if (b == null) {
+				MToolError error = new MToolError(MToolErrorType.LABEL_NOT_FOUND, new String[]{entryId.toString()});
+				result.addError(entryId, error);
+			} else {
+				Set<EntryId> missing = new HashSet<EntryId>();
+				T r = this.getResult(b, this.filter, missing);	
+				result.add(entryId, r);
+				if (missing.size() > 0) {
+					result.setMissingEntries(missing);
+				}
+			}			
+		}
+		return result;
 	}
 
-	public List<T> getResult(List<EntryId> entries) {
-		List<T> result = new ArrayList<T>();
-		for (EntryId entryId : entries) {
-			T e = this.getResult(entryId);
-			result.add(e);
+	public MEntryToolResult<T> getResultForRoutines(List<String> routineNames) {
+		MEntryToolResult<T> result = new MEntryToolResult<T>();
+		for (String routineName : routineNames) {
+			HierarchicalMap<String, Block<F, B>> hm = this.blocksSupply.getBlocks(routineName);
+			if (hm == null) {
+				MToolError error = new MToolError(MToolErrorType.ROUTINE_NOT_FOUND, new String[]{routineName});
+				result.addError(new EntryId(routineName, null), error);
+			}
+			Set<String> labels = hm.keySet();
+			List<EntryId> entryIds = new ArrayList<EntryId>(labels.size());
+			for (String label : labels) {
+				EntryId entryId = new EntryId(routineName, label);
+				entryIds.add(entryId);
+			}
+			MEntryToolResult<T> subResults = this.getResult(entryIds);
+			result.add(subResults);
 		}		
 		return result;
+	}
+	
+	public MEntryToolResult<T> getResult(MEntryToolInput input) {		
+		List<String> routineNames = input.getRoutineNames();
+		MEntryToolResult<T> result = this.getResultForRoutines(routineNames);
+		List<EntryId> entryIds = input.getEntryIds();
+		MEntryToolResult<T> resultEntries = this.getResult(entryIds);
+		result.add(resultEntries);
+		return result;		
 	}
 }

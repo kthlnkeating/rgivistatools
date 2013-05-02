@@ -25,9 +25,9 @@ import com.raygroupintl.m.parsetree.data.EntryId;
 import com.raygroupintl.m.parsetree.data.IndexedFanout;
 import com.raygroupintl.m.struct.CodeLocation;
 import com.raygroupintl.m.tool.entry.BlockData;
-import com.raygroupintl.m.tool.entry.MEntryToolResult;
+import com.raygroupintl.m.tool.entry.MEntryToolIndividualResult;
 
-public class CodeLocations extends BlockData<IndexedFanout> implements MEntryToolResult, Serializable {
+public class CodeLocations extends BlockData<IndexedFanout> implements MEntryToolIndividualResult, Serializable {
 	private static final long serialVersionUID = 1L;
 
 	private List<CodeLocation> codeLocations;

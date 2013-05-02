@@ -22,9 +22,9 @@ import java.util.SortedSet;
 import java.util.TreeSet;
 
 import com.raygroupintl.m.parsetree.data.EntryId;
-import com.raygroupintl.m.tool.entry.MEntryToolResult;
+import com.raygroupintl.m.tool.entry.MEntryToolIndividualResult;
 
-public class EntryFanouts implements MEntryToolResult, Serializable {
+public class EntryFanouts implements MEntryToolIndividualResult, Serializable {
 	private static final long serialVersionUID = 1L;
 
 	private SortedSet<EntryId> fanoutEntries;

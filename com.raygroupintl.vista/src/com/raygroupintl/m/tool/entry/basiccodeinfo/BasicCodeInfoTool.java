@@ -16,7 +16,6 @@
 
 package com.raygroupintl.m.tool.entry.basiccodeinfo;
 
-import java.util.HashSet;
 import java.util.Set;
 
 import com.raygroupintl.m.parsetree.data.EntryId;
@@ -73,15 +72,9 @@ public class BasicCodeInfoTool extends MEntryTool<BasicCodeInfoTR, IndexedFanout
 	}
 
 	@Override
-	protected BasicCodeInfoTR getResult(Block<IndexedFanout, CodeInfo> block, Filter<Fanout> filter) {
+	protected BasicCodeInfoTR getResult(Block<IndexedFanout, CodeInfo> block, Filter<Fanout> filter, Set<EntryId> missingEntryIds) {
 		BCITDataAggregator bcia = new BCITDataAggregator(block, blocksSupply);
-		Set<EntryId> missing = new HashSet<EntryId>();
-		BasicCodeInfo apiData = bcia.get(filter, missing);
+		BasicCodeInfo apiData = bcia.get(filter, missingEntryIds);
 		return new BasicCodeInfoTR(block.getData().getFormals(), apiData);
-	}
-	
-	@Override
-	protected BasicCodeInfoTR getEmptyBlockResult(EntryId entryId) {
-		return new BasicCodeInfoTR(null, null);		
 	}
 }
