@@ -18,12 +18,11 @@ package com.raygroupintl.m.tool.entry.legacycodeinfo;
 
 import java.util.Set;
 
-import com.raygroupintl.m.tool.entry.MEntryToolIndividualResult;
 import com.raygroupintl.m.tool.entry.assumedvariables.AssumedVariables;
 import com.raygroupintl.m.tool.entry.basiccodeinfo.BasicCodeInfo;
 import com.raygroupintl.m.tool.entry.basiccodeinfo.BasicCodeInfoTR;
 
-public class LegacyCodeInfo implements MEntryToolIndividualResult {
+public class LegacyCodeInfo {
 	public AssumedVariables assumedVariables;
 	public BasicCodeInfoTR basicCodeInfo;
 
@@ -51,20 +50,4 @@ public class LegacyCodeInfo implements MEntryToolIndividualResult {
 	public BasicCodeInfoTR getBasicCodeInfoTR() {
 		return this.basicCodeInfo;
 	}
-	
-	@Override
-	public boolean isValid() {
-		if ((this.assumedVariables == null) || (this.basicCodeInfo == null)) {
-			return false;
-		} else {
-			return this.assumedVariables.isValid() && this.basicCodeInfo.isValid();
-		} 
-	}
-	
-	@Override
-	public boolean isEmpty() {
-		return this.assumedVariables.isEmpty() && this.basicCodeInfo.isEmpty();
-	}
-	
-	
 }

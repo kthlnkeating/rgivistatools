@@ -40,7 +40,7 @@ public class LocalAssignmentTool extends MEntryTool<CodeLocations, IndexedFanout
 	}
 	
 	private class LATDataAggregator extends AdditiveDataAggregator<CodeLocations, IndexedFanout, CodeLocations> {
-		public LATDataAggregator(Block<IndexedFanout, CodeLocations> block, BlocksSupply<Block<IndexedFanout, CodeLocations>> supply) {
+		public LATDataAggregator(Block<IndexedFanout, CodeLocations> block, BlocksSupply<IndexedFanout, CodeLocations> supply) {
 			super(block, supply);
 		}
 		

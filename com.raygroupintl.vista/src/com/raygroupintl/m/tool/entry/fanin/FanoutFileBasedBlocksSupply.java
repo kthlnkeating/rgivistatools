@@ -28,7 +28,7 @@ import com.raygroupintl.m.tool.entry.fanout.RoutineFanouts;
 import com.raygroupintl.struct.HierarchicalMap;
 import com.raygroupintl.vista.tools.fnds.ToolUtilities;
 
-public class FanoutFileBasedBlocksSupply extends BlocksSupply<Block<IndexedFanout, FaninMark>> {
+public class FanoutFileBasedBlocksSupply extends BlocksSupply<IndexedFanout, FaninMark> {
 	private EntryId entryUnderTest;
 	private String inputPath;
 	private HashMap<String, HierarchicalMap<String, Block<IndexedFanout, FaninMark>>> blocks = new HashMap<String, HierarchicalMap<String, Block<IndexedFanout, FaninMark>>>();

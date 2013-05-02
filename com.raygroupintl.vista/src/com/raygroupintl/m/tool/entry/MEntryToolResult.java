@@ -25,7 +25,7 @@ import java.util.Set;
 import com.raygroupintl.m.parsetree.data.EntryId;
 import com.raygroupintl.m.tool.MToolError;
 
-public class MEntryToolResult<T extends MEntryToolIndividualResult> {
+public class MEntryToolResult<T> {
 	private List<EntryId> entries = new ArrayList<EntryId>();
 	private List<T> results = new ArrayList<>();
 	
@@ -92,7 +92,7 @@ public class MEntryToolResult<T extends MEntryToolIndividualResult> {
 		return this.missingEntries;
 	}
 	
-	public <U extends MEntryToolIndividualResult, V extends MEntryToolIndividualResult> MEntryToolResult<U> merge(MEntryToolResult<V> addl, SingleResultMerger<U, T, V> singleMerger) {
+	public <U, V > MEntryToolResult<U> merge(MEntryToolResult<V> addl, SingleResultMerger<U, T, V> singleMerger) {
 		MEntryToolResult<U> result = new MEntryToolResult<U>();	
 		int n = this.entries.size();
 		for (int i=0; i<n; ++i) {

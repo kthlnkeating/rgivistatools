@@ -12,8 +12,6 @@ import com.raygroupintl.m.parsetree.data.EntryId;
 import com.raygroupintl.m.parsetree.data.IndexedFanout;
 import com.raygroupintl.m.tool.ParseTreeSupply;
 import com.raygroupintl.m.tool.entry.AccumulatingBlocksSupply;
-import com.raygroupintl.m.tool.entry.Block;
-import com.raygroupintl.m.tool.entry.BlocksSupply;
 import com.raygroupintl.m.tool.entry.fanin.EntryFanins;
 import com.raygroupintl.m.tool.entry.fanin.FaninMark;
 import com.raygroupintl.m.tool.entry.fanin.FaninTool;
@@ -43,7 +41,7 @@ public class FaninToolTest {
 		final EntryId entryId = new EntryId("FINROU00", "ADD");
 		MarkedAsFaninBRF brf = new MarkedAsFaninBRF(entryId); 
 
-		BlocksSupply<Block<IndexedFanout, FaninMark>> blocksSupply = new AccumulatingBlocksSupply<IndexedFanout, FaninMark>(pts, brf);
+		AccumulatingBlocksSupply<IndexedFanout, FaninMark> blocksSupply = new AccumulatingBlocksSupply<IndexedFanout, FaninMark>(pts, brf);
 		
 		FaninTool accumulator = new FaninTool(blocksSupply, false);
 		for (String routineName : routineNames) {

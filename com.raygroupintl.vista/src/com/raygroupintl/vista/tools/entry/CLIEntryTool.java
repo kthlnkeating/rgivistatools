@@ -20,7 +20,6 @@ import java.util.List;
 
 import com.raygroupintl.m.parsetree.data.EntryId;
 import com.raygroupintl.m.tool.MToolError;
-import com.raygroupintl.m.tool.entry.MEntryToolIndividualResult;
 import com.raygroupintl.m.tool.entry.MEntryToolInput;
 import com.raygroupintl.m.tool.entry.MEntryToolResult;
 import com.raygroupintl.output.Terminal;
@@ -29,7 +28,7 @@ import com.raygroupintl.vista.tools.CLIParams;
 import com.raygroupintl.vista.tools.CLIParamsAdapter;
 import com.raygroupintl.vista.tools.Tool;
 
-public abstract class CLIEntryTool<U extends MEntryToolIndividualResult> extends Tool {		
+public abstract class CLIEntryTool<U> extends Tool {		
 	protected CLIParams params;
 	
 	public CLIEntryTool(CLIParams params) {
@@ -40,17 +39,14 @@ public abstract class CLIEntryTool<U extends MEntryToolIndividualResult> extends
 	protected abstract MEntryToolResult<U> getResult(MEntryToolInput input);
 	
 	protected void write(EntryId entryId, U result, Terminal t, TerminalFormatter tf, boolean skipEmpty) {			
-		if (result.isValid()) {
-			if ((! skipEmpty) || (! result.isEmpty())) {
-				t.writeEOL(" " + entryId.toString2());		
-				this.write(result, t, tf);
-			}
-		} else {
+		if ((! skipEmpty) || (! this.isEmpty(result))) {
 			t.writeEOL(" " + entryId.toString2());		
-			t.writeEOL("  ERROR: Invalid entry point");
-			return;
-		}
-		
+			this.write(result, t, tf);
+		} 		
+	}
+	
+	protected boolean isEmpty(U u) {
+		return true;
 	}
 			
 	protected abstract void write(U result, Terminal t, TerminalFormatter tf);

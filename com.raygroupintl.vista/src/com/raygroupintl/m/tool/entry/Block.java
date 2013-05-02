@@ -71,7 +71,7 @@ public class Block<F extends Fanout, T extends BlockData<F>> implements EntryObj
 		return this.blockData;
 	}
 	
-	private void update(FanoutBlocks<F, T> fanoutBlocks, BlocksSupply<Block<F, T>> blocksSupply, Filter<Fanout> filter, Set<EntryId> missing) {
+	private void update(FanoutBlocks<F, T> fanoutBlocks, BlocksSupply<F, T> blocksSupply, Filter<Fanout> filter, Set<EntryId> missing) {
 		for (F ifout : this.blockData.getFanouts()) {
 			EntryId fout = ifout.getEntryId();
 			String routineName = fout.getRoutineName();
@@ -111,7 +111,7 @@ public class Block<F extends Fanout, T extends BlockData<F>> implements EntryObj
 		}
 	}
 	
-	private void updateFanoutBlocks(FanoutBlocks<F, T> fanoutBlocks, BlocksSupply<Block<F, T>> blocksSupply, Filter<Fanout> filter, Set<EntryId> missing) {
+	private void updateFanoutBlocks(FanoutBlocks<F, T> fanoutBlocks, BlocksSupply<F, T> blocksSupply, Filter<Fanout> filter, Set<EntryId> missing) {
 		int index = 0;	
 		while (index < fanoutBlocks.getSize()) {
 			Block<F, T> b = fanoutBlocks.getBlock(index);
@@ -120,13 +120,13 @@ public class Block<F extends Fanout, T extends BlockData<F>> implements EntryObj
 		}		
 	}
 	
-	public FanoutBlocks<F, T> getFanoutBlocks(BlocksSupply<Block<F, T>> blocksSupply, ObjectIdContainer blockIdContainer, Filter<Fanout> filter, Set<EntryId> missing) {
+	public FanoutBlocks<F, T> getFanoutBlocks(BlocksSupply<F, T> blocksSupply, ObjectIdContainer blockIdContainer, Filter<Fanout> filter, Set<EntryId> missing) {
 		FanoutBlocks<F, T> fanoutBlocks = new FanoutBlocks<F, T>(this, blockIdContainer);
 		this.updateFanoutBlocks(fanoutBlocks, blocksSupply, filter, missing);
 		return fanoutBlocks;
 	}
 	
-	public FanoutBlocks<F, T> getFanoutBlocks(BlocksSupply<Block<F, T>> blocksSupply, Filter<Fanout> filter, Set<EntryId> missing) {
+	public FanoutBlocks<F, T> getFanoutBlocks(BlocksSupply<F, T> blocksSupply, Filter<Fanout> filter, Set<EntryId> missing) {
 		FanoutBlocks<F, T> fanoutBlocks = new FanoutBlocks<F, T>(this, null);
 		this.updateFanoutBlocks(fanoutBlocks, blocksSupply, filter, missing);
 		return fanoutBlocks;

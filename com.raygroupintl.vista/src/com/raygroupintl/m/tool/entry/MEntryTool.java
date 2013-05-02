@@ -30,8 +30,8 @@ import com.raygroupintl.m.tool.MToolErrorType;
 import com.raygroupintl.struct.Filter;
 import com.raygroupintl.struct.HierarchicalMap;
 
-public abstract class MEntryTool<T extends MEntryToolIndividualResult, F extends Fanout, B extends BlockData<F>> {
-	protected BlocksSupply<Block<F, B>> blocksSupply;
+public abstract class MEntryTool<T, F extends Fanout, B extends BlockData<F>> {
+	protected BlocksSupply<F, B> blocksSupply;
 	private Filter<Fanout> filter;
 	
 	protected MEntryTool(CommonToolParams params) {

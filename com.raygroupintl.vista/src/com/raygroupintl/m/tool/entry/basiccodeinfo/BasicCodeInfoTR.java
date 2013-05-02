@@ -16,11 +16,10 @@
 
 package com.raygroupintl.m.tool.entry.basiccodeinfo;
 
-import com.raygroupintl.m.tool.entry.MEntryToolIndividualResult;
 import com.raygroupintl.output.Terminal;
 import com.raygroupintl.output.TerminalFormatter;
 
-public class BasicCodeInfoTR implements MEntryToolIndividualResult {
+public class BasicCodeInfoTR {
 	public String[] formals;	
 	private BasicCodeInfo info;
 
@@ -35,16 +34,6 @@ public class BasicCodeInfoTR implements MEntryToolIndividualResult {
 	
 	public BasicCodeInfo getData() {
 		return this.info;
-	}
-	
-	@Override
-	public boolean isValid() {
-		return this.info != null;
-	}
-	
-	@Override
-	public boolean isEmpty() {
-		return this.info == null;
 	}
 	
 	public void writeInfo(Terminal t, TerminalFormatter tf) {

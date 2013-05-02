@@ -29,7 +29,6 @@ import com.raygroupintl.m.tool.CommonToolParams;
 import com.raygroupintl.m.tool.ParseTreeSupply;
 import com.raygroupintl.m.tool.SavedParsedTrees;
 import com.raygroupintl.m.tool.entry.AccumulatingBlocksSupply;
-import com.raygroupintl.m.tool.entry.Block;
 import com.raygroupintl.m.tool.entry.BlocksSupply;
 import com.raygroupintl.m.tool.entry.MEntryToolInput;
 import com.raygroupintl.m.tool.entry.MEntryToolResult;
@@ -155,7 +154,7 @@ public class CLIEntryTools extends Tools {
 		private FaninTool getSupply(EntryId entryId, RepositoryInfo ri) {
 			String method = this.params.getMethod("routinefile");
 			if (method.equalsIgnoreCase("fanoutfile")) {
-				BlocksSupply<Block<IndexedFanout, FaninMark>> blocksSupply = new FanoutFileBasedBlocksSupply(entryId, this.params.parseTreeDirectory);		
+				BlocksSupply<IndexedFanout, FaninMark> blocksSupply = new FanoutFileBasedBlocksSupply(entryId, this.params.parseTreeDirectory);		
 				return new FaninTool(blocksSupply, false);
 			} else {
 				ParseTreeSupply pts = new SavedParsedTrees(params.parseTreeDirectory);

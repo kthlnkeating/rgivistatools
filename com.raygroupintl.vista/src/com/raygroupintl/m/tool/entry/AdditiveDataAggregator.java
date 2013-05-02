@@ -26,9 +26,9 @@ import com.raygroupintl.struct.Filter;
 
 public abstract class AdditiveDataAggregator<T, F extends Fanout, U extends BlockData<F>> {
 	Block<F, U> block;
-	BlocksSupply<Block<F, U>> supply;
+	BlocksSupply<F, U> supply;
 	
-	public AdditiveDataAggregator(Block<F, U> block, BlocksSupply<Block<F, U>> supply) {
+	public AdditiveDataAggregator(Block<F, U> block, BlocksSupply<F, U> supply) {
 		this.block = block;
 		this.supply = supply;
 	}

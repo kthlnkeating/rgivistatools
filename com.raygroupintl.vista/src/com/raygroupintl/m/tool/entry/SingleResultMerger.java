@@ -16,6 +16,6 @@
 
 package com.raygroupintl.m.tool.entry;
 
-public interface SingleResultMerger<T extends MEntryToolIndividualResult, U extends MEntryToolIndividualResult, V extends MEntryToolIndividualResult> {
+public interface SingleResultMerger<T, U, V> {
 	T merge(U u, V v);
 }

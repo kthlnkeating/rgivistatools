@@ -38,7 +38,7 @@ public class QuitTypeTool extends MEntryTool<QuitType, IndexedFanout, QTBlockDat
 	}
 
 	private class QTDataAggregator extends AdditiveDataAggregator<QuitType, IndexedFanout, QTBlockData> {
-		public QTDataAggregator(Block<IndexedFanout, QTBlockData> block, BlocksSupply<Block<IndexedFanout, QTBlockData>> supply) {
+		public QTDataAggregator(Block<IndexedFanout, QTBlockData> block, BlocksSupply<IndexedFanout, QTBlockData> supply) {
 			super(block, supply);
 		}
 

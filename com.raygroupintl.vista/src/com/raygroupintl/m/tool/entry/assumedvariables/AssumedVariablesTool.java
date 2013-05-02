@@ -39,7 +39,7 @@ public class AssumedVariablesTool extends MEntryTool<AssumedVariables, IndexedFa
 	}
 
 	private static class AVTDataAggregator extends RecursiveDataAggregator<Set<String>, IndexedFanout, AssumedVariablesBlockData> {
-		public AVTDataAggregator(Block<IndexedFanout, AssumedVariablesBlockData> block, BlocksSupply<Block<IndexedFanout, AssumedVariablesBlockData>> supply) {
+		public AVTDataAggregator(Block<IndexedFanout, AssumedVariablesBlockData> block, BlocksSupply<IndexedFanout, AssumedVariablesBlockData> supply) {
 			super(block, supply);
 		}
 		

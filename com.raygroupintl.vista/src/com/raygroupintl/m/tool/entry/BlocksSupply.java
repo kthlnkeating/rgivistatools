@@ -17,15 +17,15 @@
 package com.raygroupintl.m.tool.entry;
 
 import com.raygroupintl.m.parsetree.data.EntryId;
-import com.raygroupintl.m.parsetree.data.EntryObject;
+import com.raygroupintl.m.parsetree.data.Fanout;
 import com.raygroupintl.struct.HierarchicalMap;
 
-public abstract class BlocksSupply<T extends EntryObject> {
-	public abstract HierarchicalMap<String, T> getBlocks(String routineName);
+public abstract class BlocksSupply<F extends Fanout, T extends BlockData<F>> {
+	public abstract HierarchicalMap<String, Block<F, T>> getBlocks(String routineName);
 	
-	public T getBlock(EntryId entryId) {
+	public Block<F, T> getBlock(EntryId entryId) {
 		String routineName = entryId.getRoutineName();
-		HierarchicalMap<String, T> rbs = this.getBlocks(routineName);
+		HierarchicalMap<String, Block<F, T>> rbs = this.getBlocks(routineName);
 		if (rbs != null) {
 			String label = entryId.getLabelOrDefault();
 			return rbs.getThruHierarchy(label);

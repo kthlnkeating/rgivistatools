@@ -19,7 +19,6 @@ package com.raygroupintl.m.tool;
 import com.raygroupintl.m.parsetree.data.Fanout;
 import com.raygroupintl.m.parsetree.visitor.BlockRecorderFactory;
 import com.raygroupintl.m.tool.entry.AccumulatingBlocksSupply;
-import com.raygroupintl.m.tool.entry.Block;
 import com.raygroupintl.m.tool.entry.BlockData;
 import com.raygroupintl.m.tool.entry.BlocksSupply;
 import com.raygroupintl.m.tool.entry.RecursionSpecification;
@@ -45,7 +44,7 @@ public class CommonToolParams {
 		return this.recursionSpec.getFanoutFilter();
 	}
 	
-	public <F extends Fanout, T extends BlockData<F>> BlocksSupply<Block<F, T>> getBlocksSupply(BlockRecorderFactory<F, T> f) {
+	public <F extends Fanout, T extends BlockData<F>> BlocksSupply<F, T> getBlocksSupply(BlockRecorderFactory<F, T> f) {
 		return new AccumulatingBlocksSupply<F, T>(this.parseTreeSupply, f);
 	}
 }

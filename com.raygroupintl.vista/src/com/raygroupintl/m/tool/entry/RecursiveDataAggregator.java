@@ -31,9 +31,9 @@ import com.raygroupintl.struct.ObjectWithProperty;
 
 public abstract class RecursiveDataAggregator<T, F extends Fanout, U extends BlockData<F>> {
 	Block<F, U> block;
-	BlocksSupply<Block<F, U>> supply;
+	BlocksSupply<F, U> supply;
 	
-	public RecursiveDataAggregator(Block<F, U> block, BlocksSupply<Block<F, U>> supply) {
+	public RecursiveDataAggregator(Block<F, U> block, BlocksSupply<F, U> supply) {
 		this.block = block;
 		this.supply = supply;
 	}

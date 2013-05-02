@@ -25,7 +25,7 @@ import com.raygroupintl.m.parsetree.visitor.BlockRecorderFactory;
 import com.raygroupintl.m.tool.ParseTreeSupply;
 import com.raygroupintl.struct.HierarchicalMap;
 
-public class AccumulatingBlocksSupply<F extends Fanout, T extends BlockData<F>> extends BlocksSupply<Block<F, T>> {
+public class AccumulatingBlocksSupply<F extends Fanout, T extends BlockData<F>> extends BlocksSupply<F, T> {
 	private ParseTreeSupply parseTreeSupply;
 	private HashMap<String, HierarchicalMap<String, Block<F, T>>> blocks = new HashMap<String, HierarchicalMap<String, Block<F, T>>>();
 	private BlockRecorderFactory<F, T> blockRecorder;

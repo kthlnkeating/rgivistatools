@@ -22,9 +22,8 @@ import java.util.SortedSet;
 import java.util.TreeMap;
 
 import com.raygroupintl.m.parsetree.data.EntryId;
-import com.raygroupintl.m.tool.entry.MEntryToolIndividualResult;
 
-public class EntryFanins implements MEntryToolIndividualResult {
+public class EntryFanins {
 	Map<EntryId, SortedSet<EntryId>> pathPieces = new TreeMap<EntryId, SortedSet<EntryId>>();
 
 	public void add(PathPieceToEntry ppte) {
@@ -44,15 +43,4 @@ public class EntryFanins implements MEntryToolIndividualResult {
 	public Set<EntryId> getFaninNextEntries(EntryId entry) {
 		return this.pathPieces.get(entry);
 	}
-	
-	@Override
-	public boolean isValid() {
-		return this.pathPieces != null;
-	}
-	
-	@Override
-	public boolean isEmpty() {
-		return (this.pathPieces == null) || (this.pathPieces.size() == 0);
-	}
-	
 }

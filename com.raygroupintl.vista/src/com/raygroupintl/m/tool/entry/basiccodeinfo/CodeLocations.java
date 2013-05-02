@@ -25,9 +25,8 @@ import com.raygroupintl.m.parsetree.data.EntryId;
 import com.raygroupintl.m.parsetree.data.IndexedFanout;
 import com.raygroupintl.m.struct.CodeLocation;
 import com.raygroupintl.m.tool.entry.BlockData;
-import com.raygroupintl.m.tool.entry.MEntryToolIndividualResult;
 
-public class CodeLocations extends BlockData<IndexedFanout> implements MEntryToolIndividualResult, Serializable {
+public class CodeLocations extends BlockData<IndexedFanout> implements Serializable {
 	private static final long serialVersionUID = 1L;
 
 	private List<CodeLocation> codeLocations;
@@ -63,15 +62,4 @@ public class CodeLocations extends BlockData<IndexedFanout> implements MEntryToo
 		}		
 		return false;
 	}
-
-	@Override
-	public boolean isValid() {
-		return this.codeLocations != null;
-	}
-	
-	@Override
-	public boolean isEmpty() {
-		return (this.codeLocations == null) || (this.codeLocations.size() ==0);
-	}
-	
 }

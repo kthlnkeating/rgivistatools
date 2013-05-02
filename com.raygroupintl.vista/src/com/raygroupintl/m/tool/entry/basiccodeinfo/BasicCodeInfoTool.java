@@ -38,7 +38,7 @@ public class BasicCodeInfoTool extends MEntryTool<BasicCodeInfoTR, IndexedFanout
 	}
 
 	private class BCITDataAggregator extends AdditiveDataAggregator<BasicCodeInfo, IndexedFanout, CodeInfo> {
-		public BCITDataAggregator(Block<IndexedFanout, CodeInfo> block, BlocksSupply<Block<IndexedFanout, CodeInfo>> supply) {
+		public BCITDataAggregator(Block<IndexedFanout, CodeInfo> block, BlocksSupply<IndexedFanout, CodeInfo> supply) {
 			super(block, supply);
 		}
 

@@ -30,12 +30,12 @@ import com.raygroupintl.struct.Filter;
 import com.raygroupintl.struct.PassFilter;
 
 public class FaninTool  {
-	private BlocksSupply<Block<IndexedFanout, FaninMark>> blocksSupply;
+	private BlocksSupply<IndexedFanout, FaninMark> blocksSupply;
 	private DataStore<PathPieceToEntry> store = new DataStore<PathPieceToEntry>();					
 	private Filter<Fanout> filter = new PassFilter<Fanout>();
 	private boolean filterInternalBlocks;
 	
-	public FaninTool(BlocksSupply<Block<IndexedFanout, FaninMark>> blocksSupply, boolean filterInternalBlocks) {
+	public FaninTool(BlocksSupply<IndexedFanout, FaninMark> blocksSupply, boolean filterInternalBlocks) {
 		this.blocksSupply = blocksSupply;
 		this.filterInternalBlocks = filterInternalBlocks;
 	}

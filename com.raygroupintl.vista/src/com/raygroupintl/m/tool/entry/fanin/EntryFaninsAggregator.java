@@ -19,10 +19,10 @@ import com.raygroupintl.struct.ObjectWithProperty;
 
 public class EntryFaninsAggregator {
 	private Block<IndexedFanout, FaninMark> block;
-	private BlocksSupply<Block<IndexedFanout, FaninMark>> supply;
+	private BlocksSupply<IndexedFanout, FaninMark> supply;
 	private boolean filterInternalBlocks;
 	
-	public EntryFaninsAggregator(Block<IndexedFanout, FaninMark> block, BlocksSupply<Block<IndexedFanout, FaninMark>> supply, boolean filterInternalBlocks) {
+	public EntryFaninsAggregator(Block<IndexedFanout, FaninMark> block, BlocksSupply<IndexedFanout, FaninMark> supply, boolean filterInternalBlocks) {
 		this.block = block;
 		this.supply = supply;
 		this.filterInternalBlocks = filterInternalBlocks;

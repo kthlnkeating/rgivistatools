@@ -15,6 +15,11 @@ public class CLIAssumedVariablesTool extends CLIEntryTool<AssumedVariables> {
 	}
 	
 	@Override
+	protected boolean isEmpty(AssumedVariables assumedVariables) {
+		return assumedVariables.isEmpty();
+	}
+			
+	@Override
 	protected MEntryToolResult<AssumedVariables> getResult(MEntryToolInput input) {
 		AssumedVariablesToolParams params = CLIETParamsAdapter.toAssumedVariablesToolParams(this.params);
 		AssumedVariablesTool a = new AssumedVariablesTool(params);

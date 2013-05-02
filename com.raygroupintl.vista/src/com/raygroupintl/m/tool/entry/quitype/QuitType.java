@@ -17,9 +17,8 @@
 package com.raygroupintl.m.tool.entry.quitype;
 
 import com.raygroupintl.m.struct.CodeLocation;
-import com.raygroupintl.m.tool.entry.MEntryToolIndividualResult;
 
-public class QuitType implements MEntryToolIndividualResult {
+public class QuitType {
 	private QuitTypeState state = QuitTypeState.NO_QUITS;
 	private CodeLocation firstQuitLocation;
 	private CodeLocation conflictingLocation;
@@ -66,13 +65,5 @@ public class QuitType implements MEntryToolIndividualResult {
 			this.conflictingLocation = location;
 			break;
 		}		
-	}
-	
-	public boolean isValid() {
-		return true;
-	}
-	
-	public boolean isEmpty() {
-		return false;
 	}
 }

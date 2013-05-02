@@ -18,9 +18,7 @@ package com.raygroupintl.m.tool.entry.assumedvariables;
 
 import java.util.Set;
 
-import com.raygroupintl.m.tool.entry.MEntryToolIndividualResult;
-
-public class AssumedVariables implements MEntryToolIndividualResult  {
+public class AssumedVariables  {
 	private Set<String> assumedVariables;
 
 	public AssumedVariables(Set<String> assumedVariables) {
@@ -30,11 +28,7 @@ public class AssumedVariables implements MEntryToolIndividualResult  {
 	public Set<String> toSet() {
 		return this.assumedVariables;
 	}
-	
-	public boolean isValid() {
-		return this.assumedVariables != null;
-	}
-	
+
 	public boolean isEmpty() {
 		return (this.assumedVariables == null) || (this.assumedVariables.size() ==0);
 	}
