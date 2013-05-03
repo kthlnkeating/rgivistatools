@@ -20,7 +20,6 @@ import java.util.Set;
 
 import com.raygroupintl.m.parsetree.data.EntryId;
 import com.raygroupintl.m.parsetree.data.Fanout;
-import com.raygroupintl.m.parsetree.data.IndexedFanout;
 import com.raygroupintl.m.parsetree.visitor.BlockRecorderFactory;
 import com.raygroupintl.m.tool.CommonToolParams;
 import com.raygroupintl.m.tool.entry.AdditiveDataAggregator;
@@ -29,24 +28,24 @@ import com.raygroupintl.m.tool.entry.BlocksSupply;
 import com.raygroupintl.m.tool.entry.MEntryTool;
 import com.raygroupintl.struct.Filter;
 
-public class QuitTypeTool extends MEntryTool<QuitType, IndexedFanout, QTBlockData> {
-	private class QTRecorderFactory implements BlockRecorderFactory<IndexedFanout, QTBlockData> {
+public class QuitTypeTool extends MEntryTool<QuitType, Fanout, QTBlockData> {
+	private class QTRecorderFactory implements BlockRecorderFactory<Fanout, QTBlockData> {
 		@Override
 		public QTRecorder getRecorder() {
 			return new QTRecorder();
 		}
 	}
 
-	private class QTDataAggregator extends AdditiveDataAggregator<QuitType, IndexedFanout, QTBlockData> {
-		public QTDataAggregator(Block<IndexedFanout, QTBlockData> block, BlocksSupply<IndexedFanout, QTBlockData> supply) {
+	private class QTDataAggregator extends AdditiveDataAggregator<QuitType, Fanout, QTBlockData> {
+		public QTDataAggregator(Block<Fanout, QTBlockData> block, BlocksSupply<Fanout, QTBlockData> supply) {
 			super(block, supply);
 		}
 
-		protected QuitType getNewDataInstance(Block<IndexedFanout, QTBlockData> block) {
+		protected QuitType getNewDataInstance(Block<Fanout, QTBlockData> block) {
 			return new QuitType();
 		}
 		
-		protected void updateData(QuitType targetData, Block<IndexedFanout, QTBlockData> fanoutBlock) {
+		protected void updateData(QuitType targetData, Block<Fanout, QTBlockData> fanoutBlock) {
 		}		
 	}
 	
@@ -60,7 +59,7 @@ public class QuitTypeTool extends MEntryTool<QuitType, IndexedFanout, QTBlockDat
 	}
 
 	@Override
-	protected QuitType getResult(Block<IndexedFanout, QTBlockData> block, Filter<Fanout> filter, Set<EntryId> missingEntryIds) {
+	protected QuitType getResult(Block<Fanout, QTBlockData> block, Filter<Fanout> filter, Set<EntryId> missingEntryIds) {
 		QTDataAggregator bcia = new QTDataAggregator(block, this.blocksSupply);
 		QuitType apiData = bcia.get(filter, missingEntryIds);
 		return apiData;

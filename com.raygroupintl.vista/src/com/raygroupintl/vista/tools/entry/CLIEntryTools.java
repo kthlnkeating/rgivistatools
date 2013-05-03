@@ -23,7 +23,6 @@ import java.util.Set;
 import com.raygroupintl.m.parsetree.Routine;
 import com.raygroupintl.m.parsetree.data.EntryId;
 import com.raygroupintl.m.parsetree.data.Fanout;
-import com.raygroupintl.m.parsetree.data.IndexedFanout;
 import com.raygroupintl.m.struct.CodeLocation;
 import com.raygroupintl.m.tool.CommonToolParams;
 import com.raygroupintl.m.tool.ParseTreeSupply;
@@ -154,11 +153,11 @@ public class CLIEntryTools extends Tools {
 		private FaninTool getSupply(EntryId entryId, RepositoryInfo ri) {
 			String method = this.params.getMethod("routinefile");
 			if (method.equalsIgnoreCase("fanoutfile")) {
-				BlocksSupply<IndexedFanout, FaninMark> blocksSupply = new FanoutFileBasedBlocksSupply(entryId, this.params.parseTreeDirectory);		
+				BlocksSupply<Fanout, FaninMark> blocksSupply = new FanoutFileBasedBlocksSupply(entryId, this.params.parseTreeDirectory);		
 				return new FaninTool(blocksSupply, false);
 			} else {
 				ParseTreeSupply pts = new SavedParsedTrees(params.parseTreeDirectory);
-				AccumulatingBlocksSupply<IndexedFanout, FaninMark> bs = new AccumulatingBlocksSupply<IndexedFanout, FaninMark>(pts, new MarkedAsFaninBRF(entryId));
+				AccumulatingBlocksSupply<Fanout, FaninMark> bs = new AccumulatingBlocksSupply<Fanout, FaninMark>(pts, new MarkedAsFaninBRF(entryId));
 				return new FaninTool(bs, true);
 			}
 		}

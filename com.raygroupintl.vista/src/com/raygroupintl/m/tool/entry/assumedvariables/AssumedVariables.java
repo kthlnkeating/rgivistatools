@@ -16,20 +16,27 @@
 
 package com.raygroupintl.m.tool.entry.assumedvariables;
 
+import java.util.Map;
 import java.util.Set;
 
-public class AssumedVariables  {
-	private Set<String> assumedVariables;
+import com.raygroupintl.m.struct.CodeLocation;
 
-	public AssumedVariables(Set<String> assumedVariables) {
-		this.assumedVariables = assumedVariables;
+public class AssumedVariables {
+	private Map<String, CodeLocation> data;
+
+	public AssumedVariables(Map<String, CodeLocation> data) {
+		this.data = data;
+	}
+	
+	public CodeLocation get(String name) {
+		return this.data.get(name);
 	}
 	
 	public Set<String> toSet() {
-		return this.assumedVariables;
+		return this.data.keySet();
 	}
 
 	public boolean isEmpty() {
-		return (this.assumedVariables == null) || (this.assumedVariables.size() ==0);
+		return (this.data == null) || (this.data.size() ==0);
 	}
 }

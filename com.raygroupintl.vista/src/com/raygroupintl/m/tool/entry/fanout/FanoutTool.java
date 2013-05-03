@@ -22,7 +22,6 @@ import java.util.Set;
 import com.raygroupintl.m.parsetree.data.EntryId;
 import com.raygroupintl.m.parsetree.data.Fanout;
 import com.raygroupintl.m.parsetree.data.FanoutBlocks;
-import com.raygroupintl.m.parsetree.data.IndexedFanout;
 import com.raygroupintl.m.parsetree.visitor.BlockRecorderFactory;
 import com.raygroupintl.m.tool.CommonToolParams;
 import com.raygroupintl.m.tool.entry.Block;
@@ -30,8 +29,8 @@ import com.raygroupintl.m.tool.entry.BlockData;
 import com.raygroupintl.m.tool.entry.MEntryTool;
 import com.raygroupintl.struct.Filter;
 
-public class FanoutTool extends MEntryTool<EntryFanouts, IndexedFanout, BlockData<IndexedFanout>>{
-	private static class EntryFanoutRecorderFactory implements BlockRecorderFactory<IndexedFanout, BlockData<IndexedFanout>> {
+public class FanoutTool extends MEntryTool<EntryFanouts, Fanout, BlockData<Fanout>>{
+	private static class EntryFanoutRecorderFactory implements BlockRecorderFactory<Fanout, BlockData<Fanout>> {
 		@Override
 		public VoidBlockRecorder getRecorder() {
 			return new VoidBlockRecorder();
@@ -48,12 +47,12 @@ public class FanoutTool extends MEntryTool<EntryFanouts, IndexedFanout, BlockDat
 	}
 
 	@Override
-	protected EntryFanouts getResult(Block<IndexedFanout, BlockData<IndexedFanout>> block, Filter<Fanout> filter, Set<EntryId> missingEntryIds) {
-		FanoutBlocks<IndexedFanout, BlockData<IndexedFanout>> fanoutBlocks = block.getFanoutBlocks(this.blocksSupply, filter, missingEntryIds);
-		List<Block<IndexedFanout, BlockData<IndexedFanout>>> blocks = fanoutBlocks.getBlocks();
+	protected EntryFanouts getResult(Block<Fanout, BlockData<Fanout>> block, Filter<Fanout> filter, Set<EntryId> missingEntryIds) {
+		FanoutBlocks<Fanout, BlockData<Fanout>> fanoutBlocks = block.getFanoutBlocks(this.blocksSupply, filter, missingEntryIds);
+		List<Block<Fanout, BlockData<Fanout>>> blocks = fanoutBlocks.getBlocks();
 		boolean first = true;
 		EntryFanouts result = new EntryFanouts();
-		for (Block<IndexedFanout, BlockData<IndexedFanout>> b : blocks) {
+		for (Block<Fanout, BlockData<Fanout>> b : blocks) {
 			if (first) {
 				first = false;
 			} else if (! b.isInternal()) {					

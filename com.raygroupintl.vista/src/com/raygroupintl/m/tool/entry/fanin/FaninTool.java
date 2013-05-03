@@ -23,19 +23,18 @@ import com.raygroupintl.m.parsetree.Routine;
 import com.raygroupintl.m.parsetree.data.DataStore;
 import com.raygroupintl.m.parsetree.data.EntryId;
 import com.raygroupintl.m.parsetree.data.Fanout;
-import com.raygroupintl.m.parsetree.data.IndexedFanout;
 import com.raygroupintl.m.tool.entry.Block;
 import com.raygroupintl.m.tool.entry.BlocksSupply;
 import com.raygroupintl.struct.Filter;
 import com.raygroupintl.struct.PassFilter;
 
 public class FaninTool  {
-	private BlocksSupply<IndexedFanout, FaninMark> blocksSupply;
+	private BlocksSupply<Fanout, FaninMark> blocksSupply;
 	private DataStore<PathPieceToEntry> store = new DataStore<PathPieceToEntry>();					
 	private Filter<Fanout> filter = new PassFilter<Fanout>();
 	private boolean filterInternalBlocks;
 	
-	public FaninTool(BlocksSupply<IndexedFanout, FaninMark> blocksSupply, boolean filterInternalBlocks) {
+	public FaninTool(BlocksSupply<Fanout, FaninMark> blocksSupply, boolean filterInternalBlocks) {
 		this.blocksSupply = blocksSupply;
 		this.filterInternalBlocks = filterInternalBlocks;
 	}
@@ -47,7 +46,7 @@ public class FaninTool  {
 	public void addRoutine(Routine routine) {
 		List<EntryId> routineEntryTags = routine.getEntryIdList();
 		for (EntryId routineEntryTag : routineEntryTags) {
-			Block<IndexedFanout, FaninMark> b = this.blocksSupply.getBlock(routineEntryTag);
+			Block<Fanout, FaninMark> b = this.blocksSupply.getBlock(routineEntryTag);
 			if (b != null) {
 				EntryFaninsAggregator ag = new EntryFaninsAggregator(b, this.blocksSupply, this.filterInternalBlocks);
 				ag.get(store, this.filter);

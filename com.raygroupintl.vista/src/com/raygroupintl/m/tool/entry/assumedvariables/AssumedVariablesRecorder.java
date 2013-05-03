@@ -24,22 +24,40 @@ import com.raygroupintl.m.parsetree.Node;
 import com.raygroupintl.m.parsetree.OpenCloseUseCmdNodes;
 import com.raygroupintl.m.parsetree.data.EntryId;
 import com.raygroupintl.m.parsetree.data.FanoutType;
-import com.raygroupintl.m.parsetree.data.IndexedFanout;
 import com.raygroupintl.m.parsetree.visitor.BlockRecorder;
+import com.raygroupintl.m.struct.CodeLocation;
+import com.raygroupintl.m.struct.LineLocation;
 
 class AssumedVariablesRecorder extends BlockRecorder<IndexedFanout, AssumedVariablesBlockData> {
+	private int index;
 	private boolean underDeviceParameter;
 	
 	public void reset() {
 		this.underDeviceParameter = false;
+		this.index = 0;
 		super.reset();
 	}
 	
-	private void addOutput(Local local) {
+	@Override
+	protected void updateFanout(EntryId fanoutId, FanoutType type) {
+		if (fanoutId != null) {
+			super.updateFanout(fanoutId, type);
+			++this.index;
+		} 
+	}
+
+	private void addLocal(Local local) {
 		AssumedVariablesBlockData d = this.getCurrentBlockData();
 		if (d != null) {
-			d.addLocal(local);	
+			String routineName = this.getLastRoutineName();
+			LineLocation location = this.getLastLocation();
+			CodeLocation codeLocation = new CodeLocation(routineName, location);
+			d.addLocal(local, codeLocation);	
 		}
+	}
+	
+	private void addOutput(Local local) {
+		this.addLocal(local);
 	}
 	
 	@Override
@@ -70,9 +88,8 @@ class AssumedVariablesRecorder extends BlockRecorder<IndexedFanout, AssumedVaria
 	
 	@Override
 	protected void newLocal(Local local) {
-		int i = this.getIndex();
 		AssumedVariablesBlockData d = this.getCurrentBlockData();
-		if (d != null) d.addNewed(i, local);
+		if (d != null) d.addNewed(this.index, local);
 	}
 	
 	private static Set<String> DEVICE_PARAMS = new HashSet<String>();
@@ -98,21 +115,18 @@ class AssumedVariablesRecorder extends BlockRecorder<IndexedFanout, AssumedVaria
 	protected void visitLocal(Local local) {
 		if ((! this.underDeviceParameter) || (! isDeviceParameter(local))) { 
 			super.visitLocal(local);
-			AssumedVariablesBlockData d = this.getCurrentBlockData();
-			if (d != null) d.addLocal(local);
+			this.addLocal(local);
 		}
 	}
 
 	@Override
 	protected void passLocalByVal(Local local, int index) {		
-		AssumedVariablesBlockData d = this.getCurrentBlockData();
-		if (d != null) d.addLocal(local);
+		this.addLocal(local);
 	}
 	
 	@Override
 	protected void passLocalByRef(Local local, int index) {
-		AssumedVariablesBlockData d = this.getCurrentBlockData();
-		if (d != null) d.addLocal(local);
+		this.addLocal(local);
 		super.passLocalByRef(local, index);
 	}
 
@@ -125,7 +139,6 @@ class AssumedVariablesRecorder extends BlockRecorder<IndexedFanout, AssumedVaria
 	
 	@Override
 	protected IndexedFanout getFanout(EntryId id, FanoutType type) {
-		int index = this.getIndex();
-		return new IndexedFanout(index, id, type);
+		return new IndexedFanout(this.index, id, type);
 	}
 }

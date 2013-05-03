@@ -1,5 +1,9 @@
 package com.raygroupintl.vista.tools.entry;
 
+import java.util.ArrayList;
+import java.util.List;
+
+import com.raygroupintl.m.struct.CodeLocation;
 import com.raygroupintl.m.tool.entry.MEntryToolInput;
 import com.raygroupintl.m.tool.entry.MEntryToolResult;
 import com.raygroupintl.m.tool.entry.assumedvariables.AssumedVariables;
@@ -10,8 +14,11 @@ import com.raygroupintl.output.TerminalFormatter;
 import com.raygroupintl.vista.tools.CLIParams;
 
 public class CLIAssumedVariablesTool extends CLIEntryTool<AssumedVariables> {	
+	private boolean showDetail = false;
+	
 	public CLIAssumedVariablesTool(CLIParams params) {
 		super(params);
+		this.showDetail = this.getShowDetail();
 	}
 	
 	@Override
@@ -28,6 +35,16 @@ public class CLIAssumedVariablesTool extends CLIEntryTool<AssumedVariables> {
 	
 	@Override
 	protected void write(AssumedVariables result, Terminal t, TerminalFormatter tf) {
-		t.writeSortedFormatted("ASSUMED", result.toSet(), tf);
+		if (this.showDetail) {
+			List<String> tbw = new ArrayList<String>();
+			for (String name : result.toSet()) {
+				CodeLocation location = result.get(name);
+				String out = name + "->" + location.toString();
+				tbw.add(out);
+			}
+			t.writeSortedFormatted("ASSUMED", tbw, tf);
+		} else {
+			t.writeSortedFormatted("ASSUMED", result.toSet(), tf);
+		}
 	}
 }

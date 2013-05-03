@@ -9,7 +9,7 @@ import org.junit.Test;
 import com.raygroupintl.m.MTestCommon;
 import com.raygroupintl.m.parsetree.Routine;
 import com.raygroupintl.m.parsetree.data.EntryId;
-import com.raygroupintl.m.parsetree.data.IndexedFanout;
+import com.raygroupintl.m.parsetree.data.Fanout;
 import com.raygroupintl.m.tool.ParseTreeSupply;
 import com.raygroupintl.m.tool.entry.AccumulatingBlocksSupply;
 import com.raygroupintl.m.tool.entry.fanin.EntryFanins;
@@ -41,7 +41,7 @@ public class FaninToolTest {
 		final EntryId entryId = new EntryId("FINROU00", "ADD");
 		MarkedAsFaninBRF brf = new MarkedAsFaninBRF(entryId); 
 
-		AccumulatingBlocksSupply<IndexedFanout, FaninMark> blocksSupply = new AccumulatingBlocksSupply<IndexedFanout, FaninMark>(pts, brf);
+		AccumulatingBlocksSupply<Fanout, FaninMark> blocksSupply = new AccumulatingBlocksSupply<Fanout, FaninMark>(pts, brf);
 		
 		FaninTool accumulator = new FaninTool(blocksSupply, false);
 		for (String routineName : routineNames) {

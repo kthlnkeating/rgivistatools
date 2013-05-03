@@ -22,11 +22,11 @@ import java.util.Collections;
 import java.util.List;
 
 import com.raygroupintl.m.parsetree.data.EntryId;
-import com.raygroupintl.m.parsetree.data.IndexedFanout;
+import com.raygroupintl.m.parsetree.data.Fanout;
 import com.raygroupintl.m.struct.CodeLocation;
 import com.raygroupintl.m.tool.entry.BlockData;
 
-public class CodeLocations extends BlockData<IndexedFanout> implements Serializable {
+public class CodeLocations extends BlockData<Fanout> implements Serializable {
 	private static final long serialVersionUID = 1L;
 
 	private List<CodeLocation> codeLocations;

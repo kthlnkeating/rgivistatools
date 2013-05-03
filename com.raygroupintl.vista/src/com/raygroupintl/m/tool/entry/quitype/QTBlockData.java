@@ -17,10 +17,10 @@
 package com.raygroupintl.m.tool.entry.quitype;
 
 import com.raygroupintl.m.parsetree.data.EntryId;
-import com.raygroupintl.m.parsetree.data.IndexedFanout;
+import com.raygroupintl.m.parsetree.data.Fanout;
 import com.raygroupintl.m.tool.entry.BlockData;
 
-class QTBlockData extends BlockData<IndexedFanout> {
+class QTBlockData extends BlockData<Fanout> {
 	private QuitType quitType = new QuitType();
 	
 	public QTBlockData(EntryId entryId) {

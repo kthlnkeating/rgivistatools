@@ -21,26 +21,26 @@ import java.util.Set;
 
 import com.raygroupintl.m.parsetree.data.EntryId;
 import com.raygroupintl.m.parsetree.data.FanoutType;
-import com.raygroupintl.m.parsetree.data.IndexedFanout;
+import com.raygroupintl.m.parsetree.data.Fanout;
 import com.raygroupintl.m.tool.entry.Block;
 import com.raygroupintl.m.tool.entry.BlocksSupply;
 import com.raygroupintl.m.tool.entry.fanout.RoutineFanouts;
 import com.raygroupintl.struct.HierarchicalMap;
 import com.raygroupintl.vista.tools.fnds.ToolUtilities;
 
-public class FanoutFileBasedBlocksSupply extends BlocksSupply<IndexedFanout, FaninMark> {
+public class FanoutFileBasedBlocksSupply extends BlocksSupply<Fanout, FaninMark> {
 	private EntryId entryUnderTest;
 	private String inputPath;
-	private HashMap<String, HierarchicalMap<String, Block<IndexedFanout, FaninMark>>> blocks = new HashMap<String, HierarchicalMap<String, Block<IndexedFanout, FaninMark>>>();
+	private HashMap<String, HierarchicalMap<String, Block<Fanout, FaninMark>>> blocks = new HashMap<String, HierarchicalMap<String, Block<Fanout, FaninMark>>>();
 	
 	public FanoutFileBasedBlocksSupply(EntryId entryUnderTest, String inputPath) {
 		this.entryUnderTest = entryUnderTest;
 		this.inputPath = inputPath;
 	}
 	
-	private HierarchicalMap<String, Block<IndexedFanout, FaninMark>> getBlocks(String routineName, RoutineFanouts fanouts) {
+	private HierarchicalMap<String, Block<Fanout, FaninMark>> getBlocks(String routineName, RoutineFanouts fanouts) {
 		if (fanouts != null) {
-			HierarchicalMap<String, Block<IndexedFanout, FaninMark>> result = new HierarchicalMap<String, Block<IndexedFanout, FaninMark>>();
+			HierarchicalMap<String, Block<Fanout, FaninMark>> result = new HierarchicalMap<String, Block<Fanout, FaninMark>>();
 			Set<String> entryTags = fanouts.getRoutineEntryTags();
 			EntryId eidUnderTest = this.entryUnderTest;
 			if (routineName.equals(this.entryUnderTest.getRoutineName())) {
@@ -53,13 +53,11 @@ public class FanoutFileBasedBlocksSupply extends BlocksSupply<IndexedFanout, Fan
 				if (entryFanouts.contains(eidUnderTest)) {
 					fim.set(this.entryUnderTest);
 				}
-				int foindex = 0;
 				for (EntryId eid : entryFanouts) {
-					IndexedFanout ifo = new IndexedFanout(foindex, eid, FanoutType.DO_BLOCK);
+					Fanout ifo = new Fanout(eid, FanoutType.DO_BLOCK);
 					fim.addFanout(ifo);
-					++foindex;
 				}
-				Block<IndexedFanout, FaninMark> blx = new Block<IndexedFanout, FaninMark>(result, fim);
+				Block<Fanout, FaninMark> blx = new Block<Fanout, FaninMark>(result, fim);
 				result.put(entryTag, blx);
 			}
 			return result;
@@ -68,10 +66,10 @@ public class FanoutFileBasedBlocksSupply extends BlocksSupply<IndexedFanout, Fan
 	}
 	
 	@Override
-	public HierarchicalMap<String, Block<IndexedFanout, FaninMark>> getBlocks(String routineName) {
+	public HierarchicalMap<String, Block<Fanout, FaninMark>> getBlocks(String routineName) {
 		if (! this.blocks.containsKey(routineName)) {			
 			RoutineFanouts fanouts = (RoutineFanouts) ToolUtilities.readSerializedRoutineObject(this.inputPath, routineName, ".fo");
-			HierarchicalMap<String, Block<IndexedFanout, FaninMark>> result = this.getBlocks(routineName, fanouts);
+			HierarchicalMap<String, Block<Fanout, FaninMark>> result = this.getBlocks(routineName, fanouts);
 			this.blocks.put(routineName, result);
 			return result;
 		}

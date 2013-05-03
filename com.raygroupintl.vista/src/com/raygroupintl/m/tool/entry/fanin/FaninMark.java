@@ -19,10 +19,10 @@ package com.raygroupintl.m.tool.entry.fanin;
 import java.util.Set;
 
 import com.raygroupintl.m.parsetree.data.EntryId;
-import com.raygroupintl.m.parsetree.data.IndexedFanout;
+import com.raygroupintl.m.parsetree.data.Fanout;
 import com.raygroupintl.m.tool.entry.BlockData;
 
-public class FaninMark extends BlockData<IndexedFanout> {
+public class FaninMark extends BlockData<Fanout> {
 	private EntryId startNode;
 	private EntryId endNode;
 	

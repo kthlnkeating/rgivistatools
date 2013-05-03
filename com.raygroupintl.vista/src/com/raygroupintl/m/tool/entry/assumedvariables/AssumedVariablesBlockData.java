@@ -17,20 +17,18 @@
 package com.raygroupintl.m.tool.entry.assumedvariables;
 
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.Map;
-import java.util.Set;
 
 import com.raygroupintl.m.parsetree.Local;
 import com.raygroupintl.m.parsetree.data.EntryId;
-import com.raygroupintl.m.parsetree.data.IndexedFanout;
+import com.raygroupintl.m.struct.CodeLocation;
 import com.raygroupintl.m.tool.entry.BlockData;
 
 class AssumedVariablesBlockData extends BlockData<IndexedFanout> {
 	private String[] formals;
 	private Map<String, Integer> formalsMap;
 	private Map<String, Integer> newedLocals = new HashMap<String, Integer>();
-	private Set<String> assumedLocals = new HashSet<String>();
+	private Map<String, CodeLocation> assumedLocals = new HashMap<String, CodeLocation>();
 	
 	public AssumedVariablesBlockData(EntryId entryId) {
 		super(entryId);
@@ -61,11 +59,13 @@ class AssumedVariablesBlockData extends BlockData<IndexedFanout> {
 		}
 	}		
 	
-	public void addLocal(Local local) {
+	public void addLocal(Local local, CodeLocation location) {
 		String label = local.getName().toString();
 		if ((this.formalsMap == null) || (! this.formalsMap.containsKey(label))) {
 			if (! this.newedLocals.containsKey(label)) {
-				this.assumedLocals.add(label);
+				if (! this.assumedLocals.containsKey(label)) {				
+					this.assumedLocals.put(label, location);
+				}
 			}
 		}
 	}
@@ -99,7 +99,7 @@ class AssumedVariablesBlockData extends BlockData<IndexedFanout> {
 		return this.newedLocals;
 	}
 	
-	public Set<String> getAssumedLocals() {
+	public Map<String, CodeLocation> getAssumedLocals() {
 		return this.assumedLocals;
 	}
 }

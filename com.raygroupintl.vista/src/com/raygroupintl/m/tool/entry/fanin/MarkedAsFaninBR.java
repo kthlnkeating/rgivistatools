@@ -20,11 +20,11 @@ import com.raygroupintl.m.parsetree.AtomicDo;
 import com.raygroupintl.m.parsetree.AtomicGoto;
 import com.raygroupintl.m.parsetree.Extrinsic;
 import com.raygroupintl.m.parsetree.data.EntryId;
+import com.raygroupintl.m.parsetree.data.Fanout;
 import com.raygroupintl.m.parsetree.data.FanoutType;
-import com.raygroupintl.m.parsetree.data.IndexedFanout;
 import com.raygroupintl.m.parsetree.visitor.BlockRecorder;
 
-public class MarkedAsFaninBR extends BlockRecorder<IndexedFanout, FaninMark> {
+public class MarkedAsFaninBR extends BlockRecorder<Fanout, FaninMark> {
 	private EntryId entryId;
 	
 	public MarkedAsFaninBR(EntryId entryId) {
@@ -62,9 +62,8 @@ public class MarkedAsFaninBR extends BlockRecorder<IndexedFanout, FaninMark> {
 	}
 
 	@Override
-	protected IndexedFanout getFanout(EntryId id, FanoutType type) {
-		int index = this.getIndex();
-		return new IndexedFanout(index, id, type);
+	protected Fanout getFanout(EntryId id, FanoutType type) {
+		return new Fanout(id, type);
 	}
 }
 	

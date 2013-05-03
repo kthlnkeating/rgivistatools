@@ -61,6 +61,16 @@ public abstract class CLIEntryTool<U> extends Tool {
 		return false;			
 	}
 	
+	protected boolean getShowDetail() {
+		List<String> outputFlags = this.params.outputFlags;
+		for (String outputFlag : outputFlags) {
+			if (outputFlag.equals("showdetail")) {
+				return true;
+			}
+		}
+		return false;			
+	}
+
 	@Override
 	public void run() {
 		Terminal t = CLIParamsAdapter.getTerminal(this.params);

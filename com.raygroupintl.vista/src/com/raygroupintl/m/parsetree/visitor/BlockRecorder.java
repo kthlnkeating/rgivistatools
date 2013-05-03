@@ -34,7 +34,6 @@ public abstract class BlockRecorder<F extends Fanout, T extends BlockData<F>> ex
 	private HierarchicalMap<String, Block<F, T>> currentBlocks;
 	private T currentBlockData;
 	private String currentRoutineName;
-	private int index;
 	private InnerEntryList lastInnerEntryList;
 
 	protected T getCurrentBlockData() {
@@ -45,15 +44,10 @@ public abstract class BlockRecorder<F extends Fanout, T extends BlockData<F>> ex
 		return this.currentRoutineName;
 	}
 	
-	protected int getIndex() {
-		return this.index;
-	}
-	
 	public void reset() {
 		this.currentBlocks = null;
 		this.currentBlockData = null;
 		this.currentRoutineName = null;
-		this.index = 0;		
 		this.lastInnerEntryList = null;
 	}
 	
@@ -62,7 +56,6 @@ public abstract class BlockRecorder<F extends Fanout, T extends BlockData<F>> ex
 			fanoutId.localize(this.currentRoutineName);
 			F fo = this.getFanout(fanoutId, type);
 			this.currentBlockData.addFanout(fo);	
-			++this.index;
 		} 
 	}
 

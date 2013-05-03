@@ -16,14 +16,15 @@
 
 package com.raygroupintl.m.tool.entry.assumedvariables;
 
-import java.util.HashSet;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Set;
 
 import com.raygroupintl.m.parsetree.data.DataStore;
 import com.raygroupintl.m.parsetree.data.EntryId;
 import com.raygroupintl.m.parsetree.data.Fanout;
-import com.raygroupintl.m.parsetree.data.IndexedFanout;
 import com.raygroupintl.m.parsetree.visitor.BlockRecorderFactory;
+import com.raygroupintl.m.struct.CodeLocation;
 import com.raygroupintl.m.tool.entry.Block;
 import com.raygroupintl.m.tool.entry.BlocksSupply;
 import com.raygroupintl.m.tool.entry.MEntryTool;
@@ -38,22 +39,22 @@ public class AssumedVariablesTool extends MEntryTool<AssumedVariables, IndexedFa
 		}
 	}
 
-	private static class AVTDataAggregator extends RecursiveDataAggregator<Set<String>, IndexedFanout, AssumedVariablesBlockData> {
+	private static class AVTDataAggregator extends RecursiveDataAggregator<Map<String, CodeLocation>, IndexedFanout, AssumedVariablesBlockData> {
 		public AVTDataAggregator(Block<IndexedFanout, AssumedVariablesBlockData> block, BlocksSupply<IndexedFanout, AssumedVariablesBlockData> supply) {
 			super(block, supply);
 		}
 		
 		@Override
-		protected Set<String> getNewDataInstance(AssumedVariablesBlockData blockData) {
-			return new HashSet<>(blockData.getAssumedLocals());		
+		protected Map<String, CodeLocation> getNewDataInstance(AssumedVariablesBlockData blockData) {
+			return new HashMap<>(blockData.getAssumedLocals());		
 		}
 		
-		protected int updateData(AssumedVariablesBlockData targetBlockData, Set<String> targetData, Set<String> sourceData, IndexedFanout property) {
+		protected int updateData(AssumedVariablesBlockData targetBlockData, Map<String, CodeLocation> targetData, Map<String, CodeLocation> sourceData, IndexedFanout property) {
 			int result = 0;
-			for (String name : sourceData) {
+			for (String name : sourceData.keySet()) {
 				if (! targetBlockData.isDefined(name, property.getIndex())) {
-					if (! targetData.contains(name)) {
-						targetData.add(name);
+					if (! targetData.containsKey(name)) {
+						targetData.put(name, sourceData.get(name));
 						++result;
 					}
 				}
@@ -62,7 +63,7 @@ public class AssumedVariablesTool extends MEntryTool<AssumedVariables, IndexedFa
 		}		
 	}
 	
-	private DataStore<Set<String>> store = new DataStore<Set<String>>();					
+	private DataStore<Map<String, CodeLocation>> store = new DataStore<Map<String, CodeLocation>>();					
 	private AssumedVariablesToolParams params;
 	
 	public AssumedVariablesTool(AssumedVariablesToolParams params) {
@@ -78,9 +79,11 @@ public class AssumedVariablesTool extends MEntryTool<AssumedVariables, IndexedFa
 	@Override
 	public AssumedVariables getResult(Block<IndexedFanout, AssumedVariablesBlockData> block, Filter<Fanout> filter, Set<EntryId> missingEntryIds) {
 		AVTDataAggregator ala = new AVTDataAggregator(block, blocksSupply);
-		Set<String> assumedVariables = ala.get(this.store, filter, missingEntryIds);
+		Map<String, CodeLocation> assumedVariables = ala.get(this.store, filter, missingEntryIds);
 		if (assumedVariables != null) {
-			assumedVariables.removeAll(this.params.getExpected());
+			for (String name : this.params.getExpected()) {
+				assumedVariables.remove(name);
+			}
 		}
 		return new AssumedVariables(assumedVariables);	
 	}

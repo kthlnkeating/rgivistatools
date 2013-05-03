@@ -21,7 +21,6 @@ import java.util.Set;
 
 import com.raygroupintl.m.parsetree.data.EntryId;
 import com.raygroupintl.m.parsetree.data.Fanout;
-import com.raygroupintl.m.parsetree.data.IndexedFanout;
 import com.raygroupintl.m.parsetree.visitor.BlockRecorderFactory;
 import com.raygroupintl.m.struct.CodeLocation;
 import com.raygroupintl.m.tool.entry.AdditiveDataAggregator;
@@ -31,24 +30,24 @@ import com.raygroupintl.m.tool.entry.MEntryTool;
 import com.raygroupintl.m.tool.entry.basiccodeinfo.CodeLocations;
 import com.raygroupintl.struct.Filter;
 
-public class LocalAssignmentTool extends MEntryTool<CodeLocations, IndexedFanout, CodeLocations> {
-	private class EntryLocalAssignmentRecorderFactory implements BlockRecorderFactory<IndexedFanout, CodeLocations> {
+public class LocalAssignmentTool extends MEntryTool<CodeLocations, Fanout, CodeLocations> {
+	private class EntryLocalAssignmentRecorderFactory implements BlockRecorderFactory<Fanout, CodeLocations> {
 		@Override
 		public LocalAssignmentRecorder getRecorder() {
 			return new LocalAssignmentRecorder(LocalAssignmentTool.this.localsUnderTest);
 		}
 	}
 	
-	private class LATDataAggregator extends AdditiveDataAggregator<CodeLocations, IndexedFanout, CodeLocations> {
-		public LATDataAggregator(Block<IndexedFanout, CodeLocations> block, BlocksSupply<IndexedFanout, CodeLocations> supply) {
+	private class LATDataAggregator extends AdditiveDataAggregator<CodeLocations, Fanout, CodeLocations> {
+		public LATDataAggregator(Block<Fanout, CodeLocations> block, BlocksSupply<Fanout, CodeLocations> supply) {
 			super(block, supply);
 		}
 		
-		protected CodeLocations getNewDataInstance(Block<IndexedFanout, CodeLocations> block) {
+		protected CodeLocations getNewDataInstance(Block<Fanout, CodeLocations> block) {
 			return new CodeLocations(block.getEntryId());
 		}
 		
-		protected void updateData(CodeLocations targetData, Block<IndexedFanout, CodeLocations> fanoutBlock) {
+		protected void updateData(CodeLocations targetData, Block<Fanout, CodeLocations> fanoutBlock) {
 			CodeLocations source = fanoutBlock.getData();
 			List<CodeLocation> cls = source.getCodeLocations();
 			if (cls != null) {
@@ -72,7 +71,7 @@ public class LocalAssignmentTool extends MEntryTool<CodeLocations, IndexedFanout
 	}
 
 	@Override
-	protected CodeLocations getResult(Block<IndexedFanout, CodeLocations> block, Filter<Fanout> filter, Set<EntryId> missingEntryIds) {
+	protected CodeLocations getResult(Block<Fanout, CodeLocations> block, Filter<Fanout> filter, Set<EntryId> missingEntryIds) {
 		LATDataAggregator bcia = new LATDataAggregator(block, blocksSupply);
 		return bcia.get(filter, missingEntryIds);
 	}

@@ -23,12 +23,7 @@ import com.raygroupintl.output.Terminal;
 import com.raygroupintl.vista.repository.RepositoryInfo;
 
 public class CLIParamsAdapter {
-	private static RepositoryInfo repositoryInfo;
-	
 	public static RepositoryInfo getRepositoryInfo(CLIParams params) {
-		if (CLIParamsAdapter.repositoryInfo != null) {
-			return CLIParamsAdapter.repositoryInfo;
-		}		
 		MRARoutineFactory rf = MRARoutineFactory.getInstance(MVersion.CACHE);
 		if (rf != null) {
 			RepositoryInfo ri = RepositoryInfo.getInstance(rf);
@@ -39,7 +34,6 @@ public class CLIParamsAdapter {
 					ri.readGlobalOwnership(params.ownershipFilePath);			
 				}
 			}	
-			CLIParamsAdapter.repositoryInfo = ri;
 			return ri;
 		}		
 		return null;

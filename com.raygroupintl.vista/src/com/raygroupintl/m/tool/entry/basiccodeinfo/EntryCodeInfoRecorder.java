@@ -28,13 +28,13 @@ import com.raygroupintl.m.parsetree.XecuteCmd;
 import com.raygroupintl.m.parsetree.data.CallArgument;
 import com.raygroupintl.m.parsetree.data.CallArgumentType;
 import com.raygroupintl.m.parsetree.data.EntryId;
+import com.raygroupintl.m.parsetree.data.Fanout;
 import com.raygroupintl.m.parsetree.data.FanoutType;
-import com.raygroupintl.m.parsetree.data.IndexedFanout;
 import com.raygroupintl.m.parsetree.visitor.BlockRecorder;
 import com.raygroupintl.vista.repository.RepositoryInfo;
 import com.raygroupintl.vista.repository.VistaPackage;
 
-public class EntryCodeInfoRecorder extends BlockRecorder<IndexedFanout, CodeInfo> {
+public class EntryCodeInfoRecorder extends BlockRecorder<Fanout, CodeInfo> {
 	private RepositoryInfo repositoryInfo;
 	
 	public EntryCodeInfoRecorder(RepositoryInfo ri) {
@@ -204,8 +204,7 @@ public class EntryCodeInfoRecorder extends BlockRecorder<IndexedFanout, CodeInfo
 	}
 	
 	@Override
-	protected IndexedFanout getFanout(EntryId id, FanoutType type) {
-		int index = this.getIndex();
-		return new IndexedFanout(index, id, type);
+	protected Fanout getFanout(EntryId id, FanoutType type) {
+		return new Fanout(id, type);
 	}
 	}

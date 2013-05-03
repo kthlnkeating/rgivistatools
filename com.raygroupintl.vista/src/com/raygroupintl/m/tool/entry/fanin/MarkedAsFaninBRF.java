@@ -17,10 +17,10 @@
 package com.raygroupintl.m.tool.entry.fanin;
 
 import com.raygroupintl.m.parsetree.data.EntryId;
-import com.raygroupintl.m.parsetree.data.IndexedFanout;
+import com.raygroupintl.m.parsetree.data.Fanout;
 import com.raygroupintl.m.parsetree.visitor.BlockRecorderFactory;
 
-public class MarkedAsFaninBRF implements BlockRecorderFactory<IndexedFanout, FaninMark> {
+public class MarkedAsFaninBRF implements BlockRecorderFactory<Fanout, FaninMark> {
 	private EntryId entryId;
 	
 	public MarkedAsFaninBRF(EntryId entryId) {

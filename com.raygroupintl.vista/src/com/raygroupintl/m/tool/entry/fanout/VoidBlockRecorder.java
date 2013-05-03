@@ -17,20 +17,19 @@
 package com.raygroupintl.m.tool.entry.fanout;
 
 import com.raygroupintl.m.parsetree.data.EntryId;
+import com.raygroupintl.m.parsetree.data.Fanout;
 import com.raygroupintl.m.parsetree.data.FanoutType;
-import com.raygroupintl.m.parsetree.data.IndexedFanout;
 import com.raygroupintl.m.parsetree.visitor.BlockRecorder;
 import com.raygroupintl.m.tool.entry.BlockData;
 
-public class VoidBlockRecorder extends BlockRecorder<IndexedFanout, BlockData<IndexedFanout>> {
+public class VoidBlockRecorder extends BlockRecorder<Fanout, BlockData<Fanout>> {
 	@Override
-	protected BlockData<IndexedFanout> getNewBlockData(EntryId entryId, String[] params) {
-		return new BlockData<IndexedFanout>(entryId);
+	protected BlockData<Fanout> getNewBlockData(EntryId entryId, String[] params) {
+		return new BlockData<Fanout>(entryId);
 	}
 	
 	@Override
-	protected IndexedFanout getFanout(EntryId id, FanoutType type) {
-		int index = this.getIndex();
-		return new IndexedFanout(index, id, type);
+	protected Fanout getFanout(EntryId id, FanoutType type) {
+		return new Fanout(id, type);
 	}
 }
