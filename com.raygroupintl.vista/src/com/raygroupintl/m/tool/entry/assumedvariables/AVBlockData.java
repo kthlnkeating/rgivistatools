@@ -24,13 +24,13 @@ import com.raygroupintl.m.parsetree.data.EntryId;
 import com.raygroupintl.m.struct.CodeLocation;
 import com.raygroupintl.m.tool.entry.BlockData;
 
-class AssumedVariablesBlockData extends BlockData<IndexedFanout> {
+class AVBlockData extends BlockData<IndexedFanout> {
 	private String[] formals;
 	private Map<String, Integer> formalsMap;
 	private Map<String, Integer> newedLocals = new HashMap<String, Integer>();
 	private Map<String, CodeLocation> assumedLocals = new HashMap<String, CodeLocation>();
 	
-	public AssumedVariablesBlockData(EntryId entryId) {
+	public AVBlockData(EntryId entryId) {
 		super(entryId);
 	}
 	

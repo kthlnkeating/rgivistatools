@@ -47,9 +47,8 @@ public class LocalAssignmentTool extends MEntryTool<CodeLocations, Fanout, CodeL
 			return new CodeLocations(block.getEntryId());
 		}
 		
-		protected void updateData(CodeLocations targetData, Block<Fanout, CodeLocations> fanoutBlock) {
-			CodeLocations source = fanoutBlock.getData();
-			List<CodeLocation> cls = source.getCodeLocations();
+		protected void updateData(CodeLocations targetData, CodeLocations fanoutData) {
+			List<CodeLocation> cls = fanoutData.getCodeLocations();
 			if (cls != null) {
 				for (CodeLocation c : cls) {
 					targetData.add(c);

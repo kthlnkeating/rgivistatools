@@ -21,15 +21,24 @@ import com.raygroupintl.m.parsetree.ForLoop;
 import com.raygroupintl.m.parsetree.QuitCmd;
 import com.raygroupintl.m.parsetree.data.EntryId;
 import com.raygroupintl.m.parsetree.data.FanoutType;
-import com.raygroupintl.m.parsetree.data.Fanout;
+import com.raygroupintl.m.parsetree.data.FanoutWithLocation;
 import com.raygroupintl.m.parsetree.visitor.BlockRecorder;
 import com.raygroupintl.m.struct.CodeLocation;
 import com.raygroupintl.m.struct.LineLocation;
 
-public class QTRecorder extends BlockRecorder<Fanout, QTBlockData> {
+public class QTRecorder extends BlockRecorder<FanoutWithLocation, QTBlockData> {
+	private boolean inForLoop;
+	
+	@Override
+	public void reset() {
+		super.reset();
+		this.inForLoop = false;
+	}
+	
 	@Override
 	protected void visitQuit(QuitCmd quitCmd) {
 		super.visitQuit(quitCmd);
+		if (this.inForLoop) return;
 		QTBlockData data = this.getCurrentBlockData();
 		QuitType qt = data.getQuitType();
 		LineLocation ll = this.getLastLocation();
@@ -44,8 +53,11 @@ public class QTRecorder extends BlockRecorder<Fanout, QTBlockData> {
 
 	@Override
 	protected void visitForLoop(ForLoop forLoop) {
+		this.inForLoop = true;
+		super.visitForLoop(forLoop);
+		this.inForLoop = false;
 	}
-
+	
 	@Override
 	protected void visitDoBlock(DoBlock doBlock) {
 	}
@@ -56,7 +68,8 @@ public class QTRecorder extends BlockRecorder<Fanout, QTBlockData> {
 	}
 	
 	@Override
-	protected Fanout getFanout(EntryId id, FanoutType type) {
-		return new Fanout(id, type);
+	protected FanoutWithLocation getFanout(EntryId id, FanoutType type) {
+		CodeLocation codeLocation = this.getCodeLocation();
+		return new FanoutWithLocation(id, type, codeLocation);
 	}
 }

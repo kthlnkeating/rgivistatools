@@ -19,6 +19,7 @@ package com.raygroupintl.m.parsetree.visitor;
 import com.raygroupintl.m.parsetree.Line;
 import com.raygroupintl.m.parsetree.Routine;
 import com.raygroupintl.m.parsetree.Visitor;
+import com.raygroupintl.m.struct.CodeLocation;
 import com.raygroupintl.m.struct.LineLocation;
 
 class LocationMarker extends Visitor {
@@ -46,5 +47,9 @@ class LocationMarker extends Visitor {
 
 	protected String getLastRoutineName() {
 		return this.lastRoutineName;
+	}
+	
+	protected CodeLocation getCodeLocation() {
+		return new CodeLocation(this.lastRoutineName, this.lastLocation);
 	}
 }

@@ -35,14 +35,14 @@ public abstract class AdditiveDataAggregator<T, F extends Fanout, U extends Bloc
 	
 	protected abstract T getNewDataInstance(Block<F, U> block);
 	
-	protected abstract void updateData(T targetData, Block<F, U> fanoutBlock);
+	protected abstract void updateData(T targetData, U fanoutData);
 	
 	public T get(Filter<Fanout> filter, Set<EntryId> missing) {
 		FanoutBlocks<F, U> fanoutBlocks = this.block.getFanoutBlocks(this.supply, filter, missing);
 		List<Block<F, U>> blocks = fanoutBlocks.getBlocks();
 		T result = this.getNewDataInstance(this.block);
 		for (Block<F, U> b : blocks) {
-			this.updateData(result, b);
+			this.updateData(result, b.getData());
 		}
 		return result;		
 	}

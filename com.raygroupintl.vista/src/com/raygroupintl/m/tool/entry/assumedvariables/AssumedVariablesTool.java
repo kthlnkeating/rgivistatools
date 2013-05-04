@@ -31,25 +31,26 @@ import com.raygroupintl.m.tool.entry.MEntryTool;
 import com.raygroupintl.m.tool.entry.RecursiveDataAggregator;
 import com.raygroupintl.struct.Filter;
 
-public class AssumedVariablesTool extends MEntryTool<AssumedVariables, IndexedFanout, AssumedVariablesBlockData> {
-	private static class AVTRecorderFactory implements BlockRecorderFactory<IndexedFanout, AssumedVariablesBlockData> {
+public class AssumedVariablesTool extends MEntryTool<AssumedVariables, IndexedFanout, AVBlockData> {
+	private static class AVTRecorderFactory implements BlockRecorderFactory<IndexedFanout, AVBlockData> {
 		@Override
-		public AssumedVariablesRecorder getRecorder() {
-			return new AssumedVariablesRecorder();
+		public AVRecorder getRecorder() {
+			return new AVRecorder();
 		}
 	}
 
-	private static class AVTDataAggregator extends RecursiveDataAggregator<Map<String, CodeLocation>, IndexedFanout, AssumedVariablesBlockData> {
-		public AVTDataAggregator(Block<IndexedFanout, AssumedVariablesBlockData> block, BlocksSupply<IndexedFanout, AssumedVariablesBlockData> supply) {
+	private static class AVTDataAggregator extends RecursiveDataAggregator<Map<String, CodeLocation>, IndexedFanout, AVBlockData> {
+		public AVTDataAggregator(Block<IndexedFanout, AVBlockData> block, BlocksSupply<IndexedFanout, AVBlockData> supply) {
 			super(block, supply);
 		}
 		
 		@Override
-		protected Map<String, CodeLocation> getNewDataInstance(AssumedVariablesBlockData blockData) {
+		protected Map<String, CodeLocation> getNewDataInstance(AVBlockData blockData) {
 			return new HashMap<>(blockData.getAssumedLocals());		
 		}
 		
-		protected int updateData(AssumedVariablesBlockData targetBlockData, Map<String, CodeLocation> targetData, Map<String, CodeLocation> sourceData, IndexedFanout property) {
+		@Override
+		protected int updateData(AVBlockData targetBlockData, Map<String, CodeLocation> targetData, Map<String, CodeLocation> sourceData, IndexedFanout property) {
 			int result = 0;
 			for (String name : sourceData.keySet()) {
 				if (! targetBlockData.isDefined(name, property.getIndex())) {
@@ -72,12 +73,12 @@ public class AssumedVariablesTool extends MEntryTool<AssumedVariables, IndexedFa
 	}
 	
 	@Override
-	protected BlockRecorderFactory<IndexedFanout, AssumedVariablesBlockData> getBlockRecorderFactory() {
+	protected BlockRecorderFactory<IndexedFanout, AVBlockData> getBlockRecorderFactory() {
 		return new AVTRecorderFactory();
 	}
 
 	@Override
-	public AssumedVariables getResult(Block<IndexedFanout, AssumedVariablesBlockData> block, Filter<Fanout> filter, Set<EntryId> missingEntryIds) {
+	public AssumedVariables getResult(Block<IndexedFanout, AVBlockData> block, Filter<Fanout> filter, Set<EntryId> missingEntryIds) {
 		AVTDataAggregator ala = new AVTDataAggregator(block, blocksSupply);
 		Map<String, CodeLocation> assumedVariables = ala.get(this.store, filter, missingEntryIds);
 		if (assumedVariables != null) {

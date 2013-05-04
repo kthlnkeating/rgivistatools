@@ -45,16 +45,15 @@ public class BasicCodeInfoTool extends MEntryTool<BasicCodeInfoTR, Fanout, CodeI
 			return new BasicCodeInfo();
 		}
 		
-		protected void updateData(BasicCodeInfo targetData, Block<Fanout, CodeInfo> fanoutBlock) {
-			CodeInfo updateSource = fanoutBlock.getData();
-			targetData.mergeGlobals(updateSource.getGlobals());
-			targetData.mergeFilemanGlobals(updateSource.getFilemanGlobals());
-			targetData.mergeFilemanCalls(updateSource.getFilemanCalls());
+		protected void updateData(BasicCodeInfo targetData, CodeInfo fanoutData) {
+			targetData.mergeGlobals(fanoutData.getGlobals());
+			targetData.mergeFilemanGlobals(fanoutData.getFilemanGlobals());
+			targetData.mergeFilemanCalls(fanoutData.getFilemanCalls());
 			
-			targetData.incrementIndirectionCount(updateSource.getIndirectionCount());
-			targetData.incrementReadCount(updateSource.getReadCount());
-			targetData.incrementWriteCount(updateSource.getWriteCount());
-			targetData.incrementExecuteCount(updateSource.getExecuteCount());		
+			targetData.incrementIndirectionCount(fanoutData.getIndirectionCount());
+			targetData.incrementReadCount(fanoutData.getReadCount());
+			targetData.incrementWriteCount(fanoutData.getWriteCount());
+			targetData.incrementExecuteCount(fanoutData.getExecuteCount());		
 		}		
 	}
 	

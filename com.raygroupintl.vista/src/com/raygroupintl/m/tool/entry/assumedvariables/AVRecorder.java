@@ -26,9 +26,8 @@ import com.raygroupintl.m.parsetree.data.EntryId;
 import com.raygroupintl.m.parsetree.data.FanoutType;
 import com.raygroupintl.m.parsetree.visitor.BlockRecorder;
 import com.raygroupintl.m.struct.CodeLocation;
-import com.raygroupintl.m.struct.LineLocation;
 
-class AssumedVariablesRecorder extends BlockRecorder<IndexedFanout, AssumedVariablesBlockData> {
+class AVRecorder extends BlockRecorder<IndexedFanout, AVBlockData> {
 	private int index;
 	private boolean underDeviceParameter;
 	
@@ -47,11 +46,9 @@ class AssumedVariablesRecorder extends BlockRecorder<IndexedFanout, AssumedVaria
 	}
 
 	private void addLocal(Local local) {
-		AssumedVariablesBlockData d = this.getCurrentBlockData();
+		AVBlockData d = this.getCurrentBlockData();
 		if (d != null) {
-			String routineName = this.getLastRoutineName();
-			LineLocation location = this.getLastLocation();
-			CodeLocation codeLocation = new CodeLocation(routineName, location);
+			CodeLocation codeLocation = this.getCodeLocation();
 			d.addLocal(local, codeLocation);	
 		}
 	}
@@ -70,7 +67,7 @@ class AssumedVariablesRecorder extends BlockRecorder<IndexedFanout, AssumedVaria
 		
 	@Override
 	protected void setLocal(Local local, Node rhs) {
-		AssumedVariablesBlockData d = this.getCurrentBlockData();
+		AVBlockData d = this.getCurrentBlockData();
 		if (d != null) {
 			this.addOutput(local);
 		}
@@ -88,7 +85,7 @@ class AssumedVariablesRecorder extends BlockRecorder<IndexedFanout, AssumedVaria
 	
 	@Override
 	protected void newLocal(Local local) {
-		AssumedVariablesBlockData d = this.getCurrentBlockData();
+		AVBlockData d = this.getCurrentBlockData();
 		if (d != null) d.addNewed(this.index, local);
 	}
 	
@@ -131,8 +128,8 @@ class AssumedVariablesRecorder extends BlockRecorder<IndexedFanout, AssumedVaria
 	}
 
 	@Override
-	protected AssumedVariablesBlockData getNewBlockData(EntryId entryId, String[] params) {
-		AssumedVariablesBlockData result = new AssumedVariablesBlockData(entryId);
+	protected AVBlockData getNewBlockData(EntryId entryId, String[] params) {
+		AVBlockData result = new AVBlockData(entryId);
 		result.setFormals(params);
 		return result;
 	}
