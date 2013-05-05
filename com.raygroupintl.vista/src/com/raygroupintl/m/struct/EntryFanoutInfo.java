@@ -2,7 +2,7 @@ package com.raygroupintl.m.struct;
 
 import com.raygroupintl.m.parsetree.data.EntryId;
 import com.raygroupintl.m.parsetree.data.FanoutType;
-import com.raygroupintl.m.tool.entry.quitype.QuitTypeState;
+import com.raygroupintl.m.tool.entry.quittype.QuitTypeState;
 
 public class EntryFanoutInfo {
 	

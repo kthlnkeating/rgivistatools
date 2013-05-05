@@ -14,7 +14,7 @@
 // limitations under the License.
 //---------------------------------------------------------------------------
 
-package com.raygroupintl.m.tool.entry.quitype;
+package com.raygroupintl.m.tool.entry.quittype;
 
 import com.raygroupintl.m.parsetree.DoBlock;
 import com.raygroupintl.m.parsetree.ForLoop;

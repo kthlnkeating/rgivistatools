@@ -14,7 +14,7 @@
 // limitations under the License.
 //---------------------------------------------------------------------------
 
-package com.raygroupintl.m.tool.entry.quitype;
+package com.raygroupintl.m.tool.entry.quittype;
 
 public enum QuitTypeState {
 	NO_QUITS,

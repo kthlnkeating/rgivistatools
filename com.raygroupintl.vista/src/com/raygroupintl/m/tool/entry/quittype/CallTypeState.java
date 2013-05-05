@@ -14,21 +14,19 @@
 // limitations under the License.
 //---------------------------------------------------------------------------
 
-package com.raygroupintl.m.tool.entry.quitype;
+package com.raygroupintl.m.tool.entry.quittype;
 
-import com.raygroupintl.m.parsetree.data.EntryId;
-import com.raygroupintl.m.parsetree.data.FanoutWithLocation;
-import com.raygroupintl.m.tool.entry.BlockData;
-
-class QTBlockData extends BlockData<FanoutWithLocation> {
-	private QuitType quitType = new QuitType();
+public enum CallTypeState {
+	DO_UNVERIFIED,
+	EXTRINSIC_UNVERIFIED,
+	DO_VERIFIED,
+	EXTRINSIC_VERIFIED,
+	DO_CONFLICTING,
+	EXTRINSIC_CONFLICTING,
+	FANOUT_CONFLICTING,
 	
-	public QTBlockData(EntryId entryId) {
-		super(entryId);
-	}
-
-	public QuitType getQuitType() {
-		return this.quitType;
-	}
+	GOTO,
+	DO_BLOCK,
+	
+	INTERNAL_ERROR;
 }
-
