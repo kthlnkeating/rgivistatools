@@ -4,6 +4,8 @@ import java.util.Set;
 
 import junit.framework.Assert;
 
+import org.junit.AfterClass;
+import org.junit.BeforeClass;
 import org.junit.Test;
 
 import com.raygroupintl.m.MTestCommon;
@@ -16,8 +18,23 @@ import com.raygroupintl.m.tool.entry.assumedvariables.AssumedVariablesTool;
 import com.raygroupintl.m.tool.entry.assumedvariables.AssumedVariablesToolParams;
 
 public class AVTTest {
-	private void testAssumedLocal(AssumedVariables r, String[] expectedAssumeds) {
-		Set<String> assumeds = r.toSet();
+	private static ParseTreeSupply pts;
+	
+	@BeforeClass
+	public static void setUpBeforeClass() throws Exception {
+		String[] routineNames = {"APIROU00", "APIROU01", "APIROU02", "APIROU03","APIROU04", "DMI", "DDI", "DIE", "FIE"};
+		pts = MTestCommon.getParseTreeSupply(routineNames);		
+	}
+
+	@AfterClass
+	public static void tearDownAfterClass() throws Exception {
+		pts = null;
+	}
+		
+	private void testAssumedLocal(AssumedVariablesTool avt, String routineName, String labelName, String... expectedAssumeds) {
+		EntryId entryId = new EntryId(routineName, labelName);
+		AssumedVariables avs = avt.getResult(entryId);
+		Set<String> assumeds = avs.toSet();
 		Assert.assertEquals(expectedAssumeds.length, assumeds.size());
 		for (String expectedOutput : expectedAssumeds) {
 			Assert.assertTrue(assumeds.contains(expectedOutput));			
@@ -25,58 +42,65 @@ public class AVTTest {
 	}
 	
 	@Test
-	public void testAssumedLocals() {
-		String[] routineNames = {"APIROU00", "APIROU01", "APIROU02", "APIROU03", 
-								 "APIROU04", "DMI", "DDI", "DIE", "FIE"};
-		ParseTreeSupply pts = MTestCommon.getParseTreeSupply(routineNames);		
-		AssumedVariablesToolParams p = new AssumedVariablesToolParams(pts);		
-		RecursionSpecification rs = new RecursionSpecification();
-		rs.setDepth(RecursionDepth.ALL);
-		p.setRecursionSpecification(rs);
+	public void testAssumedLocals0() {
+		AssumedVariablesToolParams p = new AssumedVariablesToolParams(pts);
+		p.getRecursionSpecification().setDepth(RecursionDepth.ALL);
 		AssumedVariablesTool a = new AssumedVariablesTool(p);
 		
+		this.testAssumedLocal(a, "APIROU00", "FACT", "I");
+		this.testAssumedLocal(a, "APIROU00", "SUM", "M", "R", "I");
+		this.testAssumedLocal(a, "APIROU00", "SUMFACT", "S", "P");
+		this.testAssumedLocal(a, "APIROU00", "STORE", "K", "D", "R");
+		this.testAssumedLocal(a, "APIROU00", "STOREG", "K", "A", "D", "R");
+		this.testAssumedLocal(a, "APIROU00", "TOOTHER", "I", "M");
+		this.testAssumedLocal(a, "APIROU00", "TONONE", "A", "D", "ME", "NE", "HR");
+		this.testAssumedLocal(a, "APIROU00", "ZZ", "A", "D");
+		this.testAssumedLocal(a, "APIROU01", "SUMFACT", "S", "P");
+		this.testAssumedLocal(a, "APIROU01", "STORE", "K", "D", "R");
+		this.testAssumedLocal(a, "APIROU01", "LOOP", "S", "A", "C", "I", "J", "B", "D", "P");
+		this.testAssumedLocal(a, "APIROU03", "GPIND", "B", "A");
+		this.testAssumedLocal(a, "APIROU03", "CALL1", "A", "B");
+		this.testAssumedLocal(a, "APIROU03", "NEWFOLVL", "V1");
+		this.testAssumedLocal(a, "APIROU03", "NEWDOLVL", "B");
+	}
 		
-		this.testAssumedLocal(a.getResult(new EntryId("APIROU00", "FACT")), new String[]{"I"});
-		this.testAssumedLocal(a.getResult(new EntryId("APIROU00", "SUM")), new String[]{"M", "R", "I"});
-		this.testAssumedLocal(a.getResult(new EntryId("APIROU00", "SUMFACT")), new String[]{"S", "P"});
-		this.testAssumedLocal(a.getResult(new EntryId("APIROU00", "STORE")), new String[]{"K", "D", "R"});
-		this.testAssumedLocal(a.getResult(new EntryId("APIROU00", "STOREG")), new String[]{"K", "A", "D", "R"});
-		this.testAssumedLocal(a.getResult(new EntryId("APIROU00", "TOOTHER")), new String[]{"I", "M"});
-		this.testAssumedLocal(a.getResult(new EntryId("APIROU00", "TONONE")), new String[]{"A", "D", "ME", "NE", "HR"});
-		this.testAssumedLocal(a.getResult(new EntryId("APIROU00", "ZZ")), new String[]{"A", "D"});
-		this.testAssumedLocal(a.getResult(new EntryId("APIROU01", "SUMFACT")), new String[]{"S", "P"});
-		this.testAssumedLocal(a.getResult(new EntryId("APIROU01", "STORE")), new String[]{"K", "D", "R"});
-		this.testAssumedLocal(a.getResult(new EntryId("APIROU01", "LOOP")), new String[]{"S", "A", "C", "I", "J", "B", "D", "P"});
-		this.testAssumedLocal(a.getResult(new EntryId("APIROU03", "GPIND")), new String[]{"B", "A"});
-		this.testAssumedLocal(a.getResult(new EntryId("APIROU03", "CALL1")), new String[]{"A", "B"});
-		this.testAssumedLocal(a.getResult(new EntryId("APIROU03", "NEWFOLVL")), new String[]{"V1"});
-		this.testAssumedLocal(a.getResult(new EntryId("APIROU03", "NEWDOLVL")), new String[]{"B"});
-		
-		AssumedVariablesToolParams p2 = new AssumedVariablesToolParams(pts);		
-		AssumedVariablesTool a2 = new AssumedVariablesTool(p2);
-		this.testAssumedLocal(a2.getResult(new EntryId("APIROU04", "INDOBLK")), new String[]{"I", "Y"});		
-		
-		AssumedVariablesToolParams p3 = new AssumedVariablesToolParams(pts);
-		p3.addExpected("I");
-		AssumedVariablesTool a3 = new AssumedVariablesTool(p3);		
-		this.testAssumedLocal(a3.getResult(new EntryId("APIROU04", "INDOBLK")), new String[]{"Y"});	
-		
-		AssumedVariablesToolParams p4 = new AssumedVariablesToolParams(pts);		
-		AssumedVariablesTool a4 = new AssumedVariablesTool(p4);
-		this.testAssumedLocal(a4.getResult(new EntryId("APIROU04", "ASSUMEV2")), new String[]{"I", "M"});		
-		
-		AssumedVariablesToolParams p5 = new AssumedVariablesToolParams(pts);		
-		RecursionSpecification rs5 = new RecursionSpecification();
-		rs5.setDepth(RecursionDepth.ENTRY);
-		p5.setRecursionSpecification(rs5);
-		AssumedVariablesTool a5 = new AssumedVariablesTool(p5);		
-		this.testAssumedLocal(a5.getResult(new EntryId("APIROU04", "ASSUMEV2")), new String[]{"I", "M", "V3"});		
-		
-		AssumedVariablesToolParams p6 = new AssumedVariablesToolParams(pts);		
-		RecursionSpecification rs6 = new RecursionSpecification();
-		rs6.setDepth(RecursionDepth.ROUTINE);
-		p6.setRecursionSpecification(rs6);
-		AssumedVariablesTool a6 = new AssumedVariablesTool(p6);		
-		this.testAssumedLocal(a6.getResult(new EntryId("APIROU04", "ASSUMEV2")), new String[]{"I", "M", "V1", "V3"});				
+	@Test
+	public void testAssumedLocals1() {
+		AssumedVariablesToolParams p = new AssumedVariablesToolParams(pts);		
+		AssumedVariablesTool a = new AssumedVariablesTool(p);
+		this.testAssumedLocal(a, "APIROU04", "INDOBLK", "I", "Y");		
+	}
+	
+	@Test
+	public void testAssumedLocals2() {		
+		AssumedVariablesToolParams p = new AssumedVariablesToolParams(pts);
+		p.addExpected("I");
+		AssumedVariablesTool a = new AssumedVariablesTool(p);		
+		this.testAssumedLocal(a, "APIROU04", "INDOBLK", "Y");	
+	}
+	
+	@Test
+	public void testAssumedLocals3() {		
+		AssumedVariablesToolParams p = new AssumedVariablesToolParams(pts);		
+		AssumedVariablesTool a = new AssumedVariablesTool(p);
+		this.testAssumedLocal(a, "APIROU04", "ASSUMEV2", "I", "M");		
+	}
+	
+	@Test
+	public void testAssumedLocalsEntry() {		
+		AssumedVariablesToolParams p = new AssumedVariablesToolParams(pts);		
+		RecursionSpecification rs = p.getRecursionSpecification();
+		rs.setDepth(RecursionDepth.ENTRY);
+		AssumedVariablesTool a = new AssumedVariablesTool(p);		
+		this.testAssumedLocal(a, "APIROU04", "ASSUMEV2", "I", "M", "V3");		
+	}
+	
+	@Test
+	public void testAssumedLocalsRoutine() {		
+		AssumedVariablesToolParams p = new AssumedVariablesToolParams(pts);		
+		RecursionSpecification rs = p.getRecursionSpecification();
+		rs.setDepth(RecursionDepth.ROUTINE);
+		AssumedVariablesTool a6 = new AssumedVariablesTool(p);		
+		this.testAssumedLocal(a6, "APIROU04", "ASSUMEV2", "I", "M", "V1", "V3");				
 	}
 }

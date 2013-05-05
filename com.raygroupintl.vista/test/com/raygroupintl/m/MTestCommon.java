@@ -10,11 +10,11 @@ import com.raygroupintl.m.struct.MRoutineContent;
 import com.raygroupintl.m.token.MRoutine;
 import com.raygroupintl.m.token.MTFSupply;
 import com.raygroupintl.m.token.TFRoutine;
+import com.raygroupintl.m.tool.AccumulatingParseTreeAdapter;
 import com.raygroupintl.m.tool.ParseTreeSupply;
 import com.raygroupintl.m.tool.SourceCodeResources;
-import com.raygroupintl.m.tool.SourceCodeToParseTreeAdapter;
 
-public class MTestCommon {
+public class MTestCommon {	
 	public static <T> ParseTreeSupply getParseTreeSupply(String[] routineNames) {
 		int n = routineNames.length;
 		String[] resourceNames = new String[n];
@@ -23,7 +23,7 @@ public class MTestCommon {
 			resourceNames[i] = resourceName;
 		}
 		SourceCodeResources<MTestCommon> scr = SourceCodeResources.getInstance(MTestCommon.class, resourceNames);
-		ParseTreeSupply pts = new SourceCodeToParseTreeAdapter(scr);
+		ParseTreeSupply pts = new AccumulatingParseTreeAdapter(scr);
 		for (int i=0; i<routineNames.length; ++i) {
 			String routineName = routineNames[i];
 			Routine routine = pts.getParseTree(routineName);
