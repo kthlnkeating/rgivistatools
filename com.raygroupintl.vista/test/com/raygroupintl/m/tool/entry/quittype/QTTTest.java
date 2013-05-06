@@ -47,8 +47,12 @@ public class QTTTest {
 		QuitTypeState qts = qt.getQuitTypeState();
 		Assert.assertEquals(QuitTypeState.CONFLICTING_QUITS, qts);			
 		CodeLocation fql = qt.getFirstQuitLocation();
-		testCodeLocation(fql, "QTTTEST1", "SUMZ", 2);
+		testCodeLocation(fql, "QTTTEST0", "SUMC", 3);
 		CodeLocation cql = qt.getConflictingLocation();
-		testCodeLocation(cql, "QTTTEST0", "SUMC", 2);
+		testCodeLocation(cql, "QTTTEST0", "SUMY", 1);
+		
+		CallType ct = qt.getFanout(new EntryId("QTTTEST1", "SUMZ"));
+		Assert.assertNotNull(ct);
+		Assert.assertEquals(CallTypeState.DO_CONFLICTING, ct.getState());
 	}
 }

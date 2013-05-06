@@ -40,7 +40,7 @@ public class FanoutBlocks<U extends Fanout, T extends BlockData<U>> {
 		this.blockIdContainer = blockIdContainer;
 	}
 	
-	public void add(Block<U, T> fanin, Block<U, T> fanout, U fanoutProperty) {
+	public void add(Block<U, T> fanin, Block<U, T> fanout, int fanoutIndex) {
 		Integer fanoutId = System.identityHashCode(fanout);
 		boolean stored = this.blockIdContainer == null ? false : this.blockIdContainer.contains(fanoutId);
 		if (stored) {
@@ -50,7 +50,7 @@ public class FanoutBlocks<U extends Fanout, T extends BlockData<U>> {
 				faninList = new FaninList<U, T>(fanout);
 				this.faninListMap.put(fanoutId, faninList);						
 			}					
-			faninList.addFanin(fanin, fanoutProperty);
+			faninList.addFanin(fanin, fanoutIndex);
 		} else {
 			FaninList<U, T> faninList = this.faninListMap.get(fanoutId);
 			if (faninList == null) {
@@ -58,7 +58,7 @@ public class FanoutBlocks<U extends Fanout, T extends BlockData<U>> {
 				faninList = new FaninList<U, T>(fanout);
 				this.faninListMap.put(fanoutId, faninList);
 			}
-			faninList.addFanin(fanin, fanoutProperty);
+			faninList.addFanin(fanin, fanoutIndex);
 		}
 	}
 	

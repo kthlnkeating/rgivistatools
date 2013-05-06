@@ -72,7 +72,9 @@ public class Block<F extends Fanout, T extends BlockData<F>> implements EntryObj
 	}
 	
 	private void update(FanoutBlocks<F, T> fanoutBlocks, BlocksSupply<F, T> blocksSupply, Filter<Fanout> filter, Set<EntryId> missing) {
+		int findex = -1;
 		for (F ifout : this.blockData.getFanouts()) {
+			++findex;
 			EntryId fout = ifout.getEntryId();
 			String routineName = fout.getRoutineName();
 			String tagName = fout.getTag();					
@@ -93,7 +95,7 @@ public class Block<F extends Fanout, T extends BlockData<F>> implements EntryObj
 					continue;
 				}
 				if ((! inner) && (filter != null) && (! filter.isValid(ifout))) continue;
-				fanoutBlocks.add(this, tagBlock, ifout);
+				fanoutBlocks.add(this, tagBlock, findex);
 			} else {
 				if ((filter != null) && (! filter.isValid(ifout))) continue;
 				HierarchicalMap<String, Block<F, T>> routineBlocks = blocksSupply.getBlocks(routineName);
@@ -106,7 +108,7 @@ public class Block<F extends Fanout, T extends BlockData<F>> implements EntryObj
 					missing.add(fout);
 					continue;
 				}
-				fanoutBlocks.add(this, tagBlock, ifout);
+				fanoutBlocks.add(this, tagBlock, findex);
 			}				 
 		}
 	}

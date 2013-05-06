@@ -50,10 +50,11 @@ public class AssumedVariablesTool extends MEntryTool<AssumedVariables, IndexedFa
 		}
 		
 		@Override
-		protected int updateData(AVBlockData targetBlockData, Map<String, CodeLocation> targetData, Map<String, CodeLocation> sourceData, IndexedFanout property) {
+		protected int updateData(AVBlockData targetBlockData, Map<String, CodeLocation> targetData, Map<String, CodeLocation> sourceData, int indexInTarget) {
 			int result = 0;
 			for (String name : sourceData.keySet()) {
-				if (! targetBlockData.isDefined(name, property.getIndex())) {
+				IndexedFanout ifo = targetBlockData.getFanout(indexInTarget);
+				if (! targetBlockData.isDefined(name, ifo.getIndex())) {
 					if (! targetData.containsKey(name)) {
 						targetData.put(name, sourceData.get(name));
 						++result;

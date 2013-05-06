@@ -14,6 +14,7 @@ import org.junit.runners.Suite.SuiteClasses;
 	com.raygroupintl.m.tool.entry.localassignment.AllTests.class,
 	com.raygroupintl.m.tool.entry.fanout.AllTests.class,	
 	com.raygroupintl.m.tool.entry.basiccodeinfo.AllTests.class,	
+	com.raygroupintl.m.tool.entry.quittype.AllTests.class,	
 	com.raygroupintl.vista.tools.AllTests.class, 
 	com.raygroupintl.vista.tools.entry.AllTests.class, 
 	com.raygroupintl.m.tool.entry.fanin.AllTests.class 

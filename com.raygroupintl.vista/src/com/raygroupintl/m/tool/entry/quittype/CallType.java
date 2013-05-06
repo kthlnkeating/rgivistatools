@@ -36,7 +36,7 @@ public class CallType {
 		return this.location;
 	}
 	
-	public CodeLocation getColflictingLocation() {
+	public CodeLocation getConflictingLocation() {
 		return this.conflictingLocation;
 	}
 	
@@ -50,7 +50,6 @@ public class CallType {
 			this.conflictingLocation = location;
 			return 1;
 		case DO_VERIFIED:
-		case DO_CONFLICTING:
 			this.state = CallTypeState.INTERNAL_ERROR;
 			return 1;
 		default:
@@ -68,7 +67,6 @@ public class CallType {
 			this.conflictingLocation = location;
 			return 1;
 		case EXTRINSIC_VERIFIED:
-		case EXTRINSIC_CONFLICTING:
 			this.state = CallTypeState.INTERNAL_ERROR;
 			return 1;
 		default:

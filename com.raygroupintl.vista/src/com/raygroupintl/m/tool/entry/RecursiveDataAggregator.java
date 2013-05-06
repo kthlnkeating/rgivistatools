@@ -27,7 +27,7 @@ import com.raygroupintl.m.parsetree.data.FaninList;
 import com.raygroupintl.m.parsetree.data.Fanout;
 import com.raygroupintl.m.parsetree.data.FanoutBlocks;
 import com.raygroupintl.struct.Filter;
-import com.raygroupintl.struct.ObjectWithProperty;
+import com.raygroupintl.struct.Indexed;
 
 public abstract class RecursiveDataAggregator<T, F extends Fanout, U extends BlockData<F>> {
 	Block<F, U> block;
@@ -40,17 +40,17 @@ public abstract class RecursiveDataAggregator<T, F extends Fanout, U extends Blo
 	
 	protected abstract T getNewDataInstance(U blockData);
 	
-	protected abstract int updateData(U targetBlockData, T targetData, T sourceData, F sourceProperty);
+	protected abstract int updateData(U targetBlockData, T targetData, T sourceData, int index);
 	
 	private int updateFaninData(T data, Block<F, U> b, FanoutBlocks<F, U> fanoutBlocks, Map<Integer, T> datas) {
 		int numChange = 0;
 		FaninList<F, U> faninList = fanoutBlocks.getFaninList(b);
-		List<ObjectWithProperty<Block<F, U>, F>> faninBlocks = faninList.getFanins();
-		for (ObjectWithProperty<Block<F, U>, F> ib : faninBlocks) {
+		List<Indexed<Block<F, U>>> faninBlocks = faninList.getFanins();
+		for (Indexed<Block<F, U>> ib : faninBlocks) {
 			Block<F, U> faninBlock = ib.getObject();
 			int faninId = System.identityHashCode(faninBlock);
 			T faninData = datas.get(faninId);
-			numChange += this.updateData(faninBlock.getData(), faninData, data, ib.getProperty());
+			numChange += this.updateData(faninBlock.getData(), faninData, data, ib.getIndex());
 		}		
 		return numChange;
 	}

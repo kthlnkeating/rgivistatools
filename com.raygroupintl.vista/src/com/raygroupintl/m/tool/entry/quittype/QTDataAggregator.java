@@ -46,10 +46,6 @@ public class QTDataAggregator extends RecursiveDataAggregator<QuitType, FanoutWi
 			case EXTRINSIC:
 				result.addFanout(id, new CallType(CallTypeState.EXTRINSIC_UNVERIFIED, location));
 				break;
-			case GOTO:
-			case ASSUMED_GOTO:
-				result.addFanout(id, new CallType(CallTypeState.GOTO, location));
-				break;
 			default:
 				break;
 			}
@@ -58,15 +54,22 @@ public class QTDataAggregator extends RecursiveDataAggregator<QuitType, FanoutWi
 	}
 	
 	@Override
-	protected int updateData(QTBlockData targetBlockData, QuitType targetData, QuitType sourceData, FanoutWithLocation property) {
-		EntryId foutId = property.getEntryId();
-		CallType ct = targetData.getFanout(foutId);
-		CallTypeState cts = ct.getState();
-		if (cts == CallTypeState.GOTO) {
-			CodeLocation location = ct.getLocation();
-			return targetData.markQuitFromGoto(sourceData, location);
-		} else {
+	protected int updateData(QTBlockData targetBlockData, QuitType targetData, QuitType sourceData, int indexInTarget) {
+		FanoutWithLocation fwl = targetBlockData.getFanout(indexInTarget);
+		FanoutType ft = fwl.getType();
+		EntryId id = fwl.getEntryId();
+		int result = 0;
+		switch (ft) {
+		case DO:
+		case EXTRINSIC:
+			CallType ct = targetData.getFanout(id);
 			return ct.updateFromFanout(sourceData);
+		case GOTO:
+		case ASSUMED_GOTO:
+			result = targetData.markQuitFromGoto(sourceData, fwl.getCodeLocation());
+		default:
+			result += targetData.updateCallTypes(sourceData);
 		}
+		return result;
 	}		
 }

@@ -42,6 +42,10 @@ public class BlockData<F extends Fanout> {
 		return this.fanouts;
 	}
 	
+	public F getFanout(int index) {
+		return this.fanouts.get(index);
+	}
+	
 	public List<EntryId> getFanoutIds() {
 		List<EntryId> result = new ArrayList<EntryId>();
 		for (F fo : this.fanouts) {

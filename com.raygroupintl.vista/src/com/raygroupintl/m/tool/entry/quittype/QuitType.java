@@ -16,8 +16,10 @@
 
 package com.raygroupintl.m.tool.entry.quittype;
 
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Set;
 
 import com.raygroupintl.m.parsetree.data.EntryId;
 import com.raygroupintl.m.struct.CodeLocation;
@@ -27,7 +29,7 @@ public class QuitType {
 	private CodeLocation firstQuitLocation;
 	private CodeLocation conflictingLocation;
 	
-	private Map<EntryId, CallType> fanoutCalls;
+	private Map<EntryId, CallType> fanoutCalls = new HashMap<EntryId, CallType>();
 	
 	public QuitType() {		
 	}
@@ -38,17 +40,33 @@ public class QuitType {
 		this.conflictingLocation = rhs.conflictingLocation;
 	}
 	
-	public void addFanout(EntryId id, CallType type) {
-		if (this.fanoutCalls == null) {
-			this.fanoutCalls = new HashMap<EntryId, CallType>();
+	public boolean addFanout(EntryId id, CallType type) {
+		CallType ct = this.fanoutCalls.get(id);
+		if (ct == null) {
+			this.fanoutCalls.put(id, type);
+			return true;						
+		} else {
+			if (ct.getState() == type.getState()) {
+				return false;
+			} else {
+				this.fanoutCalls.put(id, type);
+				return true;
+			}
 		}
-		this.fanoutCalls.put(id, type);
 	}
 	
 	public CallType getFanout(EntryId id) {
 		return this.fanoutCalls.get(id);
 	}
 		
+	public Map<EntryId, CallType> getFanoutCalls() {
+		if (this.fanoutCalls == null) {
+			return Collections.emptyMap();
+		} else {
+			return this.fanoutCalls;
+		}
+	}
+	
 	public QuitTypeState getQuitTypeState() {
 		return this.state;
 	}
@@ -95,28 +113,47 @@ public class QuitType {
 	
 	public int markQuitFromGoto(QuitType gotoQuitType, CodeLocation location) {
 		QuitTypeState gotoState = gotoQuitType.state;
-		switch (this.state) {
-		case NO_QUITS:
+		if (gotoState == QuitTypeState.NO_QUITS) {
+			return 0;
+		}
+		if (this.state == QuitTypeState.CONFLICTING_QUITS) {
+			return 0;
+		}
+		if ((this.state == QuitTypeState.NO_QUITS) || (gotoState == QuitTypeState.CONFLICTING_QUITS)) {
 			this.state = gotoQuitType.state;
 			this.firstQuitLocation = gotoQuitType.firstQuitLocation;
 			this.conflictingLocation = gotoQuitType.conflictingLocation;
-			return 1;
-		case QUITS_WITHOUT_VALUE:
-			if ((gotoState == QuitTypeState.QUITS_WITH_VALUE) || (gotoState == QuitTypeState.CONFLICTING_QUITS)) {
-				this.state = QuitTypeState.CONFLICTING_QUITS;
-				this.conflictingLocation = location;
-				return 1;
-			}
-			return 0;	
-		case QUITS_WITH_VALUE:
-			if ((gotoState == QuitTypeState.QUITS_WITHOUT_VALUE) || (gotoState == QuitTypeState.CONFLICTING_QUITS)) {
-				this.state = QuitTypeState.CONFLICTING_QUITS;
-				this.conflictingLocation = location;
-				return 1;
-			}
-			return 0;
-		default:
-			return 0;
+			return 1;		
 		}
+		if (this.state == QuitTypeState.QUITS_WITHOUT_VALUE) {
+			if (gotoState == QuitTypeState.QUITS_WITH_VALUE) {
+				this.state = QuitTypeState.CONFLICTING_QUITS;
+				this.conflictingLocation = gotoQuitType.firstQuitLocation;
+				return 1;
+			}
+			return 0;				
+		}
+		if (this.state == QuitTypeState.QUITS_WITH_VALUE) {
+			if (gotoState == QuitTypeState.QUITS_WITHOUT_VALUE) {
+				this.state = QuitTypeState.CONFLICTING_QUITS;
+				this.conflictingLocation = gotoQuitType.firstQuitLocation;
+				return 1;
+			}
+			return 0;				
+		}
+		return 0;
+	}
+	
+	public int updateCallTypes(QuitType source) {
+		int result = 0;
+		if (source.fanoutCalls != null) {
+			Set<EntryId> entryIds = source.fanoutCalls.keySet();
+			for (EntryId entryId : entryIds) {
+				CallType ct = source.fanoutCalls.get(entryId);
+				boolean updated = this.addFanout(entryId, ct);
+				if (updated) ++result;
+			}
+		}
+		return result;
 	}
 }

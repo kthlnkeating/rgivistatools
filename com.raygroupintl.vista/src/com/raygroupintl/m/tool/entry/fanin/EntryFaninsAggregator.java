@@ -14,7 +14,7 @@ import com.raygroupintl.m.parsetree.data.FanoutBlocks;
 import com.raygroupintl.m.tool.entry.Block;
 import com.raygroupintl.m.tool.entry.BlocksSupply;
 import com.raygroupintl.struct.Filter;
-import com.raygroupintl.struct.ObjectWithProperty;
+import com.raygroupintl.struct.Indexed;
 
 public class EntryFaninsAggregator {
 	private Block<Fanout, FaninMark> block;
@@ -30,8 +30,8 @@ public class EntryFaninsAggregator {
 	private int updateFaninData(PathPieceToEntry data, Block<Fanout, FaninMark> b, FanoutBlocks<Fanout, FaninMark> fanoutBlocks, Map<Integer, PathPieceToEntry> datas) {
 		int numChange = 0;
 		FaninList<Fanout, FaninMark> faninList = fanoutBlocks.getFaninList(b);
-		List<ObjectWithProperty<Block<Fanout, FaninMark>, Fanout>> faninBlocks = faninList.getFanins();
-		for (ObjectWithProperty<Block<Fanout, FaninMark>, Fanout> ib : faninBlocks) {
+		List<Indexed<Block<Fanout, FaninMark>>> faninBlocks = faninList.getFanins();
+		for (Indexed<Block<Fanout, FaninMark>> ib : faninBlocks) {
 			Block<Fanout, FaninMark> faninBlock = ib.getObject();
 			int faninId = System.identityHashCode(faninBlock);
 			PathPieceToEntry faninData = datas.get(faninId);
