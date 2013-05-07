@@ -17,12 +17,22 @@
 package com.raygroupintl.m.tool.entry.quittype;
 
 public enum CallTypeState {
-	DO_UNVERIFIED,
-	EXTRINSIC_UNVERIFIED,
-	DO_VERIFIED,
-	EXTRINSIC_VERIFIED,
-	DO_CONFLICTING,
-	EXTRINSIC_CONFLICTING,
-	FANOUT_CONFLICTING,
-	INTERNAL_ERROR;
+	DO_UNVERIFIED(false),
+	EXTRINSIC_UNVERIFIED(false),
+	DO_VERIFIED(false),
+	EXTRINSIC_VERIFIED(false),
+	DO_CONFLICTING(true),
+	EXTRINSIC_CONFLICTING(true),
+	FANOUT_CONFLICTING(true),
+	INTERNAL_ERROR(true);
+	
+	private boolean conflicted;
+
+	private CallTypeState(boolean conflicted) {
+		this.conflicted = conflicted;
+	}
+	
+	public boolean isConflictingState() {
+		return this.conflicted;
+	}
 }

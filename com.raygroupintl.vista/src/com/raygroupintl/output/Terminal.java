@@ -37,6 +37,11 @@ public abstract class Terminal {
 		return false;
 	}
 	
+	public void writeFormatted(String title, String message, TerminalFormatter tf) {
+		String line = tf.titled(title, message);
+		this.writeEOL(line);
+	}
+	
 	public void writeFormatted(String title, int count, TerminalFormatter tf) {
 		this.write(tf.startList(title));
 		this.write(String.valueOf(count));

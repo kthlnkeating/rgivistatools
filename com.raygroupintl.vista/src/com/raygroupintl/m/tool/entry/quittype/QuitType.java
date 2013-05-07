@@ -156,4 +156,16 @@ public class QuitType {
 		}
 		return result;
 	}
+	
+	public boolean hasConflict() {
+		if (this.state == QuitTypeState.CONFLICTING_QUITS) {
+			return true;
+		}
+		for (CallType ct : this.fanoutCalls.values()) {
+			if (ct.getState().isConflictingState()) {
+				return true;
+			}
+		}
+		return false;
+	}
 }

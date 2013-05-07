@@ -241,7 +241,7 @@ public class CLIEntryTools extends Tools {
 		tools.put("quittype", new MemberFactory() {				
 			@Override
 			public Tool getInstance(CLIParams params) {
-				return null;  //new ReturnTypeTool(params);
+				return new CLIQuitTypeTool(params);
 			}
 		});		
 	}

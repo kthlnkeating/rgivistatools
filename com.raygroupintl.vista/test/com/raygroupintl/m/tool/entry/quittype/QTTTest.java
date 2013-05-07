@@ -54,5 +54,7 @@ public class QTTTest {
 		CallType ct = qt.getFanout(new EntryId("QTTTEST1", "SUMZ"));
 		Assert.assertNotNull(ct);
 		Assert.assertEquals(CallTypeState.DO_CONFLICTING, ct.getState());
+		
+		
 	}
 }

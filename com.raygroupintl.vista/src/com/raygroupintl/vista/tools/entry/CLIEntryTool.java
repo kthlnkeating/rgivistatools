@@ -51,7 +51,7 @@ public abstract class CLIEntryTool<U> extends Tool {
 			
 	protected abstract void write(U result, Terminal t, TerminalFormatter tf);
 
-	private boolean skipEmpty() {
+	public boolean skipEmpty() {
 		List<String> outputFlags = this.params.outputFlags;
 		for (String outputFlag : outputFlags) {
 			if (outputFlag.equals("ignorenodata")) {
