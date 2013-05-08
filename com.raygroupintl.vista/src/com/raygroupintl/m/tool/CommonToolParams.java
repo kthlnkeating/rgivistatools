@@ -32,6 +32,10 @@ public class CommonToolParams {
 		this.parseTreeSupply = parseTreeSupply;		
 	}
 	
+	public ParseTreeSupply getParseTreeSupply() {
+		return this.parseTreeSupply;
+	}
+	
 	public void setRecursionSpecification(RecursionSpecification recursionSpec) {
 		this.recursionSpec = recursionSpec;
 	}

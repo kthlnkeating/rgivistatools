@@ -18,67 +18,27 @@ package com.raygroupintl.vista.tools.entry;
 
 import java.util.Set;
 
-import com.raygroupintl.m.parsetree.Routine;
 import com.raygroupintl.m.parsetree.data.EntryId;
-import com.raygroupintl.m.parsetree.data.Fanout;
-import com.raygroupintl.m.tool.ParseTreeSupply;
-import com.raygroupintl.m.tool.SavedParsedTrees;
-import com.raygroupintl.m.tool.entry.AccumulatingBlocksSupply;
+import com.raygroupintl.m.tool.CommonToolParams;
 import com.raygroupintl.m.tool.entry.MEntryToolInput;
 import com.raygroupintl.m.tool.entry.MEntryToolResult;
-import com.raygroupintl.m.tool.entry.RecursionSpecification;
 import com.raygroupintl.m.tool.entry.fanin.EntryFanins;
-import com.raygroupintl.m.tool.entry.fanin.FaninMark;
 import com.raygroupintl.m.tool.entry.fanin.FaninTool;
-import com.raygroupintl.m.tool.entry.fanin.MarkedAsFaninBRF;
 import com.raygroupintl.output.Terminal;
 import com.raygroupintl.output.TerminalFormatter;
-import com.raygroupintl.struct.Filter;
-import com.raygroupintl.vista.repository.RepositoryInfo;
-import com.raygroupintl.vista.repository.RepositoryVisitor;
-import com.raygroupintl.vista.repository.VistaPackage;
-import com.raygroupintl.vista.repository.VistaPackages;
 import com.raygroupintl.vista.tools.CLIParams;
-import com.raygroupintl.vista.tools.CLIParamsAdapter;
-import com.raygroupintl.vista.tools.MRALogger;
-import com.raygroupintl.vista.tools.RepositoryTools;
 
 public class CLIFaninTool extends CLIEntryTool<EntryFanins> {		
 	public CLIFaninTool(CLIParams params) {
 		super(params);
 	}
 	
-	private FaninTool getSupply(EntryId entryId, RepositoryInfo ri) {
-		ParseTreeSupply pts = new SavedParsedTrees(params.parseTreeDirectory);
-		AccumulatingBlocksSupply<Fanout, FaninMark> bs = new AccumulatingBlocksSupply<Fanout, FaninMark>(pts, new MarkedAsFaninBRF(entryId));
-		return new FaninTool(bs, true);
-	}
-	
 	@Override
 	public MEntryToolResult<EntryFanins> getResult(MEntryToolInput input) {
-		RepositoryInfo ri = CLIParamsAdapter.getRepositoryInfo(this.params);
 		MEntryToolResult<EntryFanins> resultList = new MEntryToolResult<EntryFanins>();
 		for (EntryId entryId : input.getEntryIds()) {
-			final FaninTool efit = this.getSupply(entryId, ri);
-			RecursionSpecification rs = CLIETParamsAdapter.toRecursionSpecification(this.params);
-			Filter<Fanout> filter = rs.getFanoutFilter();
-			efit.setFilter(filter);
-			RepositoryVisitor rv = new RepositoryVisitor() {
-				int packageCount;
-				@Override
-				protected void visitRoutine(Routine routine) {
-					efit.addRoutine(routine);
-				}
-				@Override
-				protected void visitVistaPackage(VistaPackage routinePackage) {
-					++this.packageCount;
-					MRALogger.logInfo(RepositoryTools.class, String.valueOf(this.packageCount) + ". " + routinePackage.getPackageName() + "...writing");
-					super.visitVistaPackage(routinePackage);
-					MRALogger.logInfo(RepositoryTools.class, "..done.\n");
-				}
-			};
-			VistaPackages vps = this.getVistaPackages(ri);
-			vps.accept(rv);
+			CommonToolParams tp = CLIETParamsAdapter.toCommonToolParams(this.params);
+			FaninTool efit = new FaninTool(entryId, tp, true);
 			EntryFanins result = efit.getResult();
 			resultList.add(entryId, result);
 		}

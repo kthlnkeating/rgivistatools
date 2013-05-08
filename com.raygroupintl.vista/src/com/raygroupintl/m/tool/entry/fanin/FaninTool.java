@@ -16,34 +16,35 @@
 
 package com.raygroupintl.m.tool.entry.fanin;
 
-import java.util.Collection;
 import java.util.List;
 
 import com.raygroupintl.m.parsetree.Routine;
 import com.raygroupintl.m.parsetree.data.DataStore;
 import com.raygroupintl.m.parsetree.data.EntryId;
 import com.raygroupintl.m.parsetree.data.Fanout;
+import com.raygroupintl.m.parsetree.data.FanoutType;
+import com.raygroupintl.m.tool.CommonToolParams;
+import com.raygroupintl.m.tool.ParseTreeSupply;
 import com.raygroupintl.m.tool.entry.Block;
 import com.raygroupintl.m.tool.entry.BlocksSupply;
 import com.raygroupintl.struct.Filter;
 import com.raygroupintl.struct.PassFilter;
 
 public class FaninTool  {
+	private ParseTreeSupply pts;
 	private BlocksSupply<Fanout, FaninMark> blocksSupply;
 	private DataStore<PathPieceToEntry> store = new DataStore<PathPieceToEntry>();					
 	private Filter<Fanout> filter = new PassFilter<Fanout>();
 	private boolean filterInternalBlocks;
 	
-	public FaninTool(BlocksSupply<Fanout, FaninMark> blocksSupply, boolean filterInternalBlocks) {
-		this.blocksSupply = blocksSupply;
+	public FaninTool(EntryId entryId, CommonToolParams params, boolean filterInternalBlocks) {
+		this.pts = params.getParseTreeSupply();
+		this.blocksSupply = params.getBlocksSupply(new MarkedAsFaninBRF(entryId));
+		this.filter = params.getFanoutFilter();
 		this.filterInternalBlocks = filterInternalBlocks;
 	}
 	
-	public void setFilter(Filter<Fanout> filter) {
-		this.filter= filter;
-	}
-	
-	public void addRoutine(Routine routine) {
+	private void addRoutine(Routine routine) {
 		List<EntryId> routineEntryTags = routine.getEntryIdList();
 		for (EntryId routineEntryTag : routineEntryTags) {
 			Block<Fanout, FaninMark> b = this.blocksSupply.getBlock(routineEntryTag);
@@ -54,13 +55,19 @@ public class FaninTool  {
 		}		
 	}
 	
-	public void addRoutines(Collection<Routine> routines) {
-		for (Routine routine : routines) {
-			this.addRoutine(routine);
+	public void addRoutines() {
+		for (String routineName : this.pts.getAllRoutineNames()) {
+			EntryId id = new EntryId(routineName, null);
+			Fanout fo = new Fanout(id, FanoutType.DO_BLOCK);
+			if (! this.filter.isValid(fo)) continue;
+			Routine r = this.pts.getParseTree(routineName);
+			if (r == null) continue;
+			this.addRoutine(r);
 		}
 	}
 		
 	public EntryFanins getResult() {
+		this.addRoutines();
 		EntryFanins result = new EntryFanins();
 		for (PathPieceToEntry p : this.store.values()) {
 			if (p != null) {
