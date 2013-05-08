@@ -55,10 +55,10 @@ public class FaninTool  {
 		}		
 	}
 	
-	public void addRoutines() {
+	private void addRoutines() {
 		for (String routineName : this.pts.getAllRoutineNames()) {
 			EntryId id = new EntryId(routineName, null);
-			Fanout fo = new Fanout(id, FanoutType.DO_BLOCK);
+			Fanout fo = new Fanout(id, FanoutType.DO);
 			if (! this.filter.isValid(fo)) continue;
 			Routine r = this.pts.getParseTree(routineName);
 			if (r == null) continue;

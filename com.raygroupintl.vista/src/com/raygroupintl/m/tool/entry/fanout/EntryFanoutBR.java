@@ -29,7 +29,7 @@ import com.raygroupintl.m.tool.entry.Block;
 import com.raygroupintl.m.tool.entry.BlockData;
 import com.raygroupintl.struct.HierarchicalMap;
 
-public class EntryFanoutBR extends BlockRecorder<Fanout, BlockData<Fanout>> {
+class EntryFanoutBR extends BlockRecorder<Fanout, BlockData<Fanout>> {
 	@Override
 	protected BlockData<Fanout> getNewBlockData(EntryId entryId, String[] params) {
 		return new BlockData<Fanout>(entryId);
