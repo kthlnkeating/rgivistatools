@@ -28,7 +28,7 @@ import com.raygroupintl.vista.tools.CLIParams;
 import com.raygroupintl.vista.tools.CLIParamsAdapter;
 import com.raygroupintl.vista.tools.Tool;
 
-public abstract class CLIEntryTool<U> extends Tool {		
+abstract class CLIEntryTool<U> extends Tool {		
 	protected CLIParams params;
 	
 	public CLIEntryTool(CLIParams params) {

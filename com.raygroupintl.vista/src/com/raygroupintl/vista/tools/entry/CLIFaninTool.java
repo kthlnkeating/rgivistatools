@@ -28,7 +28,7 @@ import com.raygroupintl.output.Terminal;
 import com.raygroupintl.output.TerminalFormatter;
 import com.raygroupintl.vista.tools.CLIParams;
 
-public class CLIFaninTool extends CLIEntryTool<EntryFanins> {		
+class CLIFaninTool extends CLIEntryTool<EntryFanins> {		
 	public CLIFaninTool(CLIParams params) {
 		super(params);
 	}

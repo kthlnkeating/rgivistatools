@@ -16,12 +16,17 @@
 
 package com.raygroupintl.vista.tools;
 
-import java.util.Set;
-import java.util.TreeSet;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
 
 import com.raygroupintl.util.CLIParamMgr;
 import com.raygroupintl.vista.tools.entry.CLIEntryTools;
 import com.raygroupintl.vista.tools.fnds.ToolErrorException;
+import com.raygroupintl.vista.tools.macro.MacroTools;
+import com.raygroupintl.vista.tools.repository.RepositoryTools;
+import com.raygroupintl.vista.tools.routine.CLIRoutineTools;
+import com.raygroupintl.vista.tools.utility.CLIUtilityTools;
 
 public class MRoutineAnalyzer {
 	private static CLIParams getCommandLineParamaters(String[] args) {
@@ -34,7 +39,7 @@ public class MRoutineAnalyzer {
 		}		
 	}
 	
-	private static String getOptionMsg(Set<String> options) {
+	private static String getOptionMsg(Collection<String> options) {
 		String result = "";
 		for (String option : options) {
 			if (! result.isEmpty()) {
@@ -46,12 +51,11 @@ public class MRoutineAnalyzer {
 	}
 
 	private static String getRunTypeOptionsMsg(Tools[] rtss) {
-		TreeSet<String> allOptions = new TreeSet<String>();
+		List<String> allOptions = new ArrayList<String>();
 		for (Tools rts : rtss) {
-			Set<String > options = rts.getRunTypeOptions();
-			allOptions.addAll(options);
+			String name = rts.getName();
+			allOptions.add(name);
 		}
-		allOptions.add("file");
 		return getOptionMsg(allOptions);
 	}
 	
@@ -79,7 +83,7 @@ public class MRoutineAnalyzer {
 	
 	public static void main(String[] args) {
 		try {
-			Tools[] rtss = new Tools[]{new RepositoryTools(), new CLIEntryTools(), new MacroTools(), new MFileTools(), new UtilityTools()};
+			Tools[] rtss = new Tools[]{new RepositoryTools("repo"), new CLIEntryTools("entry"), new MacroTools("macro"), new CLIRoutineTools("routine"), new CLIUtilityTools("util")};
 		
 			CLIParams params = getCommandLineParamaters(args);	
 			if (params == null) return;
@@ -91,23 +95,24 @@ public class MRoutineAnalyzer {
 			
 			params.popPositional();
 			
-			if (runTypeOption.equals("file")) {
-				if (params.positionals.size() == 0) {
-					logErrorWithOptions("A addditional run type option needs to be specified following \"file\".", rtss[2]);
+			for (int i=0; i<rtss.length; ++i) {
+				Tools tools = rtss[i];
+				String toolsName = tools.getName(); 
+				if (runTypeOption.equals(toolsName)) {
+					if (params.positionals.size() == 0) {
+						logErrorWithOptions("A addditional run type option needs to be specified following \"file\".", tools);
+						return;
+					}
+					runTypeOption = params.positionals.get(0);
+					params.popPositional();
+					
+					if (run(rtss[i], runTypeOption, params)) return;
+					logErrorWithOptions("Specified run type option " + runTypeOption + " is not know.", tools);
 					return;
 				}
-				runTypeOption = params.positionals.get(0);
-				params.popPositional();
-				
-				if (run(rtss[2], runTypeOption, params)) return;
-				logErrorWithOptions("Specified run type option " + runTypeOption + " is not know.", rtss[2]);					
-			} else {
-				for (Tools rts : rtss) {
-					if (run(rts, runTypeOption, params)) return;
-				}
-				logErrorWithOptions("Specified run type option " + runTypeOption + " is not know.", rtss);					
-			}
-			
+			}			
+			logErrorWithOptions("Invalid run type option " + runTypeOption + ".", rtss);
+			return;				
 		} catch (ToolErrorException e) {
 			MRALogger.logError("Error running tool", e);
 		} catch (Throwable t) {

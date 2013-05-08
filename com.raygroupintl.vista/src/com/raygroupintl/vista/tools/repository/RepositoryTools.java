@@ -14,7 +14,7 @@
 // limitations under the License.
 //---------------------------------------------------------------------------
 
-package com.raygroupintl.vista.tools;
+package com.raygroupintl.vista.tools.repository;
 
 import java.nio.file.Path;
 import java.util.ArrayList;
@@ -37,7 +37,11 @@ import com.raygroupintl.vista.repository.visitor.FanoutWriter;
 import com.raygroupintl.vista.repository.visitor.OptionWriter;
 import com.raygroupintl.vista.repository.visitor.ProtocolWriter;
 import com.raygroupintl.vista.repository.visitor.RPCWriter;
-import com.raygroupintl.vista.repository.visitor.SerializedRoutineWriter;
+import com.raygroupintl.vista.tools.CLIParams;
+import com.raygroupintl.vista.tools.CLIParamsAdapter;
+import com.raygroupintl.vista.tools.ErrorExemptions;
+import com.raygroupintl.vista.tools.Tool;
+import com.raygroupintl.vista.tools.Tools;
 
 public class RepositoryTools extends Tools {
 	private static class Fanout extends Tool {		
@@ -271,27 +275,6 @@ public class RepositoryTools extends Tools {
 		}
 	}
 			
-	private static class ParseTreeSave extends Tool {		
-		public ParseTreeSave(CLIParams params) {
-			super(params);
-		}
-		
-		@Override
-		public void run() {
-			RepositoryInfo ri = CLIParamsAdapter.getRepositoryInfo(this.params);
-			if (ri != null) {
-				VistaPackages vps = this.getVistaPackages(ri);
-				if (vps != null) {						
-					SerializedRoutineWriter srw = new SerializedRoutineWriter(this.params.parseTreeDirectory);
-					for (String r : this.params.routines) {
-						srw.addRoutineNameFilter(r);
-					}					
-					vps.accept(srw);
-				}
-			}
-		}
-	}
-
 	private static class Entry extends Tool {		
 		public Entry(CLIParams params) {
 			super(params);
@@ -337,6 +320,10 @@ public class RepositoryTools extends Tools {
 		}
 	}
 
+	public RepositoryTools(String name) {
+		super(name);
+	}
+
 	@Override
 	protected void updateTools(Map<String, MemberFactory> tools) {
 		tools.put("fanout", new MemberFactory() {				
@@ -379,12 +366,6 @@ public class RepositoryTools extends Tools {
 			@Override
 			public Tool getInstance(CLIParams params) {
 				return new UsedGlobal(params);
-			}
-		});
-		tools.put("parsetreesave", new MemberFactory() {				
-			@Override
-			public Tool getInstance(CLIParams params) {
-				return new ParseTreeSave(params);
 			}
 		});
 		tools.put("entry", new MemberFactory() {				

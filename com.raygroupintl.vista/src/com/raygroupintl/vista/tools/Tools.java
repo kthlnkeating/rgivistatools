@@ -20,17 +20,24 @@ import java.util.HashMap;
 import java.util.Set;
 import java.util.Map;
 
-public abstract class Tools {	
+public abstract class Tools {
+	private String name; 
+	
 	protected static interface MemberFactory {
 		Tool getInstance(CLIParams params);		
 	}
 
 	private Map<String, MemberFactory> tools = new HashMap<String, MemberFactory>();
 	
-	protected Tools() {
+	protected Tools(String name) {
 		this.updateTools(this.tools);
+		this.name = name;
 	}
 
+	public String getName() {
+		return this.name;
+	}
+	
 	protected abstract void updateTools(Map<String, MemberFactory> tools);
 
 	public Set<String> getRunTypeOptions() {

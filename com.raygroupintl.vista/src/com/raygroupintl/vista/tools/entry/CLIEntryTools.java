@@ -127,33 +127,37 @@ public class CLIEntryTools extends Tools {
 		}	
 	}
 
+	public CLIEntryTools(String name) {
+		super(name);
+	}
+	
 	@Override
 	protected void updateTools(Map<String, MemberFactory> tools) {
-		tools.put("entryinfo", new MemberFactory() {				
+		tools.put("info", new MemberFactory() {				
 			@Override
 			public Tool getInstance(CLIParams params) {
 				return new EntryCodeInfoTool(params);
 			}
 		});
-		tools.put("entryassumedvar", new MemberFactory() {				
+		tools.put("assumedvar", new MemberFactory() {				
 			@Override
 			public Tool getInstance(CLIParams params) {
 				return new CLIAssumedVariablesTool(params);
 			}
 		});
-		tools.put("entrylocalassignment", new MemberFactory() {				
+		tools.put("localassignment", new MemberFactory() {				
 			@Override
 			public Tool getInstance(CLIParams params) {
 				return new EntryLocalAssignmentTool(params);
 			}
 		});
-		tools.put("entryfanout", new MemberFactory() {				
+		tools.put("fanout", new MemberFactory() {				
 			@Override
 			public Tool getInstance(CLIParams params) {
 				return new EntryFanoutTool(params);
 			}
 		});
-		tools.put("entryfanin", new MemberFactory() {				
+		tools.put("fanin", new MemberFactory() {				
 			@Override
 			public Tool getInstance(CLIParams params) {
 				return new CLIFaninTool(params);

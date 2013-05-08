@@ -14,7 +14,7 @@
 // limitations under the License.
 //---------------------------------------------------------------------------
 
-package com.raygroupintl.vista.tools;
+package com.raygroupintl.vista.tools.utility;
 
 import java.io.IOException;
 import java.nio.file.Path;
@@ -23,8 +23,12 @@ import java.util.Map;
 import com.raygroupintl.struct.Filter;
 import com.raygroupintl.util.IOUtil;
 import com.raygroupintl.vista.repository.RepositoryInfo;
+import com.raygroupintl.vista.tools.CLIParams;
+import com.raygroupintl.vista.tools.MRALogger;
+import com.raygroupintl.vista.tools.Tool;
+import com.raygroupintl.vista.tools.Tools;
 
-public class UtilityTools extends Tools {
+public class CLIUtilityTools extends Tools {
 	private static class FlattenVistAFOIA extends Tool {		
 		public FlattenVistAFOIA(CLIParams params) {
 			super(params);
@@ -56,6 +60,10 @@ public class UtilityTools extends Tools {
 			}
 		}			
 	}
+	
+	public CLIUtilityTools(String name) {
+		super(name);
+	}
 
 	@Override
 	protected void updateTools(Map<String, MemberFactory> tools) {
@@ -63,6 +71,12 @@ public class UtilityTools extends Tools {
 			@Override
 			public Tool getInstance(CLIParams params) {
 				return new FlattenVistAFOIA(params);
+			}
+		});
+		tools.put("parsetreesave", new MemberFactory() {				
+			@Override
+			public Tool getInstance(CLIParams params) {
+				return new CLIParseTreeSaveTool(params);
 			}
 		});
 	}

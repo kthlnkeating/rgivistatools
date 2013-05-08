@@ -16,13 +16,52 @@
 
 package com.raygroupintl.vista.tools;
 
+import java.io.IOException;
+
 import com.raygroupintl.m.token.MVersion;
+import com.raygroupintl.m.tool.ParseTreeSupply;
+import com.raygroupintl.m.tool.SavedParsedTrees;
+import com.raygroupintl.m.tool.SourceCodeFiles;
+import com.raygroupintl.m.tool.SourceCodeSupply;
+import com.raygroupintl.m.tool.SourceCodeToParseTreeAdapter;
 import com.raygroupintl.output.FileWrapper;
 import com.raygroupintl.output.SystemTerminal;
 import com.raygroupintl.output.Terminal;
 import com.raygroupintl.vista.repository.RepositoryInfo;
 
 public class CLIParamsAdapter {
+	private static SourceCodeSupply sourceCodeSupply;
+	private static ParseTreeSupply parseTreeSupply;
+	
+	public static SourceCodeSupply getSourceCodeSupply(CLIParams params) {
+		if (sourceCodeSupply == null) {
+			String rootDirectory = params.rootDirectory;
+			if ((rootDirectory == null) || (rootDirectory.isEmpty())) {
+				rootDirectory = RepositoryInfo.getLocation();
+			}
+			try {
+				sourceCodeSupply = SourceCodeFiles.getInstance(rootDirectory);
+			}
+			catch (IOException e) {
+			}							
+		}
+		return sourceCodeSupply;
+	}
+	
+	public static ParseTreeSupply getParseTreeSupply(CLIParams params) {
+		if (CLIParamsAdapter.parseTreeSupply != null) {
+			return CLIParamsAdapter.parseTreeSupply;
+		}		
+		if ((params.parseTreeDirectory == null) || params.parseTreeDirectory.isEmpty()) {
+			SourceCodeSupply supply = CLIParamsAdapter.getSourceCodeSupply(params);
+			CLIParamsAdapter.parseTreeSupply = new SourceCodeToParseTreeAdapter(supply);
+			return CLIParamsAdapter.parseTreeSupply;
+		} else {
+			CLIParamsAdapter.parseTreeSupply = new SavedParsedTrees(params.parseTreeDirectory);
+			return CLIParamsAdapter.parseTreeSupply;
+		}		
+	}
+	
 	public static RepositoryInfo getRepositoryInfo(CLIParams params) {
 		MRARoutineFactory rf = MRARoutineFactory.getInstance(MVersion.CACHE);
 		if (rf != null) {

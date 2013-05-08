@@ -28,9 +28,6 @@ import java.util.regex.Pattern;
 import com.raygroupintl.m.parsetree.data.EntryId;
 import com.raygroupintl.m.tool.CommonToolParams;
 import com.raygroupintl.m.tool.ParseTreeSupply;
-import com.raygroupintl.m.tool.SavedParsedTrees;
-import com.raygroupintl.m.tool.SourceCodeFiles;
-import com.raygroupintl.m.tool.SourceCodeToParseTreeAdapter;
 import com.raygroupintl.m.tool.entry.MEntryToolInput;
 import com.raygroupintl.m.tool.entry.RecursionDepth;
 import com.raygroupintl.m.tool.entry.RecursionSpecification;
@@ -39,11 +36,10 @@ import com.raygroupintl.m.tool.entry.basiccodeinfo.BasicCodeInfoToolParams;
 import com.raygroupintl.m.tool.entry.localassignment.LocalAssignmentToolParams;
 import com.raygroupintl.vista.repository.RepositoryInfo;
 import com.raygroupintl.vista.tools.CLIParams;
+import com.raygroupintl.vista.tools.CLIParamsAdapter;
 import com.raygroupintl.vista.tools.MRALogger;
 
 class CLIETParamsAdapter {
-	private static ParseTreeSupply parseTreeSupply;
-	
 	public static RecursionSpecification toRecursionSpecification(CLIParams params) {
 		String rdName = params.recursionDepth;
 		if ((rdName == null) || (rdName.isEmpty())) {
@@ -62,31 +58,8 @@ class CLIETParamsAdapter {
 		}			
 	}
 	
-	private static ParseTreeSupply getParseTreeSupply(CLIParams params) {
-		if (CLIETParamsAdapter.parseTreeSupply != null) {
-			return CLIETParamsAdapter.parseTreeSupply;
-		}		
-		if ((params.parseTreeDirectory == null) || params.parseTreeDirectory.isEmpty()) {
-			String rootDirectory = params.rootDirectory;
-			if ((rootDirectory == null) || (rootDirectory.isEmpty())) {
-				rootDirectory = RepositoryInfo.getLocation();
-			}
-			try {
-				SourceCodeFiles files = SourceCodeFiles.getInstance(rootDirectory);
-				CLIETParamsAdapter.parseTreeSupply = new SourceCodeToParseTreeAdapter(files);
-				return CLIETParamsAdapter.parseTreeSupply;
-			}
-			catch (IOException e) {
-				return null;
-			}				
-		} else {
-			CLIETParamsAdapter.parseTreeSupply = new SavedParsedTrees(params.parseTreeDirectory);
-			return CLIETParamsAdapter.parseTreeSupply;
-		}		
-	}
-
 	public static CommonToolParams toCommonToolParams(CLIParams params) {
-		ParseTreeSupply pts = getParseTreeSupply(params);
+		ParseTreeSupply pts = CLIParamsAdapter.getParseTreeSupply(params);
 		CommonToolParams result = new CommonToolParams(pts);
 		RecursionSpecification rs = toRecursionSpecification(params);
 		result.setRecursionSpecification(rs);	
@@ -94,7 +67,7 @@ class CLIETParamsAdapter {
 	}
 
 	public static LocalAssignmentToolParams toLocalAssignmentToolParams(CLIParams params) {
-		ParseTreeSupply pts = getParseTreeSupply(params);
+		ParseTreeSupply pts = CLIParamsAdapter.getParseTreeSupply(params);
 		LocalAssignmentToolParams result = new LocalAssignmentToolParams(pts);
 		if (params.includes.size() > 0) {
 			result.addLocals(params.includes);
@@ -105,7 +78,7 @@ class CLIETParamsAdapter {
 	}
 
 	public static AssumedVariablesToolParams toAssumedVariablesToolParams(CLIParams params) {
-		ParseTreeSupply pts = getParseTreeSupply(params);
+		ParseTreeSupply pts = CLIParamsAdapter.getParseTreeSupply(params);
 		AssumedVariablesToolParams result = new AssumedVariablesToolParams(pts);
 		if (params.excludes.size() > 0) {
 			result.addExpected(params.excludes);
@@ -116,7 +89,7 @@ class CLIETParamsAdapter {
 	}
 
 	public static BasicCodeInfoToolParams toBasicCodeInfoToolParams(CLIParams params, RepositoryInfo repositoryInfo) {
-		ParseTreeSupply pts = getParseTreeSupply(params);
+		ParseTreeSupply pts = CLIParamsAdapter.getParseTreeSupply(params);
 		BasicCodeInfoToolParams result = new BasicCodeInfoToolParams(pts, repositoryInfo);
 
 		RecursionSpecification rs = toRecursionSpecification(params);
@@ -168,7 +141,7 @@ class CLIETParamsAdapter {
 		}
 		if (hasRegularExpression) {
 			List<String> expandedRoutineNames = new ArrayList<String>();
-			ParseTreeSupply pts = CLIETParamsAdapter.getParseTreeSupply(params);
+			ParseTreeSupply pts = CLIParamsAdapter.getParseTreeSupply(params);
 			Collection<String> allRoutineNames = pts.getAllRoutineNames();
 			boolean[] matched = new boolean[specifiedRoutineNames.size()];
 			for (String routineName : allRoutineNames) {

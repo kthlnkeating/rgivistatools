@@ -28,7 +28,7 @@ import com.raygroupintl.output.Terminal;
 import com.raygroupintl.output.TerminalFormatter;
 import com.raygroupintl.vista.tools.CLIParams;
 
-public class CLIQuitTypeTool extends CLIEntryTool<QuitType> {	
+class CLIQuitTypeTool extends CLIEntryTool<QuitType> {	
 	public CLIQuitTypeTool(CLIParams params) {
 		super(params);		
 	}

@@ -14,7 +14,7 @@
 // limitations under the License.
 //---------------------------------------------------------------------------
 
-package com.raygroupintl.m.tool.entry.fanout;
+package com.raygroupintl.m.tool.routine;
 
 import java.util.Collection;
 import java.util.Map;
@@ -23,6 +23,9 @@ import java.util.TreeMap;
 
 import com.raygroupintl.m.parsetree.Routine;
 import com.raygroupintl.m.parsetree.data.EntryId;
+import com.raygroupintl.m.tool.entry.fanout.EntryFanoutBR;
+import com.raygroupintl.m.tool.entry.fanout.EntryFanouts;
+import com.raygroupintl.m.tool.entry.fanout.RoutineFanouts;
 import com.raygroupintl.output.Terminal;
 import com.raygroupintl.output.TerminalFormatter;
 
