@@ -73,9 +73,6 @@ public class CLIParams {
 	@CLIParameter(names={"--rawformat"})
 	public boolean rawFormat;
 	
-	@CLIParameter(names={"--method"})
-	public String method;
-	
 	@CLIParameter(names={"-ptype", "--protocoltype"})
 	public String protocolType;
 				
@@ -139,13 +136,5 @@ public class CLIParams {
 			this.positionals.remove(0);
 		}
 	}
-	
-	public String getMethod(String defaultMethod) {
-		if ((this.method == null) || this.method.isEmpty()) {
-			return defaultMethod;
-		} else {
-			return this.method;
-		}
- 	}	
 }
 

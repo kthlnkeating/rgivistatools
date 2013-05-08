@@ -4,6 +4,8 @@ import java.util.Set;
 
 import junit.framework.Assert;
 
+import org.junit.AfterClass;
+import org.junit.BeforeClass;
 import org.junit.Test;
 
 import com.raygroupintl.m.MTestCommon;
@@ -18,6 +20,19 @@ import com.raygroupintl.m.tool.entry.fanin.FaninTool;
 import com.raygroupintl.m.tool.entry.fanin.MarkedAsFaninBRF;
 
 public class FaninToolTest { 
+	private static ParseTreeSupply pts;
+	
+	@BeforeClass
+	public static void setUpBeforeClass() throws Exception {
+		String[] routineNames = {"FINROU00", "FINROU01", "FINROU02", "FINROU03", "FINROU04"};
+		pts = MTestCommon.getParseTreeSupply(routineNames);		
+	}
+
+	@AfterClass
+	public static void tearDownAfterClass() throws Exception {
+		pts = null;
+	}
+		
 	private void checkResult(EntryFanins fanins, String faninEntry, String[] faninNextEntries) {
 		EntryId faninEntryId = EntryId.getInstance(faninEntry); 
 		Assert.assertTrue(fanins.hasFaninEntry(faninEntryId));
@@ -32,19 +47,13 @@ public class FaninToolTest {
 		
 	@Test
 	public void test() {
-		String[] routineNames = {"FINROU00", 
-				                 "FINROU01", 
-				                 "FINROU02", 
-				                 "FINROU03", 
-				                 "FINROU04"};
-		ParseTreeSupply pts = MTestCommon.getParseTreeSupply(routineNames);
 		final EntryId entryId = new EntryId("FINROU00", "ADD");
 		MarkedAsFaninBRF brf = new MarkedAsFaninBRF(entryId); 
 
 		AccumulatingBlocksSupply<Fanout, FaninMark> blocksSupply = new AccumulatingBlocksSupply<Fanout, FaninMark>(pts, brf);
 		
 		FaninTool accumulator = new FaninTool(blocksSupply, false);
-		for (String routineName : routineNames) {
+		for (String routineName : pts.getAllRoutineNames()) {
 			Routine r = pts.getParseTree(routineName);
 			accumulator.addRoutine(r);
 		}
@@ -68,7 +77,7 @@ public class FaninToolTest {
 		this.checkResult(fanins, "OTHER^FINROU02", new String[]{"ADD^FINROU00"});
 		
 		FaninTool accumulator2 = new FaninTool(blocksSupply, true);
-		for (String routineName : routineNames) {
+		for (String routineName : pts.getAllRoutineNames()) {
 			Routine r = pts.getParseTree(routineName);
 			accumulator2.addRoutine(r);
 		}

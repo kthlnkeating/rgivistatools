@@ -29,8 +29,6 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import com.raygroupintl.m.parsetree.Routine;
-import com.raygroupintl.m.tool.entry.fanout.EntryFanoutBR;
-import com.raygroupintl.m.tool.entry.fanout.RoutineFanouts;
 import com.raygroupintl.vista.repository.RepositoryVisitor;
 import com.raygroupintl.vista.repository.VistaPackage;
 import com.raygroupintl.vista.repository.VistaPackages;
@@ -79,17 +77,10 @@ public class SerializedRoutineWriter extends RepositoryVisitor {
 		return false;
 	}
 	
-	private void writeFanout(Routine routine) {
-		EntryFanoutBR recorder = new EntryFanoutBR();
-		RoutineFanouts result = recorder.getResults(routine);
-		this.writeObject(routine, result, ".fo");
-	}
-	
 	@Override
 	public void visitRoutine(Routine routine) {
 		if ((this.nameRegexs == null) || (this.matches(routine.getName()))) {
 			this.writeObject(routine, routine, ".ser");
-			this.writeFanout(routine);
 		}
 	}
 	
