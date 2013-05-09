@@ -9,12 +9,14 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Stack;
 
-import com.raygroupintl.m.parsetree.Entry;
+import com.raygroupintl.m.parsetree.Label;
 import com.raygroupintl.m.parsetree.ErrorNode;
+import com.raygroupintl.m.parsetree.InnerEntry;
 import com.raygroupintl.m.parsetree.InnerEntryList;
 import com.raygroupintl.m.parsetree.Line;
 import com.raygroupintl.m.parsetree.NodeList;
-import com.raygroupintl.m.parsetree.OuterEntryList;
+import com.raygroupintl.m.parsetree.Entry;
+import com.raygroupintl.m.parsetree.EntryList;
 import com.raygroupintl.m.parsetree.Routine;
 import com.raygroupintl.m.struct.MError;
 import com.raygroupintl.m.struct.MRefactorSettings;
@@ -97,15 +99,15 @@ public class MRoutine implements MToken {
 		}
 
 		Routine routine = new Routine(this.name);
-		OuterEntryList routineEntryList = new OuterEntryList();
+		EntryList routineEntryList = new EntryList();
 		routine.setEntryList(routineEntryList);
 		
-		NodeList<Entry> entryList = routineEntryList;
+		NodeList<Label> entryList = routineEntryList;
 		
 		int level = 0;
 		Line lineNode = null;
-		Entry entry = null;
-		Stack<NodeList<Entry>> entryLists = null;
+		Label entry = null;
+		Stack<NodeList<Label>> entryLists = null;
 		
 		for (int i=0; i<this.lines.size(); ++i) {
 			MLine line = this.lines.get(i);
@@ -145,7 +147,7 @@ public class MRoutine implements MToken {
 			
 			if ((tag != null) || (entry == null)) {
 				if (tag == null) tag = "~";
-				Entry newEntry = new Entry(tag, this.name, line.getParameters());				
+				Label newEntry = (level == 0) ? new Entry(tag, this.name, line.getParameters()) : new InnerEntry(tag, this.name, line.getParameters());	 			
 				if ((entry != null) && !(entry.isClosed())) {
 					entry.setContinuationEntry(newEntry);
 				}

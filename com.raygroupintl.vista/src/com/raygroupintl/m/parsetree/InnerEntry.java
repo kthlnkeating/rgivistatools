@@ -16,15 +16,15 @@
 
 package com.raygroupintl.m.parsetree;
 
-public class InnerEntryList extends NodeList<Label> {
+public class InnerEntry extends Label {
 	private static final long serialVersionUID = 1L;
 
-	@Override
-	public void accept(Visitor visitor) {
-		visitor.visitInnerEntryList(this);
+	public InnerEntry(String name, String routineName, String[] parameters) {
+		super(name, routineName, parameters);
 	}
 	
-	public String getName() {
-		return this.getFirstNode().getName();
+	@Override
+	public void accept(Visitor visitor) {
+		visitor.visitInnerEntry(this);
 	}
 }

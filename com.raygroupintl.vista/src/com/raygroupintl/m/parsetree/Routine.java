@@ -33,7 +33,7 @@ public class Routine extends BasicNode {
 	private final static Logger LOGGER = Logger.getLogger(Routine.class.getName());
 
 	private String name;
-	private OuterEntryList entryList;
+	private EntryList entryList;
 	private ErrorNode errorNode;
 	
 	public Routine(String name) {
@@ -54,7 +54,7 @@ public class Routine extends BasicNode {
 			return Collections.emptyList();
 		} else {
 			List<EntryId> result = new ArrayList<EntryId>(this.entryList.size());
-			for (Entry e : this.entryList.getNodes()) {
+			for (Label e : this.entryList.getNodes()) {
 				String tag = e.getName();
 				EntryId entryId = new EntryId(this.name, tag);
 				result.add(entryId);				
@@ -85,7 +85,7 @@ public class Routine extends BasicNode {
 		return false;
 	}
 	
-	public void setEntryList(OuterEntryList entryList) {
+	public void setEntryList(EntryList entryList) {
 		this.entryList = entryList;
 	}
 

@@ -17,8 +17,10 @@
 package com.raygroupintl.vista.tools;
 
 import java.io.IOException;
+import java.util.List;
 
 import com.raygroupintl.m.token.MVersion;
+import com.raygroupintl.m.tool.NamespaceFilter;
 import com.raygroupintl.m.tool.ParseTreeSupply;
 import com.raygroupintl.m.tool.SavedParsedTrees;
 import com.raygroupintl.m.tool.SourceCodeFiles;
@@ -33,6 +35,14 @@ public class CLIParamsAdapter {
 	private static SourceCodeSupply sourceCodeSupply;
 	private static ParseTreeSupply parseTreeSupply;
 	
+	public static NamespaceFilter getNamespaceFilter(List<String> included, List<String> excluded, List<String> excludedException) {
+		NamespaceFilter filter = new NamespaceFilter();
+		filter.addIncludedNamespaces(included);
+		filter.addExcludedNamespaces(excluded);
+		filter.addExcludedExceptionNamespaces(excludedException);
+		return filter;
+	}
+		
 	public static SourceCodeSupply getSourceCodeSupply(CLIParams params) {
 		if (sourceCodeSupply == null) {
 			String rootDirectory = params.rootDirectory;

@@ -16,11 +16,9 @@
 
 package com.raygroupintl.m.tool.entry;
 
-import java.util.Arrays;
-import java.util.List;
-
 import com.raygroupintl.m.parsetree.data.Fanout;
 import com.raygroupintl.m.parsetree.data.FanoutType;
+import com.raygroupintl.m.tool.NamespaceFilter;
 import com.raygroupintl.struct.Filter;
 
 public class RecursionSpecification {
@@ -50,111 +48,35 @@ public class RecursionSpecification {
 	}
 	
 	private static class NamespaceBasedFanoutFilter implements Filter<Fanout> {
-		private String[] includeNamespaces;
-		private String[] excludeNamespaces;
-		private String[] excludeExceptionNamespaces;
-
-		public NamespaceBasedFanoutFilter(String[] includeNamespaces, String[] excludeNamespaces, String[] excludeExceptionNamespaces) {
-			this.includeNamespaces = includeNamespaces;
-			this.excludeNamespaces = excludeNamespaces;
-			this.excludeExceptionNamespaces = excludeExceptionNamespaces;
-		}
+		private NamespaceFilter namespaceFilter;
 		
-		private static boolean checkNamespace(String routineName, String namespace) {
-			int n = routineName.length();
-			int m = namespace.length();
-			if (n < m) return false;
-			int count = Math.min(n, m);
-			for (int i=0; i<count; ++i) {
-				if (routineName.charAt(i) != namespace.charAt(i)) return false;
-			}
-			return true;
-		}
-		
-		private static boolean checkNamespace(String routineName, String[] namespaces) {
-			for (int i=0; i<namespaces.length; ++i) {
-				if (checkNamespace(routineName, namespaces[i])) {
-					return true;
-				} 
-			}
-			return false;
+		public NamespaceBasedFanoutFilter(NamespaceFilter filter) {
+			this.namespaceFilter = filter;
 		}
 		
 		@Override
 		public boolean isValid(Fanout input) {
 			String routineName = input.getEntryId().getRoutineName();
 			if ((routineName == null) || (routineName.isEmpty())) return true;
-			if (this.includeNamespaces != null) {
-				boolean b = checkNamespace(routineName, this.includeNamespaces);
-				if (!b) return false;
-			}
-			if (this.excludeNamespaces != null) {
-				boolean b = checkNamespace(routineName, this.excludeNamespaces);
-				if (b) {
-					if (this.excludeExceptionNamespaces == null) return false;
-					return checkNamespace(routineName, this.excludeExceptionNamespaces);
-				}
-			}
-			return true;
+			return this.namespaceFilter.contains(routineName);
 		}
 	}
 
 	private RecursionDepth depth = RecursionDepth.LABEL;
-
-	private String[] includedFanoutNamespaces;
-	private String[] excludedFanoutNamespaces;
-	private String[] excludedFanoutExceptionNamespaces;
-
+	private NamespaceFilter namespaceFilter = new NamespaceFilter();
+	
 	public void setDepth(RecursionDepth depth) {
 		this.depth = depth;
 	}
 
-	public void setIncludedFanoutNamespaces(String[] namespaces) {
-		this.includedFanoutNamespaces = namespaces;
-	}
-
-	public void setExcludedFanoutNamespaces(String[] namespaces) {
-		this.excludedFanoutNamespaces = namespaces;
-	}
-	
-	public void setExcludedFanoutExceptionNamespaces(String[] namespaces) {
-		this.excludedFanoutExceptionNamespaces = namespaces;
-	}
-
-	private String[] addNamespaces(String[] original, List<String> additional) {
-		if ((additional != null) && (additional.size() > 0)) {
-			if (original == null) {
-				return additional.toArray(new String[0]);				
-			} else {
-				int n = original.length;
-				int m = additional.size();
-				String[] result = Arrays.copyOf(original, n+m);
-				for (String namespace : additional) {
-					result[n] = namespace;
-					++n;
-				}
-				return result;
-			}
-		}
-		return original;
-	}
-	
-	public void addIncludedFanoutNamespaces(List<String> namespaces) {
-		this.includedFanoutNamespaces = addNamespaces(this.includedFanoutNamespaces, namespaces);
-	}
-	
-	public void addExcludedFanoutNamespaces(List<String> namespaces) {
-		this.excludedFanoutNamespaces = addNamespaces(this.excludedFanoutNamespaces, namespaces);		
-	}
-
-	public void addExcludedFanoutExceptionNamespaces(List<String> namespaces) {
-		this.excludedFanoutExceptionNamespaces = addNamespaces(this.excludedFanoutExceptionNamespaces, namespaces);		
+	public void setNamespaceFilter(NamespaceFilter filter) {
+		this.namespaceFilter = filter;
 	}
 
 	public Filter<Fanout> getFanoutFilter() {
 		switch (this.depth) {
 		case ALL:
-			return new NamespaceBasedFanoutFilter(RecursionSpecification.this.includedFanoutNamespaces, RecursionSpecification.this.excludedFanoutNamespaces, RecursionSpecification.this.excludedFanoutExceptionNamespaces);
+			return new NamespaceBasedFanoutFilter(this.namespaceFilter);
 		case ROUTINE:
 			return new InRoutineFanoutFilter();
 		case ENTRY:

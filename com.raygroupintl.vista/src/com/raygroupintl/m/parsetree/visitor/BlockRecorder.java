@@ -19,7 +19,7 @@ package com.raygroupintl.m.parsetree.visitor;
 import com.raygroupintl.m.parsetree.AtomicDo;
 import com.raygroupintl.m.parsetree.AtomicGoto;
 import com.raygroupintl.m.parsetree.DeadCmds;
-import com.raygroupintl.m.parsetree.Entry;
+import com.raygroupintl.m.parsetree.Label;
 import com.raygroupintl.m.parsetree.Extrinsic;
 import com.raygroupintl.m.parsetree.InnerEntryList;
 import com.raygroupintl.m.parsetree.Routine;
@@ -78,7 +78,7 @@ public abstract class BlockRecorder<F extends Fanout, T extends BlockData<F>> ex
 	}
 	
 	@Override
-	protected void visitAssumedGoto(Entry fromEntry, Entry toEntry) {
+	protected void visitAssumedGoto(Label fromEntry, Label toEntry) {
 		super.visitAssumedGoto(fromEntry, toEntry);
 		String tag = toEntry.getName();
 		EntryId assumedGoto = new EntryId(null, tag);
@@ -97,13 +97,13 @@ public abstract class BlockRecorder<F extends Fanout, T extends BlockData<F>> ex
 	}
 	
 	@Override
-	protected void visitEntry(Entry entry) {
+	protected void visitLabel(Label entry) {
 		String tag = entry.getName();
 		EntryId entryId = entry.getFullEntryId();		
 		this.currentBlockData = this.getNewBlockData(entryId, entry.getParameters());
 		Block<F, T> b = new Block<F, T>(this.currentBlocks, this.currentBlockData);
 		this.currentBlocks.put(tag, b);
-		super.visitEntry(entry);
+		super.visitLabel(entry);
 	}
 			
 	@Override

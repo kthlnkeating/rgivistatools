@@ -301,22 +301,30 @@ public class Visitor {
 		line.acceptSubNodes(this);
 	}
 	
-	protected void visitAssumedGoto(Entry fromEntry, Entry toEntry) {		
+	protected void visitAssumedGoto(Label fromEntry, Label toEntry) {		
 	}
 	
-	protected void visitEntry(Entry entry) {
-		entry.acceptSubNodes(this);
-		Entry nextEntry = entry.getContinuationEntry();
+	protected void visitLabel(Label label) {
+		label.acceptSubNodes(this);
+		Label nextEntry = label.getContinuationEntry();
 		if (nextEntry != null) {
-			this.visitAssumedGoto(entry, nextEntry);
+			this.visitAssumedGoto(label, nextEntry);
 		}
+	}
+		
+	protected void visitInnerEntry(InnerEntry entry) {
+		this.visitLabel(entry);
+	}
+		
+	protected void visitEntry(Entry entry) {
+		this.visitLabel(entry);
 	}
 		
 	protected void visitInnerEntryList(InnerEntryList entryList) {
 		entryList.acceptSubNodes(this);
 	}
 		
-	protected void visitOuterEntryList(OuterEntryList entryList) {
+	protected void visitEntryList(EntryList entryList) {
 		entryList.acceptSubNodes(this);
 	}
 		

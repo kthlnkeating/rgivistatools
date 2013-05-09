@@ -27,6 +27,7 @@ import java.util.regex.Pattern;
 
 import com.raygroupintl.m.parsetree.data.EntryId;
 import com.raygroupintl.m.tool.CommonToolParams;
+import com.raygroupintl.m.tool.NamespaceFilter;
 import com.raygroupintl.m.tool.ParseTreeSupply;
 import com.raygroupintl.m.tool.entry.MEntryToolInput;
 import com.raygroupintl.m.tool.entry.RecursionDepth;
@@ -49,9 +50,8 @@ class CLIETParamsAdapter {
 		try {
 			RecursionDepth d = RecursionDepth.get(rdName);
 			rs.setDepth(d);
-			rs.addIncludedFanoutNamespaces(params.includeNamespaces);
-			rs.addExcludedFanoutNamespaces(params.excludeNamespaces);
-			rs.addExcludedFanoutExceptionNamespaces(params.excludeExceptionNamespaces);
+			NamespaceFilter filter = CLIParamsAdapter.getNamespaceFilter(params.includeNamespaces, params.excludeNamespaces, params.excludeExceptionNamespaces);
+			rs.setNamespaceFilter(filter);
 			return rs;
 		} catch (Exception ex) {
 			return null;

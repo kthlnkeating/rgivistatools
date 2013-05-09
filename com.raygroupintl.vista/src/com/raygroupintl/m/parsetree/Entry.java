@@ -16,69 +16,15 @@
 
 package com.raygroupintl.m.parsetree;
 
-import com.raygroupintl.m.parsetree.data.EntryId;
-
-public class Entry extends NodeList<Line> {
+public class Entry extends Label {
 	private static final long serialVersionUID = 1L;
 
-	private String name;
-	private String routineName;
-	private String[] parameters;
-	
-	private int endIndex = -1;
-	private Entry continuationEntry;
-	
 	public Entry(String name, String routineName, String[] parameters) {
-		this.name = name;
-		this.routineName = routineName;
-		this.parameters = parameters;
-	}
-	
-	public String getName() {
-		return this.name;
-	}
-	
-	public String[] getParameters() {
-		return this.parameters;
-	}
-
-	public EntryId getFullEntryId() {
-		if ((this.name == null) || this.name.isEmpty()) {
-			return new EntryId(this.routineName, this.routineName);
-		} else {
-			return new EntryId(this.routineName, this.name);
-		}
-		
-	}
-	
-	public int getEndIndex() {
-		return this.endIndex;
-	}
-	
-	public boolean isClosed() {
-		return this.endIndex > -1;
+		super(name, routineName, parameters);
 	}
 	
 	@Override
 	public void accept(Visitor visitor) {
 		visitor.visitEntry(this);
-	}
-
-	@Override
-	public void add(Line node) {
-		if (this.endIndex >= 0) {
-			node.tranformToClosed();
-		} else if (node.isClosed()) {
-			this.endIndex = this.size();
-		}
-		super.add(node);
-	}
-	
-	public void setContinuationEntry(Entry entry) {
-		this.continuationEntry = entry;
-	}
-
-	public Entry getContinuationEntry() {
-		return this.continuationEntry;
 	}
 }

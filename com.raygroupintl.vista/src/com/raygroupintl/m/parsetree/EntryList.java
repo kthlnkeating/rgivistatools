@@ -16,11 +16,11 @@
 
 package com.raygroupintl.m.parsetree;
 
-public class OuterEntryList extends NodeList<Entry> {
+public class EntryList extends NodeList<Label> {
 	private static final long serialVersionUID = 1L;
 
 	@Override
 	public void accept(Visitor visitor) {
-		visitor.visitOuterEntryList(this);
+		visitor.visitEntryList(this);
 	}
 }
