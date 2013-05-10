@@ -20,11 +20,11 @@ import java.util.List;
 import java.util.Set;
 
 import com.raygroupintl.m.parsetree.data.EntryId;
-import com.raygroupintl.m.tool.RoutineEntryLinks;
+import com.raygroupintl.m.tool.EntryIdsByRoutine;
+import com.raygroupintl.m.tool.ResultsByLabel;
 import com.raygroupintl.m.tool.routine.MRoutineToolInput;
 import com.raygroupintl.m.tool.routine.RoutineToolParams;
 import com.raygroupintl.m.tool.routine.fanout.FanoutTool;
-import com.raygroupintl.m.tool.routine.fanout.RoutineEntryLinksCollection;
 
 public class FaninTool {
 	private FanoutTool fanoutTool;
@@ -33,18 +33,18 @@ public class FaninTool {
 		this.fanoutTool = new FanoutTool(params);
 	}
 
-	public RoutineEntryLinksCollection getResult(MRoutineToolInput input) {
-		RoutineEntryLinksCollection fanoutLinks = this.fanoutTool.getResult(input);
-		RoutineEntryLinksCollection finLinks = new RoutineEntryLinksCollection();
+	public EntryIdsByRoutine getResult(MRoutineToolInput input) {
+		EntryIdsByRoutine fanoutLinks = this.fanoutTool.getResult(input);
+		EntryIdsByRoutine finLinks = new EntryIdsByRoutine();
 		Set<String> routineNames = fanoutLinks.getRoutineNames();
 		for (String routineName : routineNames) {
-			RoutineEntryLinks rel = fanoutLinks.getRoutineEntryLinks(routineName);
-			Set<String> routineLabels = rel.getRoutineEntryLabels();
+			ResultsByLabel<EntryId, Set<EntryId>> rel = fanoutLinks.getResults(routineName);
+			Set<String> routineLabels = rel.getLabels();
 			for (String label : routineLabels) {
-				finLinks.addOrGetLinkedEntries(routineName, label);				
-				Set<EntryId> fanouts = rel.getLinkedEntries(label);
+				finLinks.getResultsAddingWhenNone(routineName, label);				
+				Set<EntryId> fanouts = rel.getResults(label);
 				for (EntryId id : fanouts) {
-					finLinks.addLink(id, new EntryId(routineName, label));	
+					finLinks.addResult(id, new EntryId(routineName, label));	
 				}
 			}			
 		}
@@ -52,7 +52,7 @@ public class FaninTool {
 	}
 	
 	public List<EntryId> getTopEntries(MRoutineToolInput input) {
-		RoutineEntryLinksCollection allLinks = this.getResult(input);
+		EntryIdsByRoutine allLinks = this.getResult(input);
 		return allLinks.getEmptyEntries();
 	}
 }

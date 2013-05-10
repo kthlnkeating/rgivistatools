@@ -23,8 +23,9 @@ import java.util.Set;
 
 import com.raygroupintl.m.parsetree.Routine;
 import com.raygroupintl.m.parsetree.data.EntryId;
+import com.raygroupintl.m.tool.EntryIdsByLabel;
+import com.raygroupintl.m.tool.EntryIdsByRoutine;
 import com.raygroupintl.m.tool.ParseTreeSupply;
-import com.raygroupintl.m.tool.RoutineEntryLinks;
 import com.raygroupintl.m.tool.routine.MRoutineToolInput;
 import com.raygroupintl.m.tool.routine.ResultRoutineSpace;
 import com.raygroupintl.m.tool.routine.RoutineToolParams;
@@ -61,8 +62,8 @@ public class FanoutTool {
 		this.resultRoutineSpace = params.getResultRoutineSpace();
 	}
 	
-	public RoutineEntryLinksCollection getResult(MRoutineToolInput input) {
-		RoutineEntryLinksCollection result = new RoutineEntryLinksCollection();
+	public EntryIdsByRoutine getResult(MRoutineToolInput input) {
+		EntryIdsByRoutine result = new EntryIdsByRoutine();
 		List<String> routineNames = input.getRoutineNames(); 		
 		FanoutRecorder fr = new FanoutRecorder();
 		if (resultRoutineSpace == ResultRoutineSpace.ALL_INPUT_ROUTINES) {
@@ -71,7 +72,7 @@ public class FanoutTool {
 		}
 		for (String routineName : routineNames) {
 			Routine routine = this.pts.getParseTree(routineName);
-			RoutineEntryLinks rfs = fr.getFanouts(routine);
+			EntryIdsByLabel rfs = fr.getFanouts(routine);
 			result.put(routineName, rfs);
 		}
 		return result;

@@ -14,58 +14,60 @@
 // limitations under the License.
 //---------------------------------------------------------------------------
 
-package com.raygroupintl.m.tool.routine.fanout;
+package com.raygroupintl.m.tool;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
 import com.raygroupintl.m.parsetree.data.EntryId;
-import com.raygroupintl.m.tool.RoutineEntryLinks;
 
-public class RoutineEntryLinksCollection {
-	private Map<String, RoutineEntryLinks> map = new HashMap<String, RoutineEntryLinks>();
+public abstract class ResultsByRoutine<T, U extends Collection<T>> {
+	private Map<String, ResultsByLabel<T, U>> map = new HashMap<String, ResultsByLabel<T, U>>();
 
-	public void put(String routineName, RoutineEntryLinks links) {
-		this.map.put(routineName, links);
+	public void put(String routineName, ResultsByLabel<T, U> results) {
+		this.map.put(routineName, results);
 	}
 	
 	public Set<String> getRoutineNames() {
 		return this.map.keySet();
 	}
 	
-	public RoutineEntryLinks getRoutineEntryLinks(String routineName) {
+	public ResultsByLabel<T, U> getResults(String routineName) {
 		return this.map.get(routineName);
 	}
 	
-	public Set<EntryId> addOrGetLinkedEntries(String routineName, String label) {
-		RoutineEntryLinks links = this.map.get(routineName);
-		if (links == null) {
-			links = new RoutineEntryLinks();
-			this.put(routineName, links);
+	public abstract ResultsByLabel<T, U> getNewResultsInstance();
+	
+	public U getResultsAddingWhenNone(String routineName, String label) {
+		ResultsByLabel<T, U> results = this.map.get(routineName);
+		if (results == null) {
+			results = this.getNewResultsInstance();
+			this.put(routineName, results);
 		}
-		return links.addOrGetLinkedEntries(label);		
+		return results.getResultsAddingWhenNone(label);		
 	}
 	
-	public void addLink(EntryId keyEntryId, EntryId linkedEntryId){
-		String routineName = keyEntryId.getRoutineName();
-		String label = keyEntryId.getLabelOrDefault();
-		Set<EntryId> linkedEntries = this.addOrGetLinkedEntries(routineName, label);
-		linkedEntries.add(linkedEntryId);
+	public void addResult(EntryId entryId, T result){
+		String routineName = entryId.getRoutineName();
+		String label = entryId.getLabelOrDefault();
+		U results = this.getResultsAddingWhenNone(routineName, label);
+		results.add(result);
 	}
 	
 	public List<EntryId> getEmptyEntries() {
-		List<EntryId> result = new ArrayList<EntryId>();
+		List<EntryId> emptyEntries = new ArrayList<EntryId>();
 		Set<String> routineNames = this.map.keySet();
 		for (String routineName : routineNames) {
-			RoutineEntryLinks links = this.map.get(routineName);
-			List<String> emptyLabels = links.getEmptyEntries();
+			ResultsByLabel<T, U> results = this.map.get(routineName);
+			List<String> emptyLabels = results.getLabelsWithEmptyResults();
 			for (String emptyLabel : emptyLabels) {
-				result.add(new EntryId(routineName, emptyLabel));
+				emptyEntries.add(new EntryId(routineName, emptyLabel));
 			}
 		}
-		return result;
+		return emptyEntries;
 	}
 }

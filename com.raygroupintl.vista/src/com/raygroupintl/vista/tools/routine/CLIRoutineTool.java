@@ -1,9 +1,3 @@
-package com.raygroupintl.vista.tools.routine;
-
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
-import java.util.ArrayList;
 //---------------------------------------------------------------------------
 //Copyright 2012 Ray Group International
 //
@@ -20,6 +14,12 @@ import java.util.ArrayList;
 //limitations under the License.
 //---------------------------------------------------------------------------
 
+package com.raygroupintl.vista.tools.routine;
+
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.util.ArrayList;
 import java.util.List;
 
 import com.raygroupintl.m.parsetree.Routine;
@@ -82,5 +82,5 @@ abstract class CLIRoutineTool extends Tool {
 			}
 		}
 		return null;
-	}		
+	}
 }

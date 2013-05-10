@@ -16,42 +16,48 @@
 
 package com.raygroupintl.vista.tools.routine;
 
+import java.util.Collection;
 import java.util.Set;
 
-import com.raygroupintl.m.parsetree.data.EntryId;
-import com.raygroupintl.m.tool.RoutineEntryLinks;
-import com.raygroupintl.m.tool.routine.fanout.RoutineEntryLinksCollection;
+import com.raygroupintl.m.tool.ResultsByLabel;
+import com.raygroupintl.m.tool.ResultsByRoutine;
 import com.raygroupintl.output.Terminal;
 import com.raygroupintl.output.TerminalFormatter;
+import com.raygroupintl.vista.tools.CLIParams;
 
-class WriteHelper {
-	private static void write(RoutineEntryLinksCollection result, Terminal t, TerminalFormatter tf) {
-		Set<String> rns = result.getRoutineNames();
+abstract class CLIResultsByRoutineLabelTool<T, U extends Collection<T>> extends CLIRoutineTool {
+	private final String INDENT = "  ";
+	
+	public CLIResultsByRoutineLabelTool(CLIParams params) {
+		super(params);
+	}
+	
+	protected abstract String toString(T result);
+
+	protected void write(ResultsByRoutine<T, U> results, Terminal t, TerminalFormatter tf) {
+		Set<String> rns = results.getRoutineNames();
 		for (String rn : rns) {
-			RoutineEntryLinks rfs = result.getRoutineEntryLinks(rn);
-			Set<String> labels = rfs.getRoutineEntryLabels();
+			ResultsByLabel<T, U> rsbl = results.getResults(rn);
+			Set<String> labels = rsbl.getLabels();
 			for (String label : labels) {
-				t.writeEOL(" " + label + "^" + rn);	
-				Set<EntryId> fouts = rfs.getLinkedEntries(label);
-				if ((fouts == null) || (fouts.size() == 0)) {
-					t.writeEOL("  --");				
-				} else {
-					for (EntryId f : fouts) {
-						t.writeEOL("  " + f.toString2());
-					}
+				t.writeEOL(INDENT + label + "^" + rn);	
+				U rs = rsbl.getResults(label);
+				if ((rs == null) || (rs.size() == 0)) {
+					t.writeEOL(INDENT + INDENT + "--");				
+				} else for (T r : rs) {
+					t.writeEOL(INDENT + INDENT + this.toString(r));
 				}
 			}
 		
 		}
 	}
 	
-	public static void write(RoutineEntryLinksCollection result, Terminal t) {
+	protected void write(ResultsByRoutine<T, U> results, Terminal t) {
 		if (t.start()) {
 			TerminalFormatter tf = new TerminalFormatter();
 			tf.setTab(12);
-			WriteHelper.write(result, t, tf);
+			this.write(results, t, tf);
 			t.stop();
-		}						
-		
+		}								
 	}
 }

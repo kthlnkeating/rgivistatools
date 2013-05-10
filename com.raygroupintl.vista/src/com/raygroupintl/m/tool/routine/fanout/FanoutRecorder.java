@@ -28,13 +28,13 @@ import com.raygroupintl.m.parsetree.Routine;
 import com.raygroupintl.m.parsetree.data.EntryId;
 import com.raygroupintl.m.parsetree.data.FanoutType;
 import com.raygroupintl.m.parsetree.visitor.LocationMarker;
-import com.raygroupintl.m.tool.RoutineEntryLinks;
+import com.raygroupintl.m.tool.EntryIdsByLabel;
 import com.raygroupintl.struct.Filter;
 import com.raygroupintl.struct.PassFilter;
 
-public class FanoutRecorder extends LocationMarker {
+class FanoutRecorder extends LocationMarker {
 	private String routineName;
-	private RoutineEntryLinks routineFanouts;
+	private EntryIdsByLabel routineFanouts;
 	private Set<EntryId> entryFanouts;
 	private Filter<EntryId> filter = new PassFilter<EntryId>();
 	
@@ -86,12 +86,12 @@ public class FanoutRecorder extends LocationMarker {
 			
 	@Override
 	protected void visitRoutine(Routine routine) {
-		this.routineFanouts = new RoutineEntryLinks();
+		this.routineFanouts = new EntryIdsByLabel();
 		this.routineName = routine.getName();
 		super.visitRoutine(routine);
 	}
 	
-	public RoutineEntryLinks getFanouts(Routine routine) {
+	public EntryIdsByLabel getFanouts(Routine routine) {
 		routine.accept(this);
 		return this.routineFanouts;
 	}
