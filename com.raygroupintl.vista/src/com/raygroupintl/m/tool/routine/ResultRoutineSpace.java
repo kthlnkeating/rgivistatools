@@ -14,28 +14,9 @@
 // limitations under the License.
 //---------------------------------------------------------------------------
 
-package com.raygroupintl.m.tool.entry.fanout;
+package com.raygroupintl.m.tool.routine;
 
-import java.io.Serializable;
-import java.util.Set;
-import java.util.SortedSet;
-import java.util.TreeSet;
-
-import com.raygroupintl.m.parsetree.data.EntryId;
-
-public class EntryFanouts implements Serializable {
-	private static final long serialVersionUID = 1L;
-
-	private SortedSet<EntryId> fanoutEntries;
-
-	public void add(EntryId fanout) {
-		if (this.fanoutEntries == null) {
-			this.fanoutEntries = new TreeSet<EntryId>();
-		} 
-		this.fanoutEntries.add(fanout);
-	}
-	
-	public Set<EntryId> getFanouts() {
-		return this.fanoutEntries;
-	}
+public enum ResultRoutineSpace {
+	ALL_ROUTINES,
+	ALL_INPUT_ROUTINES;
 }

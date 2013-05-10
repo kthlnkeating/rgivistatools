@@ -35,10 +35,22 @@ public class CLIRoutineTools extends Tools {
 				return new CLIEntryListTool(params);
 			}
 		});
-		tools.put("entryfanout", new MemberFactory() {				
+		tools.put("fanout", new MemberFactory() {				
 			@Override
 			public Tool getInstance(CLIParams params) {
 				return new CLIFanoutTool(params);
+			}
+		});
+		tools.put("fanin", new MemberFactory() {				
+			@Override
+			public Tool getInstance(CLIParams params) {
+				return new CLIFaninTool(params);
+			}
+		});
+		tools.put("topentries", new MemberFactory() {				
+			@Override
+			public Tool getInstance(CLIParams params) {
+				return new CLITopEntriesTool(params);
 			}
 		});
 	}

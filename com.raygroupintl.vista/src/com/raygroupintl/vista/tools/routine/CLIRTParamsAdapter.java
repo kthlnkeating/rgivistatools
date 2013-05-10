@@ -14,28 +14,23 @@
 // limitations under the License.
 //---------------------------------------------------------------------------
 
-package com.raygroupintl.m.tool.entry.fanout;
+package com.raygroupintl.vista.tools.routine;
 
-import java.io.Serializable;
-import java.util.Set;
-import java.util.SortedSet;
-import java.util.TreeSet;
+import com.raygroupintl.m.tool.ParseTreeSupply;
+import com.raygroupintl.m.tool.routine.MRoutineToolInput;
+import com.raygroupintl.m.tool.routine.RoutineToolParams;
+import com.raygroupintl.vista.tools.CLIParams;
+import com.raygroupintl.vista.tools.CLIParamsAdapter;
 
-import com.raygroupintl.m.parsetree.data.EntryId;
-
-public class EntryFanouts implements Serializable {
-	private static final long serialVersionUID = 1L;
-
-	private SortedSet<EntryId> fanoutEntries;
-
-	public void add(EntryId fanout) {
-		if (this.fanoutEntries == null) {
-			this.fanoutEntries = new TreeSet<EntryId>();
-		} 
-		this.fanoutEntries.add(fanout);
+public class CLIRTParamsAdapter {
+	public static RoutineToolParams toMRoutineToolParams(CLIParams params) {
+		ParseTreeSupply pts = CLIParamsAdapter.getParseTreeSupply(params);
+		return new RoutineToolParams(pts);
 	}
-	
-	public Set<EntryId> getFanouts() {
-		return this.fanoutEntries;
+		
+	public static MRoutineToolInput toMRoutineInput(CLIParams params) {
+		MRoutineToolInput input = new MRoutineToolInput();
+		input.addRoutines(CLIParamsAdapter.getCLIRoutines(params));
+		return input;
 	}
 }

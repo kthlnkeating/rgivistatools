@@ -14,32 +14,19 @@
 // limitations under the License.
 //---------------------------------------------------------------------------
 
-package com.raygroupintl.m.tool.entry.fanout;
+package com.raygroupintl.m.tool.routine;
 
-import java.io.Serializable;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Set;
+import java.util.ArrayList;
+import java.util.List;
 
-import com.raygroupintl.m.parsetree.data.EntryId;
-
-public class RoutineFanouts implements Serializable {
-	private static final long serialVersionUID = 1L;
-
-	private Map<String, Set<EntryId>> fanouts = new HashMap<String, Set<EntryId>>();
+public class MRoutineToolInput {
+	private List<String> routineNames = new ArrayList<String>();
 	
-	public RoutineFanouts() {
+	public void addRoutines(List<String> names) {
+		this.routineNames.addAll(names);
 	}
 
-	public Set<EntryId> put(String tag, Set<EntryId> fanouts) {
-		return this.fanouts.put(tag, fanouts);
-	}
-	
-	public Set<String> getRoutineEntryTags() {
-		return this.fanouts.keySet();
-	}
-	
-	public Set<EntryId> getFanouts(String tag) {
-		return this.fanouts.get(tag);
+	public List<String> getRoutineNames() {
+		return this.routineNames;
 	}
 }

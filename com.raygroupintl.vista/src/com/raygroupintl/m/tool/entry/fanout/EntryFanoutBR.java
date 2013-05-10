@@ -25,6 +25,7 @@ import com.raygroupintl.m.parsetree.data.EntryId;
 import com.raygroupintl.m.parsetree.data.Fanout;
 import com.raygroupintl.m.parsetree.data.FanoutType;
 import com.raygroupintl.m.parsetree.visitor.BlockRecorder;
+import com.raygroupintl.m.tool.RoutineEntryLinks;
 import com.raygroupintl.m.tool.entry.Block;
 import com.raygroupintl.m.tool.entry.BlockData;
 import com.raygroupintl.struct.HierarchicalMap;
@@ -65,10 +66,10 @@ public class EntryFanoutBR extends BlockRecorder<Fanout, BlockData<Fanout>> {
 		return r;
 	}
  	
-	public RoutineFanouts getResults(Routine routine) {
+	public RoutineEntryLinks getResults(Routine routine) {
 		routine.accept(this);
 		HierarchicalMap<String, Block<Fanout, BlockData<Fanout>>> bs = super.getBlocks();
-		RoutineFanouts result = new RoutineFanouts();
+		RoutineEntryLinks result = new RoutineEntryLinks();
 		Set<String> tags = bs.keySet();
 		String routineName = routine.getName();
 		for (String tag : tags) {

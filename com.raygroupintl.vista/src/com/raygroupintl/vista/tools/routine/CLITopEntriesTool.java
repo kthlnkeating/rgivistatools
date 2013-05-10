@@ -16,28 +16,44 @@
 
 package com.raygroupintl.vista.tools.routine;
 
+import java.util.List;
+
+import com.raygroupintl.m.parsetree.data.EntryId;
 import com.raygroupintl.m.tool.routine.MRoutineToolInput;
 import com.raygroupintl.m.tool.routine.RoutineToolParams;
-import com.raygroupintl.m.tool.routine.fanout.FanoutTool;
-import com.raygroupintl.m.tool.routine.fanout.RoutineEntryLinksCollection;
+import com.raygroupintl.m.tool.routine.fanin.FaninTool;
 import com.raygroupintl.output.Terminal;
+import com.raygroupintl.output.TerminalFormatter;
 import com.raygroupintl.vista.tools.CLIParams;
 import com.raygroupintl.vista.tools.CLIParamsAdapter;
 
-class CLIFanoutTool extends CLIRoutineTool {		
-	public CLIFanoutTool(CLIParams params) {
+public class CLITopEntriesTool extends CLIRoutineTool {		
+	public CLITopEntriesTool(CLIParams params) {
 		super(params);
 	}
 	
+	public void write(List<EntryId> result, Terminal t) {
+		if (t.start()) {
+			TerminalFormatter tf = new TerminalFormatter();
+			tf.setTab(12);
+			for (EntryId e : result) {
+				if (e.hasDedicatedLabel()) {
+					t.writeEOL("  " + e.toString2());				
+				}
+			}
+			t.stop();
+		}								
+	}
+
 	@Override
 	public void run() {
 		Terminal t = CLIParamsAdapter.getTerminal(this.params);
 		if (t != null) {
 			RoutineToolParams p = CLIRTParamsAdapter.toMRoutineToolParams(this.params);	
-			FanoutTool tool = new FanoutTool(p);
+			FaninTool tool = new FaninTool(p);
 			MRoutineToolInput input = CLIRTParamsAdapter.toMRoutineInput(this.params);
-			RoutineEntryLinksCollection result = tool.getResult(input);
-			WriteHelper.write(result, t);
+			List<EntryId> result = tool.getTopEntries(input);
+			this.write(result, t);
 		}
 	}
 }

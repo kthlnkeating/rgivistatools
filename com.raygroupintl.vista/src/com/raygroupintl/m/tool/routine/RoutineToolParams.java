@@ -14,28 +14,27 @@
 // limitations under the License.
 //---------------------------------------------------------------------------
 
-package com.raygroupintl.m.tool.entry.fanout;
+package com.raygroupintl.m.tool.routine;
 
-import java.io.Serializable;
-import java.util.Set;
-import java.util.SortedSet;
-import java.util.TreeSet;
+import com.raygroupintl.m.tool.ParseTreeSupply;
 
-import com.raygroupintl.m.parsetree.data.EntryId;
+public class RoutineToolParams {
+	private ParseTreeSupply parseTreeSupply;
+	private ResultRoutineSpace resultRoutineSpace = ResultRoutineSpace.ALL_INPUT_ROUTINES;
 
-public class EntryFanouts implements Serializable {
-	private static final long serialVersionUID = 1L;
-
-	private SortedSet<EntryId> fanoutEntries;
-
-	public void add(EntryId fanout) {
-		if (this.fanoutEntries == null) {
-			this.fanoutEntries = new TreeSet<EntryId>();
-		} 
-		this.fanoutEntries.add(fanout);
+	public RoutineToolParams(ParseTreeSupply parseTreeSupply) {
+		this.parseTreeSupply = parseTreeSupply;		
 	}
 	
-	public Set<EntryId> getFanouts() {
-		return this.fanoutEntries;
+	public ParseTreeSupply getParseTreeSupply() {
+		return this.parseTreeSupply;
+	}
+	
+	public void setResultRoutineSpace(ResultRoutineSpace resultRoutineSpace) {
+		this.resultRoutineSpace = resultRoutineSpace;
+	}
+	
+	public ResultRoutineSpace getResultRoutineSpace() {
+		return this.resultRoutineSpace;
 	}
 }

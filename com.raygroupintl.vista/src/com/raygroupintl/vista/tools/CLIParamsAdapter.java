@@ -17,7 +17,10 @@
 package com.raygroupintl.vista.tools;
 
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
+import java.util.regex.Pattern;
 
 import com.raygroupintl.m.token.MVersion;
 import com.raygroupintl.m.tool.NamespaceFilter;
@@ -88,6 +91,40 @@ public class CLIParamsAdapter {
 		return null;
 	}
 	
+	public static List<String> getCLIRoutines(CLIParams params) {
+		List<String> specifiedRoutineNames = params.routines;
+		boolean hasRegularExpression = false;
+		Pattern p = Pattern.compile("[^a-zA-Z0-9\\%]");
+		for (String routineName : specifiedRoutineNames) {
+			hasRegularExpression = p.matcher(routineName).find();		
+			if (hasRegularExpression) break;
+		}
+		if (hasRegularExpression) {
+			List<String> expandedRoutineNames = new ArrayList<String>();
+			ParseTreeSupply pts = CLIParamsAdapter.getParseTreeSupply(params);
+			Collection<String> allRoutineNames = pts.getAllRoutineNames();
+			boolean[] matched = new boolean[specifiedRoutineNames.size()];
+			for (String routineName : allRoutineNames) {
+				int index = 0;
+				for (String specifiedRoutineName : specifiedRoutineNames) {
+					if (routineName.matches(specifiedRoutineName)) {
+						expandedRoutineNames.add(routineName);
+						matched[index] = true;
+					}
+					++index;
+				}				
+			}
+			for (int i=0; i<matched.length; ++i) {
+				if (! matched[i]) {
+					MRALogger.logError("No match is found for routine name: " + specifiedRoutineNames.get(i));					
+				}
+			}			
+			return expandedRoutineNames;
+		} else {
+			return specifiedRoutineNames;
+		}
+	}
+		
 	public static FileWrapper getOutputFile(CLIParams params) {
 		if ((params.outputFile == null) || params.outputFile.isEmpty()) {
 			MRALogger.logError("File " + params.outputFile + " is not found");

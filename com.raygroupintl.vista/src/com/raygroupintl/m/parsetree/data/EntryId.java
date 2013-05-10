@@ -42,6 +42,10 @@ public class EntryId implements Comparable<EntryId>, Serializable {
 		return this.label;
 	}
 	
+	public boolean hasDedicatedLabel() {
+		return (this.label != null) && ! this.label.equals(this.routineName);
+	}
+	
 	public String getLabelOrDefault() {
 		if ((this.label == null) || (this.label.isEmpty())) {
 			return this.routineName;
@@ -138,6 +142,12 @@ public class EntryId implements Comparable<EntryId>, Serializable {
 				this.label = routineName;
 			}
 		}
+	}
+	
+	public EntryId getFullCopy(String routineName) {
+		String r = (this.routineName == null) ? routineName : this.routineName;
+		String l = ((this.label == null) || this.label.isEmpty()) ? this.routineName : this.label; 
+		return new EntryId(r, l);
 	}
 	
 	public static EntryId getInstance(String tag, StringFormat format) {

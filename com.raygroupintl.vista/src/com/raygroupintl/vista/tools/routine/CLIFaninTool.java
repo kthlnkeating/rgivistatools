@@ -18,14 +18,14 @@ package com.raygroupintl.vista.tools.routine;
 
 import com.raygroupintl.m.tool.routine.MRoutineToolInput;
 import com.raygroupintl.m.tool.routine.RoutineToolParams;
-import com.raygroupintl.m.tool.routine.fanout.FanoutTool;
+import com.raygroupintl.m.tool.routine.fanin.FaninTool;
 import com.raygroupintl.m.tool.routine.fanout.RoutineEntryLinksCollection;
 import com.raygroupintl.output.Terminal;
 import com.raygroupintl.vista.tools.CLIParams;
 import com.raygroupintl.vista.tools.CLIParamsAdapter;
 
-class CLIFanoutTool extends CLIRoutineTool {		
-	public CLIFanoutTool(CLIParams params) {
+class CLIFaninTool extends CLIRoutineTool {		
+	public CLIFaninTool(CLIParams params) {
 		super(params);
 	}
 	
@@ -34,7 +34,7 @@ class CLIFanoutTool extends CLIRoutineTool {
 		Terminal t = CLIParamsAdapter.getTerminal(this.params);
 		if (t != null) {
 			RoutineToolParams p = CLIRTParamsAdapter.toMRoutineToolParams(this.params);	
-			FanoutTool tool = new FanoutTool(p);
+			FaninTool tool = new FaninTool(p);
 			MRoutineToolInput input = CLIRTParamsAdapter.toMRoutineInput(this.params);
 			RoutineEntryLinksCollection result = tool.getResult(input);
 			WriteHelper.write(result, t);

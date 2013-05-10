@@ -112,13 +112,7 @@ public class CLIEntryTools extends Tools {
 		protected void write(EntryFanouts result, Terminal t, TerminalFormatter tf) {
 			Set<EntryId> r = result.getFanouts();
 			if (r == null) {
-				String em = result.getErrorMsg();
-				if (em == null) {
-					t.writeEOL("  --");				
-				} else {
-					t.write("  ");
-					t.writeEOL(em);
-				}
+				t.writeEOL("  --");				
 			} else {
 				for (EntryId f : r) {
 					t.writeEOL("  " + f.toString2());

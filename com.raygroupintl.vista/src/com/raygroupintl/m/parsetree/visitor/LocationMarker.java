@@ -22,7 +22,7 @@ import com.raygroupintl.m.parsetree.Visitor;
 import com.raygroupintl.m.struct.CodeLocation;
 import com.raygroupintl.m.struct.LineLocation;
 
-class LocationMarker extends Visitor {
+public class LocationMarker extends Visitor {
 	private LineLocation lastLocation;
 	private String lastRoutineName;
 	

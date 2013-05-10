@@ -20,10 +20,8 @@ import java.io.IOException;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.List;
 import java.util.Scanner;
-import java.util.regex.Pattern;
 
 import com.raygroupintl.m.parsetree.data.EntryId;
 import com.raygroupintl.m.tool.CommonToolParams;
@@ -131,43 +129,9 @@ class CLIETParamsAdapter {
 		return null;
 	}
 	
-	private static List<String> getCLIRoutines(CLIParams params) {
-		List<String> specifiedRoutineNames = params.routines;
-		boolean hasRegularExpression = false;
-		Pattern p = Pattern.compile("[^a-zA-Z0-9\\%]");
-		for (String routineName : specifiedRoutineNames) {
-			hasRegularExpression = p.matcher(routineName).find();		
-			if (hasRegularExpression) break;
-		}
-		if (hasRegularExpression) {
-			List<String> expandedRoutineNames = new ArrayList<String>();
-			ParseTreeSupply pts = CLIParamsAdapter.getParseTreeSupply(params);
-			Collection<String> allRoutineNames = pts.getAllRoutineNames();
-			boolean[] matched = new boolean[specifiedRoutineNames.size()];
-			for (String routineName : allRoutineNames) {
-				int index = 0;
-				for (String specifiedRoutineName : specifiedRoutineNames) {
-					if (routineName.matches(specifiedRoutineName)) {
-						expandedRoutineNames.add(routineName);
-						matched[index] = true;
-					}
-					++index;
-				}				
-			}
-			for (int i=0; i<matched.length; ++i) {
-				if (! matched[i]) {
-					MRALogger.logError("No match is found for routine name: " + specifiedRoutineNames.get(i));					
-				}
-			}			
-			return expandedRoutineNames;
-		} else {
-			return specifiedRoutineNames;
-		}
-	}
-	
 	public static MEntryToolInput getMEntryToolInput(CLIParams params) {
 		MEntryToolInput input = new MEntryToolInput();
-		input.addRoutines(CLIETParamsAdapter.getCLIRoutines(params));
+		input.addRoutines(CLIParamsAdapter.getCLIRoutines(params));
 		List<EntryId> entryIds = getEntries(params);
 		input.addEntries(entryIds);
 		return input;
