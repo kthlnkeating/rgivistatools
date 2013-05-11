@@ -27,6 +27,7 @@ import com.raygroupintl.m.tool.entry.quittype.QuitTypeTool;
 import com.raygroupintl.output.Terminal;
 import com.raygroupintl.output.TerminalFormatter;
 import com.raygroupintl.vista.tools.CLIParams;
+import com.raygroupintl.vista.tools.CLIParamsAdapter;
 
 class CLIQuitTypeTool extends CLIEntryTool<QuitType> {	
 	public CLIQuitTypeTool(CLIParams params) {
@@ -47,7 +48,7 @@ class CLIQuitTypeTool extends CLIEntryTool<QuitType> {
 	
 	@Override
 	protected void write(QuitType result, Terminal t, TerminalFormatter tf) {
-		boolean skipEmpty = this.skipEmpty();		
+		boolean skipEmpty = CLIParamsAdapter.toOutputFlags(params).getSkipEmpty(false);		
 		QuitTypeState qts = result.getQuitTypeState();
 		switch (qts) {
 			case NO_QUITS:

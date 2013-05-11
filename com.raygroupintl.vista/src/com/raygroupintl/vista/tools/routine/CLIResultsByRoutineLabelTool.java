@@ -24,15 +24,20 @@ import com.raygroupintl.m.tool.ResultsByRoutine;
 import com.raygroupintl.output.Terminal;
 import com.raygroupintl.output.TerminalFormatter;
 import com.raygroupintl.vista.tools.CLIParams;
+import com.raygroupintl.vista.tools.CLIParamsAdapter;
+import com.raygroupintl.vista.tools.OutputFlags;
 
 abstract class CLIResultsByRoutineLabelTool<T, U extends Collection<T>> extends CLIRoutineTool {
 	private final String INDENT = "  ";
+	private boolean skipEmpty;
 	
 	public CLIResultsByRoutineLabelTool(CLIParams params) {
 		super(params);
+		OutputFlags ofs = CLIParamsAdapter.toOutputFlags(params);
+		this.skipEmpty = ofs.getSkipEmpty(false);
 	}
 	
-	protected abstract String toString(T result);
+	protected abstract void write(Terminal t, String indent, T result);
 
 	protected void write(ResultsByRoutine<T, U> results, Terminal t, TerminalFormatter tf) {
 		Set<String> rns = results.getRoutineNames();
@@ -40,12 +45,15 @@ abstract class CLIResultsByRoutineLabelTool<T, U extends Collection<T>> extends 
 			ResultsByLabel<T, U> rsbl = results.getResults(rn);
 			Set<String> labels = rsbl.getLabels();
 			for (String label : labels) {
-				t.writeEOL(INDENT + label + "^" + rn);	
 				U rs = rsbl.getResults(label);
 				if ((rs == null) || (rs.size() == 0)) {
-					t.writeEOL(INDENT + INDENT + "--");				
+					if (! this.skipEmpty) {
+						t.writeEOL(INDENT + label + "^" + rn);	
+						t.writeEOL(INDENT + INDENT + "--");
+					}
 				} else for (T r : rs) {
-					t.writeEOL(INDENT + INDENT + this.toString(r));
+					t.writeEOL(INDENT + label + "^" + rn);	
+					this.write(t, INDENT + INDENT, r);
 				}
 			}
 		

@@ -29,7 +29,6 @@ import com.raygroupintl.m.parsetree.data.FanoutType;
 import com.raygroupintl.m.tool.entry.Block;
 import com.raygroupintl.m.tool.entry.BlockData;
 import com.raygroupintl.struct.HierarchicalMap;
-
 public abstract class BlockRecorder<F extends Fanout, T extends BlockData<F>> extends LocationMarker {
 	private HierarchicalMap<String, Block<F, T>> currentBlocks;
 	private T currentBlockData;

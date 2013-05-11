@@ -14,31 +14,18 @@
 // limitations under the License.
 //---------------------------------------------------------------------------
 
-package com.raygroupintl.m.tool;
+package com.raygroupintl.m.tool.routine.error;
 
-import java.util.HashMap;
-import java.util.Map;
+import java.util.ArrayList;
+import java.util.List;
 
-import com.raygroupintl.m.parsetree.Routine;
-import com.raygroupintl.m.token.MVersion;
+import com.raygroupintl.m.tool.ResultsByLabel;
 
-public class AccumulatingParseTreeAdapter extends SourceCodeToParseTreeAdapter {
-	private Map<String, Routine> map = new HashMap<String, Routine>();
-	
-	public  AccumulatingParseTreeAdapter(SourceCodeSupply sourceCodeSupply) {
-		super(sourceCodeSupply);
-	}
-	
-	public  AccumulatingParseTreeAdapter(SourceCodeSupply sourceCodeSupply, MVersion version) {
-		super(sourceCodeSupply, version);
-	}
+public class ErrorsByLabel extends ResultsByLabel<ErrorWithLocation, List<ErrorWithLocation>> {
+	private static final long serialVersionUID = 1L;
 
 	@Override
-	public Routine getParseTree(String routineName) {
-		if (this.map.containsKey(routineName)) {
-			return this.map.get(routineName);
-		} else {
-			return super.getParseTree(routineName);
-		}
+	public List<ErrorWithLocation> getNewResultsInstance() {
+		return new ArrayList<ErrorWithLocation>();
 	}
 }

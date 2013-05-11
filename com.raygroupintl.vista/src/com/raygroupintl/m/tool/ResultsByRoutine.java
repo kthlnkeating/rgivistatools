@@ -70,4 +70,26 @@ public abstract class ResultsByRoutine<T, U extends Collection<T>> {
 		}
 		return emptyEntries;
 	}
+	
+	public boolean isEmpty() {
+		Set<String> routineNames = this.map.keySet();
+		for (String routineName : routineNames) {
+			ResultsByLabel<T, U> results = this.map.get(routineName);
+			if (! results.isEmpty()) {
+				return false;
+			}
+		}
+		return true;
+	}
+	
+	public List<T> getAllFlattened() {
+		List<T> allFlattened = new ArrayList<T>();
+		Set<String> routineNames = this.map.keySet();
+		for (String routineName : routineNames) {
+			ResultsByLabel<T, U> results = this.map.get(routineName);
+			List<T> allFlattenedLabel = results.getAllFlattened();
+			allFlattened.addAll(allFlattenedLabel);
+		}
+		return allFlattened;
+	}
 }

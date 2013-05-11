@@ -33,8 +33,8 @@ class CLIFanoutTool extends CLIResultsByRoutineLabelTool<EntryId, Set<EntryId>> 
 	}
 	
 	@Override
-	protected String toString(EntryId result) {
-		return result.toString2();
+	protected void write(Terminal t, String indent, EntryId result) {
+		t.writeEOL(indent + result.toString2());
 	}
 
 	@Override

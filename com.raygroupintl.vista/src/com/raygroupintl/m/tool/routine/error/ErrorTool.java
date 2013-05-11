@@ -16,6 +16,29 @@
 
 package com.raygroupintl.m.tool.routine.error;
 
-public class ErrorTool {
+import java.util.List;
 
+import com.raygroupintl.m.parsetree.Routine;
+import com.raygroupintl.m.tool.ParseTreeSupply;
+import com.raygroupintl.m.tool.routine.MRoutineToolInput;
+import com.raygroupintl.m.tool.routine.RoutineToolParams;
+
+public class ErrorTool {
+	private ParseTreeSupply pts;
+	
+	public ErrorTool(RoutineToolParams params) {
+		this.pts = params.getParseTreeSupply();
+	}
+	
+	public ErrorsByRoutine getResult(MRoutineToolInput input) {
+		ErrorsByRoutine result = new ErrorsByRoutine();
+		List<String> routineNames = input.getRoutineNames(); 		
+		ErrorRecorder fr = new ErrorRecorder();
+		for (String routineName : routineNames) {
+			Routine routine = this.pts.getParseTree(routineName);
+			ErrorsByLabel rfs = fr.getErrors(routine);
+			result.put(routineName, rfs);
+		}
+		return result;
+	}
 }

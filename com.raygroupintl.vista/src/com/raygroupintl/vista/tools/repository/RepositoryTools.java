@@ -31,7 +31,6 @@ import com.raygroupintl.vista.repository.visitor.DTFilemanCallWriter;
 import com.raygroupintl.vista.repository.visitor.DTUsedGlobalWriter;
 import com.raygroupintl.vista.repository.visitor.DTUsesGlobalWriter;
 import com.raygroupintl.vista.repository.visitor.EntryWriter;
-import com.raygroupintl.vista.repository.visitor.ErrorWriter;
 import com.raygroupintl.vista.repository.visitor.FaninWriter;
 import com.raygroupintl.vista.repository.visitor.FanoutWriter;
 import com.raygroupintl.vista.repository.visitor.OptionWriter;
@@ -39,7 +38,6 @@ import com.raygroupintl.vista.repository.visitor.ProtocolWriter;
 import com.raygroupintl.vista.repository.visitor.RPCWriter;
 import com.raygroupintl.vista.tools.CLIParams;
 import com.raygroupintl.vista.tools.CLIParamsAdapter;
-import com.raygroupintl.vista.tools.ErrorExemptions;
 import com.raygroupintl.vista.tools.Tool;
 import com.raygroupintl.vista.tools.Tools;
 
@@ -146,28 +144,6 @@ public class RepositoryTools extends Tools {
 					if (vps != null) {						
 						RPCWriter rw = new RPCWriter(ri, fr);
 						rw.write(vps);
-					}
-				}
-			}
-		}
-	}
-	
-	private static class MError extends Tool {		
-		public MError(CLIParams params) {
-			super(params);
-		}
-		
-		@Override
-		public void run() {
-			FileWrapper fr = CLIParamsAdapter.getOutputFile(this.params);
-			if (fr != null) {
-				RepositoryInfo ri = CLIParamsAdapter.getRepositoryInfo(this.params);
-				if (ri != null) {
-					VistaPackages vps = this.getVistaPackages(ri);
-					if (vps != null) {						
-						ErrorExemptions exemptions = ErrorExemptions.getVistAFOIAInstance();
-						ErrorWriter ew = new ErrorWriter(exemptions, fr);
-						vps.accept(ew);
 					}
 				}
 			}
@@ -372,12 +348,6 @@ public class RepositoryTools extends Tools {
 			@Override
 			public Tool getInstance(CLIParams params) {
 				return new Entry(params);
-			}
-		});
-		tools.put("error", new MemberFactory() {				
-			@Override
-			public Tool getInstance(CLIParams params) {
-				return new MError(params);
 			}
 		});
 		tools.put("routineinfo", new MemberFactory() {				

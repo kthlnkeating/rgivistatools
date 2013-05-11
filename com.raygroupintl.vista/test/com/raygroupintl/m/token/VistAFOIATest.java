@@ -9,14 +9,13 @@ import java.util.List;
 import org.junit.Test;
 
 import com.raygroupintl.m.parsetree.Routine;
-import com.raygroupintl.m.parsetree.visitor.ErrorRecorder;
-import com.raygroupintl.m.struct.MError;
-import com.raygroupintl.m.struct.ObjectInRoutine;
 import com.raygroupintl.m.struct.MRoutineContent;
 import com.raygroupintl.m.token.MVersion;
 import com.raygroupintl.m.token.TFRoutine;
 import com.raygroupintl.m.token.MLine;
 import com.raygroupintl.m.token.MRoutine;
+import com.raygroupintl.m.tool.routine.error.ErrorRecorder;
+import com.raygroupintl.m.tool.routine.error.ErrorsByLabel;
 import com.raygroupintl.parsergen.ParseException;
 import com.raygroupintl.vista.repository.FileSupply;
 import com.raygroupintl.vista.tools.ErrorExemptions;
@@ -48,8 +47,8 @@ public class VistAFOIATest {
 				ErrorRecorder ev = new ErrorRecorder(exemptions);
 				ev.setOnlyFatal(true);
 				Routine routine = r.getNode();
-				List<ObjectInRoutine<MError>> errors = ev.visitErrors(routine);
-				Assert.assertEquals(errors.size(), 0);						
+				ErrorsByLabel errors = ev.getErrors(routine);
+				Assert.assertTrue(errors.isEmpty());						
 			}			
 		} catch (ParseException e) {
 			fail("Exception: " + e.getMessage());			

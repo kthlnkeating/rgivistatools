@@ -12,12 +12,9 @@ import org.junit.Test;
 import com.raygroupintl.m.MTestCommon;
 import com.raygroupintl.m.parsetree.Routine;
 import com.raygroupintl.m.parsetree.data.EntryId;
-import com.raygroupintl.m.parsetree.visitor.ErrorRecorder;
 import com.raygroupintl.m.parsetree.visitor.FanoutRecorder;
 import com.raygroupintl.m.parsetree.visitor.OccuranceRecorder;
 import com.raygroupintl.m.struct.LineLocation;
-import com.raygroupintl.m.struct.MError;
-import com.raygroupintl.m.struct.ObjectInRoutine;
 import com.raygroupintl.m.token.MVersion;
 import com.raygroupintl.m.token.MRoutine;
 
@@ -35,51 +32,6 @@ public class TRoutineTest {
 	public static void tearDownAfterClass() throws Exception {
 		supplyStd95 = null;
 		supplyCache = null;
-	}
-	
-	private List<ObjectInRoutine<MError>> getErrors(String routineName, MTFSupply m) {
-		MRoutine token = MTestCommon.getRoutineToken(routineName, m);
-		Routine r = token.getNode();
-		ErrorRecorder v = new ErrorRecorder();
-		List<ObjectInRoutine<MError>> result = v.visitErrors(r);
-		return result;
-	}
-	
-	public void testNonErrorFiles(MTFSupply m) {
-		String[] routineNames = {"XRGITST0", "CMDTEST0"};
-		for (String routineName : routineNames) {
-			List<ObjectInRoutine<MError>> result = this.getErrors(routineName, m);
-			Assert.assertEquals(0, result.size());
-		}
-	}
-
-	@Test
-	public void testNonErrorFiles() {
-		testNonErrorFiles(supplyCache);
-		testNonErrorFiles(supplyStd95);
-	}
-	
-	private void testErrTest0Error(ObjectInRoutine<MError> error, String expectedTag, int expectedOffset) {
-		LineLocation location = error.getLocation();
-		Assert.assertEquals(expectedTag, location.getTag());
-		Assert.assertEquals(expectedOffset, location.getOffset());		
-	}
-	
-	private void testErrTest0(MTFSupply m) {
-		String routineName = "ERRTEST0";
-		List<ObjectInRoutine<MError>> result = this.getErrors(routineName, m);
-		Assert.assertEquals(5, result.size());
-		testErrTest0Error(result.get(0), "MULTIPLY", 2);
-		testErrTest0Error(result.get(1), "MAIN", 3);
-		testErrTest0Error(result.get(2), "MAIN", 5);
-		testErrTest0Error(result.get(3), "DOERR", 2);
-		testErrTest0Error(result.get(4), "DOERR2", 4);
-	}
-
-	@Test
-	public void testErrTest0() {
-		testErrTest0(supplyCache);
-		testErrTest0(supplyStd95);		
 	}
 	
 	private void checkFanouts(List<EntryId> result, String[] labels, String[] routines) {

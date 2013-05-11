@@ -50,6 +50,8 @@ public class MError {
 	public static final int ERR_UNKNOWN_INTRINSIC_VARIABLE = 1000;
 	public static final int ERR_UNKNOWN_INTRINSIC_FUNCTION = 1001;
 	public static final int ERR_WRONGARG_INTRINSIC_FUNCTION	= 1002;
+
+	public static final int ERR_DEAD_CODE = 1100;
 	
 	private static class CodeDetail {
 		public Severity severity;
@@ -142,7 +144,7 @@ public class MError {
 		CODES.put(ERR_UNKNOWN_INTRINSIC_VARIABLE, new CodeDetail(Severity.FATAL, "Unknown intrinsic variable."));
 		CODES.put(ERR_UNKNOWN_INTRINSIC_FUNCTION, new CodeDetail(Severity.FATAL, "Unknown intrinsic function."));
 		CODES.put(ERR_WRONGARG_INTRINSIC_FUNCTION, new CodeDetail(Severity.FATAL, "Wrong number of arguments for intrinsic function."));
-
+		CODES.put(ERR_DEAD_CODE, new CodeDetail(Severity.STANDARD, "Code is unreachable."));
 	}
 	
 	private int code;

@@ -141,4 +141,19 @@ public class CLIParamsAdapter {
 			return new FileWrapper(params.outputFile);
 		}
 	}
+	
+	public static OutputFlags toOutputFlags(CLIParams params) {
+		OutputFlags of = new OutputFlags();
+		List<String> outputFlags = params.outputFlags;
+		for (String outputFlag : outputFlags) {
+			if (outputFlag.equals("ignorenodata")) {
+				of.setSkipEmpty(true);
+			}
+			if (outputFlag.equals("showdetail")) {
+				of.setShowDetail(true);
+			}				
+		}
+		return of;
+	}
+	
 }

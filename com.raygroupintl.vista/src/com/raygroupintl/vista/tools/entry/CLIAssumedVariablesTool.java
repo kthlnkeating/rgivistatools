@@ -12,13 +12,14 @@ import com.raygroupintl.m.tool.entry.assumedvariables.AssumedVariablesToolParams
 import com.raygroupintl.output.Terminal;
 import com.raygroupintl.output.TerminalFormatter;
 import com.raygroupintl.vista.tools.CLIParams;
+import com.raygroupintl.vista.tools.CLIParamsAdapter;
 
 public class CLIAssumedVariablesTool extends CLIEntryTool<AssumedVariables> {	
 	private boolean showDetail = false;
 	
 	public CLIAssumedVariablesTool(CLIParams params) {
 		super(params);
-		this.showDetail = this.getShowDetail();
+		this.showDetail = CLIParamsAdapter.toOutputFlags(params).getShowDetail(false);
 	}
 	
 	@Override

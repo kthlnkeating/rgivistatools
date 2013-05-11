@@ -53,5 +53,11 @@ public class CLIRoutineTools extends Tools {
 				return new CLITopEntriesTool(params);
 			}
 		});
+		tools.put("error", new MemberFactory() {				
+			@Override
+			public Tool getInstance(CLIParams params) {
+				return new CLIErrorTool(params);
+			}
+		});
 	}
 }

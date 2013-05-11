@@ -14,22 +14,33 @@
 // limitations under the License.
 //---------------------------------------------------------------------------
 
-package com.raygroupintl.m.struct;
+package com.raygroupintl.vista.tools;
 
-public class ObjectInRoutine<T> {
-	private T object;
-	private LineLocation location;
+public class OutputFlags {
+	private Boolean showDetail;
+	private Boolean skipEmpty;
 	
-	public ObjectInRoutine(T object, LineLocation location) {
-		this.object = object;
-		this.location = location;
+	public void setShowDetail(boolean b) {
+		this.showDetail = new Boolean(b);
 	}
 	
-	public T getObject() {
-		return this.object;
+	public void setSkipEmpty(boolean b) {
+		this.skipEmpty = new Boolean(b);
 	}
 	
-	public LineLocation getLocation() {
-		return this.location;
+	public boolean getShowDetail(boolean defaultValue) {
+		if (this.showDetail == null) {
+			return defaultValue;
+		} else {
+			return this.showDetail.booleanValue();
+		}		
+	}
+
+	public boolean getSkipEmpty(boolean defaultValue) {
+		if (this.skipEmpty == null) {
+			return defaultValue;
+		} else {
+			return this.skipEmpty.booleanValue();
+		}		
 	}
 }

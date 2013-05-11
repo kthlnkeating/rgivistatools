@@ -16,25 +16,28 @@
 
 package com.raygroupintl.vista.tools.routine;
 
-import java.util.Set;
+import java.util.List;
 
-import com.raygroupintl.m.parsetree.data.EntryId;
-import com.raygroupintl.m.tool.EntryIdsByRoutine;
+import com.raygroupintl.m.struct.LineLocation;
 import com.raygroupintl.m.tool.routine.MRoutineToolInput;
 import com.raygroupintl.m.tool.routine.RoutineToolParams;
-import com.raygroupintl.m.tool.routine.fanin.FaninTool;
+import com.raygroupintl.m.tool.routine.error.ErrorTool;
+import com.raygroupintl.m.tool.routine.error.ErrorWithLocation;
+import com.raygroupintl.m.tool.routine.error.ErrorsByRoutine;
 import com.raygroupintl.output.Terminal;
 import com.raygroupintl.vista.tools.CLIParams;
 import com.raygroupintl.vista.tools.CLIParamsAdapter;
 
-class CLIFaninTool extends CLIResultsByRoutineLabelTool<EntryId, Set<EntryId>> {		
-	public CLIFaninTool(CLIParams params) {
+public class CLIErrorTool extends CLIResultsByRoutineLabelTool<ErrorWithLocation, List<ErrorWithLocation>> {
+	public CLIErrorTool(CLIParams params) {
 		super(params);
 	}
 	
 	@Override
-	protected void write(Terminal t, String indent, EntryId result) {
-		t.writeEOL(indent + result.toString2());
+	protected void write(Terminal t, String indent,  ErrorWithLocation result) {
+		LineLocation location = result.getLocation();
+		String offset = (location.getOffset() == 0 ? "" : '+' + String.valueOf(location.getOffset()));
+		t.writeEOL(indent + location.getTag() + offset + " --> " + result.getObject().getText());
 	}
 
 	@Override
@@ -42,9 +45,9 @@ class CLIFaninTool extends CLIResultsByRoutineLabelTool<EntryId, Set<EntryId>> {
 		Terminal t = CLIParamsAdapter.getTerminal(this.params);
 		if (t != null) {
 			RoutineToolParams p = CLIRTParamsAdapter.toMRoutineToolParams(this.params);	
-			FaninTool tool = new FaninTool(p);
+			ErrorTool tool = new ErrorTool(p);
 			MRoutineToolInput input = CLIRTParamsAdapter.toMRoutineInput(this.params);
-			EntryIdsByRoutine result = tool.getResult(input);
+			ErrorsByRoutine result = tool.getResult(input);
 			this.write(result, t);
 		}
 	}

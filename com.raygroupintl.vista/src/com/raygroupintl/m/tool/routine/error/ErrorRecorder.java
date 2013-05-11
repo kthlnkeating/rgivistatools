@@ -14,23 +14,26 @@
 // limitations under the License.
 //---------------------------------------------------------------------------
 
-package com.raygroupintl.m.parsetree.visitor;
+package com.raygroupintl.m.tool.routine.error;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 
 import com.raygroupintl.m.parsetree.DoBlock;
+import com.raygroupintl.m.parsetree.Entry;
 import com.raygroupintl.m.parsetree.ErrorNode;
 import com.raygroupintl.m.parsetree.InnerEntryList;
 import com.raygroupintl.m.parsetree.Routine;
+import com.raygroupintl.m.parsetree.visitor.LocationMarker;
 import com.raygroupintl.m.struct.LineLocation;
 import com.raygroupintl.m.struct.MError;
-import com.raygroupintl.m.struct.ObjectInRoutine;
 import com.raygroupintl.vista.tools.ErrorExemptions;
 
 public class ErrorRecorder extends LocationMarker {
-	private List<ObjectInRoutine<MError>> result;
+	private ErrorsByLabel allErrors;
+	private List<ErrorWithLocation> labelErrors;
+	private String routineName;
 	private ErrorExemptions exemptions;
 	private Set<LineLocation> lineExemptions;
 	private boolean onlyFatal;
@@ -50,8 +53,8 @@ public class ErrorRecorder extends LocationMarker {
 		if ((! this.onlyFatal) || (error.isFatal())) {
 			LineLocation location = this.getLastLocation();
 			if ((this.lineExemptions == null) || (! this.lineExemptions.contains(location))) {
-				ObjectInRoutine<MError> element = new ObjectInRoutine<MError>(error, location);  
-				this.result.add(element);
+				ErrorWithLocation element = new ErrorWithLocation(error, location);  
+				this.labelErrors.add(element);
 			}
 		}
 	}
@@ -62,6 +65,12 @@ public class ErrorRecorder extends LocationMarker {
 		this.addError(error);
 	}
 	
+	//@Override
+	//protected void visitDeadCmds(DeadCmds deadCmds) {
+	//	MError error = new MError(MError.ERR_DEAD_CODE);
+	//	this.addError(error);
+	//}
+
 	@Override
 	protected void visitDoBlock(DoBlock doBlock) {
 		InnerEntryList block = doBlock.getEntryList();
@@ -73,23 +82,26 @@ public class ErrorRecorder extends LocationMarker {
 	}
 	
 	@Override
+	protected void visitEntry(Entry entry) {
+		this.labelErrors = new ArrayList<ErrorWithLocation>();
+		super.visitEntry(entry);
+		this.allErrors.put(entry.getName(), this.labelErrors);
+	}
+			
+	@Override
 	protected void visitRoutine(Routine routine) {
-		this.result = new ArrayList<ObjectInRoutine<MError>>();
-		String name = routine.getName();
+		this.allErrors = new ErrorsByLabel();
+		this.routineName = routine.getName();
 		if (this.exemptions == null) {
 			super.visitRoutine(routine);			
-		} else if (! this.exemptions.containsRoutine(name)) {			
-			this.lineExemptions = this.exemptions.getLines(name);
+		} else if (! this.exemptions.containsRoutine(this.routineName)) {			
+			this.lineExemptions = this.exemptions.getLines(this.routineName);
 			super.visitRoutine(routine);
 		} 
 	}
 	
-	public List<ObjectInRoutine<MError>> getLastErrors() {
-		return this.result;
-	}
-	
-	public List<ObjectInRoutine<MError>> visitErrors(Routine routine) {
+	public ErrorsByLabel getErrors(Routine routine) {
 		routine.accept(this);
-		return this.result;
+		return this.allErrors;
 	}
 }

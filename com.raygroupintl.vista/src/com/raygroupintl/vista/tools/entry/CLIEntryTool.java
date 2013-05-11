@@ -26,6 +26,7 @@ import com.raygroupintl.output.Terminal;
 import com.raygroupintl.output.TerminalFormatter;
 import com.raygroupintl.vista.tools.CLIParams;
 import com.raygroupintl.vista.tools.CLIParamsAdapter;
+import com.raygroupintl.vista.tools.OutputFlags;
 import com.raygroupintl.vista.tools.Tool;
 
 abstract class CLIEntryTool<U> extends Tool {		
@@ -51,26 +52,6 @@ abstract class CLIEntryTool<U> extends Tool {
 			
 	protected abstract void write(U result, Terminal t, TerminalFormatter tf);
 
-	public boolean skipEmpty() {
-		List<String> outputFlags = this.params.outputFlags;
-		for (String outputFlag : outputFlags) {
-			if (outputFlag.equals("ignorenodata")) {
-				return true;
-			}
-		}
-		return false;			
-	}
-	
-	protected boolean getShowDetail() {
-		List<String> outputFlags = this.params.outputFlags;
-		for (String outputFlag : outputFlags) {
-			if (outputFlag.equals("showdetail")) {
-				return true;
-			}
-		}
-		return false;			
-	}
-
 	@Override
 	public void run() {
 		Terminal t = CLIParamsAdapter.getTerminal(this.params);
@@ -84,10 +65,12 @@ abstract class CLIEntryTool<U> extends Tool {
 					List<EntryId> entries = result.getEntries();
 					List<U> resultList = result.getResults();
 					int n = entries.size();
+					OutputFlags ofs = CLIParamsAdapter.toOutputFlags(this.params);
+					boolean skipEmpty = ofs.getSkipEmpty(false);
 					for (int i=0; i<n; ++i) {
 						U u = resultList.get(i);
 						if (u != null) {
-							this.write(entries.get(i), resultList.get(i), t, tf, this.skipEmpty());
+							this.write(entries.get(i), resultList.get(i), t, tf, skipEmpty);
 						} else {
 							t.writeEOL(" " + entries.get(i).toString2());
 							MToolError error = result.getError(i);

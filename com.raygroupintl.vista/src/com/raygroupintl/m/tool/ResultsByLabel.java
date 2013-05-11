@@ -90,4 +90,25 @@ public abstract class ResultsByLabel<T, U extends Collection<T>> implements Seri
 			return labelsWithEmptyResults;
 		}
 	}
+	
+	public boolean isEmpty() {
+		if (this.resultsMap != null) {
+			for (U results : this.resultsMap.values()) {
+				if (results.size() > 0) return false;
+			}
+		}
+		return true;
+	}
+	
+	public List<T> getAllFlattened() {
+		List<T> allFlattened = new ArrayList<T>();
+		if (this.resultsMap != null) {
+			Set<String> labels = this.resultsMap.keySet();
+			for (String label : labels) {
+				U results = this.resultsMap.get(label);
+				allFlattened.addAll(results);
+			}			
+		}
+		return allFlattened;
+	}
 }
