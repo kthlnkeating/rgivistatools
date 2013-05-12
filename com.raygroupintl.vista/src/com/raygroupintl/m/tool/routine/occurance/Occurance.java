@@ -14,16 +14,22 @@
 // limitations under the License.
 //---------------------------------------------------------------------------
 
-package com.raygroupintl.m.tool.routine.error;
+package com.raygroupintl.m.tool.routine.occurance;
 
-import java.util.List;
-
-import com.raygroupintl.m.tool.ResultsByLabel;
-import com.raygroupintl.m.tool.ResultsByRoutine;
-
-public class ErrorsByRoutine extends ResultsByRoutine<ErrorWithLocation, List<ErrorWithLocation>> {
-	@Override
-	public ResultsByLabel<ErrorWithLocation, List<ErrorWithLocation>> getNewResultsInstance() {
-		return new ErrorsByLabel();
+public class Occurance {
+	private OccuranceType type;
+	private int entryLine;
+	
+	public  Occurance(OccuranceType type, int entryLine) {
+		this.type = type;
+		this.entryLine = entryLine;
+	}
+	
+	public OccuranceType getType() {
+		return this.type;
+	}
+	
+	public int getEntryLine() {
+		return this.entryLine;
 	}
 }

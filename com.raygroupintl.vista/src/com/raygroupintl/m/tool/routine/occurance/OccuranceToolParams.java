@@ -14,16 +14,26 @@
 // limitations under the License.
 //---------------------------------------------------------------------------
 
-package com.raygroupintl.m.tool.routine.error;
+package com.raygroupintl.m.tool.routine.occurance;
 
-import java.util.List;
+import java.util.EnumSet;
 
-import com.raygroupintl.m.tool.ResultsByLabel;
-import com.raygroupintl.m.tool.ResultsByRoutine;
+import com.raygroupintl.m.tool.ParseTreeSupply;
+import com.raygroupintl.m.tool.routine.RoutineToolParams;
 
-public class ErrorsByRoutine extends ResultsByRoutine<ErrorWithLocation, List<ErrorWithLocation>> {
-	@Override
-	public ResultsByLabel<ErrorWithLocation, List<ErrorWithLocation>> getNewResultsInstance() {
-		return new ErrorsByLabel();
+public class OccuranceToolParams extends RoutineToolParams {
+	private EnumSet<OccuranceType> includeTypes;
+		
+	public OccuranceToolParams(ParseTreeSupply parseTreeSupply) {
+		super(parseTreeSupply);		
+		this.includeTypes = EnumSet.range(OccuranceType.WRITE, OccuranceType.EXECUTE);
+	}
+	
+	public void setIncludeTypes(EnumSet<OccuranceType> includeTypes) {
+		this.includeTypes = includeTypes;
+	}
+	
+	public EnumSet<OccuranceType> getIncludeTypes() {
+		return this.includeTypes;
 	}
 }

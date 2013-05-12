@@ -59,5 +59,11 @@ public class CLIRoutineTools extends Tools {
 				return new CLIErrorTool(params);
 			}
 		});
+		tools.put("occurance", new MemberFactory() {				
+			@Override
+			public Tool getInstance(CLIParams params) {
+				return new CLIOccuranceTool(params);
+			}
+		});
 	}
 }

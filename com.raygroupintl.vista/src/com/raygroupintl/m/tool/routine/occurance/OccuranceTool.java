@@ -16,6 +16,33 @@
 
 package com.raygroupintl.m.tool.routine.occurance;
 
+import java.util.EnumSet;
+import java.util.List;
+
+import com.raygroupintl.m.parsetree.Routine;
+import com.raygroupintl.m.tool.ParseTreeSupply;
+import com.raygroupintl.m.tool.routine.MRoutineToolInput;
+
 public class OccuranceTool {
+	private ParseTreeSupply pts;
+	private EnumSet<OccuranceType> types;
+	
+	public OccuranceTool(OccuranceToolParams params) {
+		this.pts = params.getParseTreeSupply();
+		this.types = params.getIncludeTypes();
+	}
+	
+	public OccurancesByRoutine getResult(MRoutineToolInput input) {
+		OccurancesByRoutine result = new OccurancesByRoutine();
+		List<String> routineNames = input.getRoutineNames(); 		
+		OccuranceRecorder fr = new OccuranceRecorder();
+		fr.setRequestedTypes(this.types);
+		for (String routineName : routineNames) {
+			Routine routine = this.pts.getParseTree(routineName);
+			OccurancesByLabel rfs = fr.getOccurances(routine);
+			result.put(routineName, rfs);
+		}
+		return result;
+	}
 
 }

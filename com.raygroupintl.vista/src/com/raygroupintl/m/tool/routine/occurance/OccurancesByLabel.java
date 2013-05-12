@@ -14,16 +14,18 @@
 // limitations under the License.
 //---------------------------------------------------------------------------
 
-package com.raygroupintl.m.tool.routine.error;
+package com.raygroupintl.m.tool.routine.occurance;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import com.raygroupintl.m.tool.ResultsByLabel;
-import com.raygroupintl.m.tool.ResultsByRoutine;
 
-public class ErrorsByRoutine extends ResultsByRoutine<ErrorWithLocation, List<ErrorWithLocation>> {
+public class OccurancesByLabel extends ResultsByLabel<Occurance, List<Occurance>> {
+	private static final long serialVersionUID = 1L;
+
 	@Override
-	public ResultsByLabel<ErrorWithLocation, List<ErrorWithLocation>> getNewResultsInstance() {
-		return new ErrorsByLabel();
+	public List<Occurance> getNewResultsInstance() {
+		return new ArrayList<Occurance>();
 	}
 }
