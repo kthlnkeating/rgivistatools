@@ -19,7 +19,6 @@ package com.raygroupintl.vista.tools.routine;
 import java.io.IOException;
 import java.util.List;
 
-import com.raygroupintl.m.struct.LineLocation;
 import com.raygroupintl.m.tool.routine.MRoutineToolInput;
 import com.raygroupintl.m.tool.routine.RoutineToolParams;
 import com.raygroupintl.m.tool.routine.error.ErrorTool;
@@ -34,13 +33,6 @@ public class CLIErrorTool extends CLIResultsByRoutineLabelTool<ErrorWithLocation
 		super(params);
 	}
 	
-	@Override
-	protected void write(Terminal t, String indent,  ErrorWithLocation result) throws IOException {
-		LineLocation location = result.getLocation();
-		String offset = (location.getOffset() == 0 ? "" : '+' + String.valueOf(location.getOffset()));
-		t.writeEOL(indent + location.getTag() + offset + " --> " + result.getObject().getText());
-	}
-
 	@Override
 	public void run() throws IOException {
 		Terminal t = CLIParamsAdapter.getTerminal(this.params);

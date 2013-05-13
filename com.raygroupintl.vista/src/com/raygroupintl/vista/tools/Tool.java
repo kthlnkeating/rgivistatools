@@ -17,7 +17,6 @@
 package com.raygroupintl.vista.tools;
 
 import java.io.IOException;
-import java.io.Writer;
 import java.util.List;
 
 import com.raygroupintl.vista.repository.RepositoryInfo;
@@ -26,7 +25,6 @@ import com.raygroupintl.vista.repository.VistaPackages;
 
 public abstract class Tool {
 	protected CLIParams params;
-	protected Writer toolOutput; //can be set programatically (ie: eclipse)
 	
 	protected Tool(CLIParams params) {
 		this.params = params;

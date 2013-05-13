@@ -34,11 +34,6 @@ class CLIFanoutTool extends CLIResultsByRoutineLabelTool<EntryId, Set<EntryId>> 
 	}
 	
 	@Override
-	protected void write(Terminal t, String indent, EntryId result) throws IOException {
-		t.writeEOL(indent + result.toString2());
-	}
-
-	@Override
 	public void run() throws IOException {
 		Terminal t = CLIParamsAdapter.getTerminal(this.params);
 		if (t != null) {

@@ -18,51 +18,25 @@ package com.raygroupintl.vista.tools.routine;
 
 import java.io.IOException;
 import java.util.Collection;
-import java.util.Set;
 
 import com.raygroupintl.m.tool.OutputFlags;
-import com.raygroupintl.m.tool.ResultsByLabel;
 import com.raygroupintl.m.tool.ResultsByRoutine;
+import com.raygroupintl.m.tool.ToolResult;
 import com.raygroupintl.output.Terminal;
 import com.raygroupintl.vista.tools.CLIParams;
 import com.raygroupintl.vista.tools.CLIParamsAdapter;
 
-abstract class CLIResultsByRoutineLabelTool<T, U extends Collection<T>> extends CLIRoutineTool {
-	private final String INDENT = "  ";
-	private boolean skipEmpty;
+abstract class CLIResultsByRoutineLabelTool<T extends ToolResult, U extends Collection<T>> extends CLIRoutineTool {
+	public OutputFlags ofs;
 	
 	public CLIResultsByRoutineLabelTool(CLIParams params) {
 		super(params);
-		OutputFlags ofs = CLIParamsAdapter.toOutputFlags(params);
-		this.skipEmpty = ofs.getSkipEmpty(false);
-	}
-	
-	protected abstract void write(Terminal t, String indent, T result) throws IOException;
-
-	private void innerWrite(ResultsByRoutine<T, U> results, Terminal t) throws IOException {
-		Set<String> rns = results.getRoutineNames();
-		for (String rn : rns) {
-			ResultsByLabel<T, U> rsbl = results.getResults(rn);
-			Set<String> labels = rsbl.getLabels();
-			for (String label : labels) {
-				U rs = rsbl.getResults(label);
-				if ((rs == null) || (rs.size() == 0)) {
-					if (! this.skipEmpty) {
-						t.writeEOL(INDENT + label + "^" + rn);	
-						t.writeEOL(INDENT + INDENT + "--");
-					}
-				} else for (T r : rs) {
-					t.writeEOL(INDENT + label + "^" + rn);	
-					this.write(t, INDENT + INDENT, r);
-				}
-			}
-		
-		}
+		this.ofs = CLIParamsAdapter.toOutputFlags(params);
 	}
 	
 	protected void write(ResultsByRoutine<T, U> results, Terminal t) throws IOException {
 		t.getTerminalFormatter().setTitleWidth(12);
-		this.innerWrite(results, t);
+		results.write(t, this.ofs);
 		t.stop();
 	}
 }

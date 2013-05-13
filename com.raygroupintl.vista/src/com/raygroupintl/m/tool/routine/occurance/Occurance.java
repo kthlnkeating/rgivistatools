@@ -16,7 +16,13 @@
 
 package com.raygroupintl.m.tool.routine.occurance;
 
-public class Occurance {
+import java.io.IOException;
+
+import com.raygroupintl.m.tool.OutputFlags;
+import com.raygroupintl.m.tool.ToolResult;
+import com.raygroupintl.output.Terminal;
+
+public class Occurance implements ToolResult {
 	private OccuranceType type;
 	private int lineIndex;
 	
@@ -31,5 +37,30 @@ public class Occurance {
 	
 	public int getLineIndex() {
 		return this.lineIndex;
+	}
+	
+	@Override
+	public boolean isEmpty() {
+		return false;
+	}
+	
+	private String getOccuranceTypeAsString(OccuranceType type) {
+		switch (type) {
+		case WRITE: return "Write";
+		case READ: return "Read";
+		case INDIRECTION: return "Indirection";
+		case EXECUTE: return "Execute";
+		case DOLLAR_TEXT: return "$TEXT";
+		case NAKED_GLOBAL: return "Naked Global";
+		default: return "";
+		}
+	}
+	
+	@Override
+	public void write(Terminal t, OutputFlags flags) throws IOException {
+		int lineIndex = this.getLineIndex();
+		String location = "Line " + String.valueOf(lineIndex);
+		String type = this.getOccuranceTypeAsString(this.getType());
+		t.writeIndented(location + " --> " + type);
 	}
 }

@@ -16,10 +16,15 @@
 
 package com.raygroupintl.m.tool.routine.error;
 
+import java.io.IOException;
+
 import com.raygroupintl.m.struct.LineLocation;
 import com.raygroupintl.m.struct.MError;
+import com.raygroupintl.m.tool.OutputFlags;
+import com.raygroupintl.m.tool.ToolResult;
+import com.raygroupintl.output.Terminal;
 
-public class ErrorWithLocation {
+public class ErrorWithLocation implements ToolResult {
 	private MError error;
 	private LineLocation location;
 	
@@ -34,5 +39,17 @@ public class ErrorWithLocation {
 	
 	public LineLocation getLocation() {
 		return this.location;
+	}
+
+	@Override
+	public boolean isEmpty() {
+		return false;
+	}
+	
+	@Override
+	public void write(Terminal t, OutputFlags flags) throws IOException {
+		LineLocation location = this.getLocation();
+		String offset = (location.getOffset() == 0 ? "" : '+' + String.valueOf(location.getOffset()));
+		t.writeIndented(location.getTag() + offset + " --> " + this.getObject().getText());
 	}
 }

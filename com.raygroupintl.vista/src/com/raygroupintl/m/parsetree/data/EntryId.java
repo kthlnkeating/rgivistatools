@@ -16,9 +16,14 @@
 
 package com.raygroupintl.m.parsetree.data;
 
+import java.io.IOException;
 import java.io.Serializable;
 
-public class EntryId implements Comparable<EntryId>, Serializable {
+import com.raygroupintl.m.tool.OutputFlags;
+import com.raygroupintl.m.tool.ToolResult;
+import com.raygroupintl.output.Terminal;
+
+public class EntryId implements Comparable<EntryId>, Serializable, ToolResult {
 	private static final long serialVersionUID = 1L;
 
 	public enum StringFormat {
@@ -173,5 +178,15 @@ public class EntryId implements Comparable<EntryId>, Serializable {
 
 	public static EntryId getInstance(String tag) {
 		return getInstance(tag, StringFormat.SF_SINGLE_LABEL);
+	}
+	
+	@Override
+	public boolean isEmpty() {
+		return false;
+	}
+	
+	@Override
+	public void write(Terminal t, OutputFlags flags) throws IOException {
+		t.writeIndented(this.toString2());
 	}
 }

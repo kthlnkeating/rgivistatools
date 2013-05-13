@@ -41,12 +41,12 @@ public class TerminalFormatter {
 		this.currentIndent = this.currentIndent + this.indentStep;
 	}
 	
-	public void pullIndex() {
+	public void pullIndent() {
 		this.currentIndent = this.currentIndent.substring(this.indentStep.length());
 	}
 	
 	public String getIndent() {
-		return this.getIndent();
+		return this.currentIndent;
 	}
 	
 	private static String getSpaces(int count) {

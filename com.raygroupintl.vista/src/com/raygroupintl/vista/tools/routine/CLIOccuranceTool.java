@@ -25,7 +25,6 @@ import com.raygroupintl.m.tool.routine.MRoutineToolInput;
 import com.raygroupintl.m.tool.routine.occurance.Occurance;
 import com.raygroupintl.m.tool.routine.occurance.OccuranceTool;
 import com.raygroupintl.m.tool.routine.occurance.OccuranceToolParams;
-import com.raygroupintl.m.tool.routine.occurance.OccuranceType;
 import com.raygroupintl.output.Terminal;
 import com.raygroupintl.vista.tools.CLIParams;
 import com.raygroupintl.vista.tools.CLIParamsAdapter;
@@ -35,26 +34,6 @@ public class CLIOccuranceTool extends CLIResultsByRoutineLabelTool<Occurance, Li
 		super(params);
 	}
 	
-	private String getOccuranceTypeAsString(OccuranceType type) {
-		switch (type) {
-		case WRITE: return "Write";
-		case READ: return "Read";
-		case INDIRECTION: return "Indirection";
-		case EXECUTE: return "Execute";
-		case DOLLAR_TEXT: return "$TEXT";
-		case NAKED_GLOBAL: return "Naked Global";
-		default: return "";
-		}
-	}
-	
-	@Override
-	protected void write(Terminal t, String indent,  Occurance result) throws IOException {
-		int lineIndex = result .getLineIndex();
-		String location = "Line " + String.valueOf(lineIndex);
-		String type = this.getOccuranceTypeAsString(result.getType());
-		t.writeEOL(indent + location + " --> " + type);
-	}
-
 	@Override
 	public void run() throws IOException {
 		Terminal t = CLIParamsAdapter.getTerminal(this.params);

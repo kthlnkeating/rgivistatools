@@ -16,6 +16,7 @@
 
 package com.raygroupintl.m.tool;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
@@ -24,8 +25,9 @@ import java.util.Map;
 import java.util.Set;
 
 import com.raygroupintl.m.parsetree.data.EntryId;
+import com.raygroupintl.output.Terminal;
 
-public abstract class ResultsByRoutine<T, U extends Collection<T>> {
+public abstract class ResultsByRoutine<T extends ToolResult, U extends Collection<T>> {
 	private Map<String, ResultsByLabel<T, U>> map = new HashMap<String, ResultsByLabel<T, U>>();
 
 	public void put(String routineName, ResultsByLabel<T, U> results) {
@@ -91,5 +93,34 @@ public abstract class ResultsByRoutine<T, U extends Collection<T>> {
 			allFlattened.addAll(allFlattenedLabel);
 		}
 		return allFlattened;
+	}
+	
+	public void write(Terminal t, OutputFlags flags) throws IOException {
+		Set<String> rns = this.getRoutineNames();
+		for (String rn : rns) {
+			ResultsByLabel<T, U> rsbl = this.getResults(rn);
+			Set<String> labels = rsbl.getLabels();
+			for (String label : labels) {
+				U rs = rsbl.getResults(label);
+				if ((rs == null) || (rs.size() == 0)) {
+					if (! flags.getSkipEmpty(true)) {
+						t.getTerminalFormatter().pushIndent();
+						t.writeIndented(label + "^" + rn);	
+						t.getTerminalFormatter().pushIndent();
+						t.writeIndented("--");
+						t.getTerminalFormatter().pullIndent();
+						t.getTerminalFormatter().pullIndent();
+					}
+				} else for (T r : rs) {
+					t.getTerminalFormatter().pushIndent();
+					t.writeIndented(label + "^" + rn);	
+					t.getTerminalFormatter().pushIndent();					
+					r.write(t, flags);
+					t.getTerminalFormatter().pullIndent();
+					t.getTerminalFormatter().pullIndent();
+				}
+			}
+		
+		}
 	}
 }
