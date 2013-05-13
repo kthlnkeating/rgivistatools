@@ -16,6 +16,7 @@
 
 package com.raygroupintl.m.tool.entry.basiccodeinfo;
 
+import java.io.IOException;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -24,9 +25,12 @@ import java.util.List;
 import com.raygroupintl.m.parsetree.data.EntryId;
 import com.raygroupintl.m.parsetree.data.Fanout;
 import com.raygroupintl.m.struct.CodeLocation;
+import com.raygroupintl.m.tool.OutputFlags;
+import com.raygroupintl.m.tool.ToolResult;
 import com.raygroupintl.m.tool.entry.BlockData;
+import com.raygroupintl.output.Terminal;
 
-public class CodeLocations extends BlockData<Fanout> implements Serializable {
+public class CodeLocations extends BlockData<Fanout> implements Serializable, ToolResult {
 	private static final long serialVersionUID = 1L;
 
 	private List<CodeLocation> codeLocations;
@@ -60,6 +64,23 @@ public class CodeLocations extends BlockData<Fanout> implements Serializable {
 			}
 			return true;
 		}		
+		return false;
+	}
+
+	@Override
+	public void write(Terminal t, OutputFlags flags) throws IOException {
+		List<CodeLocation> cl = this.getCodeLocations();
+		if (cl == null) {
+			t.writeEOL("  --");				
+		} else {
+			for (CodeLocation c : cl) {
+				t.writeEOL("  " + c.toString());
+			}
+		}
+	}	
+	
+	@Override
+	public boolean isEmpty() {
 		return false;
 	}
 }

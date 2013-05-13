@@ -21,13 +21,32 @@ import java.util.Arrays;
 public class TerminalFormatter {
 	private String eol = Utility.getEOL();
 	
-	private int tab = 0;
+	private int titleWidth = 0;
 	private int width = 76;
 	private int column = 0;
 	private int listIndex = 0;
+	private String indentStep = "  ";
+	private String currentIndent = "";
 	
-	public void setTab(int tab) {
-		this.tab = tab;
+	public void setTitleWidth(int titleWidth) {
+		this.titleWidth = titleWidth;
+	}
+	
+	public void setIndentStep(int indentStep) {
+		this.indentStep = "";
+		for (int i=0; i<indentStep; ++i) this.indentStep = this.indentStep + " "; 
+	}
+	
+	public void pushIndent() {
+		this.currentIndent = this.currentIndent + this.indentStep;
+	}
+	
+	public void pullIndex() {
+		this.currentIndent = this.currentIndent.substring(this.indentStep.length());
+	}
+	
+	public String getIndent() {
+		return this.getIndent();
 	}
 	
 	private static String getSpaces(int count) {
@@ -38,11 +57,11 @@ public class TerminalFormatter {
 	
 	private String getTitle(String title) {
 		int length = title.length();
-		if (this.tab + 2 < length) {
+		if (this.titleWidth + 2 < length) {
 			this.column = length;
 			return title;
 		} else {
-			String result = TerminalFormatter.getSpaces(this.tab - length - 2);
+			String result = TerminalFormatter.getSpaces(this.titleWidth - length - 2);
 			result += title + ':' + ' ';
 			this.column = result.length();
 			return result;
@@ -74,9 +93,9 @@ public class TerminalFormatter {
 			++this.listIndex;
 			return ',' + listElement;
 		}
-		String result = this.eol + TerminalFormatter.getSpaces(this.tab);
+		String result = this.eol + TerminalFormatter.getSpaces(this.titleWidth);
 		result += listElement;
-		this.column = length + this.tab;
+		this.column = length + this.titleWidth;
 		this.listIndex = 1;		
 		return result;
 	}

@@ -16,19 +16,12 @@
 
 package com.raygroupintl.vista.tools.entry;
 
-import java.io.IOException;
-
 import com.raygroupintl.m.tool.CommonToolParams;
 import com.raygroupintl.m.tool.entry.MEntryToolInput;
 import com.raygroupintl.m.tool.entry.MEntryToolResult;
-import com.raygroupintl.m.tool.entry.quittype.CallType;
-import com.raygroupintl.m.tool.entry.quittype.CallTypeState;
 import com.raygroupintl.m.tool.entry.quittype.QuitType;
-import com.raygroupintl.m.tool.entry.quittype.QuitTypeState;
 import com.raygroupintl.m.tool.entry.quittype.QuitTypeTool;
-import com.raygroupintl.output.Terminal;
 import com.raygroupintl.vista.tools.CLIParams;
-import com.raygroupintl.vista.tools.CLIParamsAdapter;
 
 class CLIQuitTypeTool extends CLIEntryTool<QuitType> {	
 	public CLIQuitTypeTool(CLIParams params) {
@@ -36,85 +29,9 @@ class CLIQuitTypeTool extends CLIEntryTool<QuitType> {
 	}
 	
 	@Override
-	protected boolean isEmpty(QuitType quitType) {
-		return ! quitType.hasConflict();
-	}
-			
-	@Override
 	protected MEntryToolResult<QuitType> getResult(MEntryToolInput input) {
 		CommonToolParams params = CLIETParamsAdapter.toCommonToolParams(this.params);
 		QuitTypeTool a = new QuitTypeTool(params);
 		return a.getResult(input);			
-	}
-	
-	@Override
-	protected void write(QuitType result, Terminal t) throws IOException {
-		boolean skipEmpty = CLIParamsAdapter.toOutputFlags(params).getSkipEmpty(false);		
-		QuitTypeState qts = result.getQuitTypeState();
-		switch (qts) {
-			case NO_QUITS:
-				if (! skipEmpty) {
-					t.writeFormatted("QUIT", "No quits.");
-				}
-			break;
-			case QUITS_WITH_VALUE:
-				if (! skipEmpty) {
-					String fl = result.getFirstQuitLocation().toString(); 
-					t.writeFormatted("QUIT", "With value (ex: " + fl + ")");
-				}
-			break;
-			case QUITS_WITHOUT_VALUE:
-				if (! skipEmpty) {
-					String fl = result.getFirstQuitLocation().toString(); 
-					t.writeFormatted("QUIT", "Without value (ex: " + fl + ")");
-				}
-			break;
-			case CONFLICTING_QUITS:
-			{
-				String fl = result.getFirstQuitLocation().toString(); 
-				String cl = result.getConflictingLocation().toString();
-				t.writeFormatted("QUIT", "Conflicted (ex: " + fl + " vs " + cl + ")");
-			}
-			break;
-		}
-		for (CallType ct : result.getFanoutCalls().values()) {
-			CallTypeState state = ct.getState();
-			switch (state) {
-			case DO_CONFLICTING:
-			{
-				String fl = ct.getLocation().toString(); 
-				t.writeFormatted("CALL", "Invalid DO at " + fl);				
-			}				
-			break;
-			case EXTRINSIC_CONFLICTING:
-			{
-				String fl = ct.getLocation().toString(); 
-				t.writeFormatted("CALL", "Invalid extrinsic at " + fl);				
-			}				
-			break;
-			case FANOUT_CONFLICTING:
-			{
-				String fl = ct.getLocation().toString(); 
-				t.writeFormatted("CALL", "Fanout has invalid quit type at " + fl);				
-			}				
-			break;			
-			case DO_UNVERIFIED:
-			case DO_VERIFIED:
-				if (! skipEmpty) {
-					String fl = ct.getLocation().toString(); 
-					t.writeFormatted("CALL", "DO at " + fl);									
-				}
-			break;
-			case EXTRINSIC_UNVERIFIED:
-			case EXTRINSIC_VERIFIED:
-				if (! skipEmpty) {
-					String fl = ct.getLocation().toString(); 
-					t.writeFormatted("CALL", "Extrinsic at " + fl);									
-				}
-			break;
-			default:
-				break;
-			}			
-		}
 	}
 }

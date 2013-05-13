@@ -20,12 +20,12 @@ import java.io.IOException;
 import java.util.Collection;
 import java.util.Set;
 
+import com.raygroupintl.m.tool.OutputFlags;
 import com.raygroupintl.m.tool.ResultsByLabel;
 import com.raygroupintl.m.tool.ResultsByRoutine;
 import com.raygroupintl.output.Terminal;
 import com.raygroupintl.vista.tools.CLIParams;
 import com.raygroupintl.vista.tools.CLIParamsAdapter;
-import com.raygroupintl.vista.tools.OutputFlags;
 
 abstract class CLIResultsByRoutineLabelTool<T, U extends Collection<T>> extends CLIRoutineTool {
 	private final String INDENT = "  ";
@@ -61,7 +61,7 @@ abstract class CLIResultsByRoutineLabelTool<T, U extends Collection<T>> extends 
 	}
 	
 	protected void write(ResultsByRoutine<T, U> results, Terminal t) throws IOException {
-		t.getTerminalFormatter().setTab(12);
+		t.getTerminalFormatter().setTitleWidth(12);
 		this.innerWrite(results, t);
 		t.stop();
 	}

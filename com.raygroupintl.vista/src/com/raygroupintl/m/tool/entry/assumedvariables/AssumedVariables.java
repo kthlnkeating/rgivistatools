@@ -16,12 +16,18 @@
 
 package com.raygroupintl.m.tool.entry.assumedvariables;
 
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
 import com.raygroupintl.m.struct.CodeLocation;
+import com.raygroupintl.m.tool.OutputFlags;
+import com.raygroupintl.m.tool.ToolResult;
+import com.raygroupintl.output.Terminal;
 
-public class AssumedVariables {
+public class AssumedVariables implements ToolResult {
 	private Map<String, CodeLocation> data;
 
 	public AssumedVariables(Map<String, CodeLocation> data) {
@@ -36,7 +42,24 @@ public class AssumedVariables {
 		return this.data.keySet();
 	}
 
+	@Override
 	public boolean isEmpty() {
 		return (this.data == null) || (this.data.size() ==0);
 	}
+				
+	@Override
+	public void write(Terminal t, OutputFlags flags) throws IOException {
+		if (flags.getShowDetail(false)) {
+			List<String> tbw = new ArrayList<String>();
+			for (String name : this.toSet()) {
+				CodeLocation location = this.get(name);
+				String out = name + "->" + location.toString();
+				tbw.add(out);
+			}
+			t.writeSortedFormatted("ASSUMED", tbw);
+		} else {
+			t.writeSortedFormatted("ASSUMED", this.toSet());
+		}
+	}
+
 }

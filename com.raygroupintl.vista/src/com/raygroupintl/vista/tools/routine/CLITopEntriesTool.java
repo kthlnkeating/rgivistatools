@@ -33,7 +33,7 @@ public class CLITopEntriesTool extends CLIRoutineTool {
 	}
 	
 	public void write(List<EntryId> result, Terminal t) throws IOException {
-		t.getTerminalFormatter().setTab(12);
+		t.getTerminalFormatter().setTitleWidth(12);
 		for (EntryId e : result) {
 			if (e.hasDedicatedLabel()) {
 				t.writeEOL("  " + e.toString2());				

@@ -40,6 +40,11 @@ public abstract class Terminal {
 		this.writeEOL();
 	}
 	
+	public void writeIndented(String data) throws IOException {
+		this.write(this.tf.getIndent());
+		this.writeEOL(data);
+	}
+	
 	public void writeFormatted(String title, String message) throws IOException {
 		String line = this.tf.titled(title, message);
 		this.writeEOL(line);

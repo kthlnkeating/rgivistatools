@@ -16,6 +16,7 @@
 
 package com.raygroupintl.m.tool.entry.quittype;
 
+import java.io.IOException;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
@@ -23,8 +24,11 @@ import java.util.Set;
 
 import com.raygroupintl.m.parsetree.data.EntryId;
 import com.raygroupintl.m.struct.CodeLocation;
+import com.raygroupintl.m.tool.OutputFlags;
+import com.raygroupintl.m.tool.ToolResult;
+import com.raygroupintl.output.Terminal;
 
-public class QuitType {
+public class QuitType implements ToolResult {
 	private QuitTypeState state = QuitTypeState.NO_QUITS;
 	private CodeLocation firstQuitLocation;
 	private CodeLocation conflictingLocation;
@@ -167,5 +171,82 @@ public class QuitType {
 			}
 		}
 		return false;
+	}
+	
+	
+	@Override
+	public void write(Terminal t, OutputFlags flags) throws IOException {
+		boolean skipEmpty = flags.getSkipEmpty(false);		
+		QuitTypeState qts = this.getQuitTypeState();
+		switch (qts) {
+			case NO_QUITS:
+				if (! skipEmpty) {
+					t.writeFormatted("QUIT", "No quits.");
+				}
+			break;
+			case QUITS_WITH_VALUE:
+				if (! skipEmpty) {
+					String fl = this.getFirstQuitLocation().toString(); 
+					t.writeFormatted("QUIT", "With value (ex: " + fl + ")");
+				}
+			break;
+			case QUITS_WITHOUT_VALUE:
+				if (! skipEmpty) {
+					String fl = this.getFirstQuitLocation().toString(); 
+					t.writeFormatted("QUIT", "Without value (ex: " + fl + ")");
+				}
+			break;
+			case CONFLICTING_QUITS:
+			{
+				String fl = this.getFirstQuitLocation().toString(); 
+				String cl = this.getConflictingLocation().toString();
+				t.writeFormatted("QUIT", "Conflicted (ex: " + fl + " vs " + cl + ")");
+			}
+			break;
+		}
+		for (CallType ct : this.getFanoutCalls().values()) {
+			CallTypeState state = ct.getState();
+			switch (state) {
+			case DO_CONFLICTING:
+			{
+				String fl = ct.getLocation().toString(); 
+				t.writeFormatted("CALL", "Invalid DO at " + fl);				
+			}				
+			break;
+			case EXTRINSIC_CONFLICTING:
+			{
+				String fl = ct.getLocation().toString(); 
+				t.writeFormatted("CALL", "Invalid extrinsic at " + fl);				
+			}				
+			break;
+			case FANOUT_CONFLICTING:
+			{
+				String fl = ct.getLocation().toString(); 
+				t.writeFormatted("CALL", "Fanout has invalid quit type at " + fl);				
+			}				
+			break;			
+			case DO_UNVERIFIED:
+			case DO_VERIFIED:
+				if (! skipEmpty) {
+					String fl = ct.getLocation().toString(); 
+					t.writeFormatted("CALL", "DO at " + fl);									
+				}
+			break;
+			case EXTRINSIC_UNVERIFIED:
+			case EXTRINSIC_VERIFIED:
+				if (! skipEmpty) {
+					String fl = ct.getLocation().toString(); 
+					t.writeFormatted("CALL", "Extrinsic at " + fl);									
+				}
+			break;
+			default:
+				break;
+			}			
+		}
+	}
+	
+	@Override
+	public boolean isEmpty() {
+		return ! this.hasConflict();
 	}
 }

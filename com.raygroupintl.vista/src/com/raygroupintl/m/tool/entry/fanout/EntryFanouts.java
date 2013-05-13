@@ -16,14 +16,18 @@
 
 package com.raygroupintl.m.tool.entry.fanout;
 
+import java.io.IOException;
 import java.io.Serializable;
 import java.util.Set;
 import java.util.SortedSet;
 import java.util.TreeSet;
 
 import com.raygroupintl.m.parsetree.data.EntryId;
+import com.raygroupintl.m.tool.OutputFlags;
+import com.raygroupintl.m.tool.ToolResult;
+import com.raygroupintl.output.Terminal;
 
-public class EntryFanouts implements Serializable {
+public class EntryFanouts implements Serializable, ToolResult {
 	private static final long serialVersionUID = 1L;
 
 	private SortedSet<EntryId> fanoutEntries;
@@ -37,5 +41,22 @@ public class EntryFanouts implements Serializable {
 	
 	public Set<EntryId> getFanouts() {
 		return this.fanoutEntries;
+	}
+	
+	@Override
+	public void write(Terminal t, OutputFlags flags) throws IOException {
+		Set<EntryId> r = this.getFanouts();
+		if (r == null) {
+			t.writeEOL("  --");				
+		} else {
+			for (EntryId f : r) {
+				t.writeEOL("  " + f.toString2());
+			}
+		}
+	}	
+	
+	@Override
+	public boolean isEmpty() {
+		return false;
 	}
 }

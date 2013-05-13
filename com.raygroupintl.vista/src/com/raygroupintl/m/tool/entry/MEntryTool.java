@@ -27,10 +27,11 @@ import com.raygroupintl.m.parsetree.visitor.BlockRecorderFactory;
 import com.raygroupintl.m.tool.CommonToolParams;
 import com.raygroupintl.m.tool.MToolError;
 import com.raygroupintl.m.tool.MToolErrorType;
+import com.raygroupintl.m.tool.ToolResult;
 import com.raygroupintl.struct.Filter;
 import com.raygroupintl.struct.HierarchicalMap;
 
-public abstract class MEntryTool<T, F extends Fanout, B extends BlockData<F>> {
+public abstract class MEntryTool<T extends ToolResult, F extends Fanout, B extends BlockData<F>> {
 	protected BlocksSupply<F, B> blocksSupply;
 	private Filter<Fanout> filter;
 	

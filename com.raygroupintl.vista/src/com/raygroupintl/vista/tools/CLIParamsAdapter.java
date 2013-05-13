@@ -24,6 +24,7 @@ import java.util.regex.Pattern;
 
 import com.raygroupintl.m.token.MVersion;
 import com.raygroupintl.m.tool.NamespaceFilter;
+import com.raygroupintl.m.tool.OutputFlags;
 import com.raygroupintl.m.tool.ParseTreeSupply;
 import com.raygroupintl.m.tool.SavedParsedTrees;
 import com.raygroupintl.m.tool.SourceCodeFiles;

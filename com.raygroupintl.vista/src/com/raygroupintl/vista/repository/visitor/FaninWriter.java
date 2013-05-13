@@ -145,7 +145,7 @@ public class FaninWriter extends RepositoryVisitor {
 				this.fileWrapper.stop();
 			} else {
 				int ndx = 0;
-				this.fileWrapper.getTerminalFormatter().setTab(21);
+				this.fileWrapper.getTerminalFormatter().setTitleWidth(21);
 				List<VistaPackage> reportPackages = rps.getPackages();
 				boolean multi = reportPackages.size() > 1;
 				for (VistaPackage p : reportPackages) {

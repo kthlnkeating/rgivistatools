@@ -59,7 +59,7 @@ public class DTFilemanCallWriter extends RepositoryVisitor {
 					this.fileWrapper.writeEOL();
 				}			
 				this.fileWrapper.writeEOL(" " + routine.getName());
-				this.fileWrapper.getTerminalFormatter().setTab(17);
+				this.fileWrapper.getTerminalFormatter().setTitleWidth(17);
 				this.fileWrapper.writeFormatted("Globals", filemanGlobals);
 				this.fileWrapper.writeFormatted("FileMan calls", filemanCalls);
 				this.fileWrapper.writeEOL();

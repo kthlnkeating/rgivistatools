@@ -16,14 +16,18 @@
 
 package com.raygroupintl.m.tool.entry.fanin;
 
+import java.io.IOException;
 import java.util.Map;
 import java.util.Set;
 import java.util.SortedSet;
 import java.util.TreeMap;
 
 import com.raygroupintl.m.parsetree.data.EntryId;
+import com.raygroupintl.m.tool.OutputFlags;
+import com.raygroupintl.m.tool.ToolResult;
+import com.raygroupintl.output.Terminal;
 
-public class EntryFanins {
+public class EntryFanins implements ToolResult {
 	Map<EntryId, SortedSet<EntryId>> pathPieces = new TreeMap<EntryId, SortedSet<EntryId>>();
 
 	public void add(PathPieceToEntry ppte) {
@@ -42,5 +46,22 @@ public class EntryFanins {
 	
 	public Set<EntryId> getFaninNextEntries(EntryId entry) {
 		return this.pathPieces.get(entry);
+	}
+
+	@Override
+	public void write(Terminal t, OutputFlags flags) throws IOException {
+		Set<EntryId> starts = this.getFaninEntries();
+		for (EntryId start : starts) {
+			Set<EntryId> nextUps = this.getFaninNextEntries(start);
+			for (EntryId nextUp : nextUps) {
+				t.write("   " + start.toString2() + " thru ");
+				t.writeEOL(nextUp.toString2());
+			}
+		}	
+	}
+	
+	@Override
+	public boolean isEmpty() {
+		return false;
 	}
 }

@@ -16,19 +16,12 @@
 
 package com.raygroupintl.vista.tools.entry;
 
-import java.io.IOException;
-import java.util.List;
 import java.util.Map;
-import java.util.Set;
 
-import com.raygroupintl.m.parsetree.data.EntryId;
-import com.raygroupintl.m.struct.CodeLocation;
 import com.raygroupintl.m.tool.CommonToolParams;
 import com.raygroupintl.m.tool.entry.MEntryToolInput;
 import com.raygroupintl.m.tool.entry.MEntryToolResult;
-import com.raygroupintl.m.tool.entry.assumedvariables.AssumedVariables;
 import com.raygroupintl.m.tool.entry.assumedvariables.AssumedVariablesToolParams;
-import com.raygroupintl.m.tool.entry.basiccodeinfo.BasicCodeInfoTR;
 import com.raygroupintl.m.tool.entry.basiccodeinfo.BasicCodeInfoToolParams;
 import com.raygroupintl.m.tool.entry.basiccodeinfo.CodeLocations;
 import com.raygroupintl.m.tool.entry.fanout.EntryFanouts;
@@ -37,7 +30,6 @@ import com.raygroupintl.m.tool.entry.legacycodeinfo.LegacyCodeInfo;
 import com.raygroupintl.m.tool.entry.legacycodeinfo.LegacyCodeInfoTool;
 import com.raygroupintl.m.tool.entry.localassignment.LocalAssignmentTool;
 import com.raygroupintl.m.tool.entry.localassignment.LocalAssignmentToolParams;
-import com.raygroupintl.output.Terminal;
 import com.raygroupintl.vista.repository.RepositoryInfo;
 import com.raygroupintl.vista.tools.CLIParams;
 import com.raygroupintl.vista.tools.CLIParamsAdapter;
@@ -58,17 +50,6 @@ public class CLIEntryTools extends Tools {
 			LegacyCodeInfoTool a = new LegacyCodeInfoTool(p, p2);
 			return a.getResult(input);			
 		}
-
-		@Override
-		protected void write(LegacyCodeInfo result, Terminal t) throws IOException {
-			String[] f = result.getFormals();
-			AssumedVariables av = result.getAssumedVariablesTR();
-			BasicCodeInfoTR ci = result.getBasicCodeInfoTR();
-			t.writeFormatted("FORMAL", f);
-			t.writeSortedFormatted("ASSUMED", av.toSet());
-			ci.writeInfo(t);
-			t.writeEOL();
-		}	
 	}
 
 	private static class EntryLocalAssignmentTool extends CLIEntryTool<CodeLocations> {	
@@ -82,18 +63,6 @@ public class CLIEntryTools extends Tools {
 			LocalAssignmentTool a = new LocalAssignmentTool(params);
 			return a.getResult(input);			
 		}
-
-		@Override
-		protected void write(CodeLocations result, Terminal t) throws IOException {
-			List<CodeLocation> cl = result.getCodeLocations();
-			if (cl == null) {
-				t.writeEOL("  --");				
-			} else {
-				for (CodeLocation c : cl) {
-					t.writeEOL("  " + c.toString());
-				}
-			}
-		}	
 	}
 
 	private static class EntryFanoutTool extends CLIEntryTool<EntryFanouts> {	
@@ -107,18 +76,6 @@ public class CLIEntryTools extends Tools {
 			FanoutTool a = new FanoutTool(params);
 			return a.getResult(input);			
 		}
-		
-		@Override
-		protected void write(EntryFanouts result, Terminal t) throws IOException {
-			Set<EntryId> r = result.getFanouts();
-			if (r == null) {
-				t.writeEOL("  --");				
-			} else {
-				for (EntryId f : r) {
-					t.writeEOL("  " + f.toString2());
-				}
-			}
-		}	
 	}
 
 	public CLIEntryTools(String name) {

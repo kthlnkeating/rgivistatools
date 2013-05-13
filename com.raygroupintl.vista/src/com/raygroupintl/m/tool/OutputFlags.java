@@ -14,7 +14,7 @@
 // limitations under the License.
 //---------------------------------------------------------------------------
 
-package com.raygroupintl.vista.tools;
+package com.raygroupintl.m.tool;
 
 public class OutputFlags {
 	private Boolean showDetail;

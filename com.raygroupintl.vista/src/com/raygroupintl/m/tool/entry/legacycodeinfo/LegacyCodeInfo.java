@@ -16,13 +16,17 @@
 
 package com.raygroupintl.m.tool.entry.legacycodeinfo;
 
+import java.io.IOException;
 import java.util.Set;
 
+import com.raygroupintl.m.tool.OutputFlags;
+import com.raygroupintl.m.tool.ToolResult;
 import com.raygroupintl.m.tool.entry.assumedvariables.AssumedVariables;
 import com.raygroupintl.m.tool.entry.basiccodeinfo.BasicCodeInfo;
 import com.raygroupintl.m.tool.entry.basiccodeinfo.BasicCodeInfoTR;
+import com.raygroupintl.output.Terminal;
 
-public class LegacyCodeInfo {
+public class LegacyCodeInfo implements ToolResult {
 	public AssumedVariables assumedVariables;
 	public BasicCodeInfoTR basicCodeInfo;
 
@@ -49,5 +53,22 @@ public class LegacyCodeInfo {
 	
 	public BasicCodeInfoTR getBasicCodeInfoTR() {
 		return this.basicCodeInfo;
+	}
+	
+
+	@Override
+	public void write(Terminal t, OutputFlags flags) throws IOException {
+		String[] f = this.getFormals();
+		AssumedVariables av = this.getAssumedVariablesTR();
+		BasicCodeInfoTR ci = this.getBasicCodeInfoTR();
+		t.writeFormatted("FORMAL", f);
+		t.writeSortedFormatted("ASSUMED", av.toSet());
+		ci.write(t, flags);
+		t.writeEOL();
+	}	
+	
+	@Override
+	public boolean isEmpty() {
+		return false;
 	}
 }

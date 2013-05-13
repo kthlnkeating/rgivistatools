@@ -18,9 +18,11 @@ package com.raygroupintl.m.tool.entry.basiccodeinfo;
 
 import java.io.IOException;
 
+import com.raygroupintl.m.tool.OutputFlags;
+import com.raygroupintl.m.tool.ToolResult;
 import com.raygroupintl.output.Terminal;
 
-public class BasicCodeInfoTR {
+public class BasicCodeInfoTR implements ToolResult {
 	public String[] formals;	
 	private BasicCodeInfo info;
 
@@ -37,7 +39,8 @@ public class BasicCodeInfoTR {
 		return this.info;
 	}
 	
-	public void writeInfo(Terminal t) throws IOException {
+	@Override
+	public void write(Terminal t, OutputFlags flags) throws IOException {
 		t.writeFormatted("GLBS", this.info.getGlobals());
 		t.writeFormatted("READ" , this.info.getReadCount());
 		t.writeFormatted("WRITE", this.info.getWriteCount());
@@ -45,5 +48,10 @@ public class BasicCodeInfoTR {
 		t.writeFormatted("IND", this.info.getIndirectionCount());
 		t.writeFormatted("FMGLBS", this.info.getFilemanGlobals());
 		t.writeFormatted("FMCALLS", this.info.getFilemanCalls());		
+	}
+	
+	@Override
+	public boolean isEmpty() {
+		return false;
 	}
 }

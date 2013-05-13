@@ -16,6 +16,7 @@
 
 package com.raygroupintl.m.tool.entry;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -24,8 +25,11 @@ import java.util.Set;
 
 import com.raygroupintl.m.parsetree.data.EntryId;
 import com.raygroupintl.m.tool.MToolError;
+import com.raygroupintl.m.tool.OutputFlags;
+import com.raygroupintl.m.tool.ToolResult;
+import com.raygroupintl.output.Terminal;
 
-public class MEntryToolResult<T> {
+public class MEntryToolResult<T extends ToolResult> {
 	private List<EntryId> entries = new ArrayList<EntryId>();
 	private List<T> results = new ArrayList<>();
 	
@@ -92,7 +96,7 @@ public class MEntryToolResult<T> {
 		return this.missingEntries;
 	}
 	
-	public <U, V > MEntryToolResult<U> merge(MEntryToolResult<V> addl, SingleResultMerger<U, T, V> singleMerger) {
+	public <U extends ToolResult, V extends ToolResult> MEntryToolResult<U> merge(MEntryToolResult<V> addl, SingleResultMerger<U, T, V> singleMerger) {
 		MEntryToolResult<U> result = new MEntryToolResult<U>();	
 		int n = this.entries.size();
 		for (int i=0; i<n; ++i) {
@@ -103,5 +107,25 @@ public class MEntryToolResult<T> {
 			result.add(id, u);
 		}
 		return result;	
+	}
+	
+	public void write(Terminal t, OutputFlags flags) throws IOException {
+		List<EntryId> entries = this.getEntries();
+		List<T> resultList = this.getResults();
+		int n = entries.size();
+		for (int i=0; i<n; ++i) {
+			T u = resultList.get(i);
+			if (u != null) {
+				if ((! flags.getSkipEmpty(false)) || (! u.isEmpty())) {
+					t.writeEOL(" " + entries.get(i).toString2());		
+					u.write(t, flags);
+				} 		
+			} else {
+				t.writeEOL(" " + entries.get(i).toString2());
+				MToolError error = this.getError(i);
+				t.writeEOL("  ERROR: " + error.getMessage());
+			}
+		}
+		
 	}
  }
