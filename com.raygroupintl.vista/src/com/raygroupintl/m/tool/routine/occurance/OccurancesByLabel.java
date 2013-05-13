@@ -21,7 +21,7 @@ import java.util.List;
 
 import com.raygroupintl.m.tool.ResultsByLabel;
 
-public class OccurancesByLabel extends ResultsByLabel<Occurance, List<Occurance>> {
+class OccurancesByLabel extends ResultsByLabel<Occurance, List<Occurance>> {
 	private static final long serialVersionUID = 1L;
 
 	@Override

@@ -18,18 +18,18 @@ package com.raygroupintl.m.tool.routine.occurance;
 
 public class Occurance {
 	private OccuranceType type;
-	private int entryLine;
+	private int lineIndex;
 	
-	public  Occurance(OccuranceType type, int entryLine) {
+	public  Occurance(OccuranceType type, int lineIndex) {
 		this.type = type;
-		this.entryLine = entryLine;
+		this.lineIndex = lineIndex;
 	}
 	
 	public OccuranceType getType() {
 		return this.type;
 	}
 	
-	public int getEntryLine() {
-		return this.entryLine;
+	public int getLineIndex() {
+		return this.lineIndex;
 	}
 }

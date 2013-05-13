@@ -21,7 +21,7 @@ import java.util.List;
 import com.raygroupintl.m.tool.ResultsByLabel;
 import com.raygroupintl.m.tool.ResultsByRoutine;
 
-public class OccurancesByRoutine extends ResultsByRoutine<Occurance, List<Occurance>> {
+class OccurancesByRoutine extends ResultsByRoutine<Occurance, List<Occurance>> {
 	@Override
 	public ResultsByLabel<Occurance, List<Occurance>> getNewResultsInstance() {
 		return new OccurancesByLabel();

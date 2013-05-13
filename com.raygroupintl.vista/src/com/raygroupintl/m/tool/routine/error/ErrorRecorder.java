@@ -65,12 +65,6 @@ public class ErrorRecorder extends LocationMarker {
 		this.addError(error);
 	}
 	
-	//@Override
-	//protected void visitDeadCmds(DeadCmds deadCmds) {
-	//	MError error = new MError(MError.ERR_DEAD_CODE);
-	//	this.addError(error);
-	//}
-
 	@Override
 	protected void visitDoBlock(DoBlock doBlock) {
 		InnerEntryList block = doBlock.getEntryList();

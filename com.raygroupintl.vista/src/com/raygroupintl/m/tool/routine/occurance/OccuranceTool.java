@@ -21,6 +21,8 @@ import java.util.List;
 
 import com.raygroupintl.m.parsetree.Routine;
 import com.raygroupintl.m.tool.ParseTreeSupply;
+import com.raygroupintl.m.tool.ResultsByLabel;
+import com.raygroupintl.m.tool.ResultsByRoutine;
 import com.raygroupintl.m.tool.routine.MRoutineToolInput;
 
 public class OccuranceTool {
@@ -32,14 +34,14 @@ public class OccuranceTool {
 		this.types = params.getIncludeTypes();
 	}
 	
-	public OccurancesByRoutine getResult(MRoutineToolInput input) {
+	public ResultsByRoutine<Occurance, List<Occurance>> getResult(MRoutineToolInput input) {
 		OccurancesByRoutine result = new OccurancesByRoutine();
 		List<String> routineNames = input.getRoutineNames(); 		
-		OccuranceRecorder fr = new OccuranceRecorder();
-		fr.setRequestedTypes(this.types);
+		OccuranceRecorder or = new OccuranceRecorder();
+		or.setRequestedTypes(this.types);
 		for (String routineName : routineNames) {
 			Routine routine = this.pts.getParseTree(routineName);
-			OccurancesByLabel rfs = fr.getOccurances(routine);
+			ResultsByLabel<Occurance, List<Occurance>> rfs = or.getResults(routine);
 			result.put(routineName, rfs);
 		}
 		return result;

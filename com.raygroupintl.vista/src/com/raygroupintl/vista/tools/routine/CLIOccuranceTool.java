@@ -19,12 +19,12 @@ package com.raygroupintl.vista.tools.routine;
 import java.util.List;
 
 import com.raygroupintl.m.tool.ParseTreeSupply;
+import com.raygroupintl.m.tool.ResultsByRoutine;
 import com.raygroupintl.m.tool.routine.MRoutineToolInput;
 import com.raygroupintl.m.tool.routine.occurance.Occurance;
 import com.raygroupintl.m.tool.routine.occurance.OccuranceTool;
 import com.raygroupintl.m.tool.routine.occurance.OccuranceToolParams;
 import com.raygroupintl.m.tool.routine.occurance.OccuranceType;
-import com.raygroupintl.m.tool.routine.occurance.OccurancesByRoutine;
 import com.raygroupintl.output.Terminal;
 import com.raygroupintl.vista.tools.CLIParams;
 import com.raygroupintl.vista.tools.CLIParamsAdapter;
@@ -48,10 +48,10 @@ public class CLIOccuranceTool extends CLIResultsByRoutineLabelTool<Occurance, Li
 	
 	@Override
 	protected void write(Terminal t, String indent,  Occurance result) {
-		int lineIndex = result .getEntryLine();
-		String offset = (lineIndex == 0 ? "" : '+' + String.valueOf(lineIndex));
+		int lineIndex = result .getLineIndex();
+		String location = "Line " + String.valueOf(lineIndex);
 		String type = this.getOccuranceTypeAsString(result.getType());
-		t.writeEOL(indent + offset + " --> " + type);
+		t.writeEOL(indent + location + " --> " + type);
 	}
 
 	@Override
@@ -62,7 +62,7 @@ public class CLIOccuranceTool extends CLIResultsByRoutineLabelTool<Occurance, Li
 			OccuranceToolParams p = new OccuranceToolParams(pts);	
 			OccuranceTool tool = new OccuranceTool(p);
 			MRoutineToolInput input = CLIRTParamsAdapter.toMRoutineInput(this.params);
-			OccurancesByRoutine result = tool.getResult(input);
+			ResultsByRoutine<Occurance, List<Occurance>> result = tool.getResult(input);
 			this.write(result, t);
 		}
 	}

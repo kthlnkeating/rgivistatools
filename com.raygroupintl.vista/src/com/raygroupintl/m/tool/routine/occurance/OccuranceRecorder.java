@@ -16,39 +16,30 @@
 
 package com.raygroupintl.m.tool.routine.occurance;
 
-import java.util.ArrayList;
 import java.util.EnumSet;
 import java.util.List;
 
-import com.raygroupintl.m.parsetree.Entry;
 import com.raygroupintl.m.parsetree.Indirection;
-import com.raygroupintl.m.parsetree.InnerEntryList;
 import com.raygroupintl.m.parsetree.IntrinsicFunction;
-import com.raygroupintl.m.parsetree.Line;
 import com.raygroupintl.m.parsetree.NakedGlobal;
 import com.raygroupintl.m.parsetree.ReadCmd;
-import com.raygroupintl.m.parsetree.Routine;
-import com.raygroupintl.m.parsetree.Visitor;
 import com.raygroupintl.m.parsetree.WriteCmd;
 import com.raygroupintl.m.parsetree.XecuteCmd;
+import com.raygroupintl.m.tool.ResultsByLabel;
+import com.raygroupintl.m.tool.ResultsByLabelVisitor;
 
-public class OccuranceRecorder extends Visitor {
+class OccuranceRecorder extends ResultsByLabelVisitor<Occurance, List<Occurance>> {
 	private EnumSet<OccuranceType> types;
 	
-	private OccurancesByLabel occurancesMap;
-	private List<Occurance> occurances;
-	
-	private int index;
-	private InnerEntryList lastInnerEntryList;
-
 	public void setRequestedTypes(EnumSet<OccuranceType> types) {
 		this.types = types;
 	}
 	
 	private void addOccurance(OccuranceType type) {
 		if (this.types.contains(type)) {
-			Occurance o = new Occurance(type, this.index);
-			this.occurances.add(o);		
+			int index = this.getIndex();
+			Occurance o = new Occurance(type, index);
+			this.addResult(o);		
 		}
 	}
 	
@@ -91,37 +82,9 @@ public class OccuranceRecorder extends Visitor {
 		this.addOccurance(OccuranceType.EXECUTE);
 		super.visitXecuteCmd(xecuteCmd);
 	}
-	
+
 	@Override
-	protected void visitInnerEntryList(InnerEntryList entryList) {
-		if (entryList != this.lastInnerEntryList) {
-			this.lastInnerEntryList = entryList;
-			super.visitInnerEntryList(entryList);
-		}
-	}
-	
-	@Override
-	protected void visitLine(Line line) {
-		super.visitLine(line);
-		++this.index;
-	}
-	
-	@Override
-	protected void visitEntry(Entry entry) {
-		this.occurances = new ArrayList<Occurance>();
-		this.index = 0;
-		super.visitEntry(entry);
-		this.occurancesMap.put(entry.getName(), this.occurances);
-	}
-			
-	@Override
-	protected void visitRoutine(Routine routine) {
-		this.occurancesMap = new OccurancesByLabel();
-		super.visitRoutine(routine);
-	}
-	
-	public OccurancesByLabel getOccurances(Routine routine) {
-		routine.accept(this);
-		return this.occurancesMap;
+	protected ResultsByLabel<Occurance, List<Occurance>> getNewResultsByLabelInstance() {
+		return new OccurancesByLabel();
 	}
 }

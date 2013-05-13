@@ -11,8 +11,9 @@ import com.raygroupintl.parser.Token;
 import com.raygroupintl.parser.Tokens;
 
 public class MLine extends MSequence {
-	String tagName = "";
-	int index = 0;
+	private String tagName = "";
+	private int index = 0;
+	private int lineIndex = 0;
 
 	public MLine(int length) {
 		super(length);
@@ -58,9 +59,10 @@ public class MLine extends MSequence {
 		return level;
 	}
 
-	public void setIdentifier(String tagName, int index) {
+	public void setIdentifier(String tagName, int index, int lineIndex) {
 		this.tagName = tagName;
 		this.index = index;
+		this.lineIndex = lineIndex;
 	}
 
 	public String getTagName() {
@@ -71,8 +73,12 @@ public class MLine extends MSequence {
 		return this.index;
 	}
 	
+	public int getLineIndex() {
+		return this.lineIndex;
+	}
+	
 	public Line getErrorNode(ErrorNode errorNode) {
-		Line result = new Line(this.tagName, this.index, this.getLevel());
+		Line result = new Line(this.tagName, this.index, this.getLevel(), this.lineIndex);
 		NodeList<Node> nodes = new NodeList<Node>(1);
 		nodes.add(errorNode);
 		result.setNodes(null);
@@ -80,7 +86,7 @@ public class MLine extends MSequence {
 	}
 	
 	public Line getAsErrorNode(ErrorNode errorNode) {
-		Line result = new Line(this.tagName, this.index, this.getLevel());
+		Line result = new Line(this.tagName, this.index, this.getLevel(), this.lineIndex);
 		NodeList<Node> nodes = new NodeList<Node>(1);
 		nodes.add(errorNode);
 		result.setNodes(nodes);
@@ -90,7 +96,7 @@ public class MLine extends MSequence {
 	@Override
 	public Line getNode() {
 		int level = this.getLevel();
-		Line result = new Line(this.tagName, this.index, level);
+		Line result = new Line(this.tagName, this.index, level, this.lineIndex);
 		ParentNode currentParent = result;
 		Tokens<MToken> cmds = this.getTokens(4);
 		if (cmds != null) {

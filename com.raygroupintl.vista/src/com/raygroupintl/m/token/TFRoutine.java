@@ -46,6 +46,7 @@ public class TFRoutine {
 		String name = content.getName();
 		MRoutine result = new MRoutine(name);
 		int index = 0;
+		int lineIndex = 0;
 		String tagName = "";
 		for (String line : content.getLines()) {
 			MLine tokens = null;
@@ -60,9 +61,10 @@ public class TFRoutine {
 				tagName = lineTagName;
 				index = 0;
 			}
-			tokens.setIdentifier(tagName, index);
+			tokens.setIdentifier(tagName, index, lineIndex);
 			result.add(tokens);
 			++index;
+			++lineIndex;
 		}		
 		return result;
 	}

@@ -21,12 +21,14 @@ public class Line extends ParentNode {
 
 	private String tag;
 	private int index;
+	private int lineIndex;
 	private int level;
 		
-	public Line(String tag, int index, int level) {
+	public Line(String tag, int index, int level, int lineIndex) {
 		this.tag = tag;
 		this.index = index;
 		this.level = level;
+		this.lineIndex = lineIndex;
 	}
 
 	public String getTag() {
@@ -35,6 +37,10 @@ public class Line extends ParentNode {
 	
 	public int getIndex() {
 		return this.index;
+	}
+
+	public int getLineIndex() {
+		return this.lineIndex;
 	}
 
 	public int getLevel() {
