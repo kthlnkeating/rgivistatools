@@ -14,18 +14,20 @@
 // limitations under the License.
 //---------------------------------------------------------------------------
 
-package com.raygroupintl.vista.repository.visitor;
+package com.raygroupintl.output;
 
-import com.raygroupintl.output.FileTerminal;
-import com.raygroupintl.vista.repository.RepositoryInfo;
-import com.raygroupintl.vista.repository.VistaPackages;
+import java.io.IOException;
+import java.io.OutputStream;
 
-public class RPCWriter extends OptionRPCWriter {
-	public RPCWriter(RepositoryInfo repositoryInfo, FileTerminal fileWrapper) {
-		super(repositoryInfo, fileWrapper);
+public class OSTerminal extends AbstractOSTerminal {
+	private OutputStream os;
+
+	public OSTerminal(OutputStream os) {
+		this.os = os;
 	}
-	
-	public void write(VistaPackages vps) {
-		this.write(vps, this.repositoryInfo.getRPCs());
+
+	@Override
+	protected OutputStream getOutputStream() throws IOException {
+		return this.os;
 	}
 }

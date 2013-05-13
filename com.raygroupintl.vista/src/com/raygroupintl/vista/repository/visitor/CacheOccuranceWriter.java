@@ -16,16 +16,19 @@
 
 package com.raygroupintl.vista.repository.visitor;
 
+import java.io.IOException;
+
 import com.raygroupintl.m.parsetree.Routine;
 import com.raygroupintl.m.parsetree.visitor.CacheOccuranceRecorder;
-import com.raygroupintl.output.FileWrapper;
+import com.raygroupintl.output.FileTerminal;
 import com.raygroupintl.vista.repository.RepositoryVisitor;
 import com.raygroupintl.vista.repository.VistaPackages;
+import com.raygroupintl.vista.tools.MRALogger;
 
 public class CacheOccuranceWriter extends RepositoryVisitor {
-	private FileWrapper fileWrapper;
+	private FileTerminal fileWrapper;
 	
-	public CacheOccuranceWriter(FileWrapper fileWrapper) {
+	public CacheOccuranceWriter(FileTerminal fileWrapper) {
 		this.fileWrapper = fileWrapper;
 	}
 		
@@ -34,15 +37,21 @@ public class CacheOccuranceWriter extends RepositoryVisitor {
 		CacheOccuranceRecorder cor = new CacheOccuranceRecorder();
 		cor.visitRoutine(routine);
 		if (cor.getNumOccurance() > 0) {
-			this.fileWrapper.writeEOL(routine.getName());
+			try {
+				this.fileWrapper.writeEOL(routine.getName());
+			} catch (IOException e) {
+				MRALogger.logError("Unable to write result", e);
+			}
 		}
 	}
 	
 	@Override
 	protected void visitRoutinePackages(VistaPackages rps) {
-		if (this.fileWrapper.start()) {
-			super.visitRoutinePackages(rps);
+		super.visitRoutinePackages(rps);
+		try {
 			this.fileWrapper.stop();
+		} catch (IOException e) {
+			MRALogger.logError("Unable to write result", e);
 		}
 	}
 }

@@ -1,5 +1,6 @@
 package com.raygroupintl.vista.tools.entry;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -10,7 +11,6 @@ import com.raygroupintl.m.tool.entry.assumedvariables.AssumedVariables;
 import com.raygroupintl.m.tool.entry.assumedvariables.AssumedVariablesTool;
 import com.raygroupintl.m.tool.entry.assumedvariables.AssumedVariablesToolParams;
 import com.raygroupintl.output.Terminal;
-import com.raygroupintl.output.TerminalFormatter;
 import com.raygroupintl.vista.tools.CLIParams;
 import com.raygroupintl.vista.tools.CLIParamsAdapter;
 
@@ -35,7 +35,7 @@ public class CLIAssumedVariablesTool extends CLIEntryTool<AssumedVariables> {
 	}
 	
 	@Override
-	protected void write(AssumedVariables result, Terminal t, TerminalFormatter tf) {
+	protected void write(AssumedVariables result, Terminal t) throws IOException {
 		if (this.showDetail) {
 			List<String> tbw = new ArrayList<String>();
 			for (String name : result.toSet()) {
@@ -43,9 +43,9 @@ public class CLIAssumedVariablesTool extends CLIEntryTool<AssumedVariables> {
 				String out = name + "->" + location.toString();
 				tbw.add(out);
 			}
-			t.writeSortedFormatted("ASSUMED", tbw, tf);
+			t.writeSortedFormatted("ASSUMED", tbw);
 		} else {
-			t.writeSortedFormatted("ASSUMED", result.toSet(), tf);
+			t.writeSortedFormatted("ASSUMED", result.toSet());
 		}
 	}
 }

@@ -29,7 +29,7 @@ import com.raygroupintl.m.tool.SavedParsedTrees;
 import com.raygroupintl.m.tool.SourceCodeFiles;
 import com.raygroupintl.m.tool.SourceCodeSupply;
 import com.raygroupintl.m.tool.SourceCodeToParseTreeAdapter;
-import com.raygroupintl.output.FileWrapper;
+import com.raygroupintl.output.FileTerminal;
 import com.raygroupintl.output.SystemTerminal;
 import com.raygroupintl.output.Terminal;
 import com.raygroupintl.vista.repository.RepositoryInfo;
@@ -125,12 +125,12 @@ public class CLIParamsAdapter {
 		}
 	}
 		
-	public static FileWrapper getOutputFile(CLIParams params) {
+	public static FileTerminal getOutputFile(CLIParams params) {
 		if ((params.outputFile == null) || params.outputFile.isEmpty()) {
 			MRALogger.logError("File " + params.outputFile + " is not found");
 			return null;
 		} else {
-			return new FileWrapper(params.outputFile);
+			return new FileTerminal(params.outputFile);
 		}
 	}
 	
@@ -138,7 +138,7 @@ public class CLIParamsAdapter {
 		if ((params.outputFile == null) || params.outputFile.isEmpty()) {
 			return new SystemTerminal();
 		} else {
-			return new FileWrapper(params.outputFile);
+			return new FileTerminal(params.outputFile);
 		}
 	}
 	

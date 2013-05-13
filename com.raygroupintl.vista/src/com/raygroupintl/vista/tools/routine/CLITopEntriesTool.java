@@ -16,6 +16,7 @@
 
 package com.raygroupintl.vista.tools.routine;
 
+import java.io.IOException;
 import java.util.List;
 
 import com.raygroupintl.m.parsetree.data.EntryId;
@@ -23,7 +24,6 @@ import com.raygroupintl.m.tool.routine.MRoutineToolInput;
 import com.raygroupintl.m.tool.routine.RoutineToolParams;
 import com.raygroupintl.m.tool.routine.fanin.FaninTool;
 import com.raygroupintl.output.Terminal;
-import com.raygroupintl.output.TerminalFormatter;
 import com.raygroupintl.vista.tools.CLIParams;
 import com.raygroupintl.vista.tools.CLIParamsAdapter;
 
@@ -32,21 +32,18 @@ public class CLITopEntriesTool extends CLIRoutineTool {
 		super(params);
 	}
 	
-	public void write(List<EntryId> result, Terminal t) {
-		if (t.start()) {
-			TerminalFormatter tf = new TerminalFormatter();
-			tf.setTab(12);
-			for (EntryId e : result) {
-				if (e.hasDedicatedLabel()) {
-					t.writeEOL("  " + e.toString2());				
-				}
+	public void write(List<EntryId> result, Terminal t) throws IOException {
+		t.getTerminalFormatter().setTab(12);
+		for (EntryId e : result) {
+			if (e.hasDedicatedLabel()) {
+				t.writeEOL("  " + e.toString2());				
 			}
-			t.stop();
-		}								
+		}
+		t.stop();
 	}
 
 	@Override
-	public void run() {
+	public void run() throws IOException {
 		Terminal t = CLIParamsAdapter.getTerminal(this.params);
 		if (t != null) {
 			RoutineToolParams p = CLIRTParamsAdapter.toMRoutineToolParams(this.params);	

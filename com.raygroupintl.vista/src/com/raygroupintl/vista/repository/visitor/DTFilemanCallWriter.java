@@ -16,64 +16,56 @@
 
 package com.raygroupintl.vista.repository.visitor;
 
+import java.io.IOException;
 import java.util.List;
 
 import com.raygroupintl.m.parsetree.Routine;
 import com.raygroupintl.m.parsetree.visitor.FilemanCallRecorder;
-import com.raygroupintl.output.FileWrapper;
-import com.raygroupintl.output.TerminalFormatter;
+import com.raygroupintl.output.FileTerminal;
 import com.raygroupintl.vista.repository.RepositoryInfo;
 import com.raygroupintl.vista.repository.RepositoryVisitor;
 import com.raygroupintl.vista.repository.VistaPackages;
 import com.raygroupintl.vista.repository.VistaPackage;
+import com.raygroupintl.vista.tools.MRALogger;
 
 public class DTFilemanCallWriter extends RepositoryVisitor {
 	private RepositoryInfo repositoryInfo;
-	private FileWrapper fileWrapper;
+	private FileTerminal fileWrapper;
 	private int pkgCount;
 	private String lastPackageName;
 	private boolean packageFirst;
 	
-	public DTFilemanCallWriter(RepositoryInfo repositoryInfo, FileWrapper fileWrapper) {
+	public DTFilemanCallWriter(RepositoryInfo repositoryInfo, FileTerminal fileWrapper) {
 		this.repositoryInfo = repositoryInfo;
 		this.fileWrapper = fileWrapper;
 	}
 		
-	private void writeData(TerminalFormatter tf, List<String> dataList, String title) {
-		this.fileWrapper.write(tf.startList(title));
-		if (dataList.size() > 0) {
-			for (String data : dataList) {
-				this.fileWrapper.write(tf.addToList(data));
-			}
-		} else {
-			this.fileWrapper.write("--");
-		}
-		this.fileWrapper.writeEOL();		
-	}
-	
 	@Override
 	public void visitRoutine(Routine routine) {
 		FilemanCallRecorder recorder = new FilemanCallRecorder(this.repositoryInfo);
 		routine.accept(recorder);
 		List<String> filemanGlobals = recorder.getFilemanGlobals();
 		List<String> filemanCalls = recorder.getFilemanCalls();
-		if ((filemanCalls.size() > 0) || (filemanGlobals.size() > 0)) {	
-			if (this.packageFirst) {
-				this.packageFirst = false;
-				++this.pkgCount;
-				this.fileWrapper.writeEOL("--------------------------------------------------------------");
+		try {
+			if ((filemanCalls.size() > 0) || (filemanGlobals.size() > 0)) {	
+				if (this.packageFirst) {
+					this.packageFirst = false;
+					++this.pkgCount;
+					this.fileWrapper.writeEOL("--------------------------------------------------------------");
+					this.fileWrapper.writeEOL();
+					this.fileWrapper.write(String.valueOf(this.pkgCount));
+					this.fileWrapper.write(". PACKAGE NAME: ");
+					this.fileWrapper.writeEOL(this.lastPackageName);
+					this.fileWrapper.writeEOL();
+				}			
+				this.fileWrapper.writeEOL(" " + routine.getName());
+				this.fileWrapper.getTerminalFormatter().setTab(17);
+				this.fileWrapper.writeFormatted("Globals", filemanGlobals);
+				this.fileWrapper.writeFormatted("FileMan calls", filemanCalls);
 				this.fileWrapper.writeEOL();
-				this.fileWrapper.write(String.valueOf(this.pkgCount));
-				this.fileWrapper.write(". PACKAGE NAME: ");
-				this.fileWrapper.writeEOL(this.lastPackageName);
-				this.fileWrapper.writeEOL();
-			}			
-			this.fileWrapper.writeEOL(" " + routine.getName());
-			TerminalFormatter tf = new TerminalFormatter();
-			tf.setTab(17);
-			this.writeData(tf, filemanGlobals, "Globals");
-			this.writeData(tf, filemanCalls, "FileMan calls");
-			this.fileWrapper.writeEOL();
+			}
+		} catch (IOException e) {
+			MRALogger.logError("Unable to write result", e);
 		}
 	}
 	
@@ -85,17 +77,23 @@ public class DTFilemanCallWriter extends RepositoryVisitor {
 			this.packageFirst = true;
 			super.visitVistaPackage(routinePackage);
 			if (! this.packageFirst) {
-				this.fileWrapper.writeEOL("--------------------------------------------------------------");
-				this.fileWrapper.writeEOL();				
+				try {
+					this.fileWrapper.writeEOL("--------------------------------------------------------------");
+					this.fileWrapper.writeEOL();				
+				} catch (IOException e) {
+					MRALogger.logError("Unable to write result", e);
+				}
 			}
 		}
 	}
 
 	@Override
 	protected void visitRoutinePackages(VistaPackages rps) {
-		if (this.fileWrapper.start()) {			
+		try {			
 			super.visitRoutinePackages(rps);
 			this.fileWrapper.stop();
+		} catch (IOException e) {
+			MRALogger.logError("Unable to write result", e);
 		}
 	}
 }

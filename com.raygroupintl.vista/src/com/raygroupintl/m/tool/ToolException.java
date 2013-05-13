@@ -14,7 +14,7 @@
 //limitations under the License.
 //---------------------------------------------------------------------------
 
-package com.raygroupintl.vista.tools.fnds;
+package com.raygroupintl.m.tool;
 
 @SuppressWarnings("serial")
 public class ToolException extends Exception {

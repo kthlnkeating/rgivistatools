@@ -18,23 +18,16 @@ package com.raygroupintl.output;
 
 public class SystemTerminal extends Terminal {
 	@Override
-	public boolean start() {
-		return true;
-	}
-	
-	@Override
 	public void stop() {
 	}
 	
 	@Override
-	public boolean write(String data) {
+	public void write(String data) {
 		System.out.print(data);
-		return true;
 	}
 	
 	@Override
-	public boolean writeEOL() {
+	public void writeEOL() {
 		System.out.println();
-		return true;
 	}
 }

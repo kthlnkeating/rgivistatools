@@ -16,6 +16,7 @@
 
 package com.raygroupintl.vista.tools.entry;
 
+import java.io.IOException;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -37,7 +38,6 @@ import com.raygroupintl.m.tool.entry.legacycodeinfo.LegacyCodeInfoTool;
 import com.raygroupintl.m.tool.entry.localassignment.LocalAssignmentTool;
 import com.raygroupintl.m.tool.entry.localassignment.LocalAssignmentToolParams;
 import com.raygroupintl.output.Terminal;
-import com.raygroupintl.output.TerminalFormatter;
 import com.raygroupintl.vista.repository.RepositoryInfo;
 import com.raygroupintl.vista.tools.CLIParams;
 import com.raygroupintl.vista.tools.CLIParamsAdapter;
@@ -60,13 +60,13 @@ public class CLIEntryTools extends Tools {
 		}
 
 		@Override
-		protected void write(LegacyCodeInfo result, Terminal t, TerminalFormatter tf) {
+		protected void write(LegacyCodeInfo result, Terminal t) throws IOException {
 			String[] f = result.getFormals();
 			AssumedVariables av = result.getAssumedVariablesTR();
 			BasicCodeInfoTR ci = result.getBasicCodeInfoTR();
-			t.writeFormatted("FORMAL", f, tf);
-			t.writeSortedFormatted("ASSUMED", av.toSet(), tf);
-			ci.writeInfo(t, tf);
+			t.writeFormatted("FORMAL", f);
+			t.writeSortedFormatted("ASSUMED", av.toSet());
+			ci.writeInfo(t);
 			t.writeEOL();
 		}	
 	}
@@ -84,7 +84,7 @@ public class CLIEntryTools extends Tools {
 		}
 
 		@Override
-		protected void write(CodeLocations result, Terminal t, TerminalFormatter tf) {
+		protected void write(CodeLocations result, Terminal t) throws IOException {
 			List<CodeLocation> cl = result.getCodeLocations();
 			if (cl == null) {
 				t.writeEOL("  --");				
@@ -109,7 +109,7 @@ public class CLIEntryTools extends Tools {
 		}
 		
 		@Override
-		protected void write(EntryFanouts result, Terminal t, TerminalFormatter tf) {
+		protected void write(EntryFanouts result, Terminal t) throws IOException {
 			Set<EntryId> r = result.getFanouts();
 			if (r == null) {
 				t.writeEOL("  --");				

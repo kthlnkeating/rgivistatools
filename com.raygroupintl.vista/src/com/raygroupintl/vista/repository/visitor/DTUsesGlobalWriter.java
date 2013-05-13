@@ -16,25 +16,27 @@
 
 package com.raygroupintl.vista.repository.visitor;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
 
 import com.raygroupintl.m.parsetree.Routine;
 import com.raygroupintl.m.parsetree.visitor.GlobalRecorder;
-import com.raygroupintl.output.FileWrapper;
+import com.raygroupintl.output.FileTerminal;
 import com.raygroupintl.struct.ExcludeValueFilter;
 import com.raygroupintl.vista.repository.RepositoryInfo;
 import com.raygroupintl.vista.repository.RepositoryVisitor;
 import com.raygroupintl.vista.repository.VistaPackages;
 import com.raygroupintl.vista.repository.VistaPackage;
+import com.raygroupintl.vista.tools.MRALogger;
 
 public class DTUsesGlobalWriter extends RepositoryVisitor {
 	private RepositoryInfo repositoryInfo;
-	private FileWrapper fileWrapper;
+	private FileTerminal fileWrapper;
 	private GlobalRecorder recorder = new GlobalRecorder();
 	private String lastPackageName;
 	
-	public DTUsesGlobalWriter(RepositoryInfo repositoryInfo, FileWrapper fileWrapper) {
+	public DTUsesGlobalWriter(RepositoryInfo repositoryInfo, FileTerminal fileWrapper) {
 		this.repositoryInfo = repositoryInfo;
 		this.fileWrapper = fileWrapper;
 		ExcludeValueFilter<String> filter = new ExcludeValueFilter<String>();
@@ -52,48 +54,58 @@ public class DTUsesGlobalWriter extends RepositoryVisitor {
 		ArrayList<String> result = new ArrayList<String>(recorder.getGlobals());
 		Collections.sort(result);
 		String routinePrefix = "Routine " + routine.getName() + ": ";
-		for (String r : result) {
-			String g = r;
-			this.fileWrapper.write(routinePrefix);
-			this.fileWrapper.write(r);
-			this.fileWrapper.write(" ");
-			String packageName = this.repositoryInfo.getPackageFromGlobal(g);
-			if (packageName == null) {
-				g = g.split("\\(")[0] + "(";
-				packageName = this.repositoryInfo.getPackageFromGlobal(g);
-			}
-			if (packageName == null) {
-				this.fileWrapper.write("(Dependency Unknown)");				
-			} else if (! packageName.equalsIgnoreCase(this.lastPackageName)) {
-				String fileName = this.repositoryInfo.getFileNameFromGlobal(g);
-				this.fileWrapper.write("(Dependency to ");
-				this.fileWrapper.write(packageName);
-				this.fileWrapper.write(", ");
-				if ((fileName != null) && (! fileName.isEmpty())) {
-					this.fileWrapper.write(fileName);					
-				} else {
-					this.fileWrapper.write("Unknown");
+		try {
+			for (String r : result) {
+				String g = r;
+				this.fileWrapper.write(routinePrefix);
+				this.fileWrapper.write(r);
+				this.fileWrapper.write(" ");
+				String packageName = this.repositoryInfo.getPackageFromGlobal(g);
+				if (packageName == null) {
+					g = g.split("\\(")[0] + "(";
+					packageName = this.repositoryInfo.getPackageFromGlobal(g);
 				}
-				this.fileWrapper.write(" File)");					
+				if (packageName == null) {
+					this.fileWrapper.write("(Dependency Unknown)");				
+				} else if (! packageName.equalsIgnoreCase(this.lastPackageName)) {
+					String fileName = this.repositoryInfo.getFileNameFromGlobal(g);
+					this.fileWrapper.write("(Dependency to ");
+					this.fileWrapper.write(packageName);
+					this.fileWrapper.write(", ");
+					if ((fileName != null) && (! fileName.isEmpty())) {
+						this.fileWrapper.write(fileName);					
+					} else {
+						this.fileWrapper.write("Unknown");
+					}
+					this.fileWrapper.write(" File)");					
+				}
+				this.fileWrapper.writeEOL();
 			}
-			this.fileWrapper.writeEOL();
+		} catch (IOException e) {
+			MRALogger.logError("Unable to write result", e);
 		}
 	}
 	
 	@Override
 	protected void visitVistaPackage(VistaPackage routinePackage) {
-		this.fileWrapper.writeEOL("Directly Used Globals By " + routinePackage.getPackageName());
-		this.fileWrapper.writeEOL();
-		this.lastPackageName = routinePackage.getPackageName();
-		super.visitVistaPackage(routinePackage);
-		this.fileWrapper.writeEOL();
+		try {
+			this.fileWrapper.writeEOL("Directly Used Globals By " + routinePackage.getPackageName());
+			this.fileWrapper.writeEOL();
+			this.lastPackageName = routinePackage.getPackageName();
+			super.visitVistaPackage(routinePackage);
+			this.fileWrapper.writeEOL();
+		} catch (IOException e) {
+			MRALogger.logError("Unable to write result", e);
+		}
 	}
 
 	@Override
 	protected void visitRoutinePackages(VistaPackages rps) {
-		if (this.fileWrapper.start()) {
+		try {
 			super.visitRoutinePackages(rps);
 			this.fileWrapper.stop();
+		} catch (IOException e) {
+			MRALogger.logError("Unable to write result", e);
 		}
 	}
 }

@@ -16,6 +16,7 @@
 
 package com.raygroupintl.vista.tools.entry;
 
+import java.io.IOException;
 import java.util.Set;
 
 import com.raygroupintl.m.parsetree.data.EntryId;
@@ -25,7 +26,6 @@ import com.raygroupintl.m.tool.entry.MEntryToolResult;
 import com.raygroupintl.m.tool.entry.fanin.EntryFanins;
 import com.raygroupintl.m.tool.entry.fanin.FaninTool;
 import com.raygroupintl.output.Terminal;
-import com.raygroupintl.output.TerminalFormatter;
 import com.raygroupintl.vista.tools.CLIParams;
 
 class CLIFaninTool extends CLIEntryTool<EntryFanins> {		
@@ -46,7 +46,7 @@ class CLIFaninTool extends CLIEntryTool<EntryFanins> {
 	}
 	
 	@Override
-	protected void write(EntryFanins result, Terminal t, TerminalFormatter tf) {
+	protected void write(EntryFanins result, Terminal t) throws IOException {
 		Set<EntryId> starts = result.getFaninEntries();
 		for (EntryId start : starts) {
 			Set<EntryId> nextUps = result.getFaninNextEntries(start);

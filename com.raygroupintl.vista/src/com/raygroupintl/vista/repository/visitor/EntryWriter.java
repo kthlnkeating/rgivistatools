@@ -16,23 +16,25 @@
 
 package com.raygroupintl.vista.repository.visitor;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
 import com.raygroupintl.m.parsetree.Routine;
 import com.raygroupintl.m.parsetree.data.EntryId;
-import com.raygroupintl.output.FileWrapper;
+import com.raygroupintl.output.FileTerminal;
 import com.raygroupintl.vista.repository.RepositoryVisitor;
 import com.raygroupintl.vista.repository.VistaPackage;
 import com.raygroupintl.vista.repository.VistaPackages;
+import com.raygroupintl.vista.tools.MRALogger;
 
 public class EntryWriter extends RepositoryVisitor {
-	private FileWrapper fileWrapper;
+	private FileTerminal fileWrapper;
 	private List<String> nameRegexs;
 	private List<EntryId> allEntries = new ArrayList<EntryId>();
 	
-	public EntryWriter(FileWrapper fileWrapper) {
+	public EntryWriter(FileTerminal fileWrapper) {
 		this.fileWrapper = fileWrapper;
 	}
 	
@@ -63,7 +65,7 @@ public class EntryWriter extends RepositoryVisitor {
 		routinePackage.acceptSubNodes(this);
 	}
 
-	private void writeEntries() {
+	private void writeEntries() throws IOException {
 		List<EntryId> entries = new ArrayList<EntryId>(this.allEntries);
 		Collections.sort(entries);
 		for (EntryId entry : entries) {
@@ -74,20 +76,24 @@ public class EntryWriter extends RepositoryVisitor {
 	
 	@Override
 	protected void visitRoutinePackages(VistaPackages rps) {
-		if (this.fileWrapper.start()) {
+		try  {
 			super.visitRoutinePackages(rps);
 			this.writeEntries();
 			this.fileWrapper.stop();
+		} catch (IOException e) {
+			MRALogger.logError("Unable to write result", e);
 		}
 	}
 	
 	public void writeForRoutines(List<Routine> routines) {
-		if (this.fileWrapper.start()) {
+		try {
 			for (Routine r : routines) {
 				this.visitRoutine(r);
 			}
 			this.writeEntries();
 			this.fileWrapper.stop();
+		} catch (IOException e) {
+			MRALogger.logError("Unable to write result", e);
 		}		
 	}
 }

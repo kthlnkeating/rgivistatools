@@ -16,6 +16,7 @@
 
 package com.raygroupintl.vista.tools.routine;
 
+import java.io.IOException;
 import java.util.List;
 
 import com.raygroupintl.m.tool.ParseTreeSupply;
@@ -47,7 +48,7 @@ public class CLIOccuranceTool extends CLIResultsByRoutineLabelTool<Occurance, Li
 	}
 	
 	@Override
-	protected void write(Terminal t, String indent,  Occurance result) {
+	protected void write(Terminal t, String indent,  Occurance result) throws IOException {
 		int lineIndex = result .getLineIndex();
 		String location = "Line " + String.valueOf(lineIndex);
 		String type = this.getOccuranceTypeAsString(result.getType());
@@ -55,7 +56,7 @@ public class CLIOccuranceTool extends CLIResultsByRoutineLabelTool<Occurance, Li
 	}
 
 	@Override
-	public void run() {
+	public void run() throws IOException {
 		Terminal t = CLIParamsAdapter.getTerminal(this.params);
 		if (t != null) {
 			ParseTreeSupply pts = CLIParamsAdapter.getParseTreeSupply(this.params);

@@ -16,6 +16,7 @@
 
 package com.raygroupintl.vista.tools.routine;
 
+import java.io.IOException;
 import java.util.Set;
 
 import com.raygroupintl.m.parsetree.data.EntryId;
@@ -33,12 +34,12 @@ class CLIFaninTool extends CLIResultsByRoutineLabelTool<EntryId, Set<EntryId>> {
 	}
 	
 	@Override
-	protected void write(Terminal t, String indent, EntryId result) {
+	protected void write(Terminal t, String indent, EntryId result) throws IOException {
 		t.writeEOL(indent + result.toString2());
 	}
 
 	@Override
-	public void run() {
+	public void run() throws IOException {
 		Terminal t = CLIParamsAdapter.getTerminal(this.params);
 		if (t != null) {
 			RoutineToolParams p = CLIRTParamsAdapter.toMRoutineToolParams(this.params);	

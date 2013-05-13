@@ -16,13 +16,13 @@
 
 package com.raygroupintl.vista.tools.routine;
 
+import java.io.IOException;
 import java.util.Collection;
 import java.util.Set;
 
 import com.raygroupintl.m.tool.ResultsByLabel;
 import com.raygroupintl.m.tool.ResultsByRoutine;
 import com.raygroupintl.output.Terminal;
-import com.raygroupintl.output.TerminalFormatter;
 import com.raygroupintl.vista.tools.CLIParams;
 import com.raygroupintl.vista.tools.CLIParamsAdapter;
 import com.raygroupintl.vista.tools.OutputFlags;
@@ -37,9 +37,9 @@ abstract class CLIResultsByRoutineLabelTool<T, U extends Collection<T>> extends 
 		this.skipEmpty = ofs.getSkipEmpty(false);
 	}
 	
-	protected abstract void write(Terminal t, String indent, T result);
+	protected abstract void write(Terminal t, String indent, T result) throws IOException;
 
-	protected void write(ResultsByRoutine<T, U> results, Terminal t, TerminalFormatter tf) {
+	private void innerWrite(ResultsByRoutine<T, U> results, Terminal t) throws IOException {
 		Set<String> rns = results.getRoutineNames();
 		for (String rn : rns) {
 			ResultsByLabel<T, U> rsbl = results.getResults(rn);
@@ -60,12 +60,9 @@ abstract class CLIResultsByRoutineLabelTool<T, U extends Collection<T>> extends 
 		}
 	}
 	
-	protected void write(ResultsByRoutine<T, U> results, Terminal t) {
-		if (t.start()) {
-			TerminalFormatter tf = new TerminalFormatter();
-			tf.setTab(12);
-			this.write(results, t, tf);
-			t.stop();
-		}								
+	protected void write(ResultsByRoutine<T, U> results, Terminal t) throws IOException {
+		t.getTerminalFormatter().setTab(12);
+		this.innerWrite(results, t);
+		t.stop();
 	}
 }

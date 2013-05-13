@@ -16,6 +16,7 @@
 
 package com.raygroupintl.vista.repository.visitor;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashSet;
@@ -24,11 +25,12 @@ import java.util.Set;
 
 import com.raygroupintl.m.parsetree.Routine;
 import com.raygroupintl.m.parsetree.visitor.GlobalRecorder;
-import com.raygroupintl.output.FileWrapper;
+import com.raygroupintl.output.FileTerminal;
 import com.raygroupintl.vista.repository.RepositoryInfo;
 import com.raygroupintl.vista.repository.RepositoryVisitor;
 import com.raygroupintl.vista.repository.VistaPackages;
 import com.raygroupintl.vista.repository.VistaPackage;
+import com.raygroupintl.vista.tools.MRALogger;
 
 public class DTUsedGlobalWriter extends RepositoryVisitor {
 	private static class OutputLine implements Comparable<OutputLine> {
@@ -47,13 +49,13 @@ public class DTUsedGlobalWriter extends RepositoryVisitor {
 	}
 		
 	private RepositoryInfo repositoryInfo;
-	private FileWrapper fileWrapper;
+	private FileTerminal fileWrapper;
 	private GlobalRecorder recorder = new GlobalRecorder();
 	private String lastPackageName;
 	private List<OutputLine> outputLines = new ArrayList<OutputLine>();
 	private Set<String> selectedVPs;	
 	
-	public DTUsedGlobalWriter(RepositoryInfo repositoryInfo, FileWrapper fileWrapper) {
+	public DTUsedGlobalWriter(RepositoryInfo repositoryInfo, FileTerminal fileWrapper) {
 		this.repositoryInfo = repositoryInfo;
 		this.fileWrapper = fileWrapper;
 	}
@@ -98,7 +100,7 @@ public class DTUsedGlobalWriter extends RepositoryVisitor {
 			}
 		}
 		Collections.sort(this.outputLines);
-		if (this.fileWrapper.start()) {
+		try  {
 			for (OutputLine ol : this.outputLines) {
 				this.fileWrapper.write("Routine ");
 				this.fileWrapper.write(ol.routineName);
@@ -110,6 +112,8 @@ public class DTUsedGlobalWriter extends RepositoryVisitor {
 				this.fileWrapper.writeEOL();				
 			}
 			this.fileWrapper.stop();
+		} catch (IOException e) {
+			MRALogger.logError("Unable to write result", e);
 		}
 	}
 }

@@ -16,6 +16,8 @@
 
 package com.raygroupintl.vista.tools.entry;
 
+import java.io.IOException;
+
 import com.raygroupintl.m.tool.CommonToolParams;
 import com.raygroupintl.m.tool.entry.MEntryToolInput;
 import com.raygroupintl.m.tool.entry.MEntryToolResult;
@@ -25,7 +27,6 @@ import com.raygroupintl.m.tool.entry.quittype.QuitType;
 import com.raygroupintl.m.tool.entry.quittype.QuitTypeState;
 import com.raygroupintl.m.tool.entry.quittype.QuitTypeTool;
 import com.raygroupintl.output.Terminal;
-import com.raygroupintl.output.TerminalFormatter;
 import com.raygroupintl.vista.tools.CLIParams;
 import com.raygroupintl.vista.tools.CLIParamsAdapter;
 
@@ -47,32 +48,32 @@ class CLIQuitTypeTool extends CLIEntryTool<QuitType> {
 	}
 	
 	@Override
-	protected void write(QuitType result, Terminal t, TerminalFormatter tf) {
+	protected void write(QuitType result, Terminal t) throws IOException {
 		boolean skipEmpty = CLIParamsAdapter.toOutputFlags(params).getSkipEmpty(false);		
 		QuitTypeState qts = result.getQuitTypeState();
 		switch (qts) {
 			case NO_QUITS:
 				if (! skipEmpty) {
-					t.writeFormatted("QUIT", "No quits.", tf);
+					t.writeFormatted("QUIT", "No quits.");
 				}
 			break;
 			case QUITS_WITH_VALUE:
 				if (! skipEmpty) {
 					String fl = result.getFirstQuitLocation().toString(); 
-					t.writeFormatted("QUIT", "With value (ex: " + fl + ")", tf);
+					t.writeFormatted("QUIT", "With value (ex: " + fl + ")");
 				}
 			break;
 			case QUITS_WITHOUT_VALUE:
 				if (! skipEmpty) {
 					String fl = result.getFirstQuitLocation().toString(); 
-					t.writeFormatted("QUIT", "Without value (ex: " + fl + ")", tf);
+					t.writeFormatted("QUIT", "Without value (ex: " + fl + ")");
 				}
 			break;
 			case CONFLICTING_QUITS:
 			{
 				String fl = result.getFirstQuitLocation().toString(); 
 				String cl = result.getConflictingLocation().toString();
-				t.writeFormatted("QUIT", "Conflicted (ex: " + fl + " vs " + cl + ")", tf);
+				t.writeFormatted("QUIT", "Conflicted (ex: " + fl + " vs " + cl + ")");
 			}
 			break;
 		}
@@ -82,33 +83,33 @@ class CLIQuitTypeTool extends CLIEntryTool<QuitType> {
 			case DO_CONFLICTING:
 			{
 				String fl = ct.getLocation().toString(); 
-				t.writeFormatted("CALL", "Invalid DO at " + fl, tf);				
+				t.writeFormatted("CALL", "Invalid DO at " + fl);				
 			}				
 			break;
 			case EXTRINSIC_CONFLICTING:
 			{
 				String fl = ct.getLocation().toString(); 
-				t.writeFormatted("CALL", "Invalid extrinsic at " + fl, tf);				
+				t.writeFormatted("CALL", "Invalid extrinsic at " + fl);				
 			}				
 			break;
 			case FANOUT_CONFLICTING:
 			{
 				String fl = ct.getLocation().toString(); 
-				t.writeFormatted("CALL", "Fanout has invalid quit type at " + fl, tf);				
+				t.writeFormatted("CALL", "Fanout has invalid quit type at " + fl);				
 			}				
 			break;			
 			case DO_UNVERIFIED:
 			case DO_VERIFIED:
 				if (! skipEmpty) {
 					String fl = ct.getLocation().toString(); 
-					t.writeFormatted("CALL", "DO at " + fl, tf);									
+					t.writeFormatted("CALL", "DO at " + fl);									
 				}
 			break;
 			case EXTRINSIC_UNVERIFIED:
 			case EXTRINSIC_VERIFIED:
 				if (! skipEmpty) {
 					String fl = ct.getLocation().toString(); 
-					t.writeFormatted("CALL", "Extrinsic at " + fl, tf);									
+					t.writeFormatted("CALL", "Extrinsic at " + fl);									
 				}
 			break;
 			default:

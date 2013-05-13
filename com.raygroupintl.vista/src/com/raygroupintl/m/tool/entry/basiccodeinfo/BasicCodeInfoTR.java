@@ -16,8 +16,9 @@
 
 package com.raygroupintl.m.tool.entry.basiccodeinfo;
 
+import java.io.IOException;
+
 import com.raygroupintl.output.Terminal;
-import com.raygroupintl.output.TerminalFormatter;
 
 public class BasicCodeInfoTR {
 	public String[] formals;	
@@ -36,13 +37,13 @@ public class BasicCodeInfoTR {
 		return this.info;
 	}
 	
-	public void writeInfo(Terminal t, TerminalFormatter tf) {
-		t.writeFormatted("GLBS", this.info.getGlobals(), tf);
-		t.writeFormatted("READ" , this.info.getReadCount(), tf);
-		t.writeFormatted("WRITE", this.info.getWriteCount(), tf);
-		t.writeFormatted("EXEC", this.info.getExecuteCount(), tf);
-		t.writeFormatted("IND", this.info.getIndirectionCount(), tf);
-		t.writeFormatted("FMGLBS", this.info.getFilemanGlobals(), tf);
-		t.writeFormatted("FMCALLS", this.info.getFilemanCalls(), tf);		
+	public void writeInfo(Terminal t) throws IOException {
+		t.writeFormatted("GLBS", this.info.getGlobals());
+		t.writeFormatted("READ" , this.info.getReadCount());
+		t.writeFormatted("WRITE", this.info.getWriteCount());
+		t.writeFormatted("EXEC", this.info.getExecuteCount());
+		t.writeFormatted("IND", this.info.getIndirectionCount());
+		t.writeFormatted("FMGLBS", this.info.getFilemanGlobals());
+		t.writeFormatted("FMCALLS", this.info.getFilemanCalls());		
 	}
 }

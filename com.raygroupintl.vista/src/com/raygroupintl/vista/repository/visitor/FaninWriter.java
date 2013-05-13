@@ -16,6 +16,7 @@
 
 package com.raygroupintl.vista.repository.visitor;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
@@ -27,17 +28,17 @@ import java.util.Set;
 import com.raygroupintl.m.parsetree.Routine;
 import com.raygroupintl.m.parsetree.data.EntryId;
 import com.raygroupintl.m.parsetree.visitor.FanInRecorder;
-import com.raygroupintl.output.FileWrapper;
-import com.raygroupintl.output.TerminalFormatter;
+import com.raygroupintl.output.FileTerminal;
 import com.raygroupintl.struct.Filter;
 import com.raygroupintl.vista.repository.RepositoryInfo;
 import com.raygroupintl.vista.repository.RepositoryVisitor;
 import com.raygroupintl.vista.repository.VistaPackage;
 import com.raygroupintl.vista.repository.VistaPackages;
+import com.raygroupintl.vista.tools.MRALogger;
 
 public class FaninWriter extends RepositoryVisitor {
 	private RepositoryInfo repositoryInfo;
-	private FileWrapper fileWrapper;
+	private FileTerminal fileWrapper;
 	private FanInRecorder faninRecorder;
 	private boolean rawFormat;
 	
@@ -68,7 +69,7 @@ public class FaninWriter extends RepositoryVisitor {
 		}		
 	}
 	
-	public FaninWriter(RepositoryInfo repositoryInfo, FileWrapper fileWrapper, boolean rawFormat) {
+	public FaninWriter(RepositoryInfo repositoryInfo, FileTerminal fileWrapper, boolean rawFormat) {
 		this.repositoryInfo = repositoryInfo;
 		this.fileWrapper = fileWrapper;
 		this.rawFormat = rawFormat;
@@ -130,9 +131,8 @@ public class FaninWriter extends RepositoryVisitor {
 			entryIds.add(fws);
 		}
 		
-		
-		if (rawFormat) {
-			if (this.fileWrapper.start()) {
+		try {
+			if (rawFormat) {
 				List<VistaPackage> reportPackages = rps.getPackages();
 				for (VistaPackage p : reportPackages) {
 					String name = p.getPackageName();
@@ -143,12 +143,9 @@ public class FaninWriter extends RepositoryVisitor {
 					}
 				}
 				this.fileWrapper.stop();
-			}	
-		} else {
-			TerminalFormatter tf = new TerminalFormatter();
-			int ndx = 0;
-			if (this.fileWrapper.start()) {
-				tf.setTab(21);
+			} else {
+				int ndx = 0;
+				this.fileWrapper.getTerminalFormatter().setTab(21);
 				List<VistaPackage> reportPackages = rps.getPackages();
 				boolean multi = reportPackages.size() > 1;
 				for (VistaPackage p : reportPackages) {
@@ -173,17 +170,15 @@ public class FaninWriter extends RepositoryVisitor {
 						Collections.sort(fs);
 						for (EntryIdWithSources f : fs) {
 							this.fileWrapper.writeEOL("  " + f.entryId.toString());
-							String title = tf.startList("CALLING PACKAGES");
-							this.fileWrapper.write(title);
 							List<String> sourcePackages = new ArrayList<String>(f.sources.getPackages());
 							Collections.sort(sourcePackages);
+							List<String> outputList = new ArrayList<String>();
 							for (String source : sourcePackages) {
 								VistaPackage vp = this.repositoryInfo.getPackageFromPrefix(source);							
 								String pkgName = vp.getPackageName();
-								String line = tf.addToList(pkgName);
-								this.fileWrapper.write(line);
+								outputList.add(pkgName);
 							}
-							this.fileWrapper.writeEOL();
+							this.fileWrapper.writeFormatted("CALLING PACKAGES", outputList);
 							this.fileWrapper.writeEOL();
 						}
 					}
@@ -193,7 +188,9 @@ public class FaninWriter extends RepositoryVisitor {
 					}
 				}
 				this.fileWrapper.stop();
-			}
+			} 
+		} catch (IOException e) {
+			MRALogger.logError("Unable to write result", e);
 		}
 	}
 }

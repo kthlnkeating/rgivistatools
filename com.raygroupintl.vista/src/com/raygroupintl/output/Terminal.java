@@ -16,55 +16,58 @@
 
 package com.raygroupintl.output;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 
 public abstract class Terminal {
-	public abstract boolean start();
+	private TerminalFormatter tf = new TerminalFormatter();
 	
-	public abstract void stop();
-	
-	public abstract boolean write(String data);
-	
-	public abstract boolean writeEOL();
-
-	public boolean writeEOL(String data) {
-		if (this.write(data)) {
-			return this.writeEOL();
-		}
-		return false;
+	public TerminalFormatter getTerminalFormatter() {
+		return this.tf;
 	}
 	
-	public void writeFormatted(String title, String message, TerminalFormatter tf) {
-		String line = tf.titled(title, message);
+	public abstract void stop() throws IOException;
+	
+	public abstract void write(String data) throws IOException;
+	
+	public abstract void writeEOL() throws IOException;
+
+	public void writeEOL(String data) throws IOException {
+		this.write(data);
+		this.writeEOL();
+	}
+	
+	public void writeFormatted(String title, String message) throws IOException {
+		String line = this.tf.titled(title, message);
 		this.writeEOL(line);
 	}
 	
-	public void writeFormatted(String title, int count, TerminalFormatter tf) {
-		this.write(tf.startList(title));
+	public void writeFormatted(String title, int count) throws IOException {
+		this.write(this.tf.startList(title));
 		this.write(String.valueOf(count));
 		this.writeEOL();		
 	}
 
-	public void writeFormatted(String title, String[] dataArray, TerminalFormatter tf) {
-		this.write(tf.startList(title));
+	public void writeFormatted(String title, String[] dataArray) throws IOException {
+		this.write(this.tf.startList(title));
 		if ((dataArray == null) || (dataArray.length == 0)) {
 			this.write("--");
 		} else {
 			for (String data : dataArray) {
-				this.write(tf.addToList(data));					
+				this.write(this.tf.addToList(data));					
 			}
 		}
 		this.writeEOL();		
 	}
 
-	public void writeFormatted(String title, Collection<String> dataList, TerminalFormatter tf) {
-		this.write(tf.startList(title));
+	public void writeFormatted(String title, Collection<String> dataList) throws IOException {
+		this.write(this.tf.startList(title));
 		if (dataList.size() > 0) {
 			for (String data : dataList) {
-				this.write(tf.addToList(data));
+				this.write(this.tf.addToList(data));
 			}
 		} else {
 			this.write("--");
@@ -72,9 +75,9 @@ public abstract class Terminal {
 		this.writeEOL();		
 	}
 
-	public void writeSortedFormatted(String title, Collection<String> dataList, TerminalFormatter tf) {
+	public void writeSortedFormatted(String title, Collection<String> dataList) throws IOException {
 		List<String> sorted = new ArrayList<String>(dataList);
 		Collections.sort(sorted);		
-		this.writeFormatted(title, sorted, tf);
+		this.writeFormatted(title, sorted);
 	}
 }

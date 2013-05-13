@@ -16,6 +16,7 @@
 
 package com.raygroupintl.vista.repository.visitor;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
@@ -24,16 +25,17 @@ import java.util.Map;
 
 import com.raygroupintl.m.parsetree.data.EntryId;
 import com.raygroupintl.m.parsetree.data.EntryIdWithSource;
-import com.raygroupintl.output.FileWrapper;
+import com.raygroupintl.output.FileTerminal;
 import com.raygroupintl.vista.repository.RepositoryInfo;
 import com.raygroupintl.vista.repository.VistaPackage;
 import com.raygroupintl.vista.repository.VistaPackages;
+import com.raygroupintl.vista.tools.MRALogger;
 
 public class OptionRPCWriter {
 	protected RepositoryInfo repositoryInfo;
-	private FileWrapper fileWrapper;
+	private FileTerminal fileWrapper;
 	
-	public OptionRPCWriter(RepositoryInfo repositoryInfo, FileWrapper fileWrapper) {
+	public OptionRPCWriter(RepositoryInfo repositoryInfo, FileTerminal fileWrapper) {
 		this.repositoryInfo = repositoryInfo;
 		this.fileWrapper = fileWrapper;
 	}
@@ -55,7 +57,7 @@ public class OptionRPCWriter {
 				pkgOptions.add(value);
 			}
 		}		
-		if (this.fileWrapper.start()) {
+		try {
 			int index = 0;
 			List<VistaPackage> reportPackages = vps.getPackages();
 			boolean multi = reportPackages.size() > 1;
@@ -79,6 +81,8 @@ public class OptionRPCWriter {
 				}
 			}
 			this.fileWrapper.stop();
+		} catch (IOException e) {
+			MRALogger.logError("Unable to write result", e);
 		}
 	}
 }

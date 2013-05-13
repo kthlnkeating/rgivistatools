@@ -19,7 +19,7 @@ package com.raygroupintl.vista.tools.routine;
 import java.util.List;
 
 import com.raygroupintl.m.parsetree.Routine;
-import com.raygroupintl.output.FileWrapper;
+import com.raygroupintl.output.FileTerminal;
 import com.raygroupintl.vista.repository.visitor.EntryWriter;
 import com.raygroupintl.vista.tools.CLIParams;
 import com.raygroupintl.vista.tools.CLIParamsAdapter;
@@ -33,7 +33,7 @@ class CLIEntryListTool extends CLIRoutineTool {
 	public void run() {
 		List<Routine> routines = this.getRoutines();
 		if (routines != null) {
-			FileWrapper fr = CLIParamsAdapter.getOutputFile(this.params);
+			FileTerminal fr = CLIParamsAdapter.getOutputFile(this.params);
 			if (fr != null) {
 				EntryWriter ew = new EntryWriter(fr);
 				ew.writeForRoutines(routines);

@@ -16,13 +16,14 @@
 
 package com.raygroupintl.vista.tools;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
+import com.raygroupintl.m.tool.ToolErrorException;
 import com.raygroupintl.util.CLIParamMgr;
 import com.raygroupintl.vista.tools.entry.CLIEntryTools;
-import com.raygroupintl.vista.tools.fnds.ToolErrorException;
 import com.raygroupintl.vista.tools.macro.MacroTools;
 import com.raygroupintl.vista.tools.repository.RepositoryTools;
 import com.raygroupintl.vista.tools.routine.CLIRoutineTools;
@@ -69,7 +70,7 @@ public class MRoutineAnalyzer {
 		MRALogger.logError(firstLineMsg + "\n" + secondLineMsg + "\n");
 	}
 
-	private static boolean run(Tools rts, String runTypeOption, CLIParams params) {
+	private static boolean run(Tools rts, String runTypeOption, CLIParams params) throws IOException {
 		Tool rt = rts.getRunType(runTypeOption, params);
 		if (rt != null) {
 			MRALogger.logInfo("Started " + runTypeOption + ".");
@@ -115,6 +116,8 @@ public class MRoutineAnalyzer {
 			return;				
 		} catch (ToolErrorException e) {
 			MRALogger.logError("Error running tool", e);
+		} catch (IOException e) {
+			MRALogger.logError("File error", e);
 		} catch (Throwable t) {
 			MRALogger.logError("Unexpected error.", t);
 		}

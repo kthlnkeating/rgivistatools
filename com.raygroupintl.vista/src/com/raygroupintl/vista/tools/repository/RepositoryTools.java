@@ -16,13 +16,14 @@
 
 package com.raygroupintl.vista.tools.repository;
 
+import java.io.IOException;
 import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 
-import com.raygroupintl.output.FileWrapper;
+import com.raygroupintl.output.FileTerminal;
 import com.raygroupintl.vista.repository.RepositoryInfo;
 import com.raygroupintl.vista.repository.VistaPackage;
 import com.raygroupintl.vista.repository.VistaPackages;
@@ -49,7 +50,7 @@ public class RepositoryTools extends Tools {
 		
 		@Override
 		public void run() {
-			FileWrapper fr = CLIParamsAdapter.getOutputFile(this.params);
+			FileTerminal fr = CLIParamsAdapter.getOutputFile(this.params);
 			if (fr != null) {
 				RepositoryInfo ri = CLIParamsAdapter.getRepositoryInfo(this.params);
 				if (ri != null) {
@@ -70,7 +71,7 @@ public class RepositoryTools extends Tools {
 		
 		@Override
 		public void run() {
-			FileWrapper fr = CLIParamsAdapter.getOutputFile(this.params);
+			FileTerminal fr = CLIParamsAdapter.getOutputFile(this.params);
 			if (fr != null) {
 				RepositoryInfo ri = CLIParamsAdapter.getRepositoryInfo(this.params);
 				if (ri != null) {
@@ -91,7 +92,7 @@ public class RepositoryTools extends Tools {
 		
 		@Override
 		public void run() {
-			FileWrapper fr = CLIParamsAdapter.getOutputFile(this.params);
+			FileTerminal fr = CLIParamsAdapter.getOutputFile(this.params);
 			if (fr != null) {
 				RepositoryInfo ri = CLIParamsAdapter.getRepositoryInfo(this.params);
 				if (ri != null) {
@@ -115,7 +116,7 @@ public class RepositoryTools extends Tools {
 		
 		@Override
 		public void run() {
-			FileWrapper fr = CLIParamsAdapter.getOutputFile(this.params);
+			FileTerminal fr = CLIParamsAdapter.getOutputFile(this.params);
 			if (fr != null) {
 				RepositoryInfo ri = CLIParamsAdapter.getRepositoryInfo(this.params);
 				if (ri != null) {
@@ -136,7 +137,7 @@ public class RepositoryTools extends Tools {
 		
 		@Override
 		public void run() {
-			FileWrapper fr = CLIParamsAdapter.getOutputFile(this.params);
+			FileTerminal fr = CLIParamsAdapter.getOutputFile(this.params);
 			if (fr != null) {
 				RepositoryInfo ri = CLIParamsAdapter.getRepositoryInfo(this.params);
 				if (ri != null) {
@@ -156,8 +157,8 @@ public class RepositoryTools extends Tools {
 		}
 		
 		@Override
-		public void run() {
-			FileWrapper fr = CLIParamsAdapter.getOutputFile(this.params);
+		public void run() throws IOException {
+			FileTerminal fr = CLIParamsAdapter.getOutputFile(this.params);
 			if (fr != null) {
 				RepositoryInfo ri = CLIParamsAdapter.getRepositoryInfo(this.params);
 				if (ri != null) {
@@ -173,7 +174,6 @@ public class RepositoryTools extends Tools {
 							}
 						}
 						Collections.sort(routineNames);				
-						fr.start();
 						for (String routineName : routineNames) {
 							VistaPackage pkg = ri.getPackageFromRoutineName(routineName);
 							String prefix = pkg.getDefaultPrefix();
@@ -195,7 +195,7 @@ public class RepositoryTools extends Tools {
 		
 		@Override
 		public void run() {
-			FileWrapper fr = CLIParamsAdapter.getOutputFile(this.params);
+			FileTerminal fr = CLIParamsAdapter.getOutputFile(this.params);
 			if (fr != null) {
 				RepositoryInfo ri = CLIParamsAdapter.getRepositoryInfo(this.params);
 				if (ri != null) {
@@ -216,7 +216,7 @@ public class RepositoryTools extends Tools {
 		
 		@Override
 		public void run() {
-			FileWrapper fr = CLIParamsAdapter.getOutputFile(this.params);
+			FileTerminal fr = CLIParamsAdapter.getOutputFile(this.params);
 			if (fr != null) {
 				RepositoryInfo ri = CLIParamsAdapter.getRepositoryInfo(this.params);
 				if (ri != null) {
@@ -237,7 +237,7 @@ public class RepositoryTools extends Tools {
 		
 		@Override
 		public void run() {
-			FileWrapper fr = CLIParamsAdapter.getOutputFile(this.params);
+			FileTerminal fr = CLIParamsAdapter.getOutputFile(this.params);
 			if (fr != null) {
 				RepositoryInfo ri = CLIParamsAdapter.getRepositoryInfo(this.params);
 				if (ri != null) {
@@ -258,7 +258,7 @@ public class RepositoryTools extends Tools {
 		
 		@Override
 		public void run() {
-			FileWrapper fr = CLIParamsAdapter.getOutputFile(this.params);
+			FileTerminal fr = CLIParamsAdapter.getOutputFile(this.params);
 			if (fr != null) {
 				RepositoryInfo ri = CLIParamsAdapter.getRepositoryInfo(this.params);
 				if (ri != null) {
@@ -282,7 +282,7 @@ public class RepositoryTools extends Tools {
 		
 		@Override
 		public void run() {
-			FileWrapper fr = CLIParamsAdapter.getOutputFile(this.params);
+			FileTerminal fr = CLIParamsAdapter.getOutputFile(this.params);
 			if (fr != null) {
 				RepositoryInfo ri = CLIParamsAdapter.getRepositoryInfo(this.params);
 				if (ri != null) {

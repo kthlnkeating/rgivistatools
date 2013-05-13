@@ -16,6 +16,7 @@
 
 package com.raygroupintl.vista.tools;
 
+import java.io.IOException;
 import java.io.Writer;
 import java.util.List;
 
@@ -31,7 +32,7 @@ public abstract class Tool {
 		this.params = params;
 	}
 		
-	public abstract void run();
+	public abstract void run() throws IOException;
 
 	protected VistaPackages getAllVistaPackages(RepositoryInfo ri) {
 		List<VistaPackage> packages = ri.getAllPackages(this.params.packageExceptions);

@@ -1,10 +1,10 @@
 package com.raygroupintl.vista.tools.returntype;
 
+import java.io.IOException;
 import java.util.LinkedList;
 
 import com.raygroupintl.m.struct.EntryFanoutInfo;
 import com.raygroupintl.output.Terminal;
-import com.raygroupintl.output.TerminalFormatter;
 
 public class ReturnTypeToolResults {
 	
@@ -25,7 +25,7 @@ public class ReturnTypeToolResults {
 	     return String.format("%1$-" + n + "s", s);  
 	}
 
-	public void write(Terminal t, TerminalFormatter tf) {
+	public void write(Terminal t) throws IOException {
 		t.writeEOL(" " + resultName);
 		
 		boolean allValid = true;
