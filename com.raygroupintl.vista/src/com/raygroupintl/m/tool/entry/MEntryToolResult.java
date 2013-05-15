@@ -29,7 +29,7 @@ import com.raygroupintl.m.tool.OutputFlags;
 import com.raygroupintl.m.tool.ToolResult;
 import com.raygroupintl.output.Terminal;
 
-public class MEntryToolResult<T extends ToolResult> {
+public class MEntryToolResult<T extends ToolResult> implements ToolResult {
 	private List<EntryId> entries = new ArrayList<EntryId>();
 	private List<T> results = new ArrayList<>();
 	
@@ -109,6 +109,12 @@ public class MEntryToolResult<T extends ToolResult> {
 		return result;	
 	}
 	
+	@Override
+	public boolean isEmpty() {
+		return false;
+	}
+	
+	@Override
 	public void write(Terminal t, OutputFlags flags) throws IOException {
 		List<EntryId> entries = this.getEntries();
 		List<T> resultList = this.getResults();

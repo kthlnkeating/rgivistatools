@@ -27,7 +27,7 @@ import java.util.Set;
 import com.raygroupintl.m.parsetree.data.EntryId;
 import com.raygroupintl.output.Terminal;
 
-public abstract class ResultsByRoutine<T extends ToolResult, U extends Collection<T>> {
+public abstract class ResultsByRoutine<T extends ToolResult, U extends Collection<T>> implements ToolResult {
 	private Map<String, ResultsByLabel<T, U>> map = new HashMap<String, ResultsByLabel<T, U>>();
 
 	public void put(String routineName, ResultsByLabel<T, U> results) {
@@ -73,6 +73,7 @@ public abstract class ResultsByRoutine<T extends ToolResult, U extends Collectio
 		return emptyEntries;
 	}
 	
+	@Override
 	public boolean isEmpty() {
 		Set<String> routineNames = this.map.keySet();
 		for (String routineName : routineNames) {
@@ -95,6 +96,7 @@ public abstract class ResultsByRoutine<T extends ToolResult, U extends Collectio
 		return allFlattened;
 	}
 	
+	@Override
 	public void write(Terminal t, OutputFlags flags) throws IOException {
 		Set<String> rns = this.getRoutineNames();
 		for (String rn : rns) {
