@@ -99,6 +99,7 @@ public abstract class ResultsByRoutine<T extends ToolResult, U extends Collectio
 	@Override
 	public void write(Terminal t, OutputFlags flags) throws IOException {
 		Set<String> rns = this.getRoutineNames();
+		boolean found = false;
 		for (String rn : rns) {
 			ResultsByLabel<T, U> rsbl = this.getResults(rn);
 			Set<String> labels = rsbl.getLabels();
@@ -112,6 +113,7 @@ public abstract class ResultsByRoutine<T extends ToolResult, U extends Collectio
 						t.writeIndented("--");
 						t.getTerminalFormatter().pullIndent();
 						t.getTerminalFormatter().pullIndent();
+						found = true;
 					}
 				} else for (T r : rs) {
 					t.getTerminalFormatter().pushIndent();
@@ -120,9 +122,12 @@ public abstract class ResultsByRoutine<T extends ToolResult, U extends Collectio
 					r.write(t, flags);
 					t.getTerminalFormatter().pullIndent();
 					t.getTerminalFormatter().pullIndent();
+					found = true;
 				}
-			}
-		
+			}		
 		}
+		if (! found) {
+			t.writeEOL("None found.");
+		}		
 	}
 }

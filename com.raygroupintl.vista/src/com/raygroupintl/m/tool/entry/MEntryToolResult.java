@@ -111,7 +111,14 @@ public class MEntryToolResult<T extends ToolResult> implements ToolResult {
 	
 	@Override
 	public boolean isEmpty() {
-		return false;
+		if (this.results != null) {
+			for (T result : this.results) {
+				if (! result.isEmpty()) {
+					return false;
+				}
+			}
+		}
+		return true;
 	}
 	
 	@Override
@@ -119,10 +126,12 @@ public class MEntryToolResult<T extends ToolResult> implements ToolResult {
 		List<EntryId> entries = this.getEntries();
 		List<T> resultList = this.getResults();
 		int n = entries.size();
+		boolean found = false;
 		for (int i=0; i<n; ++i) {
 			T u = resultList.get(i);
 			if (u != null) {
 				if ((! flags.getSkipEmpty(false)) || (! u.isEmpty())) {
+					found = true;
 					t.writeEOL(" " + entries.get(i).toString2());		
 					u.write(t, flags);
 				} 		
@@ -132,6 +141,8 @@ public class MEntryToolResult<T extends ToolResult> implements ToolResult {
 				t.writeEOL("  ERROR: " + error.getMessage());
 			}
 		}
-		
+		if (! found) {
+			t.writeEOL("None found.");
+		}		
 	}
  }
