@@ -25,11 +25,12 @@ import com.raygroupintl.m.tool.routine.MRoutineToolInput;
 import com.raygroupintl.m.tool.routine.occurance.Occurance;
 import com.raygroupintl.m.tool.routine.occurance.OccuranceTool;
 import com.raygroupintl.m.tool.routine.occurance.OccuranceToolParams;
+import com.raygroupintl.m.tool.routine.occurance.OccuranceType;
 import com.raygroupintl.output.Terminal;
 import com.raygroupintl.vista.tools.CLIParams;
 import com.raygroupintl.vista.tools.CLIParamsAdapter;
 
-public class CLIOccuranceTool extends CLIResultsByRoutineLabelTool<Occurance, List<Occurance>> {
+public class CLIOccuranceTool extends CLIResultsByRoutineLabelTool<Occurance, List<Occurance>> {	
 	public CLIOccuranceTool(CLIParams params) {
 		super(params);
 	}
@@ -39,7 +40,14 @@ public class CLIOccuranceTool extends CLIResultsByRoutineLabelTool<Occurance, Li
 		Terminal t = CLIParamsAdapter.getTerminal(this.params);
 		if (t != null) {
 			ParseTreeSupply pts = CLIParamsAdapter.getParseTreeSupply(this.params);
-			OccuranceToolParams p = new OccuranceToolParams(pts);	
+			OccuranceToolParams p = new OccuranceToolParams(pts);
+			if (this.params.occuranceType.size() > 0) {
+				p.clearTypes();
+				for (String otv : this.params.occuranceType) {
+					OccuranceType ot = OccuranceType.valueOf(otv);
+					p.addType(ot);
+				}
+			}
 			OccuranceTool tool = new OccuranceTool(p);
 			MRoutineToolInput input = CLIRTParamsAdapter.toMRoutineInput(this.params);
 			ResultsByRoutine<Occurance, List<Occurance>> result = tool.getResult(input);

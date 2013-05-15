@@ -29,8 +29,12 @@ public class OccuranceToolParams extends RoutineToolParams {
 		this.includeTypes = EnumSet.range(OccuranceType.WRITE, OccuranceType.EXECUTE);
 	}
 	
-	public void setIncludeTypes(EnumSet<OccuranceType> includeTypes) {
-		this.includeTypes = includeTypes;
+	public void clearTypes() {
+		this.includeTypes.clear();
+	}
+	
+	public void addType(OccuranceType type) {
+		this.includeTypes.add(type);
 	}
 	
 	public EnumSet<OccuranceType> getIncludeTypes() {

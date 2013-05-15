@@ -44,23 +44,11 @@ public class Occurance implements ToolResult {
 		return false;
 	}
 	
-	private String getOccuranceTypeAsString(OccuranceType type) {
-		switch (type) {
-		case WRITE: return "Write";
-		case READ: return "Read";
-		case INDIRECTION: return "Indirection";
-		case EXECUTE: return "Execute";
-		case DOLLAR_TEXT: return "$TEXT";
-		case NAKED_GLOBAL: return "Naked Global";
-		default: return "";
-		}
-	}
-	
 	@Override
 	public void write(Terminal t, OutputFlags flags) throws IOException {
 		int lineIndex = this.getLineIndex();
 		String location = "Line " + String.valueOf(lineIndex);
-		String type = this.getOccuranceTypeAsString(this.getType());
+		String type = this.getType().toString();
 		t.writeIndented(location + " --> " + type);
 	}
 }

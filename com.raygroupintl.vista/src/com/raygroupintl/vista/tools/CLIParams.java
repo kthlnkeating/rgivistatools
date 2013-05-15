@@ -92,6 +92,9 @@ public class CLIParams {
 	@CLIParameter(names={"-root", "--rootdirectory"})
 	public String rootDirectory;
 	
+	@CLIParameter(names={"--occurance"})
+	public List<String> occuranceType = new ArrayList<String>();
+	
 	private static void logError(String msg) {
 		Logger logger = Logger.getLogger(MRoutineAnalyzer.class.getName());		
 		logger.log(Level.SEVERE, msg);

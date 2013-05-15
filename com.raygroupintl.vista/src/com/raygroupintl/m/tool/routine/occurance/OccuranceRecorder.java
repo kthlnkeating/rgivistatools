@@ -21,6 +21,7 @@ import java.util.List;
 
 import com.raygroupintl.m.parsetree.Indirection;
 import com.raygroupintl.m.parsetree.IntrinsicFunction;
+import com.raygroupintl.m.parsetree.KillCmdNodes;
 import com.raygroupintl.m.parsetree.NakedGlobal;
 import com.raygroupintl.m.parsetree.ReadCmd;
 import com.raygroupintl.m.parsetree.WriteCmd;
@@ -59,7 +60,7 @@ class OccuranceRecorder extends ResultsByLabelVisitor<Occurance, List<Occurance>
 	protected void visitIntrinsicFunction(IntrinsicFunction intrinsicFunction) {
 		String name = intrinsicFunction.getName().toUpperCase();
 		if (name.equals("T") || name.equals("TEXT")) {
-				this.addOccurance(OccuranceType.DOLLAR_TEXT);
+				this.addOccurance(OccuranceType.INTRINSIC_TEXT);
 		}
 		super.visitIntrinsicFunction(intrinsicFunction);
 	}
@@ -81,6 +82,18 @@ class OccuranceRecorder extends ResultsByLabelVisitor<Occurance, List<Occurance>
 	protected void visitXecuteCmd(XecuteCmd xecuteCmd) {
 		this.addOccurance(OccuranceType.EXECUTE);
 		super.visitXecuteCmd(xecuteCmd);
+	}
+
+	@Override
+	protected void visitAllKillCmd(KillCmdNodes.AllKillCmd atomicKill) {
+		this.addOccurance(OccuranceType.EXCLUSIVE_KILL);
+		super.visitAllKillCmd(atomicKill);
+	}
+	
+	@Override
+	protected void visitExclusiveAtomicKill(KillCmdNodes.ExclusiveAtomicKill atomicKill) {
+		this.addOccurance(OccuranceType.EXCLUSIVE_KILL);
+		super.visitExclusiveAtomicKill(atomicKill);
 	}
 
 	@Override
