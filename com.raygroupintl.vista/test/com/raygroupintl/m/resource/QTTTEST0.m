@@ -18,3 +18,11 @@ SUMC
  ;
 SUMY
  Q ^X("ADS")
+ ;
+SUMALL
+ N A
+ S A=1
+ F I=1:3:1 D  Q
+ . D THRUERR0^QTTEST1(.A)
+ W A
+ Q

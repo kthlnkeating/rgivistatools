@@ -20,7 +20,7 @@ public class QTTTest {
 	
 	@BeforeClass
 	public static void setUpBeforeClass() throws Exception {
-		String[] routineNames = {"QTTTEST0", "QTTTEST1"};
+		String[] routineNames = {"QTTTEST0", "QTTTEST1", "QTTTEST2"};
 		pts = MTestCommon.getParseTreeSupply(routineNames);		
 	}
 
@@ -35,11 +35,16 @@ public class QTTTest {
 		Assert.assertEquals(underTest, cl);					
 	}
 	
-	@Test
-	public void testQTTTest0() {
+	private static QuitTypeTool getTool(RecursionDepth depth) {
 		CommonToolParams p = new AssumedVariablesToolParams(pts);
 		p.getRecursionSpecification().setDepth(RecursionDepth.ALL);
 		QuitTypeTool qtt = new QuitTypeTool(p);
+		return qtt;
+	}
+	
+	@Test
+	public void testQTTTest0() {
+    	QuitTypeTool qtt = getTool(RecursionDepth.ALL);
 		
 		EntryId id = new EntryId("QTTTEST0","SUMXYZ");
 		QuitType qt = qtt.getResult(id);
@@ -53,8 +58,54 @@ public class QTTTest {
 		
 		CallType ct = qt.getFanout(new EntryId("QTTTEST1", "SUMZ"));
 		Assert.assertNotNull(ct);
-		Assert.assertEquals(CallTypeState.DO_CONFLICTING, ct.getState());
+		Assert.assertEquals(CallTypeState.DO_CONFLICTING, ct.getState());	
+	}
+
+	@Test
+	public void testQTTTest1() {
+    	QuitTypeTool qtt = getTool(RecursionDepth.ALL);
 		
+		EntryId id = new EntryId("QTTTEST0","SUMALL");
+		QuitType qt = qtt.getResult(id);
 		
+		QuitTypeState qts = qt.getQuitTypeState();
+		Assert.assertEquals(QuitTypeState.QUITS_WITHOUT_VALUE, qts);			
+		
+		CallType ct = qt.getFanout(new EntryId("QTTTEST1", "THRUERR0"));
+		Assert.assertNull(ct);
+	}
+
+	@Test
+	public void testQTTTest2() {
+    	QuitTypeTool qtt = getTool(RecursionDepth.ALL);
+		
+		EntryId id = new EntryId("QTTTEST1","THRUERR0");
+		QuitType qt = qtt.getResult(id);
+		
+		QuitTypeState qts = qt.getQuitTypeState();
+		Assert.assertEquals(QuitTypeState.QUITS_WITHOUT_VALUE, qts);			
+		
+		CallType ct = qt.getFanout(new EntryId("QTTTEST2", "EXTR"));
+		Assert.assertNotNull(ct);
+		Assert.assertEquals(CallTypeState.DO_CONFLICTING, ct.getState());	
+	}
+
+	@Test
+	public void testQTTTest3() {
+    	QuitTypeTool qtt = getTool(RecursionDepth.ALL);
+		
+		EntryId id = new EntryId("QTTTEST1","THRUGOOD");
+		QuitType qt = qtt.getResult(id);
+		
+		QuitTypeState qts = qt.getQuitTypeState();
+		Assert.assertEquals(QuitTypeState.QUITS_WITH_VALUE, qts);			
+		
+		CallType ct0 = qt.getFanout(new EntryId("QTTTEST2", "EXTR"));
+		Assert.assertNotNull(ct0);
+		Assert.assertEquals(CallTypeState.EXTRINSIC_VERIFIED, ct0.getState());	
+	
+		CallType ct1 = qt.getFanout(new EntryId(null, "THRUERR0"));
+		Assert.assertNotNull(ct1);
+		Assert.assertEquals(CallTypeState.EXTRINSIC_CONFLICTING, ct1.getState());	
 	}
 }
