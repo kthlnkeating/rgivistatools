@@ -18,11 +18,12 @@ package com.raygroupintl.m.tool.routine.occurance;
 
 import java.io.IOException;
 
+import com.raygroupintl.m.parsetree.data.EntryId;
 import com.raygroupintl.m.tool.OutputFlags;
-import com.raygroupintl.m.tool.ToolResult;
+import com.raygroupintl.m.tool.routine.ToolResultPiece;
 import com.raygroupintl.output.Terminal;
 
-public class Occurance implements ToolResult {
+public class Occurance implements ToolResultPiece {
 	private OccuranceType type;
 	private int lineIndex;
 	
@@ -40,15 +41,11 @@ public class Occurance implements ToolResult {
 	}
 	
 	@Override
-	public boolean isEmpty() {
-		return false;
-	}
-	
-	@Override
-	public void write(Terminal t, OutputFlags flags) throws IOException {
+	public void write(Terminal t, EntryId entryUnderTest, OutputFlags flags) throws IOException {
 		int lineIndex = this.getLineIndex();
-		String location = "Line " + String.valueOf(lineIndex);
+		String routineName = entryUnderTest.getRoutineName();
+		String location = "(" + routineName + ":" + String.valueOf(lineIndex) + ")";
 		String type = this.getType().toString();
-		t.writeIndented(location + " --> " + type);
+		t.writeIndented(type + location);
 	}
 }

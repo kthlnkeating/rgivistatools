@@ -20,6 +20,7 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
@@ -31,9 +32,21 @@ import com.raygroupintl.util.IOUtil;
 
 public class SourceCodeFiles implements SourceCodeSupply {
 	private Map<String, String> filesByRoutineName = new HashMap<String, String>();
+	private String root;
+	
+	public SourceCodeFiles() {		
+	}
+	
+	public SourceCodeFiles(String root) {
+		this.root = root;
+	}
 	
 	public void put(String routineName, String fileName) {
 		this.filesByRoutineName.put(routineName, fileName);		
+	}
+	
+	public String get(String routineName) {
+		return this.filesByRoutineName.get(routineName);
 	}
 	
 	@Override
@@ -41,6 +54,10 @@ public class SourceCodeFiles implements SourceCodeSupply {
 		String fileName = this.filesByRoutineName.get(routineName);
 		if (fileName != null) {
 			try {
+				if (this.root != null) {
+					Path path = Paths.get(this.root, fileName);
+					fileName = path.toString();
+				}				
 				InputStream is = new FileInputStream(fileName);
 				return is;
 			} catch(IOException e) {

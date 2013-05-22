@@ -25,9 +25,10 @@ import java.util.Map;
 import java.util.Set;
 
 import com.raygroupintl.m.parsetree.data.EntryId;
+import com.raygroupintl.m.tool.routine.ToolResultPiece;
 import com.raygroupintl.output.Terminal;
 
-public abstract class ResultsByRoutine<T extends ToolResult, U extends Collection<T>> implements ToolResult {
+public abstract class ResultsByRoutine<T extends ToolResultPiece, U extends Collection<T>> implements ToolResult {
 	private Map<String, ResultsByLabel<T, U>> map = new HashMap<String, ResultsByLabel<T, U>>();
 
 	public void put(String routineName, ResultsByLabel<T, U> results) {
@@ -119,7 +120,7 @@ public abstract class ResultsByRoutine<T extends ToolResult, U extends Collectio
 					t.getTerminalFormatter().pushIndent();
 					t.writeIndented(label + "^" + rn);	
 					t.getTerminalFormatter().pushIndent();					
-					r.write(t, flags);
+					r.write(t, new EntryId(rn, label), flags);
 					t.getTerminalFormatter().pullIndent();
 					t.getTerminalFormatter().pullIndent();
 					found = true;

@@ -43,7 +43,7 @@ public class SourceCodeToParseTreeAdapter implements ParseTreeSupply {
 		this.sourceCodeSupply = sourceCodeSupply;
 		this.version = version;
 	}
-
+	
 	private TFRoutine getTokenFactory() {
 		try {
 			MTFSupply mtf = MTFSupply.getInstance(this.version);

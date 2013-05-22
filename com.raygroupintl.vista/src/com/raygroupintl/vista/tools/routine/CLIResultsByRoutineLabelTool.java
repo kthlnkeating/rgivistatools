@@ -21,12 +21,12 @@ import java.util.Collection;
 
 import com.raygroupintl.m.tool.OutputFlags;
 import com.raygroupintl.m.tool.ResultsByRoutine;
-import com.raygroupintl.m.tool.ToolResult;
+import com.raygroupintl.m.tool.routine.ToolResultPiece;
 import com.raygroupintl.output.Terminal;
 import com.raygroupintl.vista.tools.CLIParams;
 import com.raygroupintl.vista.tools.CLIParamsAdapter;
 
-abstract class CLIResultsByRoutineLabelTool<T extends ToolResult, U extends Collection<T>> extends CLIRoutineTool {
+abstract class CLIResultsByRoutineLabelTool<T extends ToolResultPiece, U extends Collection<T>> extends CLIRoutineTool {
 	public OutputFlags ofs;
 	
 	public CLIResultsByRoutineLabelTool(CLIParams params) {

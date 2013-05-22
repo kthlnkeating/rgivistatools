@@ -21,9 +21,10 @@ import java.io.Serializable;
 
 import com.raygroupintl.m.tool.OutputFlags;
 import com.raygroupintl.m.tool.ToolResult;
+import com.raygroupintl.m.tool.routine.ToolResultPiece;
 import com.raygroupintl.output.Terminal;
 
-public class EntryId implements Comparable<EntryId>, Serializable, ToolResult {
+public class EntryId implements Comparable<EntryId>, Serializable, ToolResult, ToolResultPiece {
 	private static final long serialVersionUID = 1L;
 
 	public enum StringFormat {
@@ -187,6 +188,11 @@ public class EntryId implements Comparable<EntryId>, Serializable, ToolResult {
 	
 	@Override
 	public void write(Terminal t, OutputFlags flags) throws IOException {
+		t.writeIndented(this.toString2());
+	}
+
+	@Override
+	public void write(Terminal t, EntryId EntryUnderTest, OutputFlags flags) throws IOException {
 		t.writeIndented(this.toString2());
 	}
 }
