@@ -13,7 +13,6 @@ import com.raygroupintl.m.MTestCommon;
 import com.raygroupintl.m.parsetree.Routine;
 import com.raygroupintl.m.parsetree.data.EntryId;
 import com.raygroupintl.m.parsetree.visitor.FanoutRecorder;
-import com.raygroupintl.m.parsetree.visitor.OccuranceRecorder;
 import com.raygroupintl.m.struct.LineLocation;
 import com.raygroupintl.m.token.MVersion;
 import com.raygroupintl.m.token.MRoutine;
@@ -58,17 +57,6 @@ public class TRoutineTest {
 		MRoutine token = MTestCommon.getRoutineToken(routineName, m);
 		Routine r = token.getNode();
 
-		OccuranceRecorder or = OccuranceRecorder.record(r);		
-		Assert.assertEquals(0, or.getErrorNodeCount());
-		Assert.assertEquals(10, or.getDoBlockCount());
-		Assert.assertEquals(21, or.getDoCount());
-		Assert.assertEquals(29, or.getAtomicDoCount());
-		Assert.assertEquals(8, or.getExternalDoCount());
-		Assert.assertEquals(27, or.getIndirectionCount());
-		Assert.assertEquals(17, or.getGotoCount());
-		Assert.assertEquals(31, or.getAtomicGotoCount());
-		Assert.assertEquals(5, or.getExtrinsicCount());
-		
 		FanoutRecorder foutr = new FanoutRecorder();
 		Map<LineLocation, List<EntryId>> fanouts = foutr.getFanouts(r);	
 		List<EntryId> do1 = fanouts.get(new LineLocation("DO", 1));

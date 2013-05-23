@@ -39,6 +39,10 @@ public abstract class ResultsByLabelVisitor<T, U extends Collection<T>> extends 
 		return this.index;
 	}
 	
+	protected boolean isConsidered(InnerEntryList entryList) {
+		return entryList == this.lastInnerEntryList;	
+	}
+	
 	@Override
 	protected void visitInnerEntryList(InnerEntryList entryList) {
 		if (entryList != this.lastInnerEntryList) {

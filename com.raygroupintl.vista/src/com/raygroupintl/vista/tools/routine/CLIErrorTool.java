@@ -22,13 +22,13 @@ import java.util.List;
 import com.raygroupintl.m.tool.routine.MRoutineToolInput;
 import com.raygroupintl.m.tool.routine.RoutineToolParams;
 import com.raygroupintl.m.tool.routine.error.ErrorTool;
-import com.raygroupintl.m.tool.routine.error.ErrorWithLocation;
+import com.raygroupintl.m.tool.routine.error.ErrorWithLineIndex;
 import com.raygroupintl.m.tool.routine.error.ErrorsByRoutine;
 import com.raygroupintl.output.Terminal;
 import com.raygroupintl.vista.tools.CLIParams;
 import com.raygroupintl.vista.tools.CLIParamsAdapter;
 
-public class CLIErrorTool extends CLIResultsByRoutineLabelTool<ErrorWithLocation, List<ErrorWithLocation>> {
+public class CLIErrorTool extends CLIResultsByRoutineLabelTool<ErrorWithLineIndex, List<ErrorWithLineIndex>> {
 	public CLIErrorTool(CLIParams params) {
 		super(params);
 	}

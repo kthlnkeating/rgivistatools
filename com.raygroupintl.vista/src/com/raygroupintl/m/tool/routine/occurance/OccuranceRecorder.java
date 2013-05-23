@@ -19,7 +19,14 @@ package com.raygroupintl.m.tool.routine.occurance;
 import java.util.EnumSet;
 import java.util.List;
 
+import com.raygroupintl.m.parsetree.AtomicDo;
+import com.raygroupintl.m.parsetree.AtomicGoto;
+import com.raygroupintl.m.parsetree.Do;
+import com.raygroupintl.m.parsetree.ExternalDo;
+import com.raygroupintl.m.parsetree.Extrinsic;
+import com.raygroupintl.m.parsetree.Goto;
 import com.raygroupintl.m.parsetree.Indirection;
+import com.raygroupintl.m.parsetree.InnerEntryList;
 import com.raygroupintl.m.parsetree.IntrinsicFunction;
 import com.raygroupintl.m.parsetree.KillCmdNodes;
 import com.raygroupintl.m.parsetree.NakedGlobal;
@@ -96,6 +103,50 @@ class OccuranceRecorder extends ResultsByLabelVisitor<Occurance, List<Occurance>
 		super.visitExclusiveAtomicKill(atomicKill);
 	}
 
+	@Override
+	protected void visitExternalDo(ExternalDo externalDo) {
+		this.addOccurance(OccuranceType.EXTERNAL_DO);
+		super.visitExternalDo(externalDo);
+	}
+
+	@Override
+	protected void visitAtomicDo(AtomicDo atomicDo) {
+		this.addOccurance(OccuranceType.ATOMIC_DO);
+		super.visitAtomicDo(atomicDo);
+	}
+	
+	@Override
+	protected void visitAtomicGoto(AtomicGoto atomicGoto) {
+		this.addOccurance(OccuranceType.ATOMIC_GOTO);
+		super.visitAtomicGoto(atomicGoto);
+	}
+	
+	@Override
+	protected void visitExtrinsic(Extrinsic extrinsic) {
+		this.addOccurance(OccuranceType.EXTRINSIC);
+		super.visitExtrinsic(extrinsic);
+	}
+	
+	@Override
+	protected void visitDo(Do d) {
+		this.addOccurance(OccuranceType.DO);
+		super.visitDo(d);
+	}	
+	
+	@Override
+	protected void visitGoto(Goto g) {
+		this.addOccurance(OccuranceType.GOTO);
+		super.visitGoto(g);
+	}	
+	
+	@Override
+	protected void visitInnerEntryList(InnerEntryList entryList) {
+		if (! super.isConsidered(entryList)) {
+			this.addOccurance(OccuranceType.DO_BLOCK);
+		}
+		super.visitInnerEntryList(entryList);
+	}
+	
 	@Override
 	protected ResultsByLabel<Occurance, List<Occurance>> getNewResultsByLabelInstance() {
 		return new OccurancesByLabel();

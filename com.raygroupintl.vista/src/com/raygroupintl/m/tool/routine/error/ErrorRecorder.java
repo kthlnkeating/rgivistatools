@@ -24,6 +24,7 @@ import com.raygroupintl.m.parsetree.DoBlock;
 import com.raygroupintl.m.parsetree.Entry;
 import com.raygroupintl.m.parsetree.ErrorNode;
 import com.raygroupintl.m.parsetree.InnerEntryList;
+import com.raygroupintl.m.parsetree.Line;
 import com.raygroupintl.m.parsetree.Routine;
 import com.raygroupintl.m.parsetree.visitor.LocationMarker;
 import com.raygroupintl.m.struct.LineLocation;
@@ -32,11 +33,12 @@ import com.raygroupintl.vista.tools.ErrorExemptions;
 
 public class ErrorRecorder extends LocationMarker {
 	private ErrorsByLabel allErrors;
-	private List<ErrorWithLocation> labelErrors;
+	private List<ErrorWithLineIndex> labelErrors;
 	private String routineName;
 	private ErrorExemptions exemptions;
 	private Set<LineLocation> lineExemptions;
 	private boolean onlyFatal;
+	private int index;
 	
 	public ErrorRecorder(ErrorExemptions exemptions) {
 		this.exemptions = exemptions;
@@ -53,7 +55,7 @@ public class ErrorRecorder extends LocationMarker {
 		if ((! this.onlyFatal) || (error.isFatal())) {
 			LineLocation location = this.getLastLocation();
 			if ((this.lineExemptions == null) || (! this.lineExemptions.contains(location))) {
-				ErrorWithLocation element = new ErrorWithLocation(error, location);  
+				ErrorWithLineIndex element = new ErrorWithLineIndex(error, this.index);  
 				this.labelErrors.add(element);
 			}
 		}
@@ -76,8 +78,14 @@ public class ErrorRecorder extends LocationMarker {
 	}
 	
 	@Override
+	protected void visitLine(Line line) {
+		this.index = line.getLineIndex();
+		super.visitLine(line);
+	}
+	
+	@Override
 	protected void visitEntry(Entry entry) {
-		this.labelErrors = new ArrayList<ErrorWithLocation>();
+		this.labelErrors = new ArrayList<ErrorWithLineIndex>();
 		super.visitEntry(entry);
 		this.allErrors.put(entry.getName(), this.labelErrors);
 	}

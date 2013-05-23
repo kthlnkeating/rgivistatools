@@ -21,11 +21,11 @@ import java.util.List;
 
 import com.raygroupintl.m.tool.ResultsByLabel;
 
-public class ErrorsByLabel extends ResultsByLabel<ErrorWithLocation, List<ErrorWithLocation>> {
+public class ErrorsByLabel extends ResultsByLabel<ErrorWithLineIndex, List<ErrorWithLineIndex>> {
 	private static final long serialVersionUID = 1L;
 
 	@Override
-	public List<ErrorWithLocation> getNewResultsInstance() {
-		return new ArrayList<ErrorWithLocation>();
+	public List<ErrorWithLineIndex> getNewResultsInstance() {
+		return new ArrayList<ErrorWithLineIndex>();
 	}
 }

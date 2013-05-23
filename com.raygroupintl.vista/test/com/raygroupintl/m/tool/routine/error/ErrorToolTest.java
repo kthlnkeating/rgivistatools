@@ -10,11 +10,12 @@ import org.junit.Test;
 
 import com.raygroupintl.m.MTestCommon;
 import com.raygroupintl.m.parsetree.Routine;
+import com.raygroupintl.m.parsetree.data.TagLocations;
 import com.raygroupintl.m.struct.LineLocation;
 import com.raygroupintl.m.token.MVersion;
 import com.raygroupintl.m.tool.ParseTreeSupply;
 import com.raygroupintl.m.tool.routine.error.ErrorRecorder;
-import com.raygroupintl.m.tool.routine.error.ErrorWithLocation;
+import com.raygroupintl.m.tool.routine.error.ErrorWithLineIndex;
 
 public class ErrorToolTest {
 	private static ParseTreeSupply pts95;
@@ -33,8 +34,7 @@ public class ErrorToolTest {
 		ptsCache = null;
 	}
 		
-	private ErrorsByLabel getErrors(String routineName, ParseTreeSupply pts) {
-		Routine r = pts.getParseTree(routineName);
+	private ErrorsByLabel getErrors(Routine r) {
 		ErrorRecorder v = new ErrorRecorder();
 		ErrorsByLabel result = v.getErrors(r);
 		return result;
@@ -43,7 +43,8 @@ public class ErrorToolTest {
 	public void testNonErrorFiles(ParseTreeSupply pts) {
 		String[] routineNames = {"XRGITST0", "CMDTEST0"};
 		for (String routineName : routineNames) {
-			ErrorsByLabel result = this.getErrors(routineName, pts);
+			Routine r = pts.getParseTree(routineName);
+			ErrorsByLabel result = this.getErrors(r);
 			Assert.assertTrue(result.isEmpty());
 		}
 	}
@@ -54,32 +55,35 @@ public class ErrorToolTest {
 		testNonErrorFiles(pts95);
 	}
 	
-	private void testErrTest0Error(ErrorWithLocation error, String expectedTag, int expectedOffset) {
-		LineLocation location = error.getLocation();
+	private void testErrTest0Error(ErrorWithLineIndex error, TagLocations locations, String expectedTag, int expectedOffset) {
+		int lineIndex = error.getLineIndex();
+		LineLocation location = locations.getLineLocation(lineIndex);
 		Assert.assertEquals(expectedTag, location.getTag());
 		Assert.assertEquals(expectedOffset, location.getOffset());		
 	}
 	
 	private void testErrTest0(ParseTreeSupply pts) {
 		String routineName = "ERRTEST0";
-		ErrorsByLabel result = this.getErrors(routineName, pts);
+		Routine r = pts.getParseTree(routineName);
+		ErrorsByLabel result = this.getErrors(r);
+		TagLocations locations = r.getTagLocations();
 		
-		List<ErrorWithLocation> ewl0 = result.getResults("MULTIPLY");		
+		List<ErrorWithLineIndex> ewl0 = result.getResults("MULTIPLY");		
 		Assert.assertEquals(1, ewl0.size());		
-		testErrTest0Error(ewl0.get(0), "MULTIPLY", 2);
+		testErrTest0Error(ewl0.get(0), locations, "MULTIPLY", 2);
 		
-		List<ErrorWithLocation> ewl1 = result.getResults("MAIN");		
+		List<ErrorWithLineIndex> ewl1 = result.getResults("MAIN");		
 		Assert.assertEquals(2, ewl1.size());		
-		testErrTest0Error(ewl1.get(0), "MAIN", 3);
-		testErrTest0Error(ewl1.get(1), "MAIN", 5);
+		testErrTest0Error(ewl1.get(0), locations, "MAIN", 3);
+		testErrTest0Error(ewl1.get(1), locations, "MAIN", 5);
 		
-		List<ErrorWithLocation> ewl2 = result.getResults("DOERR");		
+		List<ErrorWithLineIndex> ewl2 = result.getResults("DOERR");		
 		Assert.assertEquals(1, ewl2.size());		
-		testErrTest0Error(ewl2.get(0), "DOERR", 2);
+		testErrTest0Error(ewl2.get(0), locations, "DOERR", 2);
 		
-		List<ErrorWithLocation> ewl3 = result.getResults("DOERR2");		
+		List<ErrorWithLineIndex> ewl3 = result.getResults("DOERR2");		
 		Assert.assertEquals(1, ewl3.size());		
-		testErrTest0Error(ewl3.get(0), "DOERR2", 4);
+		testErrTest0Error(ewl3.get(0), locations, "DOERR2", 4);
 	}
 
 	@Test

@@ -14,23 +14,25 @@
 // limitations under the License.
 //---------------------------------------------------------------------------
 
-package com.raygroupintl.m.tool.routine;
+package com.raygroupintl.m.tool.routine.error;
 
-import java.util.ArrayList;
-import java.util.List;
+import com.raygroupintl.m.struct.MError;
+import com.raygroupintl.m.tool.routine.ToolResultPieceWithLineIndex;
 
-public class MRoutineToolInput {
-	private List<String> routineNames = new ArrayList<String>();
+public class ErrorWithLineIndex extends ToolResultPieceWithLineIndex {
+	private MError error;
+
+	public ErrorWithLineIndex(MError object, int lineIndex) {
+		super(lineIndex);
+		this.error = object;
+	}
 	
-	public void addRoutines(List<String> names) {
-		this.routineNames.addAll(names);
+	public MError getError() {
+		return this.error;
 	}
-
-	public void addRoutine(String name) {
-		this.routineNames.add(name);
-	}
-
-	public List<String> getRoutineNames() {
-		return this.routineNames;
+	
+	@Override
+	protected String getActualResult() {
+		return this.getError().getText();
 	}
 }

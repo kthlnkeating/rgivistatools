@@ -21,9 +21,9 @@ import java.util.List;
 import com.raygroupintl.m.tool.ResultsByLabel;
 import com.raygroupintl.m.tool.ResultsByRoutine;
 
-public class ErrorsByRoutine extends ResultsByRoutine<ErrorWithLocation, List<ErrorWithLocation>> {
+public class ErrorsByRoutine extends ResultsByRoutine<ErrorWithLineIndex, List<ErrorWithLineIndex>> {
 	@Override
-	public ResultsByLabel<ErrorWithLocation, List<ErrorWithLocation>> getNewResultsInstance() {
+	public ResultsByLabel<ErrorWithLineIndex, List<ErrorWithLineIndex>> getNewResultsInstance() {
 		return new ErrorsByLabel();
 	}
 }

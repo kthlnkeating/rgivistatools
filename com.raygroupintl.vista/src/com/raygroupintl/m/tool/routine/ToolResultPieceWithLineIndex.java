@@ -14,38 +14,33 @@
 // limitations under the License.
 //---------------------------------------------------------------------------
 
-package com.raygroupintl.m.tool.routine.error;
+package com.raygroupintl.m.tool.routine;
 
 import java.io.IOException;
 
 import com.raygroupintl.m.parsetree.data.EntryId;
-import com.raygroupintl.m.struct.LineLocation;
-import com.raygroupintl.m.struct.MError;
 import com.raygroupintl.m.tool.OutputFlags;
-import com.raygroupintl.m.tool.routine.ToolResultPiece;
 import com.raygroupintl.output.Terminal;
 
-public class ErrorWithLocation implements ToolResultPiece {
-	private MError error;
-	private LineLocation location;
+public abstract class ToolResultPieceWithLineIndex implements ToolResultPiece {
+	private int lineIndex;
 	
-	public ErrorWithLocation(MError object, LineLocation location) {
-		this.error = object;
-		this.location = location;
+	public ToolResultPieceWithLineIndex(int lineIndex) {
+		this.lineIndex = lineIndex;
 	}
 	
-	public MError getObject() {
-		return this.error;
-	}
-	
-	public LineLocation getLocation() {
-		return this.location;
+	public int getLineIndex() {
+		return this.lineIndex;
 	}
 
+	protected abstract String getActualResult();
+	
 	@Override
 	public void write(Terminal t, EntryId entryUnderTest, OutputFlags flags) throws IOException {
-		LineLocation location = this.getLocation();
-		String offset = (location.getOffset() == 0 ? "" : '+' + String.valueOf(location.getOffset()));
-		t.writeIndented(location.getTag() + offset + " --> " + this.getObject().getText());
+		int lineIndex = this.getLineIndex();
+		String routineName = entryUnderTest.getRoutineName();
+		String location = " (" + routineName + ":" + String.valueOf(lineIndex) + ")";
+		String actual = this.getActualResult();
+		t.writeIndented(actual + location);
 	}
 }
