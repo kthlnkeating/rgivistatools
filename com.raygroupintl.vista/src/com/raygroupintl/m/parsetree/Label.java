@@ -16,6 +16,10 @@
 
 package com.raygroupintl.m.parsetree;
 
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+
 import com.raygroupintl.m.parsetree.data.EntryId;
 
 public abstract class Label extends NodeList<Line> {
@@ -27,6 +31,8 @@ public abstract class Label extends NodeList<Line> {
 	
 	private int endIndex = -1;
 	private Label continuationEntry;
+	
+	private List<InnerEntryList> entryLists;
 	
 	public Label(String name, String routineName, String[] parameters) {
 		this.name = name;
@@ -59,6 +65,21 @@ public abstract class Label extends NodeList<Line> {
 		return this.endIndex > -1;
 	}
 	
+	public List<InnerEntryList> getEntryLists() {
+		if (this.entryLists == null) {
+			return Collections.emptyList();
+		} else {
+			return this.entryLists;
+		}
+	}
+	
+	public void add(InnerEntryList entryList) {
+		if (this.entryLists == null) {
+			this.entryLists = new ArrayList<>(2);
+		}
+		this.entryLists.add(entryList);
+	}
+		
 	@Override
 	public void add(Line node) {
 		if (this.endIndex >= 0) {

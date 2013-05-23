@@ -16,18 +16,16 @@
 
 package com.raygroupintl.m.parsetree;
 
-public abstract class EntryList extends NodeList<Label> {
+public class RoutineEntryList extends EntryList {
 	private static final long serialVersionUID = 1L;
 
-	protected abstract Label getLabel(String tag, String routineName, String[] parameters);
+	@Override
+	protected Label getLabel(String tag, String routineName, String[] parameters) {
+		return new Entry(tag, routineName, parameters);
+	}
 
-	public Label addEntry(String tag, String routineName, String[] parameters) {
-		Label entry = this.getLabel(tag, routineName, parameters);
-		Label last = this.getLastNode();		
-		if ((last != null) && ! (last.isClosed())) {
-			last.setContinuationEntry(entry);
-		}
-		this.add(entry);
-		return entry;
+	@Override
+	public void accept(Visitor visitor) {
+		visitor.visitEntryList(this);
 	}
 }

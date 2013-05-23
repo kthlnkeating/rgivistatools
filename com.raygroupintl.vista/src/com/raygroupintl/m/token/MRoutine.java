@@ -11,12 +11,9 @@ import java.util.Stack;
 
 import com.raygroupintl.m.parsetree.Label;
 import com.raygroupintl.m.parsetree.ErrorNode;
-import com.raygroupintl.m.parsetree.InnerEntry;
 import com.raygroupintl.m.parsetree.InnerEntryList;
-import com.raygroupintl.m.parsetree.Line;
-import com.raygroupintl.m.parsetree.NodeList;
-import com.raygroupintl.m.parsetree.Entry;
 import com.raygroupintl.m.parsetree.EntryList;
+import com.raygroupintl.m.parsetree.Line;
 import com.raygroupintl.m.parsetree.Routine;
 import com.raygroupintl.m.struct.MError;
 import com.raygroupintl.m.struct.MRefactorSettings;
@@ -99,15 +96,12 @@ public class MRoutine implements MToken {
 		}
 
 		Routine routine = new Routine(this.name);
-		EntryList routineEntryList = new EntryList();
-		routine.setEntryList(routineEntryList);
-		
-		NodeList<Label> entryList = routineEntryList;
+		EntryList entryList = routine.getEntryList();
 		
 		int level = 0;
 		Line lineNode = null;
 		Label entry = null;
-		Stack<NodeList<Label>> entryLists = null;
+		Stack<EntryList> entryLists = null;
 		
 		for (int i=0; i<this.lines.size(); ++i) {
 			MLine line = this.lines.get(i);
@@ -135,6 +129,7 @@ public class MRoutine implements MToken {
 					if (lineNode.setEntryList(newEntryList)) {
 						if (entryLists == null) entryLists = new Stack<>();
 						entryLists.push(entryList);
+						entry.add(newEntryList);
 						entryList = newEntryList;
 						entry = null;
 						if (tag == null) tag = ":"  + String.valueOf(i);
@@ -147,12 +142,7 @@ public class MRoutine implements MToken {
 			
 			if ((tag != null) || (entry == null)) {
 				if (tag == null) tag = "~";
-				Label newEntry = (level == 0) ? new Entry(tag, this.name, line.getParameters()) : new InnerEntry(tag, this.name, line.getParameters());	 			
-				if ((entry != null) && !(entry.isClosed())) {
-					entry.setContinuationEntry(newEntry);
-				}
-				entry = newEntry;
-				entryList.add(entry);
+				entry = entryList.addEntry(tag, this.name, line.getParameters());
 			}
 
 			lineNode = (errorNode == null) ? line.getNode() : line.getAsErrorNode(errorNode);

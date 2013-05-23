@@ -16,8 +16,13 @@
 
 package com.raygroupintl.m.parsetree;
 
-public class InnerEntryList extends NodeList<Label> {
+public class InnerEntryList extends EntryList {
 	private static final long serialVersionUID = 1L;
+
+	@Override
+	protected Label getLabel(String tag, String routineName, String[] parameters) {
+		return new InnerEntry(tag, routineName, parameters);
+	}
 
 	@Override
 	public void accept(Visitor visitor) {

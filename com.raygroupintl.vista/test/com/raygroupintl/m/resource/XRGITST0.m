@@ -18,4 +18,10 @@ TAG1 ;
  D @C^@B,@B
  Q
  ;
+TAG2 ;
+ F I=1:1 D ADD:A>5,SUB:A>10 D  Q:A>20  G TAG1
+ . ; Empty line
+ . S A=1
+ Q
+ ;
 TAG3 N A S A=1 D:TAG1 ADD(A,1,1),SUB(A,1,1) Q

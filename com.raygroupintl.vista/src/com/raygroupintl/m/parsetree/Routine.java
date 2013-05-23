@@ -33,11 +33,12 @@ public class Routine extends BasicNode {
 	private final static Logger LOGGER = Logger.getLogger(Routine.class.getName());
 
 	private String name;
-	private EntryList entryList;
+	private RoutineEntryList entryList;
 	private ErrorNode errorNode;
 	
 	public Routine(String name) {
 		this.name = name;
+		this.entryList = new RoutineEntryList();
 	}
 	
 	public Routine(String name, ErrorNode errorNode) {
@@ -47,6 +48,10 @@ public class Routine extends BasicNode {
 	
 	public String getName() {
 		return this.name;
+	}
+	
+	public RoutineEntryList getEntryList() {
+		return this.entryList;
 	}
 	
 	public List<EntryId> getEntryIdList() {
@@ -85,7 +90,7 @@ public class Routine extends BasicNode {
 		return false;
 	}
 	
-	public void setEntryList(EntryList entryList) {
+	public void setEntryList(RoutineEntryList entryList) {
 		this.entryList = entryList;
 	}
 
