@@ -21,6 +21,7 @@ import java.util.Collections;
 import java.util.List;
 
 import com.raygroupintl.m.parsetree.data.EntryId;
+import com.raygroupintl.m.parsetree.data.TagLocations;
 
 public abstract class Label extends NodeList<Line> {
 	private static final long serialVersionUID = 1L;
@@ -55,6 +56,25 @@ public abstract class Label extends NodeList<Line> {
 			return new EntryId(this.routineName, this.name);
 		}
 		
+	}
+	
+	public int getLineIndex() {
+		Line line = this.getFirstNode();
+		return line.getLineIndex();
+	}
+	
+	public TagLocations getTagLocations() {
+		TagLocations result = new TagLocations();
+		if (! this.name.startsWith(":")) {
+			result.add(this.name, this.getLineIndex());
+		}
+		for (EntryList list : this.getEntryLists()) {
+			for (Label label : list.getNodes()) {
+				TagLocations labelResult = label.getTagLocations();
+				result.update(labelResult);
+			}			
+		}
+		return result;
 	}
 	
 	public int getEndIndex() {

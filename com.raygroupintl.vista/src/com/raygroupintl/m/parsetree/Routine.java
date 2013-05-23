@@ -27,6 +27,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import com.raygroupintl.m.parsetree.data.EntryId;
+import com.raygroupintl.m.parsetree.data.TagLocations;
 
 public class Routine extends BasicNode {
 	private static final long serialVersionUID = 1L;
@@ -96,6 +97,15 @@ public class Routine extends BasicNode {
 
 	public void setErrorNode(ErrorNode errorNode) {
 		this.errorNode = errorNode;
+	}
+	
+	public TagLocations getTagLocations() {
+		TagLocations result = new TagLocations();
+		for (Label entry : this.entryList.getNodes()) {
+			TagLocations entryTagLocation = entry.getTagLocations();
+			result.update(entryTagLocation);
+		}
+		return result;
 	}
 	
 	public static Routine readSerialized(String directory, String routineName) {

@@ -9,6 +9,7 @@ import org.junit.runners.Suite.SuiteClasses;
 	com.raygroupintl.parsergen.ruledef.AllTests.class, 
 	com.raygroupintl.m.token.AllTests.class, 
 	com.raygroupintl.vista.repository.AllTests.class, 
+	com.raygroupintl.m.parsetree.data.AllTests.class,
 	com.raygroupintl.m.struct.AllTests.class,
 	com.raygroupintl.m.tool.entry.assumedvariables.AllTests.class,
 	com.raygroupintl.m.tool.entry.localassignment.AllTests.class,

@@ -16,7 +16,7 @@
 
 package com.raygroupintl.struct;
 
-public class Indexed<T> {
+public class Indexed<T> implements Comparable<Indexed<T>> {
 	private T object;
 	private int index;
 	
@@ -31,5 +31,10 @@ public class Indexed<T> {
 	
 	public T getObject() {
 		return this.object;
+	}
+
+	@Override
+	public int compareTo(Indexed<T> rhs) {
+		return this.index - rhs.index;
 	}
 }
