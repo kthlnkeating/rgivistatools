@@ -18,42 +18,38 @@ package com.raygroupintl.m.struct;
 
 public class CodeLocation {
 	private String routineName;
-	private LineLocation lineLocation;
+	private int lineIndex;
 	
-	public CodeLocation(String routineName, LineLocation lineLocation) {
+	public CodeLocation(String routineName, int lineIndex) {
 		this.routineName = routineName;
-		this.lineLocation = lineLocation;
+		this.lineIndex = lineIndex;
 	}
 
-	public CodeLocation(String routineName, String tag, int offset) {
-		this(routineName, new LineLocation(tag, offset));
-	}
-	
 	public String getRoutineName() {
 		return this.routineName;
 	}
 	
-	public LineLocation getLineLocation() {
-		return this.lineLocation;
+	public int getLineIndex() {
+		return this.lineIndex;
 	}
 
 	@Override
 	public String toString() {
-		return this.routineName + ": " + lineLocation.toString();
+		return "(" + this.routineName + ":" + String.valueOf(this.lineIndex) + ")";
 	}
 
 	@Override
 	public boolean equals(Object rhs) {
 		if ((rhs != null) && (rhs instanceof CodeLocation)) {	
 			CodeLocation r = (CodeLocation) rhs;
-			return this.routineName.equals(r.routineName) && (this.lineLocation.equals(r.lineLocation)); 
+			return this.routineName.equals(r.routineName) && (this.lineIndex == r.lineIndex); 
 		}
 		return false;
 	}
 	
 	@Override
 	public int hashCode() {
-		String hashString = this.lineLocation.toString() + "^" + this.routineName;
+		String hashString = this.routineName + ":" + String.valueOf(this.lineIndex);
 		int result = hashString.hashCode(); 
 		return result;
 	}

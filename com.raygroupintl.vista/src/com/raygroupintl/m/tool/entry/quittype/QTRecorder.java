@@ -24,7 +24,6 @@ import com.raygroupintl.m.parsetree.data.FanoutType;
 import com.raygroupintl.m.parsetree.data.FanoutWithLocation;
 import com.raygroupintl.m.parsetree.visitor.BlockRecorder;
 import com.raygroupintl.m.struct.CodeLocation;
-import com.raygroupintl.m.struct.LineLocation;
 
 public class QTRecorder extends BlockRecorder<FanoutWithLocation, QTBlockData> {
 	private boolean inForLoop;
@@ -41,9 +40,7 @@ public class QTRecorder extends BlockRecorder<FanoutWithLocation, QTBlockData> {
 		if (this.inForLoop) return;
 		QTBlockData data = this.getCurrentBlockData();
 		QuitType qt = data.getQuitType();
-		LineLocation ll = this.getLastLocation();
-		String routineName = this.getCurrentRoutineName();
-		CodeLocation cl = new CodeLocation(routineName, ll);
+		CodeLocation cl = this.getCodeLocation();
 		if (quitCmd.hasArgument()) {
 			qt.markQuitWithValue(cl);
 		} else {

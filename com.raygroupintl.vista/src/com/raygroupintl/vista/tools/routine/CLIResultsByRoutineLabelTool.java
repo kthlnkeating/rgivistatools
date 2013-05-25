@@ -21,7 +21,7 @@ import java.util.Collection;
 
 import com.raygroupintl.m.tool.OutputFlags;
 import com.raygroupintl.m.tool.ResultsByRoutine;
-import com.raygroupintl.m.tool.routine.ToolResultPiece;
+import com.raygroupintl.m.tool.ToolResultPiece;
 import com.raygroupintl.output.Terminal;
 import com.raygroupintl.vista.tools.CLIParams;
 import com.raygroupintl.vista.tools.CLIParamsAdapter;

@@ -9,7 +9,6 @@ import org.junit.Test;
 import com.raygroupintl.m.MTestCommon;
 import com.raygroupintl.m.parsetree.data.EntryId;
 import com.raygroupintl.m.struct.CodeLocation;
-import com.raygroupintl.m.struct.LineLocation;
 import com.raygroupintl.m.tool.CommonToolParams;
 import com.raygroupintl.m.tool.ParseTreeSupply;
 import com.raygroupintl.m.tool.entry.RecursionDepth;
@@ -29,9 +28,8 @@ public class QTTTest {
 		pts = null;
 	}
 
-	private static void testCodeLocation(CodeLocation underTest, String routineName, String label, int offset) {
-		LineLocation ll = new LineLocation(label, offset);
-		CodeLocation cl = new CodeLocation(routineName, ll);
+	private static void testCodeLocation(CodeLocation underTest, String routineName, int lineIndex) {
+		CodeLocation cl = new CodeLocation(routineName, lineIndex);
 		Assert.assertEquals(underTest, cl);					
 	}
 	
@@ -52,9 +50,9 @@ public class QTTTest {
 		QuitTypeState qts = qt.getQuitTypeState();
 		Assert.assertEquals(QuitTypeState.CONFLICTING_QUITS, qts);			
 		CodeLocation fql = qt.getFirstQuitLocation();
-		testCodeLocation(fql, "QTTTEST0", "SUMC", 3);
+		testCodeLocation(fql, "QTTTEST0", 16);
 		CodeLocation cql = qt.getConflictingLocation();
-		testCodeLocation(cql, "QTTTEST0", "SUMY", 1);
+		testCodeLocation(cql, "QTTTEST0", 19);
 		
 		CallType ct = qt.getFanout(new EntryId("QTTTEST1", "SUMZ"));
 		Assert.assertNotNull(ct);

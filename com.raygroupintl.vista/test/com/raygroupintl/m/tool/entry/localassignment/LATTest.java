@@ -34,11 +34,11 @@ public class LATTest {
 		LocalAssignmentTool a = new LocalAssignmentTool(p);
 				
 		CodeLocation[] expectedCodeLocations = new CodeLocation[]{
-				new CodeLocation("APIROU01", "SUMFACT", 4),
-				new CodeLocation("APIROU00", "FACT", 2),
-				new CodeLocation("APIROU00", "FACT", 3),
-				new CodeLocation("APIROU00", "SUM", 1),
-				new CodeLocation("APIROU00", "SUM", 2),
+				new CodeLocation("APIROU01", 9),
+				new CodeLocation("APIROU00", 7),
+				new CodeLocation("APIROU00", 8),
+				new CodeLocation("APIROU00", 12),
+				new CodeLocation("APIROU00", 13),
 					};
 		this.testLocations(a.getResult(new EntryId("APIROU01", "SUMFACT")), expectedCodeLocations);
 	}

@@ -14,14 +14,13 @@
 // limitations under the License.
 //---------------------------------------------------------------------------
 
-package com.raygroupintl.m.tool.routine;
+package com.raygroupintl.m.tool;
 
 import java.io.IOException;
 
 import com.raygroupintl.m.parsetree.data.EntryId;
-import com.raygroupintl.m.tool.OutputFlags;
 import com.raygroupintl.output.Terminal;
 
 public interface ToolResultPiece {
-	void write(Terminal t, EntryId EntryUnderTest, OutputFlags flags) throws IOException;
+	void write(Terminal t, EntryId entryUnderTest, OutputFlags flags) throws IOException;
 }

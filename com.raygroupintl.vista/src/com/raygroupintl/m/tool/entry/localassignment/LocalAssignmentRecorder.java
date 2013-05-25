@@ -25,7 +25,6 @@ import com.raygroupintl.m.parsetree.data.FanoutType;
 import com.raygroupintl.m.parsetree.data.Fanout;
 import com.raygroupintl.m.parsetree.visitor.BlockRecorder;
 import com.raygroupintl.m.struct.CodeLocation;
-import com.raygroupintl.m.struct.LineLocation;
 import com.raygroupintl.m.tool.entry.basiccodeinfo.CodeLocations;
 
 public class LocalAssignmentRecorder extends BlockRecorder<Fanout, CodeLocations> {
@@ -45,9 +44,7 @@ public class LocalAssignmentRecorder extends BlockRecorder<Fanout, CodeLocations
 		String name = local.getName().toString();
 		if (this.localNames.contains(name)) {
 			CodeLocations ecls = this.getCurrentBlockData();
-			LineLocation ll = this.getLastLocation();
-			String rn = this.getCurrentRoutineName();
-			CodeLocation cl = new CodeLocation(rn, ll);
+			CodeLocation cl = this.getCodeLocation();
 			ecls.add(cl);
 		}
 	}

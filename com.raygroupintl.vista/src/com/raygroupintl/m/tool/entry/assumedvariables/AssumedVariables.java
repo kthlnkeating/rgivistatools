@@ -53,7 +53,7 @@ public class AssumedVariables implements ToolResult {
 			List<String> tbw = new ArrayList<String>();
 			for (String name : this.toSet()) {
 				CodeLocation location = this.get(name);
-				String out = name + "->" + location.toString();
+				String out = " " + name + location.toString();
 				tbw.add(out);
 			}
 			t.writeSortedFormatted("ASSUMED", tbw);

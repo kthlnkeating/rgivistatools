@@ -22,10 +22,12 @@ import com.raygroupintl.m.parsetree.DeadCmds;
 import com.raygroupintl.m.parsetree.Label;
 import com.raygroupintl.m.parsetree.Extrinsic;
 import com.raygroupintl.m.parsetree.InnerEntryList;
+import com.raygroupintl.m.parsetree.Line;
 import com.raygroupintl.m.parsetree.Routine;
 import com.raygroupintl.m.parsetree.data.EntryId;
 import com.raygroupintl.m.parsetree.data.Fanout;
 import com.raygroupintl.m.parsetree.data.FanoutType;
+import com.raygroupintl.m.struct.CodeLocation;
 import com.raygroupintl.m.tool.entry.Block;
 import com.raygroupintl.m.tool.entry.BlockData;
 import com.raygroupintl.struct.HierarchicalMap;
@@ -34,6 +36,7 @@ public abstract class BlockRecorder<F extends Fanout, T extends BlockData<F>> ex
 	private T currentBlockData;
 	private String currentRoutineName;
 	private InnerEntryList lastInnerEntryList;
+	private int lineIndex;
 
 	protected T getCurrentBlockData() {
 		return this.currentBlockData;
@@ -41,6 +44,10 @@ public abstract class BlockRecorder<F extends Fanout, T extends BlockData<F>> ex
 	
 	protected String getCurrentRoutineName() {
 		return this.currentRoutineName;
+	}
+	
+	protected CodeLocation getCodeLocation() {
+		return new CodeLocation(this.currentRoutineName, this.lineIndex);
 	}
 	
 	public void reset() {
@@ -82,6 +89,12 @@ public abstract class BlockRecorder<F extends Fanout, T extends BlockData<F>> ex
 		String tag = toEntry.getName();
 		EntryId assumedGoto = new EntryId(null, tag);
 		this.updateFanout(assumedGoto, FanoutType.ASSUMED_GOTO);
+	}
+	
+	@Override
+	protected void visitLine(Line line) {
+		this.lineIndex = line.getLineIndex();
+		super.visitLine(line);
 	}
 	
 	protected abstract T getNewBlockData(EntryId entryId, String[] params);

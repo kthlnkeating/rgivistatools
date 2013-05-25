@@ -21,7 +21,7 @@ import java.io.Serializable;
 
 import com.raygroupintl.m.tool.OutputFlags;
 import com.raygroupintl.m.tool.ToolResult;
-import com.raygroupintl.m.tool.routine.ToolResultPiece;
+import com.raygroupintl.m.tool.ToolResultPiece;
 import com.raygroupintl.output.Terminal;
 
 public class EntryId implements Comparable<EntryId>, Serializable, ToolResult, ToolResultPiece {

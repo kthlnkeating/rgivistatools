@@ -187,20 +187,20 @@ public class QuitType implements ToolResult {
 			case QUITS_WITH_VALUE:
 				if (! skipEmpty) {
 					String fl = this.getFirstQuitLocation().toString(); 
-					t.writeFormatted("QUIT", "With value (ex: " + fl + ")");
+					t.writeFormatted("QUIT", "With value " + fl);
 				}
 			break;
 			case QUITS_WITHOUT_VALUE:
 				if (! skipEmpty) {
 					String fl = this.getFirstQuitLocation().toString(); 
-					t.writeFormatted("QUIT", "Without value (ex: " + fl + ")");
+					t.writeFormatted("QUIT", "Without value " + fl);
 				}
 			break;
 			case CONFLICTING_QUITS:
 			{
 				String fl = this.getFirstQuitLocation().toString(); 
 				String cl = this.getConflictingLocation().toString();
-				t.writeFormatted("QUIT", "Conflicted (ex: " + fl + " vs " + cl + ")");
+				t.writeFormatted("QUIT", "Conflicted " + fl + " vs " + cl);
 			}
 			break;
 		}

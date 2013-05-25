@@ -25,7 +25,6 @@ import java.util.Map;
 import java.util.Set;
 
 import com.raygroupintl.m.parsetree.data.EntryId;
-import com.raygroupintl.m.tool.routine.ToolResultPiece;
 import com.raygroupintl.output.Terminal;
 
 public abstract class ResultsByRoutine<T extends ToolResultPiece, U extends Collection<T>> implements ToolResult {

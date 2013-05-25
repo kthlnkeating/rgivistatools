@@ -20,6 +20,7 @@ import java.io.IOException;
 
 import com.raygroupintl.m.parsetree.data.EntryId;
 import com.raygroupintl.m.tool.OutputFlags;
+import com.raygroupintl.m.tool.ToolResultPiece;
 import com.raygroupintl.output.Terminal;
 
 public abstract class ToolResultPieceWithLineIndex implements ToolResultPiece {
