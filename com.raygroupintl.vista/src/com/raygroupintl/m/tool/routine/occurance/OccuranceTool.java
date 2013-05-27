@@ -20,9 +20,11 @@ import java.util.EnumSet;
 import java.util.List;
 
 import com.raygroupintl.m.parsetree.Routine;
+import com.raygroupintl.m.parsetree.data.EntryId;
 import com.raygroupintl.m.tool.ParseTreeSupply;
 import com.raygroupintl.m.tool.ResultsByLabel;
 import com.raygroupintl.m.tool.ResultsByRoutine;
+import com.raygroupintl.m.tool.routine.CollectionAsToolResult;
 import com.raygroupintl.m.tool.routine.MRoutineToolInput;
 
 public class OccuranceTool {
@@ -34,9 +36,19 @@ public class OccuranceTool {
 		this.types = params.getIncludeTypes();
 	}
 	
-	public ResultsByRoutine<Occurance, List<Occurance>> getResult(MRoutineToolInput input) {
+	public CollectionAsToolResult<Occurance> getResult(EntryId entryUnderTest) {
+		String routineName = entryUnderTest.getRoutineName();
+		Routine routine = this.pts.getParseTree(routineName);
+		OccuranceRecorder or = new OccuranceRecorder();
+		or.setRequestedTypes(this.types);
+		String tag = entryUnderTest.getLabelOrDefault();
+		ResultsByLabel<Occurance, List<Occurance>> rfs = or.getResults(routine);
+		List<Occurance> result = rfs.getResults(tag);
+		return new CollectionAsToolResult<Occurance>(entryUnderTest, result);
+	}
+	
+	public ResultsByRoutine<Occurance, List<Occurance>> getResult(List<String> routineNames) {
 		OccurancesByRoutine result = new OccurancesByRoutine();
-		List<String> routineNames = input.getRoutineNames(); 		
 		OccuranceRecorder or = new OccuranceRecorder();
 		or.setRequestedTypes(this.types);
 		for (String routineName : routineNames) {
@@ -47,4 +59,8 @@ public class OccuranceTool {
 		return result;
 	}
 
+	public ResultsByRoutine<Occurance, List<Occurance>> getResult(MRoutineToolInput input) {
+		List<String> routineNames = input.getRoutineNames(); 
+		return this.getResult(routineNames);
+	}
 }

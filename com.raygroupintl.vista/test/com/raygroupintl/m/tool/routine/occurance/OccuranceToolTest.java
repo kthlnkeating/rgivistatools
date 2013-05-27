@@ -1,5 +1,6 @@
 package com.raygroupintl.m.tool.routine.occurance;
 
+import java.util.Collection;
 import java.util.List;
 import java.util.Set;
 
@@ -10,10 +11,12 @@ import org.junit.BeforeClass;
 import org.junit.Test;
 
 import com.raygroupintl.m.MTestCommon;
+import com.raygroupintl.m.parsetree.data.EntryId;
 import com.raygroupintl.m.token.MVersion;
 import com.raygroupintl.m.tool.ParseTreeSupply;
 import com.raygroupintl.m.tool.ResultsByLabel;
 import com.raygroupintl.m.tool.ResultsByRoutine;
+import com.raygroupintl.m.tool.routine.CollectionAsToolResult;
 import com.raygroupintl.m.tool.routine.MRoutineToolInput;
 
 public class OccuranceToolTest {
@@ -33,21 +36,54 @@ public class OccuranceToolTest {
 		ptsCache = null;
 	}
 		
+	private int getCount(Collection<Occurance> occurances, OccuranceType type) {
+		int count = 0;
+		for (Occurance occurance : occurances) {
+			if (occurance.getType() == type) {
+				++count;
+			}
+		}
+		return count;
+	}
+	
 	private void testCount(ResultsByLabel<Occurance, List<Occurance>> result, int expected, OccuranceType type) {
 		int count = 0;
 		Set<String> labels = result.getLabels();
 		for (String label : labels) {
 			List<Occurance> occurances = result.getResults(label);
-			for (Occurance occurance : occurances) {
-				if (occurance.getType() == type) {
-					++count;
-				}
-			}
+			count += this.getCount(occurances, type);
 		}
 		Assert.assertEquals(expected, count);		
 	}
-	
-	private void test(ParseTreeSupply pts) {
+
+	private void testCount(CollectionAsToolResult<Occurance> result, int expected, OccuranceType type) {
+		Collection<Occurance> collection = result.getCollection();
+		int count = this.getCount(collection, type);
+		Assert.assertEquals(expected, count);		
+	}
+		
+	private void testSingle(ParseTreeSupply pts) {
+		EntryId entryId = new EntryId("CMDTEST0", "GOTO");
+		
+		OccuranceToolParams params = new OccuranceToolParams(pts);
+		params.clearTypes();
+		params.addType(OccuranceType.GOTO);
+		params.addType(OccuranceType.ATOMIC_GOTO);
+		
+		OccuranceTool tool = new OccuranceTool(params);
+		CollectionAsToolResult<Occurance> result = tool.getResult(entryId);
+		
+		testCount(result, 17, OccuranceType.GOTO);
+		testCount(result, 31, OccuranceType.ATOMIC_GOTO);
+	}
+
+	@Test
+	public void testSingle() {
+		testSingle(ptsCache);
+		testSingle(pts95);		
+	}
+
+	private void testAll(ParseTreeSupply pts) {
 		String routineName = "CMDTEST0";
 		
 		OccuranceToolParams params = new OccuranceToolParams(pts);
@@ -81,7 +117,7 @@ public class OccuranceToolTest {
 
 	@Test
 	public void test() {
-		test(ptsCache);
-		test(pts95);		
+		testAll(ptsCache);
+		testAll(pts95);		
 	}
 }

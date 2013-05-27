@@ -19,7 +19,10 @@ package com.raygroupintl.m.tool.routine.error;
 import java.util.List;
 
 import com.raygroupintl.m.parsetree.Routine;
+import com.raygroupintl.m.parsetree.data.EntryId;
 import com.raygroupintl.m.tool.ParseTreeSupply;
+import com.raygroupintl.m.tool.ToolResult;
+import com.raygroupintl.m.tool.routine.CollectionAsToolResult;
 import com.raygroupintl.m.tool.routine.MRoutineToolInput;
 import com.raygroupintl.m.tool.routine.RoutineToolParams;
 
@@ -30,9 +33,18 @@ public class ErrorTool {
 		this.pts = params.getParseTreeSupply();
 	}
 	
-	public ErrorsByRoutine getResult(MRoutineToolInput input) {
+	public ToolResult getResult(EntryId entryUnderTest) {
+		String routineName = entryUnderTest.getRoutineName();
+		Routine routine = this.pts.getParseTree(routineName);
+		ErrorRecorder fr = new ErrorRecorder();
+		ErrorsByLabel rfs = fr.getErrors(routine);
+		String tag = entryUnderTest.getLabelOrDefault();
+		List<ErrorWithLineIndex> result = rfs.getResults(tag);
+		return new CollectionAsToolResult<ErrorWithLineIndex>(entryUnderTest, result);
+	}
+	
+	public ErrorsByRoutine getResult(List<String> routineNames) {
 		ErrorsByRoutine result = new ErrorsByRoutine();
-		List<String> routineNames = input.getRoutineNames(); 		
 		ErrorRecorder fr = new ErrorRecorder();
 		for (String routineName : routineNames) {
 			Routine routine = this.pts.getParseTree(routineName);
@@ -40,5 +52,10 @@ public class ErrorTool {
 			result.put(routineName, rfs);
 		}
 		return result;
+	}
+
+	public ErrorsByRoutine getResult(MRoutineToolInput input) {
+		List<String> routineNames = input.getRoutineNames(); 
+		return this.getResult(routineNames);
 	}
 }

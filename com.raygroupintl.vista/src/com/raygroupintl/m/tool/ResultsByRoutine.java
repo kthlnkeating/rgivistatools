@@ -115,11 +115,13 @@ public abstract class ResultsByRoutine<T extends ToolResultPiece, U extends Coll
 						t.getTerminalFormatter().pullIndent();
 						found = true;
 					}
-				} else for (T r : rs) {
+				} else {
 					t.getTerminalFormatter().pushIndent();
 					t.writeIndented(label + "^" + rn);	
 					t.getTerminalFormatter().pushIndent();					
-					r.write(t, new EntryId(rn, label), flags);
+					for (T r : rs) {
+						r.write(t, new EntryId(rn, label), flags);
+					}
 					t.getTerminalFormatter().pullIndent();
 					t.getTerminalFormatter().pullIndent();
 					found = true;
