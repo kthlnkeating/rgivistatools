@@ -17,18 +17,16 @@
 package com.pwc.us.rgi.vista.tools.routine;
 
 import java.io.IOException;
-import java.util.List;
 
 import com.pwc.us.rgi.m.tool.routine.MRoutineToolInput;
 import com.pwc.us.rgi.m.tool.routine.RoutineToolParams;
 import com.pwc.us.rgi.m.tool.routine.error.ErrorTool;
-import com.pwc.us.rgi.m.tool.routine.error.ErrorWithLineIndex;
 import com.pwc.us.rgi.m.tool.routine.error.ErrorsByRoutine;
 import com.pwc.us.rgi.output.Terminal;
 import com.pwc.us.rgi.vista.tools.CLIParams;
 import com.pwc.us.rgi.vista.tools.CLIParamsAdapter;
 
-public class CLIErrorTool extends CLIResultsByRoutineLabelTool<ErrorWithLineIndex, List<ErrorWithLineIndex>> {
+public class CLIErrorTool extends CLIRoutineTool {
 	public CLIErrorTool(CLIParams params) {
 		super(params);
 	}

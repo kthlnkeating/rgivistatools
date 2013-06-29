@@ -22,10 +22,8 @@ import java.util.List;
 
 import com.pwc.us.rgi.m.tool.CommonToolParams;
 import com.pwc.us.rgi.m.tool.ParseTreeSupply;
-import com.pwc.us.rgi.vista.repository.RepositoryInfo;
 
 public class AssumedVariablesToolParams extends CommonToolParams {
-	public RepositoryInfo repositoryInfo;
 	private List<String> expected;
 
 	public AssumedVariablesToolParams(ParseTreeSupply pts) {

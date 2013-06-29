@@ -17,9 +17,7 @@
 package com.pwc.us.rgi.vista.tools.routine;
 
 import java.io.IOException;
-import java.util.Set;
 
-import com.pwc.us.rgi.m.parsetree.data.EntryId;
 import com.pwc.us.rgi.m.tool.EntryIdsByRoutine;
 import com.pwc.us.rgi.m.tool.routine.MRoutineToolInput;
 import com.pwc.us.rgi.m.tool.routine.RoutineToolParams;
@@ -28,7 +26,7 @@ import com.pwc.us.rgi.output.Terminal;
 import com.pwc.us.rgi.vista.tools.CLIParams;
 import com.pwc.us.rgi.vista.tools.CLIParamsAdapter;
 
-class CLIFanoutTool extends CLIResultsByRoutineLabelTool<EntryId, Set<EntryId>> {		
+class CLIFanoutTool extends CLIRoutineTool {		
 	public CLIFanoutTool(CLIParams params) {
 		super(params);
 	}

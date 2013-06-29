@@ -17,12 +17,11 @@
 package com.pwc.us.rgi.vista.tools.routine;
 
 import java.io.IOException;
-import java.util.List;
 
-import com.pwc.us.rgi.m.parsetree.data.EntryId;
+import com.pwc.us.rgi.m.tool.ToolResult;
 import com.pwc.us.rgi.m.tool.routine.MRoutineToolInput;
 import com.pwc.us.rgi.m.tool.routine.RoutineToolParams;
-import com.pwc.us.rgi.m.tool.routine.fanin.FaninTool;
+import com.pwc.us.rgi.m.tool.routine.topentries.TopEntriesTool;
 import com.pwc.us.rgi.output.Terminal;
 import com.pwc.us.rgi.vista.tools.CLIParams;
 import com.pwc.us.rgi.vista.tools.CLIParamsAdapter;
@@ -32,24 +31,14 @@ public class CLITopEntriesTool extends CLIRoutineTool {
 		super(params);
 	}
 	
-	public void write(List<EntryId> result, Terminal t) throws IOException {
-		t.getTerminalFormatter().setTitleWidth(12);
-		for (EntryId e : result) {
-			if (e.hasDedicatedLabel()) {
-				t.writeEOL("  " + e.toString2());				
-			}
-		}
-		t.stop();
-	}
-
 	@Override
 	public void run() throws IOException {
 		Terminal t = CLIParamsAdapter.getTerminal(this.params);
 		if (t != null) {
 			RoutineToolParams p = CLIRTParamsAdapter.toMRoutineToolParams(this.params);	
-			FaninTool tool = new FaninTool(p);
+			TopEntriesTool tool = new TopEntriesTool(p);
 			MRoutineToolInput input = CLIRTParamsAdapter.toMRoutineInput(this.params);
-			List<EntryId> result = tool.getTopEntries(input);
+			ToolResult result = tool.getResult(input);
 			this.write(result, t);
 		}
 	}

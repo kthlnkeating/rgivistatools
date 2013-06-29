@@ -30,7 +30,7 @@ import com.pwc.us.rgi.output.Terminal;
 import com.pwc.us.rgi.vista.tools.CLIParams;
 import com.pwc.us.rgi.vista.tools.CLIParamsAdapter;
 
-public class CLIOccuranceTool extends CLIResultsByRoutineLabelTool<Occurance, List<Occurance>> {	
+public class CLIOccuranceTool extends CLIRoutineTool {	
 	public CLIOccuranceTool(CLIParams params) {
 		super(params);
 	}

@@ -16,6 +16,7 @@
 
 package com.pwc.us.rgi.vista.tools.routine;
 
+import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -24,14 +25,21 @@ import java.util.List;
 
 import com.pwc.us.rgi.m.parsetree.Routine;
 import com.pwc.us.rgi.m.token.MVersion;
+import com.pwc.us.rgi.m.tool.OutputFlags;
+import com.pwc.us.rgi.m.tool.ToolResult;
+import com.pwc.us.rgi.output.Terminal;
 import com.pwc.us.rgi.vista.tools.CLIParams;
+import com.pwc.us.rgi.vista.tools.CLIParamsAdapter;
 import com.pwc.us.rgi.vista.tools.MRALogger;
 import com.pwc.us.rgi.vista.tools.MRARoutineFactory;
 import com.pwc.us.rgi.vista.tools.Tool;
 
 abstract class CLIRoutineTool extends Tool {
+	private OutputFlags ofs;
+	
 	public CLIRoutineTool(CLIParams params) {
 		super(params);
+		this.ofs = CLIParamsAdapter.toOutputFlags(params);
 	}
 	
 	private List<Path> getMFiles() {
@@ -82,5 +90,12 @@ abstract class CLIRoutineTool extends Tool {
 			}
 		}
 		return null;
+	}
+	
+	
+	protected void write(ToolResult result, Terminal t) throws IOException {
+		t.getTerminalFormatter().setTitleWidth(12);
+		result.write(t, this.ofs);
+		t.stop();
 	}
 }

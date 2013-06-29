@@ -14,23 +14,27 @@
 // limitations under the License.
 //---------------------------------------------------------------------------
 
-package com.pwc.us.rgi.vista.tools.routine;
+package com.pwc.us.rgi.m.tool.routine.topentries;
 
-import com.pwc.us.rgi.m.tool.ParseTreeSupply;
+import java.util.List;
+
+import com.pwc.us.rgi.m.parsetree.data.EntryId;
+import com.pwc.us.rgi.m.tool.EntryIdsByRoutine;
+import com.pwc.us.rgi.m.tool.ToolResultCollection;
+import com.pwc.us.rgi.m.tool.routine.fanin.FaninTool;
 import com.pwc.us.rgi.m.tool.routine.MRoutineToolInput;
 import com.pwc.us.rgi.m.tool.routine.RoutineToolParams;
-import com.pwc.us.rgi.vista.tools.CLIParams;
-import com.pwc.us.rgi.vista.tools.CLIParamsAdapter;
 
-public class CLIRTParamsAdapter {
-	public static RoutineToolParams toMRoutineToolParams(CLIParams params) {
-		ParseTreeSupply pts = CLIParamsAdapter.getParseTreeSupply(params);
-		return new RoutineToolParams(pts);
+public class TopEntriesTool {
+	private FaninTool faninTool;
+	
+	public TopEntriesTool(RoutineToolParams params) {
+		this.faninTool = new FaninTool(params);
 	}
-		
-	public static MRoutineToolInput toMRoutineInput(CLIParams params) {
-		MRoutineToolInput input = new MRoutineToolInput();
-		input.addRoutines(CLIParamsAdapter.getCLIRoutines(params));
-		return input;
+
+	public ToolResultCollection getResult(MRoutineToolInput input) {
+		EntryIdsByRoutine allLinks = this.faninTool.getResult(input);
+		List<EntryId> result = allLinks.getEmptyEntries();
+		return new ToolResultCollection(result);
 	}
 }

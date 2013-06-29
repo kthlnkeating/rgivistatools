@@ -101,14 +101,14 @@ public class MRoutineAnalyzer {
 				String toolsName = tools.getName(); 
 				if (runTypeOption.equals(toolsName)) {
 					if (params.positionals.size() == 0) {
-						logErrorWithOptions("A addditional run type option needs to be specified following \"file\".", tools);
+						logErrorWithOptions("An addditional run type option needs to be specified following \"" + runTypeOption + "\".", tools);
 						return;
 					}
-					runTypeOption = params.positionals.get(0);
+					String runTypeOptionAddl = params.positionals.get(0);
 					params.popPositional();
 					
-					if (run(rtss[i], runTypeOption, params)) return;
-					logErrorWithOptions("Specified run type option " + runTypeOption + " is not know.", tools);
+					if (run(rtss[i], runTypeOptionAddl , params)) return;
+					logErrorWithOptions("Specified run type option " + runTypeOptionAddl  + " is not known.", tools);
 					return;
 				}
 			}			

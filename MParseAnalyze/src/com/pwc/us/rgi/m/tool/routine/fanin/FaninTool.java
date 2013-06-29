@@ -16,7 +16,6 @@
 
 package com.pwc.us.rgi.m.tool.routine.fanin;
 
-import java.util.List;
 import java.util.Set;
 
 import com.pwc.us.rgi.m.parsetree.data.EntryId;
@@ -49,10 +48,5 @@ public class FaninTool {
 			}			
 		}
 		return finLinks;
-	}
-	
-	public List<EntryId> getTopEntries(MRoutineToolInput input) {
-		EntryIdsByRoutine allLinks = this.getResult(input);
-		return allLinks.getEmptyEntries();
 	}
 }
