@@ -37,6 +37,9 @@ public class CLIParams {
 	@CLIParameter(names={"-r", "--routine"})
 	public List<String> routines = new ArrayList<String>();
 	
+	@CLIParameter(names={"-rrf", "--resultroutinefilter"})
+	public List<String> resultRoutines = new ArrayList<String>();
+	
 	@CLIParameter(names={"-o", "--output"})
 	public String outputFile;
 	 

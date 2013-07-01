@@ -21,31 +21,31 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
+import com.pwc.us.rgi.m.parsetree.data.EntryId;
 import com.pwc.us.rgi.output.Terminal;
 
-public class ToolResultCollection implements ToolResult {
-	private List<ToolResult> toolResults = new ArrayList<ToolResult>();
+public class EntryIdListResult implements ToolResult {
+	private List<EntryId> toolResults = new ArrayList<EntryId>();
 
-	public ToolResultCollection() {
-		this.toolResults = new ArrayList<ToolResult>();	
+	public EntryIdListResult() {
+		this.toolResults = new ArrayList<EntryId>();	
 	}
 	
-	public <T extends ToolResult> ToolResultCollection(Collection<T> toolResults) {
-		this.toolResults = new ArrayList<ToolResult>(toolResults);	
+	public EntryIdListResult(Collection<EntryId> toolResults) {
+		this.toolResults = new ArrayList<EntryId>(toolResults);	
 	}
 
-	public void add(ToolResult toolResult) {
+	public void add(EntryId toolResult) {
 		this.toolResults.add(toolResult);
+	}
+	
+	public List<EntryId> getEntryIdList() {
+		return this.toolResults;
 	}
 	
 	@Override
 	public boolean isEmpty() {
-		for (ToolResult r : this.toolResults) {
-			if (! r.isEmpty()) {
-				return false;
-			}
-		}
-		return true;
+		return this.toolResults.isEmpty();
 	}
 
 	@Override
@@ -55,10 +55,8 @@ public class ToolResultCollection implements ToolResult {
 			return;
 		}
 	
-		for (ToolResult r : this.toolResults) {
-			if (! r.isEmpty()) {
-				r.write(t, flags);
-			}
+		for (EntryId r : this.toolResults) {
+			r.write(t, flags);
 		}		
 	}
 

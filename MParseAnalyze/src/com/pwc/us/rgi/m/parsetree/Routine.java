@@ -69,6 +69,19 @@ public class Routine extends BasicNode {
 		}
 	}
 	
+	public List<String> getTopTags() {
+		if (this.entryList == null) {
+			return Collections.emptyList();
+		} else {
+			List<String> result = new ArrayList<String>(this.entryList.size());
+			for (Label e : this.entryList.getNodes()) {
+				String tag = e.getName();
+				result.add(tag);				
+			}
+			return result;
+		}
+	}
+	
 	public void acceptSubNodes(Visitor visitor) {
 		if (this.errorNode != null) {
 			this.errorNode.accept(visitor);

@@ -16,37 +16,95 @@
 
 package com.pwc.us.rgi.m.tool.routine.fanin;
 
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
 import java.util.Set;
 
+import com.pwc.us.rgi.m.parsetree.Routine;
 import com.pwc.us.rgi.m.parsetree.data.EntryId;
 import com.pwc.us.rgi.m.tool.EntryIdsByRoutine;
+import com.pwc.us.rgi.m.tool.ParseTreeSupply;
 import com.pwc.us.rgi.m.tool.ResultsByLabel;
 import com.pwc.us.rgi.m.tool.routine.MRoutineToolInput;
+import com.pwc.us.rgi.m.tool.routine.RoutineNameFilter;
 import com.pwc.us.rgi.m.tool.routine.RoutineToolParams;
 import com.pwc.us.rgi.m.tool.routine.fanout.FanoutTool;
+import com.pwc.us.rgi.struct.Filter;
 
 public class FaninTool {
-	private FanoutTool fanoutTool;
+	private RoutineToolParams params;
 	
 	public FaninTool(RoutineToolParams params) {
-		this.fanoutTool = new FanoutTool(params);
+		this.params = params;
 	}
 
-	public EntryIdsByRoutine getResult(MRoutineToolInput input) {
-		EntryIdsByRoutine fanoutLinks = this.fanoutTool.getResult(input);
-		EntryIdsByRoutine finLinks = new EntryIdsByRoutine();
-		Set<String> routineNames = fanoutLinks.getRoutineNames();
-		for (String routineName : routineNames) {
-			ResultsByLabel<EntryId, Set<EntryId>> rel = fanoutLinks.getResults(routineName);
+	private RoutineToolParams getFanoutParams(MRoutineToolInput input) {
+		List<String> routineNames = input.getRoutineNames(); 		
+		Filter<EntryId> fanoutFilter = new RoutineNameFilter(routineNames);
+		ParseTreeSupply pts = this.params.getParseTreeSupply();
+		RoutineToolParams fanoutParams = new RoutineToolParams(pts);
+		fanoutParams.setResultRoutineFilter(fanoutFilter);
+		return fanoutParams;		
+	}
+	
+	private MRoutineToolInput getFanoutInput(MRoutineToolInput input)  {
+		Filter<EntryId> resultFilter = this.params.getResultRoutineFilter();
+		if (resultFilter != null) {
+			ParseTreeSupply pts = this.params.getParseTreeSupply();
+			Collection<String> allRoutineNames = pts.getAllRoutineNames();
+			List<String> inputRoutineNames = new ArrayList<String>();
+			for (String routineName : allRoutineNames) {
+				if (resultFilter.isValid(new EntryId(routineName, null))) {
+					inputRoutineNames.add(routineName);
+				}				
+			}
+			input = new MRoutineToolInput();
+			input.addRoutines(inputRoutineNames);
+		}
+		return input;		
+	}
+	
+	private EntryIdsByRoutine getFanoutResult(MRoutineToolInput input) {
+		RoutineToolParams fanoutParams = this.getFanoutParams(input);
+		FanoutTool fanoutTool = new FanoutTool(fanoutParams);
+		MRoutineToolInput fanoutInput = this.getFanoutInput(input);
+		EntryIdsByRoutine fanoutResult = fanoutTool.getResult(fanoutInput);
+		return fanoutResult;
+	}
+	
+	private EntryIdsByRoutine convertFanoutResult(EntryIdsByRoutine fanoutResult) {
+		EntryIdsByRoutine result = new EntryIdsByRoutine();
+		Set<String> resultRoutineNames = fanoutResult.getRoutineNames();
+		for (String routineName : resultRoutineNames) {
+			ResultsByLabel<EntryId, Set<EntryId>> rel = fanoutResult.getResults(routineName);
 			Set<String> routineLabels = rel.getLabels();
 			for (String label : routineLabels) {
-				finLinks.getResultsAddingWhenNone(routineName, label);				
 				Set<EntryId> fanouts = rel.getResults(label);
 				for (EntryId id : fanouts) {
-					finLinks.addResult(id, new EntryId(routineName, label));	
+					result.addResult(id, new EntryId(routineName, label));	
 				}
 			}			
 		}
-		return finLinks;
+		return result;		
+	}
+	
+	private void putEmptyLabels(EntryIdsByRoutine result, List<String> inputRoutineNames) {
+		ParseTreeSupply pts = this.params.getParseTreeSupply();
+		for (String name : inputRoutineNames) {
+			Routine r = pts.getParseTree(name);
+			List<String> tags = r.getTopTags();
+			for (String tag : tags) {
+				result.getResultsAddingWhenNone(name, tag);					
+			}
+		}		
+	}
+	
+	public EntryIdsByRoutine getResult(MRoutineToolInput input) {
+		EntryIdsByRoutine fanoutResult = this.getFanoutResult(input);		
+		EntryIdsByRoutine result = this.convertFanoutResult(fanoutResult);
+		List<String> inputRoutineNames = input.getRoutineNames();
+		this.putEmptyLabels(result, inputRoutineNames);
+		return result;
 	}
 }

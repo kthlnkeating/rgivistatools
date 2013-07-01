@@ -16,12 +16,37 @@
 
 package com.pwc.us.rgi.m.tool.routine;
 
+import java.util.List;
+
+import com.pwc.us.rgi.m.parsetree.data.EntryId;
 import com.pwc.us.rgi.m.tool.ParseTreeSupply;
+import com.pwc.us.rgi.struct.Filter;
 
 public class RoutineToolParams {
-	private ParseTreeSupply parseTreeSupply;
-	private ResultRoutineSpace resultRoutineSpace = ResultRoutineSpace.ALL_INPUT_ROUTINES;
+	private static class RoutineRegexFilter implements Filter<EntryId> {
+		private List<String> routineRegexes;
+		
+		public RoutineRegexFilter(List<String> routineRegexes) {
+			this.routineRegexes = routineRegexes;
+		}
+		
+		@Override
+		public boolean isValid(EntryId id) {
+			String routineName = id.getRoutineName();
+			if (routineName != null) {
+				for (String routineRegex : routineRegexes) {
+					if (routineName.matches(routineRegex)) return true;
+				}
+				return false;
+			} else {
+				return true;
+			}
+		}
+	}
 
+	private ParseTreeSupply parseTreeSupply;
+	private Filter<EntryId> resultFilter;
+	
 	public RoutineToolParams(ParseTreeSupply parseTreeSupply) {
 		this.parseTreeSupply = parseTreeSupply;		
 	}
@@ -30,11 +55,19 @@ public class RoutineToolParams {
 		return this.parseTreeSupply;
 	}
 	
-	public void setResultRoutineSpace(ResultRoutineSpace resultRoutineSpace) {
-		this.resultRoutineSpace = resultRoutineSpace;
+	public void setResultRoutineFilter(List<String> resultRoutineRegex) {
+		if ((resultRoutineRegex == null) || (resultRoutineRegex.size() == 0)) {
+			this.resultFilter = null;
+		} else {
+			this.resultFilter = new RoutineRegexFilter(resultRoutineRegex);
+		}
 	}
 	
-	public ResultRoutineSpace getResultRoutineSpace() {
-		return this.resultRoutineSpace;
+	public void setResultRoutineFilter(Filter<EntryId> filter) {
+		this.resultFilter = filter;
+	}
+	
+	public Filter<EntryId> getResultRoutineFilter() {
+		return this.resultFilter;
 	}
 }

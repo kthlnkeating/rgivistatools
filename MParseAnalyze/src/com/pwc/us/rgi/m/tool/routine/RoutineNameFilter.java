@@ -14,29 +14,34 @@
 // limitations under the License.
 //---------------------------------------------------------------------------
 
-package com.pwc.us.rgi.m.tool.routine.topentries;
+package com.pwc.us.rgi.m.tool.routine;
 
-import java.util.Collections;
-import java.util.List;
+import java.util.Collection;
+import java.util.HashSet;
+import java.util.Set;
 
 import com.pwc.us.rgi.m.parsetree.data.EntryId;
-import com.pwc.us.rgi.m.tool.EntryIdsByRoutine;
-import com.pwc.us.rgi.m.tool.EntryIdListResult;
-import com.pwc.us.rgi.m.tool.routine.fanin.FaninTool;
-import com.pwc.us.rgi.m.tool.routine.MRoutineToolInput;
-import com.pwc.us.rgi.m.tool.routine.RoutineToolParams;
+import com.pwc.us.rgi.struct.Filter;
 
-public class TopEntriesTool {
-	private FaninTool faninTool;
+public class RoutineNameFilter implements Filter<EntryId> {
+	private Set<String> routineNames;
 	
-	public TopEntriesTool(RoutineToolParams params) {
-		this.faninTool = new FaninTool(params);
+	public RoutineNameFilter(Set<String> routineNames) {
+		this.routineNames = routineNames;
 	}
-
-	public EntryIdListResult getResult(MRoutineToolInput input) {
-		EntryIdsByRoutine allLinks = this.faninTool.getResult(input);
-		List<EntryId> result = allLinks.getEmptyEntries();
-		Collections.sort(result);
-		return new EntryIdListResult(result);
+	
+	public RoutineNameFilter(Collection<String> routineNames) {
+		this(new HashSet<String>(routineNames));
+	}
+	
+	@Override
+	public boolean isValid(EntryId id) {
+		String routineName = id.getRoutineName();
+		if (routineName != null) {
+			return this.routineNames.contains(routineName);
+		} else {
+			return true;
+		}
 	}
 }
+	

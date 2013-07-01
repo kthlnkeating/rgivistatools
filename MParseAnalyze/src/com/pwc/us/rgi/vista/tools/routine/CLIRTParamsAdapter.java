@@ -25,7 +25,9 @@ import com.pwc.us.rgi.vista.tools.CLIParamsAdapter;
 public class CLIRTParamsAdapter {
 	public static RoutineToolParams toMRoutineToolParams(CLIParams params) {
 		ParseTreeSupply pts = CLIParamsAdapter.getParseTreeSupply(params);
-		return new RoutineToolParams(pts);
+		RoutineToolParams rtparams = new RoutineToolParams(pts);
+		rtparams.setResultRoutineFilter(params.resultRoutines);
+		return rtparams;
 	}
 		
 	public static MRoutineToolInput toMRoutineInput(CLIParams params) {
