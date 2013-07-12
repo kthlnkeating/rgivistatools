@@ -32,18 +32,18 @@ public class QuitRecorder extends BlockRecorder<Fanout, CodeLocations> {
 		return ecls;
 	}
 
-	private boolean inForLoopOrDoBlock;
+	private int innerQuit = 0;
 	
 	@Override
 	public void reset() {
 		super.reset();
-		this.inForLoopOrDoBlock = false;
+		this.innerQuit = 0;
 	}
 	
 	@Override
 	protected void visitQuit(QuitCmd quitCmd) {
 		super.visitQuit(quitCmd);
-		if (this.inForLoopOrDoBlock) return;
+		if (this.innerQuit > 0) return;
 		CodeLocations data = this.getCurrentBlockData();
 		CodeLocation codeLocation = this.getCodeLocation();
 		data.add(codeLocation);
@@ -51,16 +51,16 @@ public class QuitRecorder extends BlockRecorder<Fanout, CodeLocations> {
 
 	@Override
 	protected void visitForLoop(ForLoop forLoop) {
-		this.inForLoopOrDoBlock = true;
+		++this.innerQuit;
 		super.visitForLoop(forLoop);
-		this.inForLoopOrDoBlock = false;
+		--this.innerQuit;
 	}
 	
 	@Override
 	protected void visitDoBlock(DoBlock doBlock) {
-		this.inForLoopOrDoBlock = true;
+		++this.innerQuit;
 		super.visitDoBlock(doBlock);
-		this.inForLoopOrDoBlock = false;
+		--this.innerQuit;
 	}
 
 	@Override
