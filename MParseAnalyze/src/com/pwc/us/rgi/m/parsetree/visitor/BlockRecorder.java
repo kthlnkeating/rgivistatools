@@ -19,6 +19,7 @@ package com.pwc.us.rgi.m.parsetree.visitor;
 import com.pwc.us.rgi.m.parsetree.AtomicDo;
 import com.pwc.us.rgi.m.parsetree.AtomicGoto;
 import com.pwc.us.rgi.m.parsetree.DeadCmds;
+import com.pwc.us.rgi.m.parsetree.DoBlock;
 import com.pwc.us.rgi.m.parsetree.Extrinsic;
 import com.pwc.us.rgi.m.parsetree.InnerEntryList;
 import com.pwc.us.rgi.m.parsetree.Label;
@@ -118,6 +119,13 @@ public abstract class BlockRecorder<F extends Fanout, T extends BlockData<F>> ex
 		super.visitLabel(entry);
 	}
 			
+	@Override
+	protected void visitDoBlock(DoBlock doBlock) {
+		int parentLineIndex = this.lineIndex;
+		super.visitDoBlock(doBlock);
+		this.lineIndex = parentLineIndex;
+	}
+
 	@Override
 	protected void visitInnerEntryList(InnerEntryList entryList) {
 		if (entryList != this.lastInnerEntryList) {

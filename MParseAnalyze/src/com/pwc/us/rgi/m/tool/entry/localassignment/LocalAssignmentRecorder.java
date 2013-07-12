@@ -25,7 +25,7 @@ import com.pwc.us.rgi.m.parsetree.data.Fanout;
 import com.pwc.us.rgi.m.parsetree.data.FanoutType;
 import com.pwc.us.rgi.m.parsetree.visitor.BlockRecorder;
 import com.pwc.us.rgi.m.struct.CodeLocation;
-import com.pwc.us.rgi.m.tool.entry.basiccodeinfo.CodeLocations;
+import com.pwc.us.rgi.m.tool.entry.CodeLocations;
 
 public class LocalAssignmentRecorder extends BlockRecorder<Fanout, CodeLocations> {
 	private Set<String> localNames;

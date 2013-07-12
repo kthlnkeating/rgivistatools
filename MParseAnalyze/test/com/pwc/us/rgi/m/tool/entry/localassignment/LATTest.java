@@ -8,9 +8,9 @@ import com.pwc.us.rgi.m.MTestCommon;
 import com.pwc.us.rgi.m.parsetree.data.EntryId;
 import com.pwc.us.rgi.m.struct.CodeLocation;
 import com.pwc.us.rgi.m.tool.ParseTreeSupply;
+import com.pwc.us.rgi.m.tool.entry.CodeLocations;
 import com.pwc.us.rgi.m.tool.entry.RecursionDepth;
 import com.pwc.us.rgi.m.tool.entry.RecursionSpecification;
-import com.pwc.us.rgi.m.tool.entry.basiccodeinfo.CodeLocations;
 import com.pwc.us.rgi.m.tool.entry.localassignment.LocalAssignmentTool;
 import com.pwc.us.rgi.m.tool.entry.localassignment.LocalAssignmentToolParams;
 

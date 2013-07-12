@@ -19,17 +19,18 @@ package com.pwc.us.rgi.vista.tools.entry;
 import java.util.Map;
 
 import com.pwc.us.rgi.m.tool.CommonToolParams;
+import com.pwc.us.rgi.m.tool.entry.CodeLocations;
 import com.pwc.us.rgi.m.tool.entry.MEntryToolInput;
 import com.pwc.us.rgi.m.tool.entry.MEntryToolResult;
 import com.pwc.us.rgi.m.tool.entry.assumedvariables.AssumedVariablesToolParams;
 import com.pwc.us.rgi.m.tool.entry.basiccodeinfo.BasicCodeInfoToolParams;
-import com.pwc.us.rgi.m.tool.entry.basiccodeinfo.CodeLocations;
 import com.pwc.us.rgi.m.tool.entry.fanout.EntryFanouts;
 import com.pwc.us.rgi.m.tool.entry.fanout.FanoutTool;
 import com.pwc.us.rgi.m.tool.entry.legacycodeinfo.LegacyCodeInfo;
 import com.pwc.us.rgi.m.tool.entry.legacycodeinfo.LegacyCodeInfoTool;
 import com.pwc.us.rgi.m.tool.entry.localassignment.LocalAssignmentTool;
 import com.pwc.us.rgi.m.tool.entry.localassignment.LocalAssignmentToolParams;
+import com.pwc.us.rgi.m.tool.entry.quit.QuitTool;
 import com.pwc.us.rgi.vista.repository.RepositoryInfo;
 import com.pwc.us.rgi.vista.tools.CLIParams;
 import com.pwc.us.rgi.vista.tools.CLIParamsAdapter;
@@ -52,8 +53,8 @@ public class CLIEntryTools extends Tools {
 		}
 	}
 
-	private static class EntryLocalAssignmentTool extends CLIEntryTool<CodeLocations> {	
-		public EntryLocalAssignmentTool(CLIParams params) {
+	private static class CLILocalAssignmentTool extends CLIEntryTool<CodeLocations> {	
+		public CLILocalAssignmentTool(CLIParams params) {
 			super(params);
 		}
 		
@@ -61,6 +62,19 @@ public class CLIEntryTools extends Tools {
 		protected MEntryToolResult<CodeLocations> getResult(MEntryToolInput input) {
 			LocalAssignmentToolParams params = CLIETParamsAdapter.toLocalAssignmentToolParams(this.params);
 			LocalAssignmentTool a = new LocalAssignmentTool(params);
+			return a.getResult(input);			
+		}
+	}
+
+	private static class CLIQuitTool extends CLIEntryTool<CodeLocations> {	
+		public CLIQuitTool(CLIParams params) {
+			super(params);
+		}
+		
+		@Override
+		protected MEntryToolResult<CodeLocations> getResult(MEntryToolInput input) {
+			CommonToolParams params = CLIETParamsAdapter.toCommonToolParams(this.params);
+			QuitTool a = new QuitTool(params);
 			return a.getResult(input);			
 		}
 	}
@@ -99,7 +113,13 @@ public class CLIEntryTools extends Tools {
 		tools.put("localassignment", new MemberFactory() {				
 			@Override
 			public Tool getInstance(CLIParams params) {
-				return new EntryLocalAssignmentTool(params);
+				return new CLILocalAssignmentTool(params);
+			}
+		});
+		tools.put("quit", new MemberFactory() {				
+			@Override
+			public Tool getInstance(CLIParams params) {
+				return new CLIQuitTool(params);
 			}
 		});
 		tools.put("fanout", new MemberFactory() {				

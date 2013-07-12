@@ -14,37 +14,35 @@
 // limitations under the License.
 //---------------------------------------------------------------------------
 
-package com.pwc.us.rgi.m.tool.entry.localassignment;
+package com.pwc.us.rgi.m.tool.entry.quit;
 
 import java.util.Set;
 
 import com.pwc.us.rgi.m.parsetree.data.EntryId;
 import com.pwc.us.rgi.m.parsetree.data.Fanout;
 import com.pwc.us.rgi.m.parsetree.visitor.BlockRecorderFactory;
+import com.pwc.us.rgi.m.tool.CommonToolParams;
 import com.pwc.us.rgi.m.tool.entry.Block;
 import com.pwc.us.rgi.m.tool.entry.CodeLocations;
 import com.pwc.us.rgi.m.tool.entry.CodeLocationsAggregator;
 import com.pwc.us.rgi.m.tool.entry.MEntryTool;
 import com.pwc.us.rgi.struct.Filter;
 
-public class LocalAssignmentTool extends MEntryTool<CodeLocations, Fanout, CodeLocations> {
-	private class EntryLocalAssignmentRecorderFactory implements BlockRecorderFactory<Fanout, CodeLocations> {
+public class QuitTool extends MEntryTool<CodeLocations, Fanout, CodeLocations> {
+	private static class QuitRecorderFactory implements BlockRecorderFactory<Fanout, CodeLocations> {
 		@Override
-		public LocalAssignmentRecorder getRecorder() {
-			return new LocalAssignmentRecorder(LocalAssignmentTool.this.localsUnderTest);
+		public QuitRecorder getRecorder() {
+			return new QuitRecorder();
 		}
 	}
 	
-	private Set<String> localsUnderTest;
-	
-	public LocalAssignmentTool(LocalAssignmentToolParams params) {
+	public QuitTool(CommonToolParams params) {
 		super(params);
-		this.localsUnderTest = params.getLocals();
 	}
 	
 	@Override
-	protected EntryLocalAssignmentRecorderFactory getBlockRecorderFactory() {
-		return this.new EntryLocalAssignmentRecorderFactory();
+	protected QuitRecorderFactory getBlockRecorderFactory() {
+		return new QuitRecorderFactory();
 	}
 
 	@Override
